@@ -1,0 +1,14 @@
+helm*
+*.kts
+*.svg
+*.png
+*.xml
+*.ico
+gradle/
+gradle*
+*.gradle
+Dockerfile
+.idea
+nginx/
+.*
+browserslist

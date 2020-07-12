@@ -1,0 +1,10 @@
+# This Chart.yaml file will act as the template for the "helm package" command. The helm package will set the chart
+# version and appVersion.
+# Command to package:
+# helm package --version <chart version> --app-version <app version> <folder containing Chart.yaml>
+apiVersion: v2
+name: hypertrace-ui
+description: A Helm chart for Hypertrace UI Service
+type: application
+version: 0.1.0
+

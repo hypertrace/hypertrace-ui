@@ -1,0 +1,25 @@
+@import 'color-palette';
+
+:host {
+  ::ng-deep {
+    .dragging {
+      cursor: grabbing;
+    }
+
+    .overlay {
+      stroke: $gray-3;
+      fill: white;
+      stroke-width: 8px;
+    }
+
+    .selection {
+      stroke: $gray-4;
+      fill: $gray-3;
+    }
+  }
+}
+
+.topology {
+  width: 100%;
+  height: 100%;
+}

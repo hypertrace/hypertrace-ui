@@ -1,0 +1,42 @@
+@import 'font';
+@import 'color-palette';
+
+.ht-api-definition-response {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+
+  .title {
+    @include font-subtitle-medium;
+    height: 24px;
+  }
+
+  .content {
+    flex: 1 1 auto;
+    height: 100%;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+
+    .toggle-button {
+      align-self: flex-end;
+    }
+
+    .body-viewer {
+      width: 100%;
+      flex: 1 1 auto;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid $gray-1;
+      border-radius: 4px;
+
+      .json-viewer {
+        height: 100%;
+      }
+
+      .raw {
+        height: 100%;
+      }
+    }
+  }
+}

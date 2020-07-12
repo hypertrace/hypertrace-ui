@@ -1,0 +1,78 @@
+@import 'color-palette';
+@import 'font';
+
+.tooltip-container {
+  background-color: $gray-9;
+  padding: 12px;
+  opacity: 0.92;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  max-width: 400px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip-title {
+  @include body-1-medium(white);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .title-text {
+    min-width: 0;
+    @include ellipsis-overflow;
+  }
+
+  .edge-title-arrow {
+    color: $gray-3;
+    display: inline-block;
+    transform: rotate(90deg);
+    padding: 0 8px;
+  }
+
+  .hide-tooltip-button-container {
+    flex-grow: 1;
+    min-width: 24px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .hide-tooltip-button {
+    color: $gray-5;
+    cursor: pointer;
+  }
+}
+
+.tooltip-divider {
+  background-color: $gray-7;
+  height: 1px;
+  border: none;
+  margin: 12px 0;
+}
+
+.metric-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2px 0;
+
+  .metric-label {
+    @include body-small($gray-3);
+    @include ellipsis-overflow;
+    padding-right: 24px;
+    flex: 1 1 auto;
+  }
+
+  .metric-value {
+    @include body-small(white);
+    @include ellipsis-overflow;
+    font-weight: bold;
+  }
+
+  .metric-unit {
+    margin-left: 2px;
+    @include body-small(white);
+  }
+}

@@ -1,0 +1,47 @@
+@import 'font';
+@import 'color-palette';
+
+.ht-api-definition-widget {
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+
+    .uri {
+      @include font-subtitle-medium;
+    }
+
+    .value {
+      height: 28px;
+      margin-top: 12px;
+      span {
+        height: 100%;
+        background: $gray-1;
+        border: 1px solid $gray-1;
+        border-radius: 1px;
+        padding-left: 8px;
+        padding-right: 16px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 18px;
+        letter-spacing: -0.01em;
+        color: $color-text;
+      }
+    }
+  }
+
+  .toggle-button {
+    margin-top: 45px;
+  }
+
+  .details {
+    margin-top: 24px;
+    flex: 1 1 auto;
+  }
+}

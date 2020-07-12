@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../../",
+    "outDir": "../../out-tsc/lib",
+    "target": "es2015",
+    "declaration": true,
+    "inlineSources": true,
+    "types": [],
+    "paths": {
+      "@hypertrace/graphql-client": ["hypertrace-core-ui/projects/graphql-client/src/public-api.ts"],
+      "@hypertrace/common": ["hypertrace-core-ui/projects/common/src/public-api.ts"],
+      "@hypertrace/components": ["hypertrace-core-ui/projects/components/src/public-api.ts"],
+      "@hypertrace/dashboards": ["hypertrace-core-ui/projects/dashboards/src/public-api.ts"],
+      "@hypertrace/distributed-tracing": ["hypertrace-core-ui/projects/distributed-tracing/src/public-api.ts"],
+      "@hypertrace/test-utils": ["hypertrace-core-ui/projects/test-utils/src/public-api.ts"],
+      "@hypertrace/dashboards/testing": ["hypertrace-core-ui/projects/dashboards/src/test/public-api.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "enableResourceInlining": true
+  },
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+}

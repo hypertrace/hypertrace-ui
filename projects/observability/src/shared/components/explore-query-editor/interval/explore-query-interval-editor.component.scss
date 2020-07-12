@@ -1,0 +1,13 @@
+@import 'font';
+@import 'color-palette';
+
+.interval-container {
+  display: flex;
+  flex-direction: column;
+  width: 124px;
+
+  .interval-label {
+    @include body-1-medium($gray-9);
+    padding-bottom: 6px;
+  }
+}

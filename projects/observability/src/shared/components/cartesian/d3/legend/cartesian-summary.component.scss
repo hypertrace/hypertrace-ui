@@ -1,0 +1,14 @@
+@import 'color-palette';
+@import 'font';
+
+.summary-control {
+  display: flex;
+  flex-direction: row;
+  padding-right: 12px;
+
+  .summary {
+    @include subtitle-1($gray-9);
+    @include ellipsis-overflow();
+    padding-right: 12px;
+  }
+}

@@ -1,0 +1,29 @@
+@import 'font';
+@import 'color-palette';
+
+.step-summaries {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 64px 70px 58px 64px;
+  background-image: linear-gradient(to bottom right, rgb(29, 71, 106), rgb(6, 26, 49));
+
+  .summary-header {
+    @include header-4(white);
+    @include semi-bold;
+    margin-bottom: 40px;
+  }
+
+  .summaries {
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+    .summary {
+      margin-top: 30px;
+    }
+  }
+}

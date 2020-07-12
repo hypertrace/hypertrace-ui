@@ -1,0 +1,59 @@
+@import 'font';
+@import 'color-palette';
+
+.legend-entries {
+  display: flex;
+  flex-wrap: wrap;
+
+  &.legend-row {
+    flex-direction: row;
+    justify-content: center;
+
+    .legend-entry {
+      margin-right: 12px;
+    }
+
+    &.position-top-left {
+      justify-content: flex-start;
+    }
+
+    &.position-top-right {
+      justify-content: flex-end;
+    }
+  }
+
+  &.legend-column {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .legend-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 100%;
+
+    &:not(:first-child) {
+      margin-top: 6px;
+    }
+
+    .legend-symbol {
+      min-width: 8px;
+      min-height: 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    .legend-label {
+      @include body-2-medium($gray-4);
+      @include ellipsis-overflow();
+      flex: 1;
+      min-width: 24px;
+    }
+
+    .legend-value {
+      @include body-2-medium($gray-9);
+      padding-left: 16px;
+    }
+  }
+}

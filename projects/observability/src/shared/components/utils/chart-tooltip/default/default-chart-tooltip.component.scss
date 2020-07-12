@@ -1,0 +1,46 @@
+@import 'color-palette';
+@import 'font';
+
+.tooltip-container {
+  background-color: $gray-9;
+  color: white;
+  opacity: 0.9;
+  border-radius: 4px;
+  min-width: 100px;
+  min-height: 48px;
+  padding: 12px;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.14);
+}
+
+.tooltip-timestamp {
+  color: $gray-3;
+  padding-top: 8px;
+}
+
+.tooltip-data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.tooltip-data-label-container {
+  display: flex;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.tooltip-data-color {
+  width: 14px;
+  height: 14px;
+  padding-right: 8px;
+}
+
+.tooltip-data-value {
+  color: white;
+  font-weight: bold;
+  text-align: right;
+}
+
+.tooltip-data-units {
+  color: white;
+}

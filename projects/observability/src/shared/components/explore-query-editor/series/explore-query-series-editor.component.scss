@@ -1,0 +1,35 @@
+@import 'font';
+@import 'color-palette';
+
+.series-group {
+  display: flex;
+  align-items: center;
+
+  .series-remove-button {
+    margin-left: 8px;
+  }
+
+  .metric-selector {
+    .attribute-selector {
+      width: 172px;
+      min-width: 0;
+      margin-right: 8px;
+    }
+
+    .aggregation-selector {
+      width: 124px;
+    }
+  }
+
+  .visualization-type-selector-container {
+    padding-left: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .visualization-type-label {
+      @include body-2-regular($gray-5);
+      padding-right: 8px;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@import 'font';
+
+.ht-card-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1px;
+  padding-right: 1px;
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .card {
+    border-radius: 4px;
+    border: 1px solid $gray-1;
+    margin-bottom: 8px;
+    @include card-hover;
+  }
+
+  .list {
+    &:first-child {
+      margin-top: 12px;
+    }
+  }
+}

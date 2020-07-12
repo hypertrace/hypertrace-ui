@@ -1,0 +1,87 @@
+@import 'layout';
+@import 'font';
+@import '@angular/material/theming';
+
+.tab-content {
+  @include tab-content;
+}
+
+.dashboard-content {
+  @include dashboard-content;
+}
+
+.dashboard-container-content {
+  @include dashboard-container-content;
+}
+
+.center-contents {
+  @include center-contents;
+}
+
+.fill-container {
+  @include fill-container;
+}
+
+.no-outside-spacing {
+  @include no-outside-spacing;
+}
+
+.frame-border {
+  @include frame-border;
+}
+
+.hidden {
+  @include hidden;
+}
+
+// The html, body, and h1 blocks need to be tweaked for our own look, but leaving as is for now
+html {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  background: white;
+  overflow: hidden;
+}
+
+button {
+  font-family: $font-family;
+}
+
+h1 {
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+mark {
+  background-color: $color-text-highlight;
+  color: $gray-9;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.placeholder-banner {
+  background: $red-3;
+  padding: 2px 6px;
+  font-size: 12px;
+  height: 18px;
+}
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();

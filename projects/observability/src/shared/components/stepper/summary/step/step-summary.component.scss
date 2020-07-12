@@ -1,0 +1,52 @@
+@import 'font';
+@import 'color-palette';
+
+.ht-step-summary {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    display: grid;
+    grid-template-columns: 3px auto 20px;
+    grid-template-rows: 12px 24px;
+    row-gap: 4px;
+    column-gap: 12px;
+
+    .status {
+      grid-area: 1 / 1 / 3 / 2;
+
+      &.done {
+        background-color: $green-5;
+      }
+
+      &.in-progress {
+        background-color: $blue-5;
+      }
+
+      &.to-do {
+        background-color: white;
+        opacity: 0.24;
+      }
+    }
+
+    .title {
+      grid-area: 1 / 2 / 2 / 3;
+      @include overline(white);
+    }
+
+    .name {
+      grid-area: 2 / 2 / 3 / 3;
+      @include subtitle-1(white);
+    }
+  }
+
+  .footer {
+    margin-top: 8px;
+
+    .spinner {
+      margin-top: 8px;
+    }
+  }
+}

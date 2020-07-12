@@ -1,0 +1,8 @@
+@import 'font';
+@import 'color-palette';
+
+.entity-cell {
+  &.first-column {
+    @include body-1-medium($gray-9);
+  }
+}

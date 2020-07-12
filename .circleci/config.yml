@@ -1,0 +1,155 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1
+executors:
+  node:
+    docker:
+      - image: cimg/node:14.5
+  publisher:
+    docker:
+      - image: cimg/openjdk:11.0
+  helm:
+    docker:
+      - image: hypertrace/helm-gcs-packager:0.1.1
+commands:
+  update-submodule:
+    description: 'Pull Submodules'
+    steps:
+      - run:
+          name: Pull Submodules
+          command: git submodule update --init
+      - run:
+          name: Ensure submodules point to commit from master branch
+          command: git submodule foreach "git merge-base --is-ancestor HEAD origin/master"
+
+  setup_for_building:
+    description: 'Checks out code and restores node modules'
+    steps:
+      - checkout
+      - update-submodule
+      - restore_cache:
+          keys:
+            - node_modules-3-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
+  setup_for_publishing:
+    description: 'Checks out code, sets up credentials, docker and attaches workspace'
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - '2c:f1:1d:8b:a2:b4:6a:28:46:1d:5b:7c:b1:92:d4:ba'
+      - checkout
+      - update-submodule
+      - attach_workspace:
+          at: dist
+      - setup_remote_docker
+jobs:
+  npm-install-if-needed:
+    executor: node
+    steps:
+      - setup_for_building
+      - run:
+          name: Install if cache missing
+          command: |
+            if [ ! -d node_modules ] ;
+            then npm ci ;
+            else echo "package.json and package-lock.json unchanged. Using cache." ;
+            fi
+      - run:
+          name: Fail if git dirty after install
+          command: test -z "$(git status --porcelain)"
+      - save_cache:
+          paths:
+            - node_modules
+          key: node_modules-3-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
+  build:
+    executor: node
+    steps:
+      - setup_for_building
+      - run: npm run build:ci
+      - persist_to_workspace:
+          root: dist
+          paths:
+            - hypertrace-ui
+  lint:
+    executor: node
+    steps:
+      - setup_for_building
+      - run: npm run lint
+      - run: npm run prettier:check
+  test:
+    executor: node
+    parallelism: 2
+    steps:
+      - setup_for_building
+      - run: npm run test:ci -- $(circleci tests glob "{projects,src}/**/*.{spec,test}.ts" | circleci tests split --split-by=timings | xargs -n 1 echo --testPathPattern)
+      - codecov/upload
+      - store_test_results:
+          path: test-results/hypertrace-ui
+      - store_artifacts:
+          path: test-results/hypertrace-ui
+          destination: test-results
+  validate-charts:
+    executor: helm
+    steps:
+      - checkout
+      - run:
+          name: Helm Charts Lint and Template Render
+          command: |
+            helm lint --strict ./helm/
+            helm template ./helm/
+  publish:
+    executor: publisher
+    steps:
+      - setup_for_publishing
+      - run: ./gradlew :tag -Prelease
+      - run:
+          name: Push git tag
+          command: git push origin $(./gradlew -q :printVersion)
+      - run: ./gradlew dockerPushImages
+  package-charts:
+    executor: helm
+    steps:
+      - checkout
+      - run:
+          name: Package and Publish Helm Charts
+          command: |
+            CHART_VERSION=$(git describe --abbrev=0)
+            CHART_NAME=$(awk '/^name:/ {print $2}' ./helm/Chart.yaml)
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/helm-gcs-key.json
+            echo ${HELM_GCS_CREDENTIALS} > ${GOOGLE_APPLICATION_CREDENTIALS}
+            helm repo add helm-gcs ${HELM_GCS_REPOSITORY}
+            helm package --version ${CHART_VERSION} --app-version ${CHART_VERSION} ./helm/
+            helm gcs push ${CHART_NAME}-${CHART_VERSION}.tgz helm-gcs --public --retry
+workflows:
+  version: 2
+  build-and-publish:
+    jobs:
+      - npm-install-if-needed
+      - build:
+          requires:
+            - npm-install-if-needed
+      - test:
+          requires:
+            - npm-install-if-needed
+      - lint:
+          requires:
+            - npm-install-if-needed
+      - validate-charts
+      - publish:
+          context: hypertrace-publishing
+          requires:
+            - build
+            - test
+            - lint
+            - validate-charts
+          filters:
+            branches:
+              only:
+                - master
+      - package-charts:
+          context: hypertrace-publishing
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                - master

@@ -1,0 +1,13 @@
+.query-editor {
+  display: flex;
+  flex-direction: column;
+
+  .query-level-config {
+    margin-top: 24px;
+    display: flex;
+
+    > :not(:first-child) {
+      margin-left: 24px;
+    }
+  }
+}

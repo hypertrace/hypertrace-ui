@@ -1,0 +1,130 @@
+@import 'color-palette';
+@import 'font';
+@import 'animation';
+
+@mixin hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@mixin show {
+  opacity: 1;
+  visibility: visible;
+}
+
+:host {
+  ::ng-deep {
+    .entity-node {
+      @include transition;
+      cursor: pointer;
+
+      &.background {
+        .entity-outer-band,
+        .entity-label,
+        .metric-category,
+        .node-icon {
+          @include transition;
+          @include hide;
+        }
+      }
+
+      &.emphasized {
+        @include transition;
+        .entity-outer-band {
+          filter: url(#entity-node-dropshadow-filter);
+          fill: white;
+        }
+      }
+
+      &.focused {
+        @include transition;
+        .entity-outer-band {
+          filter: url(#entity-node-dropshadow-filter);
+          fill: white;
+          stroke: $blue-4;
+          stroke-width: 1px;
+        }
+
+        .entity-label:hover {
+          @include link;
+          fill: currentColor;
+        }
+      }
+
+      &.dragging {
+        @include transition(0s);
+        cursor: grabbing;
+      }
+
+      .entity-label {
+        @include svg-link-hover;
+        @include body-2-medium($gray-7);
+        text-anchor: middle;
+        fill: $gray-7;
+      }
+
+      .entity-inner-band {
+        fill: transparent;
+        stroke: $gray-2;
+      }
+
+      .entity-outer-band {
+        fill: $gray-1;
+      }
+
+      .entity-metric-value {
+        @include body-1-regular(white);
+        text-anchor: middle;
+        fill: white;
+      }
+
+      .node-icon {
+        color: $gray-4;
+        fill: currentColor;
+      }
+
+      &.less-than-20-category {
+        .metric-category {
+          fill: $blue-gray-1;
+        }
+      }
+
+      &.from-20-to-100-category {
+        .metric-category {
+          fill: $blue-gray-2;
+        }
+      }
+
+      &.from-100-to-500-category {
+        .metric-category {
+          fill: $blue-gray-3;
+        }
+      }
+
+      &.from-500-to-1000-category {
+        .metric-category {
+          fill: $blue-gray-4;
+        }
+      }
+
+      &.greater-than-or-equal-to-1000-category {
+        .metric-category {
+          fill: $blue-gray-5;
+        }
+      }
+
+      &.not-specified-category {
+        .metric-category {
+          fill: lightgray;
+        }
+      }
+
+      &.greater-than-or-equal-to-5-error-category {
+        .entity-outer-band {
+          fill: $red-1;
+          stroke: $red-5;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+@import 'color-palette';
+
+.bubble-chart-container {
+  position: relative;
+}
+
+.bubble-chart-svg {
+  border: 1px $gray-1 solid;
+  border-radius: 4px;
+
+  .bubble-chart-data {
+    .bubble-group {
+      .checkmark-group {
+        visibility: hidden;
+
+        .checkmark-svg-container {
+          color: white;
+
+          text {
+            fill: white;
+            cursor: default;
+          }
+        }
+      }
+
+      &.active {
+        .data-bubble {
+          stroke: black;
+          stroke-width: 2px;
+        }
+        .checkmark-group {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

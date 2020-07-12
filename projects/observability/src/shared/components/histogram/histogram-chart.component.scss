@@ -1,0 +1,62 @@
+@import 'color-palette';
+@import 'font';
+
+.ht-histogram-chart {
+  display: flex;
+  flex-direction: column;
+  @include font-title;
+
+  .histogram-bar {
+    flex: 0 0 auto;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    padding-top: 16px;
+
+    .bar-label {
+      flex: 0 0 auto;
+      @include body-2-regular;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .bar-value {
+      flex: 1 1 auto;
+      margin-top: 2px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .bar {
+        height: 100%;
+        border-radius: 2px;
+        height: 18px;
+      }
+
+      .value {
+        margin-left: 6px;
+        @include overline;
+      }
+    }
+
+    .clickable {
+      @include link-hover;
+    }
+  }
+}
+
+/* All series siblings before the hovered series should have partial opacity */
+.ht-histogram-chart:hover .histogram-bar {
+  opacity: 0.4;
+}
+
+/* The hovered series sibling should have full opacity */
+.ht-histogram-chart .histogram-bar:hover {
+  opacity: 1;
+}
+
+/* All series siblings after the hovered series should have partial opacity  */
+.ht-histogram-chart .histogram-bar:hover ~ .histogram-bar {
+  opacity: 0.4;
+}

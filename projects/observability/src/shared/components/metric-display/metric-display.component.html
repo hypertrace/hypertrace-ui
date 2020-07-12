@@ -1,0 +1,15 @@
+<div class="metric-display">
+  <div *ngIf="metricTitle" class="metric-title">
+    {{ metricTitle }}
+  </div>
+  <div class="metric-value">
+    <span class="value" [ngClass]="[health]">{{ value | htcDisplayNumber }}</span>
+    <div class="script">
+      <span class="superscript">{{ this.superscript }}</span>
+      <span class="subscript">{{ this.subscript }}</span>
+    </div>
+  </div>
+  <div *ngIf="metricSubtitle" class="metric-subtitle">
+    {{ metricSubtitle }}
+  </div>
+</div>

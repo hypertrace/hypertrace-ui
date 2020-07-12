@@ -1,0 +1,16 @@
+@import 'font';
+
+.ht-stepper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .step-summaries {
+    width: 442px;
+  }
+
+  .step-content {
+    width: calc(100% - 442px);
+  }
+}

@@ -1,0 +1,107 @@
+@import 'color-palette';
+@import 'font';
+
+.visualization {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  .topology {
+    flex: 1 1 auto;
+  }
+
+  .legend {
+    position: relative;
+    top: 26px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 16px;
+    width: calc(100% - 224px); // This width is for topology controls
+
+    .latency {
+      display: flex;
+      flex-wrap: wrap;
+
+      .label {
+        @include body-small($gray-7);
+        margin-right: 8px;
+      }
+
+      .entry {
+        margin-right: 16px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .symbol {
+          width: 8px;
+          height: 8px;
+          border-radius: 4px;
+          background: currentColor;
+        }
+
+        .label {
+          @include body-small($gray-5);
+          margin-left: 6px;
+        }
+      }
+    }
+
+    .error-percentage {
+      display: flex;
+      flex-wrap: wrap;
+
+      .label {
+        @include body-small($gray-7);
+        margin-right: 8px;
+      }
+
+      .entry {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        .symbol {
+          width: 8px;
+          height: 8px;
+          border: 1px solid currentColor;
+        }
+
+        .label {
+          @include body-small($gray-7);
+          margin-left: 6px;
+        }
+      }
+    }
+
+    .less-than-20 {
+      color: $blue-gray-1;
+    }
+
+    .from-20-to-100 {
+      color: $blue-gray-2;
+    }
+
+    .from-100-to-500 {
+      color: $blue-gray-3;
+    }
+
+    .from-500-to-1000 {
+      color: $blue-gray-4;
+    }
+
+    .greater-than-or-equal-to-1000 {
+      color: $blue-gray-5;
+    }
+
+    .not-specified {
+      color: lightgray;
+    }
+
+    .greater-than-or-equal-to-5 {
+      color: $red-5;
+    }
+  }
+}

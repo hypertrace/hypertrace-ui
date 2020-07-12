@@ -1,0 +1,122 @@
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule } from '@angular/router';
+import { IconType } from '@hypertrace/assets-library';
+import { ExternalUrlNavigator, TraceRoute } from '@hypertrace/common';
+import { NotFoundComponent, NotFoundModule } from '@hypertrace/components';
+import { ApiDetailBreadcrumbResolver, ApiDetailService, ObservabilityIconType } from '@hypertrace/observability';
+import { ApplicationFrameComponent } from '../application-frame/application-frame.component';
+
+const ROUTE_CONFIG: TraceRoute[] = [
+  {
+    path: '',
+    children: [
+      {
+        path: '',
+        component: ApplicationFrameComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'home',
+            pathMatch: 'full'
+          },
+          {
+            path: 'home',
+            data: {
+              breadcrumb: {
+                icon: IconType.Dashboard,
+                label: 'Dashboard'
+              }
+            },
+            loadChildren: () => import('../home/home.module').then(module => module.HomeModule)
+          },
+          {
+            path: 'application-flow',
+            data: {
+              breadcrumb: {
+                icon: ObservabilityIconType.ApplicationFlow,
+                label: 'Application Flow'
+              }
+            },
+            loadChildren: () =>
+              import('./application-flow/application-flow-routing.module').then(
+                module => module.ApplicationFlowRoutingModule
+              )
+          },
+          {
+            path: 'backends',
+            data: {
+              breadcrumb: {
+                icon: ObservabilityIconType.Backend,
+                label: 'Backends'
+              }
+            },
+            loadChildren: () =>
+              import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
+          },
+          {
+            path: 'services',
+            data: {
+              breadcrumb: {
+                icon: ObservabilityIconType.Service,
+                label: 'Services'
+              }
+            },
+            loadChildren: () =>
+              import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
+          },
+          {
+            path: `endpoint/:${ApiDetailService.API_ID_PARAM_NAME}`,
+            resolve: {
+              breadcrumb: ApiDetailBreadcrumbResolver
+            },
+            loadChildren: () =>
+              import('./api-detail/api-detail-routing.module').then(module => module.ApiDetailRoutingModule)
+          },
+          {
+            path: 'trace',
+            loadChildren: () => import('@hypertrace/distributed-tracing').then(module => module.TraceDetailPageModule)
+          },
+          {
+            path: 'api-trace',
+            loadChildren: () => import('@hypertrace/observability').then(module => module.ApiTraceDetailPageModule)
+          },
+          {
+            path: 'explorer',
+            data: {
+              breadcrumb: {
+                icon: IconType.Search,
+                label: 'Explorer'
+              }
+            },
+            loadChildren: () => import('@hypertrace/observability').then(module => module.ExplorerModule)
+          },
+          {
+            path: 'error',
+            component: NotFoundComponent
+          }
+        ]
+      },
+      {
+        path: 'external',
+        canActivate: [ExternalUrlNavigator],
+        component: NotFoundComponent // Not actually used, but required by router
+      },
+      {
+        path: '**',
+        redirectTo: 'error',
+        pathMatch: 'full'
+      }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [
+    NotFoundModule,
+    RouterModule.forRoot(ROUTE_CONFIG, {
+      preloadingStrategy: PreloadAllModules
+    })
+  ],
+  exports: [RouterModule]
+})
+export class RootRoutingModule {}

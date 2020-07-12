@@ -1,0 +1,63 @@
+@import 'color-palette';
+@import 'font';
+
+.topology-control {
+  border-radius: 6px;
+  background: white;
+  color: $gray-7;
+  border: 1px solid $gray-2;
+
+  &:not(:first-child) {
+    margin-left: 8px;
+  }
+
+  .control-icon {
+    color: $gray-7;
+  }
+}
+
+.control-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+button {
+  border: none;
+  background: none;
+  &:not([disabled]) {
+    cursor: pointer;
+  }
+}
+
+.zoom-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .zoom-percentage {
+    @include body-1-medium($gray-7);
+    width: 60px;
+    text-align: center;
+    color: $gray-7;
+    border-left: 1px solid $gray-2;
+    margin-left: 2px;
+    padding-left: 12px;
+    padding-right: 8px;
+  }
+}
+
+.visibility-toggle-content {
+  margin-top: 8px;
+  padding: 12px;
+}
+
+.metric-selector {
+  width: none;
+  visibility: hidden;
+}
+
+.topology-button {
+  height: 36px;
+  width: 36px;
+}

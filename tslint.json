@@ -1,0 +1,111 @@
+{
+  "extends": ["tslint:all", "tslint-config-prettier"],
+  "rulesDirectory": ["node_modules/codelyzer"],
+  "rules": {
+    "template-banana-in-box": true,
+    "template-no-negated-async": true,
+    "component-max-inline-declarations": [
+      true,
+      {
+        "template": 120
+      }
+    ],
+    "no-implicit-dependencies": [
+      true,
+      [
+        "@hypertrace/assets-library",
+        "@hypertrace/common",
+        "@hypertrace/components",
+        "@hypertrace/dashboards",
+        "@ngneat/spectator/jest",
+        "@hypertrace/common/testing",
+        "@hypertrace/dashboards/testing",
+        "@hypertrace/graphql-client",
+        "@hypertrace/distributed-tracing",
+        "@hypertrace/test-utils",
+        "@hypertrace/observability",
+        "ng-mocks"
+      ]
+    ],
+    "no-lifecycle-call": true,
+    "prefer-output-readonly": true,
+    "no-conflicting-lifecycle": true,
+    "no-queries-metadata-property": true,
+    "prefer-inline-decorator": false,
+    "no-inputs-metadata-property": true,
+    "no-outputs-metadata-property": true,
+    "no-host-metadata-property": true,
+    "use-component-view-encapsulation": true,
+    "no-attribute-decorator": true,
+    "no-output-native": true,
+    "no-input-rename": true,
+    "no-output-rename": true,
+    "no-output-on-prefix": true,
+    "no-forward-ref": true,
+    "no-unused-css": true,
+    "use-lifecycle-interface": true,
+    "contextual-lifecycle": true,
+    "template-use-track-by-function": false,
+    "use-pipe-transform-interface": true,
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "no-pipe-impure": true,
+    "template-cyclomatic-complexity": [true, 9],
+    "template-conditional-complexity": [true, 4],
+    "no-inferrable-types": [true, "ignore-properties", "ignore-params"],
+    "typedef": [true, "parameter", "call-signature", "property-declaration", "member-variable-declaration"],
+    "max-file-line-count": [true, 500],
+    "file-name-casing": [true, "kebab-case"],
+    "prefer-function-over-method": false,
+    "interface-name": false,
+    "array-type": [true, "array"],
+    "no-non-null-assertion": false,
+    "member-ordering": false,
+    "no-unused-variable": false,
+    "max-classes-per-file": [true, 1, "exclude-class-expressions"],
+    "object-literal-sort-keys": false,
+    "no-void-expression": [true, "ignore-arrow-function-shorthand"],
+    "strict-boolean-expressions": [
+      true,
+      "allow-null-union",
+      "allow-undefined-union",
+      "ignore-rhs",
+      "allow-mix",
+      "allow-boolean-or-undefined"
+    ],
+    "object-literal-shorthand": [true, "never"],
+    "arrow-parens": false,
+    "no-magic-numbers": false,
+    "no-unbound-method": false,
+    "no-parameter-properties": false,
+    "no-submodule-imports": false,
+    "completed-docs": false,
+    "no-unsafe-any": false,
+    "no-floating-promises": false,
+    "no-import-side-effect": [
+      true,
+      {
+        "ignore-module": "(zone\\.js.*|core-js.*)$"
+      }
+    ],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+    "ordered-imports": [
+      true,
+      {
+        "grouped-imports": false
+      }
+    ],
+    "no-use-before-declare": false,
+    "increment-decrement": false,
+    "radix": false,
+    "directive-selector": [true, "attribute", "ht", "camelCase"],
+    "component-selector": [true, "element", "ht", "kebab-case"],
+    "binary-expression-operand-order": false,
+    "no-unused-expression": [true, "allow-fast-null-checks"],
+    "no-unnecessary-class": [true, "allow-empty-class", "allow-constructor-only"],
+    "prefer-on-push-component-change-detection": true,
+    "strict-comparisons": false,
+    "import-blacklist": [true, "@angular/material", [".*/src/.*"]],
+    "ban": [true, { "name": "forkJoin", "message": "Use forkJoinSafeEmpty instead" }]
+  }
+}

@@ -1,0 +1,30 @@
+<div class="tooltip-container" *ngIf="data$ | async as data">
+  <table>
+    <tr *ngFor="let labeledValue of data.labeledValues">
+      <!-- Label Column -->
+      <td>
+        <div class="tooltip-data-label-container">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" class="tooltip-data-color">
+            <circle cx="50%" cy="50%" r="50%" [attr.fill]="labeledValue.color"></circle>
+          </svg>
+          <htc-label [label]="labeledValue.label"></htc-label>
+        </div>
+      </td>
+      <!-- Value Column -->
+      <td>
+        <div class="tooltip-data-value">
+          {{ labeledValue.value | htcDisplayNumber }}
+        </div>
+      </td>
+      <!-- Units Column -->
+      <td>
+        <div *ngIf="labeledValue.units" class="tooltip-data-units">
+          {{ labeledValue.units }}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="tooltip-timestamp">
+    {{ data.title }}
+  </div>
+</div>

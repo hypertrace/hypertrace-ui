@@ -1,0 +1,63 @@
+@import 'font';
+@import 'color-palette';
+
+.metric-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.healthy {
+  color: $color-health-green;
+}
+
+.warning {
+  color: $color-health-yellow;
+}
+
+.severe {
+  color: $color-health-orange;
+}
+
+.critical {
+  color: $color-health-red;
+}
+
+.notspecified {
+  color: $color-health-unknown;
+}
+
+.metric-value {
+  display: flex;
+  margin-top: 4px;
+
+  .value {
+    @include font-metric-large;
+  }
+
+  .script {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 4px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    .subscript {
+      @include font-metric-script;
+      line-height: 16px;
+    }
+
+    .superscript {
+      @include font-metric-script;
+      line-height: 16px;
+    }
+  }
+}
+
+.metric-title {
+  @include font-title;
+}
+
+.metric-subtitle {
+  @include font-label;
+}

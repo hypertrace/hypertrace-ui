@@ -1,0 +1,25 @@
+@import 'color-palette';
+
+.interval-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 14px;
+  color: $gray-5;
+
+  .selection {
+    max-width: 160px;
+
+    &.disabled {
+      ::ng-deep {
+        .mat-select-value {
+          color: $gray-5;
+        }
+
+        .mat-select-arrow-wrapper {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+}

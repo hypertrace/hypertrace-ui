@@ -1,0 +1,34 @@
+.chart-container {
+  position: absolute; // We want parent to ignore size to detect resizes
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.row {
+    flex-direction: row;
+    .chart-legend-container {
+      padding-left: 48px;
+      padding-right: 12px;
+    }
+  }
+
+  &.column {
+    flex-direction: column;
+    .chart-legend-container {
+      padding-top: 24px;
+      padding-bottom: 12px;
+    }
+  }
+
+  &.column-reverse {
+    flex-direction: column-reverse;
+    .chart-legend-container {
+      padding-bottom: 24px;
+      padding-top: 12px;
+    }
+  }
+
+  .chart-visualization-container {
+    display: flex;
+  }
+}

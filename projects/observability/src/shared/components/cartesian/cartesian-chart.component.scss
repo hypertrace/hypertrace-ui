@@ -1,0 +1,132 @@
+@import 'color-palette';
+@import 'font';
+
+:host {
+  display: block;
+}
+
+:host ::ng-deep {
+  .axis {
+    .tick {
+      text {
+        font-size: 12px;
+        color: $gray-5;
+      }
+    }
+
+    .grid-line {
+      color: $gray-1;
+    }
+
+    .domain {
+      color: $gray-1;
+    }
+  }
+
+  .crosshair {
+    stroke: $gray-9;
+    stroke-width: 1px;
+    stroke-dasharray: 3, 3;
+
+    .crosshair-point {
+      stroke-dasharray: none;
+      stroke: white;
+      fill: $gray-9;
+    }
+  }
+
+  .no-data-message {
+    fill: $gray-5;
+    text-anchor: middle;
+    font-size: 24px;
+  }
+
+  .interval-area {
+    position: absolute;
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .legend {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: absolute;
+    min-height: 48px;
+
+    &.position-none {
+      display: none;
+    }
+
+    &.position-top {
+      top: 0;
+      right: 0;
+    }
+
+    &.position-top-left {
+      top: 0;
+      right: 0;
+      .legend-entries {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+      }
+    }
+
+    &.position-top-right {
+      top: 0;
+      right: 0;
+      .legend-entries {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+    }
+
+    &.position-bottom {
+      bottom: 0;
+      .legend-entries {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    &.position-right {
+      height: 100%;
+      .legend-entries {
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    .legend-entries {
+      padding-right: 8px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .legend-entry {
+        display: flex;
+        flex-direction: row;
+        padding-right: 12px;
+
+        .legend-symbol {
+          width: 20px;
+          height: 20px;
+        }
+
+        .legend-text {
+          fill: $gray-5;
+          font-size: 14px;
+          padding-left: 2px;
+        }
+      }
+    }
+
+    .interval-control {
+      padding: 0 8px;
+    }
+  }
+}

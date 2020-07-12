@@ -1,0 +1,12 @@
+@import 'font';
+@import 'color-palette';
+
+.group-by-container {
+  display: flex;
+  flex-direction: column;
+
+  .group-by-label {
+    @include body-1-medium($gray-9);
+    padding-bottom: 6px;
+  }
+}

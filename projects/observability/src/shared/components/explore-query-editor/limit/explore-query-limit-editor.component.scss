@@ -1,0 +1,46 @@
+@import 'font';
+@import 'color-palette';
+
+.limit-container {
+  display: flex;
+  height: 100%;
+  align-items: flex-end;
+
+  .limit-number-input-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .limit-label {
+      @include body-1-medium($gray-9);
+      padding-bottom: 6px;
+
+      &.disabled {
+        opacity: 0.4;
+      }
+    }
+
+    .limit-input-wrapper {
+      border: 1px solid $color-border;
+      border-radius: 4px;
+      width: 100px;
+    }
+
+    .limit-input {
+      @include body-2-regular($gray-9);
+      width: 100%;
+      height: 100%;
+      line-height: 32px;
+    }
+  }
+
+  .limit-include-rest-container {
+    padding-left: 16px;
+    padding-bottom: 6px;
+
+    .limit-include-rest-label {
+      @include body-2-regular($gray-5);
+      padding-right: 6px;
+    }
+  }
+}

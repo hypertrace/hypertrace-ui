@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.model-editor {
+  padding: 12px;
+  display: block;
+  width: 300px;
+}
+
+.row-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.dashboard {
+  flex-grow: 1;
+}

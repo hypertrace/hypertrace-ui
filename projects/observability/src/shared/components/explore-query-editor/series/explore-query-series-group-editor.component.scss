@@ -1,0 +1,41 @@
+@import 'font';
+@import 'color-palette';
+
+.section-header-container {
+  display: flex;
+  align-items: center;
+
+  .section-header {
+    @include body-1-medium;
+    margin: 0;
+  }
+
+  .add-series-button {
+    margin-left: 16px;
+    @include body-1-medium($blue-5);
+  }
+}
+
+.series-container {
+  display: flex;
+  align-items: center;
+
+  &:not(:first-child) {
+    margin-top: 12px;
+  }
+
+  .series-index-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background-color: $blue-9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+
+    .series-index-indicator-text {
+      @include overline(white);
+    }
+  }
+}

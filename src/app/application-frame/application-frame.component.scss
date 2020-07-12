@@ -1,0 +1,32 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.ht-logo {
+  width: 206px;
+}
+
+.app-body {
+  display: flex;
+  flex-grow: 1;
+  min-width: 600px;
+  overflow: hidden;
+}
+
+.app-content {
+  padding: 16px 24px 8px 24px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.app-content-with-header {
+  flex: 1 1 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
