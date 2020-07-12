@@ -1,3 +1,4 @@
+import { TimeDuration } from '@hypertrace/common';
 import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +10,6 @@ import {
   GraphQlExploreRequest,
   GraphQlExploreResult
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { TimeDuration } from '@hypertrace/common';
 
 export abstract class TraceSeriesValuesDataSourceModel<TData> extends GraphQlDataSourceModel<TData> {
   protected abstract specification: ExploreSpecification;
