@@ -12,7 +12,7 @@ import { maxBy } from 'lodash';
         <div class="border-top"></div>
         <div
           class="label"
-          [traceTooltip]="item.label"
+          [htcTooltip]="item.label"
           (click)="this.onLabelClick(item.label)"
           [ngClass]="{ clickable: this.labelClickable }"
         >
