@@ -34,8 +34,15 @@
 
   .summary-row {
     display: flex;
-    margin-top: 12px;
-    height: 18px;
+    align-items: center;
+
+    .separation {
+      flex: 1 1 auto;
+    }
+
+    .full-trace-button {
+      margin-left: 8px;
+    }
   }
 
   .summary-value {

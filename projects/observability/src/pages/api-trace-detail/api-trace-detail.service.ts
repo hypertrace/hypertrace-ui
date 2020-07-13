@@ -46,7 +46,7 @@ export class ApiTraceDetailService implements OnDestroy {
   }
 
   protected getAttributes(): string[] {
-    return ['serviceName', 'protocol', 'apiName', 'startTime', 'duration'];
+    return ['serviceName', 'protocol', 'apiName', 'startTime', 'duration', 'traceId'];
   }
 
   public fetchTraceDetails(): Observable<ApiTraceDetails> {
@@ -65,6 +65,7 @@ export class ApiTraceDetailService implements OnDestroy {
   protected constructTraceDetails(trace: Trace, durationAttribute: AttributeMetadata): ApiTraceDetails {
     return {
       id: trace[traceIdKey],
+      traceId: trace.traceId as string,
       type: ObservabilityTraceType.Api,
       timeString: this.buildTimeString(trace, durationAttribute.units),
       titleString: this.buildTitleString(trace)
@@ -98,6 +99,7 @@ export class ApiTraceDetailService implements OnDestroy {
 
 export interface ApiTraceDetails {
   id: string;
+  traceId: string;
   type: TraceType;
   timeString: string;
   titleString: string;
