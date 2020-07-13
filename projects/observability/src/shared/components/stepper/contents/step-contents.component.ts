@@ -25,7 +25,7 @@ import { StepContentContext, StepDetail } from '../stepper';
       <div class="step-navigation">
         <htc-button
           class="button back"
-          traceTooltip="Back"
+          htcTooltip="Back"
           label="Back"
           role="${ButtonRole.Tertiary}"
           [disabled]="!this.canGoToPrevStep()"
@@ -34,7 +34,7 @@ import { StepContentContext, StepDetail } from '../stepper';
         </htc-button>
         <htc-button
           class="button next"
-          traceTooltip="Next"
+          htcTooltip="Next"
           label="Next"
           role="${ButtonRole.Primary}"
           *ngIf="this.showNext()"
