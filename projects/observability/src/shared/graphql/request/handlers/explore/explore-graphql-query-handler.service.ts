@@ -4,8 +4,7 @@ import {
   GraphQlFilter,
   GraphQlSelectionBuilder,
   GraphQlSortBySpecification,
-  GraphQlTimeRange,
-  SpecificationContextBuilder
+  GraphQlTimeRange
 } from '@hypertrace/distributed-tracing';
 import {
   GraphQlEnumArgument,
@@ -29,8 +28,6 @@ export class ExploreGraphQlQueryHandlerService
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
-  public constructor(private readonly specificationContextBuilder: SpecificationContextBuilder) {}
-
   public matchesRequest(request: unknown): request is GraphQlExploreRequest {
     return (
       typeof request === 'object' &&
@@ -41,7 +38,6 @@ export class ExploreGraphQlQueryHandlerService
 
   public convertRequest(request: GraphQlExploreRequest): GraphQlSelection {
     const totalSelection = request.includeTotal ? [{ path: 'total' }] : [];
-    const context = this.specificationContextBuilder.buildContext();
 
     return {
       path: 'explore',
@@ -53,7 +49,7 @@ export class ExploreGraphQlQueryHandlerService
         this.argBuilder.forLimit(request.limit),
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
-        ...this.argBuilder.forInterval(request.interval === 'AUTO' ? context.getAutoInterval() : request.interval),
+        ...this.argBuilder.forInterval(request.interval),
         ...this.argBuilder.forFilters(request.filters),
         ...this.argBuilder.forGroupBy(request.groupBy),
         ...this.argBuilder.forOrderBys(request.orderBy)
@@ -148,7 +144,7 @@ export interface GraphQlExploreRequest {
   timeRange: GraphQlTimeRange;
   offset?: number;
   includeTotal?: boolean;
-  interval?: Interval;
+  interval?: TimeDuration;
   orderBy?: GraphQlSortBySpecification[];
   filters?: GraphQlFilter[];
   groupBy?: GraphQlGroupBy;
@@ -183,5 +179,3 @@ interface GraphQlExploreServerResult {
 
   [key: string]: GraphQlExploreResultValue | string | undefined;
 }
-
-export type Interval = TimeDuration | 'AUTO' | undefined;

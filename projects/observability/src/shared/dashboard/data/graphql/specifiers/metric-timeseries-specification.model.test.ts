@@ -1,6 +1,6 @@
-import { isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { IntervalDurationService, isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType, SpecificationContextBuilder } from '@hypertrace/distributed-tracing';
+import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
@@ -9,14 +9,11 @@ import { MetricTimeseriesSpecificationModel } from './metric-timeseries-specific
 describe('Metric timeseries specification model', () => {
   test('matches spec from builder', () => {
     const modelFactory = createModelFactory();
-    const mockContext = {
-      getAutoInterval: () => new TimeDuration(3, TimeUnit.Minute)
-    };
 
     const spectator = modelFactory(MetricTimeseriesSpecificationModel, {
       providers: [
-        mockProvider(SpecificationContextBuilder, {
-          buildContext: () => mockContext
+        mockProvider(IntervalDurationService, {
+          getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
         }),
         {
           provide: MODEL_PROPERTY_TYPES,
@@ -34,7 +31,6 @@ describe('Metric timeseries specification model', () => {
     const expectedSpecObject = new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
       'test_metric',
       MetricAggregationType.Average,
-      mockContext,
       new TimeDuration(3, TimeUnit.Minute)
     );
 

@@ -42,7 +42,7 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
     });
   }
 
-  private getAllData(interval: TimeDuration | undefined): Observable<MetricSeries<MetricTimeseriesInterval>> {
+  private getAllData(interval: TimeDuration): Observable<MetricSeries<MetricTimeseriesInterval>> {
     return forkJoinSafeEmpty({
       intervals: this.getSeries(interval),
       units: this.getUnits()
@@ -60,7 +60,7 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
       .pipe(map(attribute => attribute.units));
   }
 
-  private getSeries(interval: TimeDuration | undefined): Observable<MetricTimeseriesInterval[]> {
+  private getSeries(interval: TimeDuration): Observable<MetricTimeseriesInterval[]> {
     return this.fetchSpecificationData(interval).pipe(
       map((results: GraphQlExploreResult[]) =>
         results.map(result => ({

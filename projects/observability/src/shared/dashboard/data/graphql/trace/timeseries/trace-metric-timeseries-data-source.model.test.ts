@@ -1,3 +1,4 @@
+import { TimeDuration, TimeUnit } from '@hypertrace/common';
 import { GraphQlFilter, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
@@ -8,6 +9,7 @@ import { TraceMetricTimeseriesDataSourceModel } from './trace-metric-timeseries-
 describe('Trace metric timeseries data source model', () => {
   const specBuilder = new ExploreSpecificationBuilder();
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
+  const testInterval = new TimeDuration(15, TimeUnit.Second);
   let model!: TraceMetricTimeseriesDataSourceModel;
   let lastEmittedQueryBuilder: (filters: GraphQlFilter[]) => unknown;
 
@@ -19,7 +21,7 @@ describe('Trace metric timeseries data source model', () => {
     model.specification = specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average);
     model.api = mockApi as ModelApi;
     model.query$.subscribe(query => (lastEmittedQueryBuilder = query.buildRequest));
-    model.getData().subscribe(fetcher => fetcher.getData());
+    model.getData().subscribe(fetcher => fetcher.getData(testInterval));
   });
 
   test('builds expected request', () => {
@@ -28,7 +30,7 @@ describe('Trace metric timeseries data source model', () => {
       requestType: EXPLORE_GQL_REQUEST,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       context: ObservabilityTraceType.Api,
-      interval: 'AUTO',
+      interval: testInterval,
       limit: 10000,
       selections: [model.specification]
     });

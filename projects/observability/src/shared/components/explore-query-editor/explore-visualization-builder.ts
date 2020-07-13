@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
+import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hypertrace/common';
 import {
   AttributeMetadata,
   Filter,
@@ -41,7 +41,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public constructor(
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
-    private readonly metadataService: MetadataService
+    private readonly metadataService: MetadataService,
+    private readonly intervalDurationService: IntervalDurationService
   ) {
     this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest()); // Todo: Revisit first request without knowing the context
 
@@ -129,7 +130,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       context: state.context,
       series: [...state.series],
       filters: state.filters && [...state.filters],
-      interval: state.interval,
+      interval: this.resolveInterval(state.interval),
       groupBy: state.groupBy && { ...state.groupBy },
       groupByLimit: state.groupByLimit,
       exploreQuery$: this.mapStateToExploreQuery(state),
@@ -142,7 +143,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       requestType: EXPLORE_GQL_REQUEST,
       selections: state.series.map(series => series.specification),
       context: state.context,
-      interval: state.interval,
+      interval: this.resolveInterval(state.interval),
       filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFilters(state.filters),
       groupBy: state.groupBy,
       limit: state.groupByLimit === undefined ? ExploreVisualizationBuilder.DEFAULT_UNGROUPED_LIMIT : state.groupByLimit
@@ -228,6 +229,10 @@ export class ExploreVisualizationBuilder implements OnDestroy {
         type: CartesianSeriesVisualizationType.Column
       }
     };
+  }
+
+  private resolveInterval(interval?: TimeDuration | 'AUTO'): TimeDuration | undefined {
+    return interval === 'AUTO' ? this.intervalDurationService.getAutoDuration() : interval;
   }
 }
 

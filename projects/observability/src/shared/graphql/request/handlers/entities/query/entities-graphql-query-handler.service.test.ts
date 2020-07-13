@@ -50,10 +50,6 @@ describe('Entities graphql query handler', () => {
     ]
   });
 
-  const mockContext = {
-    getAutoInterval: () => new TimeDuration(1, TimeUnit.Minute)
-  };
-
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
     new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
   );
@@ -307,24 +303,9 @@ describe('Entities graphql query handler', () => {
     const requestWithAvgrates = {
       ...buildRequest(),
       properties: [
-        specBuilder.metricTimeseriesSpec(
-          'a_metric',
-          MetricAggregationType.Min,
-          mockContext,
-          new TimeDuration(1, TimeUnit.Minute)
-        ),
-        specBuilder.metricTimeseriesSpec(
-          'a_metric',
-          MetricAggregationType.Max,
-          mockContext,
-          new TimeDuration(1, TimeUnit.Minute)
-        ),
-        specBuilder.metricTimeseriesSpec(
-          'a_metric',
-          MetricAggregationType.Min,
-          mockContext,
-          new TimeDuration(5, TimeUnit.Minute)
-        )
+        specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Min, new TimeDuration(1, TimeUnit.Minute)),
+        specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Max, new TimeDuration(1, TimeUnit.Minute)),
+        specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Min, new TimeDuration(5, TimeUnit.Minute))
       ]
     };
 

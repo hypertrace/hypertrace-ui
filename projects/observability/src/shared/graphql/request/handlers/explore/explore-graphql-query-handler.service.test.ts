@@ -7,8 +7,7 @@ import {
   GraphQlOperatorType,
   GraphQlTimeRange,
   MetadataService,
-  MetricAggregationType,
-  SpecificationContextBuilder
+  MetricAggregationType
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -25,16 +24,9 @@ import {
 } from './explore-graphql-query-handler.service';
 
 describe('Explore graphql query handler', () => {
-  const testInterval = new TimeDuration(5, TimeUnit.Minute);
-
   const createService = createServiceFactory({
     service: ExploreGraphQlQueryHandlerService,
     providers: [
-      mockProvider(SpecificationContextBuilder, {
-        buildContext: jest.fn().mockReturnValue({
-          getAutoInterval: () => testInterval
-        })
-      }),
       mockProvider(MetadataService, {
         getSelectionAttributes: () =>
           of([

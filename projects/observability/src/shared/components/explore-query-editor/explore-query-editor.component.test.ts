@@ -1,7 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { FixedTimeRange, NavigationService, TimeRangeService } from '@hypertrace/common';
+import {
+  FixedTimeRange,
+  IntervalDurationService,
+  NavigationService,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -66,6 +73,10 @@ describe('Explore query editor', () => {
       mockProvider(GraphQlRequestService, {
         queryImmediately: jest.fn(() => of(metadata))
       }),
+      mockProvider(IntervalDurationService, {
+        availableIntervals$: of('AUTO'),
+        getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
+      }),
       mockProvider(NavigationService)
     ],
     declareComponent: false
@@ -81,7 +92,7 @@ describe('Explore query editor', () => {
 
   const expectedDefaultQuery = (): ExploreVisualizationRequest =>
     expect.objectContaining({
-      interval: 'AUTO',
+      interval: new TimeDuration(15, TimeUnit.Second),
       series: [defaultSeries]
     });
 

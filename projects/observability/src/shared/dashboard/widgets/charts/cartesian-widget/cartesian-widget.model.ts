@@ -159,7 +159,7 @@ export class CartesianWidgetModel<TData> {
 
   private combineSeries(
     dataFetchers: DecoratedDataFetcher<TData>[],
-    interval?: TimeDuration
+    interval: TimeDuration
   ): Observable<Series<TData>[]> {
     return forkJoinSafeEmpty(dataFetchers.map((dataFetcher, index) => this.fetchSeries(dataFetcher, index, interval)));
   }
@@ -167,7 +167,7 @@ export class CartesianWidgetModel<TData> {
   private fetchSeries(
     dataFetcher: DecoratedDataFetcher<TData>,
     index: number,
-    interval?: TimeDuration
+    interval: TimeDuration
   ): Observable<Series<TData>> {
     return dataFetcher
       .getData(interval)
@@ -221,6 +221,6 @@ interface DecoratedDataFetcher<TData> extends MetricSeriesDataFetcher<TData> {
 }
 
 export interface MetricSeriesFetcher<TInterval> {
-  getData(interval?: TimeDuration): Observable<Series<TInterval>[]>;
+  getData(interval: TimeDuration): Observable<Series<TInterval>[]>;
   getRequestedInterval?(): TimeDuration | undefined;
 }
