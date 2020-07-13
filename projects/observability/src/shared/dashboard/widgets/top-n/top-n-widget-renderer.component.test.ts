@@ -23,7 +23,9 @@ describe('Top N Widget renderer', () => {
     getTimeRange: jest.fn(),
     model: {
       getData: jest.fn(() => of(mockResponse)),
-      title: title,
+      header: {
+        title: title
+      },
       optionMetricSpecifications: optionMetricSpecifications
     },
     change$: EMPTY,
