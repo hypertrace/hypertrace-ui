@@ -6,6 +6,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .donut-svg {
+    .donut-value-title {
+      font-size: 15px;
+      dominant-baseline: hanging;
+    }
+
+    .donut-value {
+      font-size: 64px;
+      dominant-baseline: hanging;
+    }
+  }
 }
 
 .donut-arc {
