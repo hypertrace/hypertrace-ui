@@ -1,8 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { FormattingModule, NavigationService } from '@hypertrace/common';
-import { TooltipModule } from '@hypertrace/components';
-import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { FormattingModule } from '@hypertrace/common';
+import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { TopNChartComponent, TopNData } from './top-n-chart.component';
 
 describe('Top N Chart Component', () => {
@@ -11,8 +8,7 @@ describe('Top N Chart Component', () => {
   const createHost = createHostFactory({
     component: TopNChartComponent,
     shallow: true,
-    imports: [CommonModule, TooltipModule, FormattingModule],
-    providers: [mockProvider(NavigationService), ...getMockFlexLayoutProviders()]
+    imports: [FormattingModule]
   });
 
   test('should convert data in descending order of their value', () => {
