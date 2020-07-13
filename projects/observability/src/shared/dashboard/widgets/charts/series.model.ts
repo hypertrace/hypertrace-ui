@@ -65,7 +65,7 @@ export class SeriesModel<TData> {
 }
 
 export interface MetricSeriesDataFetcher<TInterval> {
-  getData(interval?: TimeDuration): Observable<MetricSeries<TInterval>>;
+  getData(interval: TimeDuration): Observable<MetricSeries<TInterval>>;
   getRequestedInterval?(): TimeDuration | undefined;
 }
 

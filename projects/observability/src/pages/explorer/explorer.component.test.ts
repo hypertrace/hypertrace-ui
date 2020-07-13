@@ -117,7 +117,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
         limit: 10000,
-        interval: 'AUTO'
+        interval: new TimeDuration(15, TimeUnit.Second)
       })
     );
 
@@ -156,7 +156,7 @@ describe('Explorer component', () => {
         context: ObservabilityTraceType.Api,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 10000,
-        interval: 'AUTO'
+        interval: new TimeDuration(15, TimeUnit.Second)
       })
     );
 
@@ -183,7 +183,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 10000,
-        interval: 'AUTO'
+        interval: new TimeDuration(15, TimeUnit.Second)
       })
     );
 
@@ -226,7 +226,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 10000,
-        interval: 'AUTO',
+        interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
       })
     );

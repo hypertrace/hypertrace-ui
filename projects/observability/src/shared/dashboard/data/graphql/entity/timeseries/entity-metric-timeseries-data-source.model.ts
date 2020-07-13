@@ -34,7 +34,7 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
     });
   }
 
-  private getAllData(interval: TimeDuration | undefined): Observable<MetricSeries<MetricTimeseriesInterval>> {
+  private getAllData(interval: TimeDuration): Observable<MetricSeries<MetricTimeseriesInterval>> {
     return combineLatest([this.getSeries(interval), this.getSummary()]).pipe(
       map(([intervals, summary]) => ({
         intervals: intervals,
@@ -44,7 +44,7 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
     );
   }
 
-  private getSeries(interval: TimeDuration | undefined): Observable<MetricTimeseriesInterval[]> {
+  private getSeries(interval: TimeDuration): Observable<MetricTimeseriesInterval[]> {
     return this.fetchSpecificationData(this.specification.withNewIntervalDuration(interval));
   }
 

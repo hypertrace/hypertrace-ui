@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   ColorService,
+  IntervalDurationService,
   NavigationService,
   RelativeTimeRange,
   TimeDuration,
@@ -35,6 +36,9 @@ describe('ApiMetricsComponent', () => {
       mockProvider(ColorService),
       mockProvider(ApiDetailService, {
         entityFilter$: of('')
+      }),
+      mockProvider(IntervalDurationService, {
+        getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
       }),
       mockProvider(GraphQlRequestService),
       mockProvider(Router),

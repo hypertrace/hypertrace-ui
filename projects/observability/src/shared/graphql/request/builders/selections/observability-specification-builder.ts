@@ -7,8 +7,7 @@ import {
   MetricHealth,
   MetricSpecification,
   Specification,
-  SpecificationBuilder,
-  SpecificationResolutionContext
+  SpecificationBuilder
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import { assignIn, Dictionary } from 'lodash';
@@ -171,29 +170,26 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
   public metricTimeseriesSpec(
     metric: string,
     aggregation: MetricAggregationType,
-    context: SpecificationResolutionContext,
-    intervalDuration?: TimeDuration
+    intervalDuration: TimeDuration
   ): MetricTimeseriesSpecification {
     const dateCoercer: DateCoercer = new DateCoercer();
-    const resolvedInterval = () => intervalDuration || context.getAutoInterval();
-    const seriesAlias = () => `${aggregation}_series_${resolvedInterval().toString()}`;
+    const seriesAlias = `${aggregation}_series_${intervalDuration.toString()}`;
 
     // Timeseries does not require unique because it's deduping at the series level
     const aggregationSelection = this.buildAggregationSelection(aggregation, false);
 
     return {
       ...this.getMetricSpecificationBase(metric, aggregation),
-      resultAlias: () =>
-        this.buildResultAlias(metric, aggregation, [intervalDuration ? intervalDuration.toString() : 'auto']),
-      withNewIntervalDuration: newInterval => this.metricTimeseriesSpec(metric, aggregation, context, newInterval),
+      resultAlias: () => this.buildResultAlias(metric, aggregation, [intervalDuration.toString()]),
+      withNewIntervalDuration: newInterval => this.metricTimeseriesSpec(metric, aggregation, newInterval),
       getIntervalDuration: () => intervalDuration,
       asGraphQlSelections: () => ({
         ...this.getMetricSelectionBase(metric),
         children: [
           {
             path: 'series',
-            alias: seriesAlias(),
-            arguments: this.argBuilder.forIntervalArgs(resolvedInterval()),
+            alias: seriesAlias,
+            arguments: this.argBuilder.forIntervalArgs(intervalDuration),
             children: [
               { path: 'startTime' },
               {
@@ -205,7 +201,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
         ]
       }),
       extractFromServerData: resultContainer =>
-        resultContainer[metric][seriesAlias()].map(interval => ({
+        resultContainer[metric][seriesAlias].map(interval => ({
           value: interval[convertToGraphQlMetricAggregationPath(aggregation)]!.value,
           timestamp: dateCoercer.coerce(interval.startTime)!
         }))
