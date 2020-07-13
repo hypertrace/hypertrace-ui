@@ -70,29 +70,11 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))
-      .style('font-size', '1px')
-      .style(
-        'font-size',
-        (_datum, index, groups): string =>
-          `${this.calcFontSize(dimensions.donutInnerRadius, groups[index] as SVGTextElement, 2)}px`
-      )
-      .attr('dominant-baseline', 'baseline')
-      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 3})`);
+      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`);
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_CLASS))
-      .style('font-size', '1px')
-      .style(
-        'font-size',
-        (_datum, index, groups): string =>
-          `${this.calcFontSize(dimensions.donutInnerRadius, groups[index] as SVGTextElement)}px`
-      )
-      .attr('dominant-baseline', 'hanging')
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`);
-  }
-
-  private calcFontSize(radius: number, textElement: SVGTextElement, factor: number = 1): number {
-    return Math.min(radius, radius / this.measurer.getComputedTextLength(textElement) / factor);
   }
 
   protected drawVisualization(
