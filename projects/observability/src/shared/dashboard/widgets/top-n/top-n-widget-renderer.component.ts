@@ -21,7 +21,11 @@ import { TopNWidgetModel } from './top-n-widget.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-top-n-widget-renderer">
-      <htc-titled-content [title]="this.model.title | htcDisplayTitle">
+      <htc-titled-content
+        [title]="this.model.header?.title | htcDisplayTitle"
+        [link]="this.model.header?.link?.url"
+        [linkLabel]="this.model.header?.link?.displayText"
+      >
         <htc-select
           *htcTitledHeaderControl
           [selected]="this.metricSpecification"
