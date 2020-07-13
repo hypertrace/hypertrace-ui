@@ -6,5 +6,5 @@ import { GraphQlMetricTimeseriesContainer } from '../metric/graphql-metric-times
 export interface MetricTimeseriesSpecification extends MetricSpecification {
   extractFromServerData(resultContainer: Dictionary<GraphQlMetricTimeseriesContainer>): MetricTimeseriesInterval[];
   getIntervalDuration(): TimeDuration | undefined;
-  withNewIntervalDuration(intervalDuration?: TimeDuration): MetricTimeseriesSpecification;
+  withNewIntervalDuration(intervalDuration: TimeDuration): MetricTimeseriesSpecification;
 }

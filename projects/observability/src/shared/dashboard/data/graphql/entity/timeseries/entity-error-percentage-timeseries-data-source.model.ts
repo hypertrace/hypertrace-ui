@@ -5,8 +5,7 @@ import {
   MetricAggregation,
   MetricAggregationType,
   MetricSpecification,
-  Specification,
-  SpecificationContextBuilder
+  Specification
 } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
@@ -41,9 +40,6 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
     MetricAggregationType.Sum
   );
 
-  @ModelInject(SpecificationContextBuilder)
-  private readonly contextBuilder!: SpecificationContextBuilder;
-
   @ModelInject(LoggerService)
   private readonly loggerService!: LoggerService;
 
@@ -54,7 +50,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
     });
   }
 
-  private getAllData(interval: TimeDuration | undefined): Observable<MetricSeries<MetricTimeseriesInterval>> {
+  private getAllData(interval: TimeDuration): Observable<MetricSeries<MetricTimeseriesInterval>> {
     return forkJoinSafeEmpty({
       errorCountIntervals: this.getErrorCountSeries(interval),
       callCountIntervals: this.getCallCountSeries(interval),
@@ -92,23 +88,21 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
     };
   }
 
-  private getErrorCountSeries(interval: TimeDuration | undefined): Observable<MetricTimeseriesInterval[]> {
+  private getErrorCountSeries(interval: TimeDuration): Observable<MetricTimeseriesInterval[]> {
     return this.fetchSpecificationData<MetricTimeseriesInterval[]>(
       new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
         this.errorCountSpec.name,
         this.errorCountSpec.aggregation,
-        this.contextBuilder.buildContext(),
         interval
       )
     );
   }
 
-  private getCallCountSeries(interval: TimeDuration | undefined): Observable<MetricTimeseriesInterval[]> {
+  private getCallCountSeries(interval: TimeDuration): Observable<MetricTimeseriesInterval[]> {
     return this.fetchSpecificationData<MetricTimeseriesInterval[]>(
       new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
         this.callCountSpec.name,
         this.callCountSpec.aggregation,
-        this.contextBuilder.buildContext(),
         interval
       )
     );
