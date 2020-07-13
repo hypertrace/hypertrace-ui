@@ -163,6 +163,18 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Service',
+            width: '2',
+            value: {
+              type: 'attribute-specification',
+              attribute: 'serviceName'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Endpoint',
             width: '2',
             value: {
@@ -218,7 +230,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Protocol',
-            width: '20%',
+            width: '10%',
             value: {
               type: 'attribute-specification',
               attribute: 'protocolName'
@@ -229,8 +241,20 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Service',
+            width: '20%',
+            value: {
+              type: 'attribute-specification',
+              attribute: 'serviceName'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Name',
-            width: '30%',
+            width: '35%',
             value: {
               type: 'attribute-specification',
               attribute: 'displaySpanName'
@@ -242,7 +266,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Status',
-            width: '20%', // Use Status Cell Renderer
+            width: '5%', // Use Status Cell Renderer
             value: {
               type: 'attribute-specification',
               attribute: 'statusCode'
