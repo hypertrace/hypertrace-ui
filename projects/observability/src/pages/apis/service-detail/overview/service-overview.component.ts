@@ -660,7 +660,10 @@ export class ServiceOverviewComponent {
           },
           {
             type: 'top-n-widget',
-            title: 'Top Endpoints',
+            header: {
+              type: 'widget-header',
+              title: 'Top Endpoints'
+            },
             'select-option-metrics': [
               {
                 type: 'metric-aggregation',
