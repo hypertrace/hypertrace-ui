@@ -254,7 +254,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Name',
-            width: '20%',
+            width: '35%',
             value: {
               type: 'attribute-specification',
               attribute: 'displaySpanName'
@@ -266,7 +266,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Status',
-            width: '20%', // Use Status Cell Renderer
+            width: '5%', // Use Status Cell Renderer
             value: {
               type: 'attribute-specification',
               attribute: 'statusCode'
