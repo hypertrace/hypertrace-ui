@@ -7,8 +7,8 @@ import { IntervalValue } from '../../interval-select/interval-select.component';
 
 @Component({
   selector: 'ht-explore-query-interval-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./explore-query-interval-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="interval-container">
       <span class="interval-label">
