@@ -451,7 +451,7 @@ export class BackendOverviewComponent {
         header: {
           type: 'widget-header',
           title: 'Services',
-          'top-margin': true,
+          'top-margin': true
         },
         pageable: false,
         columns: [
