@@ -23,9 +23,10 @@ export class TopNWidgetModel {
       key: ModelPropertyType.TYPE,
       defaultModelClass: WidgetHeaderModel
     } as ModelModelPropertyTypeInstance,
-    key: 'header'
+    key: 'header',
+    required: false
   })
-  public header!: WidgetHeaderModel;
+  public header?: WidgetHeaderModel;
 
   @ModelProperty({
     type: ARRAY_PROPERTY.type,
