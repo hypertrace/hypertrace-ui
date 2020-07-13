@@ -84,8 +84,8 @@ export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidg
     return this.model.selectableInterval && !!fetcher.getRequestedInterval;
   }
 
-  private resolveInterval(value?: IntervalValue): TimeDuration | undefined {
-    return value instanceof TimeDuration ? value : undefined;
+  private resolveInterval(value?: IntervalValue): TimeDuration {
+    return value instanceof TimeDuration ? value : this.intervalDurationService.getAutoDuration();
   }
 
   private buildIntervalOptions(): IntervalValue[] {

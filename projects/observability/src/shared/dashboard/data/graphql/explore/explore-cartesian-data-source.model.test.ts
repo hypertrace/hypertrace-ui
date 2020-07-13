@@ -1,4 +1,4 @@
-import { ColorService } from '@hypertrace/common';
+import { ColorService, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import {
   AttributeMetadataType,
@@ -25,6 +25,8 @@ import {
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 
 describe('Explore cartesian data source model', () => {
+  const testInterval = new TimeDuration(5, TimeUnit.Minute);
+
   const modelFactory = createModelFactory({
     providers: [
       mockProvider(GraphQlQueryEventService),
@@ -59,7 +61,7 @@ describe('Explore cartesian data source model', () => {
       query.responseObserver.complete();
     });
 
-    return model.getData().pipe(flatMap(fetcher => fetcher.getData()));
+    return model.getData().pipe(flatMap(fetcher => fetcher.getData(testInterval)));
   };
 
   const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({
@@ -68,7 +70,7 @@ describe('Explore cartesian data source model', () => {
       context: ObservabilityTraceType.Api,
       limit: 1000,
       offset: 0,
-      interval: partialRequest.interval,
+      interval: partialRequest.interval as TimeDuration,
       groupBy: partialRequest.groupBy,
       selections: partialRequest.series.map(series => series.specification)
     } as const),

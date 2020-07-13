@@ -1,6 +1,6 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FixedTimeRange, TimeRangeService } from '@hypertrace/common';
+import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { MetadataService, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -22,6 +22,9 @@ describe('Explore visualization builder', () => {
             requiresAggregation: false
           })
         )
+      }),
+      mockProvider(IntervalDurationService, {
+        getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
       })
     ]
   });
@@ -39,7 +42,7 @@ describe('Explore visualization builder', () => {
   const expectedQuery = (queryPartial: Partial<ExploreVisualizationRequest> = {}): ExploreVisualizationRequest =>
     expect.objectContaining({
       context: ObservabilityTraceType.Api,
-      interval: 'AUTO',
+      interval: new TimeDuration(3, TimeUnit.Minute),
       series: [matchSeriesWithName('calls')],
       ...queryPartial
     });

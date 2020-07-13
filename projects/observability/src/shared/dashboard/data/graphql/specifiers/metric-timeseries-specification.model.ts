@@ -1,6 +1,5 @@
-import { Dictionary, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { Dictionary, IntervalDurationService, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
-import { SpecificationContextBuilder } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -33,23 +32,22 @@ export class MetricTimeseriesSpecificationModel extends MetricSpecificationModel
   })
   public timeUnit?: TimeUnit;
 
-  @ModelInject(SpecificationContextBuilder)
-  private readonly contextBuilder!: SpecificationContextBuilder;
+  @ModelInject(IntervalDurationService)
+  private readonly intervalDurationService!: IntervalDurationService;
 
   protected buildInnerSpec(): MetricTimeseriesSpecification {
     return new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
       this.metric,
       this.aggregation,
-      this.contextBuilder.buildContext(),
-      this.maybeBuildDuration()
+      this.intervalDurationService.getAutoDuration()
     );
   }
 
   public getIntervalDuration(): TimeDuration | undefined {
-    return this.innerSpec.getIntervalDuration();
+    return this.maybeBuildDuration();
   }
 
-  public withNewIntervalDuration(intervalDuration?: TimeDuration): MetricTimeseriesSpecification {
+  public withNewIntervalDuration(intervalDuration: TimeDuration): MetricTimeseriesSpecification {
     return this.innerSpec.withNewIntervalDuration(intervalDuration);
   }
 
