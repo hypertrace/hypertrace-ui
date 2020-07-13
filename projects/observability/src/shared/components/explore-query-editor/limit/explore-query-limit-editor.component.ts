@@ -3,8 +3,8 @@ import { InputAppearance } from '@hypertrace/components';
 
 @Component({
   selector: 'ht-explore-query-limit-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./explore-query-limit-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="limit-container">
       <div class="limit-number-input-container">
@@ -25,7 +25,7 @@ import { InputAppearance } from '@hypertrace/components';
       </div>
       <div class="limit-include-rest-container" *ngIf="!this.disabled">
         <span class="limit-include-rest-label">
-          Group other results:
+          Show Other:
         </span>
         <htc-checkbox
           [disabled]="this.disabled"

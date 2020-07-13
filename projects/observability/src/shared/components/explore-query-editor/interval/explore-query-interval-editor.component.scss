@@ -8,6 +8,8 @@
 
   .interval-label {
     @include body-1-medium($gray-9);
-    padding-bottom: 6px;
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 12px;
   }
 }
