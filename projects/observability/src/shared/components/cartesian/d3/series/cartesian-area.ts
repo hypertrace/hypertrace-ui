@@ -1,3 +1,4 @@
+import { rgb } from 'd3-color';
 import { BaseType, select, Selection } from 'd3-selection';
 import { area, curveMonotoneX, Line } from 'd3-shape';
 import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
@@ -11,7 +12,7 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
 
   public drawSvg(element: BaseType): void {
     const seriesGroup = select(element).append('g').classed(CartesianArea.CSS_CLASS, true);
-
+    this.drawAreaGradient(element);
     this.drawSvgArea(seriesGroup);
     this.buildLine().drawSvg(seriesGroup.node()!);
   }
@@ -29,9 +30,8 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
   private drawSvgArea(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     seriesGroupSelection
       .append('path')
-      .attr('fill', this.series.color)
-      .attr('fill-opacity', 0.4)
-      .attr('d', this.buildArea()(this.series.data)!);
+      .attr('d', this.buildArea()(this.series.data)!)
+      .style('fill', `url(#linear-gradient-${this.series.name})`);
   }
 
   private drawCanvasArea(context: CanvasRenderingContext2D): void {
@@ -55,5 +55,35 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
 
   private buildLine(): CartesianLine<TData> {
     return new CartesianLine({ ...this.series, symbol: undefined }, this.scaleBuilder);
+  }
+
+  private drawAreaGradient(element: BaseType): void {
+    const chartSelection = select(element);
+    const radialGradient = chartSelection
+      .selectAll(`defs.area-gradient-${this.series.name}`)
+      .data([this.series])
+      .enter()
+      .append('defs')
+      .append('linearGradient')
+      .attr('id', `linear-gradient-${this.series.name}`)
+      .attr('gradientTransform', 'rotate(90)')
+      .classed(`area-gradient-${this.series.name}`, true);
+
+    radialGradient
+      .append('stop')
+      .attr('offset', '0%')
+      .attr('stop-color', series => this.getColorWithOpacity(series.color, 0.24));
+
+    radialGradient
+      .append('stop')
+      .attr('offset', '80%')
+      .attr('stop-color', series => this.getColorWithOpacity(series.color, 0));
+  }
+
+  private getColorWithOpacity(color: string, opacity: number): string {
+    const colorObj = rgb(color);
+    colorObj.opacity = opacity;
+
+    return colorObj.toString();
   }
 }
