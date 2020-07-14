@@ -2,7 +2,14 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormattingModule, TraceRoute } from '@hypertrace/common';
-import { IconModule, LabelModule, LoadAsyncModule, SummaryValueModule } from '@hypertrace/components';
+import {
+  ButtonModule,
+  CopyShareableLinkToClipboardModule,
+  IconModule,
+  LabelModule,
+  LoadAsyncModule,
+  SummaryValueModule
+} from '@hypertrace/components';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { ApiTraceDetailPageComponent } from './api-trace-detail.page.component';
 
@@ -23,7 +30,9 @@ const ROUTE_CONFIG: TraceRoute[] = [
     IconModule,
     SummaryValueModule,
     LoadAsyncModule,
-    FormattingModule
+    FormattingModule,
+    ButtonModule,
+    CopyShareableLinkToClipboardModule
   ]
 })
 export class ApiTraceDetailPageModule {}
