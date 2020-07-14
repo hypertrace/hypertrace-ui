@@ -31,7 +31,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
           [selected]="this.metricSpecification"
           (selectedChange)="this.onSelection($event)"
           size="${SelectSize.Small}"
-          traceTooltip="Select Metric"
+          htcTooltip="Select Metric"
           class="metric-selector"
         >
           <htc-select-option

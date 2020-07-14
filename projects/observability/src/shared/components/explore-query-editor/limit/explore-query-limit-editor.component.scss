@@ -4,7 +4,6 @@
 .limit-container {
   display: flex;
   height: 100%;
-  align-items: flex-end;
 
   .limit-number-input-container {
     display: flex;
@@ -13,7 +12,9 @@
 
     .limit-label {
       @include body-1-medium($gray-9);
-      padding-bottom: 6px;
+      height: 32px;
+      line-height: 32px;
+      margin-bottom: 12px;
 
       &.disabled {
         opacity: 0.4;
@@ -35,12 +36,17 @@
   }
 
   .limit-include-rest-container {
-    padding-left: 16px;
-    padding-bottom: 6px;
+    display: flex;
+    align-items: center;
+    height: 34px;
+    padding-left: 24px;
+    padding-right: 12px;
+    margin-top: 42px;
 
     .limit-include-rest-label {
       @include body-2-regular($gray-5);
-      padding-right: 6px;
+      padding-right: 12px;
+      text-align: right;
     }
   }
 }

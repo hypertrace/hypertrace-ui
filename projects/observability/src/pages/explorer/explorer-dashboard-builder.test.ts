@@ -138,6 +138,18 @@ describe('Explorer dashboard builder', () => {
               },
               {
                 type: 'table-widget-column',
+                title: 'Service',
+                width: '2',
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'serviceName'
+                },
+                'click-handler': {
+                  type: 'api-trace-navigation-handler'
+                }
+              },
+              {
+                type: 'table-widget-column',
                 title: 'Endpoint',
                 width: '2',
                 value: {

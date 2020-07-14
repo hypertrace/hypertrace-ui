@@ -13,8 +13,8 @@ import {
 
 @Component({
   selector: 'ht-explore-query-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./explore-query-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ExploreVisualizationBuilder],
   template: `
     <div *ngIf="this.visualizationRequest$ | async as currentVisualization" class="query-editor">
@@ -25,6 +25,10 @@ import {
         (seriesChange)="this.setSeries($event)"
         (addSeries)="this.addSeries()"
       ></ht-explore-query-series-group-editor>
+
+      <div class="divider-container">
+        <div class="divider"></div>
+      </div>
 
       <div class="query-level-config">
         <ht-explore-query-interval-editor

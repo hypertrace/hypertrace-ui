@@ -1,9 +1,22 @@
+@import 'font';
+@import 'color-palette';
+
 .query-editor {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+
+  .divider-container {
+    display: flex;
+    align-items: center;
+
+    .divider {
+      height: calc(100% - 48px);
+      margin: 48px 24px 0;
+      border: 1px solid $color-border;
+    }
+  }
 
   .query-level-config {
-    margin-top: 24px;
     display: flex;
 
     > :not(:first-child) {
