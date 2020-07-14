@@ -1,3 +1,4 @@
+import { rgb } from 'd3-color';
 import { BaseType, select, Selection } from 'd3-selection';
 import { area, curveMonotoneX, Line } from 'd3-shape';
 import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
@@ -5,7 +6,6 @@ import { Series } from '../../chart';
 import { QuadtreeDataLookupStrategy } from '../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { CartesianLine } from './cartesian-line';
 import { CartesianSeries } from './cartesian-series';
-import { rgb } from 'd3-color';
 
 export class CartesianArea<TData> extends CartesianSeries<TData> {
   private static readonly CSS_CLASS: string = 'area-data-series';
@@ -72,19 +72,18 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
     radialGradient
       .append('stop')
       .attr('offset', '0%')
-      .attr('stop-color', series => {
-        const c = rgb(series.color);
-        c!.opacity = 0.24;
-        return c!.toString();
-      });
+      .attr('stop-color', series => this.getColorWithOpacity(series.color, 0.24));
 
     radialGradient
       .append('stop')
       .attr('offset', '80%')
-      .attr('stop-color', series => {
-        const c = rgb(series.color);
-        c!.opacity = 0;
-        return c!.toString();
-      });
+      .attr('stop-color', series => this.getColorWithOpacity(series.color, 0));
+  }
+
+  private getColorWithOpacity(color: string, opacity: number): string {
+    const colorObj = rgb(color);
+    colorObj.opacity = opacity;
+
+    return colorObj.toString();
   }
 }
