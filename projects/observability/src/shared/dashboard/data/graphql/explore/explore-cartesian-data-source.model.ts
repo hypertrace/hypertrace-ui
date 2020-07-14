@@ -64,7 +64,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
         (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
       );
 
-    const groupByKeys = request.groupBy?.keys || [];
+    const groupByKeys = request.groupBy?.keys ?? [];
     const isGroupBy = groupByKeys.length > 0;
 
     if (!isGroupBy && request.interval) {
