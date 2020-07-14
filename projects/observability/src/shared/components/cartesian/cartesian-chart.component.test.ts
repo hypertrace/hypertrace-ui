@@ -39,7 +39,7 @@ describe('Cartesian Chart component', () => {
             data: [[1, 2]],
             name: 'test series',
             color: 'blue',
-            type: CartesianSeriesVisualizationType.Line
+            type: CartesianSeriesVisualizationType.Area
           }
         ]
       }
