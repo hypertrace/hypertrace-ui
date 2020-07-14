@@ -15,7 +15,6 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { MetricSeriesFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
-
 @Model({
   type: 'explore-cartesian-data-source'
 })
@@ -65,16 +64,19 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
         (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
       );
 
-    if (request.interval && !request.groupBy) {
+    const groupByKeys = request.groupBy?.keys || [];
+    const isGroupBy = groupByKeys.length > 0;
+
+    if (!isGroupBy && request.interval) {
       return aggregatableSpecs.map(spec => this.buildTimeseriesData(spec, result));
     }
 
-    if (request.groupBy && !request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, result));
+    if (isGroupBy && !request.interval) {
+      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByKeys, result));
     }
 
-    if (request.groupBy && request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, result)).flat();
+    if (isGroupBy && request.interval) {
+      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByKeys, result)).flat();
     }
 
     return [];
@@ -110,21 +112,31 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
     };
   }
 
-  public buildGroupedSeriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData {
+  public buildGroupedSeriesData(spec: AggregatableSpec, groupByKeys: string[], result: ExploreResult): SeriesData {
     return {
-      data: result.getGroupedSeriesData(spec.name, spec.aggregation),
+      data: result
+        .getGroupedSeriesData(groupByKeys, spec.name, spec.aggregation)
+        .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
       spec: spec
     };
   }
 
-  public buildGroupedTimeseriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData[] {
-    return Array.from(result.getGroupedTimeSeriesData(spec.name, spec.aggregation).entries()).map(
-      ([groupName, data]) => ({
+  public buildGroupedTimeseriesData(
+    spec: AggregatableSpec,
+    groupByKeys: string[],
+    result: ExploreResult
+  ): SeriesData[] {
+    return Array.from(result.getGroupedTimeSeriesData(groupByKeys, spec.name, spec.aggregation).entries()).map(
+      ([groupNames, data]) => ({
         data: data,
-        groupName: groupName,
+        groupName: this.buildGroupedSeriesName(groupNames),
         spec: spec
       })
     );
+  }
+
+  private buildGroupedSeriesName(groupKeys: string[]): string {
+    return groupKeys.join(', ');
   }
 }
 

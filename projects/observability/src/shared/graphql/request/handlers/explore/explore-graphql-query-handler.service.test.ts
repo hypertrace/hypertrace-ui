@@ -18,7 +18,6 @@ import { ExploreSpecificationBuilder } from '../../builders/specification/explor
 import {
   EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
-  GQL_EXPLORE_RESULT_GROUP_KEY,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreRequest
 } from './explore-graphql-query-handler.service';
@@ -62,7 +61,7 @@ describe('Explore graphql query handler', () => {
     interval: new TimeDuration(1, TimeUnit.Minute),
     groupBy: {
       includeRest: true,
-      key: 'serviceName'
+      keys: ['serviceName']
     },
     orderBy: [
       {
@@ -120,7 +119,7 @@ describe('Explore graphql query handler', () => {
           name: 'groupBy',
           value: {
             includeRest: true,
-            key: 'serviceName'
+            keys: ['serviceName']
           }
         },
         {
@@ -139,7 +138,12 @@ describe('Explore graphql query handler', () => {
           path: 'results',
           children: [
             { path: 'intervalStart', alias: '__intervalStart' },
-            { path: 'groupName', alias: '__group' },
+            {
+              path: 'selection',
+              alias: 'serviceName',
+              arguments: [{ name: 'key', value: 'serviceName' }],
+              children: [{ path: 'value' }, { path: 'type' }]
+            },
             {
               path: 'selection',
               alias: 'avg_duration',
@@ -175,7 +179,10 @@ describe('Explore graphql query handler', () => {
       results: [
         {
           __intervalStart: '2019-11-06T19:26:53.196Z',
-          __group: 'First Service',
+          serviceName: {
+            value: 'First Service',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 15,
             type: AttributeMetadataType.Number
@@ -187,7 +194,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
-          __group: 'First Service',
+          serviceName: {
+            value: 'First Service',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 20,
             type: AttributeMetadataType.Number
@@ -199,7 +209,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           __intervalStart: '2019-11-06T19:26:53.196Z',
-          __group: 'Second Service',
+          serviceName: {
+            value: 'Second Service',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 25,
             type: AttributeMetadataType.Number
@@ -211,7 +224,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
-          __group: 'Second Service',
+          serviceName: {
+            value: 'Second Service',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 30,
             type: AttributeMetadataType.Number
@@ -223,7 +239,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           __intervalStart: '2019-11-06T19:26:53.196Z',
-          __group: '__remainder',
+          serviceName: {
+            value: '__remainder',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 35,
             type: AttributeMetadataType.Number
@@ -235,7 +254,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
-          __group: '__remainder',
+          serviceName: {
+            value: '__remainder',
+            type: AttributeMetadataType.String
+          },
           avg_duration: {
             value: 40,
             type: AttributeMetadataType.Number
@@ -253,7 +275,10 @@ describe('Explore graphql query handler', () => {
       results: [
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'First Service',
+          serviceName: {
+            value: 'First Service',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 15,
             type: AttributeMetadataType.Number
@@ -265,7 +290,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'First Service',
+          serviceName: {
+            value: 'First Service',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 20,
             type: AttributeMetadataType.Number
@@ -277,7 +305,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'Second Service',
+          serviceName: {
+            value: 'Second Service',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 25,
             type: AttributeMetadataType.Number
@@ -289,7 +320,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'Second Service',
+          serviceName: {
+            value: 'Second Service',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 30,
             type: AttributeMetadataType.Number
@@ -301,7 +335,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: '__remainder',
+          serviceName: {
+            value: '__remainder',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 35,
             type: AttributeMetadataType.Number
@@ -313,7 +350,10 @@ describe('Explore graphql query handler', () => {
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: '__remainder',
+          serviceName: {
+            value: '__remainder',
+            type: AttributeMetadataType.String
+          },
           'avg(duration)': {
             value: 40,
             type: AttributeMetadataType.Number

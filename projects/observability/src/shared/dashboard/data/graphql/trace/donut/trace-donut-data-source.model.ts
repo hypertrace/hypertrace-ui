@@ -63,7 +63,7 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
       timeRange: this.getTimeRangeOrThrow(),
       filters: filters,
       groupBy: {
-        key: this.groupBy.name
+        keys: [this.groupBy.name]
       }
     })).pipe(map(exploreResponse => this.buildDonutResults(exploreResponse, this.metric)));
   }
@@ -75,13 +75,13 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
     let total = 0;
 
     const series: DonutSeries[] = new ExploreResult(exploreResponse)
-      .getGroupedSeriesData(metric.name, metric.aggregation)
+      .getGroupedSeriesData([this.groupBy.name], metric.name, metric.aggregation)
       .map(seriesTuple => {
-        total = total + seriesTuple[1];
+        total = total + seriesTuple.value;
 
         return {
-          name: seriesTuple[0],
-          value: seriesTuple[1]
+          name: seriesTuple.keys.join(', '),
+          value: seriesTuple.value
         };
       });
 

@@ -82,7 +82,7 @@ describe('Explore visualization builder', () => {
       spectator.service
         .setSeries([buildSeries('test1')])
         .groupBy({
-          key: 'testGroupBy'
+          keys: ['testGroupBy']
         })
         .groupByLimit(15)
         .setSeries([buildSeries('test2')]);
@@ -94,17 +94,17 @@ describe('Explore visualization builder', () => {
         }),
         c: expectedQuery({
           series: [matchSeriesWithName('test1')],
-          groupBy: { key: 'testGroupBy' },
+          groupBy: { keys: ['testGroupBy'] },
           groupByLimit: 5
         }),
         d: expectedQuery({
           series: [matchSeriesWithName('test1')],
-          groupBy: { key: 'testGroupBy' },
+          groupBy: { keys: ['testGroupBy'] },
           groupByLimit: 15
         }),
         e: expectedQuery({
           series: [matchSeriesWithName('test2')],
-          groupBy: { key: 'testGroupBy' },
+          groupBy: { keys: ['testGroupBy'] },
           groupByLimit: 15
         })
       });

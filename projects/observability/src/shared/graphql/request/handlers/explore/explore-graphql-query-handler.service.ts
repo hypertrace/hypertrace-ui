@@ -15,8 +15,8 @@ import {
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
+import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 
-const GROUP_NAME_QUERY_KEY = '__group';
 const INTERVAL_START_QUERY_KEY = '__intervalStart';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +26,7 @@ export class ExploreGraphQlQueryHandlerService
 
   private readonly argBuilder: GraphQlObservabilityArgumentBuilder = new GraphQlObservabilityArgumentBuilder();
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
+  private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public matchesRequest(request: unknown): request is GraphQlExploreRequest {
@@ -58,7 +59,8 @@ export class ExploreGraphQlQueryHandlerService
         {
           path: 'results',
           children: [
-            ...this.getAnyMetaSelections(request),
+            ...this.getAnyIntervalSelections(request),
+            ...this.selectionBuilder.fromSpecifications(this.groupByAsSpecifications(request.groupBy)),
             ...this.selectionBuilder.fromSpecifications(request.selections)
           ]
         },
@@ -80,8 +82,8 @@ export class ExploreGraphQlQueryHandlerService
   private convertResultRow(row: GraphQlExploreServerResult, request: GraphQlExploreRequest): GraphQlExploreResult {
     return {
       ...this.getIntervalResultFragment(row, request),
-      ...this.getGroupByResultFragment(row, request),
-      ...this.getSelectionResultFragment(row, request)
+      ...this.getSelectionResultFragment(row, this.groupByAsSpecifications(request.groupBy)),
+      ...this.getSelectionResultFragment(row, request.selections)
     };
   }
 
@@ -98,43 +100,29 @@ export class ExploreGraphQlQueryHandlerService
     return {};
   }
 
-  private getGroupByResultFragment(
-    row: GraphQlExploreServerResult,
-    request: GraphQlExploreRequest
-  ): Pick<GraphQlExploreResult, typeof GQL_EXPLORE_RESULT_GROUP_KEY> {
-    if (request.groupBy) {
-      return {
-        [GQL_EXPLORE_RESULT_GROUP_KEY]: row[GROUP_NAME_QUERY_KEY]
-      };
-    }
-
-    return {};
-  }
-
   private getSelectionResultFragment(
     row: GraphQlExploreServerResult,
-    request: GraphQlExploreRequest
+    specifications: ExploreSpecification[]
   ): Pick<GraphQlExploreResult, string> {
     return Object.assign(
       {},
-      ...request.selections.map(selection => ({
-        [selection.resultAlias()]: selection.extractFromServerData(row as Dictionary<GraphQlExploreResultValue>)
+      ...specifications.map(specification => ({
+        [specification.resultAlias()]: specification.extractFromServerData(row as Dictionary<GraphQlExploreResultValue>)
       }))
     );
   }
 
-  private getAnyMetaSelections(request: GraphQlExploreRequest): GraphQlSelection[] {
-    const intervalSelections = request.interval ? [{ path: 'intervalStart', alias: INTERVAL_START_QUERY_KEY }] : [];
+  private getAnyIntervalSelections(request: GraphQlExploreRequest): GraphQlSelection[] {
+    return request.interval ? [{ path: 'intervalStart', alias: INTERVAL_START_QUERY_KEY }] : [];
+  }
 
-    const groupBySelections = request.groupBy ? [{ path: 'groupName', alias: GROUP_NAME_QUERY_KEY }] : [];
-
-    return [...intervalSelections, ...groupBySelections];
+  private groupByAsSpecifications(groupBy?: GraphQlGroupBy): ExploreSpecification[] {
+    return (groupBy?.keys ?? []).map(key => this.specBuilder.exploreSpecificationForKey(key));
   }
 }
 
 export const EXPLORE_GQL_REQUEST = Symbol('GraphQL Query Request');
 export const GQL_EXPLORE_RESULT_INTERVAL_KEY = Symbol('Interval Start');
-export const GQL_EXPLORE_RESULT_GROUP_KEY = Symbol('Group');
 
 export interface GraphQlExploreRequest {
   requestType: typeof EXPLORE_GQL_REQUEST;
@@ -157,7 +145,6 @@ export interface GraphQlExploreResponse {
 
 export interface GraphQlExploreResult {
   [GQL_EXPLORE_RESULT_INTERVAL_KEY]?: Date;
-  [GQL_EXPLORE_RESULT_GROUP_KEY]?: string;
 
   [key: string]: GraphQlExploreResultValue;
 }
@@ -174,7 +161,6 @@ interface GraphQlExploreServerResponse {
 }
 
 interface GraphQlExploreServerResult {
-  [GROUP_NAME_QUERY_KEY]?: string;
   [INTERVAL_START_QUERY_KEY]?: string;
 
   [key: string]: GraphQlExploreResultValue | string | undefined;

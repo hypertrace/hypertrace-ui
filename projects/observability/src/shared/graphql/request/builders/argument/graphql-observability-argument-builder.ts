@@ -139,10 +139,10 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
           // Remove includeRest key if undefined
           groupBy.includeRest === undefined
             ? {
-                key: groupBy.key
+                keys: groupBy.keys
               }
             : {
-                key: groupBy.key,
+                keys: groupBy.keys,
                 includeRest: groupBy.includeRest
               }
       }
