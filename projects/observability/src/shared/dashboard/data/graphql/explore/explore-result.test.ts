@@ -1,8 +1,5 @@
 import { AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
-import {
-  GQL_EXPLORE_RESULT_GROUP_KEY,
-  GQL_EXPLORE_RESULT_INTERVAL_KEY
-} from '../../../../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ExploreResult } from './explore-result';
 
 describe('Explore result', () => {
@@ -57,29 +54,38 @@ describe('Explore result', () => {
             value: 10,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first'
+          group: {
+            value: 'first',
+            type: AttributeMetadataType.String
+          }
         },
         {
           'sum(foo)': {
             value: 15,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second'
+          group: {
+            value: 'second',
+            type: AttributeMetadataType.String
+          }
         },
         {
           'sum(foo)': {
             value: 20,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'third'
+          group: {
+            value: 'third',
+            type: AttributeMetadataType.String
+          }
         }
       ]
     });
 
-    expect(result.getGroupedSeriesData('foo', MetricAggregationType.Sum)).toEqual([
-      ['first', 10],
-      ['second', 15],
-      ['third', 20]
+    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+      { keys: ['first'], value: 10 },
+      { keys: ['second'], value: 15 },
+      { keys: ['third'], value: 20 }
     ]);
   });
 
@@ -91,21 +97,27 @@ describe('Explore result', () => {
             value: 10,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first'
+          group: {
+            value: 'first',
+            type: AttributeMetadataType.String
+          }
         },
         {
           'sum(foo)': {
             value: 15,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: '__Other'
+          group: {
+            value: '__Other',
+            type: AttributeMetadataType.String
+          }
         }
       ]
     });
 
-    expect(result.getGroupedSeriesData('foo', MetricAggregationType.Sum)).toEqual([
-      ['first', 10],
-      ['Other results', 15]
+    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+      { keys: ['first'], value: 10 },
+      { keys: ['Other results'], value: 15 }
     ]);
   });
 
@@ -117,7 +129,10 @@ describe('Explore result', () => {
             value: 10,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first',
+          group: {
+            value: 'first',
+            type: AttributeMetadataType.String
+          },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
         },
         {
@@ -125,7 +140,10 @@ describe('Explore result', () => {
             value: 15,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first',
+          group: {
+            value: 'first',
+            type: AttributeMetadataType.String
+          },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
         },
         {
@@ -133,7 +151,10 @@ describe('Explore result', () => {
             value: 20,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second',
+          group: {
+            value: 'second',
+            type: AttributeMetadataType.String
+          },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
         },
         {
@@ -141,16 +162,19 @@ describe('Explore result', () => {
             value: 25,
             type: AttributeMetadataType.Number
           },
-          [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second',
+          group: {
+            value: 'second',
+            type: AttributeMetadataType.String
+          },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
         }
       ]
     });
 
-    expect(result.getGroupedTimeSeriesData('foo', MetricAggregationType.Sum)).toEqual(
+    expect(result.getGroupedTimeSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual(
       new Map([
         [
-          'first',
+          ['first'],
           [
             {
               timestamp: new Date(0),
@@ -163,7 +187,7 @@ describe('Explore result', () => {
           ]
         ],
         [
-          'second',
+          ['second'],
           [
             {
               timestamp: new Date(0),

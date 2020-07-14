@@ -39,7 +39,7 @@ import {
         <ht-explore-query-group-by-editor
           class="group-by"
           [context]="currentVisualization.context"
-          [groupByKey]="currentVisualization.groupBy?.key"
+          [groupByKey]="(currentVisualization.groupBy?.keys)[0]"
           (groupByKeyChange)="this.updateGroupByKey(currentVisualization.groupBy, $event)"
         ></ht-explore-query-group-by-editor>
 
@@ -94,7 +94,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     if (key === undefined) {
       this.visualizationBuilder.groupBy();
     } else {
-      this.visualizationBuilder.groupBy(groupBy ? { ...groupBy, key: key } : { key: key });
+      this.visualizationBuilder.groupBy(groupBy ? { ...groupBy, keys: [key] } : { keys: [key] });
     }
   }
 

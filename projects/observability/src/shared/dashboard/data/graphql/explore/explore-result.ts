@@ -4,7 +4,6 @@ import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metri
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  GQL_EXPLORE_RESULT_GROUP_KEY,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse,
   GraphQlExploreResult
@@ -22,45 +21,55 @@ export class ExploreResult {
     return this.extractTimeseriesForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
   }
 
-  public getGroupedSeriesData(metricKey: string, aggregation: MetricAggregationType): GroupData[] {
-    return this.extractGroupSeriesForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
+  public getGroupedSeriesData(groupKeys: string[], metricKey: string, aggregation: MetricAggregationType): GroupData[] {
+    return this.extractGroupSeriesForSpec(
+      groupKeys.map(key => this.specBuilder.exploreSpecificationForKey(key)),
+      this.specBuilder.exploreSpecificationForKey(metricKey, aggregation)
+    );
   }
 
   public getGroupedTimeSeriesData(
+    groupKeys: string[],
     metricKey: string,
     aggregation: MetricAggregationType
-  ): Map<string, MetricTimeseriesInterval[]> {
-    const groupedResults = groupBy(this.response.results, result => this.getGroupNameFromResult(result));
+  ): Map<string[], MetricTimeseriesInterval[]> {
+    const groupSpecs = groupKeys.map(key => this.specBuilder.exploreSpecificationForKey(key));
     const spec = this.specBuilder.exploreSpecificationForKey(metricKey, aggregation);
+    const groupedResults = groupBy(this.response.results, result =>
+      this.getGroupNamesFromResult(result, groupSpecs).join(',')
+    );
 
     return new Map(
-      Object.entries(groupedResults).map(([groupName, results]) => [
-        groupName,
+      Object.entries(groupedResults).map(([concatenatedGroupNames, results]) => [
+        concatenatedGroupNames.split(','),
         results.map(result => this.resultToTimeseriesInterval(result, spec))
       ])
     );
   }
 
-  private extractGroupSeriesForSpec(spec: ExploreSpecification): GroupData[] {
-    return this.resultsContainingSpec(spec).map(result => this.resultToGroupData(result, spec));
+  private extractGroupSeriesForSpec(groupBySpecs: ExploreSpecification[], spec: ExploreSpecification): GroupData[] {
+    return this.resultsContainingSpec(spec).map(result => this.resultToGroupData(result, groupBySpecs, spec));
   }
 
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
     return this.resultsContainingSpec(spec).map(result => this.resultToTimeseriesInterval(result, spec));
   }
 
-  private resultToGroupData(result: GraphQlExploreResult, spec: ExploreSpecification): GroupData {
-    return [this.getGroupNameFromResult(result), result[spec.resultAlias()].value as number];
+  private resultToGroupData(
+    result: GraphQlExploreResult,
+    groupBySpecs: ExploreSpecification[],
+    spec: ExploreSpecification
+  ): GroupData {
+    return {
+      keys: this.getGroupNamesFromResult(result, groupBySpecs),
+      value: result[spec.resultAlias()].value as number
+    };
   }
 
-  private getGroupNameFromResult(result: GraphQlExploreResult): string {
-    const returnedName = result[GQL_EXPLORE_RESULT_GROUP_KEY]!;
-
-    if (returnedName === ExploreResult.OTHER_SERVER_GROUP_NAME) {
-      return ExploreResult.OTHER_UI_GROUP_NAME;
-    }
-
-    return returnedName;
+  private getGroupNamesFromResult(result: GraphQlExploreResult, groupBySpecs: ExploreSpecification[]): string[] {
+    return groupBySpecs
+      .map(spec => result[spec.resultAlias()].value as string)
+      .map(name => (name === ExploreResult.OTHER_SERVER_GROUP_NAME ? ExploreResult.OTHER_UI_GROUP_NAME : name));
   }
 
   private resultToTimeseriesInterval(
@@ -80,4 +89,7 @@ export class ExploreResult {
   }
 }
 
-type GroupData = [string, number];
+interface GroupData {
+  keys: string[];
+  value: number;
+}

@@ -165,7 +165,7 @@ describe('Explore query editor', () => {
         series: [defaultSeries],
         groupByLimit: 5, // Default group by limit
         groupBy: {
-          key: 'first groupable'
+          keys: ['first groupable']
         }
       })
     );
@@ -204,7 +204,7 @@ describe('Explore query editor', () => {
         series: [defaultSeries],
         groupByLimit: 6,
         groupBy: {
-          key: 'first groupable'
+          keys: ['first groupable']
         }
       })
     );
