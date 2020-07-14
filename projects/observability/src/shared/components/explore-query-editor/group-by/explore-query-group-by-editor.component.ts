@@ -7,8 +7,8 @@ import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-explore-query-group-by-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./explore-query-group-by-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="group-by-container">
       <span class="group-by-label">

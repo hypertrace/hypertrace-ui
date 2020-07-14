@@ -72,7 +72,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
       <htc-button
         *ngIf="this.removable"
         class="series-remove-button"
-        traceTooltip="Remove Series"
+        htcTooltip="Remove Series"
         icon="${IconType.Close}"
         display="${ButtonStyle.Text}"
         (click)="this.onRemove()"
