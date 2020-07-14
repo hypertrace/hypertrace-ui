@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { IconSize } from '@hypertrace/components';
+import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
 
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
@@ -31,7 +31,23 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
           icon="${IconType.Time}"
           [value]="traceDetails.timeString"
         ></htc-summary-value>
-        <htc-summary-value class="summary-value" icon="${IconType.Id}" [value]="traceDetails.id"></htc-summary-value>
+        <htc-summary-value
+          class="summary-value"
+          icon="${IconType.Id}"
+          [value]="traceDetails.traceId"
+        ></htc-summary-value>
+
+        <div class="separation"></div>
+
+        <htc-copy-shareable-link-to-clipboard class="share"></htc-copy-shareable-link-to-clipboard>
+
+        <htc-button
+          class="full-trace-button"
+          role="${ButtonRole.Tertiary}"
+          display="${ButtonStyle.Bordered}"
+          label="See Full Trace"
+          (click)="this.navigateToFullTrace(traceDetails.traceId)"
+        ></htc-button>
       </div>
 
       <htc-application-aware-dashboard
@@ -68,7 +84,7 @@ export class ApiTraceDetailPageComponent {
 
   public constructor(
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
-    private readonly navigationService: NavigationService,
+    protected readonly navigationService: NavigationService,
     private readonly apiTraceDetailService: ApiTraceDetailService
   ) {
     this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
@@ -86,5 +102,9 @@ export class ApiTraceDetailPageComponent {
 
   public onClickBack(): void {
     this.navigationService.navigateBack();
+  }
+
+  public navigateToFullTrace(traceId: string): void {
+    this.navigationService.navigateWithinApp(['/trace', traceId]);
   }
 }
