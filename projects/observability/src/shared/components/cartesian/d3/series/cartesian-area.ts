@@ -1,4 +1,4 @@
-import { rgb } from 'd3-color';
+import { rgb, RGBColor } from 'd3-color';
 import { BaseType, select, Selection } from 'd3-selection';
 import { area, curveMonotoneX, Line } from 'd3-shape';
 import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
@@ -31,7 +31,7 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
     seriesGroupSelection
       .append('path')
       .attr('d', this.buildArea()(this.series.data)!)
-      .style('fill', `url(#linear-gradient-${this.series.name})`);
+      .style('fill', `url(#linear-gradient-${this.getColorIdentifier()})`);
   }
 
   private drawCanvasArea(context: CanvasRenderingContext2D): void {
@@ -60,14 +60,14 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
   private drawAreaGradient(element: BaseType): void {
     const chartSelection = select(element);
     const radialGradient = chartSelection
-      .selectAll(`defs.area-gradient-${this.series.name}`)
+      .selectAll(`defs.area-gradient-${this.getColorIdentifier()}`)
       .data([this.series])
       .enter()
       .append('defs')
       .append('linearGradient')
-      .attr('id', `linear-gradient-${this.series.name}`)
+      .attr('id', `linear-gradient-${this.getColorIdentifier()}`)
       .attr('gradientTransform', 'rotate(90)')
-      .classed(`area-gradient-${this.series.name}`, true);
+      .classed(`area-gradient-${this.getColorIdentifier()}`, true);
 
     radialGradient
       .append('stop')
@@ -85,5 +85,14 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
     colorObj.opacity = opacity;
 
     return colorObj.toString();
+  }
+
+  private getColorIdentifier(): string {
+    const color = rgb(this.series.color) as RGBColor | null; // Mistyped
+    if (!color) {
+      return '';
+    }
+
+    return color.hex().substr(1);
   }
 }
