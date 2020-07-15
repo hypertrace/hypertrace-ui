@@ -3,9 +3,8 @@ import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
-  BLUE_COLOR_PALETTE,
+  DEFAULT_COLOR_PALETTE,
   LayoutChangeService,
-  RED_COLOR_PALETTE,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
@@ -78,12 +77,11 @@ describe('Explorer component', () => {
       }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
       {
-        provide: BLUE_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      {
-        provide: RED_COLOR_PALETTE,
-        useValue: ['black', 'white']
+        provide: DEFAULT_COLOR_PALETTE,
+        useValue: {
+          name: 'default',
+          colors: ['black', 'white']
+        }
       },
       ...getMockFlexLayoutProviders()
     ]

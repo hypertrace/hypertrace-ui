@@ -1,4 +1,4 @@
-import { BLUE_COLOR_PALETTE, RED_COLOR_PALETTE } from '@hypertrace/common';
+import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { LegendComponent, LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -10,15 +10,14 @@ describe('Donut component', () => {
     entryComponents: [LegendComponent],
     shallow: true,
     providers: [
+      mockProvider(ChartTooltipBuilderService),
       {
-        provide: BLUE_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      {
-        provide: RED_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      mockProvider(ChartTooltipBuilderService)
+        provide: DEFAULT_COLOR_PALETTE,
+        useValue: {
+          name: 'default',
+          colors: ['black', 'white']
+        }
+      }
     ]
   });
 

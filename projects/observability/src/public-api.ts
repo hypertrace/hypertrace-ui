@@ -105,6 +105,7 @@ export * from './shared/icons/observability-icon-library.module';
 
 // Constants
 export * from './shared/constants/entity-metadata';
+export * from './shared/constants/color-palette';
 
 // Radar
 export { RadarSeries, RadarAxis, RadarPoint } from './shared/components/radar/radar';
