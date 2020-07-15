@@ -1,4 +1,4 @@
-import { BLUE_COLOR_PALETTE, FormattingModule, RED_COLOR_PALETTE } from '@hypertrace/common';
+import { DEFAULT_COLOR_PALETTE, FormattingModule } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { HistogramBarData, HistogramChartComponent } from './histogram-chart.component';
 
@@ -10,12 +10,11 @@ describe('Histogram Chart Component', () => {
     imports: [FormattingModule],
     providers: [
       {
-        provide: BLUE_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      {
-        provide: RED_COLOR_PALETTE,
-        useValue: ['black', 'white']
+        provide: DEFAULT_COLOR_PALETTE,
+        useValue: {
+          name: 'default',
+          colors: ['black', 'white']
+        }
       }
     ],
     shallow: true

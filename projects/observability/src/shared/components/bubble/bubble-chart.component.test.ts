@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector } from '@angular/core';
-import { BLUE_COLOR_PALETTE, RED_COLOR_PALETTE } from '@hypertrace/common';
+import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { Subject } from 'rxjs';
 import { LegendComponent } from '../legend/legend.component';
@@ -23,15 +23,14 @@ describe('Bubble chart component', () => {
     declarations: [LegendComponent, CustomChartTooltipComponent],
     imports: [ChartTooltipModule],
     providers: [
+      mockProvider(ChartTooltipBuilderService),
       {
-        provide: BLUE_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      {
-        provide: RED_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      mockProvider(ChartTooltipBuilderService)
+        provide: DEFAULT_COLOR_PALETTE,
+        useValue: {
+          name: 'default',
+          colors: ['black', 'white']
+        }
+      }
     ]
   });
 
