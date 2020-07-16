@@ -1,4 +1,4 @@
-import { ColorPaletteType, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
+import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
 import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
@@ -42,14 +42,9 @@ export class CartesianWidgetModel<TData> {
   @ModelProperty({
     key: 'color-palette',
     displayName: 'Color Palette',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ENUM_TYPE.type,
-      values: [ColorPaletteType.Blue, ColorPaletteType.Red]
-    } as EnumPropertyTypeInstance,
-    required: false
+    type: STRING_PROPERTY.type
   })
-  public colorPaletteKey?: ColorPaletteType;
+  public colorPaletteKey?: ColorPaletteKey;
 
   @ModelProperty({
     key: 'series-from-data',

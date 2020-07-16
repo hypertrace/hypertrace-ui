@@ -14,7 +14,6 @@ import { ObservabilityTraceType } from '../../../../../graphql/model/schema/obse
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   EXPLORE_GQL_REQUEST,
-  GQL_EXPLORE_RESULT_GROUP_KEY,
   GraphQlExploreResponse
 } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { TraceDonutDataSourceModel } from './trace-donut-data-source.model';
@@ -66,7 +65,7 @@ describe('Donut data source model', () => {
           timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
           filters: [],
           groupBy: {
-            key: 'bar'
+            keys: ['bar']
           },
           limit: 3,
           selections: [
@@ -100,14 +99,20 @@ describe('Donut data source model', () => {
                 value: 10,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first'
+              bar: {
+                value: 'first',
+                type: AttributeMetadataType.String
+              }
             },
             {
               'sum(foo)': {
                 value: 15,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second'
+              bar: {
+                value: 'second',
+                type: AttributeMetadataType.String
+              }
             }
           ]
         })

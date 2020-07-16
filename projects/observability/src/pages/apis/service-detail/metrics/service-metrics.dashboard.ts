@@ -1,6 +1,6 @@
-import { ColorPaletteType } from '@hypertrace/common';
 import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
+import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
 
 export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_METRICS',
@@ -197,7 +197,7 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
         children: [
           {
             type: 'cartesian-widget',
-            'color-palette': ColorPaletteType.Red,
+            'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
             series: [

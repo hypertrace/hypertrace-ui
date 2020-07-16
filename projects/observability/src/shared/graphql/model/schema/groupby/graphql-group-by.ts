@@ -1,4 +1,4 @@
 export interface GraphQlGroupBy {
-  key: string;
+  keys: string[];
   includeRest?: boolean;
 }

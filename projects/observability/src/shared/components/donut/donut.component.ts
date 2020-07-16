@@ -18,7 +18,7 @@ import { DonutBuilderService } from './donut-builder.service';
   selector: 'ht-donut',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['../utils/d3/d3-visualization.scss', './donut.component.scss'],
-  template: ` <div class="fill-container donut-container" (traceLayoutChange)="this.reflow()" #donutContainer></div> `
+  template: ` <div class="fill-container donut-container" (htcLayoutChange)="this.reflow()" #donutContainer></div> `
 })
 export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input()

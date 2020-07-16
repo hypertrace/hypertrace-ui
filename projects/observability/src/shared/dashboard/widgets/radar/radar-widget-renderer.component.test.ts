@@ -1,13 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import {
-  BLUE_COLOR_PALETTE,
-  DomElementMeasurerService,
-  NavigationService,
-  RED_COLOR_PALETTE,
-  TimeUnit
-} from '@hypertrace/common';
+import { DomElementMeasurerService, NavigationService, TimeUnit } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
@@ -145,14 +139,6 @@ describe('Radar Widget renderer', () => {
         }),
         getComputedTextLength: () => 0
       }),
-      {
-        provide: BLUE_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
-      {
-        provide: RED_COLOR_PALETTE,
-        useValue: ['black', 'white']
-      },
       ...getMockFlexLayoutProviders()
     ],
     mocks: [NavigationService],

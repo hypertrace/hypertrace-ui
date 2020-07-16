@@ -18,7 +18,6 @@ import { ExploreSpecification } from '../../../../graphql/model/schema/specifica
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   EXPLORE_GQL_REQUEST,
-  GQL_EXPLORE_RESULT_GROUP_KEY,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
@@ -149,7 +148,7 @@ describe('Explore cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: undefined,
       groupBy: {
-        key: 'baz'
+        keys: ['baz']
       },
       series: [
         {
@@ -170,14 +169,20 @@ describe('Explore cartesian data source model', () => {
                 value: 10,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first'
+              baz: {
+                value: 'first',
+                type: AttributeMetadataType.String
+              }
             },
             {
               'sum(foo)': {
                 value: 15,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second'
+              baz: {
+                value: 'second',
+                type: AttributeMetadataType.String
+              }
             }
           ]
         })
@@ -201,7 +206,7 @@ describe('Explore cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: 'AUTO',
       groupBy: {
-        key: 'baz'
+        keys: ['baz']
       },
       series: [
         {
@@ -222,7 +227,10 @@ describe('Explore cartesian data source model', () => {
                 value: 10,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first',
+              baz: {
+                value: 'first',
+                type: AttributeMetadataType.String
+              },
               [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
             },
             {
@@ -230,7 +238,10 @@ describe('Explore cartesian data source model', () => {
                 value: 15,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'first',
+              baz: {
+                value: 'first',
+                type: AttributeMetadataType.String
+              },
               [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
             },
             {
@@ -238,7 +249,10 @@ describe('Explore cartesian data source model', () => {
                 value: 20,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second',
+              baz: {
+                value: 'second',
+                type: AttributeMetadataType.String
+              },
               [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
             },
             {
@@ -246,7 +260,10 @@ describe('Explore cartesian data source model', () => {
                 value: 25,
                 type: AttributeMetadataType.Number
               },
-              [GQL_EXPLORE_RESULT_GROUP_KEY]: 'second',
+              baz: {
+                value: 'second',
+                type: AttributeMetadataType.String
+              },
               [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
             }
           ]

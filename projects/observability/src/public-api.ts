@@ -105,6 +105,7 @@ export * from './shared/icons/observability-icon-library.module';
 
 // Constants
 export * from './shared/constants/entity-metadata';
+export * from './shared/constants/color-palette';
 
 // Radar
 export { RadarSeries, RadarAxis, RadarPoint } from './shared/components/radar/radar';
@@ -143,6 +144,7 @@ export * from './shared/components/cartesian/chart';
 export * from './shared/components/cartesian/chart-interactivty';
 export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/series.model';
 export { MetricSeriesFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
+export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 
 // Histogram
 export * from './shared/components/histogram/histogram-chart.component';
@@ -156,6 +158,9 @@ export { BubbleChartModule } from './shared/components/bubble/bubble-chart.modul
 // Aggregations
 export * from './shared/graphql/model/schema/specifications/metric-aggregation-specification';
 export * from './shared/dashboard/data/graphql/specifiers/metric-aggregation-specification.model';
+
+// Timeseries
+export * from './shared/graphql/model/metric/metric-timeseries';
 
 // Card list
 export * from './shared/components/card-list/card-list.component';
