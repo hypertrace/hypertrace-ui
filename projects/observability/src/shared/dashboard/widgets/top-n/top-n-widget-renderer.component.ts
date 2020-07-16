@@ -7,10 +7,9 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { flatMap, map, switchMap, tap } from 'rxjs/operators';
-import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
-import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
+import { TopNWidgetDataFetcher, TopNWidgetData, TopNEntityData } from './data/top-n-data-source.model';
 import { TopNWidgetModel } from './top-n-widget.model';
 
 @Renderer({ modelClass: TopNWidgetModel })
@@ -42,19 +41,19 @@ import { TopNWidgetModel } from './top-n-widget.model';
         </htc-select>
         <ht-top-n-chart
           *htcLoadAsync="this.data$ as data"
-          [data]="data"
+          [totalValue]="data.totalValue"
+          [data]="data.topNData"
           [labelClickable]="true"
-          (labelClick)="this.onLabelClicked($event)"
+          (labelClick)="this.onLabelClicked($event, data.topNData)"
         >
         </ht-top-n-chart>
       </htc-titled-content>
     </div>
   `
 })
-export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
+export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNWidgetData> {
   public metricSpecification!: MetricAggregationSpecificationModel;
   public options$!: Observable<SelectOption<MetricAggregationSpecificationModel>[]>;
-  private topNData: TopNWidgetValueData[] = [];
   private fetcher?: TopNWidgetDataFetcher;
 
   public constructor(
@@ -73,27 +72,22 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     this.updateDataObservable();
   }
 
-  public onLabelClicked(label: string): void {
-    const topNDatum = this.topNData.find(datum => datum.label === label);
+  public onLabelClicked(label: string, topNData: TopNEntityData[]): void {
+    const topNDatum = topNData.find(datum => datum.label === label);
     if (topNDatum) {
       this.entityNavService.navigateToEntity(topNDatum.entity);
     }
   }
 
-  protected fetchData(): Observable<TopNData[]> {
+  protected fetchData(): Observable<TopNWidgetData> {
     return this.model.getData().pipe(
       tap(fetcher => (this.fetcher = fetcher)),
       switchMap(() => this.buildDataObservable())
     );
   }
 
-  protected buildDataObservable(): Observable<TopNData[]> {
-    return this.fetcher
-      ? this.fetcher.getData(this.metricSpecification).pipe(
-          tap(topNData => (this.topNData = topNData)),
-          map(topNData => topNData.map(datum => ({ label: datum.label, value: datum.value })))
-        )
-      : NEVER;
+  protected buildDataObservable(): Observable<TopNWidgetData> {
+    return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 
   private setOptionsObservables(): void {

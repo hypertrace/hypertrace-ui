@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { maxBy } from 'lodash';
 
 @Component({
   selector: 'ht-top-n-chart',
@@ -18,7 +17,7 @@ import { maxBy } from 'lodash';
         >
           {{ item.label }}
         </div>
-        <div class="progress">
+        <div class="progress" htcTooltip="{{ item.value | htcDisplayNumber }} of {{ this.totalValue | htcDisplayNumber}}">
           <div class="progress-value" [ngStyle]="{ width: item.width }"></div>
         </div>
         <div class="value">
@@ -31,6 +30,9 @@ import { maxBy } from 'lodash';
 export class TopNChartComponent implements OnChanges {
   @Input()
   public data: TopNData[] = [];
+
+  @Input()
+  public totalValue?: number;
 
   @Input()
   public labelClickable: boolean = false;
@@ -52,26 +54,21 @@ export class TopNChartComponent implements OnChanges {
 
   private buildItemOptions(): void {
     this.itemOptions = [];
-    if (this.data.length === 0) {
-      return;
-    }
 
-    let maxValue = maxBy(this.data, option => option.value)?.value;
-    if (maxValue === undefined || maxValue === 0) {
-      maxValue = 1;
+    if (this.data.length > 0 && this.totalValue !== undefined && this.totalValue > 0) {
+      this.itemOptions = this.data
+        .sort((first, second) => second.value - first.value)
+        .map(
+          (option): TopNItemOptions => ({
+            label: option.label,
+            width: `${((option.value / this.totalValue!) * 100).toFixed(2)}%`,
+            value: option.value
+          })
+        );
     }
-
-    this.itemOptions = this.data
-      .sort((first, second) => second.value - first.value)
-      .map(
-        (option): TopNItemOptions => ({
-          label: option.label,
-          width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
-          value: option.value
-        })
-      );
   }
 }
+
 export interface TopNData {
   label: string;
   value: number;
