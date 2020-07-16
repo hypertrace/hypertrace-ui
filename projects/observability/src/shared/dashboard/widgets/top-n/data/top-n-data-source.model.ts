@@ -5,8 +5,8 @@ import {
   MetricAggregation
 } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, ModelPropertyType, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
-import { Observable, of, EMPTY } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
@@ -19,8 +19,8 @@ import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { TopNData } from '../../../../components/top-n/top-n-chart.component';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  ExploreGraphQlQueryHandlerService,
-  EXPLORE_GQL_REQUEST
+  EXPLORE_GQL_REQUEST,
+  ExploreGraphQlQueryHandlerService
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 @Model({
@@ -72,6 +72,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
             totalValue: totalValue
           });
         }
+
         return EMPTY;
       })
     );

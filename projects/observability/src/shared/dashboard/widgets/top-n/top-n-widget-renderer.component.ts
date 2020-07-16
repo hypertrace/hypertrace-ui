@@ -9,7 +9,7 @@ import { NEVER, Observable } from 'rxjs';
 import { flatMap, map, switchMap, tap } from 'rxjs/operators';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
-import { TopNWidgetDataFetcher, TopNWidgetData, TopNEntityData } from './data/top-n-data-source.model';
+import { TopNEntityData, TopNWidgetData, TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 import { TopNWidgetModel } from './top-n-widget.model';
 
 @Renderer({ modelClass: TopNWidgetModel })

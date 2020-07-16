@@ -28,11 +28,12 @@ describe('Top N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-top-n-chart [data]="data">
+      `<ht-top-n-chart [data]="data" [totalValue]="totalValue">
       </ht-top-n-chart>`,
       {
         hostProps: {
-          data: data
+          data: data,
+          totalValue: 240
         }
       }
     );
@@ -41,17 +42,17 @@ describe('Top N Chart Component', () => {
       {
         label: 'POST /api 2',
         value: 120,
-        width: '100.00%'
+        width: '50.00%'
       },
       {
         label: 'POST /api 1',
         value: 80,
-        width: '66.67%'
+        width: '33.33%'
       },
       {
         label: 'POST /api 3',
         value: 40,
-        width: '33.33%'
+        width: '16.67%'
       }
     ]);
   });
@@ -67,11 +68,12 @@ describe('Top N Chart Component', () => {
     const onLabelClick: jest.Mock = jest.fn();
 
     spectator = createHost(
-      `<ht-top-n-chart [data]="data" [labelClickable]="labelClickable" (labelClick)="onLabelClick($event)">
+      `<ht-top-n-chart [data]="data" [totalValue]="totalValue" [labelClickable]="labelClickable" (labelClick)="onLabelClick($event)">
       </ht-top-n-chart>`,
       {
         hostProps: {
           data: data,
+          totalValue: 120,
           labelClickable: true,
           onLabelClick: onLabelClick
         }
@@ -91,16 +93,56 @@ describe('Top N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-top-n-chart [data]="data">
+      `<ht-top-n-chart [data]="data" [totalValue]="totalValue">
       </ht-top-n-chart>`,
       {
         hostProps: {
-          data: data
+          data: data,
+          totalValue: 120
         }
       }
     );
 
     expect(spectator.query('.progress-value')).toExist();
     expect(spectator.query('.value')).toHaveText('120 (100.00%)');
+  });
+
+  test('hide if totalValue is 0', () => {
+    const data = [
+      {
+        label: 'POST /api 1',
+        value: 120
+      }
+    ];
+
+    spectator = createHost(
+      `<ht-top-n-chart [data]="data" [totalValue]="totalValue">
+      </ht-top-n-chart>`,
+      {
+        hostProps: {
+          data: data,
+          totalValue: 0
+        }
+      }
+    );
+    expect(spectator.query('.label')).not.toExist();
+    expect(spectator.query('.progress-value')).not.toExist();
+    expect(spectator.query('.value')).not.toExist();
+  });
+
+  test('hide if data is empty', () => {
+    spectator = createHost(
+      `<ht-top-n-chart [data]="data" [totalValue]="totalValue">
+      </ht-top-n-chart>`,
+      {
+        hostProps: {
+          data: [],
+          totalValue: 1 // Invalid case
+        }
+      }
+    );
+    expect(spectator.query('.label')).not.toExist();
+    expect(spectator.query('.progress-value')).not.toExist();
+    expect(spectator.query('.value')).not.toExist();
   });
 });

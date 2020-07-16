@@ -56,6 +56,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
 
     return {
       ...this.getMetricSpecificationBase(metric, aggregation),
+      name: metric,
       displayName: displayName,
       resultAlias: () => this.buildResultAlias(metric, aggregation),
       asGraphQlSelections: () => ({

@@ -88,8 +88,13 @@ describe('Top N Widget renderer', () => {
     ];
     mockResponse = {
       scope: ObservabilityEntityType.Api,
-      getData: () => of(data)
+      getData: () =>
+        of({
+          topNData: data,
+          totalValue: 150
+        })
     };
+
     const requestMetricSpec = buildMetricSpecification('Request', 'numCalls', MetricAggregationType.Sum);
     const errorMetricSpec = buildMetricSpecification('Errors', 'errorCount', MetricAggregationType.Sum);
     optionMetricSpecifications = [requestMetricSpec, errorMetricSpec];
@@ -101,16 +106,27 @@ describe('Top N Widget renderer', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.data$!).toBe('(x|)', {
-        x: [
-          {
-            label: 'Api 1',
-            value: 50
-          },
-          {
-            label: 'Api 2',
-            value: 100
-          }
-        ]
+        x: {
+          topNData: [
+            {
+              label: 'Api 1',
+              value: 50,
+              entity: {
+                [entityIdKey]: 'test-id - 1',
+                [entityTypeKey]: ObservabilityEntityType.Api
+              }
+            },
+            {
+              label: 'Api 2',
+              value: 100,
+              entity: {
+                [entityIdKey]: 'test-id - 2',
+                [entityTypeKey]: ObservabilityEntityType.Api
+              }
+            }
+          ],
+          totalValue: 150
+        }
       });
       expectObservable(spectator.component.options$).toBe('(x|)', {
         x: [
@@ -149,12 +165,16 @@ describe('Top N Widget renderer', () => {
 
     mockResponse = {
       scope: ObservabilityEntityType.Api,
-      getData: () => of(data)
+      getData: () =>
+        of({
+          topNData: data,
+          totalValue: 150
+        })
     };
 
     const spectator = createComponent();
     spectator.component.data$?.subscribe();
-    spectator.component.onLabelClicked('Api 1');
+    spectator.component.onLabelClicked('Api 1', data);
 
     expect(spectator.inject(EntityNavigationService).navigateToEntity).toHaveBeenCalledWith({
       [entityIdKey]: 'test-id - 1',

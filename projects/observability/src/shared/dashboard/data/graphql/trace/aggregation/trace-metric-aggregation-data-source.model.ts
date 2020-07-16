@@ -9,9 +9,6 @@ import { TraceValueDataSourceModel } from '../trace-value-data-source.model';
 @Model({
   type: 'trace-metric-aggregation-data-source'
 })
-/**
- * @deprecated Migrate to ExploreMetricAggregationDataSourceModel
- */
 export class TraceMetricAggregationDataSourceModel extends TraceValueDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'metric',

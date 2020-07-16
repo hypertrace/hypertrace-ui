@@ -3,17 +3,22 @@ import { AttributeSpecificationModel, GraphQlTimeRange, MetricAggregationType } 
 import { ModelApi } from '@hypertrace/hyperdash';
 import { flatMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
+import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+import {
+  EXPLORE_GQL_REQUEST,
+  GraphQlExploreRequest
+} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { MetricAggregationSpecificationModel } from '../../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNDataSourceModel } from './top-n-data-source.model';
 
 describe('Top N Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model: TopNDataSourceModel;
-  let emittedQuery: GraphQlEntitiesQueryRequest;
+  const emittedQueries: unknown[] = [];
 
   const attributeSpecificationModel = new AttributeSpecificationModel();
   attributeSpecificationModel.attribute = 'name';
@@ -21,6 +26,9 @@ describe('Top N Data Source Model', () => {
   const metricAggregationSpecification = new MetricAggregationSpecificationModel();
   metricAggregationSpecification.metric = 'numCalls';
   metricAggregationSpecification.aggregation = MetricAggregationType.Sum;
+  metricAggregationSpecification.modelOnInit();
+
+  const exploreSpecBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -33,7 +41,7 @@ describe('Top N Data Source Model', () => {
     model.resultLimit = 3;
     model.attributeSpecification = attributeSpecificationModel;
 
-    model.query$.subscribe(query => (emittedQuery = query.buildRequest([]) as GraphQlEntitiesQueryRequest));
+    model.query$.subscribe(query => emittedQueries.push(query.buildRequest([])));
   });
 
   test('builds expected Entity requests for Last Hour', fakeAsync(() => {
@@ -43,11 +51,11 @@ describe('Top N Data Source Model', () => {
       .subscribe();
 
     tick();
-
-    const expectedQuery: GraphQlEntitiesQueryRequest = {
+    const graphQltimeRange = new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime);
+    const expectedEntityQuery: GraphQlEntitiesQueryRequest = {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: ObservabilityEntityType.Api,
-      timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      timeRange: graphQltimeRange,
       properties: [attributeSpecificationModel, metricAggregationSpecification],
       limit: 3,
       sort: {
@@ -57,6 +65,21 @@ describe('Top N Data Source Model', () => {
       filters: []
     };
 
-    expect(expectedQuery).toEqual(emittedQuery);
+    const expectedExploreQuery: GraphQlExploreRequest = {
+      requestType: EXPLORE_GQL_REQUEST,
+      timeRange: graphQltimeRange,
+      context: ObservabilityEntityType.Api,
+      filters: [],
+      limit: 1,
+      selections: [
+        exploreSpecBuilder.exploreSpecificationForKey(
+          metricAggregationSpecification.metric,
+          metricAggregationSpecification.aggregation
+        )
+      ]
+    };
+
+    expect(emittedQueries[0]).toEqual(expectedEntityQuery);
+    expect(emittedQueries[1]).toEqual(expectedExploreQuery);
   }));
 });

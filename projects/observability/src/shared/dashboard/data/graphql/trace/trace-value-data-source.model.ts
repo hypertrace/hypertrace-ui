@@ -10,9 +10,6 @@ import {
   GraphQlExploreResultValue
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
-/**
- * @deprecated Migrate to ExploreValueDataSourceModel
- */
 export abstract class TraceValueDataSourceModel<TData> extends GraphQlDataSourceModel<TData> {
   protected abstract specification: ExploreSpecification;
 

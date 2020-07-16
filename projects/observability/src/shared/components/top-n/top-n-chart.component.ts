@@ -17,7 +17,10 @@ import { TypedSimpleChanges } from '@hypertrace/common';
         >
           {{ item.label }}
         </div>
-        <div class="progress" htcTooltip="{{ item.value | htcDisplayNumber }} of {{ this.totalValue | htcDisplayNumber}}">
+        <div
+          class="progress"
+          htcTooltip="{{ item.value | htcDisplayNumber }} of {{ this.totalValue | htcDisplayNumber }}"
+        >
           <div class="progress-value" [ngStyle]="{ width: item.width }"></div>
         </div>
         <div class="value">
