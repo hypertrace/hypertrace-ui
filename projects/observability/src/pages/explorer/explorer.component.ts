@@ -14,6 +14,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ExplorerDashboardBuilder],
   template: `
+    <htc-page-header></htc-page-header>
     <div class="fill-container explorer-container">
       <htc-toggle-button-group (selectedLabelChange)="this.onContextChange($event)" class="toggle-filter">
         <htc-toggle-button label="${ExplorerComponent.API_TRACES}"> </htc-toggle-button>
@@ -45,6 +46,7 @@ import {
             <htc-application-aware-dashboard
               *ngIf="this.vizDashboard$ | async as vizDashboard"
               class="visualization-dashboard"
+              [padding]="0"
               [json]="vizDashboard.json"
               (dashboardReady)="vizDashboard.onReady($event)"
             >
@@ -61,6 +63,7 @@ import {
           <htc-application-aware-dashboard
             *ngIf="this.resultsDashboard$ | async as resultsDashboard"
             class="results-panel-content"
+            [padding]="0"
             [json]="resultsDashboard.json"
             (dashboardReady)="resultsDashboard.onReady($event)"
           >

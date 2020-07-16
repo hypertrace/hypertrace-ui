@@ -13,49 +13,53 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
   providers: [SubscriptionLifecycle, ApiTraceDetailService],
   template: `
     <div class="trace-detail" *htcLoadAsync="this.traceDetails$ as traceDetails">
-      <div class="back">
-        <htc-icon
-          (click)="this.onClickBack()"
-          icon="${IconType.KeyboardBackspace}"
-          size="${IconSize.Small}"
-          class="arrow"
-        ></htc-icon>
-        <htc-label (click)="this.onClickBack()" label="Back" class="label"></htc-label>
+      <div class="header">
+        <div class="back">
+          <htc-icon
+            (click)="this.onClickBack()"
+            icon="${IconType.KeyboardBackspace}"
+            size="${IconSize.Small}"
+            class="arrow"
+          ></htc-icon>
+          <htc-label (click)="this.onClickBack()" label="Back" class="label"></htc-label>
+        </div>
+
+        <htc-label [label]="traceDetails.titleString" class="title"></htc-label>
+
+        <div class="summary-row">
+          <htc-summary-value
+            class="summary-value"
+            icon="${IconType.Time}"
+            [value]="traceDetails.timeString"
+          ></htc-summary-value>
+          <htc-summary-value
+            class="summary-value"
+            icon="${IconType.Id}"
+            [value]="traceDetails.traceId"
+          ></htc-summary-value>
+
+          <div class="separation"></div>
+
+          <htc-copy-shareable-link-to-clipboard class="share"></htc-copy-shareable-link-to-clipboard>
+
+          <htc-button
+            class="full-trace-button"
+            role="${ButtonRole.Tertiary}"
+            display="${ButtonStyle.Bordered}"
+            label="See Full Trace"
+            (click)="this.navigateToFullTrace(traceDetails.traceId)"
+          ></htc-button>
+        </div>
       </div>
 
-      <htc-label [label]="traceDetails.titleString" class="title"></htc-label>
-
-      <div class="summary-row">
-        <htc-summary-value
-          class="summary-value"
-          icon="${IconType.Time}"
-          [value]="traceDetails.timeString"
-        ></htc-summary-value>
-        <htc-summary-value
-          class="summary-value"
-          icon="${IconType.Id}"
-          [value]="traceDetails.traceId"
-        ></htc-summary-value>
-
-        <div class="separation"></div>
-
-        <htc-copy-shareable-link-to-clipboard class="share"></htc-copy-shareable-link-to-clipboard>
-
-        <htc-button
-          class="full-trace-button"
-          role="${ButtonRole.Tertiary}"
-          display="${ButtonStyle.Bordered}"
-          label="See Full Trace"
-          (click)="this.navigateToFullTrace(traceDetails.traceId)"
-        ></htc-button>
+      <div class="scrollable-container">
+        <htc-application-aware-dashboard
+          [json]="this.defaultJson"
+          [padding]="0"
+          (dashboardReady)="this.onDashboardReady($event)"
+        >
+        </htc-application-aware-dashboard>
       </div>
-
-      <htc-application-aware-dashboard
-        class="dashboard-content"
-        [json]="this.defaultJson"
-        (dashboardReady)="this.onDashboardReady($event)"
-      >
-      </htc-application-aware-dashboard>
     </div>
   `
 })

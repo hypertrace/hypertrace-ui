@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NavigableTabModule } from '@hypertrace/components';
+import { NavigableTabModule, PageHeaderModule } from '@hypertrace/components';
 import { GraphQlModule } from '@hypertrace/graphql-client';
 import { EntityGraphQlQueryHandlerService } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ApiDetailComponent } from './api-detail.component';
@@ -19,7 +19,8 @@ import { ApiTraceListModule } from './traces/api-trace-list.module';
     // Child Routes
     ApiOverviewModule,
     ApiTraceListModule,
-    ApiMetricsModule
+    ApiMetricsModule,
+    PageHeaderModule
   ]
 })
 export class ApiDetailModule {}

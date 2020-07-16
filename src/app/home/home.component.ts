@@ -12,7 +12,7 @@ import { LegendPosition, ObservabilityTableCellRenderer } from '@hypertrace/obse
   styleUrls: ['./home.component.scss'],
   template: `
     <div class="home">
-      <htc-navigable-dashboard class="dashboard-content" [navLocation]="this.location" [defaultJson]="this.defaultJson">
+      <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson">
       </htc-navigable-dashboard>
     </div>
   `

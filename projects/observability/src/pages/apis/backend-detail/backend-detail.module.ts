@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NavigableTabModule } from '@hypertrace/components';
+import { NavigableTabModule, PageHeaderModule } from '@hypertrace/components';
 import { GraphQlModule } from '@hypertrace/graphql-client';
 import { ObservabilityDashboardModule } from '../../../shared/dashboard/observability-dashboard.module';
 import { EntityGraphQlQueryHandlerService } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
@@ -21,7 +21,8 @@ import { BackendTraceListModule } from './traces/backend-trace-list.module';
     // Child Routes
     BackendOverviewModule,
     BackendTraceListModule,
-    BackendMetricsModule
+    BackendMetricsModule,
+    PageHeaderModule
   ]
 })
 export class BackendDetailModule {}

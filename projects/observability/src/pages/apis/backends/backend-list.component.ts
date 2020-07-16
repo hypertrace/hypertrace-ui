@@ -8,7 +8,8 @@ import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/en
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-navigable-dashboard class="dashboard-content" [navLocation]="this.location" [defaultJson]="this.defaultJson">
+    <htc-page-header></htc-page-header>
+    <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson">
     </htc-navigable-dashboard>
   `
 })

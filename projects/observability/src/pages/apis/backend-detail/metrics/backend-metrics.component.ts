@@ -11,7 +11,6 @@ import { backendMetricsDashboard } from './backend-metrics.dashboard';
   template: `
     <htc-navigable-dashboard
       *htcLoadAsync="this.filterConfig$ as filterConfig"
-      class="dashboard-content"
       navLocation="${backendMetricsDashboard.location}"
       [filterConfig]="filterConfig"
     >
