@@ -1,6 +1,8 @@
 import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import { PageHeaderComponent } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import { ApiDetailComponent } from './api-detail.component';
@@ -10,6 +12,7 @@ describe('Api detail component', () => {
   const componentFactory = createComponentFactory({
     component: ApiDetailComponent,
     shallow: true,
+    declarations: [MockComponent(PageHeaderComponent)],
     providers: [
       mockProvider(GraphQlRequestService),
       mockProvider(FeatureStateResolver, {
@@ -32,7 +35,11 @@ describe('Api detail component', () => {
       ]
     });
 
-    expect(spectator.element).toHaveText('Overview');
-    expect(spectator.element).toHaveText('Traces');
+    expect(spectator.query(PageHeaderComponent)?.tabs).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'Overview' }),
+        expect.objectContaining({ label: 'Traces' })
+      ])
+    );
   });
 });

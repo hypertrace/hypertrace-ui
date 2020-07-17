@@ -12,7 +12,6 @@ import { ServiceDetailService } from '../service-detail.service';
   providers: [SubscriptionLifecycle],
   template: `
     <htc-navigable-dashboard
-      class="dashboard-content"
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"

@@ -11,7 +11,6 @@ import { apiMetricsDashboard } from './api-metrics-dashboard';
   template: `
     <htc-navigable-dashboard
       *htcLoadAsync="this.filterConfig$ as filterConfig"
-      class="dashboard-content"
       navLocation="${apiMetricsDashboard.location}"
       [filterConfig]="filterConfig"
     >

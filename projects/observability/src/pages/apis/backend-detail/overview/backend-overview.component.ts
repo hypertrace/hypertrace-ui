@@ -8,12 +8,10 @@ import { ObservabilityTableCellRenderer } from '../../../../shared/components/ta
 import { BackendDetailService } from '../backend-detail.service';
 
 @Component({
-  styleUrls: ['./backend-overview.component.scss'],
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <htc-navigable-dashboard
-      class="dashboard-content"
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"

@@ -4,10 +4,10 @@ import { ModelJson } from '@hypertrace/hyperdash';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./application-flow.component.scss'],
   template: `
-    <div class="service-topology">
-      <htc-navigable-dashboard class="dashboard-content" [navLocation]="this.location" [defaultJson]="this.defaultJson">
+    <div class="vertical-flex-layout">
+      <htc-page-header></htc-page-header>
+      <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson">
       </htc-navigable-dashboard>
     </div>
   `

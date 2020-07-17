@@ -6,18 +6,15 @@ import { LegendPosition } from '../../../../shared/components/legend/legend.comp
 import { ApiDetailService } from '../api-detail.service';
 
 @Component({
-  styleUrls: ['./api-overview.component.scss'],
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="content">
-      <htc-navigable-dashboard
-        [navLocation]="this.location"
-        [defaultJson]="this.defaultJson"
-        (dashboardReady)="this.onDashboardReady($event)"
-      >
-      </htc-navigable-dashboard>
-    </div>
+    <htc-navigable-dashboard
+      [navLocation]="this.location"
+      [defaultJson]="this.defaultJson"
+      (dashboardReady)="this.onDashboardReady($event)"
+    >
+    </htc-navigable-dashboard>
   `
 })
 export class ApiOverviewComponent {

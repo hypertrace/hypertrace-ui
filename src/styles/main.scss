@@ -2,16 +2,16 @@
 @import 'font';
 @import '@angular/material/theming';
 
-.tab-content {
-  @include tab-content;
+.vertical-flex-layout {
+  @include flex-layout(column);
 }
 
-.dashboard-content {
-  @include dashboard-content;
+.scrollable-container {
+  @include scrollable-container();
 }
 
-.dashboard-container-content {
-  @include dashboard-container-content;
+.non-scrollable-container {
+  @include non-scrollable-container();
 }
 
 .center-contents {
@@ -20,18 +20,6 @@
 
 .fill-container {
   @include fill-container;
-}
-
-.no-outside-spacing {
-  @include no-outside-spacing;
-}
-
-.frame-border {
-  @include frame-border;
-}
-
-.hidden {
-  @include hidden;
 }
 
 // The html, body, and h1 blocks need to be tweaked for our own look, but leaving as is for now
@@ -72,13 +60,6 @@ mark {
 
 [hidden] {
   display: none !important;
-}
-
-.placeholder-banner {
-  background: $red-3;
-  padding: 2px 6px;
-  font-size: 12px;
-  height: 18px;
 }
 
 // Include the common styles for Angular Material. We include this here so that you only
