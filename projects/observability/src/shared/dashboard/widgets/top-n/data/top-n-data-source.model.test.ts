@@ -3,11 +3,7 @@ import { AttributeSpecificationModel, GraphQlTimeRange, MetricAggregationType } 
 import { ModelApi } from '@hypertrace/hyperdash';
 import { flatMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
-import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
-import {
-  ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
-} from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+import { ENTITIES_GQL_REQUEST } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest
@@ -18,17 +14,15 @@ import { TopNDataSourceModel } from './top-n-data-source.model';
 describe('Top N Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model: TopNDataSourceModel;
-  const emittedQueries: unknown[] = [];
-
+  let emittedQueries: unknown[];
   const attributeSpecificationModel = new AttributeSpecificationModel();
   attributeSpecificationModel.attribute = 'name';
+  attributeSpecificationModel.modelOnInit();
 
   const metricAggregationSpecification = new MetricAggregationSpecificationModel();
   metricAggregationSpecification.metric = 'numCalls';
   metricAggregationSpecification.aggregation = MetricAggregationType.Sum;
   metricAggregationSpecification.modelOnInit();
-
-  const exploreSpecBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -40,11 +34,11 @@ describe('Top N Data Source Model', () => {
     model.api = mockApi as ModelApi;
     model.resultLimit = 3;
     model.attributeSpecification = attributeSpecificationModel;
-
+    emittedQueries = [];
     model.query$.subscribe(query => emittedQueries.push(query.buildRequest([])));
   });
 
-  test('builds expected Entity requests for Last Hour', fakeAsync(() => {
+  test('builds expected requests for Last Hour', fakeAsync(() => {
     model
       .getData()
       .pipe(flatMap(fetcher => fetcher.getData(metricAggregationSpecification)))
@@ -52,17 +46,26 @@ describe('Top N Data Source Model', () => {
 
     tick();
     const graphQltimeRange = new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime);
-    const expectedEntityQuery: GraphQlEntitiesQueryRequest = {
+    const expectedEntityQuery = {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: ObservabilityEntityType.Api,
-      timeRange: graphQltimeRange,
-      properties: [attributeSpecificationModel, metricAggregationSpecification],
+      properties: [
+        expect.objectContaining({
+          attribute: attributeSpecificationModel.attribute
+        }),
+        expect.objectContaining({
+          metric: metricAggregationSpecification.metric,
+          aggregation: metricAggregationSpecification.aggregation
+        })
+      ],
       limit: 3,
       sort: {
         direction: 'DESC',
-        key: metricAggregationSpecification
-      },
-      filters: []
+        key: expect.objectContaining({
+          metric: metricAggregationSpecification.metric,
+          aggregation: metricAggregationSpecification.aggregation
+        })
+      }
     };
 
     const expectedExploreQuery: GraphQlExploreRequest = {
@@ -72,14 +75,14 @@ describe('Top N Data Source Model', () => {
       filters: [],
       limit: 1,
       selections: [
-        exploreSpecBuilder.exploreSpecificationForKey(
-          metricAggregationSpecification.metric,
-          metricAggregationSpecification.aggregation
-        )
+        expect.objectContaining({
+          name: metricAggregationSpecification.metric,
+          aggregation: metricAggregationSpecification.aggregation
+        })
       ]
     };
 
-    expect(emittedQueries[0]).toEqual(expectedEntityQuery);
-    expect(emittedQueries[1]).toEqual(expectedExploreQuery);
+    expect(emittedQueries[0]).toEqual(expect.objectContaining(expectedEntityQuery));
+    expect(emittedQueries[1]).toEqual(expect.objectContaining(expectedExploreQuery));
   }));
 });
