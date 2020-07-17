@@ -10,7 +10,6 @@ import { ServiceDetailService } from '../service-detail.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <htc-navigable-dashboard
-      class="dashboard-content"
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"

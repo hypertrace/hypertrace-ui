@@ -10,7 +10,6 @@ import { serviceMetricsDashboard } from './service-metrics.dashboard';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <htc-navigable-dashboard
-      class="dashboard-content"
       *htcLoadAsync="this.filterConfig$ as filterConfig"
       navLocation="${serviceMetricsDashboard.location}"
       [filterConfig]="filterConfig"

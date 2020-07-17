@@ -16,11 +16,8 @@ import { IconSize } from '@hypertrace/components';
     </htc-application-header>
     <div class="app-body">
       <ht-navigation class="left-nav"></ht-navigation>
-      <div class="app-content-with-header">
-        <htc-page-header></htc-page-header>
-        <div class="app-content">
-          <router-outlet></router-outlet>
-        </div>
+      <div class="app-content">
+        <router-outlet></router-outlet>
       </div>
     </div>
   `
