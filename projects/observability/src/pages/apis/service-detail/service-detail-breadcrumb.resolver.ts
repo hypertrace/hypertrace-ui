@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
-  ENTITY_GQL_REQUEST,
-  EntityGraphQlQueryHandlerService
+  EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
 import { ServiceEntity } from './service-detail.service';

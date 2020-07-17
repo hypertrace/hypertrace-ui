@@ -1,4 +1,4 @@
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   AttributeSpecificationModel,
   GraphQlDataSourceModel,
@@ -11,8 +11,8 @@ import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
-  ENTITIES_GQL_REQUEST,
-  EntitiesGraphQlQueryHandlerService
+  EntitiesGraphQlQueryHandlerService,
+  ENTITIES_GQL_REQUEST
 } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 
 @Model({

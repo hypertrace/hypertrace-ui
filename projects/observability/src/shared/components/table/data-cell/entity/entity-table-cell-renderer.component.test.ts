@@ -1,10 +1,10 @@
 import { Dictionary, NavigationService } from '@hypertrace/common';
 import {
+  TableColumnConfig,
   TABLE_CELL_RENDERER_CELL_DATA,
   TABLE_CELL_RENDERER_COLUMN_CONFIG,
   TABLE_CELL_RENDERER_COLUMN_INDEX,
-  TABLE_CELL_RENDERER_ROW_DATA,
-  TableColumnConfig
+  TABLE_CELL_RENDERER_ROW_DATA
 } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';

@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
-import { defaults } from 'lodash';
+import { defaults } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';

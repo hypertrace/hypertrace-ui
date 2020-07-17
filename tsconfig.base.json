@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "importHelpers": true,
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2020",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "downlevelIteration": true,
+    "lib": ["es2015", "es2016", "es2017", "esnext.array", "esnext.asynciterable", "dom"],
+    "paths": {
+      "@hypertrace/assets-library": ["hypertrace-core-ui/projects/assets-library/src/public-api.ts"],
+      "@hypertrace/common": ["hypertrace-core-ui/projects/common/src/public-api.ts"],
+      "@hypertrace/components": ["hypertrace-core-ui/projects/components/src/public-api.ts"],
+      "@hypertrace/dashboards": ["hypertrace-core-ui/projects/dashboards/src/public-api.ts"],
+      "@hypertrace/graphql-client": ["hypertrace-core-ui/projects/graphql-client/src/public-api.ts"],
+      "@hypertrace/distributed-tracing": ["hypertrace-core-ui/projects/distributed-tracing/src/public-api.ts"],
+      "@hypertrace/test-utils": ["hypertrace-core-ui/projects/test-utils/src/public-api.ts"],
+      "@hypertrace/dashboards/testing": ["hypertrace-core-ui/projects/dashboards/src/test/public-api.ts"],
+      "@hypertrace/observability": ["projects/observability/src/public-api.ts"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

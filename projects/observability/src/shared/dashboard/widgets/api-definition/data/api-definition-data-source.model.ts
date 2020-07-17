@@ -2,11 +2,11 @@ import { Dictionary } from '@hypertrace/common';
 import { GraphQlDataSourceModel, Specification, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { Entity, entityIdKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import {
-  ENTITY_GQL_REQUEST,
-  EntityGraphQlQueryHandlerService
+  EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST
 } from '../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 @Model({
@@ -37,7 +37,7 @@ export class ApiDefinitionDataSourceModel extends GraphQlDataSourceModel<ApiDefi
       id: this.apiId,
       timeRange: this.getTimeRangeOrThrow(),
       properties: this.definitionSpecifications
-    }).pipe(flatMap(trace => this.mapResponseObject(trace)));
+    }).pipe(mergeMap(trace => this.mapResponseObject(trace)));
   }
 
   public mapResponseObject(apiEntity: Entity | undefined): Observable<ApiDefinitionData> {

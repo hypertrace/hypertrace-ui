@@ -6,8 +6,8 @@ import { RadarPoint } from '../../../../../components/radar/radar';
 import { Entity } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import {
-  ENTITY_GQL_REQUEST,
   EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST,
   GraphQlEntityRequest
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { RadarDataSourceModel } from '../radar-data-source.model';

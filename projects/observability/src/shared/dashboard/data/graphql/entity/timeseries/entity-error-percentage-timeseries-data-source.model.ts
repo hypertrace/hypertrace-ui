@@ -18,8 +18,8 @@ import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/fil
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
-  ENTITY_GQL_REQUEST,
   EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST,
   GraphQlEntityRequest
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/series.model';

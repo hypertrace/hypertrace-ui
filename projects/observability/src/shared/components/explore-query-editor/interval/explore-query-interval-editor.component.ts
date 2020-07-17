@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IntervalDurationService, TimeDuration, TypedSimpleChanges } from '@hypertrace/common';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IntervalValue } from '../../interval-select/interval-select.component';

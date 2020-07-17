@@ -1,5 +1,5 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   GraphQlFilter,
   SpecificationBackedTableColumnDef,
@@ -12,8 +12,8 @@ import { Entity, EntityType, ObservabilityEntityType } from '../../../../../grap
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
-  ENTITIES_GQL_REQUEST,
   EntitiesGraphQlQueryHandlerService,
+  ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 

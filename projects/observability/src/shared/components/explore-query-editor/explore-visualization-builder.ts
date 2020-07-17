@@ -8,14 +8,14 @@ import {
   GraphQlTracesRequest,
   MetadataService,
   MetricAggregationType,
-  SPAN_SCOPE,
   SPANS_GQL_REQUEST,
+  SPAN_SCOPE,
   Specification,
   SpecificationBuilder,
   TRACES_GQL_REQUEST,
   TraceType
 } from '@hypertrace/distributed-tracing';
-import { uniqBy } from 'lodash';
+import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { defaultIfEmpty, map, takeUntil } from 'rxjs/operators';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';

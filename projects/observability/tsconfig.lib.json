@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "../../",
     "outDir": "../../out-tsc/lib",
@@ -8,6 +8,7 @@
     "inlineSources": true,
     "types": [],
     "paths": {
+      "@hypertrace/assets-library": ["hypertrace-core-ui/projects/assets-library/src/public-api.ts"],
       "@hypertrace/graphql-client": ["hypertrace-core-ui/projects/graphql-client/src/public-api.ts"],
       "@hypertrace/common": ["hypertrace-core-ui/projects/common/src/public-api.ts"],
       "@hypertrace/components": ["hypertrace-core-ui/projects/components/src/public-api.ts"],

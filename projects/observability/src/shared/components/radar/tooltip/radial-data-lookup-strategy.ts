@@ -1,6 +1,6 @@
 import { getAngleForCoordinate } from '@hypertrace/common';
 import { Bisector, bisector } from 'd3-array';
-import { clone } from 'lodash';
+import { clone } from 'lodash-es';
 import { MouseLocationData, RelativeMouseLocation } from '../../utils/mouse-tracking/mouse-tracking';
 import { RadarAxisData } from '../axis/radar-chart-axis.service';
 import { RadarPoint, RadarSeries } from '../radar';

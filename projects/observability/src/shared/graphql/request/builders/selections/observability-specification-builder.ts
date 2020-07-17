@@ -1,4 +1,4 @@
-import { DateCoercer, TimeDuration } from '@hypertrace/common';
+import { DateCoercer, Dictionary, TimeDuration } from '@hypertrace/common';
 import {
   convertToGraphQlMetricAggregationType,
   GraphQlMetricAggregationType,
@@ -10,7 +10,7 @@ import {
   SpecificationBuilder
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
-import { assignIn, Dictionary } from 'lodash';
+import { assignIn } from 'lodash-es';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';

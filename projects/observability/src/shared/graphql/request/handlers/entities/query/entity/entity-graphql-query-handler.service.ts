@@ -12,8 +12,8 @@ import { Entity, EntityType } from '../../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-builder.service';
 import {
-  ENTITIES_GQL_REQUEST,
   EntitiesGraphQlQueryHandlerService,
+  ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../entities-graphql-query-handler.service';
 

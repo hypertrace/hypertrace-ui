@@ -1,5 +1,5 @@
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RecursivePartial } from '@hypertrace/common';
 import { select } from 'd3-selection';
-import { defaultsDeep } from 'lodash';
+import { defaultsDeep } from 'lodash-es';
 import { LegendPosition } from '../legend/legend.component';
 import { RadarChartAxisService } from './axis/radar-chart-axis.service';
 import { RadarChartLayoutService } from './layout/radar-chart-layout.service';

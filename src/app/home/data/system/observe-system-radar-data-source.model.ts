@@ -2,10 +2,10 @@ import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
   ExploreSpecification,
   ExploreSpecificationBuilder,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse,
   ObservabilityTraceType,

@@ -13,8 +13,8 @@ import { ObservabilityTraceType } from '../../../../../graphql/model/schema/obse
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ExploreResult } from '../../explore/explore-result';

@@ -45,7 +45,8 @@
             "stylePreprocessorOptions": {
               "includePaths": ["./hypertrace-core-ui/projects/assets-library/assets/styles", "./node_modules"]
             },
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"]
           },
           "configurations": {
             "production": {

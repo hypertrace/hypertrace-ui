@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { AttributeSpecificationModel, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import {
   ENTITIES_GQL_REQUEST,
@@ -39,7 +39,7 @@ describe('Top N Data Source Model', () => {
   test('builds expected Entity requests for Last Hour', fakeAsync(() => {
     model
       .getData()
-      .pipe(flatMap(fetcher => fetcher.getData(metricAggregationSpecification)))
+      .pipe(mergeMap(fetcher => fetcher.getData(metricAggregationSpecification)))
       .subscribe();
 
     tick();

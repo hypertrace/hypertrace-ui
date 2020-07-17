@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 import { TopologyEdge, TopologyNeighborhood, TopologyNode } from '../topology';
 
 export class TopologyNeighborhoodFinder {

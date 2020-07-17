@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonRole, ButtonStyle } from '@hypertrace/components';
 import { TraceType } from '@hypertrace/distributed-tracing';
-import { without } from 'lodash';
+import { without } from 'lodash-es';
 import { ExploreSeries } from '../explore-visualization-builder';
 
 @Component({

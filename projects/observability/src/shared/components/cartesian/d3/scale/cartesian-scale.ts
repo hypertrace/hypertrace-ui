@@ -1,6 +1,6 @@
 import { AxisScale } from 'd3-axis';
 import { ScaleBand, ScaleLinear, ScaleTime } from 'd3-scale';
-import { last } from 'lodash';
+import { last } from 'lodash-es';
 import { AxisType, ScaleType, Series } from '../../chart';
 import { SeriesState } from './state/series-state';
 

@@ -6,11 +6,11 @@ import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { ENTITY_METADATA, EntityMetadata, EntityMetadataMap } from '../../../shared/constants/entity-metadata';
+import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
-  ENTITY_GQL_REQUEST,
-  EntityGraphQlQueryHandlerService
+  EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })

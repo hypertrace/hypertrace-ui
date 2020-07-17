@@ -1,9 +1,9 @@
 import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
-import { defaults } from 'lodash';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { defaults } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { EntityMetricAggregationDataSourceModel } from '../../data/graphql/entity/aggregation/entity-metric-aggregation-data-source.model';
 import { EntityAttributeDataSourceModel } from '../../data/graphql/entity/attribute/entity-attribute-data-source.model';
 
@@ -58,7 +58,7 @@ export class MetricDisplayWidgetModel {
   public api!: ModelApi;
 
   public getData(): Observable<MetricWidgetValueData> {
-    return this.api.getData<unknown>().pipe(flatMap(receivedValue => this.normalizeData(receivedValue)));
+    return this.api.getData<unknown>().pipe(mergeMap(receivedValue => this.normalizeData(receivedValue)));
   }
 
   private normalizeData(metricValue: unknown): Observable<MetricWidgetValueData> {

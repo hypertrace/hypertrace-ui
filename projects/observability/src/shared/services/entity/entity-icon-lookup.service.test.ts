@@ -1,5 +1,5 @@
 import { createServiceFactory } from '@ngneat/spectator/jest';
-import { ENTITY_METADATA, EntityMetadata } from '../../constants/entity-metadata';
+import { EntityMetadata, ENTITY_METADATA } from '../../constants/entity-metadata';
 import {
   BackendType,
   entityIdKey,

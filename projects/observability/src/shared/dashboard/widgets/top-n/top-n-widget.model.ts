@@ -7,7 +7,7 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-source.model';

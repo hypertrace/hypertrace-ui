@@ -10,15 +10,15 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
   ExploreSpecification,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   ObservabilityTraceType
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { ObserveSystemRadarDataSourceModel } from './observe-system-radar-data-source.model';
 
 describe('Observe System radar data source model', () => {
@@ -89,7 +89,7 @@ describe('Observe System radar data source model', () => {
   test('builds expected requests for Last Hour', fakeAsync(() => {
     spectator.model
       .getData()
-      .pipe(flatMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
+      .pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
       .subscribe(() => {
         // NOOP
       });
@@ -119,7 +119,7 @@ describe('Observe System radar data source model', () => {
   test('builds expected requests and response', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        spectator.model.getData().pipe(flatMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
+        spectator.model.getData().pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
       ).toBe('(x|)', {
         x: {
           current: [

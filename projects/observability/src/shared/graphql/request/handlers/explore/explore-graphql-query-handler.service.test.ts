@@ -16,8 +16,8 @@ import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-inte
 import { ObservabilityTraceType } from '../../../model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreRequest
 } from './explore-graphql-query-handler.service';

@@ -4,9 +4,9 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
-import { flatMap, map, switchMap, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
@@ -99,7 +99,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
   private setOptionsObservables(): void {
     this.options$ = this.model.getData().pipe(
       map(fetcher => fetcher.scope),
-      flatMap(scope =>
+      mergeMap(scope =>
         forkJoinSafeEmpty(
           this.model.optionMetricSpecifications.map(specification =>
             this.metadataService

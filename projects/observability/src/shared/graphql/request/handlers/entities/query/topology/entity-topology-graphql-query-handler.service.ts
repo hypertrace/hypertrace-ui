@@ -8,7 +8,7 @@ import {
   SpecificationBuilder
 } from '@hypertrace/distributed-tracing';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
-import { fromPairs } from 'lodash';
+import { fromPairs } from 'lodash-es';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
 import { GraphQlMetricAggregation } from '../../../../../model/schema/metric/graphql-metric-aggregation';
 import { MetricAggregationSpecification } from '../../../../../model/schema/specifications/metric-aggregation-specification';

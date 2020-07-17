@@ -1,4 +1,4 @@
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { DefinesNeighbor, NeighborDirection } from '../../../../graphql/model/schema/neighbor';

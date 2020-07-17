@@ -10,7 +10,7 @@ import {
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, Observable, of } from 'rxjs';
-import { flatMap, take } from 'rxjs/operators';
+import { mergeMap, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
@@ -60,7 +60,7 @@ describe('Explore cartesian data source model', () => {
       query.responseObserver.complete();
     });
 
-    return model.getData().pipe(flatMap(fetcher => fetcher.getData(testInterval)));
+    return model.getData().pipe(mergeMap(fetcher => fetcher.getData(testInterval)));
   };
 
   const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({

@@ -6,9 +6,9 @@ import {
   spanIdKey,
   SpanType,
   Trace,
-  TRACE_GQL_REQUEST,
   traceIdKey,
   traceTypeKey,
+  TRACE_GQL_REQUEST,
   WaterfallData
 } from '@hypertrace/distributed-tracing';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';

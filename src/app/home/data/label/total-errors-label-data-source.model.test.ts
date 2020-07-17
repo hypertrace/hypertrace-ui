@@ -10,9 +10,9 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
   ExploreSpecification,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   ObservabilityTraceType
 } from '@hypertrace/observability';

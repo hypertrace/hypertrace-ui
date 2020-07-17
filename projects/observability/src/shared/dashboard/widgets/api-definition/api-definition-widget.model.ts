@@ -1,5 +1,5 @@
 import { Model, ModelApi } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { ApiDefinitionData, ApiDefinitionDataSourceModel } from './data/api-definition-data-source.model';
 

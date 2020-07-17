@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CONTENT_HOLDER_TEMPLATE, ContentHolder } from '@hypertrace/components';
+import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '@hypertrace/components';
 
 @Component({
   selector: 'ht-timeline-card-container',

@@ -15,8 +15,8 @@ import { concatMap, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { Entity, EntityType } from '../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import {
-  ENTITY_GQL_REQUEST,
-  EntityGraphQlQueryHandlerService
+  EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST
 } from '../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 @Injectable()

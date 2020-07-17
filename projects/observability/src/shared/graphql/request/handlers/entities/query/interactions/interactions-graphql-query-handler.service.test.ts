@@ -18,8 +18,8 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../..
 import { ObservabilitySpecificationBuilder } from '../../../../builders/selections/observability-specification-builder';
 import {
   GraphQlInteractionsRequest,
-  INTERACTIONS_GQL_REQUEST,
-  InteractionsGraphQlQueryHandlerService
+  InteractionsGraphQlQueryHandlerService,
+  INTERACTIONS_GQL_REQUEST
 } from './interactions-graphql-query-handler.service';
 
 describe('Interactions graphql query handler', () => {

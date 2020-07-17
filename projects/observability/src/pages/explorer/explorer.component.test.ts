@@ -16,8 +16,8 @@ import {
   GraphQlFieldFilter,
   GraphQlOperatorType,
   MetricAggregationType,
-  SPAN_SCOPE,
   SPANS_GQL_REQUEST,
+  SPAN_SCOPE,
   TRACES_GQL_REQUEST,
   UserFilterOperator
 } from '@hypertrace/distributed-tracing';

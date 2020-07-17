@@ -1,4 +1,4 @@
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { BOOLEAN_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Axis, ScaleType } from '../../../../../components/cartesian/chart';
 

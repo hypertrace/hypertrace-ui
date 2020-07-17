@@ -22,7 +22,7 @@ import {
 } from '@hypertrace/graphql-client';
 import { Observable, of } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
-import { ENTITY_METADATA, EntityMetadataMap } from '../../../../../constants/entity-metadata';
+import { EntityMetadataMap, ENTITY_METADATA } from '../../../../../constants/entity-metadata';
 import {
   Entity,
   entityIdKey,

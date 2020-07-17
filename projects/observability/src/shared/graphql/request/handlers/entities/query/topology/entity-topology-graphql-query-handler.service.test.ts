@@ -5,10 +5,10 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../..
 import { GraphQlIntervalUnit } from '../../../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilitySpecificationBuilder } from '../../../../builders/selections/observability-specification-builder';
 import {
-  ENTITY_TOPOLOGY_GQL_REQUEST,
   EntityEdge,
   EntityNode,
   EntityTopologyGraphQlQueryHandlerService,
+  ENTITY_TOPOLOGY_GQL_REQUEST,
   GraphQlEntityTopologyRequest,
   TopologyNodeSpecification
 } from './entity-topology-graphql-query-handler.service';

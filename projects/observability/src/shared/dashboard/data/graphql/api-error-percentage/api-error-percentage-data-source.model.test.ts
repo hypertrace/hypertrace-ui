@@ -4,8 +4,8 @@ import { ModelApi } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ApiErrorPercentageDataSourceModel } from './api-error-percentage-data-source.model';

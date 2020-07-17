@@ -1,5 +1,5 @@
+import { Dictionary } from '@hypertrace/common';
 import { MetricAggregation, MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { Dictionary } from 'lodash';
 import {
   ErrorPercentageMetricAggregation,
   ErrorPercentageMetricValueCategory

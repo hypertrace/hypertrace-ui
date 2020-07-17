@@ -19,8 +19,8 @@ import { GraphQlEntityFilter } from '../../../../model/schema/filter/entity/grap
 import { GraphQlIntervalUnit } from '../../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilitySpecificationBuilder } from '../../../builders/selections/observability-specification-builder';
 import {
-  ENTITIES_GQL_REQUEST,
   EntitiesGraphQlQueryHandlerService,
+  ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from './entities-graphql-query-handler.service';
 
