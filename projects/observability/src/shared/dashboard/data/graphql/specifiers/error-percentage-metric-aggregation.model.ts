@@ -1,5 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { MetricAggregationType, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty } from '@hypertrace/hyperdash';
 import {

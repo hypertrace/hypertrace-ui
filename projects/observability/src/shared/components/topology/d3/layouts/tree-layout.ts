@@ -1,5 +1,5 @@
 import { hierarchy, HierarchyNode, HierarchyPointNode, tree } from 'd3-hierarchy';
-import { first } from 'lodash';
+import { first } from 'lodash-es';
 import {
   RenderableTopology,
   RenderableTopologyNode,

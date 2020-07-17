@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
 import { Observable, throwError } from 'rxjs';
-import { ENTITY_METADATA, EntityMetadataMap } from '../../../constants/entity-metadata';
+import { EntityMetadataMap, ENTITY_METADATA } from '../../../constants/entity-metadata';
 import { Entity, entityIdKey, EntityType, entityTypeKey } from '../../../graphql/model/schema/entity';
 
 @Injectable({ providedIn: 'root' })

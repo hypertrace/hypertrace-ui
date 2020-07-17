@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { TableColumnConfig, TableDataSource, ToggleViewMode } from '@hypertrace/components';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { ApiParameters } from '../data/api-definition-data-source.model';
 

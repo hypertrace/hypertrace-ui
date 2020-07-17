@@ -10,7 +10,7 @@ import {
   TraceType
 } from '@hypertrace/distributed-tracing';
 import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { flatMap, map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { CartesianSeriesVisualizationType } from '../../cartesian/chart';
 import { ExploreSeries } from '../explore-visualization-builder';
@@ -221,7 +221,7 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
     seriesData$
       .pipe(
         take(1),
-        flatMap(seriesData => this.buildNewExploreSeries(...seriesData))
+        switchMap(seriesData => this.buildNewExploreSeries(...seriesData))
       )
       .subscribe(newSeries => this.seriesChange.next(newSeries));
   }

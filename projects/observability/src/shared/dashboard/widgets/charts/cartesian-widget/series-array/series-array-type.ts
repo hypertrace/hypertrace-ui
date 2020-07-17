@@ -1,5 +1,5 @@
 import { ModelJson, ModelPropertyTypeRegistrationInformation } from '@hypertrace/hyperdash';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 export const SERIES_ARRAY_TYPE: ModelPropertyTypeRegistrationInformation = {
   type: 'series-array',

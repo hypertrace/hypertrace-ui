@@ -1,5 +1,5 @@
 import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -8,8 +8,8 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
-import { intersectionBy } from 'lodash';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { intersectionBy } from 'lodash-es';
 import { merge, Observable } from 'rxjs';
 import { map, toArray } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';

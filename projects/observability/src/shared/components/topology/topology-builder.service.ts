@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { defaults } from 'lodash';
+import { defaults } from 'lodash-es';
 import { D3Topology } from './d3/d3-topology';
 import { Topology, TopologyConfiguration } from './topology';
 

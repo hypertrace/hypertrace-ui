@@ -7,7 +7,7 @@ import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/sp
 
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
-import { ENTITY_METADATA, EntityMetadata } from '../../../shared/constants/entity-metadata';
+import { EntityMetadata, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';

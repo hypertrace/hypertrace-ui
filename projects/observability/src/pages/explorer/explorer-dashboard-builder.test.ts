@@ -13,7 +13,7 @@ import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { capitalize } from 'lodash';
+import { capitalize } from 'lodash-es';
 import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';

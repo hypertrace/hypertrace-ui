@@ -1,7 +1,7 @@
 import { ElementRef, Injector, Renderer2, TemplateRef, Type } from '@angular/core';
 import { assertUnreachable, DomElementMeasurerService, DynamicComponentService, selector } from '@hypertrace/common';
 import { ContainerElement, mouse, Selection } from 'd3-selection';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { LegendComponent, LegendLayout, LegendPosition, LegendSeries } from '../../legend/legend.component';
 import { ChartTooltipBuilderService, ChartTooltipDataMapper } from '../chart-tooltip/chart-tooltip-builder.service';
 import { ChartTooltipRef } from '../chart-tooltip/chart-tooltip-popover';

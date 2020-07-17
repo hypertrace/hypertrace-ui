@@ -12,7 +12,7 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, flatMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
@@ -29,11 +29,13 @@ export class ExplorerDashboardBuilder {
     // We only want to rebuild a dashboard if we actually have a meaningful request change
     const uniqueRequests$ = this.requestSubject.pipe(distinctUntilChanged(isEqualIgnoreFunctions));
 
-    this.visualizationDashboard$ = uniqueRequests$.pipe(flatMap(request => this.buildVisualizationDashboard(request)));
+    this.visualizationDashboard$ = uniqueRequests$.pipe(
+      switchMap(request => this.buildVisualizationDashboard(request))
+    );
 
     // Two step process so we can see if the trace request will ultimately be any different
     this.resultsDashboard$ = uniqueRequests$.pipe(
-      flatMap(request => this.buildDashboardData(request)),
+      switchMap(request => this.buildDashboardData(request)),
       distinctUntilChanged(isEqualIgnoreFunctions),
       map(data => this.buildResultsDashboard(data))
     );
@@ -72,7 +74,7 @@ export class ExplorerDashboardBuilder {
 
   private buildDashboardData(request: ExploreVisualizationRequest): Observable<ResultsDashboardData> {
     return request.resultsQuery$.pipe(
-      flatMap(resultsQuery =>
+      switchMap(resultsQuery =>
         forkJoinSafeEmpty(
           resultsQuery.properties.map(property => this.metadataService.getAttribute(request.context, property.name))
         ).pipe(

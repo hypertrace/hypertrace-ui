@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
-import { throttle } from 'lodash';
+import { throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -36,9 +36,9 @@ import { TopologyDragEvent, TopologyNodeDrag } from './interactions/drag/topolog
 import { TopologyHover, TopologyHoverEvent } from './interactions/hover/topology-hover';
 import { TopologyStateManager } from './interactions/state/topology-state-manager';
 import {
-  TOPOLOGY_INTERACTION_CONTROL_DATA,
   TopologyInteractionControlComponent,
-  TopologyInteractionControlData
+  TopologyInteractionControlData,
+  TOPOLOGY_INTERACTION_CONTROL_DATA
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
 import { TreeLayout } from './layouts/tree-layout';

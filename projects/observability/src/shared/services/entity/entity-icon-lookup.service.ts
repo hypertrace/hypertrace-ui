@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ENTITY_METADATA, EntityMetadataMap } from '../../constants/entity-metadata';
+import { EntityMetadataMap, ENTITY_METADATA } from '../../constants/entity-metadata';
 import {
   BackendType,
   Entity,

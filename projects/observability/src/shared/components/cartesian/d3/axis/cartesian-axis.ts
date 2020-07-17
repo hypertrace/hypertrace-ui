@@ -1,6 +1,6 @@
 import { Axis as D3Axis, axisBottom, AxisDomain, axisLeft, axisRight, AxisScale, axisTop } from 'd3-axis';
 import { BaseType, select, Selection } from 'd3-selection';
-import { defaultsDeep } from 'lodash';
+import { defaultsDeep } from 'lodash-es';
 import { MouseLocationData } from '../../../utils/mouse-tracking/mouse-tracking';
 import { SvgUtilService } from '../../../utils/svg/svg-util.service';
 import { Axis, AxisLocation, AxisType } from '../../chart';

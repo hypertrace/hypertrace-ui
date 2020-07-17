@@ -1,5 +1,5 @@
 import { ScaleBand, scaleBand } from 'd3-scale';
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 import { ScaleType } from '../../../chart';
 import { CartesianScale, D3ScaleForType } from '../cartesian-scale';
 

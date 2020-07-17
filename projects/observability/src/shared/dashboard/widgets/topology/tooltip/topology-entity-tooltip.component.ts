@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
-import { IconSize, POPOVER_DATA, PopoverRef } from '@hypertrace/components';
+import { IconSize, PopoverRef, POPOVER_DATA } from '@hypertrace/components';
 import { MetadataService, MetricAggregation } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
   TopologyTooltipData,
   TopologyTooltipEdgeData,
@@ -63,7 +63,7 @@ export class TopologyEntityTooltipComponent {
     private readonly metadataService: MetadataService,
     private readonly popoverRef: PopoverRef
   ) {
-    this.data$ = dataStream.pipe(flatMap(tooltipData => this.convertTooltipDataToTemplateData(tooltipData)));
+    this.data$ = dataStream.pipe(switchMap(tooltipData => this.convertTooltipDataToTemplateData(tooltipData)));
   }
 
   public onHide(): void {

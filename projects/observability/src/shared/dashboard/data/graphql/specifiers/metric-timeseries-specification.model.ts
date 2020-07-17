@@ -1,5 +1,5 @@
 import { Dictionary, IntervalDurationService, TimeDuration, TimeUnit } from '@hypertrace/common';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';

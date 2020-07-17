@@ -11,8 +11,8 @@ import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/fil
 import { NeighborDirection, specificationDefinesNeighbor } from '../../../../../graphql/model/schema/neighbor';
 import {
   GraphQlInteractionsRequest,
-  INTERACTIONS_GQL_REQUEST,
-  InteractionsResponse
+  InteractionsResponse,
+  INTERACTIONS_GQL_REQUEST
 } from '../../../../../graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
 
 @Model({

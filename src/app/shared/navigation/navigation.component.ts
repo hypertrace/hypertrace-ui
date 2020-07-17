@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, TraceRoute } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 
 @Component({
   selector: 'ht-navigation',

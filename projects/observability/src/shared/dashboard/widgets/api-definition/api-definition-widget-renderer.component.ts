@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { ApiDefinitionWidgetModel } from './api-definition-widget.model';
 import { ApiDefinitionData } from './data/api-definition-data-source.model';

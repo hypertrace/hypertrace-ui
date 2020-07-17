@@ -1,5 +1,5 @@
 import { extent, Numeric } from 'd3-array';
-import { compact, uniq } from 'lodash';
+import { compact, uniq } from 'lodash-es';
 import { AxisType } from '../../../chart';
 import { CartesianScale } from '../cartesian-scale';
 import { SeriesState } from '../state/series-state';

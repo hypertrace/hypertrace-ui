@@ -2,7 +2,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
@@ -41,7 +41,7 @@ describe('Entity radar data source model', () => {
   test('builds expected Entity requests for Last Hour', fakeAsync(() => {
     model
       .getData()
-      .pipe(flatMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
+      .pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
       .subscribe(() => {
         // NOOP
       });
@@ -79,7 +79,7 @@ describe('Entity radar data source model', () => {
   test('builds expected Entity requests for Last Day', fakeAsync(() => {
     model
       .getData()
-      .pipe(flatMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Day))))
+      .pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Day))))
       .subscribe(() => {
         // NOOP
       });
@@ -117,7 +117,7 @@ describe('Entity radar data source model', () => {
   test('builds expected Entity requests for Last Month', fakeAsync(() => {
     model
       .getData()
-      .pipe(flatMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Month))))
+      .pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Month))))
       .subscribe(() => {
         // NOOP
       });

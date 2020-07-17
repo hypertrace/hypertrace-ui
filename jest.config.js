@@ -27,11 +27,11 @@ module.exports = {
     '!**/*/test/**',
     '!src/app/routes/**/*.ts'
   ],
-  testEnvironment: 'jest-environment-jsdom-sixteen', // Update test env to newer jsdom for bug fixes
   coverageDirectory: 'coverage/hypertrace-ui',
   modulePathIgnorePatterns: ['<rootDir>/dist/'], // Need to reset from app project, but empty is merged
   testMatch: ['<rootDir>/(src|projects)/**/+(*.)+(spec|test).ts'],
   moduleNameMapper: {
+    '^lodash-es$': 'lodash',
     '@hypertrace/assets-library': '<rootDir>/hypertrace-core-ui/projects/assets-library/src/public-api.ts',
     '@hypertrace/common$': '<rootDir>/hypertrace-core-ui/projects/common/src/public-api.ts',
     '@hypertrace/components': '<rootDir>/hypertrace-core-ui/projects/components/src/public-api.ts',

@@ -1,5 +1,5 @@
 import { ContainerElement, mouse, select, Selection } from 'd3-selection';
-import { minBy } from 'lodash';
+import { minBy } from 'lodash-es';
 import { MouseLocationData, RelativeMouseLocation } from '../../../utils/mouse-tracking/mouse-tracking';
 import { AxisCrosshair, AxisType } from '../../chart';
 import { ScaleBounds } from '../scale/cartesian-scale';

@@ -3,7 +3,7 @@ import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
 // tslint:disable-next-line: no-restricted-globals weird tslint error. Rename event so we can type it and not mistake it for other events
 import { event as _d3CurrentEvent, Selection } from 'd3-selection';
 import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { RenderableTopologyNode, RenderableTopologyNodeRenderedData } from '../../../topology';
 

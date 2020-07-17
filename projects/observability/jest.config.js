@@ -23,7 +23,6 @@ module.exports = {
       }
     ]
   ],
-  testEnvironment: 'jest-environment-jsdom-sixteen', // Update test env to newer jsdom for bug fixes
   testMatch: ['<rootDir>/projects/observability/**/+(*.)+(spec|test).ts'],
   modulePathIgnorePatterns: ['BOGUS'], // Need to reset from app project, but empty is merged
   watchPathIgnorePatterns: ['test-results']

@@ -5,8 +5,8 @@ import { map } from 'rxjs/operators';
 import { Entity } from '../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import {
-  ENTITY_GQL_REQUEST,
   EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST,
   GraphQlEntityRequest
 } from '../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 

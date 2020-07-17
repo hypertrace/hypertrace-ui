@@ -7,11 +7,11 @@ import {
   MetadataService,
   SpecificationBuilder,
   Trace,
-  TRACE_GQL_REQUEST,
   TraceGraphQlQueryHandlerService,
   traceIdKey,
   TraceType,
-  traceTypeKey
+  traceTypeKey,
+  TRACE_GQL_REQUEST
 } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { combineLatest, Observable, Subject } from 'rxjs';

@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { defaults } from 'lodash';
+import { defaults } from 'lodash-es';
 import { Observable, Observer } from 'rxjs';
 import { D3UtilService } from '../../../../utils/d3/d3-util.service';
 import {

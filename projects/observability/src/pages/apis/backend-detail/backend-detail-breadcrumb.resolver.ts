@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
-  ENTITY_GQL_REQUEST,
-  EntityGraphQlQueryHandlerService
+  EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';

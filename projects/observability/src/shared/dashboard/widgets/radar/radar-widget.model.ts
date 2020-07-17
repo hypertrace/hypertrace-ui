@@ -1,4 +1,4 @@
-import { ArrayPropertyTypeInstance, ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
   Model,
@@ -8,7 +8,7 @@ import {
   NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { LegendPosition } from '../../../components/legend/legend.component';
 import { RadarWidgetDataFetcher } from './data/radar-data-source.model';

@@ -4,14 +4,14 @@ import {
   GraphQlDataSourceModel,
   MetadataService,
   Span,
-  SPAN_SCOPE,
   spanIdKey,
   SpanType,
+  SPAN_SCOPE,
   SpecificationBuilder,
   Trace,
-  TRACE_GQL_REQUEST,
   TraceGraphQlQueryHandlerService,
   traceIdKey,
+  TRACE_GQL_REQUEST,
   WaterfallData
 } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';

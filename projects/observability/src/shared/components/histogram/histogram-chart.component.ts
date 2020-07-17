@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ColorService, TypedSimpleChanges } from '@hypertrace/common';
-import { maxBy } from 'lodash';
+import { maxBy } from 'lodash-es';
 
 @Component({
   selector: 'ht-histogram-chart',

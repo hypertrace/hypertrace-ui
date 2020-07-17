@@ -1,15 +1,15 @@
-import { ArrayPropertyTypeInstance, ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { ARRAY_PROPERTY, Model, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import {
-  ENTITY_TOPOLOGY_GQL_REQUEST,
   EntityNode,
   EntityTopologyGraphQlQueryHandlerService,
+  ENTITY_TOPOLOGY_GQL_REQUEST,
   TopologyEdgeSpecification,
   TopologyNodeSpecification
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';

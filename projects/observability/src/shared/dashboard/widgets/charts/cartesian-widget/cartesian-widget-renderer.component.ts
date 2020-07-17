@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';

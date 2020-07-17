@@ -3,7 +3,7 @@ import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { EMPTY, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TopologyEdgeRendererService } from '../../../components/topology/renderers/edge/topology-edge-renderer.service';

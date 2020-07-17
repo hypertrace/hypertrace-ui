@@ -2,7 +2,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NavigationService } from '@hypertrace/common';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { ENTITY_METADATA, EntityMetadata } from '../../../constants/entity-metadata';
+import { EntityMetadata, ENTITY_METADATA } from '../../../constants/entity-metadata';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { ObservabilityIconType } from '../../../icons/observability-icon-type';
 import { EntityNavigationService } from './entity-navigation.service';

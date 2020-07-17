@@ -14,8 +14,8 @@ import { EntityType, Interaction, INTERACTION_SCOPE } from '../../../../../model
 import { GraphQlObservabilityArgumentBuilder } from '../../../../builders/argument/graphql-observability-argument-builder';
 import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-builder.service';
 import {
-  ENTITY_GQL_REQUEST,
   EntityGraphQlQueryHandlerService,
+  ENTITY_GQL_REQUEST,
   GraphQlEntityRequest
 } from '../entity/entity-graphql-query-handler.service';
 

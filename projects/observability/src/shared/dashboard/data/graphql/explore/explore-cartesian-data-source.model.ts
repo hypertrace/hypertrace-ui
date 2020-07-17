@@ -2,9 +2,9 @@ import { ColorService, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
 import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -29,7 +29,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
 
   public getData(): Observable<MetricSeriesFetcher<ExplorerData>> {
     return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
-      flatMap(request =>
+      switchMap(request =>
         this.queryWithNextBatch<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
           // Add inherited filters
           request.filters?.push(...inheritedFilters);

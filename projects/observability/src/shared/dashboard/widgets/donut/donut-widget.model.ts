@@ -1,4 +1,4 @@
-import { ENUM_TYPE, EnumPropertyTypeInstance, WidgetHeaderModel } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -8,7 +8,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DonutResults, DonutSeriesResults } from '../../../components/donut/donut';
