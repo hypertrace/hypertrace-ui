@@ -101,16 +101,7 @@ describe('Top N Widget renderer', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.data$!).toBe('(x|)', {
-        x: [
-          {
-            label: 'Api 1',
-            value: 50
-          },
-          {
-            label: 'Api 2',
-            value: 100
-          }
-        ]
+        x: data
       });
       expectObservable(spectator.component.options$).toBe('(x|)', {
         x: [
@@ -154,7 +145,7 @@ describe('Top N Widget renderer', () => {
 
     const spectator = createComponent();
     spectator.component.data$?.subscribe();
-    spectator.component.onLabelClicked('Api 1');
+    spectator.component.onItemClicked(data[0]);
 
     expect(spectator.inject(EntityNavigationService).navigateToEntity).toHaveBeenCalledWith({
       [entityIdKey]: 'test-id - 1',
