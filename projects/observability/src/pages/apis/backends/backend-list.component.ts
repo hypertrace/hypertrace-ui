@@ -8,8 +8,11 @@ import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/en
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-page-header></htc-page-header>
-    <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson"> </htc-navigable-dashboard>
+    <div class="vertical-flex-layout">
+      <htc-page-header></htc-page-header>
+      <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson">
+      </htc-navigable-dashboard>
+    </div>
   `
 })
 export class BackendListComponent {
