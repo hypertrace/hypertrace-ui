@@ -10,11 +10,12 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { Card, CardType } from './card';
+import { InteractionHandler } from '@hypertrace/distributed-tracing';
 
 @Model({
   type: 'card-list-widget'
 })
-export class CardListWidgetModel<T extends Card[]> {
+export class CardListWidgetModel<P, T extends Card<P>[]> {
   @ModelProperty({
     key: 'title',
     type: STRING_PROPERTY.type,
@@ -43,6 +44,13 @@ export class CardListWidgetModel<T extends Card[]> {
     } as ModelModelPropertyTypeInstance
   })
   public header?: WidgetHeaderModel;
+
+  @ModelProperty({
+    key: 'click-handler',
+    displayName: 'Click Handler',
+    type: ModelPropertyType.TYPE
+  })
+  public clickHandler?: InteractionHandler;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;

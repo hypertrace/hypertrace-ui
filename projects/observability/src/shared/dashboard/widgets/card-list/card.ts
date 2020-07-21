@@ -1,5 +1,6 @@
-export interface Card {
+export interface Card<T> {
   name: string;
+  original: T;
 }
 
 export const enum CardType {
