@@ -13,7 +13,7 @@ import { maxBy } from 'lodash-es';
         <div
           class="label"
           [htcTooltip]="item.label"
-          (click)="this.onLabelClick(item.label)"
+          (click)="this.onItemClick(item)"
           [ngClass]="{ clickable: this.labelClickable }"
         >
           {{ item.label }}
@@ -28,17 +28,17 @@ import { maxBy } from 'lodash-es';
     </div>
   `
 })
-export class TopNChartComponent implements OnChanges {
+export class TopNChartComponent<T extends TopNData = TopNData> implements OnChanges {
   @Input()
-  public data: TopNData[] = [];
+  public data: T[] = [];
 
   @Input()
   public labelClickable: boolean = false;
 
   @Output()
-  public readonly labelClick: EventEmitter<string> = new EventEmitter();
+  public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
-  public itemOptions: TopNItemOptions[] = [];
+  public itemOptions: TopNItemOption<T>[] = [];
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -46,8 +46,8 @@ export class TopNChartComponent implements OnChanges {
     }
   }
 
-  public onLabelClick(label: string): void {
-    this.labelClickable && this.labelClick.emit(label);
+  public onItemClick(item: TopNItemOption<T>): void {
+    this.labelClickable && this.itemClick.emit(item.original);
   }
 
   private buildItemOptions(): void {
@@ -63,13 +63,12 @@ export class TopNChartComponent implements OnChanges {
 
     this.itemOptions = this.data
       .sort((first, second) => second.value - first.value)
-      .map(
-        (option): TopNItemOptions => ({
-          label: option.label,
-          width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
-          value: option.value
-        })
-      );
+      .map(option => ({
+        label: option.label,
+        width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
+        value: option.value,
+        original: option
+      }));
   }
 }
 export interface TopNData {
@@ -77,6 +76,7 @@ export interface TopNData {
   value: number;
 }
 
-interface TopNItemOptions extends TopNData {
+interface TopNItemOption<T extends TopNData> extends TopNData {
   width: string;
+  original: T;
 }
