@@ -5,6 +5,7 @@ export interface EntityMetadata {
   icon: string;
   detailPath(id: string, sourceRoute?: string): string[];
   listPath?: string[];
+  endpointsListPath?(id: string): string[];
   sourceRoutes?: string[];
   typeDisplayName?: string;
   volatile?: boolean; // Default false; Is this entity safely cacheable i.e. can it be mutated

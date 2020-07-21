@@ -6,11 +6,11 @@ import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
+import { ENTITY_METADATA, EntityMetadata, EntityMetadataMap } from '../../../shared/constants/entity-metadata';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
-  EntityGraphQlQueryHandlerService,
-  ENTITY_GQL_REQUEST
+  ENTITY_GQL_REQUEST,
+  EntityGraphQlQueryHandlerService
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -37,10 +37,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
         take(1),
         switchMap(api => [
           ...this.getParentBreadcrumb(api, parentType),
-          {
-            label: 'Endpoints',
-            icon: this.apiEntityMetadata?.icon
-          },
+          this.getEndpointsListCrumb(api, parentType),
           {
             label: api.name,
             icon: this.apiEntityMetadata?.icon,
@@ -49,6 +46,19 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
         ])
       )
     );
+  }
+
+  private getEndpointsListCrumb(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb {
+    const endpointsListCrumb: Breadcrumb = {
+      label: 'Endpoints',
+      icon: this.apiEntityMetadata?.icon
+    };
+
+    if (parentEntityMetadata?.endpointsListPath !== undefined) {
+      endpointsListCrumb.url = parentEntityMetadata?.endpointsListPath(api.parentId);
+    }
+
+    return endpointsListCrumb;
   }
 
   private getParentBreadcrumb(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
