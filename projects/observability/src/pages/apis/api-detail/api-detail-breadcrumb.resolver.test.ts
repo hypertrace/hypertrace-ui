@@ -119,11 +119,7 @@ describe('Api detail breadcrumb resolver', () => {
 
     resolverPromise.then(breadcrumb$ => {
       runFakeRxjs(({ expectObservable }) => {
-        expectObservable(breadcrumb$).toBe('(xy|)', {
-          x: {
-            label: 'Endpoints',
-            icon: ObservabilityIconType.Api
-          },
+        expectObservable(breadcrumb$).toBe('(y|)', {
           y: {
             label: 'test api',
             icon: ObservabilityIconType.Api,
