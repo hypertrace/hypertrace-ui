@@ -21,7 +21,12 @@ import { CardListWidgetModel } from './card-list-widget-model';
         <ht-card-list>
           <ht-card-container *ngFor="let card of cards" [ngSwitch]="this.model.cardType">
             <div class="summary-card" *ngSwitchCase="'${CardType.Summary}'">
-              <htc-summary-card [name]="card.name" [color]="card.color" [summaries]="card.summaries"></htc-summary-card>
+              <htc-summary-card
+                [name]="card.name"
+                [color]="card.color"
+                [summaries]="card.summaries"
+                (click)="this.model.clickHandler?.execute(card.context)"
+              ></htc-summary-card>
             </div>
           </ht-card-container>
         </ht-card-list>
@@ -29,7 +34,10 @@ import { CardListWidgetModel } from './card-list-widget-model';
     </div>
   `
 })
-export class CardListWidgetRendererComponent<T extends Card[]> extends WidgetRenderer<CardListWidgetModel<T>, T> {
+export class CardListWidgetRendererComponent<P, T extends Card<P>[]> extends WidgetRenderer<
+  CardListWidgetModel<P, T>,
+  T
+> {
   protected fetchData(): Observable<T> {
     return this.model.getData();
   }

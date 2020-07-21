@@ -1,4 +1,5 @@
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
+import { InteractionHandler } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelApi,
@@ -14,7 +15,7 @@ import { Card, CardType } from './card';
 @Model({
   type: 'card-list-widget'
 })
-export class CardListWidgetModel<T extends Card[]> {
+export class CardListWidgetModel<P, T extends Card<P>[]> {
   @ModelProperty({
     key: 'title',
     type: STRING_PROPERTY.type,
@@ -43,6 +44,13 @@ export class CardListWidgetModel<T extends Card[]> {
     } as ModelModelPropertyTypeInstance
   })
   public header?: WidgetHeaderModel;
+
+  @ModelProperty({
+    key: 'click-handler',
+    displayName: 'Click Handler',
+    type: ModelPropertyType.TYPE
+  })
+  public clickHandler?: InteractionHandler;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
