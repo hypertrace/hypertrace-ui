@@ -6,13 +6,13 @@ import {
   TitledContentComponent
 } from '@hypertrace/components';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '@hypertrace/observability';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { Card, CardType } from './card';
 import { CardListWidgetModel } from './card-list-widget-model';
 import { CardListWidgetRendererComponent } from './card-list-widget-renderer.component';
-import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '@hypertrace/observability';
 
 describe('Card List Widget Renderer', () => {
   let mockModel: Partial<CardListWidgetModel<Entity, Card<Entity>[]>> = {};
@@ -41,7 +41,7 @@ describe('Card List Widget Renderer', () => {
       name: 'Card #1',
       color: SummaryCardColor.Red,
       summaries: [],
-      original: {
+      context: {
         [entityIdKey]: 'entity-id-1',
         [entityTypeKey]: ObservabilityEntityType.Service
       }
@@ -51,7 +51,7 @@ describe('Card List Widget Renderer', () => {
       name: 'Card #2',
       color: SummaryCardColor.Brown,
       summaries: [],
-      original: {
+      context: {
         [entityIdKey]: 'entity-id-2',
         [entityTypeKey]: ObservabilityEntityType.Service
       }
@@ -86,6 +86,6 @@ describe('Card List Widget Renderer', () => {
     expect(cards[1].summaries).toEqual(card2.summaries);
 
     spectator.triggerEventHandler('htc-summary-card', 'click', undefined);
-    expect(mockInteractionHandler).toHaveBeenCalledWith(card1.original);
+    expect(mockInteractionHandler).toHaveBeenCalledWith(card1.context);
   });
 });

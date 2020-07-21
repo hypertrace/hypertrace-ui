@@ -1,4 +1,5 @@
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
+import { InteractionHandler } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelApi,
@@ -10,7 +11,6 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { Card, CardType } from './card';
-import { InteractionHandler } from '@hypertrace/distributed-tracing';
 
 @Model({
   type: 'card-list-widget'

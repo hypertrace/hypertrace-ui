@@ -25,7 +25,7 @@ import { CardListWidgetModel } from './card-list-widget-model';
                 [name]="card.name"
                 [color]="card.color"
                 [summaries]="card.summaries"
-                (click)="this.model.clickHandler?.execute(card.original)"
+                (click)="this.model.clickHandler?.execute(card.context)"
               ></htc-summary-card>
             </div>
           </ht-card-container>

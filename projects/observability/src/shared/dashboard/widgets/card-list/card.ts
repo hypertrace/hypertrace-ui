@@ -1,6 +1,6 @@
 export interface Card<T> {
   name: string;
-  original: T;
+  context: T;
 }
 
 export const enum CardType {
