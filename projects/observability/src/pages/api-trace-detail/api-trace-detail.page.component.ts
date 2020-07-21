@@ -17,7 +17,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
         <div class="back">
           <htc-icon
             (click)="this.onClickBack()"
-            icon="${IconType.KeyboardBackspace}"
+            icon="${IconType.ArrowLeft}"
             size="${IconSize.Small}"
             class="arrow"
           ></htc-icon>
