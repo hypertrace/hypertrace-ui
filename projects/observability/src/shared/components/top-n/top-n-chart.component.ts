@@ -8,7 +8,7 @@ import { maxBy } from 'lodash-es';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="top-n-chart">
-      <ng-container *ngFor="let item of this.itemOptions; first as isFirst">
+      <ng-container *ngFor="let item of this.itemOptions">
         <div class="border-top"></div>
         <div
           class="label"
@@ -39,7 +39,6 @@ export class TopNChartComponent<T extends TopNData = TopNData> implements OnChan
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
   public itemOptions: TopNItemOption<T>[] = [];
-  public maxValue?: number;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -57,16 +56,16 @@ export class TopNChartComponent<T extends TopNData = TopNData> implements OnChan
       return;
     }
 
-    this.maxValue = maxBy(this.data, option => option.value)?.value;
-    if (this.maxValue === undefined || this.maxValue === 0) {
-      this.maxValue = 1;
+    let maxValue = maxBy(this.data, option => option.value)?.value;
+    if (maxValue === undefined || maxValue === 0) {
+      maxValue = 1;
     }
 
     this.itemOptions = this.data
       .sort((first, second) => second.value - first.value)
       .map(option => ({
         label: option.label,
-        width: `${((option.value / this.maxValue!) * 100).toFixed(2)}%`,
+        width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
         value: option.value,
         original: option
       }));
