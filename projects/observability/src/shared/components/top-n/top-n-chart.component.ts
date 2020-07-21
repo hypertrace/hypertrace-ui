@@ -8,7 +8,7 @@ import { maxBy } from 'lodash-es';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="top-n-chart">
-      <ng-container *ngFor="let item of this.itemOptions">
+      <ng-container *ngFor="let item of this.itemOptions; first as isFirst">
         <div class="border-top"></div>
         <div
           class="label"
@@ -22,7 +22,7 @@ import { maxBy } from 'lodash-es';
           <div class="progress-value" [ngStyle]="{ width: item.width }"></div>
         </div>
         <div class="value">
-          <span>{{ item.value | htcDisplayNumber }} ({{ item.width }})</span>
+          <span>{{ item.value | htcDisplayNumber }}</span>
         </div>
       </ng-container>
     </div>
@@ -39,6 +39,7 @@ export class TopNChartComponent<T extends TopNData = TopNData> implements OnChan
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
   public itemOptions: TopNItemOption<T>[] = [];
+  public maxValue?: number;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -56,16 +57,16 @@ export class TopNChartComponent<T extends TopNData = TopNData> implements OnChan
       return;
     }
 
-    let maxValue = maxBy(this.data, option => option.value)?.value;
-    if (maxValue === undefined || maxValue === 0) {
-      maxValue = 1;
+    this.maxValue = maxBy(this.data, option => option.value)?.value;
+    if (this.maxValue === undefined || this.maxValue === 0) {
+      this.maxValue = 1;
     }
 
     this.itemOptions = this.data
       .sort((first, second) => second.value - first.value)
       .map(option => ({
         label: option.label,
-        width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
+        width: `${((option.value / this.maxValue!) * 100).toFixed(2)}%`,
         value: option.value,
         original: option
       }));
