@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   padding: 24px;
+  height: calc(100% - 40px);
 
   .filter-bar {
     margin-top: 16px;

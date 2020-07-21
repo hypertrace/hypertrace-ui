@@ -9,6 +9,7 @@ import {
   TopologyNode
 } from '../../topology';
 
+// TODO this whole layout doesn't make sense for a graph. Lots of hacks in here to try to flatten as a tree
 export class TreeLayout implements TopologyLayout {
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
     const rootHierarchyNode = hierarchy(this.buildHierarchyProxyNodes(topology.nodes, { x: 0, y: 0 }));
@@ -120,18 +121,16 @@ export class TreeLayout implements TopologyLayout {
 
     topologyHierarchyNodeMap.forEach((d3Node, topologyNode) => {
       this.removeSelfLinks(topologyNode);
+      // First add all children
+      d3Node.children = topologyNode.outgoing.map(edge => edge.target).map(node => topologyHierarchyNodeMap.get(node)!);
+      // Then remove children that would have introduced a cycle
+      d3Node.children = d3Node.children
+        .filter(mappedD3Node => !this.nodeIntroducesCycle(mappedD3Node))
+        .map(mappedD3Node => {
+          mappedD3Node.hasIncomingEdges = true;
 
-      d3Node.children.push(
-        ...topologyNode.outgoing
-          .map(edge => edge.target)
-          .map(node => topologyHierarchyNodeMap.get(node)!)
-          .filter(mappedD3Node => !this.nodeIntroducesCycle(mappedD3Node))
-          .map(mappedD3Node => {
-            mappedD3Node.hasIncomingEdges = true;
-
-            return mappedD3Node;
-          })
-      );
+          return mappedD3Node;
+        });
     });
 
     return topologyHierarchyNodeMap;
