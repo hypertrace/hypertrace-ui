@@ -36,8 +36,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
       this.fetchEntity(id, parentType).pipe(
         take(1),
         switchMap(api => [
-          ...this.getParentBreadcrumb(api, parentType),
-          this.getEndpointsListCrumb(api, parentType),
+          ...this.getParentBreadcrumbs(api, parentType),
           {
             label: api.name,
             icon: this.apiEntityMetadata?.icon,
@@ -48,26 +47,18 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     );
   }
 
-  private getEndpointsListCrumb(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb {
-    const endpointsListCrumb: Breadcrumb = {
-      label: 'Endpoints',
-      icon: this.apiEntityMetadata?.icon
-    };
-
-    if (parentEntityMetadata?.endpointsListPath !== undefined) {
-      endpointsListCrumb.url = parentEntityMetadata?.endpointsListPath(api.parentId);
-    }
-
-    return endpointsListCrumb;
-  }
-
-  private getParentBreadcrumb(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
+  private getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
     return parentEntityMetadata !== undefined
       ? [
           {
             label: api.parentName,
             icon: parentEntityMetadata?.icon,
             url: parentEntityMetadata?.detailPath(api.parentId)
+          },
+          {
+            label: 'Endpoints',
+            icon: this.apiEntityMetadata?.icon,
+            url: parentEntityMetadata?.endpointsListPath?.(api.parentId)
           }
         ]
       : [];
