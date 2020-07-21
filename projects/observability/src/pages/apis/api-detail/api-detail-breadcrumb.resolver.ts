@@ -58,7 +58,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
           {
             label: 'Endpoints',
             icon: this.apiEntityMetadata?.icon,
-            url: parentEntityMetadata?.endpointsListPath?.(api.parentId)
+            url: parentEntityMetadata?.apisListPath?.(api.parentId)
           }
         ]
       : [];

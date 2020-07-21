@@ -48,7 +48,7 @@ describe('Api detail breadcrumb resolver', () => {
               entityType: ObservabilityEntityType.Service,
               icon: ObservabilityIconType.Service,
               detailPath: (id: string) => ['services', 'service', id],
-              endpointsListPath: (id: string) => ['services', 'service', id, 'endpoints'],
+              apisListPath: (id: string) => ['services', 'service', id, 'endpoints'],
               listPath: ['services'],
               typeDisplayName: 'Service'
             }

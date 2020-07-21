@@ -17,7 +17,7 @@ export const entityMetadata: EntityMetadataMap = new Map([
       icon: ObservabilityIconType.Service,
       detailPath: (id: string) => ['services', 'service', id],
       listPath: ['services'],
-      endpointsListPath: (id: string) => ['services', 'service', id, 'endpoints'],
+      apisListPath: (id: string) => ['services', 'service', id, 'endpoints'],
       typeDisplayName: 'Service'
     }
   ],
