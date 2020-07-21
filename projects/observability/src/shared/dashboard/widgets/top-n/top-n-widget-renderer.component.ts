@@ -44,7 +44,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
           *htcLoadAsync="this.data$ as data"
           [data]="data"
           [labelClickable]="true"
-          (labelClick)="this.onLabelClicked($event)"
+          (itemClick)="this.onItemClicked($event)"
         >
         </ht-top-n-chart>
       </htc-titled-content>
@@ -54,7 +54,6 @@ import { TopNWidgetModel } from './top-n-widget.model';
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
   public metricSpecification!: MetricAggregationSpecificationModel;
   public options$!: Observable<SelectOption<MetricAggregationSpecificationModel>[]>;
-  private topNData: TopNWidgetValueData[] = [];
   private fetcher?: TopNWidgetDataFetcher;
 
   public constructor(
@@ -73,11 +72,8 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     this.updateDataObservable();
   }
 
-  public onLabelClicked(label: string): void {
-    const topNDatum = this.topNData.find(datum => datum.label === label);
-    if (topNDatum) {
-      this.entityNavService.navigateToEntity(topNDatum.entity);
-    }
+  public onItemClicked(item: TopNWidgetValueData): void {
+    this.entityNavService.navigateToEntity(item.entity);
   }
 
   protected fetchData(): Observable<TopNData[]> {
@@ -88,12 +84,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
   }
 
   protected buildDataObservable(): Observable<TopNData[]> {
-    return this.fetcher
-      ? this.fetcher.getData(this.metricSpecification).pipe(
-          tap(topNData => (this.topNData = topNData)),
-          map(topNData => topNData.map(datum => ({ label: datum.label, value: datum.value })))
-        )
-      : NEVER;
+    return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 
   private setOptionsObservables(): void {

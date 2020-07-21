@@ -38,21 +38,15 @@ describe('Top N Chart Component', () => {
     );
 
     expect(spectator.component.itemOptions).toEqual([
-      {
-        label: 'POST /api 2',
-        value: 120,
-        width: '100.00%'
-      },
-      {
-        label: 'POST /api 1',
-        value: 80,
-        width: '66.67%'
-      },
-      {
-        label: 'POST /api 3',
-        value: 40,
-        width: '33.33%'
-      }
+      expect.objectContaining({
+        label: 'POST /api 2'
+      }),
+      expect.objectContaining({
+        label: 'POST /api 1'
+      }),
+      expect.objectContaining({
+        label: 'POST /api 3'
+      })
     ]);
   });
 
@@ -64,22 +58,22 @@ describe('Top N Chart Component', () => {
       }
     ];
 
-    const onLabelClick: jest.Mock = jest.fn();
+    const onItemClick: jest.Mock = jest.fn();
 
     spectator = createHost(
-      `<ht-top-n-chart [data]="data" [labelClickable]="labelClickable" (labelClick)="onLabelClick($event)">
+      `<ht-top-n-chart [data]="data" [labelClickable]="labelClickable" (itemClick)="onItemClick($event)">
       </ht-top-n-chart>`,
       {
         hostProps: {
           data: data,
           labelClickable: true,
-          onLabelClick: onLabelClick
+          onItemClick: onItemClick
         }
       }
     );
 
     spectator.click(spectator.query('.label')!);
-    expect(onLabelClick).toHaveBeenCalledWith('POST /api 1');
+    expect(onItemClick).toHaveBeenCalledWith(data[0]);
   });
 
   test('should show progress bar and value', () => {
