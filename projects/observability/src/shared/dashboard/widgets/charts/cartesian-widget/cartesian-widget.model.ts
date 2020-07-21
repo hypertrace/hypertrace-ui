@@ -5,7 +5,8 @@ import {
   Model,
   ModelApi,
   ModelProperty,
-  ModelPropertyType, NUMBER_PROPERTY,
+  ModelPropertyType,
+  NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
