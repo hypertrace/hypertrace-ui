@@ -88,4 +88,28 @@ describe('Tree Layout', () => {
     expect(topology.nodes[1].x).toEqual(170);
     expect(topology.nodes[1].y).toEqual(0);
   });
+
+  test('detects bidirectional call as cycle', () => {
+    const source = buildTopologyNode();
+    const target = buildTopologyNode();
+
+    const edge1 = buildTopologyEdge(source, target);
+    const edge2 = buildTopologyEdge(target, source);
+    source.outgoing.push(edge1);
+    source.incoming.push(edge2);
+    target.outgoing.push(edge2);
+    target.incoming.push(edge1);
+
+    const topology = {
+      nodes: [source, target],
+      edges: [edge1, edge2],
+      neighborhood: {
+        nodes: [],
+        edges: []
+      }
+    };
+
+    // Layout shouldn't error or hang on a cycle
+    expect(() => treeLayout.layout(topology)).not.toThrow();
+  });
 });
