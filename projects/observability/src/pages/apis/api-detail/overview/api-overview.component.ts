@@ -224,6 +224,7 @@ export class ApiOverviewComponent {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'max-data-points': 150,
             series: [
               {
                 type: 'series',
@@ -300,6 +301,7 @@ export class ApiOverviewComponent {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'max-data-points': 150,
             series: [
               {
                 type: 'series',
@@ -377,6 +379,7 @@ export class ApiOverviewComponent {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'max-data-points': 150,
             series: [
               {
                 type: 'series',

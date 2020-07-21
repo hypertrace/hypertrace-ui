@@ -66,26 +66,32 @@ export class IntervalSelectComponent implements OnChanges {
     return this.disabled || this.intervalSelectOptions.length <= 1;
   }
 
-  private buildOptions(intervalValues: IntervalValue[] = []): IntervalOption[] {
-    return intervalValues.map(value => this.valueAsOption(value));
+  private buildOptions(values: IntervalValue[] = []): IntervalOption[] {
+    return values.map(value => this.valueAsOption(value, values));
   }
 
-  private valueAsOption(value: IntervalValue): IntervalOption {
+  private valueAsOption(value: IntervalValue, values: IntervalValue[]): IntervalOption {
     return {
       value: value,
-      label: this.getLabelForIntervalValue(value)
+      label: this.getLabelForIntervalValue(value, values)
     };
   }
 
-  private getLabelForIntervalValue(value: IntervalValue): string {
+  private getLabelForIntervalValue(value: IntervalValue, values: IntervalValue[]): string {
     if (value === 'NONE') {
       return 'None';
     }
     if (value === 'AUTO') {
-      return `Auto (${this.intervalDurationService.getAutoDuration().toString()})`;
+      return `Auto (${this.intervalDurationService
+        .getAutoDurationFromTimeDurations(this.getTimeDurationsFromIntervalDurations(values))
+        .toString()})`;
     }
 
     return value.toString();
+  }
+
+  private getTimeDurationsFromIntervalDurations(intervals: IntervalValue[]): TimeDuration[] {
+    return intervals.filter((interval): interval is TimeDuration => interval instanceof TimeDuration);
   }
 }
 
