@@ -48,6 +48,7 @@ describe('Api detail breadcrumb resolver', () => {
               entityType: ObservabilityEntityType.Service,
               icon: ObservabilityIconType.Service,
               detailPath: (id: string) => ['services', 'service', id],
+              apisListPath: (id: string) => ['services', 'service', id, 'endpoints'],
               listPath: ['services'],
               typeDisplayName: 'Service'
             }
@@ -88,7 +89,8 @@ describe('Api detail breadcrumb resolver', () => {
           },
           b: {
             label: 'Endpoints',
-            icon: ObservabilityIconType.Api
+            icon: ObservabilityIconType.Api,
+            url: ['services', 'service', 'test-service-id', 'endpoints']
           },
           c: {
             label: 'test api',
@@ -117,11 +119,7 @@ describe('Api detail breadcrumb resolver', () => {
 
     resolverPromise.then(breadcrumb$ => {
       runFakeRxjs(({ expectObservable }) => {
-        expectObservable(breadcrumb$).toBe('(xy|)', {
-          x: {
-            label: 'Endpoints',
-            icon: ObservabilityIconType.Api
-          },
+        expectObservable(breadcrumb$).toBe('(y|)', {
           y: {
             label: 'test api',
             icon: ObservabilityIconType.Api,
