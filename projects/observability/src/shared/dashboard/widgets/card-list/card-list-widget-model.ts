@@ -15,7 +15,7 @@ import { Card, CardType } from './card';
 @Model({
   type: 'card-list-widget'
 })
-export class CardListWidgetModel<P, T extends Card<P>[]> {
+export class CardListWidgetModel<T extends Card[]> {
   @ModelProperty({
     key: 'title',
     type: STRING_PROPERTY.type,
