@@ -22,7 +22,7 @@ import { maxBy } from 'lodash-es';
           <div class="progress-value" [ngStyle]="{ width: item.width }"></div>
         </div>
         <div class="value">
-          <span>{{ item.value | htcDisplayNumber }} ({{ item.width }})</span>
+          <span>{{ item.value | htcDisplayNumber }}</span>
         </div>
       </ng-container>
     </div>
