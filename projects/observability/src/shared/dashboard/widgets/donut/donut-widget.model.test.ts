@@ -1,7 +1,7 @@
 import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
-import { DonutSeriesResults} from '@hypertrace/observability';
+import { DonutSeriesResults } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { DonutWidgetModel } from './donut-widget.model';
@@ -43,21 +43,21 @@ describe('Donut widget model', () => {
       ]
     });
 
-    spectator.model.colorPalette = [ 'red', 'blue'];
+    spectator.model.colorPalette = ['red', 'blue'];
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.model.getData()).toBe('(x|)', {
         x: {
-          "series": [
+          series: [
             {
-              "color": "rgb(255, 0, 0)",
-              "name": "first",
-              "value": 10
+              color: 'rgb(255, 0, 0)',
+              name: 'first',
+              value: 10
             },
             {
-              "color": "rgb(0, 0, 255)",
-              "name": "second",
-              "value": 20
+              color: 'rgb(0, 0, 255)',
+              name: 'second',
+              value: 20
             }
           ]
         }

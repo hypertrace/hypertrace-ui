@@ -1,14 +1,14 @@
 import { ColorService } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
-  ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   Model,
   ModelApi,
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
+  UNKNOWN_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -20,8 +20,6 @@ import { LegendPosition } from '../../../components/legend/legend.component';
   type: 'donut-widget'
 })
 export class DonutWidgetModel {
-  private static readonly DONUT_COLORS: symbol = Symbol('Donut Colors');
-
   @ModelProperty({
     key: 'title',
     type: STRING_PROPERTY.type
@@ -69,12 +67,13 @@ export class DonutWidgetModel {
   })
   public header?: WidgetHeaderModel;
 
+  // TODO: Define a new ModelProperty as COLOR_PROPERTY for colorPalette
   @ModelProperty({
     key: 'color-palette',
-    type: ARRAY_PROPERTY.type,
+    type: UNKNOWN_PROPERTY.type,
     required: false
   })
-  public colorPalette: string[] = [];
+  public colorPalette?: string | string[];
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
@@ -83,8 +82,6 @@ export class DonutWidgetModel {
   private readonly colorService!: ColorService;
 
   public getData(): Observable<DonutResults> {
-    this.colorService.registerColorPalette(DonutWidgetModel.DONUT_COLORS, this.colorPalette);
-
     return this.api.getData<DonutSeriesResults>().pipe(
       map(r => ({
         series: this.buildSeriesWithColors(r.series),
@@ -100,7 +97,7 @@ export class DonutWidgetModel {
   }
 
   private buildSeriesWithColors(series: DonutSeries[]): DonutSeries[] {
-    const colors = this.colorService.getColorPalette(DonutWidgetModel.DONUT_COLORS).forNColors(series.length);
+    const colors = this.colorService.getColorPalette(this.colorPalette).forNColors(series.length);
 
     return series.map((aSeries, index) => ({
       color: colors[index],
