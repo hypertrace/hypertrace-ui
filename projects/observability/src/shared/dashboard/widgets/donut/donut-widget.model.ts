@@ -1,5 +1,6 @@
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
+  ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   Model,
   ModelApi,
@@ -11,13 +12,16 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DonutResults, DonutSeriesResults } from '../../../components/donut/donut';
+import { DonutResults, DonutSeries, DonutSeriesResults } from '../../../components/donut/donut';
 import { LegendPosition } from '../../../components/legend/legend.component';
+import { ColorService } from '@hypertrace/common';
 
 @Model({
   type: 'donut-widget'
 })
 export class DonutWidgetModel {
+  private static readonly DONUT_COLORS: symbol = Symbol('Donut Colors');
+
   @ModelProperty({
     key: 'title',
     type: STRING_PROPERTY.type
@@ -65,13 +69,25 @@ export class DonutWidgetModel {
   })
   public header?: WidgetHeaderModel;
 
+  @ModelProperty({
+    key: 'color-palette',
+    type: ARRAY_PROPERTY.type,
+    required: false
+  })
+  public colorPalette: string[] = [];
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 
+  @ModelInject(ColorService)
+  private readonly colorService!: ColorService;
+
   public getData(): Observable<DonutResults> {
+    this.colorService.registerColorPalette(DonutWidgetModel.DONUT_COLORS, this.colorPalette);
+
     return this.api.getData<DonutSeriesResults>().pipe(
       map(r => ({
-        series: r.series,
+        series: this.buildSeriesWithColors(r.series),
         center:
           this.centerTitle !== undefined
             ? {
@@ -81,5 +97,14 @@ export class DonutWidgetModel {
             : undefined
       }))
     );
+  }
+
+  private buildSeriesWithColors(series: DonutSeries[]): DonutSeries[] {
+    const colors = this.colorService.getColorPalette(DonutWidgetModel.DONUT_COLORS).forNColors(series.length);
+
+    return series.map((aSeries, index) => ({
+      color: colors[index],
+      ...aSeries
+    }));
   }
 }
