@@ -15,6 +15,7 @@ import {
   FilterBarComponent,
   GraphQlFieldFilter,
   GraphQlOperatorType,
+  MetadataService,
   MetricAggregationType,
   SPANS_GQL_REQUEST,
   SPAN_SCOPE,
@@ -63,9 +64,18 @@ describe('Explorer component', () => {
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
   const createComponent = createComponentFactory({
     component: ExplorerComponent,
-    imports: [ExplorerModule, RouterTestingModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [
+      ExplorerModule.withDashboardBuilderFactory({
+        useFactory: (metadataService: MetadataService) => new ExplorerDashboardBuilder(metadataService),
+        deps: [MetadataService]
+      }),
+      ExplorerModule,
+      RouterTestingModule,
+      HttpClientTestingModule,
+      IconLibraryTestingModule
+    ],
     declareComponent: false,
-    componentProviders: [LayoutChangeService, ExplorerDashboardBuilder],
+    componentProviders: [LayoutChangeService],
     providers: [
       mockProvider(GraphQlRequestService, {
         queryImmediately: () => of(mockAttributes), // Only metadata uses queryImmediately in this test

@@ -88,7 +88,8 @@ const ROUTE_CONFIG: TraceRoute[] = [
                 label: 'Explorer'
               }
             },
-            loadChildren: () => import('@hypertrace/observability').then(module => module.ExplorerModule)
+            loadChildren: () =>
+              import('./explorer/explorer-routing.module').then(module => module.ExplorerRoutingModule)
           },
           {
             path: 'error',
