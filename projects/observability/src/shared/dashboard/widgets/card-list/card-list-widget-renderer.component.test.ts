@@ -15,7 +15,7 @@ import { CardListWidgetModel } from './card-list-widget-model';
 import { CardListWidgetRendererComponent } from './card-list-widget-renderer.component';
 
 describe('Card List Widget Renderer', () => {
-  let mockModel: Partial<CardListWidgetModel<Entity, Card<Entity>[]>> = {};
+  let mockModel: Partial<CardListWidgetModel<Card<Entity>[]>> = {};
 
   const componentFactory = createComponentFactory({
     component: CardListWidgetRendererComponent,

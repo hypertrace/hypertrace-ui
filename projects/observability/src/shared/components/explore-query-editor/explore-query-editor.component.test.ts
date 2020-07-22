@@ -75,6 +75,7 @@ describe('Explore query editor', () => {
       }),
       mockProvider(IntervalDurationService, {
         availableIntervals$: of('AUTO'),
+        getAutoDurationFromTimeDurations: () => new TimeDuration(15, TimeUnit.Second),
         getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
       }),
       mockProvider(NavigationService)
