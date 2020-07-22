@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Filter, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import {
   ExplorerDashboardBuilder,
+  ExplorerDashboardBuilderFactory,
   ExplorerGeneratedDashboard,
-  ExplorerGeneratedDashboardContext
+  ExplorerGeneratedDashboardContext,
+  EXPLORER_DASHBOARD_BUILDER_FACTORY
 } from './explorer-dashboard-builder';
 
 @Component({
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ExplorerDashboardBuilder],
   template: `
     <div class="vertical-flex-layout">
       <htc-page-header></htc-page-header>
@@ -81,10 +82,9 @@ export class ExplorerComponent {
   public static readonly API_TRACES: string = 'Endpoint Traces';
   public static readonly SPANS: string = 'Spans';
 
-  public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard> = this.explorerDashboardBuilder
-    .resultsDashboard$;
-  public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard> = this.explorerDashboardBuilder
-    .visualizationDashboard$;
+  private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
+  public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
+  public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
 
   public context: ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api;
   public filters: Filter[] = [];
@@ -92,7 +92,13 @@ export class ExplorerComponent {
   public visualizationExpanded: boolean = true;
   public resultsExpanded: boolean = true;
 
-  public constructor(private readonly explorerDashboardBuilder: ExplorerDashboardBuilder) {}
+  public constructor(
+    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDasboardBuilderFactory: ExplorerDashboardBuilderFactory
+  ) {
+    this.explorerDashboardBuilder = explorerDasboardBuilderFactory.build();
+    this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
+    this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
+  }
 
   public updateExplorer(request: ExploreVisualizationRequest): void {
     this.explorerDashboardBuilder.updateForRequest(request);
