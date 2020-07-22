@@ -1,10 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
   LayoutChangeService,
+  NavigationService,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
@@ -86,6 +88,12 @@ describe('Explorer component', () => {
         getTimeRangeAndChanges: () => NEVER.pipe(startWith(testTimeRange))
       }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          queryParamMap: EMPTY
+        }
+      },
       {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
@@ -279,5 +287,13 @@ describe('Explorer component', () => {
         ])
       })
     );
+  }));
+
+  test('updates URL with query param when context toggled', fakeAsync(() => {
+    const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
+    // Select Spans tab
+    spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
+    detectQueryChange();
+    expect(queryParamChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ scope: 'spans' }));
   }));
 });

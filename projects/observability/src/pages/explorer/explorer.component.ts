@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { assertUnreachable, NavigationService } from '@hypertrace/common';
 import { Filter, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import {
@@ -18,7 +21,11 @@ import {
     <div class="vertical-flex-layout">
       <htc-page-header></htc-page-header>
       <div class="fill-container explorer-container">
-        <htc-toggle-button-group (selectedLabelChange)="this.onContextChange($event)" class="toggle-filter">
+        <htc-toggle-button-group
+          [selectedLabel]="this.contextLabel$ | async"
+          (selectedLabelChange)="this.onContextUpdated($event)"
+          class="toggle-filter"
+        >
           <htc-toggle-button label="${ExplorerComponent.API_TRACES}"> </htc-toggle-button>
           <htc-toggle-button label="${ExplorerComponent.SPANS}"> </htc-toggle-button>
         </htc-toggle-button-group>
@@ -79,25 +86,34 @@ import {
   `
 })
 export class ExplorerComponent {
-  public static readonly API_TRACES: string = 'Endpoint Traces';
-  public static readonly SPANS: string = 'Spans';
+  public static readonly API_TRACES: 'Endpoint Traces' = 'Endpoint Traces';
+  public static readonly SPANS: 'Spans' = 'Spans';
+  private static readonly SCOPE_QUERY_PARAM: string = 'scope';
 
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
+  public readonly contextLabel$: Observable<ContextLabel>;
 
-  public context: ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api;
+  public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
 
   public visualizationExpanded: boolean = true;
   public resultsExpanded: boolean = true;
 
   public constructor(
-    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDasboardBuilderFactory: ExplorerDashboardBuilderFactory
+    private readonly navigationService: NavigationService,
+    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDasboardBuilderFactory: ExplorerDashboardBuilderFactory,
+    activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDasboardBuilderFactory.build();
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
+    this.contextLabel$ = activatedRoute.queryParamMap.pipe(
+      map(paramMap => paramMap.get(ExplorerComponent.SCOPE_QUERY_PARAM)),
+      map(queryParam => this.queryParamToContextLabel(queryParam)),
+      tap(label => this.onContextUpdated(label))
+    );
   }
 
   public updateExplorer(request: ExploreVisualizationRequest): void {
@@ -108,7 +124,51 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  public onContextChange(label: string): void {
-    this.context = label === ExplorerComponent.API_TRACES ? ObservabilityTraceType.Api : SPAN_SCOPE;
+  public onContextUpdated(label: ContextLabel): void {
+    this.context = this.contextLabelToDashboardContext(label);
+    // Set query param async to allow any initating route change to complete
+    setTimeout(() =>
+      this.navigationService.addQueryParametersToUrl({
+        [ExplorerComponent.SCOPE_QUERY_PARAM]: this.contextLabelToQueryParam(label)
+      })
+    );
   }
+
+  private queryParamToContextLabel(queryParam: string | null): ContextLabel {
+    switch (queryParam) {
+      case ScopeQueryParam.Spans:
+        return ExplorerComponent.SPANS;
+      case ScopeQueryParam.EndpointTraces:
+      default:
+        return ExplorerComponent.API_TRACES;
+    }
+  }
+
+  private contextLabelToDashboardContext(label: ContextLabel): ExplorerGeneratedDashboardContext {
+    switch (label) {
+      case ExplorerComponent.SPANS:
+        return SPAN_SCOPE;
+      case ExplorerComponent.API_TRACES:
+        return ObservabilityTraceType.Api;
+      default:
+        return assertUnreachable(label);
+    }
+  }
+
+  private contextLabelToQueryParam(label: ContextLabel): ScopeQueryParam {
+    switch (label) {
+      case ExplorerComponent.SPANS:
+        return ScopeQueryParam.Spans;
+      case ExplorerComponent.API_TRACES:
+        return ScopeQueryParam.EndpointTraces;
+      default:
+        return assertUnreachable(label);
+    }
+  }
+}
+
+type ContextLabel = 'Spans' | 'Endpoint Traces';
+const enum ScopeQueryParam {
+  EndpointTraces = 'endpoint_traces',
+  Spans = 'spans'
 }
