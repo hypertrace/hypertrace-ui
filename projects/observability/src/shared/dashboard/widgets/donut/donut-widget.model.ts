@@ -1,3 +1,4 @@
+import { ColorService } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
@@ -6,12 +7,13 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
+  UNKNOWN_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DonutResults, DonutSeriesResults } from '../../../components/donut/donut';
+import { DonutResults, DonutSeries, DonutSeriesResults } from '../../../components/donut/donut';
 import { LegendPosition } from '../../../components/legend/legend.component';
 
 @Model({
@@ -65,13 +67,24 @@ export class DonutWidgetModel {
   })
   public header?: WidgetHeaderModel;
 
+  // TODO: Define a new ModelProperty as COLOR_PROPERTY for colorPalette
+  @ModelProperty({
+    key: 'color-palette',
+    type: UNKNOWN_PROPERTY.type,
+    required: false
+  })
+  public colorPalette?: string | string[];
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
+
+  @ModelInject(ColorService)
+  private readonly colorService!: ColorService;
 
   public getData(): Observable<DonutResults> {
     return this.api.getData<DonutSeriesResults>().pipe(
       map(r => ({
-        series: r.series,
+        series: this.buildSeriesWithColors(r.series),
         center:
           this.centerTitle !== undefined
             ? {
@@ -81,5 +94,14 @@ export class DonutWidgetModel {
             : undefined
       }))
     );
+  }
+
+  private buildSeriesWithColors(series: DonutSeries[]): DonutSeries[] {
+    const colors = this.colorService.getColorPalette(this.colorPalette).forNColors(series.length);
+
+    return series.map((aSeries, index) => ({
+      color: colors[index],
+      ...aSeries
+    }));
   }
 }
