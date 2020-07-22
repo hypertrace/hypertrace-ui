@@ -1,10 +1,10 @@
+import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
+import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 import { DonutSeriesResults} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { DonutWidgetModel } from './donut-widget.model';
-import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
-import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 
 describe('Donut widget model', () => {
   test('uses colors from color map', () => {

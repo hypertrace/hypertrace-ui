@@ -1,3 +1,4 @@
+import { ColorService } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE, WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
@@ -14,7 +15,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DonutResults, DonutSeries, DonutSeriesResults } from '../../../components/donut/donut';
 import { LegendPosition } from '../../../components/legend/legend.component';
-import { ColorService } from '@hypertrace/common';
 
 @Model({
   type: 'donut-widget'
