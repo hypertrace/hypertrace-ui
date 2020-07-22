@@ -195,7 +195,7 @@ describe('Cartesian widget renderer component', () => {
           useValue: rendererApiFactory(
             cartesianModelFactory({
               series: [series],
-              maxDataPoints: 20
+              maxSeriesDataPoints: 20
             })
           )
         }

@@ -114,12 +114,12 @@ export class CartesianWidgetModel<TData> {
   public legendPosition: LegendPosition = LegendPosition.TopRight;
 
   @ModelProperty({
-    key: 'max-data-points',
+    key: 'max-series-data-points',
     required: false,
     displayName: 'Maximum Data Points',
     type: NUMBER_PROPERTY.type
   })
-  public maxDataPoints?: number;
+  public maxSeriesDataPoints?: number;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
