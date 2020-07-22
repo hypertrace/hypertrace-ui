@@ -66,26 +66,32 @@ export class IntervalSelectComponent implements OnChanges {
     return this.disabled || this.intervalSelectOptions.length <= 1;
   }
 
-  private buildOptions(intervalValues: IntervalValue[] = []): IntervalOption[] {
-    return intervalValues.map(value => this.valueAsOption(value));
+  private buildOptions(availableIntervals: IntervalValue[] = []): IntervalOption[] {
+    return availableIntervals.map(availableInterval => this.valueAsOption(availableInterval, availableIntervals));
   }
 
-  private valueAsOption(value: IntervalValue): IntervalOption {
+  private valueAsOption(interval: IntervalValue, availableIntervals: IntervalValue[]): IntervalOption {
     return {
-      value: value,
-      label: this.getLabelForIntervalValue(value)
+      value: interval,
+      label: this.getLabelForIntervalValue(interval, availableIntervals)
     };
   }
 
-  private getLabelForIntervalValue(value: IntervalValue): string {
-    if (value === 'NONE') {
+  private getLabelForIntervalValue(interval: IntervalValue, availableIntervals: IntervalValue[]): string {
+    if (interval === 'NONE') {
       return 'None';
     }
-    if (value === 'AUTO') {
-      return `Auto (${this.intervalDurationService.getAutoDuration().toString()})`;
+    if (interval === 'AUTO') {
+      return `Auto (${this.intervalDurationService
+        .getAutoDurationFromTimeDurations(this.getTimeDurationsFromIntervalDurations(availableIntervals))
+        .toString()})`;
     }
 
-    return value.toString();
+    return interval.toString();
+  }
+
+  private getTimeDurationsFromIntervalDurations(intervals: IntervalValue[]): TimeDuration[] {
+    return intervals.filter((interval): interval is TimeDuration => interval instanceof TimeDuration);
   }
 }
 

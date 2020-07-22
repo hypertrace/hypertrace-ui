@@ -6,6 +6,7 @@ import {
   ModelApi,
   ModelProperty,
   ModelPropertyType,
+  NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -111,6 +112,14 @@ export class CartesianWidgetModel<TData> {
     } as EnumPropertyTypeInstance
   })
   public legendPosition: LegendPosition = LegendPosition.TopRight;
+
+  @ModelProperty({
+    key: 'max-series-data-points',
+    required: false,
+    displayName: 'Maximum Data Points',
+    type: NUMBER_PROPERTY.type
+  })
+  public maxSeriesDataPoints?: number;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
