@@ -322,4 +322,19 @@ describe('Explorer component', () => {
     });
     expect(spectator.component.context).toBe(SPAN_SCOPE);
   }));
+
+  test('defaults to endpoints and sets url', fakeAsync(() => {
+    init({
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParamMap: of(convertToParamMap({}))
+          }
+        }
+      ]
+    });
+    expect(spectator.component.context).toBe(ObservabilityTraceType.Api);
+    expect(spectator.inject(NavigationService).getQueryParameter('scope', 'unset')).toEqual('endpoint_traces');
+  }));
 });
