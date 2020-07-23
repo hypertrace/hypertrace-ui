@@ -95,6 +95,6 @@ describe('Top N Chart Component', () => {
     );
 
     expect(spectator.query('.progress-value')).toExist();
-    expect(spectator.query('.value')).toHaveText('120 (100.00%)');
+    expect(spectator.query('.value')).toHaveText('120');
   });
 });

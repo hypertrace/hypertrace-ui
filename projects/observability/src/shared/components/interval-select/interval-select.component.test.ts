@@ -1,23 +1,21 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { fakeAsync, flush } from '@angular/core/testing';
-import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { IntervalDurationService, NavigationService, TimeDuration, TimeUnit } from '@hypertrace/common';
-import { SelectComponent } from '@hypertrace/components';
+import { fakeAsync } from '@angular/core/testing';
+import { IconType } from '@hypertrace/assets-library';
+import { IntervalDurationService, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { SelectComponent, SelectOptionComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { IntervalSelectComponent, IntervalValue } from './interval-select.component';
-import { IntervalSelectModule } from './interval-select.module';
 
 describe('Interval Select component', () => {
   const buildHost = createHostFactory({
     component: IntervalSelectComponent,
-    imports: [IntervalSelectModule, HttpClientTestingModule, IconLibraryTestingModule],
+    declarations: [MockComponent(SelectComponent), MockComponent(SelectOptionComponent)],
     providers: [
       mockProvider(IntervalDurationService, {
-        getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
-      }),
-      mockProvider(NavigationService)
+        getAutoDurationFromTimeDurations: () => new TimeDuration(3, TimeUnit.Minute)
+      })
     ],
-    declareComponent: false
+    shallow: true
   });
 
   const intervalOptions = [
@@ -103,10 +101,10 @@ describe('Interval Select component', () => {
 
     spectator.tick();
 
-    expect(spectator.element).toHaveText('5h');
+    expect(spectator.query(SelectComponent)!.selected).toEqual(new TimeDuration(5, TimeUnit.Hour));
   }));
 
-  test('uses provided selection options', fakeAsync(() => {
+  test('uses provided selection options', () => {
     const spectator = buildHost(
       `
     <ht-interval-select [intervalOptions]="intervalOptions" [interval]="interval">
@@ -119,21 +117,17 @@ describe('Interval Select component', () => {
       }
     );
 
-    spectator.tick();
-
-    spectator.click(spectator.query('.trigger-content')!);
-
-    const options = spectator.queryAll('.select-option', { root: true });
+    const options = spectator.queryAll(SelectOptionComponent);
 
     expect(options.length).toBe(5);
-    expect(options[0]).toHaveText('None');
-    expect(options[1]).toHaveText('Auto (3m)');
-    expect(options[2]).toHaveText('1m');
-    expect(options[3]).toHaveText('5h');
-    expect(options[4]).toHaveText('2d');
-  }));
+    expect(options[0].label).toEqual('None');
+    expect(options[1].label).toEqual('Auto (3m)');
+    expect(options[2].label).toEqual('1m');
+    expect(options[3].label).toEqual('5h');
+    expect(options[4].label).toEqual('2d');
+  });
 
-  test('emits on selection change and updates display', fakeAsync(() => {
+  test('emits on selection change', () => {
     const onChange = jest.fn();
     const spectator = buildHost(
       `
@@ -148,15 +142,9 @@ describe('Interval Select component', () => {
       }
     );
 
-    spectator.tick();
+    spectator.triggerEventHandler('htc-select', 'selectedChange', new TimeDuration(1, TimeUnit.Minute));
 
-    spectator.click(spectator.query('.trigger-content')!);
-    spectator.click(spectator.queryAll('.select-option', { root: true })[2]);
-
-    expect(spectator.element).toHaveText('1m');
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(intervalOptions[2]);
-
-    flush();
-  }));
+    expect(onChange).toHaveBeenCalledWith(new TimeDuration(1, TimeUnit.Minute));
+  });
 });

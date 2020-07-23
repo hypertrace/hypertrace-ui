@@ -36,11 +36,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
       this.fetchEntity(id, parentType).pipe(
         take(1),
         switchMap(api => [
-          ...this.getParentBreadcrumb(api, parentType),
-          {
-            label: 'Endpoints',
-            icon: this.apiEntityMetadata?.icon
-          },
+          ...this.getParentBreadcrumbs(api, parentType),
           {
             label: api.name,
             icon: this.apiEntityMetadata?.icon,
@@ -51,13 +47,18 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     );
   }
 
-  private getParentBreadcrumb(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
+  private getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
     return parentEntityMetadata !== undefined
       ? [
           {
             label: api.parentName,
             icon: parentEntityMetadata?.icon,
             url: parentEntityMetadata?.detailPath(api.parentId)
+          },
+          {
+            label: 'Endpoints',
+            icon: this.apiEntityMetadata?.icon,
+            url: parentEntityMetadata?.apisListPath?.(api.parentId)
           }
         ]
       : [];

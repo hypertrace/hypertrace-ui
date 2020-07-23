@@ -85,11 +85,16 @@ export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidg
   }
 
   private resolveInterval(value?: IntervalValue): TimeDuration {
-    return value instanceof TimeDuration ? value : this.intervalDurationService.getAutoDuration();
+    return value instanceof TimeDuration
+      ? value
+      : this.intervalDurationService.getAutoDuration(this.timeRange, this.model.maxSeriesDataPoints);
   }
 
   private buildIntervalOptions(): IntervalValue[] {
-    return ['AUTO', ...this.intervalDurationService.getAvailableIntervalsForTimeRange(this.timeRange)];
+    return [
+      'AUTO',
+      ...this.intervalDurationService.getAvailableIntervalsForTimeRange(this.timeRange, this.model.maxSeriesDataPoints)
+    ];
   }
 
   private getBestIntervalMatch(options: IntervalValue[], request: IntervalValue = 'AUTO'): IntervalValue {

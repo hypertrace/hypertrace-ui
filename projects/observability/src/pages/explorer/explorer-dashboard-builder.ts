@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
 import { StandardTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
 import {
@@ -18,7 +18,6 @@ import { LegendPosition } from '../../shared/components/legend/legend.component'
 import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
-@Injectable()
 export class ExplorerDashboardBuilder {
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
 
@@ -365,3 +364,10 @@ interface ResultsDashboardData {
   filters: GraphQlFilter[];
   json: ModelJson;
 }
+export interface ExplorerDashboardBuilderFactory {
+  build(): ExplorerDashboardBuilder;
+}
+
+export const EXPLORER_DASHBOARD_BUILDER_FACTORY = new InjectionToken<ExplorerDashboardBuilderFactory>(
+  'EXPLORER_DASHBOARD_BUILDER_FACTORY'
+);

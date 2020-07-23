@@ -34,10 +34,7 @@ import { CardListWidgetModel } from './card-list-widget-model';
     </div>
   `
 })
-export class CardListWidgetRendererComponent<P, T extends Card<P>[]> extends WidgetRenderer<
-  CardListWidgetModel<P, T>,
-  T
-> {
+export class CardListWidgetRendererComponent<T extends Card[]> extends WidgetRenderer<CardListWidgetModel<T>, T> {
   protected fetchData(): Observable<T> {
     return this.model.getData();
   }

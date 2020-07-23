@@ -9,11 +9,10 @@ import {
   TRACES_GQL_REQUEST,
   TracingTableCellRenderer
 } from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
-import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { capitalize } from 'lodash-es';
+import { MockService } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
@@ -24,11 +23,6 @@ import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builde
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 
 describe('Explorer dashboard builder', () => {
-  const serviceFactory = createServiceFactory({
-    service: ExplorerDashboardBuilder,
-    providers: [mockProvider(GraphQlRequestService)]
-  });
-
   const buildSeries = (key: string, aggregation?: MetricAggregationType) => ({
     specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
     visualizationOptions: {
@@ -36,13 +30,13 @@ describe('Explorer dashboard builder', () => {
     }
   });
   test('can build dashboard JSON for visualization', done => {
-    const spectator = serviceFactory();
+    const builder = new ExplorerDashboardBuilder(MockService(MetadataService));
 
     runFakeRxjs(({ expectObservable }) => {
-      const dashboardRecording = recordObservable(spectator.service.visualizationDashboard$);
+      const dashboardRecording = recordObservable(builder.visualizationDashboard$);
 
       const mockRequest = {};
-      spectator.service.updateForRequest(mockRequest as ExploreVisualizationRequest);
+      builder.updateForRequest(mockRequest as ExploreVisualizationRequest);
 
       expectObservable(dashboardRecording).toBe('x', {
         x: {
@@ -73,21 +67,18 @@ describe('Explorer dashboard builder', () => {
   });
 
   test('can build dashboard JSON for traces', done => {
-    const spectator = serviceFactory({
-      providers: [
-        mockProvider(MetadataService, {
-          getAttribute: (_: never, name: string) =>
-            of({
-              name: name,
-              displayName: capitalize(name),
-              type: AttributeMetadataType.Number
-            })
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    const builder = new ExplorerDashboardBuilder({
+      getAttribute: (_: never, name: string) =>
+        of({
+          name: name,
+          displayName: capitalize(name),
+          type: AttributeMetadataType.Number
         })
-      ]
-    });
+    } as MetadataService);
 
     runFakeRxjs(({ expectObservable }) => {
-      const dashboardRecording = recordObservable(spectator.service.resultsDashboard$);
+      const dashboardRecording = recordObservable(builder.resultsDashboard$);
       const series = buildSeries('foo');
       const mockRequest: ExploreVisualizationRequest = {
         context: ObservabilityTraceType.Api,
@@ -101,7 +92,7 @@ describe('Explorer dashboard builder', () => {
           limit: 1000
         })
       };
-      spectator.service.updateForRequest(mockRequest);
+      builder.updateForRequest(mockRequest);
 
       expectObservable(dashboardRecording).toBe('x', {
         x: {

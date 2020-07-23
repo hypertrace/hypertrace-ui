@@ -1,4 +1,4 @@
-export interface Card<T> {
+export interface Card<T = unknown> {
   name: string;
   context: T;
 }
