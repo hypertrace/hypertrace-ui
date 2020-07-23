@@ -117,7 +117,7 @@ describe('Explore result', () => {
 
     expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
-      { keys: ['Other results'], value: 15 }
+      { keys: ['Others'], value: 15 }
     ]);
   });
 
