@@ -306,7 +306,7 @@ describe('Explorer component', () => {
     // Select Endpoint traces tab
     spectator.click(spectator.queryAll('.htc-toggle-button')[0]);
     detectQueryChange();
-    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'endpoint_traces' }));
+    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'endpoint-traces' }));
   }));
 
   test('selects tab based on url', fakeAsync(() => {
@@ -335,6 +335,6 @@ describe('Explorer component', () => {
       ]
     });
     expect(spectator.component.context).toBe(ObservabilityTraceType.Api);
-    expect(spectator.inject(NavigationService).getQueryParameter('scope', 'unset')).toEqual('endpoint_traces');
+    expect(spectator.inject(NavigationService).getQueryParameter('scope', 'unset')).toEqual('endpoint-traces');
   }));
 });

@@ -169,6 +169,6 @@ export class ExplorerComponent {
 
 type ContextLabel = 'Spans' | 'Endpoint Traces';
 const enum ScopeQueryParam {
-  EndpointTraces = 'endpoint_traces',
+  EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
 }
