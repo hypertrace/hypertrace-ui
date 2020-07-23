@@ -7,7 +7,7 @@
   },
   "license": "LicenseRef-LICENSE",
   "scripts": {
-    "postinstall": "ngcc --properties browser main --tsconfig './tsconfig.spec.json'",
+    "postinstall": "ngcc --properties browser main --tsconfig './tsconfig.app.json'",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",

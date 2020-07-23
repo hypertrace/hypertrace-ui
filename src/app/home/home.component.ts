@@ -138,7 +138,7 @@ export class HomeComponent {
         type: 'highlighted-label-widget',
         'label-template': 'You have {totalErrors} total errors',
         data: {
-          type: 'total-errors-label-data-source'
+          type: 'greeting-message-data-source'
         }
       },
       {

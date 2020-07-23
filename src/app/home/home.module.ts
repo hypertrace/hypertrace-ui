@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TraceRoute } from '@hypertrace/common';
 import { ObservabilityDashboardModule } from '@hypertrace/observability';
-import { TotalErrorsLabelDataSourceModule } from './data/label/total-errors-label-data-source.module';
+import { GreetingMessageDataSourceModule } from './data/greeting-message/greeting-message-data-source.module';
 import { ObserveSystemRadarDataSourceModule } from './data/system/observe-system-radar-data-source.module';
 import { HomeComponent } from './home.component';
 
@@ -20,7 +20,7 @@ const ROUTE_CONFIG: TraceRoute[] = [
     CommonModule,
     ObservabilityDashboardModule,
     ObserveSystemRadarDataSourceModule,
-    TotalErrorsLabelDataSourceModule
+    GreetingMessageDataSourceModule
   ],
   declarations: [HomeComponent]
 })

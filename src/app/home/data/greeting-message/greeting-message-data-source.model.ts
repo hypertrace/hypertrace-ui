@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Model({
-  type: 'total-errors-label-data-source'
+  type: 'greeting-message-data-source'
 })
-export class TotalErrorsLabelDataSourceModel extends TraceValueDataSourceModel<TotalErrorsResult> {
+export class GreetingMessageDataSourceModel extends TraceValueDataSourceModel<TotalErrorsResult> {
   public specification: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'errorCount',
     MetricAggregationType.Sum

@@ -18,12 +18,12 @@ import {
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { TotalErrorsLabelDataSourceModel } from './total-errors-label-data-source.model';
+import { GreetingMessageDataSourceModel } from './greeting-messag-data-source.model';
 
 type GraphQlRequest = GraphQlExploreRequest;
 
-describe('Total Errors label data source model', () => {
-  let spectator: SpectatorModel<TotalErrorsLabelDataSourceModel>;
+describe('Greeting message data source model', () => {
+  let spectator: SpectatorModel<GreetingMessageDataSourceModel>;
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let emittedRequests: GraphQlRequest[];
   const modelFactory = createModelFactory();
@@ -48,7 +48,7 @@ describe('Total Errors label data source model', () => {
   beforeEach(() => {
     emittedRequests = [];
 
-    spectator = modelFactory(TotalErrorsLabelDataSourceModel, {
+    spectator = modelFactory(GreetingMessageDataSourceModel, {
       providers: [
         mockProvider(TimeDurationService, {
           getTimeRangeDuration: (timeRange: Pick<TimeRange, 'startTime' | 'endTime'>) =>
