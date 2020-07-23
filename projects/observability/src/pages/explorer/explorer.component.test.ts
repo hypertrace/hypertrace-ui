@@ -1,10 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
   LayoutChangeService,
+  NavigationService,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
@@ -87,6 +89,12 @@ describe('Explorer component', () => {
       }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
       {
+        provide: ActivatedRoute,
+        useValue: {
+          queryParamMap: EMPTY
+        }
+      },
+      {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           name: 'default',
@@ -110,14 +118,15 @@ describe('Explorer component', () => {
     discardPeriodicTasks(); // Some of the newly instantiated components also uses async, need to wait for them to settle
   };
 
-  beforeEach(fakeAsync(() => {
-    spectator = createComponent();
+  const init = (...params: Parameters<typeof createComponent>) => {
+    spectator = createComponent(...params);
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
     querySpy = spectator.inject(GraphQlRequestService).queryDebounced;
-  }));
+  };
 
   test('fires query on init for traces', fakeAsync(() => {
+    init();
     // Traces tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
       1,
@@ -140,6 +149,7 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on filter change for traces', fakeAsync(() => {
+    init();
     querySpy.mockClear();
     const filterBar = spectator.query(FilterBarComponent)!;
 
@@ -179,6 +189,7 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on init for spans', fakeAsync(() => {
+    init();
     querySpy.mockClear();
 
     // Select Spans tab
@@ -206,6 +217,7 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on init for spans', fakeAsync(() => {
+    init();
     // Select traces tab
     spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
     detectQueryChange();
@@ -250,6 +262,7 @@ describe('Explorer component', () => {
   }));
 
   test('traces table fires query on series change', fakeAsync(() => {
+    init();
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -266,6 +279,7 @@ describe('Explorer component', () => {
   }));
 
   test('visualization fires query on series change', fakeAsync(() => {
+    init();
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -279,5 +293,48 @@ describe('Explorer component', () => {
         ])
       })
     );
+  }));
+
+  test('updates URL with query param when context toggled', fakeAsync(() => {
+    init();
+    const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
+    // Select Spans tab
+    spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
+    detectQueryChange();
+    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'spans' }));
+
+    // Select Endpoint traces tab
+    spectator.click(spectator.queryAll('.htc-toggle-button')[0]);
+    detectQueryChange();
+    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'endpoint-traces' }));
+  }));
+
+  test('selects tab based on url', fakeAsync(() => {
+    init({
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParamMap: of(convertToParamMap({ scope: 'spans' }))
+          }
+        }
+      ]
+    });
+    expect(spectator.component.context).toBe(SPAN_SCOPE);
+  }));
+
+  test('defaults to endpoints and sets url', fakeAsync(() => {
+    init({
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParamMap: of(convertToParamMap({}))
+          }
+        }
+      ]
+    });
+    expect(spectator.component.context).toBe(ObservabilityTraceType.Api);
+    expect(spectator.inject(NavigationService).getQueryParameter('scope', 'unset')).toEqual('endpoint-traces');
   }));
 });
