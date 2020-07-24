@@ -63,7 +63,7 @@ describe('Observe System radar data source model', () => {
       query.responseObserver.next({
         results: [
           {
-            'sum(calls)': {
+            'p99(duration)': {
               type: AttributeMetadataType.Number,
               value: 23
             },
@@ -71,7 +71,7 @@ describe('Observe System radar data source model', () => {
               type: AttributeMetadataType.Number,
               value: 33
             },
-            'sum(errorCount)': {
+            'avg(duration)': {
               type: AttributeMetadataType.Number,
               value: 43
             },
@@ -103,13 +103,13 @@ describe('Observe System radar data source model', () => {
     );
 
     const expectedRequests = [
-      exploreRequest(current, buildSelection('calls', MetricAggregationType.Sum)),
+      exploreRequest(current, buildSelection('duration', MetricAggregationType.P99)),
       exploreRequest(current, buildSelection('calls', MetricAggregationType.AvgrateSecond)),
-      exploreRequest(current, buildSelection('errorCount', MetricAggregationType.Sum)),
+      exploreRequest(current, buildSelection('duration', MetricAggregationType.Average)),
       exploreRequest(current, buildSelection('errorCount', MetricAggregationType.AvgrateSecond)),
-      exploreRequest(lastHour, buildSelection('calls', MetricAggregationType.Sum)),
+      exploreRequest(lastHour, buildSelection('duration', MetricAggregationType.P99)),
       exploreRequest(lastHour, buildSelection('calls', MetricAggregationType.AvgrateSecond)),
-      exploreRequest(lastHour, buildSelection('errorCount', MetricAggregationType.Sum)),
+      exploreRequest(lastHour, buildSelection('duration', MetricAggregationType.Average)),
       exploreRequest(lastHour, buildSelection('errorCount', MetricAggregationType.AvgrateSecond))
     ];
 
@@ -124,7 +124,7 @@ describe('Observe System radar data source model', () => {
         x: {
           current: [
             {
-              axis: 'Total Calls',
+              axis: 'P99 Latency',
               value: 23
             },
             {
@@ -132,7 +132,7 @@ describe('Observe System radar data source model', () => {
               value: 33
             },
             {
-              axis: 'Total Errors',
+              axis: 'Avg Latency',
               value: 43
             },
             {
@@ -142,7 +142,7 @@ describe('Observe System radar data source model', () => {
           ],
           previous: [
             {
-              axis: 'Total Calls',
+              axis: 'P99 Latency',
               value: 23
             },
             {
@@ -150,7 +150,7 @@ describe('Observe System radar data source model', () => {
               value: 33
             },
             {
-              axis: 'Total Errors',
+              axis: 'Avg Latency',
               value: 43
             },
             {
