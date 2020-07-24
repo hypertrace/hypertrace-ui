@@ -23,24 +23,24 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
 
   protected fetchData(timeRange: GraphQlTimeRange): Observable<RadarPoint[]> {
     return forkJoinSafeEmpty([
-      this.fetchTotalCalls(timeRange),
+      this.fetchP99Latency(timeRange),
       this.fetchCallsPerSecond(timeRange),
-      this.fetchTotalErrors(timeRange),
+      this.fetchAvgLatency(timeRange),
       this.fetchErrorsPerSecond(timeRange)
     ]).pipe(
       map(([totalCalls, callsPerSecond, totalErrors, errorsPerSecond]) => [
-        this.buildTotalCallsRadarPoint(totalCalls),
+        this.buildP99LatencyRadarPoint(totalCalls),
         this.buildCallsPerSecondRadarPoint(callsPerSecond),
-        this.buildTotalErrorsRadarPoint(totalErrors),
+        this.buildAvgLatencyRadarPoint(totalErrors),
         this.buildErrorsPerSecondRadarPoint(errorsPerSecond)
       ])
     );
   }
 
-  private fetchTotalCalls(timeRange: GraphQlTimeRange): Observable<number> {
+  private fetchP99Latency(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
-      'calls',
-      MetricAggregationType.Sum
+      'duration',
+      MetricAggregationType.P99
     );
 
     return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
@@ -51,14 +51,14 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
     );
   }
 
-  private buildTotalCallsRadarPoint(totalCalls: number): RadarPoint {
-    return this.buildRadarPoint('Total Calls', totalCalls);
+  private buildP99LatencyRadarPoint(p99Latency: number): RadarPoint {
+    return this.buildRadarPoint('P99 Latency', p99Latency);
   }
 
-  private fetchTotalErrors(timeRange: GraphQlTimeRange): Observable<number> {
+  private fetchAvgLatency(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
-      'errorCount',
-      MetricAggregationType.Sum
+      'duration',
+      MetricAggregationType.Average
     );
 
     return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
@@ -69,8 +69,8 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
     );
   }
 
-  private buildTotalErrorsRadarPoint(totalErrors: number): RadarPoint {
-    return this.buildRadarPoint('Total Errors', totalErrors);
+  private buildAvgLatencyRadarPoint(avgLatency: number): RadarPoint {
+    return this.buildRadarPoint('Avg Latency', avgLatency);
   }
 
   /*
