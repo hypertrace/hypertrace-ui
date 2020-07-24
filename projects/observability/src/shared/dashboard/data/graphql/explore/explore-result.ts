@@ -11,7 +11,7 @@ import {
 
 export class ExploreResult {
   private static readonly OTHER_SERVER_GROUP_NAME: string = '__Other';
-  private static readonly OTHER_UI_GROUP_NAME: string = 'Other results';
+  public static readonly OTHER_UI_GROUP_NAME: string = 'Others';
 
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 

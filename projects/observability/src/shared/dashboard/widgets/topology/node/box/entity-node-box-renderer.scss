@@ -57,7 +57,7 @@
       }
 
       .entity-label {
-        @include svg-link-hover;
+        @include link-hover(true);
         @include body-2-medium($gray-7);
         text-anchor: middle;
         fill: $gray-7;
