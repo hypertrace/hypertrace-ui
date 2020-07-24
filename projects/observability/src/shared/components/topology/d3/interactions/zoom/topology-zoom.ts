@@ -258,7 +258,7 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
 
   private isPrimaryMouseOrTouchEvent(receivedEvent: ZoomSourceEvent): receivedEvent is TouchEvent | MouseEvent {
     return (
-      receivedEvent instanceof window.TouchEvent ||
+      ('TouchEvent' in window && receivedEvent instanceof TouchEvent) ||
       (receivedEvent instanceof MouseEvent &&
         !this.isScrollEvent(receivedEvent) &&
         receivedEvent.button === MouseButton.Primary)
