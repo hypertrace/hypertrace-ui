@@ -7,6 +7,10 @@
   visibility: hidden;
 }
 
+@mixin show-in-background {
+  opacity: 0.4;
+}
+
 @mixin show {
   opacity: 1;
   visibility: visible;
@@ -24,7 +28,7 @@
         .metric-category,
         .node-icon {
           @include transition;
-          @include hide;
+          @include show-in-background;
         }
       }
 
@@ -69,7 +73,7 @@
       }
 
       .entity-outer-band {
-        fill: $gray-1;
+        fill: $gray-2;
       }
 
       .entity-metric-value {
