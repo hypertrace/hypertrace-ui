@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigableTab } from '@hypertrace/components';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ApiDetailService, ApiType } from './api-detail.service';
+import { ApiDetailService } from './api-detail.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,10 +29,4 @@ export class ApiDetailComponent {
       label: 'Metrics'
     }
   ];
-
-  public readonly showApiDefinition$: Observable<boolean>;
-
-  public constructor(apiDetailService: ApiDetailService) {
-    this.showApiDefinition$ = apiDetailService.getEntity().pipe(map(api => api.apiType === ApiType.Http));
-  }
 }
