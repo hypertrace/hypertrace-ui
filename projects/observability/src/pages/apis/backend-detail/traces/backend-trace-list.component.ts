@@ -22,7 +22,9 @@ export class BackendTraceListComponent {
   public constructor(backendDetailService: BackendDetailService) {
     this.filterConfig$ = backendDetailService.entityFilter$.pipe(
       map(filter => ({
-        scope: ObservabilityTraceType.Backend,
+        filterBar: {
+          scope: ObservabilityTraceType.Backend
+        },
         implicitFilters: [filter]
       }))
     );

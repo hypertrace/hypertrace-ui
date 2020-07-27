@@ -22,7 +22,9 @@ export class ServiceTraceListComponent {
   public constructor(serviceDetailService: ServiceDetailService) {
     this.filterConfig$ = serviceDetailService.entityFilter$.pipe(
       map(filter => ({
-        scope: ObservabilityTraceType.Api,
+        filterBar: {
+          scope: ObservabilityTraceType.Api
+        },
         implicitFilters: [filter]
       }))
     );
