@@ -22,7 +22,9 @@ export class ApiTraceListComponent {
   public constructor(apiDetailService: ApiDetailService) {
     this.filterConfig$ = apiDetailService.entityFilter$.pipe(
       map(filter => ({
-        scope: ObservabilityTraceType.Api,
+        filterBar: {
+          scope: ObservabilityTraceType.Api
+        },
         implicitFilters: [filter]
       }))
     );

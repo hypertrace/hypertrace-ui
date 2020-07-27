@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReplayObservable } from '@hypertrace/common';
 import { NavigableDashboardFilterConfig } from '@hypertrace/distributed-tracing';
 import { map } from 'rxjs/operators';
-import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 import { ApiDetailService } from '../api-detail.service';
 import { apiMetricsDashboard } from './api-metrics-dashboard';
 
@@ -22,9 +21,7 @@ export class ApiMetricsComponent {
   public constructor(apiDetailService: ApiDetailService) {
     this.filterConfig$ = apiDetailService.entityFilter$.pipe(
       map(filter => ({
-        scope: ObservabilityTraceType.Api,
-        implicitFilters: [filter],
-        hideFilterBar: true
+        implicitFilters: [filter]
       }))
     );
   }
