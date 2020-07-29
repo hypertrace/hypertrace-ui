@@ -7,7 +7,7 @@ metadata:
 data:
   default.conf: |-
     server {
-      listen       80;
+      listen       {{ .Values.service.port }};
       server_name  _;
 
       location / {
