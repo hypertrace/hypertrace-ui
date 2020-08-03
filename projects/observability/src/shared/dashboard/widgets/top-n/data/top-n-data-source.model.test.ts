@@ -3,8 +3,6 @@ import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
   ExploreSelectionSpecificationModel,
-  ExploreSpecification,
-  ExploreSpecificationBuilder,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest
 } from '@hypertrace/observability';
@@ -19,10 +17,6 @@ describe('Top N Data Source Model', () => {
   const exploreSelectionSpecification = new ExploreSelectionSpecificationModel();
   exploreSelectionSpecification.metric = 'numCalls';
   exploreSelectionSpecification.aggregation = MetricAggregationType.Sum;
-
-  const specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
-  const nameAttributeSpec: ExploreSpecification = specBuilder.exploreSpecificationForKey('name');
-  const idAttributeSpec: ExploreSpecification = specBuilder.exploreSpecificationForKey('id');
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -45,24 +39,28 @@ describe('Top N Data Source Model', () => {
 
     tick();
 
-    const expectedQuery: GraphQlExploreRequest = {
-      requestType: EXPLORE_GQL_REQUEST,
-      context: 'API',
-      timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
-      selections: [nameAttributeSpec, idAttributeSpec, exploreSelectionSpecification],
-      limit: 3,
-      orderBy: [
-        {
-          direction: 'DESC',
-          key: exploreSelectionSpecification
-        }
-      ],
-      filters: [],
-      groupBy: {
-        keys: [nameAttributeSpec.name, idAttributeSpec.name]
-      }
-    };
-
-    expect(expectedQuery).toEqual(emittedQuery);
+    expect(emittedQuery).toEqual(
+      expect.objectContaining({
+        requestType: EXPLORE_GQL_REQUEST,
+        context: 'API',
+        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+        selections: [
+          expect.objectContaining({ name: 'name' }),
+          expect.objectContaining({ name: 'id' }),
+          expect.objectContaining({ metric: exploreSelectionSpecification.metric })
+        ],
+        limit: 3,
+        orderBy: expect.arrayContaining([
+          {
+            direction: 'DESC',
+            key: exploreSelectionSpecification
+          }
+        ]),
+        filters: [],
+        groupBy: expect.objectContaining({
+          keys: ['name', 'id']
+        })
+      })
+    );
   }));
 });

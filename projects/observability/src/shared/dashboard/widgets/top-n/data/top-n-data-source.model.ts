@@ -9,8 +9,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import {
   ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse,
-  GraphQlExploreResultValue
+  GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 @Model({
