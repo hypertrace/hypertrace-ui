@@ -51,7 +51,8 @@ describe('Explorer component', () => {
       type: AttributeMetadataType.String,
       requiresAggregation: false,
       scope: SPAN_SCOPE,
-      units: ''
+      units: '',
+      groupable: true
     },
     {
       name: 'second',
@@ -60,7 +61,8 @@ describe('Explorer component', () => {
       type: AttributeMetadataType.Timestamp,
       requiresAggregation: false,
       scope: SPAN_SCOPE,
-      units: ''
+      units: '',
+      groupable: false
     }
   ];
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
