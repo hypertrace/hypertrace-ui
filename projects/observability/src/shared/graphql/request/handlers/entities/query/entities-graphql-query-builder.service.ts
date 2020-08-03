@@ -30,7 +30,7 @@ import {
 } from '../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../model/schema/filter/entity/graphql-entity-filter';
 import { GraphQlObservabilityArgumentBuilder } from '../../../builders/argument/graphql-observability-argument-builder';
-import { FilterUtil } from '../../util/filter-util';
+import { getApiDiscoveryStateFilter } from '../../util/handler-util';
 
 @Injectable({ providedIn: 'root' })
 export class EntitiesGraphqlQueryBuilderService {
@@ -68,7 +68,7 @@ export class EntitiesGraphqlQueryBuilderService {
 
     if (!hasApiEntityFilter) {
       // Apply a filter on discovery state
-      filters.push(FilterUtil.getApiDiscoveryStateFilter());
+      filters.push(getApiDiscoveryStateFilter());
     }
 
     return this.argBuilder.forFilters(filters);

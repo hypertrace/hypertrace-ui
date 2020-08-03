@@ -16,7 +16,7 @@ import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
-import { FilterUtil } from '../util/filter-util';
+import { getApiDiscoveryStateFilter } from '../util/handler-util';
 
 const INTERVAL_START_QUERY_KEY = '__intervalStart';
 
@@ -46,7 +46,7 @@ export class ExploreGraphQlQueryHandlerService
         request.filters = [];
       }
 
-      request.filters?.push(FilterUtil.getApiDiscoveryStateFilter());
+      request.filters?.push(getApiDiscoveryStateFilter());
     }
 
     return {
