@@ -2,16 +2,16 @@ import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, NUMBER_PROPERTY, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreRequestContext } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
+import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
+import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse,
   GraphQlExploreResultValue
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
-import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 
 @Model({
   type: 'top-n-data-source'
@@ -41,8 +41,8 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
 
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 
-  private nameAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('name');
-  private idAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('id');
+  private readonly nameAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('name');
+  private readonly idAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('id');
 
   private fetchDataWithMetric(metricSpecification: ExploreSpecification): Observable<TopNWidgetValueData[]> {
     return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(filters => ({
@@ -64,10 +64,10 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
     })).pipe(
       map(response =>
         response.results.map(entity => ({
-          label: (entity[this.nameAttributeSpec.resultAlias()] as GraphQlExploreResultValue).value as string,
-          value: (entity[metricSpecification.resultAlias()] as GraphQlExploreResultValue).value as number,
+          label: entity[this.nameAttributeSpec.resultAlias()].value as string,
+          value: entity[metricSpecification.resultAlias()].value as number,
           entity: {
-            [entityIdKey]: (entity[this.idAttributeSpec.resultAlias()] as GraphQlExploreResultValue).value as string,
+            [entityIdKey]: entity[this.idAttributeSpec.resultAlias()].value as string,
             [entityTypeKey]: this.getEntityTypeForContext(this.context)
           }
         }))

@@ -3,6 +3,7 @@ import { TitledContentComponent } from '@hypertrace/components';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { ExploreSelectionSpecificationModel } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -12,7 +13,6 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../gr
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 import { TopNWidgetRendererComponent } from './top-n-widget-renderer.component';
-import { ExploreSelectionSpecificationModel } from '@hypertrace/observability';
 
 describe('Top N Widget renderer', () => {
   let mockResponse: TopNWidgetDataFetcher;
