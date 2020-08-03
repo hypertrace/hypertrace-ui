@@ -2,6 +2,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
+  ExploreQueryContextType,
   ExploreSelectionSpecificationModel,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest
@@ -24,7 +25,7 @@ describe('Top N Data Source Model', () => {
     };
 
     model = new TopNDataSourceModel();
-    model.context = 'API';
+    model.context = ExploreQueryContextType.Api;
     model.api = mockApi as ModelApi;
     model.resultLimit = 3;
 
@@ -42,7 +43,7 @@ describe('Top N Data Source Model', () => {
     expect(emittedQuery).toEqual(
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
-        context: 'API',
+        context: ExploreQueryContextType.Api,
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         selections: [
           expect.objectContaining({ name: 'name' }),

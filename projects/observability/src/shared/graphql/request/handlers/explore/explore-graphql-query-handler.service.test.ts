@@ -17,6 +17,7 @@ import { ObservabilityTraceType } from '../../../model/schema/observability-trac
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import {
   ExploreGraphQlQueryHandlerService,
+  ExploreQueryContextType,
   EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreRequest
@@ -111,6 +112,106 @@ describe('Explore graphql query handler', () => {
               key: 'duration',
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
+            }
+          ]
+        },
+        {
+          name: 'groupBy',
+          value: {
+            includeRest: true,
+            keys: ['serviceName']
+          }
+        },
+        {
+          name: 'orderBy',
+          value: [
+            {
+              direction: new GraphQlEnumArgument('ASC'),
+              key: 'duration',
+              aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
+            }
+          ]
+        }
+      ],
+      children: [
+        {
+          path: 'results',
+          children: [
+            { path: 'intervalStart', alias: '__intervalStart' },
+            {
+              path: 'selection',
+              alias: 'serviceName',
+              arguments: [{ name: 'key', value: 'serviceName' }],
+              children: [{ path: 'value' }, { path: 'type' }]
+            },
+            {
+              path: 'selection',
+              alias: 'avg_duration',
+              arguments: [
+                { name: 'key', value: 'duration' },
+                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
+              ],
+              children: [{ path: 'value' }, { path: 'type' }]
+            },
+            {
+              path: 'selection',
+              alias: 'avgrate_min_duration',
+              arguments: [
+                { name: 'key', value: 'duration' },
+                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate) },
+                { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
+                { name: 'size', value: 1 }
+              ],
+              children: [{ path: 'value' }, { path: 'type' }]
+            }
+          ]
+        },
+        {
+          path: 'total'
+        }
+      ]
+    });
+  });
+
+  test('produces expected graphql for API context', () => {
+    const spectator = createService();
+    const request = buildRequest();
+    request.context = ExploreQueryContextType.Api;
+
+    expect(spectator.service.convertRequest(request)).toEqual({
+      path: 'explore',
+      arguments: [
+        { name: 'context', value: new GraphQlEnumArgument(ExploreQueryContextType.Api) },
+        { name: 'limit', value: 2 },
+        {
+          name: 'between',
+          value: {
+            startTime: new Date(testTimeRange.from),
+            endTime: new Date(testTimeRange.to)
+          }
+        },
+        { name: 'offset', value: 0 },
+        { name: 'interval', value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) } },
+        {
+          name: 'filterBy',
+          value: [
+            {
+              key: 'duration',
+              operator: new GraphQlEnumArgument(GraphQlOperatorType.GreaterThan),
+              value: 0,
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
+            },
+            {
+              key: 'duration',
+              operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
+              value: 100,
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
+            },
+            {
+              key: 'apiDiscoveryState',
+              operator: new GraphQlEnumArgument(GraphQlOperatorType.Equals),
+              value: 'DISCOVERED',
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
             }
           ]

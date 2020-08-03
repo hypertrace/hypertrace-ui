@@ -8,6 +8,7 @@ import { ExploreSpecification } from '../../../../graphql/model/schema/specifica
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   ExploreGraphQlQueryHandlerService,
+  ExploreQueryContextType,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
@@ -76,9 +77,9 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
 
   private getEntityTypeForContext(context: string): string {
     switch (context) {
-      case 'API':
+      case ExploreQueryContextType.Api:
         return ObservabilityEntityType.Api;
-      case 'SERVICE':
+      case ExploreQueryContextType.Service:
         return ObservabilityEntityType.Service;
       default:
         return '';
