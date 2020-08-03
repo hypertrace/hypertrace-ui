@@ -4,14 +4,14 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
 import { TopNWidgetModel } from './top-n-widget.model';
+import { ExploreSelectionSpecificationModel } from '../../data/graphql/specifiers/explore-selection-specification.model';
 
 @Renderer({ modelClass: TopNWidgetModel })
 @Component({
@@ -52,8 +52,8 @@ import { TopNWidgetModel } from './top-n-widget.model';
   `
 })
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
-  public metricSpecification!: MetricAggregationSpecificationModel;
-  public options$!: Observable<SelectOption<MetricAggregationSpecificationModel>[]>;
+  public metricSpecification!: ExploreSelectionSpecificationModel;
+  public options$!: Observable<SelectOption<ExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;
 
   public constructor(
@@ -67,7 +67,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     this.setOptionsObservables();
   }
 
-  public onSelection(metricSpecification: MetricAggregationSpecificationModel): void {
+  public onSelection(metricSpecification: ExploreSelectionSpecificationModel): void {
     this.metricSpecification = metricSpecification;
     this.updateDataObservable();
   }

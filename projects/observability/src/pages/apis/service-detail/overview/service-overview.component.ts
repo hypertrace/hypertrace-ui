@@ -668,25 +668,25 @@ export class ServiceOverviewComponent {
             },
             'select-option-metrics': [
               {
-                type: 'metric-aggregation',
+                type: 'explore-selection',
                 'display-name': 'Calls',
                 metric: 'numCalls',
                 aggregation: MetricAggregationType.Sum
               },
               {
-                type: 'metric-aggregation',
+                type: 'explore-selection',
                 'display-name': 'Errors',
                 metric: 'errorCount',
                 aggregation: MetricAggregationType.Sum
               },
               {
-                type: 'metric-aggregation',
+                type: 'explore-selection',
                 'display-name': 'p99 Latency',
                 metric: 'duration',
                 aggregation: MetricAggregationType.P99
               },
               {
-                type: 'metric-aggregation',
+                type: 'explore-selection',
                 'display-name': 'p50 Latency',
                 metric: 'duration',
                 aggregation: MetricAggregationType.P50
@@ -694,12 +694,8 @@ export class ServiceOverviewComponent {
             ],
             data: {
               type: 'top-n-data-source',
-              entity: 'API',
-              'result-limit': 10,
-              attribute: {
-                type: 'attribute-specification',
-                attribute: 'name'
-              }
+              context: 'API',
+              'result-limit': 10
             }
           }
         ]

@@ -1,41 +1,29 @@
-import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import {
-  AttributeSpecificationModel,
-  GraphQlDataSourceModel,
-  MetricAggregation
-} from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, ModelPropertyType, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
+import { Model, ModelProperty, NUMBER_PROPERTY, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
-import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
-import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
+import { ExploreRequestContext } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import {
-  EntitiesGraphQlQueryHandlerService,
-  ENTITIES_GQL_REQUEST
-} from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+  EXPLORE_GQL_REQUEST,
+  ExploreGraphQlQueryHandlerService,
+  GraphQlExploreResponse,
+  GraphQlExploreResultValue
+} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
+import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 
 @Model({
   type: 'top-n-data-source'
 })
 export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFetcher> {
   @ModelProperty({
-    key: 'entity',
+    key: 'context',
     required: true,
     // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ENUM_TYPE.type,
-      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]
-    } as EnumPropertyTypeInstance
+    type: STRING_PROPERTY.type
   })
-  public entityType!: ObservabilityEntityType;
-
-  @ModelProperty({
-    key: 'attribute',
-    type: ModelPropertyType.TYPE,
-    required: true
-  })
-  public attributeSpecification!: AttributeSpecificationModel;
+  public context!: ExploreRequestContext;
 
   @ModelProperty({
     key: 'result-limit',
@@ -46,41 +34,62 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
 
   public getData(): Observable<TopNWidgetDataFetcher> {
     return of({
-      scope: this.entityType,
-      getData: (metricSpecification: MetricAggregationSpecification) => this.fetchDataWithMetric(metricSpecification)
+      scope: this.context,
+      getData: (metricSpecification: ExploreSpecification) => this.fetchDataWithMetric(metricSpecification)
     });
   }
 
-  private fetchDataWithMetric(metricSpecification: MetricAggregationSpecification): Observable<TopNWidgetValueData[]> {
-    return this.queryWithNextBatch<EntitiesGraphQlQueryHandlerService, EntitiesResponse>(filters => ({
-      requestType: ENTITIES_GQL_REQUEST,
-      entityType: this.entityType,
+  private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
+
+  private nameAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('name');
+  private idAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('id');
+
+  private fetchDataWithMetric(metricSpecification: ExploreSpecification): Observable<TopNWidgetValueData[]> {
+    return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(filters => ({
+      requestType: EXPLORE_GQL_REQUEST,
+      context: this.context,
       limit: this.resultLimit,
       timeRange: this.getTimeRangeOrThrow(),
-      properties: [this.attributeSpecification, metricSpecification],
+      selections: [this.nameAttributeSpec, this.idAttributeSpec, metricSpecification],
       filters: filters,
-      sort: {
-        direction: 'DESC',
-        key: metricSpecification
-      }
+      groupBy: {
+        keys: [this.nameAttributeSpec.name, this.idAttributeSpec.name]
+      },
+      orderBy: [
+        {
+          direction: 'DESC',
+          key: metricSpecification
+        }
+      ]
     })).pipe(
       map(response =>
         response.results.map(entity => ({
-          label: entity[this.attributeSpecification.resultAlias()] as string,
-          value: (entity[metricSpecification.resultAlias()] as MetricAggregation).value,
+          label: (entity[this.nameAttributeSpec.resultAlias()] as GraphQlExploreResultValue).value as string,
+          value: (entity[metricSpecification.resultAlias()] as GraphQlExploreResultValue).value as number,
           entity: {
-            [entityIdKey]: entity[entityIdKey],
-            [entityTypeKey]: this.entityType
+            [entityIdKey]: (entity[this.idAttributeSpec.resultAlias()] as GraphQlExploreResultValue).value as string,
+            [entityTypeKey]: this.getEntityTypeForContext(this.context)
           }
         }))
       )
     );
   }
+
+  private getEntityTypeForContext(context: string): string {
+    switch (context) {
+      case 'API':
+        return ObservabilityEntityType.Api;
+      case 'SERVICE':
+        return ObservabilityEntityType.Service;
+      default:
+        return '';
+    }
+  }
 }
 
 export interface TopNWidgetDataFetcher {
   scope: string;
-  getData(metricSpecification: MetricAggregationSpecification): Observable<TopNWidgetValueData[]>;
+  getData(metricSpecification: ExploreSpecification): Observable<TopNWidgetValueData[]>;
 }
 
 export interface TopNWidgetValueData {

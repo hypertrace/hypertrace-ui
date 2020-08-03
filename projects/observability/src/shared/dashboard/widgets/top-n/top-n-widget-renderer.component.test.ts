@@ -10,13 +10,13 @@ import { EMPTY, of } from 'rxjs';
 import { TopNChartComponent } from '../../../components/top-n/top-n-chart.component';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 import { TopNWidgetRendererComponent } from './top-n-widget-renderer.component';
+import { ExploreSelectionSpecificationModel } from '@hypertrace/observability';
 
 describe('Top N Widget renderer', () => {
   let mockResponse: TopNWidgetDataFetcher;
-  let optionMetricSpecifications: MetricAggregationSpecificationModel[] = [];
+  let optionMetricSpecifications: ExploreSelectionSpecificationModel[] = [];
   let title = '';
 
   const rendererApiFactory = () => ({
@@ -59,7 +59,7 @@ describe('Top N Widget renderer', () => {
     metricName: string,
     aggregationType: MetricAggregationType
   ) => {
-    const model = new MetricAggregationSpecificationModel();
+    const model = new ExploreSelectionSpecificationModel();
     model.displayName = displayName;
     model.aggregation = aggregationType;
     model.metric = metricName;

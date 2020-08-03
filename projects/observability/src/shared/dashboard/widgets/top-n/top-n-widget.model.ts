@@ -7,10 +7,10 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-source.model';
+import { ExploreSelectionSpecificationModel } from '../../data/graphql/specifiers/explore-selection-specification.model';
 
 @Model({
   type: 'top-n-widget',
@@ -33,7 +33,7 @@ export class TopNWidgetModel {
     key: 'select-option-metrics',
     required: true
   })
-  public optionMetricSpecifications!: MetricAggregationSpecificationModel[];
+  public optionMetricSpecifications!: ExploreSelectionSpecificationModel[];
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
