@@ -40,8 +40,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
   }
 
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
-
-  private readonly nameAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('name');
+  private readonly labelAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('name');
   private readonly idAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey('id');
 
   private fetchDataWithMetric(metricSpecification: ExploreSpecification): Observable<TopNWidgetValueData[]> {
@@ -50,10 +49,10 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       context: this.context,
       limit: this.resultLimit,
       timeRange: this.getTimeRangeOrThrow(),
-      selections: [this.nameAttributeSpec, this.idAttributeSpec, metricSpecification],
+      selections: [this.labelAttributeSpec, this.idAttributeSpec, metricSpecification],
       filters: filters,
       groupBy: {
-        keys: [this.nameAttributeSpec.name, this.idAttributeSpec.name]
+        keys: [this.labelAttributeSpec.name, this.idAttributeSpec.name]
       },
       orderBy: [
         {
@@ -64,7 +63,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
     })).pipe(
       map(response =>
         response.results.map(entity => ({
-          label: entity[this.nameAttributeSpec.resultAlias()].value as string,
+          label: entity[this.labelAttributeSpec.resultAlias()].value as string,
           value: entity[metricSpecification.resultAlias()].value as number,
           entity: {
             [entityIdKey]: entity[this.idAttributeSpec.resultAlias()].value as string,
