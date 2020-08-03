@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { assertUnreachable, NavigationService } from '@hypertrace/common';
+import { ToggleItem } from '@hypertrace/components';
 import { Filter, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -21,14 +22,11 @@ import {
     <div class="vertical-flex-layout">
       <htc-page-header></htc-page-header>
       <div class="fill-container explorer-container">
-        <htc-toggle-button-group
-          [selectedLabel]="this.contextLabel$ | async"
-          (selectedLabelChange)="this.onContextUpdated($event)"
-          class="toggle-filter"
-        >
-          <htc-toggle-button label="${ExplorerComponent.API_TRACES}"> </htc-toggle-button>
-          <htc-toggle-button label="${ExplorerComponent.SPANS}"> </htc-toggle-button>
-        </htc-toggle-button-group>
+        <htc-toggle-group
+          [items]="this.contextItems"
+          [activeItem]="this.activeContextItem$ | async"
+          (activeItemChange)="this.onContextUpdated($event)"
+        ></htc-toggle-group>
 
         <htc-filter-bar
           class="filter-bar"
@@ -93,7 +91,18 @@ export class ExplorerComponent {
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
-  public readonly contextLabel$: Observable<ContextLabel>;
+
+  public contextItems: ToggleItem<ContextLabel>[] = [
+    {
+      label: ExplorerComponent.API_TRACES,
+      value: ExplorerComponent.API_TRACES
+    },
+    {
+      label: ExplorerComponent.SPANS,
+      value: ExplorerComponent.SPANS
+    }
+  ];
+  public activeContextItem$: Observable<ToggleItem<ContextLabel> | undefined>;
 
   public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
@@ -109,10 +118,11 @@ export class ExplorerComponent {
     this.explorerDashboardBuilder = explorerDasboardBuilderFactory.build();
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.contextLabel$ = activatedRoute.queryParamMap.pipe(
+    this.activeContextItem$ = activatedRoute.queryParamMap.pipe(
       map(paramMap => paramMap.get(ExplorerComponent.SCOPE_QUERY_PARAM)),
       map(queryParam => this.queryParamToContextLabel(queryParam)),
-      tap(label => this.onContextUpdated(label))
+      map(label => this.getContextItem(label)),
+      tap(toggleItem => this.onContextUpdated(toggleItem))
     );
   }
 
@@ -124,12 +134,16 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  public onContextUpdated(label: ContextLabel): void {
-    this.context = this.contextLabelToDashboardContext(label);
-    // Set query param async to allow any initating route change to complete
+  private getContextItem(label: string): ToggleItem<ContextLabel> | undefined {
+    return this.contextItems.find(item => item.label === label);
+  }
+
+  public onContextUpdated(item: ToggleItem<ContextLabel> = this.contextItems[0]): void {
+    this.context = this.contextLabelToDashboardContext(item.value!);
+    // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
       this.navigationService.addQueryParametersToUrl({
-        [ExplorerComponent.SCOPE_QUERY_PARAM]: this.contextLabelToQueryParam(label)
+        [ExplorerComponent.SCOPE_QUERY_PARAM]: this.contextLabelToQueryParam(item.value!)
       })
     );
   }
@@ -168,6 +182,7 @@ export class ExplorerComponent {
 }
 
 type ContextLabel = 'Spans' | 'Endpoint Traces';
+
 const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
