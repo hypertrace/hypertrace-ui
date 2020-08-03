@@ -1,15 +1,15 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { mergeMap } from 'rxjs/operators';
-import { TopNDataSourceModel } from './top-n-data-source.model';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreSelectionSpecificationModel,
   ExploreSpecification,
   ExploreSpecificationBuilder,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest
 } from '@hypertrace/observability';
+import { mergeMap } from 'rxjs/operators';
+import { TopNDataSourceModel } from './top-n-data-source.model';
 
 describe('Top N Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };

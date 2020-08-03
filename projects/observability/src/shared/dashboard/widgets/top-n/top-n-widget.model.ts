@@ -7,10 +7,10 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 import { ExploreSelectionSpecificationModel } from '../../data/graphql/specifiers/explore-selection-specification.model';
+import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 
 @Model({
   type: 'top-n-widget',
