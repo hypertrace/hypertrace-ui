@@ -140,10 +140,10 @@ export class ExplorerComponent {
   }
 
   private getContextItemFromValue(value: ScopeQueryParam): ToggleItem<ExplorerContextScope> | undefined {
-    return this.contextItems.find(item => value === item.value.scopeQueryParam);
+    return this.contextItems.find(item => value === item.value!.scopeQueryParam);
   }
 
-  public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value): void {
+  public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value!): void {
     this.context = value.dashboardContext;
     // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
