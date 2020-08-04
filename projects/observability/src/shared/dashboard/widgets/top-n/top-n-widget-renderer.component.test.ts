@@ -1,8 +1,9 @@
 import { FormattingModule, NavigationService } from '@hypertrace/common';
-import { TitledContentComponent } from '@hypertrace/components';
+import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { ExploreSpecificationBuilder } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -10,13 +11,13 @@ import { EMPTY, of } from 'rxjs';
 import { TopNChartComponent } from '../../../components/top-n/top-n-chart.component';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNWidgetDataFetcher } from './data/top-n-data-source.model';
+import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
 import { TopNWidgetRendererComponent } from './top-n-widget-renderer.component';
 
 describe('Top N Widget renderer', () => {
   let mockResponse: TopNWidgetDataFetcher;
-  let optionMetricSpecifications: MetricAggregationSpecificationModel[] = [];
+  let optionMetricSpecifications: TopNExploreSelectionSpecificationModel[] = [];
   let title = '';
 
   const rendererApiFactory = () => ({
@@ -25,8 +26,7 @@ describe('Top N Widget renderer', () => {
       getData: jest.fn(() => of(mockResponse)),
       header: {
         title: title
-      },
-      optionMetricSpecifications: optionMetricSpecifications
+      }
     },
     change$: EMPTY,
     dataRefresh$: EMPTY,
@@ -49,7 +49,7 @@ describe('Top N Widget renderer', () => {
       ...getMockFlexLayoutProviders()
     ],
     mocks: [NavigationService],
-    imports: [FormattingModule],
+    imports: [FormattingModule, LoadAsyncModule],
     declarations: [MockComponent(TopNChartComponent), MockComponent(TitledContentComponent)],
     shallow: true
   });
@@ -59,12 +59,15 @@ describe('Top N Widget renderer', () => {
     metricName: string,
     aggregationType: MetricAggregationType
   ) => {
-    const model = new MetricAggregationSpecificationModel();
-    model.displayName = displayName;
-    model.aggregation = aggregationType;
-    model.metric = metricName;
+    const exploreSpecBuilder = new ExploreSpecificationBuilder();
+    const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
+    topNOptionSpec.nameKey = 'nameKey';
+    topNOptionSpec.idKey = 'idKey';
+    topNOptionSpec.metric = exploreSpecBuilder.exploreSpecificationForKey(metricName, aggregationType);
+    topNOptionSpec.metric.displayName = displayName;
+    topNOptionSpec.context = 'API_CONTEXT';
 
-    return model;
+    return topNOptionSpec;
   };
 
   test('renders the widget', () => {
@@ -86,13 +89,15 @@ describe('Top N Widget renderer', () => {
         }
       }
     ];
-    mockResponse = {
-      scope: ObservabilityEntityType.Api,
-      getData: () => of(data)
-    };
     const requestMetricSpec = buildMetricSpecification('Request', 'numCalls', MetricAggregationType.Sum);
     const errorMetricSpec = buildMetricSpecification('Errors', 'errorCount', MetricAggregationType.Sum);
+    requestMetricSpec.context = ObservabilityEntityType.Api;
+    errorMetricSpec.context = ObservabilityEntityType.Api;
     optionMetricSpecifications = [requestMetricSpec, errorMetricSpec];
+    mockResponse = {
+      getData: () => of(data),
+      getOptions: () => optionMetricSpecifications
+    };
 
     title = 'Top Apis';
 
@@ -139,8 +144,8 @@ describe('Top N Widget renderer', () => {
     ];
 
     mockResponse = {
-      scope: ObservabilityEntityType.Api,
-      getData: () => of(data)
+      getData: () => of(data),
+      getOptions: () => optionMetricSpecifications
     };
 
     const spectator = createComponent();

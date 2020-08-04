@@ -1,26 +1,27 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { AttributeSpecificationModel, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { mergeMap } from 'rxjs/operators';
-import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import {
-  ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
-} from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
-import { MetricAggregationSpecificationModel } from '../../../data/graphql/specifiers/metric-aggregation-specification.model';
+  ExploreSpecificationBuilder,
+  EXPLORE_GQL_REQUEST,
+  GraphQlExploreRequest,
+  ObservabilityEntityType
+} from '@hypertrace/observability';
+import { mergeMap } from 'rxjs/operators';
 import { TopNDataSourceModel } from './top-n-data-source.model';
+import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 describe('Top N Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model: TopNDataSourceModel;
-  let emittedQuery: GraphQlEntitiesQueryRequest;
+  let emittedQuery: GraphQlExploreRequest;
 
-  const attributeSpecificationModel = new AttributeSpecificationModel();
-  attributeSpecificationModel.attribute = 'name';
-
-  const metricAggregationSpecification = new MetricAggregationSpecificationModel();
-  metricAggregationSpecification.metric = 'numCalls';
-  metricAggregationSpecification.aggregation = MetricAggregationType.Sum;
+  const exploreSpecBuilder = new ExploreSpecificationBuilder();
+  const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
+  topNOptionSpec.nameKey = 'nameKey';
+  topNOptionSpec.idKey = 'idKey';
+  topNOptionSpec.metric = exploreSpecBuilder.exploreSpecificationForKey('numCalls', MetricAggregationType.Sum);
+  topNOptionSpec.context = 'API_CONTEXT';
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -31,32 +32,40 @@ describe('Top N Data Source Model', () => {
     model.entityType = ObservabilityEntityType.Api;
     model.api = mockApi as ModelApi;
     model.resultLimit = 3;
-    model.attributeSpecification = attributeSpecificationModel;
 
-    model.query$.subscribe(query => (emittedQuery = query.buildRequest([]) as GraphQlEntitiesQueryRequest));
+    model.query$.subscribe(query => (emittedQuery = query.buildRequest([]) as GraphQlExploreRequest));
   });
 
-  test('builds expected Entity requests for Last Hour', fakeAsync(() => {
+  test('builds expected explore requests', fakeAsync(() => {
     model
       .getData()
-      .pipe(mergeMap(fetcher => fetcher.getData(metricAggregationSpecification)))
+      .pipe(mergeMap(fetcher => fetcher.getData(topNOptionSpec)))
       .subscribe();
 
     tick();
 
-    const expectedQuery: GraphQlEntitiesQueryRequest = {
-      requestType: ENTITIES_GQL_REQUEST,
-      entityType: ObservabilityEntityType.Api,
-      timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
-      properties: [attributeSpecificationModel, metricAggregationSpecification],
-      limit: 3,
-      sort: {
-        direction: 'DESC',
-        key: metricAggregationSpecification
-      },
-      filters: []
-    };
-
-    expect(expectedQuery).toEqual(emittedQuery);
+    expect(emittedQuery).toEqual(
+      expect.objectContaining({
+        requestType: EXPLORE_GQL_REQUEST,
+        context: 'API_CONTEXT',
+        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+        selections: [
+          expect.objectContaining({ name: 'nameKey' }),
+          expect.objectContaining({ name: 'idKey' }),
+          expect.objectContaining(topNOptionSpec.metric)
+        ],
+        limit: 3,
+        orderBy: expect.arrayContaining([
+          {
+            direction: 'DESC',
+            key: topNOptionSpec.metric
+          }
+        ]),
+        filters: [],
+        groupBy: expect.objectContaining({
+          keys: ['nameKey', 'idKey']
+        })
+      })
+    );
   }));
 });
