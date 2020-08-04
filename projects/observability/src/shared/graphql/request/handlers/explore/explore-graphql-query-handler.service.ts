@@ -12,6 +12,7 @@ import {
   GraphQlQueryHandler,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
+import { ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
@@ -41,7 +42,7 @@ export class ExploreGraphQlQueryHandlerService
   public convertRequest(request: GraphQlExploreRequest): GraphQlSelection {
     const totalSelection = request.includeTotal ? [{ path: 'total' }] : [];
 
-    if (request.context === ExploreQueryContextType.Api) {
+    if (request.context === ObservabilityEntityType.Api) {
       if (request.filters?.length === 0) {
         request.filters = [];
       }
@@ -156,11 +157,6 @@ export interface GraphQlExploreResult {
   [GQL_EXPLORE_RESULT_INTERVAL_KEY]?: Date;
 
   [key: string]: GraphQlExploreResultValue;
-}
-
-export enum ExploreQueryContextType {
-  Api = 'API',
-  Service = 'SERVICE'
 }
 
 type GraphQlExploreValueType = number | string | boolean | undefined;

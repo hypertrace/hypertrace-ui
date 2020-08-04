@@ -36,7 +36,7 @@ describe('Top N Data Source Model', () => {
     model.query$.subscribe(query => (emittedQuery = query.buildRequest([]) as GraphQlExploreRequest));
   });
 
-  test('builds expected explore requests for Last Hour', fakeAsync(() => {
+  test('builds expected explore requests', fakeAsync(() => {
     model
       .getData()
       .pipe(mergeMap(fetcher => fetcher.getData(topNOptionSpec)))

@@ -177,12 +177,12 @@ describe('Explore graphql query handler', () => {
   test('produces expected graphql for API context', () => {
     const spectator = createService();
     const request = buildRequest();
-    request.context = ExploreQueryContextType.Api;
+    request.context = ObservabilityEntityType.Api;
 
     expect(spectator.service.convertRequest(request)).toEqual({
       path: 'explore',
       arguments: [
-        { name: 'context', value: new GraphQlEnumArgument(ExploreQueryContextType.Api) },
+        { name: 'context', value: new GraphQlEnumArgument(ObservabilityEntityType.Api) },
         { name: 'limit', value: 2 },
         {
           name: 'between',

@@ -37,16 +37,16 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
 
   @ModelProperty({
     type: ARRAY_PROPERTY.type,
-    key: 'select-option-metrics',
+    key: 'options',
     required: true
   })
-  public optionMetricSpecifications!: TopNExploreSelectionSpecificationModel[];
+  public options!: TopNExploreSelectionSpecificationModel[];
 
   public getData(): Observable<TopNWidgetDataFetcher> {
     return of({
       getData: (metricSpecification: TopNExploreSelectionSpecificationModel) =>
         this.fetchDataWithMetric(metricSpecification),
-      getOptions: () => this.optionMetricSpecifications
+      getOptions: () => this.options
     });
   }
 

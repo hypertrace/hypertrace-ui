@@ -6,7 +6,7 @@ import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
@@ -81,7 +81,14 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
   }
 
   protected fetchData(): Observable<TopNData[]> {
-    return this.model.getData().pipe(switchMap(() => this.buildDataObservable()));
+    return this.model.getData().pipe(
+      tap(fetcher => {
+        this.fetcher = fetcher;
+        this.setInitialMetricSpecification(fetcher);
+        this.setOptionsObservables(fetcher);
+      }),
+      switchMap(() => this.buildDataObservable())
+    );
   }
 
   protected buildDataObservable(): Observable<TopNData[]> {

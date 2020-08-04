@@ -3,9 +3,8 @@ import { SubscriptionLifecycle } from '@hypertrace/common';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
-import { ServiceDetailService } from '../service-detail.service';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
-import { ExploreQueryContextType } from '../../../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { ServiceDetailService } from '../service-detail.service';
 
 @Component({
   providers: [SubscriptionLifecycle],
@@ -672,7 +671,7 @@ export class ServiceOverviewComponent {
               type: 'top-n-data-source',
               entity: ObservabilityEntityType.Api,
               'result-limit': 10,
-              'select-option-metrics': [
+              options: [
                 {
                   type: 'top-n-explore-selection',
                   metric: {
@@ -681,7 +680,7 @@ export class ServiceOverviewComponent {
                     metric: 'numCalls',
                     aggregation: MetricAggregationType.Sum
                   },
-                  context: ExploreQueryContextType.Api
+                  context: ObservabilityEntityType.Api
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -691,7 +690,7 @@ export class ServiceOverviewComponent {
                     metric: 'errorCount',
                     aggregation: MetricAggregationType.Sum
                   },
-                  context: ExploreQueryContextType.Api
+                  context: ObservabilityEntityType.Api
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -701,7 +700,7 @@ export class ServiceOverviewComponent {
                     metric: 'duration',
                     aggregation: MetricAggregationType.P99
                   },
-                  context: ExploreQueryContextType.Api
+                  context: ObservabilityEntityType.Api
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -711,7 +710,7 @@ export class ServiceOverviewComponent {
                     metric: 'duration',
                     aggregation: MetricAggregationType.P50
                   },
-                  context: ExploreQueryContextType.Api
+                  context: ObservabilityEntityType.Api
                 }
               ]
             }

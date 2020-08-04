@@ -91,8 +91,8 @@ describe('Top N Widget renderer', () => {
     ];
     const requestMetricSpec = buildMetricSpecification('Request', 'numCalls', MetricAggregationType.Sum);
     const errorMetricSpec = buildMetricSpecification('Errors', 'errorCount', MetricAggregationType.Sum);
-    requestMetricSpec.context = ExploreQueryContextType.Api;
-    errorMetricSpec.context = ExploreQueryContextType.Api;
+    requestMetricSpec.context = ObservabilityEntityType.Api;
+    errorMetricSpec.context = ObservabilityEntityType.Api;
     optionMetricSpecifications = [requestMetricSpec, errorMetricSpec];
     mockResponse = {
       getData: () => of(data),
