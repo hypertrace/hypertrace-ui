@@ -1,17 +1,18 @@
+import { TableSortDirection } from '@hypertrace/components';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
-import { ARRAY_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Entity, entityIdKey, entityTypeKey } from '../../../../graphql/model/schema/entity';
+import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
-import { TableSortDirection } from '@hypertrace/components';
 
 @Model({
   type: 'top-n-data-source'
@@ -19,7 +20,10 @@ import { TableSortDirection } from '@hypertrace/components';
 export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFetcher> {
   @ModelProperty({
     key: 'entity',
-    type: STRING_PROPERTY.type,
+    type: {
+      key: ENUM_TYPE.type,
+      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]
+    } as EnumPropertyTypeInstance,
     required: true
   })
   public entityType!: string;
