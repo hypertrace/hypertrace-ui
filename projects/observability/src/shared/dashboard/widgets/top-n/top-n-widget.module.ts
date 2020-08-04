@@ -9,12 +9,13 @@ import { EntitiesGraphQlQueryHandlerService } from '../../../graphql/request/han
 import { TopNDataSourceModel } from './data/top-n-data-source.model';
 import { TopNWidgetRendererComponent } from './top-n-widget-renderer.component';
 import { TopNWidgetModel } from './top-n-widget.model';
+import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
 
 @NgModule({
   declarations: [TopNWidgetRendererComponent],
   imports: [
     DashboardCoreModule.with({
-      models: [TopNWidgetModel, TopNDataSourceModel],
+      models: [TopNWidgetModel, TopNDataSourceModel, TopNExploreSelectionSpecificationModel],
       renderers: [TopNWidgetRendererComponent]
     }),
     GraphQlModule.withHandlerProviders([EntitiesGraphQlQueryHandlerService]),

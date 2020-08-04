@@ -4,14 +4,14 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
-import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
-import { ExploreSelectionSpecificationModel } from '../../data/graphql/specifiers/explore-selection-specification.model';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
 import { TopNWidgetModel } from './top-n-widget.model';
+import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
 
 @Renderer({ modelClass: TopNWidgetModel })
 @Component({
@@ -52,8 +52,8 @@ import { TopNWidgetModel } from './top-n-widget.model';
   `
 })
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
-  public metricSpecification!: ExploreSelectionSpecificationModel;
-  public options$!: Observable<SelectOption<ExploreSelectionSpecificationModel>[]>;
+  public metricSpecification!: TopNExploreSelectionSpecificationModel;
+  public options$!: Observable<SelectOption<TopNExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;
 
   public constructor(
@@ -63,11 +63,15 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     private readonly entityNavService: EntityNavigationService
   ) {
     super(api, changeDetector);
-    this.setInitialMetricSpecification();
-    this.setOptionsObservables();
+
+    this.model.getData().subscribe(fetcher => {
+      this.fetcher = fetcher;
+      this.setInitialMetricSpecification(fetcher);
+      this.setOptionsObservables(fetcher);
+    });
   }
 
-  public onSelection(metricSpecification: ExploreSelectionSpecificationModel): void {
+  public onSelection(metricSpecification: TopNExploreSelectionSpecificationModel): void {
     this.metricSpecification = metricSpecification;
     this.updateDataObservable();
   }
@@ -77,32 +81,26 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
   }
 
   protected fetchData(): Observable<TopNData[]> {
-    return this.model.getData().pipe(
-      tap(fetcher => (this.fetcher = fetcher)),
-      switchMap(() => this.buildDataObservable())
-    );
+    return this.model.getData().pipe(switchMap(() => this.buildDataObservable()));
   }
 
   protected buildDataObservable(): Observable<TopNData[]> {
     return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 
-  private setOptionsObservables(): void {
-    this.options$ = this.model.getData().pipe(
-      map(fetcher => fetcher.scope),
-      mergeMap(scope =>
-        forkJoinSafeEmpty(
-          this.model.optionMetricSpecifications.map(specification =>
-            this.metadataService
-              .getSpecificationDisplayName(scope, specification)
-              .pipe(map(label => ({ label: label, value: specification })))
-          )
+  private setOptionsObservables(fetcher: TopNWidgetDataFetcher): void {
+    this.options$ = forkJoinSafeEmpty(
+      fetcher
+        .getOptions()
+        .map(spec =>
+          this.metadataService
+            .getSpecificationDisplayName(spec.context, spec.exploreSpec)
+            .pipe(map(label => ({ label: label, value: spec })))
         )
-      )
     );
   }
 
-  private setInitialMetricSpecification(): void {
-    this.metricSpecification = this.model.optionMetricSpecifications[0];
+  private setInitialMetricSpecification(fetcher: TopNWidgetDataFetcher): void {
+    this.metricSpecification = fetcher.getOptions()[0];
   }
 }
