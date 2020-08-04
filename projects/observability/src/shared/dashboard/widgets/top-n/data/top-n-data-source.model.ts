@@ -62,7 +62,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       context: metricSpec.context,
       limit: this.resultLimit,
       timeRange: this.getTimeRangeOrThrow(),
-      selections: [labelAttributeSpec, idAttributeSpec, metricSpec.exploreSpec],
+      selections: [labelAttributeSpec, idAttributeSpec, metricSpec.metric],
       filters: (filters ?? []).concat(metricSpec.filters ?? []),
       groupBy: {
         keys: [labelAttributeSpec.name, idAttributeSpec.name]
@@ -70,14 +70,14 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       orderBy: [
         {
           direction: TableSortDirection.Descending,
-          key: metricSpec.exploreSpec
+          key: metricSpec.metric
         }
       ]
     })).pipe(
       map(response =>
         response.results.map(entity => ({
           label: entity[labelAttributeSpec.resultAlias()].value as string,
-          value: entity[metricSpec.exploreSpec.resultAlias()].value as number,
+          value: entity[metricSpec.metric.resultAlias()].value as number,
           entity: {
             [entityIdKey]: entity[idAttributeSpec.resultAlias()].value as string,
             [entityTypeKey]: this.entityType

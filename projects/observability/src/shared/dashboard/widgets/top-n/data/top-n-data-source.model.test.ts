@@ -20,7 +20,7 @@ describe('Top N Data Source Model', () => {
   const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
   topNOptionSpec.nameKey = 'nameKey';
   topNOptionSpec.idKey = 'idKey';
-  topNOptionSpec.exploreSpec = exploreSpecBuilder.exploreSpecificationForKey('numCalls', MetricAggregationType.Sum);
+  topNOptionSpec.metric = exploreSpecBuilder.exploreSpecificationForKey('numCalls', MetricAggregationType.Sum);
   topNOptionSpec.context = 'API_CONTEXT';
 
   beforeEach(() => {
@@ -52,13 +52,13 @@ describe('Top N Data Source Model', () => {
         selections: [
           expect.objectContaining({ name: 'nameKey' }),
           expect.objectContaining({ name: 'idKey' }),
-          expect.objectContaining(topNOptionSpec.exploreSpec)
+          expect.objectContaining(topNOptionSpec.metric)
         ],
         limit: 3,
         orderBy: expect.arrayContaining([
           {
             direction: 'DESC',
-            key: topNOptionSpec.exploreSpec
+            key: topNOptionSpec.metric
           }
         ]),
         filters: [],

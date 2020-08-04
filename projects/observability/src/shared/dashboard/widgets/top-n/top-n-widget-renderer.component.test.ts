@@ -63,8 +63,8 @@ describe('Top N Widget renderer', () => {
     const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
     topNOptionSpec.nameKey = 'nameKey';
     topNOptionSpec.idKey = 'idKey';
-    topNOptionSpec.exploreSpec = exploreSpecBuilder.exploreSpecificationForKey(metricName, aggregationType);
-    topNOptionSpec.exploreSpec.displayName = displayName;
+    topNOptionSpec.metric = exploreSpecBuilder.exploreSpecificationForKey(metricName, aggregationType);
+    topNOptionSpec.metric.displayName = displayName;
     topNOptionSpec.context = 'API_CONTEXT';
 
     return topNOptionSpec;

@@ -63,12 +63,6 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     private readonly entityNavService: EntityNavigationService
   ) {
     super(api, changeDetector);
-
-    this.model.getData().subscribe(fetcher => {
-      this.fetcher = fetcher;
-      this.setInitialMetricSpecification(fetcher);
-      this.setOptionsObservables(fetcher);
-    });
   }
 
   public onSelection(metricSpecification: TopNExploreSelectionSpecificationModel): void {
@@ -101,7 +95,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
         .getOptions()
         .map(spec =>
           this.metadataService
-            .getSpecificationDisplayName(spec.context, spec.exploreSpec)
+            .getSpecificationDisplayName(spec.context, spec.metric)
             .pipe(map(label => ({ label: label, value: spec })))
         )
     );

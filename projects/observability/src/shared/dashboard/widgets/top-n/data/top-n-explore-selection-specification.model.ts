@@ -48,5 +48,5 @@ export class TopNExploreSelectionSpecificationModel {
     } as ModelModelPropertyTypeInstance,
     required: true
   })
-  public exploreSpec!: ExploreSpecification;
+  public metric!: ExploreSpecification;
 }
