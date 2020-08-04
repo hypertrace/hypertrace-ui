@@ -96,15 +96,15 @@ export class ExplorerComponent {
     {
       label: ExplorerComponent.API_TRACES,
       value: {
-        context: ObservabilityTraceType.Api,
-        scope: ScopeQueryParam.EndpointTraces
+        dashboardContext: ObservabilityTraceType.Api,
+        scopeQueryParam: ScopeQueryParam.EndpointTraces
       }
     },
     {
       label: ExplorerComponent.SPANS,
       value: {
-        context: SPAN_SCOPE,
-        scope: ScopeQueryParam.Spans
+        dashboardContext: SPAN_SCOPE,
+        scopeQueryParam: ScopeQueryParam.Spans
       }
     }
   ];
@@ -140,23 +140,23 @@ export class ExplorerComponent {
   }
 
   private getContextItemFromValue(value: ScopeQueryParam): ToggleItem<ExplorerContextScope> | undefined {
-    return this.contextItems.find(item => value === item.value.scope);
+    return this.contextItems.find(item => value === item.value.scopeQueryParam);
   }
 
   public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value): void {
-    this.context = value.context;
+    this.context = value.dashboardContext;
     // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
       this.navigationService.addQueryParametersToUrl({
-        [ExplorerComponent.SCOPE_QUERY_PARAM]: value.scope
+        [ExplorerComponent.SCOPE_QUERY_PARAM]: value.scopeQueryParam
       })
     );
   }
 }
 
 interface ExplorerContextScope {
-  context: ExplorerGeneratedDashboardContext;
-  scope: ScopeQueryParam;
+  dashboardContext: ExplorerGeneratedDashboardContext;
+  scopeQueryParam: ScopeQueryParam;
 }
 
 const enum ScopeQueryParam {
