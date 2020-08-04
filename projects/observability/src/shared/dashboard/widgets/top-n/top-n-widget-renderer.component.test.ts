@@ -1,5 +1,5 @@
 import { FormattingModule, NavigationService } from '@hypertrace/common';
-import { TitledContentComponent } from '@hypertrace/components';
+import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -49,7 +49,7 @@ describe('Top N Widget renderer', () => {
       ...getMockFlexLayoutProviders()
     ],
     mocks: [NavigationService],
-    imports: [FormattingModule],
+    imports: [FormattingModule, LoadAsyncModule],
     declarations: [MockComponent(TopNChartComponent), MockComponent(TitledContentComponent)],
     shallow: true
   });
