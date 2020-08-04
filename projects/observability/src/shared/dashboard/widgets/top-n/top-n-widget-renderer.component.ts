@@ -4,14 +4,14 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
-import { TopNWidgetModel } from './top-n-widget.model';
 import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
+import { TopNWidgetModel } from './top-n-widget.model';
 
 @Renderer({ modelClass: TopNWidgetModel })
 @Component({

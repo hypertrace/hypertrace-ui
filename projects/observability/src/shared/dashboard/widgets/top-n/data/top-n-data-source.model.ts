@@ -20,6 +20,7 @@ import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selectio
 export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFetcher> {
   @ModelProperty({
     key: 'entity',
+    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]

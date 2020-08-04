@@ -3,7 +3,7 @@ import { TitledContentComponent } from '@hypertrace/components';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { ExploreQueryContextType, ExploreSpecificationBuilder } from '@hypertrace/observability';
+import { ExploreSpecificationBuilder } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
