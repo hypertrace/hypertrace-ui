@@ -2,22 +2,26 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
-  ExploreQueryContextType,
-  ExploreSelectionSpecificationModel,
+  ExploreSpecificationBuilder,
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreRequest
+  GraphQlExploreRequest,
+  ObservabilityEntityType
 } from '@hypertrace/observability';
 import { mergeMap } from 'rxjs/operators';
 import { TopNDataSourceModel } from './top-n-data-source.model';
+import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 describe('Top N Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model: TopNDataSourceModel;
   let emittedQuery: GraphQlExploreRequest;
 
-  const exploreSelectionSpecification = new ExploreSelectionSpecificationModel();
-  exploreSelectionSpecification.metric = 'numCalls';
-  exploreSelectionSpecification.aggregation = MetricAggregationType.Sum;
+  const exploreSpecBuilder = new ExploreSpecificationBuilder();
+  const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
+  topNOptionSpec.nameKey = 'nameKey';
+  topNOptionSpec.idKey = 'idKey';
+  topNOptionSpec.exploreSpec = exploreSpecBuilder.exploreSpecificationForKey('numCalls', MetricAggregationType.Sum);
+  topNOptionSpec.context = 'API_CONTEXT';
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -25,17 +29,17 @@ describe('Top N Data Source Model', () => {
     };
 
     model = new TopNDataSourceModel();
-    model.context = ExploreQueryContextType.Api;
+    model.entityType = ObservabilityEntityType.Api;
     model.api = mockApi as ModelApi;
     model.resultLimit = 3;
 
     model.query$.subscribe(query => (emittedQuery = query.buildRequest([]) as GraphQlExploreRequest));
   });
 
-  test('builds expected Entity requests for Last Hour', fakeAsync(() => {
+  test('builds expected explore requests for Last Hour', fakeAsync(() => {
     model
       .getData()
-      .pipe(mergeMap(fetcher => fetcher.getData(exploreSelectionSpecification)))
+      .pipe(mergeMap(fetcher => fetcher.getData(topNOptionSpec)))
       .subscribe();
 
     tick();
@@ -43,23 +47,23 @@ describe('Top N Data Source Model', () => {
     expect(emittedQuery).toEqual(
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
-        context: ExploreQueryContextType.Api,
+        context: 'API_CONTEXT',
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         selections: [
-          expect.objectContaining({ name: 'name' }),
-          expect.objectContaining({ name: 'id' }),
-          expect.objectContaining({ metric: exploreSelectionSpecification.metric })
+          expect.objectContaining({ name: 'nameKey' }),
+          expect.objectContaining({ name: 'idKey' }),
+          expect.objectContaining(topNOptionSpec.exploreSpec)
         ],
         limit: 3,
         orderBy: expect.arrayContaining([
           {
             direction: 'DESC',
-            key: exploreSelectionSpecification
+            key: topNOptionSpec.exploreSpec
           }
         ]),
         filters: [],
         groupBy: expect.objectContaining({
-          keys: ['name', 'id']
+          keys: ['nameKey', 'idKey']
         })
       })
     );
