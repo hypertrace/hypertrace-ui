@@ -92,7 +92,7 @@ export class ExplorerComponent {
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
 
-  public contextItems: ToggleItem<ExplorerContextScope>[] = [
+  public contextItems: ContextToggleItem[] = [
     {
       label: ExplorerComponent.API_TRACES,
       value: {
@@ -108,7 +108,7 @@ export class ExplorerComponent {
       }
     }
   ];
-  public activeContextItem$: Observable<ToggleItem | undefined>;
+  public activeContextItem$: Observable<ContextToggleItem | undefined>;
 
   public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
@@ -139,7 +139,7 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  private getContextItemFromValue(value: ScopeQueryParam): ToggleItem<ExplorerContextScope> | undefined {
+  private getContextItemFromValue(value: ScopeQueryParam): ContextToggleItem | undefined {
     return this.contextItems.find(item => value === item.value.scopeQueryParam);
   }
 
@@ -152,6 +152,10 @@ export class ExplorerComponent {
       })
     );
   }
+}
+
+interface ContextToggleItem extends ToggleItem {
+  value: ExplorerContextScope;
 }
 
 interface ExplorerContextScope {
