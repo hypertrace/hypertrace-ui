@@ -35,7 +35,6 @@ export const serviceTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'URL',
-        width: '30%',
         value: {
           type: 'attribute-specification',
           attribute: 'requestUrl'
@@ -73,7 +72,7 @@ export const serviceTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Start Time',
-        width: '20%',
+        width: '220px',
         display: StandardTableCellRendererType.Timestamp,
         value: {
           type: 'attribute-specification',
