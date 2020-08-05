@@ -92,7 +92,7 @@ export class ExplorerComponent {
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
 
-  public contextItems: ToggleItem<ExplorerContextScope>[] = [
+  public contextItems: ContextToggleItem[] = [
     {
       label: ExplorerComponent.API_TRACES,
       value: {
@@ -108,7 +108,7 @@ export class ExplorerComponent {
       }
     }
   ];
-  public activeContextItem$: Observable<ToggleItem | undefined>;
+  public activeContextItem$: Observable<ContextToggleItem | undefined>;
 
   public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
@@ -139,11 +139,11 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  private getContextItemFromValue(value: ScopeQueryParam): ToggleItem<ExplorerContextScope> | undefined {
-    return this.contextItems.find(item => value === item.value!.scopeQueryParam);
+  private getContextItemFromValue(value: ScopeQueryParam): ContextToggleItem | undefined {
+    return this.contextItems.find(item => value === item.value.scopeQueryParam);
   }
 
-  public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value!): void {
+  public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value): void {
     this.context = value.dashboardContext;
     // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
@@ -153,6 +153,8 @@ export class ExplorerComponent {
     );
   }
 }
+
+type ContextToggleItem = Required<ToggleItem<ExplorerContextScope>>;
 
 interface ExplorerContextScope {
   dashboardContext: ExplorerGeneratedDashboardContext;
