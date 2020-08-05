@@ -154,7 +154,9 @@ export class ExplorerComponent {
   }
 }
 
-type ContextToggleItem = Required<ToggleItem<ExplorerContextScope>>;
+interface ContextToggleItem extends ToggleItem {
+  value: ExplorerContextScope;
+}
 
 interface ExplorerContextScope {
   dashboardContext: ExplorerGeneratedDashboardContext;
