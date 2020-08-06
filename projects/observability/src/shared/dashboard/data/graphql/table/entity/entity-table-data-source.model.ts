@@ -48,7 +48,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequest: request,
       entityType: this.entityType,
       properties: request.columns.map(column => column.specification),
-      limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
+      limit: this.limit !== undefined ? this.limit : request.position.limit * 4, // Prefetch 4 pages
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
