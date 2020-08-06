@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FactorySansProvider, ModuleWithProviders, NgModule } from '@angular/core';
-import { PageHeaderModule, PanelModule, ToggleButtonModule } from '@hypertrace/components';
+import { PageHeaderModule, PanelModule, ToggleGroupModule } from '@hypertrace/components';
 import { FilterBarModule } from '@hypertrace/distributed-tracing';
 import { ExploreQueryEditorModule } from '../../shared/components/explore-query-editor/explore-query-editor.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
@@ -14,8 +14,8 @@ import { ExplorerComponent } from './explorer.component';
     FilterBarModule,
     ExploreQueryEditorModule,
     PanelModule,
-    ToggleButtonModule,
-    PageHeaderModule
+    PageHeaderModule,
+    ToggleGroupModule
   ],
   declarations: [ExplorerComponent]
 })

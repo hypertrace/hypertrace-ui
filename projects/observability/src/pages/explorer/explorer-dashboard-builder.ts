@@ -214,7 +214,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Start Time',
-            width: '196px',
+            width: '220px',
             display: StandardTableCellRendererType.Timestamp,
             value: {
               type: 'attribute-specification',
@@ -255,7 +255,6 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Name',
-            width: '35%',
             value: {
               type: 'attribute-specification',
               attribute: 'displaySpanName'
@@ -292,7 +291,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Start Time',
-            width: '20%',
+            width: '220px',
             display: StandardTableCellRendererType.Timestamp,
             value: {
               type: 'attribute-specification',

@@ -31,7 +31,8 @@ describe('Explore query editor', () => {
       units: 'ms',
       type: AttributeMetadataType.Number,
       requiresAggregation: false,
-      allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum]
+      allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
+      groupable: false
     },
     {
       name: 'second',
@@ -40,7 +41,8 @@ describe('Explore query editor', () => {
       units: 'ms',
       type: AttributeMetadataType.Number,
       requiresAggregation: false,
-      allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum]
+      allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
+      groupable: false
     },
     {
       name: 'first groupable',
@@ -49,7 +51,8 @@ describe('Explore query editor', () => {
       units: 'ms',
       type: AttributeMetadataType.String,
       requiresAggregation: false,
-      allowedAggregations: []
+      allowedAggregations: [],
+      groupable: true
     },
     {
       name: 'second groupable',
@@ -58,7 +61,8 @@ describe('Explore query editor', () => {
       units: 'ms',
       type: AttributeMetadataType.String,
       requiresAggregation: false,
-      allowedAggregations: []
+      allowedAggregations: [],
+      groupable: true
     }
   ];
 

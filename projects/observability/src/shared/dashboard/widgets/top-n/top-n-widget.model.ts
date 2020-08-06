@@ -1,6 +1,5 @@
 import { WidgetHeaderModel } from '@hypertrace/dashboards';
 import {
-  ARRAY_PROPERTY,
   Model,
   ModelApi,
   ModelModelPropertyTypeInstance,
@@ -9,7 +8,6 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-source.model';
 
 @Model({
@@ -27,13 +25,6 @@ export class TopNWidgetModel {
     required: false
   })
   public header?: WidgetHeaderModel;
-
-  @ModelProperty({
-    type: ARRAY_PROPERTY.type,
-    key: 'select-option-metrics',
-    required: true
-  })
-  public optionMetricSpecifications!: MetricAggregationSpecificationModel[];
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;

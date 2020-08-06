@@ -179,7 +179,7 @@ describe('Explorer dashboard builder', () => {
               {
                 type: 'table-widget-column',
                 title: 'Start Time',
-                width: '196px',
+                width: '220px',
                 display: StandardTableCellRendererType.Timestamp,
                 value: {
                   type: 'attribute-specification',

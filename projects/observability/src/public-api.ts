@@ -136,6 +136,7 @@ export * from './shared/dashboard/data/graphql/waterfall/api-trace-waterfall-dat
 export * from './pages/apis/service-detail/metrics/service-metrics.dashboard';
 export * from './pages/apis/backend-detail/metrics/backend-metrics.dashboard';
 export * from './pages/apis/api-detail/metrics/api-metrics-dashboard';
+export * from './pages/apis/service-detail/overview/service-overview.dashboard';
 
 // Cartesian
 export * from './shared/components/cartesian/cartesian-chart.component';
@@ -176,6 +177,10 @@ export * from './shared/components/timeline-card-list/timeline-card-list.module'
 // Interval Select
 export * from './shared/components/interval-select/interval-select.component';
 export * from './shared/components/interval-select/interval-select.module';
+
+// Top N Chart
+export * from './shared/components/top-n/top-n-chart.module';
+export * from './shared/components/top-n/top-n-chart.component';
 
 // Stepper
 export * from './shared/components/stepper/stepper.module';
