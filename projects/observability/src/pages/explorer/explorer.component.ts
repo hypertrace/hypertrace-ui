@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { assertUnreachable, NavigationService } from '@hypertrace/common';
+import { NavigationService } from '@hypertrace/common';
+import { ToggleItem } from '@hypertrace/components';
 import { Filter, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -21,14 +22,11 @@ import {
     <div class="vertical-flex-layout">
       <htc-page-header></htc-page-header>
       <div class="fill-container explorer-container">
-        <htc-toggle-button-group
-          [selectedLabel]="this.contextLabel$ | async"
-          (selectedLabelChange)="this.onContextUpdated($event)"
-          class="toggle-filter"
-        >
-          <htc-toggle-button label="${ExplorerComponent.API_TRACES}"> </htc-toggle-button>
-          <htc-toggle-button label="${ExplorerComponent.SPANS}"> </htc-toggle-button>
-        </htc-toggle-button-group>
+        <htc-toggle-group
+          [items]="this.contextItems"
+          [activeItem]="this.activeContextItem$ | async"
+          (activeItemChange)="this.onContextUpdated($event.value)"
+        ></htc-toggle-group>
 
         <htc-filter-bar
           class="filter-bar"
@@ -93,7 +91,24 @@ export class ExplorerComponent {
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
-  public readonly contextLabel$: Observable<ContextLabel>;
+
+  public contextItems: ContextToggleItem[] = [
+    {
+      label: ExplorerComponent.API_TRACES,
+      value: {
+        dashboardContext: ObservabilityTraceType.Api,
+        scopeQueryParam: ScopeQueryParam.EndpointTraces
+      }
+    },
+    {
+      label: ExplorerComponent.SPANS,
+      value: {
+        dashboardContext: SPAN_SCOPE,
+        scopeQueryParam: ScopeQueryParam.Spans
+      }
+    }
+  ];
+  public activeContextItem$: Observable<ContextToggleItem | undefined>;
 
   public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
@@ -103,16 +118,16 @@ export class ExplorerComponent {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDasboardBuilderFactory: ExplorerDashboardBuilderFactory,
+    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
   ) {
-    this.explorerDashboardBuilder = explorerDasboardBuilderFactory.build();
+    this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.contextLabel$ = activatedRoute.queryParamMap.pipe(
+    this.activeContextItem$ = activatedRoute.queryParamMap.pipe(
       map(paramMap => paramMap.get(ExplorerComponent.SCOPE_QUERY_PARAM)),
-      map(queryParam => this.queryParamToContextLabel(queryParam)),
-      tap(label => this.onContextUpdated(label))
+      map(queryParam => this.getContextItemFromValue(queryParam as ScopeQueryParam)),
+      tap(toggleItem => this.onContextUpdated(toggleItem?.value))
     );
   }
 
@@ -124,50 +139,30 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  public onContextUpdated(label: ContextLabel): void {
-    this.context = this.contextLabelToDashboardContext(label);
-    // Set query param async to allow any initating route change to complete
+  private getContextItemFromValue(value: ScopeQueryParam): ContextToggleItem | undefined {
+    return this.contextItems.find(item => value === item.value.scopeQueryParam);
+  }
+
+  public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value): void {
+    this.context = value.dashboardContext;
+    // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
       this.navigationService.addQueryParametersToUrl({
-        [ExplorerComponent.SCOPE_QUERY_PARAM]: this.contextLabelToQueryParam(label)
+        [ExplorerComponent.SCOPE_QUERY_PARAM]: value.scopeQueryParam
       })
     );
   }
-
-  private queryParamToContextLabel(queryParam: string | null): ContextLabel {
-    switch (queryParam) {
-      case ScopeQueryParam.Spans:
-        return ExplorerComponent.SPANS;
-      case ScopeQueryParam.EndpointTraces:
-      default:
-        return ExplorerComponent.API_TRACES;
-    }
-  }
-
-  private contextLabelToDashboardContext(label: ContextLabel): ExplorerGeneratedDashboardContext {
-    switch (label) {
-      case ExplorerComponent.SPANS:
-        return SPAN_SCOPE;
-      case ExplorerComponent.API_TRACES:
-        return ObservabilityTraceType.Api;
-      default:
-        return assertUnreachable(label);
-    }
-  }
-
-  private contextLabelToQueryParam(label: ContextLabel): ScopeQueryParam {
-    switch (label) {
-      case ExplorerComponent.SPANS:
-        return ScopeQueryParam.Spans;
-      case ExplorerComponent.API_TRACES:
-        return ScopeQueryParam.EndpointTraces;
-      default:
-        return assertUnreachable(label);
-    }
-  }
 }
 
-type ContextLabel = 'Spans' | 'Endpoint Traces';
+interface ContextToggleItem extends ToggleItem {
+  value: ExplorerContextScope;
+}
+
+interface ExplorerContextScope {
+  dashboardContext: ExplorerGeneratedDashboardContext;
+  scopeQueryParam: ScopeQueryParam;
+}
+
 const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'

@@ -2,9 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
   getAggregationUnitDisplayName,
-  GraphQlFieldFilter,
   GraphQlFilter,
-  GraphQlOperatorType,
   GraphQlSelectionBuilder,
   GraphQlSortBySpecification,
   GraphQlTimeRange,
@@ -32,6 +30,7 @@ import {
 } from '../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../model/schema/filter/entity/graphql-entity-filter';
 import { GraphQlObservabilityArgumentBuilder } from '../../../builders/argument/graphql-observability-argument-builder';
+import { getApiDiscoveryStateFilter } from '../../util/handler-util';
 
 @Injectable({ providedIn: 'root' })
 export class EntitiesGraphqlQueryBuilderService {
@@ -69,7 +68,7 @@ export class EntitiesGraphqlQueryBuilderService {
 
     if (!hasApiEntityFilter) {
       // Apply a filter on discovery state
-      filters.push(new GraphQlFieldFilter('apiDiscoveryState', GraphQlOperatorType.Equals, 'DISCOVERED'));
+      filters.push(getApiDiscoveryStateFilter());
     }
 
     return this.argBuilder.forFilters(filters);

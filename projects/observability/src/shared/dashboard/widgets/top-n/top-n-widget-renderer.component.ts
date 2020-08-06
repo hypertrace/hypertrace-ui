@@ -6,11 +6,11 @@ import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
-import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { TopNData } from '../../../components/top-n/top-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
-import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
+import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
 import { TopNWidgetModel } from './top-n-widget.model';
 
 @Renderer({ modelClass: TopNWidgetModel })
@@ -52,8 +52,8 @@ import { TopNWidgetModel } from './top-n-widget.model';
   `
 })
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
-  public metricSpecification!: MetricAggregationSpecificationModel;
-  public options$!: Observable<SelectOption<MetricAggregationSpecificationModel>[]>;
+  public metricSpecification!: TopNExploreSelectionSpecificationModel;
+  public options$!: Observable<SelectOption<TopNExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;
 
   public constructor(
@@ -63,11 +63,9 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     private readonly entityNavService: EntityNavigationService
   ) {
     super(api, changeDetector);
-    this.setInitialMetricSpecification();
-    this.setOptionsObservables();
   }
 
-  public onSelection(metricSpecification: MetricAggregationSpecificationModel): void {
+  public onSelection(metricSpecification: TopNExploreSelectionSpecificationModel): void {
     this.metricSpecification = metricSpecification;
     this.updateDataObservable();
   }
@@ -78,7 +76,11 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
 
   protected fetchData(): Observable<TopNData[]> {
     return this.model.getData().pipe(
-      tap(fetcher => (this.fetcher = fetcher)),
+      tap(fetcher => {
+        this.fetcher = fetcher;
+        this.setInitialMetricSpecification(fetcher);
+        this.setOptionsObservables(fetcher);
+      }),
       switchMap(() => this.buildDataObservable())
     );
   }
@@ -87,22 +89,19 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 
-  private setOptionsObservables(): void {
-    this.options$ = this.model.getData().pipe(
-      map(fetcher => fetcher.scope),
-      mergeMap(scope =>
-        forkJoinSafeEmpty(
-          this.model.optionMetricSpecifications.map(specification =>
-            this.metadataService
-              .getSpecificationDisplayName(scope, specification)
-              .pipe(map(label => ({ label: label, value: specification })))
-          )
+  private setOptionsObservables(fetcher: TopNWidgetDataFetcher): void {
+    this.options$ = forkJoinSafeEmpty(
+      fetcher
+        .getOptions()
+        .map(spec =>
+          this.metadataService
+            .getSpecificationDisplayName(spec.context, spec.metric)
+            .pipe(map(label => ({ label: label, value: spec })))
         )
-      )
     );
   }
 
-  private setInitialMetricSpecification(): void {
-    this.metricSpecification = this.model.optionMetricSpecifications[0];
+  private setInitialMetricSpecification(fetcher: TopNWidgetDataFetcher): void {
+    this.metricSpecification = fetcher.getOptions()[0];
   }
 }

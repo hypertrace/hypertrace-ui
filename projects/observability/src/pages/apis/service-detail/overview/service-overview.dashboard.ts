@@ -1,5 +1,6 @@
 import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
+import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 
 export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_OVERVIEW',
@@ -650,40 +651,52 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
               type: 'widget-header',
               title: 'Top Endpoints'
             },
-            'select-option-metrics': [
-              {
-                type: 'metric-aggregation',
-                'display-name': 'Calls',
-                metric: 'numCalls',
-                aggregation: MetricAggregationType.Sum
-              },
-              {
-                type: 'metric-aggregation',
-                'display-name': 'Errors',
-                metric: 'errorCount',
-                aggregation: MetricAggregationType.Sum
-              },
-              {
-                type: 'metric-aggregation',
-                'display-name': 'p99 Latency',
-                metric: 'duration',
-                aggregation: MetricAggregationType.P99
-              },
-              {
-                type: 'metric-aggregation',
-                'display-name': 'p50 Latency',
-                metric: 'duration',
-                aggregation: MetricAggregationType.P50
-              }
-            ],
             data: {
               type: 'top-n-data-source',
-              entity: 'API',
+              entity: ObservabilityEntityType.Api,
               'result-limit': 10,
-              attribute: {
-                type: 'attribute-specification',
-                attribute: 'name'
-              }
+              options: [
+                {
+                  type: 'top-n-explore-selection',
+                  metric: {
+                    type: 'explore-selection',
+                    'display-name': 'Calls',
+                    metric: 'numCalls',
+                    aggregation: MetricAggregationType.Sum
+                  },
+                  context: ObservabilityEntityType.Api
+                },
+                {
+                  type: 'top-n-explore-selection',
+                  metric: {
+                    type: 'explore-selection',
+                    'display-name': 'Errors',
+                    metric: 'errorCount',
+                    aggregation: MetricAggregationType.Sum
+                  },
+                  context: ObservabilityEntityType.Api
+                },
+                {
+                  type: 'top-n-explore-selection',
+                  metric: {
+                    type: 'explore-selection',
+                    'display-name': 'p99 Latency',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.P99
+                  },
+                  context: ObservabilityEntityType.Api
+                },
+                {
+                  type: 'top-n-explore-selection',
+                  metric: {
+                    type: 'explore-selection',
+                    'display-name': 'p50 Latency',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.P50
+                  },
+                  context: ObservabilityEntityType.Api
+                }
+              ]
             }
           }
         ]

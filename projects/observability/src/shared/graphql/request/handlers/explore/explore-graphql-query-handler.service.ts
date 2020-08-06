@@ -12,10 +12,12 @@ import {
   GraphQlQueryHandler,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
+import { ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
+import { getApiDiscoveryStateFilter } from '../util/handler-util';
 
 const INTERVAL_START_QUERY_KEY = '__intervalStart';
 
@@ -39,6 +41,14 @@ export class ExploreGraphQlQueryHandlerService
 
   public convertRequest(request: GraphQlExploreRequest): GraphQlSelection {
     const totalSelection = request.includeTotal ? [{ path: 'total' }] : [];
+
+    if (request.context === ObservabilityEntityType.Api) {
+      if (request.filters?.length === 0) {
+        request.filters = [];
+      }
+
+      request.filters?.push(getApiDiscoveryStateFilter());
+    }
 
     return {
       path: 'explore',

@@ -51,7 +51,8 @@ describe('Explorer component', () => {
       type: AttributeMetadataType.String,
       requiresAggregation: false,
       scope: SPAN_SCOPE,
-      units: ''
+      units: '',
+      groupable: true
     },
     {
       name: 'second',
@@ -60,7 +61,8 @@ describe('Explorer component', () => {
       type: AttributeMetadataType.Timestamp,
       requiresAggregation: false,
       scope: SPAN_SCOPE,
-      units: ''
+      units: '',
+      groupable: false
     }
   ];
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
@@ -193,7 +195,7 @@ describe('Explorer component', () => {
     querySpy.mockClear();
 
     // Select Spans tab
-    spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
+    spectator.click(spectator.queryAll('htc-toggle-item')[1]);
     detectQueryChange();
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -219,7 +221,7 @@ describe('Explorer component', () => {
   test('fires query on init for spans', fakeAsync(() => {
     init();
     // Select traces tab
-    spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
+    spectator.click(spectator.queryAll('htc-toggle-item')[1]);
     detectQueryChange();
 
     querySpy.mockClear();
@@ -299,12 +301,12 @@ describe('Explorer component', () => {
     init();
     const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
     // Select Spans tab
-    spectator.click(spectator.queryAll('.htc-toggle-button')[1]);
+    spectator.click(spectator.queryAll('htc-toggle-item')[1]);
     detectQueryChange();
     expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'spans' }));
 
     // Select Endpoint traces tab
-    spectator.click(spectator.queryAll('.htc-toggle-button')[0]);
+    spectator.click(spectator.queryAll('htc-toggle-item')[0]);
     detectQueryChange();
     expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'endpoint-traces' }));
   }));
