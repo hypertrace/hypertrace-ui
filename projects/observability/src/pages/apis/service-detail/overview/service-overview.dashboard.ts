@@ -2,6 +2,7 @@ import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrac
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 
+// tslint:disable: max-file-line-count
 export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_OVERVIEW',
   json: {
