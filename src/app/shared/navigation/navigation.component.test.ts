@@ -6,11 +6,12 @@ import {
   FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
+  PreferenceService,
   SubscriptionLifecycle
 } from '@hypertrace/common';
 import { ButtonModule, NavItemType } from '@hypertrace/components';
 import { byLabel, createRoutingFactory, mockProvider, SpectatorRouting } from '@ngneat/spectator/jest';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, of, BehaviorSubject } from 'rxjs';
 import { NavigationComponent } from './navigation.component';
 import { NavigationModule } from './navigation.module';
 
@@ -37,7 +38,8 @@ describe('NavigationComponent', () => {
       mockProvider(LayoutChangeService),
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled)
-      })
+      }),
+      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })
     ]
   });
 
@@ -56,5 +58,19 @@ describe('NavigationComponent', () => {
     const element = spectator.query(byLabel('Explorer'));
     spectator.click(element!);
     expect(spy).toHaveBeenCalled();
+  });
+
+  test('should update preference when collapse nav-item element is clicked', () => {
+    const collapsedSubject = new BehaviorSubject(false);
+
+    spectator = createRoutingComponent({
+      providers: [
+        mockProvider(PreferenceService, {
+          get: jest.fn().mockReturnValue(collapsedSubject)
+        })
+      ]
+    });
+    spectator.component.onViewToggle(true);
+    expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith('app-navigation.collapsed', true);
   });
 });
