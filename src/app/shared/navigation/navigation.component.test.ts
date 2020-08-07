@@ -11,7 +11,7 @@ import {
 } from '@hypertrace/common';
 import { ButtonModule, NavItemType } from '@hypertrace/components';
 import { byLabel, createRoutingFactory, mockProvider, SpectatorRouting } from '@ngneat/spectator/jest';
-import { EMPTY, of, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
 import { NavigationComponent } from './navigation.component';
 import { NavigationModule } from './navigation.module';
 
