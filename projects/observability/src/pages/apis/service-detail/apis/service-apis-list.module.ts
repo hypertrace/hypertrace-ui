@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FilterBarModule } from '@hypertrace/distributed-tracing';
+import { FilterBarModule } from '@hypertrace/components';
 import { ObservabilityDashboardModule } from '../../../../shared/dashboard/observability-dashboard.module';
 import { ServiceApisListComponent } from './service-apis-list.component';
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { Filter } from '@hypertrace/distributed-tracing';
+import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { IntervalValue } from '../interval-select/interval-select.component';
