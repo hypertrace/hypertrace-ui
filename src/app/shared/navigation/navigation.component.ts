@@ -1,17 +1,30 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, TraceRoute } from '@hypertrace/common';
+import { NavigationService, PreferenceService, TraceRoute } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { uniq } from 'lodash-es';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ht-navigation',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <htc-navigation-list [navItems]="this.navItems"></htc-navigation-list> `
+  styleUrls: ['./navigation.component.scss'],
+  template: `
+    <div class="navigation">
+      <htc-navigation-list
+        [navItems]="this.navItems"
+        *htcLetAsync="this.isCollapsed$ as isCollapsed"
+        [collapsed]="isCollapsed"
+        (collapsedChange)="this.onViewToggle($event)"
+      ></htc-navigation-list>
+    </div>
+  `
 })
 export class NavigationComponent {
+  private static readonly COLLAPSED_PREFERENCE: string = 'app-navigation.collapsed';
   public readonly navItems: NavItemConfig[];
+  public readonly isCollapsed$: Observable<boolean>;
 
   private readonly navItemDefinitions: NavItemConfig[] = [
     {
@@ -54,8 +67,16 @@ export class NavigationComponent {
     }
   ];
 
-  public constructor(private readonly navigationService: NavigationService) {
+  public constructor(
+    private readonly navigationService: NavigationService,
+    private readonly preferenceService: PreferenceService
+  ) {
     this.navItems = this.navItemDefinitions.map(definition => this.decorateNavItem(definition));
+    this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
+  }
+
+  public onViewToggle(collapsed: boolean): void {
+    this.preferenceService.set(NavigationComponent.COLLAPSED_PREFERENCE, collapsed);
   }
 
   private decorateNavItem(navItem: NavItemConfig): NavItemConfig {
