@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
-import { ToggleItem } from '@hypertrace/components';
-import { Filter, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
-import { Observable } from 'rxjs';
+import { Filter, ToggleItem } from '@hypertrace/components';
+import { AttributeMetadata, MetadataService, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
+import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
@@ -30,7 +30,7 @@ import {
 
         <htc-filter-bar
           class="filter-bar"
-          [scope]="this.context"
+          [attributes]="this.attributes$ | async"
           [syncWithUrl]="true"
           (filtersChange)="this.onFiltersUpdated($event)"
         ></htc-filter-bar>
@@ -110,6 +110,7 @@ export class ExplorerComponent {
   ];
   public activeContextItem$: Observable<ContextToggleItem | undefined>;
 
+  public attributes$: Observable<AttributeMetadata[]> = of([]);
   public context?: ExplorerGeneratedDashboardContext;
   public filters: Filter[] = [];
 
@@ -117,6 +118,7 @@ export class ExplorerComponent {
   public resultsExpanded: boolean = true;
 
   public constructor(
+    private readonly metadataService: MetadataService,
     private readonly navigationService: NavigationService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
@@ -144,7 +146,11 @@ export class ExplorerComponent {
   }
 
   public onContextUpdated(value: ExplorerContextScope = this.contextItems[0].value): void {
-    this.context = value.dashboardContext;
+    if (this.context !== value.dashboardContext) {
+      this.context = value.dashboardContext;
+      this.attributes$ = this.metadataService.getFilterAttributes(this.context);
+    }
+
     // Set query param async to allow any initiating route change to complete
     setTimeout(() =>
       this.navigationService.addQueryParametersToUrl({
