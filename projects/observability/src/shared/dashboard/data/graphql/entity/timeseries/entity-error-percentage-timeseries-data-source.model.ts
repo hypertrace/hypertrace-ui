@@ -117,7 +117,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
   }
 
   protected fetchSpecificationData<TResponse>(specification: MetricSpecification): Observable<TResponse> {
-    return this.queryWithNextBatch<EntityGraphQlQueryHandlerService, Entity & Dictionary<TResponse>>(filters =>
+    return this.queryIsolated<EntityGraphQlQueryHandlerService, Entity & Dictionary<TResponse>>(filters =>
       this.buildRequest(specification, filters)
     ).pipe(map(response => response[specification.resultAlias()]));
   }

@@ -24,7 +24,7 @@ export class EntityRadarDataSourceModel extends RadarDataSourceModel {
   public metricSpecifications: Specification[] = [];
 
   protected fetchData(timeRange: GraphQlTimeRange): Observable<RadarPoint[]> {
-    return this.queryWithNextBatch<EntityGraphQlQueryHandlerService, Entity>(filters =>
+    return this.queryIsolated<EntityGraphQlQueryHandlerService, Entity>(filters =>
       this.buildRequest(timeRange, filters)
     ).pipe(map(entity => this.buildDataPointsFromEntity(entity)));
   }

@@ -110,7 +110,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     entity: Entity,
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): Observable<TableRow[]> {
-    return this.queryWithNextBatch<EntitiesGraphQlQueryHandlerService>(
+    return this.queryIsolated<EntitiesGraphQlQueryHandlerService>(
       this.buildChildEntityRequest(request, entity)
     ).pipe(map(response => this.resultsAsTreeRows(response.results, request, false)));
   }
