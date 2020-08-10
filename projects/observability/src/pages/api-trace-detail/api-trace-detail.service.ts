@@ -73,7 +73,7 @@ export class ApiTraceDetailService implements OnDestroy {
   }
 
   protected getGqlResponse(traceId: string, timeRange: TimeRange): Observable<Trace> {
-    return this.graphQlQueryService.queryDebounced<TraceGraphQlQueryHandlerService, Trace>({
+    return this.graphQlQueryService.queryImmediately<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceType: ObservabilityTraceType.Api,
       traceId: traceId,

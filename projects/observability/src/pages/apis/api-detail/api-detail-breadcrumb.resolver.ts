@@ -67,7 +67,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
   private fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
-        this.graphQlQueryService.queryDebounced<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>({
+        this.graphQlQueryService.queryImmediately<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>({
           requestType: ENTITY_GQL_REQUEST,
           entityType: ObservabilityEntityType.Api,
           id: id,

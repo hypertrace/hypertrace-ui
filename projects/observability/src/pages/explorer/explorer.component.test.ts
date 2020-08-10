@@ -83,7 +83,7 @@ describe('Explorer component', () => {
     providers: [
       mockProvider(GraphQlRequestService, {
         queryImmediately: () => of(mockAttributes), // Only metadata uses queryImmediately in this test
-        queryDebounced: jest.fn().mockReturnValue(EMPTY)
+        queryImmediately: jest.fn().mockReturnValue(EMPTY)
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
@@ -124,7 +124,7 @@ describe('Explorer component', () => {
     spectator = createComponent(...params);
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
-    querySpy = spectator.inject(GraphQlRequestService).queryDebounced;
+    querySpy = spectator.inject(GraphQlRequestService).queryImmediately;
   };
 
   test('fires query on init for traces', fakeAsync(() => {
