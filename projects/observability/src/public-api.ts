@@ -32,6 +32,9 @@ export * from './pages/api-trace-detail/api-trace-detail.service';
 export * from './shared/services/entity/entity-detail.service';
 export * from './shared/services/navigation/entity/entity-navigation.service';
 
+// Entity Renderer
+export * from './shared/components/entity-renderer/entity-renderer.module';
+
 // Table
 export { ObservabilityTableCellRenderer } from './shared/components/table/observability-table-cell-renderer';
 
