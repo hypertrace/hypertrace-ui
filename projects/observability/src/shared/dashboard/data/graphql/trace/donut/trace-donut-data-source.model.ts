@@ -53,7 +53,7 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
   public maxResults: number = 5;
 
   public getData(): Observable<DonutSeriesResults> {
-    return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService>(filters => ({
+    return this.query<ExploreGraphQlQueryHandlerService>(filters => ({
       requestType: EXPLORE_GQL_REQUEST,
       selections: [
         new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric.name, this.metric.aggregation)

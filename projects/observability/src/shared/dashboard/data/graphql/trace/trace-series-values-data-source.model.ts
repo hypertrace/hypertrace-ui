@@ -15,7 +15,7 @@ export abstract class TraceSeriesValuesDataSourceModel<TData> extends GraphQlDat
   protected abstract specification: ExploreSpecification;
 
   protected fetchSpecificationData(interval: TimeDuration): Observable<GraphQlExploreResult[]> {
-    return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService>(() => this.buildRequest(interval)).pipe(
+    return this.query<ExploreGraphQlQueryHandlerService>(() => this.buildRequest(interval)).pipe(
       map(response => response.results)
     );
   }

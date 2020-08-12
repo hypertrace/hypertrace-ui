@@ -40,7 +40,7 @@ export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<Me
   );
 
   private fetchErrorCountData(): Observable<number> {
-    return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
       requestType: EXPLORE_GQL_REQUEST,
       context: 'API',
       selections: [this.errorCountSpec, this.numCallsSpec],

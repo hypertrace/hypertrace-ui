@@ -40,7 +40,7 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
 
     this.entity$ = combineLatest([this.entityId$, this.timeRangeService.getTimeRangeAndChanges()]).pipe(
       concatMap(([entityId, timeRange]) =>
-        graphQlQueryService.queryDebounced<EntityGraphQlQueryHandlerService, T>({
+        graphQlQueryService.queryImmediately<EntityGraphQlQueryHandlerService, T>({
           requestType: ENTITY_GQL_REQUEST,
           entityType: this.getEntityType(),
           id: entityId,

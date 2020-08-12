@@ -89,7 +89,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
       metricSpecifications: this.edgeMetricSpecifications
     };
 
-    return this.queryIsolated<EntityTopologyGraphQlQueryHandlerService>(filters => ({
+    return this.query<EntityTopologyGraphQlQueryHandlerService>(filters => ({
       requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
       rootNodeType: this.entityType,
       rootNodeLimit: 100,

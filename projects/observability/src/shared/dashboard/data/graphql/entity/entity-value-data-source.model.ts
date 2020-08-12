@@ -14,7 +14,7 @@ export abstract class EntityValueDataSourceModel<TData, TResponse = TData> exten
   protected abstract specification: Specification;
 
   protected fetchSpecificationData<T = TResponse>(specification: Specification = this.specification): Observable<T> {
-    return this.queryWithNextBatch<EntityGraphQlQueryHandlerService, Entity & Dictionary<T>>(filters =>
+    return this.query<EntityGraphQlQueryHandlerService, Entity & Dictionary<T>>(filters =>
       this.buildRequest(specification, filters)
     ).pipe(map(response => response[specification.resultAlias()]));
   }

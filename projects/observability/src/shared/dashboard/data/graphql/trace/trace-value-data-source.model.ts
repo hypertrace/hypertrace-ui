@@ -14,7 +14,7 @@ export abstract class TraceValueDataSourceModel<TData> extends GraphQlDataSource
   protected abstract specification: ExploreSpecification;
 
   protected fetchSpecificationData(): Observable<GraphQlExploreResultValue> {
-    return this.queryWithNextBatch<ExploreGraphQlQueryHandlerService>(() => this.buildRequest()).pipe(
+    return this.query<ExploreGraphQlQueryHandlerService>(() => this.buildRequest()).pipe(
       map(response => response.results[0]),
       map(result => result[this.specification.resultAlias()])
     );
