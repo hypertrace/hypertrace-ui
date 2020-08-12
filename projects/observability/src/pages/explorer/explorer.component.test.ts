@@ -12,17 +12,15 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
+import { FilterBarComponent, FilterType, UserFilterOperator } from '@hypertrace/components';
 import {
-  AttributeMetadataType,
-  FilterBarComponent,
   GraphQlFieldFilter,
   GraphQlOperatorType,
   MetadataService,
   MetricAggregationType,
   SPANS_GQL_REQUEST,
   SPAN_SCOPE,
-  TRACES_GQL_REQUEST,
-  UserFilterOperator
+  TRACES_GQL_REQUEST
 } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
@@ -48,21 +46,13 @@ describe('Explorer component', () => {
       name: 'first',
       displayName: 'First',
       allowedAggregations: [],
-      type: AttributeMetadataType.String,
-      requiresAggregation: false,
-      scope: SPAN_SCOPE,
-      units: '',
-      groupable: true
+      type: FilterType.String
     },
     {
       name: 'second',
       displayName: 'Second',
       allowedAggregations: [],
-      type: AttributeMetadataType.Timestamp,
-      requiresAggregation: false,
-      scope: SPAN_SCOPE,
-      units: '',
-      groupable: false
+      type: FilterType.Timestamp
     }
   ];
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));

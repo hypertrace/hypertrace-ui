@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import { Filter } from '@hypertrace/components';
 import {
   AttributeMetadata,
-  Filter,
   GraphQlFilterBuilderService,
   GraphQlSpansRequest,
   GraphQlTracesRequest,
