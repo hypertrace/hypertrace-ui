@@ -35,6 +35,9 @@ export * from './shared/services/navigation/entity/entity-navigation.service';
 // Entity Renderer
 export * from './shared/components/entity-renderer/entity-renderer.module';
 
+// Entity table cell renderer util
+export * from './shared/components/table/data-cell/entity/entity-table-cell-renderer-util';
+
 // Table
 export { ObservabilityTableCellRenderer } from './shared/components/table/observability-table-cell-renderer';
 
