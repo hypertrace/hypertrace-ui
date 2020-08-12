@@ -72,8 +72,7 @@ describe('Explorer component', () => {
     componentProviders: [LayoutChangeService],
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: () => of(mockAttributes), // Only metadata uses queryImmediately in this test
-        queryImmediately: jest.fn().mockReturnValue(EMPTY)
+        queryImmediately: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
@@ -121,7 +120,7 @@ describe('Explorer component', () => {
     init();
     // Traces tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
-      1,
+      2,
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
@@ -131,7 +130,7 @@ describe('Explorer component', () => {
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
-      2,
+      3,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [],
