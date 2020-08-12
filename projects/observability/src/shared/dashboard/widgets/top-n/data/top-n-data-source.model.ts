@@ -57,7 +57,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
     const labelAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(metricSpec.nameKey);
     const idAttributeSpec: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(metricSpec.idKey);
 
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(filters => ({
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(filters => ({
       requestType: EXPLORE_GQL_REQUEST,
       context: metricSpec.context,
       limit: this.resultLimit,

@@ -30,7 +30,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
   public getData(): Observable<MetricSeriesFetcher<ExplorerData>> {
     return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
       switchMap(request =>
-        this.queryIsolated<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
+        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
           // Add inherited filters
           request.filters?.push(...inheritedFilters);
 

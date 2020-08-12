@@ -43,7 +43,7 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       MetricAggregationType.P99
     );
 
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
       this.buildExploreRequest(timeRange, specification)
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
@@ -61,7 +61,7 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       MetricAggregationType.Average
     );
 
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
       this.buildExploreRequest(timeRange, specification)
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
@@ -85,7 +85,7 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       MetricAggregationType.AvgrateSecond
     );
 
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
       this.buildExploreRequest(timeRange, specification)
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
@@ -109,7 +109,7 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       MetricAggregationType.AvgrateSecond
     );
 
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
       this.buildExploreRequest(timeRange, specification)
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),

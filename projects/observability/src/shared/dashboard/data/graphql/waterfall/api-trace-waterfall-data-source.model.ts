@@ -57,7 +57,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   }
 
   private getTraceData(): Observable<Trace | undefined> {
-    return this.queryIsolated<TraceGraphQlQueryHandlerService>({
+    return this.query<TraceGraphQlQueryHandlerService>({
       requestType: TRACE_GQL_REQUEST,
       traceType: ObservabilityTraceType.Api,
       traceId: this.traceId,

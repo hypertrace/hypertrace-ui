@@ -35,7 +35,7 @@ export class ApiCallsCountDataSourceModel extends GraphQlDataSourceModel<MetricA
   );
 
   private fetchCallCount(): Observable<number> {
-    return this.queryIsolated<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
+    return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
       requestType: EXPLORE_GQL_REQUEST,
       context: 'API',
       limit: 1,
