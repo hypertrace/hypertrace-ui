@@ -3,7 +3,7 @@ import { Dictionary } from '@hypertrace/common';
 import { TableCellAlignmentType, TableCellRenderer, TableCellRendererComponent } from '@hypertrace/components';
 import { Entity } from '../../../../graphql/model/schema/entity';
 import { ObservabilityTableCellRenderer } from '../../observability-table-cell-renderer';
-import { parseValue } from './entity-table-cell-renderer-util';
+import { parseEntityFromTableRow } from './entity-table-cell-renderer-util';
 
 @Component({
   selector: 'ht-entity-table-cell-renderer',
@@ -21,6 +21,6 @@ import { parseValue } from './entity-table-cell-renderer-util';
 })
 export class EntityTableCellRendererComponent extends TableCellRendererComponent<Entity | undefined> {
   protected parseValue(cell: Entity | undefined, row: Dictionary<unknown>): Entity | undefined {
-    return parseValue(cell, row);
+    return parseEntityFromTableRow(cell, row);
   }
 }
