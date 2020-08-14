@@ -2,7 +2,7 @@ import { Dictionary } from '@hypertrace/common';
 import { Entity, Interaction } from '../../../../graphql/model/schema/entity';
 import { EntitySpecificationBuilder } from '../../../../graphql/request/builders/specification/entity/entity-specification-builder';
 
-export const parseValue = (cell: Entity | undefined, row: Dictionary<unknown>): Entity | undefined => {
+export const parseEntityFromTableRow = (cell: Entity | undefined, row: Dictionary<unknown>): Entity | undefined => {
   if (cell === undefined && isInteraction(row.neighbor)) {
     /*
      * TODO: This is a temporary hack. It might be better if the GraphQL spec builder provided a way for downstream
