@@ -63,7 +63,7 @@
     "d3-transition": "^1.2.0",
     "d3-zoom": "^1.8.3",
     "graphql": "^14.7.0",
-    "graphql-tag": "^2.10.0",
+    "graphql-tag": "^2.11.0",
     "lodash-es": "^4.17.15",
     "rxjs": "~6.6.2",
     "tslib": "^2.0.1",
