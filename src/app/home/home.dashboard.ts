@@ -153,6 +153,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'metric-display-widget',
             title: 'p99 Latency',
+            subscript: 'ms',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
@@ -165,7 +166,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           },
           {
             type: 'metric-display-widget',
-            title: 'Avg. Latency',
+            title: 'p50 Latency',
+            subscript: 'ms',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
