@@ -152,40 +152,27 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         children: [
           {
             type: 'metric-display-widget',
-            title: 'Total Calls',
+            title: 'p99 Latency',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
               metric: {
                 type: 'explore-selection',
-                metric: 'calls',
-                aggregation: MetricAggregationType.Sum
+                metric: 'duration',
+                aggregation: MetricAggregationType.P99
               }
             }
           },
           {
             type: 'metric-display-widget',
-            title: 'Calls/Second',
+            title: 'Avg. Latency',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
               metric: {
                 type: 'explore-selection',
-                metric: 'calls',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
-          },
-          {
-            type: 'metric-display-widget',
-            title: 'Total Errors',
-            'title-position': TitlePosition.Footer,
-            data: {
-              type: 'trace-metric-aggregation-data-source',
-              metric: {
-                type: 'explore-selection',
-                metric: 'errorCount',
-                aggregation: MetricAggregationType.Sum
+                metric: 'duration',
+                aggregation: MetricAggregationType.P50
               }
             }
           },
@@ -198,6 +185,19 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'errorCount',
+                aggregation: MetricAggregationType.AvgrateSecond
+              }
+            }
+          },
+          {
+            type: 'metric-display-widget',
+            title: 'Calls/Second',
+            'title-position': TitlePosition.Footer,
+            data: {
+              type: 'trace-metric-aggregation-data-source',
+              metric: {
+                type: 'explore-selection',
+                metric: 'calls',
                 aggregation: MetricAggregationType.AvgrateSecond
               }
             }
