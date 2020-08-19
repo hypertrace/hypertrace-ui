@@ -219,7 +219,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 1s',
                 subscript: '%',
                 data: {
-                  type: 'trace-calls-percentage-data-source',
+                  type: 'calls-percentage-data-source',
+                  context: 'API_TRACE',
+                  'call-count-metric-key': 'calls',
                   filters: [
                     {
                       type: 'graphql-key-value-filter',
@@ -235,7 +237,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 500ms',
                 subscript: '%',
                 data: {
-                  type: 'trace-calls-percentage-data-source',
+                  type: 'calls-percentage-data-source',
+                  context: 'API_TRACE',
+                  'call-count-metric-key': 'calls',
                   filters: [
                     {
                       type: 'graphql-key-value-filter',

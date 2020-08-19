@@ -8,6 +8,7 @@ import { InteractionsGraphQlQueryHandlerService } from '../../../graphql/request
 import { EntityTopologyGraphQlQueryHandlerService } from '../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { ExploreGraphQlQueryHandlerService } from '../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count/api-calls-count-data-source-model';
+import { CallsPercentageDataSourceModel } from './calls-percentage/calls-percentage-data-source.model';
 import { EntityMetricAggregationDataSourceModel } from './entity/aggregation/entity-metric-aggregation-data-source.model';
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
@@ -22,7 +23,6 @@ import { PercentileLatencyAggregationSpecificationModel } from './specifiers/per
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
-import { TraceCallsPercentageDataSourceModel } from './trace-calls-percentage/trace-calls-percentage-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
 import { TraceMetricTimeseriesDataSourceModel } from './trace/timeseries/trace-metric-timeseries-data-source.model';
@@ -59,7 +59,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         MetricTimeseriesSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
-        TraceCallsPercentageDataSourceModel
+        CallsPercentageDataSourceModel
       ]
     })
   ]

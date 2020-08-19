@@ -16,11 +16,11 @@ import {
   GraphQlExploreResponse
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { TraceCallsPercentageDataSourceModel } from './trace-calls-percentage-data-source.model';
+import { CallsPercentageDataSourceModel } from './calls-percentage-data-source.model';
 
-describe('Trace Calls Percentage Data Source Model', () => {
+describe('Calls Percentage Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
-  let model!: TraceCallsPercentageDataSourceModel;
+  let model!: CallsPercentageDataSourceModel;
   const emittedQueries: GraphQlExploreRequest[] = [];
 
   const callCountSpec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
@@ -37,8 +37,10 @@ describe('Trace Calls Percentage Data Source Model', () => {
     const mockApi: Partial<ModelApi> = {
       getTimeRange: jest.fn(() => testTimeRange)
     };
-    model = new TraceCallsPercentageDataSourceModel();
+    model = new CallsPercentageDataSourceModel();
     model.api = mockApi as ModelApi;
+    model.context = 'API_TRACE';
+    model.callCountMetricKey = 'calls';
     model.filters = [new GraphQlFieldFilter('duration', GraphQlOperatorType.GreaterThan, 500)];
     model.query$.subscribe(
       (query: ObservedGraphQlRequest<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>) => {

@@ -5,7 +5,7 @@ import {
   MetricAggregationType,
   MetricHealth
 } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -17,11 +17,25 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 @Model({
-  type: 'trace-calls-percentage-data-source'
+  type: 'calls-percentage-data-source'
 })
-export class TraceCallsPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+export class CallsPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+  @ModelProperty({
+    key: 'context',
+    type: STRING_PROPERTY.type,
+    required: true
+  })
+  public context!: string;
+
+  @ModelProperty({
+    key: 'call-count-metric-key',
+    type: STRING_PROPERTY.type,
+    required: true
+  })
+  public callCountMetricKey!: string;
+
   public getData(): Observable<MetricAggregation> {
-    return forkJoinSafeEmpty([this.fetchCallCountWithFilters(), this.fetchNumCallsData()]).pipe(
+    return forkJoinSafeEmpty([this.fetchCallCountWithFilters(), this.fetchTotalCallsData()]).pipe(
       map(results => ({
         value: getPercentage(results[0], results[1]),
         health: MetricHealth.NotSpecified,
@@ -30,11 +44,9 @@ export class TraceCallsPercentageDataSourceModel extends GraphQlDataSourceModel<
     );
   }
 
-  private readonly context: string = 'API_TRACE';
-
   private fetchCallCountWithFilters(): Observable<number> {
     const callCountSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
-      'calls',
+      this.callCountMetricKey,
       MetricAggregationType.Count
     );
 
@@ -51,9 +63,9 @@ export class TraceCallsPercentageDataSourceModel extends GraphQlDataSourceModel<
     );
   }
 
-  private fetchNumCallsData(): Observable<number> {
+  private fetchTotalCallsData(): Observable<number> {
     const totalCallsSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
-      'calls',
+      this.callCountMetricKey,
       MetricAggregationType.Sum
     );
 
