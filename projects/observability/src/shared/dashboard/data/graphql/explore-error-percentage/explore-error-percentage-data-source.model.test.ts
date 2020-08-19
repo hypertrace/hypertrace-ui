@@ -10,7 +10,7 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage-data-source.model';
 
-describe('API error percentage data source model', () => {
+describe('Explore error percentage data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model!: ExploreErrorPercentageDataSourceModel;
   let lastEmittedQuery: unknown;

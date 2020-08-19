@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { GraphQlModule } from '@hypertrace/graphql-client';
-import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage-data-source.model';
+import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage-data-source.model';
 
 @NgModule({
   declarations: [],
@@ -15,4 +15,4 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
     CommonModule
   ]
 })
-export class ApiErrorPercentageDataSourceModule {}
+export class ExploreErrorPercentageDataSourceModule {}
