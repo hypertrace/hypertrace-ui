@@ -30,6 +30,7 @@ describe('API error percentage data source model', () => {
     };
     model = new ApiErrorPercentageDataSourceModel();
     model.api = mockApi as ModelApi;
+    model.context = 'API';
     model.query$.subscribe(
       (query: ObservedGraphQlRequest<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>) => {
         const request = query.buildRequest([]);

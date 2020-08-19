@@ -5,7 +5,7 @@ import {
   MetricAggregationType,
   MetricHealth
 } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -17,7 +17,7 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 @Model({
-  type: 'api-error-percentage-data-source'
+  type: 'explore-error-percentage-data-source'
 })
 export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   public getData(): Observable<MetricAggregation> {
@@ -29,6 +29,12 @@ export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<Me
       }))
     );
   }
+
+  @ModelProperty({
+    key: 'context',
+    type: STRING_PROPERTY.type
+  })
+  public context!: string;
 
   private readonly errorCountSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'errorCount',
@@ -42,7 +48,7 @@ export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<Me
   private fetchErrorCountData(): Observable<number> {
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
       requestType: EXPLORE_GQL_REQUEST,
-      context: 'API',
+      context: this.context,
       selections: [this.errorCountSpec, this.numCallsSpec],
       timeRange: this.getTimeRangeOrThrow(),
       limit: 1
