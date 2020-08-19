@@ -1,4 +1,4 @@
-import { Dictionary, NavigationService } from '@hypertrace/common';
+import { NavigationService } from '@hypertrace/common';
 import {
   TableColumnConfig,
   TableRow,
