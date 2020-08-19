@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
-import { Dictionary } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import {
   IconSize,
   TableCellAlignmentType,
   TableCellRenderer,
   TableCellRendererComponent,
   TableColumnConfig,
+  TableRow,
   TABLE_CELL_RENDERER_CELL_DATA,
   TABLE_CELL_RENDERER_COLUMN_CONFIG,
   TABLE_CELL_RENDERER_COLUMN_INDEX,
@@ -32,13 +32,13 @@ export class BackendIconTableCellRendererComponent extends TableCellRendererComp
     private readonly lookupService: EntityIconLookupService,
     @Inject(TABLE_CELL_RENDERER_COLUMN_CONFIG) columnConfig: TableColumnConfig,
     @Inject(TABLE_CELL_RENDERER_COLUMN_INDEX) index: number,
-    @Optional() @Inject(TABLE_CELL_RENDERER_CELL_DATA) cellData: string | null,
-    @Optional() @Inject(TABLE_CELL_RENDERER_ROW_DATA) rowData: Dictionary<unknown> | null
+    @Inject(TABLE_CELL_RENDERER_ROW_DATA) rowData: TableRow,
+    @Inject(TABLE_CELL_RENDERER_CELL_DATA) cellData: string
   ) {
-    super(columnConfig, index, cellData, rowData);
+    super(columnConfig, index, rowData, cellData);
   }
 
-  protected parseValue(raw: string): string {
-    return this.lookupService.forBackendType(raw);
+  public parseValue(cellData: string): string {
+    return this.lookupService.forBackendType(cellData);
   }
 }

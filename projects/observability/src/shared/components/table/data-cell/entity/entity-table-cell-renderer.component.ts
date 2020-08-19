@@ -20,7 +20,7 @@ import { parseEntityFromTableRow } from './entity-table-cell-renderer-util';
   alignment: TableCellAlignmentType.Left
 })
 export class EntityTableCellRendererComponent extends TableCellRendererComponent<Entity | undefined> {
-  protected parseValue(cell: Entity | undefined, row: Dictionary<unknown>): Entity | undefined {
-    return parseEntityFromTableRow(cell, row);
+  public parseValue(cellData: Entity | undefined, row: Dictionary<unknown>): Entity | undefined {
+    return parseEntityFromTableRow(cellData, row);
   }
 }
