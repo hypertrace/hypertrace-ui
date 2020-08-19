@@ -19,7 +19,7 @@ import {
 @Model({
   type: 'explore-error-percentage-data-source'
 })
-export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+export class ExploreErrorPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   public getData(): Observable<MetricAggregation> {
     return this.fetchErrorCountData().pipe(
       map((response: number) => ({
@@ -32,7 +32,8 @@ export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<Me
 
   @ModelProperty({
     key: 'context',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
+    required: true
   })
   public context!: string;
 
