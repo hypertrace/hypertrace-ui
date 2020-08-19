@@ -8,11 +8,11 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { ApiErrorPercentageDataSourceModel } from './api-error-percentage-data-source.model';
+import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage-data-source.model';
 
-describe('API error percentage data source model', () => {
+describe('Explore error percentage data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
-  let model!: ApiErrorPercentageDataSourceModel;
+  let model!: ExploreErrorPercentageDataSourceModel;
   let lastEmittedQuery: unknown;
 
   const errorCountSpec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
@@ -28,8 +28,9 @@ describe('API error percentage data source model', () => {
     const mockApi: Partial<ModelApi> = {
       getTimeRange: jest.fn(() => testTimeRange)
     };
-    model = new ApiErrorPercentageDataSourceModel();
+    model = new ExploreErrorPercentageDataSourceModel();
     model.api = mockApi as ModelApi;
+    model.context = 'API';
     model.query$.subscribe(
       (query: ObservedGraphQlRequest<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>) => {
         const request = query.buildRequest([]);
