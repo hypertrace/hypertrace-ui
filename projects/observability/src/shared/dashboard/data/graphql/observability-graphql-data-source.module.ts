@@ -22,6 +22,7 @@ import { PercentileLatencyAggregationSpecificationModel } from './specifiers/per
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
+import { TraceCallsPercentageDataSourceModel } from './trace-calls-percentage/trace-calls-percentage-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
 import { TraceMetricTimeseriesDataSourceModel } from './trace/timeseries/trace-metric-timeseries-data-source.model';
@@ -57,7 +58,8 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         TraceDonutDataSourceModel,
         MetricTimeseriesSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
-        PercentileLatencyAggregationSpecificationModel
+        PercentileLatencyAggregationSpecificationModel,
+        TraceCallsPercentageDataSourceModel
       ]
     })
   ]
