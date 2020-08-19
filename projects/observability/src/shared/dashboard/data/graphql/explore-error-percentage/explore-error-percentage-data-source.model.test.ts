@@ -31,6 +31,8 @@ describe('Explore error percentage data source model', () => {
     model = new ExploreErrorPercentageDataSourceModel();
     model.api = mockApi as ModelApi;
     model.context = 'API';
+    model.callCountMetricKey = 'numCalls';
+    model.errorCountMetricKey = 'errorCount';
     model.query$.subscribe(
       (query: ObservedGraphQlRequest<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>) => {
         const request = query.buildRequest([]);
@@ -68,8 +70,8 @@ describe('Explore error percentage data source model', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: 'API',
         selections: [
-          expect.objectContaining({ aggregation: 'sum', name: 'errorCount' }),
-          expect.objectContaining({ aggregation: 'sum', name: 'numCalls' })
+          expect.objectContaining({ aggregation: 'sum', name: 'numCalls' }),
+          expect.objectContaining({ aggregation: 'sum', name: 'errorCount' })
         ],
         timeRange: expect.objectContaining({ from: new Date(1568907645141), to: new Date(1568911245141) }),
         limit: 1
