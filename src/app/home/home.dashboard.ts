@@ -199,12 +199,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             }
           },
           {
-            // To be replaced with greeting label
-            type: 'highlighted-label-widget',
-            'label-template': 'You have {totalErrors} total errors',
-            data: {
-              type: 'total-errors-label-data-source'
-            }
+            type: 'greeting-label-widget',
+            'suffix-label': ", here's your trace report:"
           },
           {
             type: 'container-widget',
