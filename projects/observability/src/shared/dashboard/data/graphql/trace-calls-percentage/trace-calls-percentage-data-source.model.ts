@@ -30,7 +30,7 @@ export class TraceCallsPercentageDataSourceModel extends GraphQlDataSourceModel<
     );
   }
 
-  private context: string = 'API_TRACE';
+  private readonly context: string = 'API_TRACE';
 
   private fetchCallCountWithFilters(): Observable<number> {
     const callCountSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
