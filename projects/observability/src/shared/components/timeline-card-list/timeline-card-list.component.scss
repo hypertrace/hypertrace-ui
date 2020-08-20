@@ -1,4 +1,5 @@
 @import 'font';
+@import 'interaction';
 
 .ht-timeline-card-list {
   display: flex;
@@ -39,11 +40,21 @@
       border: 1px solid $gray-1;
       box-sizing: border-box;
       border-radius: 4px;
+      @include card-hover;
+
+      &.selected-card {
+        background: $blue-1;
+        border: 1px solid $blue-2;
+
+        &:hover {
+          background: $blue-2;
+          border: 1px solid $blue-5;
+        }
+      }
 
       &:hover {
-        box-shadow: 0px 0px 2px rgba(65, 64, 64, 0.16), 0px 2px 2px rgba(65, 64, 64, 0.12),
-          0px 1px 3px rgba(65, 64, 64, 0.16);
-        cursor: pointer;
+        background: $gray-1;
+        border: 1px solid $gray-2;
       }
     }
 
