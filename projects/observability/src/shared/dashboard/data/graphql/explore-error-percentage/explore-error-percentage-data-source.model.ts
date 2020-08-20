@@ -5,7 +5,7 @@ import {
   MetricAggregationType,
   MetricHealth
 } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -17,9 +17,30 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 @Model({
-  type: 'api-error-percentage-data-source'
+  type: 'explore-error-percentage-data-source'
 })
-export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+export class ExploreErrorPercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+  @ModelProperty({
+    key: 'context',
+    type: STRING_PROPERTY.type,
+    required: true
+  })
+  public context!: string;
+
+  @ModelProperty({
+    key: 'error-count-metric-key',
+    type: STRING_PROPERTY.type,
+    required: true
+  })
+  public errorCountMetricKey!: string;
+
+  @ModelProperty({
+    key: 'call-count-metric-key',
+    type: STRING_PROPERTY.type,
+    required: true
+  })
+  public callCountMetricKey!: string;
+
   public getData(): Observable<MetricAggregation> {
     return this.fetchErrorCountData().pipe(
       map((response: number) => ({
@@ -30,27 +51,28 @@ export class ApiErrorPercentageDataSourceModel extends GraphQlDataSourceModel<Me
     );
   }
 
-  private readonly errorCountSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
-    'errorCount',
-    MetricAggregationType.Sum
-  );
-  private readonly numCallsSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
-    'numCalls',
-    MetricAggregationType.Sum
-  );
-
   private fetchErrorCountData(): Observable<number> {
+    const numCallsSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
+      this.callCountMetricKey,
+      MetricAggregationType.Sum
+    );
+
+    const errorCountSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
+      this.errorCountMetricKey,
+      MetricAggregationType.Sum
+    );
+
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>({
       requestType: EXPLORE_GQL_REQUEST,
-      context: 'API',
-      selections: [this.errorCountSpec, this.numCallsSpec],
+      context: this.context,
+      selections: [numCallsSpec, errorCountSpec],
       timeRange: this.getTimeRangeOrThrow(),
       limit: 1
     }).pipe(
       map(response => response.results[0]),
       map(result => {
-        const errorCount: number = result[this.errorCountSpec.resultAlias()]?.value as number;
-        const callCount: number = result[this.numCallsSpec.resultAlias()]?.value as number;
+        const errorCount: number = result[errorCountSpec.resultAlias()]?.value as number;
+        const callCount: number = result[numCallsSpec.resultAlias()]?.value as number;
 
         return getPercentage(errorCount, callCount);
       })

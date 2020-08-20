@@ -1,6 +1,7 @@
 import { StandardTableCellRendererType, TableMode, TableStyle, TitlePosition } from '@hypertrace/components';
 import {
   DashboardDefaultConfiguration,
+  GraphQlOperatorType,
   MetricAggregationType,
   TracingTableCellRenderer
 } from '@hypertrace/distributed-tracing';
@@ -124,11 +125,149 @@ export const homeDashboard: DashboardDefaultConfiguration = {
     },
     children: [
       {
-        type: 'highlighted-label-widget',
-        'label-template': 'You have {totalErrors} total errors',
-        data: {
-          type: 'total-errors-label-data-source'
-        }
+        type: 'container-widget',
+        layout: {
+          type: 'custom-container-layout',
+          'enable-style': false,
+          'row-dimensions': [
+            {
+              type: 'dimension-model',
+              dimension: 144,
+              unit: 'PX'
+            },
+            {
+              type: 'dimension-model',
+              dimension: 32,
+              unit: 'PX'
+            },
+            {
+              type: 'dimension-model',
+              dimension: 80,
+              unit: 'PX'
+            },
+            {
+              type: 'dimension-model',
+              dimension: 144,
+              unit: 'PX'
+            }
+          ],
+          'column-dimensions': [
+            {
+              type: 'dimension-model',
+              dimension: 1,
+              unit: 'FR'
+            }
+          ],
+          'cell-spans': [
+            {
+              type: 'cell-span-model',
+              'col-start': 0,
+              'col-end': 1,
+              'row-start': 0,
+              'row-end': 1
+            },
+            {
+              type: 'cell-span-model',
+              'col-start': 0,
+              'col-end': 1,
+              'row-start': 1,
+              'row-end': 2
+            },
+            {
+              type: 'cell-span-model',
+              'col-start': 0,
+              'col-end': 1,
+              'row-start': 2,
+              'row-end': 3
+            },
+            {
+              type: 'cell-span-model',
+              'col-start': 0,
+              'col-end': 1,
+              'row-start': 3,
+              'row-end': 4
+            }
+          ]
+        },
+        children: [
+          {
+            type: 'container-widget',
+            layout: {
+              type: 'auto-container-layout',
+              rows: 1,
+              'enable-style': false
+            }
+          },
+          {
+            type: 'greeting-label-widget',
+            'suffix-label': ", here's your trace report:"
+          },
+          {
+            type: 'container-widget',
+            layout: {
+              type: 'auto-container-layout',
+              rows: 1,
+              'enable-style': false
+            },
+            children: [
+              {
+                type: 'metric-display-widget',
+                title: 'Latency > 1s',
+                subscript: '%',
+                data: {
+                  type: 'calls-percentage-data-source',
+                  context: 'API_TRACE',
+                  'call-count-metric-key': 'calls',
+                  filters: [
+                    {
+                      type: 'graphql-key-value-filter',
+                      key: 'duration',
+                      operator: GraphQlOperatorType.GreaterThan,
+                      value: 1000
+                    }
+                  ]
+                }
+              },
+              {
+                type: 'metric-display-widget',
+                title: 'Latency > 500ms',
+                subscript: '%',
+                data: {
+                  type: 'calls-percentage-data-source',
+                  context: 'API_TRACE',
+                  'call-count-metric-key': 'calls',
+                  filters: [
+                    {
+                      type: 'graphql-key-value-filter',
+                      key: 'duration',
+                      operator: GraphQlOperatorType.GreaterThan,
+                      value: 500
+                    }
+                  ]
+                }
+              },
+              {
+                type: 'metric-display-widget',
+                title: 'Errors',
+                subscript: '%',
+                data: {
+                  type: 'explore-error-percentage-data-source',
+                  context: 'API_TRACE',
+                  'error-count-metric-key': 'errorCount',
+                  'call-count-metric-key': 'calls'
+                }
+              }
+            ]
+          },
+          {
+            type: 'container-widget',
+            layout: {
+              type: 'auto-container-layout',
+              rows: 1,
+              'enable-style': false
+            }
+          }
+        ]
       },
       {
         type: 'radar-widget',
@@ -152,40 +291,29 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         children: [
           {
             type: 'metric-display-widget',
-            title: 'Total Calls',
+            title: 'p99 Latency',
+            subscript: 'ms',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
               metric: {
                 type: 'explore-selection',
-                metric: 'calls',
-                aggregation: MetricAggregationType.Sum
+                metric: 'duration',
+                aggregation: MetricAggregationType.P99
               }
             }
           },
           {
             type: 'metric-display-widget',
-            title: 'Calls/Second',
+            title: 'p50 Latency',
+            subscript: 'ms',
             'title-position': TitlePosition.Footer,
             data: {
               type: 'trace-metric-aggregation-data-source',
               metric: {
                 type: 'explore-selection',
-                metric: 'calls',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
-          },
-          {
-            type: 'metric-display-widget',
-            title: 'Total Errors',
-            'title-position': TitlePosition.Footer,
-            data: {
-              type: 'trace-metric-aggregation-data-source',
-              metric: {
-                type: 'explore-selection',
-                metric: 'errorCount',
-                aggregation: MetricAggregationType.Sum
+                metric: 'duration',
+                aggregation: MetricAggregationType.P50
               }
             }
           },
@@ -198,6 +326,19 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'errorCount',
+                aggregation: MetricAggregationType.AvgrateSecond
+              }
+            }
+          },
+          {
+            type: 'metric-display-widget',
+            title: 'Calls/Second',
+            'title-position': TitlePosition.Footer,
+            data: {
+              type: 'trace-metric-aggregation-data-source',
+              metric: {
+                type: 'explore-selection',
+                metric: 'calls',
                 aggregation: MetricAggregationType.AvgrateSecond
               }
             }
