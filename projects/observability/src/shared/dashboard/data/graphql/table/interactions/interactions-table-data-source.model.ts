@@ -19,6 +19,10 @@ import {
   type: 'interactions-table-data-source'
 })
 export class InteractionsTableDataSourceModel extends TableDataSourceModel {
+  public getScope(): undefined {
+    return;
+  }
+
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
