@@ -154,6 +154,7 @@ export class ExplorerDashboardBuilder {
             title: 'Type',
             width: '96px',
             display: StandardTableCellRendererType.Text,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'protocol'
@@ -166,6 +167,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Service',
             width: '2',
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'serviceName'
@@ -178,6 +180,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Endpoint',
             width: '2',
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiName'
@@ -203,6 +206,7 @@ export class ExplorerDashboardBuilder {
             title: 'Duration',
             width: '100px',
             display: TracingTableCellRenderer.Metric,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'duration'
@@ -232,6 +236,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Protocol',
             width: '10%',
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'protocolName'
@@ -244,6 +249,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Service',
             width: '20%',
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'serviceName'
@@ -255,6 +261,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Name',
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'displaySpanName'
@@ -280,6 +287,7 @@ export class ExplorerDashboardBuilder {
             title: 'Duration',
             width: '100px',
             display: TracingTableCellRenderer.Metric,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'duration'

@@ -119,6 +119,7 @@ describe('Explorer dashboard builder', () => {
                 title: 'Type',
                 width: '96px',
                 display: StandardTableCellRendererType.Text,
+                filterable: true,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'protocol'
@@ -131,6 +132,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Service',
                 width: '2',
+                filterable: true,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'serviceName'
@@ -143,6 +145,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Endpoint',
                 width: '2',
+                filterable: true,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'apiName'
@@ -168,6 +171,7 @@ describe('Explorer dashboard builder', () => {
                 title: 'Duration',
                 width: '100px',
                 display: TracingTableCellRenderer.Metric,
+                filterable: true,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'duration'

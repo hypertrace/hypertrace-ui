@@ -1,6 +1,7 @@
-import { Dictionary, NavigationService } from '@hypertrace/common';
+import { NavigationService } from '@hypertrace/common';
 import {
   TableColumnConfig,
+  TableRow,
   TABLE_CELL_RENDERER_CELL_DATA,
   TABLE_CELL_RENDERER_COLUMN_CONFIG,
   TABLE_CELL_RENDERER_COLUMN_INDEX,
@@ -28,7 +29,7 @@ describe('Backend Icon table cell renderer component', () => {
     useValue: cellData
   });
 
-  const tableRowDataRendererRowDataProvider = (rowData: Dictionary<unknown>) => ({
+  const tableRowDataRendererRowDataProvider = (rowData: TableRow) => ({
     provide: TABLE_CELL_RENDERER_ROW_DATA,
     useValue: rowData
   });
