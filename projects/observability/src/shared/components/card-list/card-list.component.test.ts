@@ -1,5 +1,5 @@
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { CardListComponent } from './card-list.component';
+import { CardListComponent, CardListMode } from './card-list.component';
 import { CardListModule } from './card-list.module';
 
 describe('Card List component', () => {
@@ -27,7 +27,7 @@ describe('Card List component', () => {
 
     spectator = createHost(
       `
-    <ht-card-list>
+    <ht-card-list [mode]="mode">
       <ht-card-container *ngFor="let cardData of this.data">
         <div class="custom-card">
           <div class="title">{{cardData.name}}</div>
@@ -37,7 +37,8 @@ describe('Card List component', () => {
     `,
       {
         hostProps: {
-          data: data
+          data: data,
+          mode: CardListMode.Card
         }
       }
     );
@@ -53,5 +54,12 @@ describe('Card List component', () => {
       expect(titleElement).toExist();
       expect(titleElement).toHaveText(data[index].name);
     });
+
+    // Test selection style
+    const cardElements = spectator.queryAll('.card');
+    spectator.click(cardElements[0]);
+    expect(specator.query('.selected-card')).toBe(cardElements[0]);
+    expect(specator.query('.selected-card')).not.toBe(cardElements[1]);
+    expect(specator.query('.selected-card')).not.toBe(cardElements[2]);
   });
 });

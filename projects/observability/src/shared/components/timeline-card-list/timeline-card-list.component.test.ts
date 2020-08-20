@@ -46,11 +46,23 @@ describe('Timeline Card List component', () => {
       }
     );
 
+    expect(spectator.query('.selected-card')).not.toExist();
+
+    spectator.setInput({
+      selectedIndex: 0
+    });
+
     // Add test logic
     const recordElements = spectator.queryAll('.record');
 
     expect(recordElements).toExist();
     expect(recordElements.length).toEqual(3);
+
+    const selectedCard = spectator.query('.selected-card');
+    expect(selectedCard).toBe(recordElements[0]);
+    expect(selectedCard).not.toBe(recordElements[1]);
+    expect(selectedCard).not.toBe(recordElements[2]);
+
     const dateFormatter = new DateFormatter({ mode: DateFormatMode.TimeWithSeconds });
 
     recordElements.forEach((recordElement, index) => {

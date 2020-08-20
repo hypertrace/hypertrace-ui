@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, QueryList, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 import { DateFormatMode, DateFormatOptions } from '@hypertrace/common';
 import { TimelineCardContainerComponent } from './container/timeline-card-container.component';
 
