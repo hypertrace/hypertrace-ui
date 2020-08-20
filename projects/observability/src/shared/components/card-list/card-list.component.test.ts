@@ -58,8 +58,8 @@ describe('Card List component', () => {
     // Test selection style
     const cardElements = spectator.queryAll('.card');
     spectator.click(cardElements[0]);
-    expect(specator.query('.selected-card')).toBe(cardElements[0]);
-    expect(specator.query('.selected-card')).not.toBe(cardElements[1]);
-    expect(specator.query('.selected-card')).not.toBe(cardElements[2]);
+    expect(spectator.query('.selected-card')).toBe(cardElements[0]);
+    expect(spectator.query('.selected-card')).not.toBe(cardElements[1]);
+    expect(spectator.query('.selected-card')).not.toBe(cardElements[2]);
   });
 });

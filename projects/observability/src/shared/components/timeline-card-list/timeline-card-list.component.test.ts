@@ -46,22 +46,11 @@ describe('Timeline Card List component', () => {
       }
     );
 
-    expect(spectator.query('.selected-card')).not.toExist();
-
-    spectator.setInput({
-      selectedIndex: 0
-    });
-
     // Add test logic
     const recordElements = spectator.queryAll('.record');
 
     expect(recordElements).toExist();
     expect(recordElements.length).toEqual(3);
-
-    const selectedCard = spectator.query('.selected-card');
-    expect(selectedCard).toBe(recordElements[0]);
-    expect(selectedCard).not.toBe(recordElements[1]);
-    expect(selectedCard).not.toBe(recordElements[2]);
 
     const dateFormatter = new DateFormatter({ mode: DateFormatMode.TimeWithSeconds });
 
@@ -73,5 +62,18 @@ describe('Timeline Card List component', () => {
       expect(titleElement).toExist();
       expect(titleElement).toHaveText(data[index].name);
     });
+
+    expect(spectator.query('.selected-card')).not.toExist();
+
+    spectator.setInput({
+      selectedIndex: 0
+    });
+
+    const selectedCard = spectator.query('.selected-card');
+    const cards = spectator.queryAll('.card');
+    expect(cards.length).toEqual(3);
+    expect(selectedCard).toBe(cards[0]);
+    expect(selectedCard).not.toBe(cards[1]);
+    expect(selectedCard).not.toBe(cards[2]);
   });
 });
