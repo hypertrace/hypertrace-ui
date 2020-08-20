@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 import { DateFormatMode, DateFormatOptions } from '@hypertrace/common';
 import { TimelineCardContainerComponent } from './container/timeline-card-container.component';
 
@@ -6,12 +6,12 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
   selector: 'ht-timeline-card-list',
   template: `
     <div class="ht-timeline-card-list">
-      <div class="record" *ngFor="let card of this.cards">
+      <div class="record" *ngFor="let card of this.cards; index as index">
         <div class="time">
           <div class="value">{{ card.timestamp | htcDisplayDate: this.dateFormat }}</div>
           <div class="vertical-line"></div>
         </div>
-        <div class="card">
+        <div class="card" [ngClass]="{ 'selected-card': index === this.selectedIndex }">
           <ng-container *ngTemplateOutlet="card.content"></ng-container>
         </div>
       </div>
@@ -21,6 +21,9 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineCardListComponent {
+  @Input()
+  public selectedIndex?: number;
+
   @ContentChildren(TimelineCardContainerComponent)
   public readonly cards!: QueryList<TimelineCardContainerComponent>;
 

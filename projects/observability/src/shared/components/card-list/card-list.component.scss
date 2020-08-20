@@ -18,6 +18,21 @@
     border: 1px solid $gray-2;
     margin-bottom: 8px;
     @include card-hover;
+
+    &.selected-card {
+      background: $blue-1;
+      border: 1px solid $blue-2;
+
+      &:hover {
+        background: $blue-2;
+        border: 1px solid $blue-5;
+      }
+    }
+
+    &:hover {
+      background: $gray-1;
+      border: 1px solid $gray-2;
+    }
   }
 
   .list {
