@@ -12,6 +12,7 @@ image:
 imagePullSecrets: []
 
 service:
+  annotations: {}
   type: ClusterIP
   port: 2020
 
