@@ -32,7 +32,7 @@ export class CardListComponent {
   }
 
   public getCardStyle(card: CardContainerComponent): string[] {
-    const classes = [(this.mode ?? CardListMode.List).toString()];
+    const classes: string[] = [this.mode ?? CardListMode.List];
 
     if (this.selectedCard === card) {
       classes.push('selected-card');
