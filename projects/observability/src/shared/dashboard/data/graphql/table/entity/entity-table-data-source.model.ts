@@ -38,6 +38,10 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   })
   public childEntityType?: ObservabilityEntityType;
 
+  public getScope(): string {
+    return this.entityType; // TODO: How to deal with children
+  }
+
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
