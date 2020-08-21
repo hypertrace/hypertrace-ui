@@ -107,10 +107,12 @@ describe('Explorer component', () => {
     spectator.detectChanges(); // Detect whatever caused the change
     spectator.tick(200); // Query emits async, tick here triggers building the DOM for the query
     discardPeriodicTasks(); // Some of the newly instantiated components also uses async, need to wait for them to settle
+    spectator.tick(200);
   };
 
   const init = (...params: Parameters<typeof createComponent>) => {
     spectator = createComponent(...params);
+    spectator.tick();
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
     querySpy = spectator.inject(GraphQlRequestService).queryImmediately;
@@ -207,7 +209,7 @@ describe('Explorer component', () => {
     );
   }));
 
-  test('fires query on init for spans', fakeAsync(() => {
+  test('fires query on init for traces', fakeAsync(() => {
     init();
     // Select traces tab
     spectator.click(spectator.queryAll('htc-toggle-item')[1]);
