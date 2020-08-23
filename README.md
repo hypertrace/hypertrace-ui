@@ -1,7 +1,7 @@
 # Hypertrace UI
 
 [![CircleCI](https://circleci.com/gh/hypertrace/hypertrace-ui.svg?style=shield)](https://circleci.com/gh/hypertrace/hypertrace-ui)
-[![codecov](https://codecov.io/gh/hypertrace/hypertrace-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/hypertrace/hypertrace-ui)
+[![codecov](https://codecov.io/gh/hypertrace/hypertrace-ui/branch/main/graph/badge.svg)](https://codecov.io/gh/hypertrace/hypertrace-ui)
 
 ## Prerequisites
 

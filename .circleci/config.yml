@@ -19,8 +19,8 @@ commands:
           name: Pull Submodules
           command: git submodule update --init
       - run:
-          name: Ensure submodules point to commit from master branch
-          command: git submodule foreach "git merge-base --is-ancestor HEAD origin/master"
+          name: Ensure submodules point to commit from main branch
+          command: git submodule foreach "git merge-base --is-ancestor HEAD origin/main"
 
   setup_for_building:
     description: 'Checks out code and restores node modules'
@@ -144,7 +144,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
       - package-charts:
           context: hypertrace-publishing
           requires:
@@ -152,4 +152,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
