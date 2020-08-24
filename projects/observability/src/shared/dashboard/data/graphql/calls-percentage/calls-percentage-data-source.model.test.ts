@@ -16,11 +16,11 @@ import {
   GraphQlExploreResponse
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { CallsPercentageDataSourceModel } from './calls-percentage-data-source.model';
+import { PercentageDataSourceModel } from './percentage-data-source.model';
 
 describe('Calls Percentage Data Source Model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
-  let model!: CallsPercentageDataSourceModel;
+  let model!: PercentageDataSourceModel;
   const emittedQueries: GraphQlExploreRequest[] = [];
 
   const callCountSpec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
@@ -37,7 +37,7 @@ describe('Calls Percentage Data Source Model', () => {
     const mockApi: Partial<ModelApi> = {
       getTimeRange: jest.fn(() => testTimeRange)
     };
-    model = new CallsPercentageDataSourceModel();
+    model = new PercentageDataSourceModel();
     model.api = mockApi as ModelApi;
     model.context = 'API_TRACE';
     model.callCountMetricKey = 'calls';

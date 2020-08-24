@@ -8,13 +8,14 @@ import { InteractionsGraphQlQueryHandlerService } from '../../../graphql/request
 import { EntityTopologyGraphQlQueryHandlerService } from '../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { ExploreGraphQlQueryHandlerService } from '../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count/api-calls-count-data-source-model';
-import { CallsPercentageDataSourceModel } from './calls-percentage/calls-percentage-data-source.model';
+import { PercentageDataSourceModel } from './calls-percentage/percentage-data-source.model';
 import { EntityMetricAggregationDataSourceModel } from './entity/aggregation/entity-metric-aggregation-data-source.model';
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
 import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage/explore-error-percentage-data-source.model';
 import { ExploreCartesianDataSourceModel } from './explore/explore-cartesian-data-source.model';
+import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-aggregation-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
@@ -59,7 +60,8 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         MetricTimeseriesSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
-        CallsPercentageDataSourceModel
+        PercentageDataSourceModel,
+        MetricAggregationDataSourceModel
       ]
     })
   ]
