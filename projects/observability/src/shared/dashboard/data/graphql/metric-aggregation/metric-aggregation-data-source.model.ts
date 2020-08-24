@@ -40,7 +40,7 @@ export class MetricAggregationDataSourceModel extends GraphQlDataSourceModel<Met
 
   public getData(): Observable<MetricAggregation> {
     const spec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
-      this.metric.name,
+      this.metric.metric,
       this.metric.aggregation
     );
 
