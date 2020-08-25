@@ -283,10 +283,25 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Errors',
                 subscript: '%',
                 data: {
-                  type: 'explore-error-percentage-data-source',
-                  context: 'API_TRACE',
-                  'error-count-metric-key': 'errorCount',
-                  'call-count-metric-key': 'calls'
+                  type: 'percentage-composite-data-source',
+                  numerator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'errorCount',
+                      aggregation: MetricAggregationType.Sum
+                    }
+                  },
+                  denominator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'calls',
+                      aggregation: MetricAggregationType.Sum
+                    }
+                  }
                 }
               }
             ]
