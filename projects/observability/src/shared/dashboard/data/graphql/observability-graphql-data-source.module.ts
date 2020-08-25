@@ -15,7 +15,7 @@ import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entit
 import { ExploreErrorPercentageDataSourceModel } from './explore-error-percentage/explore-error-percentage-data-source.model';
 import { ExploreCartesianDataSourceModel } from './explore/explore-cartesian-data-source.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-aggregation-data-source.model';
-import { PercentageDataSourceModel } from './percentage/percentage-data-source.model';
+import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
@@ -60,7 +60,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         MetricTimeseriesSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
-        PercentageDataSourceModel,
+        PercentageCompositeDataSourceModel,
         MetricAggregationDataSourceModel
       ]
     })

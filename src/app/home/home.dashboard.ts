@@ -215,7 +215,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 1s',
                 subscript: '%',
                 data: {
-                  type: 'percentage-data-source',
+                  type: 'percentage-composite-data-source',
                   numerator: {
                     type: 'metric-aggregation-data-source',
                     context: 'API_TRACE',
@@ -249,7 +249,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 500ms',
                 subscript: '%',
                 data: {
-                  type: 'percentage-data-source',
+                  type: 'percentage-composite-data-source',
                   numerator: {
                     type: 'metric-aggregation-data-source',
                     context: 'API_TRACE',
