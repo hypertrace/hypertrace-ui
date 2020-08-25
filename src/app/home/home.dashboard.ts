@@ -215,17 +215,33 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 1s',
                 subscript: '%',
                 data: {
-                  type: 'calls-percentage-data-source',
-                  context: 'API_TRACE',
-                  'call-count-metric-key': 'calls',
-                  filters: [
-                    {
-                      type: 'graphql-key-value-filter',
-                      key: 'duration',
-                      operator: GraphQlOperatorType.GreaterThan,
-                      value: 1000
+                  type: 'percentage-data-source',
+                  numerator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'calls',
+                      aggregation: MetricAggregationType.Count
+                    },
+                    filters: [
+                      {
+                        type: 'graphql-key-value-filter',
+                        key: 'duration',
+                        operator: GraphQlOperatorType.GreaterThan,
+                        value: 1000
+                      }
+                    ]
+                  },
+                  denominator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'calls',
+                      aggregation: MetricAggregationType.Sum
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -233,17 +249,33 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 title: 'Latency > 500ms',
                 subscript: '%',
                 data: {
-                  type: 'calls-percentage-data-source',
-                  context: 'API_TRACE',
-                  'call-count-metric-key': 'calls',
-                  filters: [
-                    {
-                      type: 'graphql-key-value-filter',
-                      key: 'duration',
-                      operator: GraphQlOperatorType.GreaterThan,
-                      value: 500
+                  type: 'percentage-data-source',
+                  numerator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'calls',
+                      aggregation: MetricAggregationType.Count
+                    },
+                    filters: [
+                      {
+                        type: 'graphql-key-value-filter',
+                        key: 'duration',
+                        operator: GraphQlOperatorType.GreaterThan,
+                        value: 500
+                      }
+                    ]
+                  },
+                  denominator: {
+                    type: 'metric-aggregation-data-source',
+                    context: 'API_TRACE',
+                    metric: {
+                      type: 'explore-selection',
+                      metric: 'calls',
+                      aggregation: MetricAggregationType.Sum
                     }
-                  ]
+                  }
                 }
               },
               {
