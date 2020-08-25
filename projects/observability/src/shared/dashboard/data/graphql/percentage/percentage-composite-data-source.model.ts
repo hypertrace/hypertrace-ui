@@ -6,9 +6,9 @@ import { map } from 'rxjs/operators';
 import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-aggregation-data-source.model';
 
 @Model({
-  type: 'percentage-data-source'
+  type: 'percentage-composite-data-source'
 })
-export class PercentageDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
+export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'numerator',
     // tslint:disable-next-line: no-object-literal-type-assertion
