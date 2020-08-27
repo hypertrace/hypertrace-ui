@@ -1,5 +1,6 @@
 import { ElementRef, Injector } from '@angular/core';
 import {
+  PopoverBackdrop,
   PopoverPositionType,
   PopoverRef,
   PopoverRelativePositionLocation,
@@ -76,12 +77,14 @@ export class TopologyTooltipPopover implements TopologyTooltip {
         type: PopoverPositionType.Hidden
       },
       parentInjector: this.injector,
-      backdrop: modal,
+      backdrop: modal ? PopoverBackdrop.Transparent : PopoverBackdrop.None,
       data: this.dataSubject
     });
+
     if (modal) {
       popover.hideOnBackdropClick();
     }
+
     popover.updatePositionStrategy({
       type: PopoverPositionType.Relative,
       locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
