@@ -3,7 +3,8 @@ import {
   PopoverPositionType,
   PopoverRef,
   PopoverRelativePositionLocation,
-  PopoverService
+  PopoverService,
+  PopoverBackdrop
 } from '@hypertrace/components';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -76,12 +77,14 @@ export class TopologyTooltipPopover implements TopologyTooltip {
         type: PopoverPositionType.Hidden
       },
       parentInjector: this.injector,
-      backdrop: modal,
+      backdrop: modal ? PopoverBackdrop.Transparent : PopoverBackdrop.None,
       data: this.dataSubject
     });
+
     if (modal) {
       popover.hideOnBackdropClick();
     }
+
     popover.updatePositionStrategy({
       type: PopoverPositionType.Relative,
       locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
