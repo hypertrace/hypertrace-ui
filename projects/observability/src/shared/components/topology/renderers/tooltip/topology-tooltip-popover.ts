@@ -1,10 +1,10 @@
 import { ElementRef, Injector } from '@angular/core';
 import {
+  PopoverBackdrop,
   PopoverPositionType,
   PopoverRef,
   PopoverRelativePositionLocation,
-  PopoverService,
-  PopoverBackdrop
+  PopoverService
 } from '@hypertrace/components';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
