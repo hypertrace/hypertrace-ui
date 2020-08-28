@@ -157,6 +157,10 @@ export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visuali
 export * from './shared/components/histogram/histogram-chart.component';
 export * from './shared/components/histogram/histogram-chart.module';
 
+// Gauge Chart
+export * from './shared/components/gauge/gauge-chart.module';
+export * from './shared/components/gauge/gauge-chart.component';
+
 // Bubble
 export * from './shared/components/bubble/bubble-chart';
 export { BubbleChartComponent } from './shared/components/bubble/bubble-chart.component';

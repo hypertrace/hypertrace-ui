@@ -1,0 +1,49 @@
+@import 'color-palette';
+@import 'font';
+
+.gauge-chart {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  margin-top: 16px;
+  grid-template-columns: minmax(60px, auto) minmax(80px, 160px) max-content;
+  grid-template-rows: repeat(auto-fill, 1px 40px);
+  column-gap: 16px;
+  align-items: center;
+
+  .border-top {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    border-top: 1px solid $gray-2;
+  }
+
+  .label {
+    @include body-1-medium($gray-7);
+    @include ellipsis-overflow;
+  }
+
+  .progress {
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    height: 6px;
+    background-color: $gray-2;
+    cursor: pointer;
+
+    .progress-value {
+      height: 100%;
+      border-radius: 3px;
+      background-color: $gray-6;
+    }
+  }
+
+  .value {
+    @include body-small($gray-5);
+    padding-right: 12px;
+    text-align: end;
+  }
+
+  .clickable {
+    @include link-hover;
+  }
+}
