@@ -36,7 +36,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
           <div class="value">{{ card.timestamp | htcDisplayDate: this.dateFormat }}</div>
           <div class="vertical-line"></div>
         </div>
-        <div class="content" [ngClass]="{ 'selected-card': this.isSelectedCard(card) }">
+        <div class="content" [ngClass]="{ 'selected-card': this.isSelectedCard | htcMemoize: card:this.selectedIndex }">
           <ng-container *ngTemplateOutlet="card.content"></ng-container>
         </div>
       </div>
@@ -68,8 +68,8 @@ export class TimelineCardListComponent implements AfterContentInit {
       });
   }
 
-  public readonly isSelectedCard = (card: TimelineCardContainerComponent): boolean =>
-    this.selectedIndex !== undefined && this.selectedIndex >= 0 && this.allCards[this.selectedIndex] === card;
+  public readonly isSelectedCard = (card: TimelineCardContainerComponent, selectedIndex?: number): boolean =>
+    selectedIndex !== undefined && selectedIndex >= 0 && this.allCards[selectedIndex] === card;
 
   private buildItems(allCards: TimelineCardContainerComponent[]): void {
     let currentItemIndex = -1;
