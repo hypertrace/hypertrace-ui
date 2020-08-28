@@ -14,7 +14,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
         <ng-container *ngIf="item.similarCards.length > 0">
           <htc-button
             *ngIf="!item.showAll; else showSimilarCards"
-            label="Click to see more > {{ item.similarCards.length }}"
+            label="See {{ item.similarCards.length }} more similar event{{ item.similarCards.length > 1 ? 's' : '' }} >"
             role="${ButtonRole.Primary}"
             display="${ButtonStyle.Outlined}"
             (click)="item.showAll = true"
