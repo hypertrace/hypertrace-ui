@@ -1,5 +1,6 @@
 import { DateFormatMode, DateFormatter } from '@hypertrace/common';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { PopoverService } from '@hypertrace/components';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { TimelineCardListComponent } from './timeline-card-list.component';
 import { TimelineCardListModule } from './timeline-card-list.module';
 
@@ -10,7 +11,7 @@ describe('Timeline Card List component', () => {
     declareComponent: false,
     component: TimelineCardListComponent,
     imports: [TimelineCardListModule],
-    providers: []
+    providers: [mockProvider(PopoverService)]
   });
 
   test('should display all cards', () => {
@@ -47,18 +48,18 @@ describe('Timeline Card List component', () => {
     );
 
     // Add test logic
-    const recordElements = spectator.queryAll('.record');
+    const cardElements = spectator.queryAll('.card');
 
-    expect(recordElements).toExist();
-    expect(recordElements.length).toEqual(3);
+    expect(cardElements).toExist();
+    expect(cardElements.length).toEqual(3);
 
     const dateFormatter = new DateFormatter({ mode: DateFormatMode.TimeWithSeconds });
 
-    recordElements.forEach((recordElement, index) => {
-      const timeElement = recordElement.querySelector('.value');
+    cardElements.forEach((cardElement, index) => {
+      const timeElement = cardElement.querySelector('.value');
       expect(timeElement).toHaveText(dateFormatter.format(data[index].timestamp));
 
-      const titleElement = recordElement.querySelector('.title');
+      const titleElement = cardElement.querySelector('.title');
       expect(titleElement).toExist();
       expect(titleElement).toHaveText(data[index].name);
     });
@@ -69,11 +70,58 @@ describe('Timeline Card List component', () => {
       selectedIndex: 0
     });
 
-    const selectedCard = spectator.query('.selected-card');
-    const cards = spectator.queryAll('.card');
-    expect(cards.length).toEqual(3);
-    expect(selectedCard).toBe(cards[0]);
-    expect(selectedCard).not.toBe(cards[1]);
-    expect(selectedCard).not.toBe(cards[2]);
+    const selectedCardContent = spectator.query('.selected-card');
+    const cardContents = spectator.queryAll('.card > .content');
+    expect(cardContents.length).toEqual(3);
+    expect(selectedCardContent).toBe(cardContents[0]);
+    expect(selectedCardContent).not.toBe(cardContents[1]);
+    expect(selectedCardContent).not.toBe(cardContents[2]);
+  });
+
+  test('should display cards with groups and expansion button', () => {
+    const data = [
+      {
+        name: 'First',
+        timestamp: 1579817561559,
+        isSimilarToPrevious: false
+      },
+      {
+        name: 'Second',
+        timestamp: 1579813972292,
+        isSimilarToPrevious: true
+      },
+      {
+        name: 'Third',
+        timestamp: 1579810387143,
+        isSimilarToPrevious: true
+      }
+    ];
+
+    spectator = createHost(
+      `
+    <ht-timeline-card-list>
+      <ht-timeline-card-container *ngFor="let cardData of this.data" [timestamp]="cardData.timestamp" [similarToPrevious]="cardData.isSimilarToPrevious">
+        <div class="custom-card">
+          <div class="title">{{cardData.name}}</div>
+        </div>
+      </ht-timeline-card-container>
+    </ht-timeline-card-list>
+    `,
+      {
+        hostProps: {
+          data: data
+        }
+      }
+    );
+
+    // Only one card element should be visible. Other two should be gropued and hidden
+    expect(spectator.queryAll('.card').length).toEqual(1);
+    expect(spectator.query('.button')).toHaveText('See 2 more similar events >');
+
+    // Click on this button should expand the list and show all cards
+    spectator.click(spectator.query('.button')!);
+
+    expect(spectator.queryAll('.card').length).toEqual(3);
+    expect(spectator.query('.button')).not.toExist();
   });
 });

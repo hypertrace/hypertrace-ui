@@ -9,4 +9,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '@hypertrace/components';
 export class TimelineCardContainerComponent extends ContentHolder {
   @Input()
   public timestamp!: number | Date;
+
+  @Input()
+  public similarToPrevious?: boolean;
 }
