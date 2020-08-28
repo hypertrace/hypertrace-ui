@@ -7,7 +7,13 @@
   padding-left: 1px;
   padding-right: 1px;
 
-  .record {
+  .button {
+    margin-top: 8px;
+    margin-left: 90px;
+  }
+
+  .card {
+    margin-top: 8px;
     display: flex;
 
     .time {
@@ -32,14 +38,13 @@
       }
     }
 
-    .card {
+    .content {
       display: flex;
       flex-direction: row;
       width: 100%;
-      margin-bottom: 8px;
-      border: 1px solid $gray-1;
+      border: 1px solid $gray-2;
       box-sizing: border-box;
-      border-radius: 4px;
+      border-radius: 6px;
       @include card-hover;
 
       &.selected-card {
