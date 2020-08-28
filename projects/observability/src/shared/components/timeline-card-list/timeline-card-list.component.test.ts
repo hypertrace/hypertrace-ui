@@ -116,7 +116,7 @@ describe('Timeline Card List component', () => {
 
     // Only one card element should be visible. Other two should be gropued and hidden
     expect(spectator.queryAll('.card').length).toEqual(1);
-    expect(spectator.query('.button')).toHaveText('Click to see more > 2');
+    expect(spectator.query('.button')).toHaveText('See 2 more similar events >');
 
     // Click on this button should expand the list and show all cards
     spectator.click(spectator.query('.button')!);
