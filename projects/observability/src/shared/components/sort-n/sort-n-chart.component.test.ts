@@ -1,18 +1,18 @@
 import { FormattingModule } from '@hypertrace/common';
-import { GaugeChartComponent, GaugeData } from '@hypertrace/observability';
+import { SortNChartComponent, SortNData } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 
-describe('Gauge Chart Component', () => {
-  let spectator: Spectator<GaugeChartComponent>;
+describe('Sort N Chart Component', () => {
+  let spectator: Spectator<SortNChartComponent>;
 
   const createHost = createHostFactory({
-    component: GaugeChartComponent,
+    component: SortNChartComponent,
     shallow: true,
     imports: [FormattingModule]
   });
 
   test('should convert data in valid options', () => {
-    const data: GaugeData[] = [
+    const data: SortNData[] = [
       {
         label: 'POST /api 1',
         value: 80
@@ -28,8 +28,8 @@ describe('Gauge Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-gauge-chart [data]="data">
-      </ht-gauge-chart>`,
+      `<ht-sort-n-chart [items]="data">
+      </ht-sort-n-chart>`,
       {
         hostProps: {
           data: data
@@ -61,8 +61,8 @@ describe('Gauge Chart Component', () => {
     const onItemClick: jest.Mock = jest.fn();
 
     spectator = createHost(
-      `<ht-gauge-chart [data]="data" [labelClickable]="labelClickable" (itemClick)="onItemClick($event)">
-      </ht-gauge-chart>`,
+      `<ht-sort-n-chart [items]="data" [itemClickable]="labelClickable" (itemClick)="onItemClick($event)">
+      </ht-sort-n-chart>`,
       {
         hostProps: {
           data: data,
@@ -85,8 +85,8 @@ describe('Gauge Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-gauge-chart [data]="data">
-      </ht-gauge-chart>`,
+      `<ht-sort-n-chart [items]="data">
+      </ht-sort-n-chart>`,
       {
         hostProps: {
           data: data
@@ -99,7 +99,7 @@ describe('Gauge Chart Component', () => {
   });
 
   test('should determine color using label', () => {
-    const data: GaugeData[] = [
+    const data: SortNData[] = [
       {
         label: 'POST /api 1',
         value: 80
@@ -115,8 +115,8 @@ describe('Gauge Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-gauge-chart [data]="data" [determineColor]="determineColor">
-      </ht-gauge-chart>`,
+      `<ht-sort-n-chart [items]="data" [determineColor]="determineColor">
+      </ht-sort-n-chart>`,
       {
         hostProps: {
           data: data,
@@ -149,7 +149,7 @@ describe('Gauge Chart Component', () => {
   });
 
   test('should determine color using colorKey', () => {
-    const data: GaugeData[] = [
+    const data: SortNData[] = [
       {
         label: 'POST /api 1',
         value: 80,
@@ -167,8 +167,8 @@ describe('Gauge Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-gauge-chart [data]="data" [determineColor]="determineColor">
-      </ht-gauge-chart>`,
+      `<ht-sort-n-chart [items]="data" [determineColor]="determineColor">
+      </ht-sort-n-chart>`,
       {
         hostProps: {
           data: data,

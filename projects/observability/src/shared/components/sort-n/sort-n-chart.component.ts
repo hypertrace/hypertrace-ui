@@ -4,18 +4,18 @@ import { maxBy } from 'lodash-es';
 import { HistogramBarData } from '../histogram/histogram-chart.component';
 
 @Component({
-  selector: 'ht-gauge-chart',
-  styleUrls: ['./gauge-chart.component.scss'],
+  selector: 'ht-sort-n-chart',
+  styleUrls: ['./sort-n-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="gauge-chart">
+    <div class="sort-n-chart">
       <ng-container *ngFor="let item of this.itemOptions">
         <div class="border-top"></div>
         <div
           class="label"
           [htcTooltip]="item.label"
           (click)="this.onItemClick(item)"
-          [ngClass]="{ clickable: this.labelClickable }"
+          [ngClass]="{ clickable: this.itemClickable }"
           [ngStyle]="{ color: item.color }"
         >
           {{ item.label }}
@@ -30,12 +30,12 @@ import { HistogramBarData } from '../histogram/histogram-chart.component';
     </div>
   `
 })
-export class GaugeChartComponent<T extends GaugeData = GaugeData> implements OnChanges {
+export class SortNChartComponent<T extends SortNData = SortNData> implements OnChanges {
   @Input()
-  public data: T[] = [];
+  public items: T[] = [];
 
   @Input()
-  public labelClickable: boolean = false;
+  public itemClickable: boolean = false;
 
   @Input()
   public determineColor?: (colorKey: string) => string;
@@ -43,32 +43,32 @@ export class GaugeChartComponent<T extends GaugeData = GaugeData> implements OnC
   @Output()
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
-  public itemOptions: GaugeItemOption<T>[] = [];
+  public itemOptions: SortItemOption<T>[] = [];
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.data && this.data) {
+    if (changes.items && this.items) {
       this.buildItemOptions();
     }
   }
 
-  public onItemClick(item: GaugeItemOption<T>): void {
-    this.labelClickable && this.itemClick.emit(item.original);
+  public onItemClick(item: SortItemOption<T>): void {
+    this.itemClickable && this.itemClick.emit(item.original);
   }
 
   private buildItemOptions(): void {
     this.itemOptions = [];
-    if (this.data.length === 0) {
+    if (this.items.length === 0) {
       return;
     }
 
-    let maxValue = maxBy(this.data, option => option.value)?.value;
+    let maxValue = maxBy(this.items, option => option.value)?.value;
     if (maxValue === undefined || maxValue === 0) {
       maxValue = 1;
     }
 
-    const colorLookupMap = this.buildColorLookupForData(this.data);
+    const colorLookupMap = this.buildColorLookupForData(this.items);
 
-    this.itemOptions = this.data.map(option => ({
+    this.itemOptions = this.items.map(option => ({
       label: option.label,
       color: colorLookupMap?.get(option.colorKey ?? option.label),
       width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
@@ -86,13 +86,13 @@ export class GaugeChartComponent<T extends GaugeData = GaugeData> implements OnC
   }
 }
 
-export interface GaugeData {
+export interface SortNData {
   label: string;
   value: number;
   colorKey?: string;
 }
 
-interface GaugeItemOption<T extends GaugeData> extends GaugeData {
+interface SortItemOption<T extends SortNData> extends SortNData {
   width: string;
   color?: string;
   original: T;

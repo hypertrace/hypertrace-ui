@@ -7,7 +7,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { TopNData } from '../../../components/top-n/top-n-chart.component';
+import { SortNData } from '../../../components/sort-n/sort-n-chart.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
@@ -40,18 +40,18 @@ import { TopNWidgetModel } from './top-n-widget.model';
             [label]="option.label"
           ></htc-select-option>
         </htc-select>
-        <ht-top-n-chart
+        <ht-sort-n-chart
           *htcLoadAsync="this.data$ as data"
-          [data]="data"
-          [labelClickable]="true"
+          [items]="data"
+          [itemClickable]="true"
           (itemClick)="this.onItemClicked($event)"
         >
-        </ht-top-n-chart>
+        </ht-sort-n-chart>
       </htc-titled-content>
     </div>
   `
 })
-export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, TopNData[]> {
+export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, SortNData[]> {
   public metricSpecification!: TopNExploreSelectionSpecificationModel;
   public options$!: Observable<SelectOption<TopNExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;
@@ -74,18 +74,19 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     this.entityNavService.navigateToEntity(item.entity);
   }
 
-  protected fetchData(): Observable<TopNData[]> {
+  protected fetchData(): Observable<SortNData[]> {
     return this.model.getData().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
         this.setInitialMetricSpecification(fetcher);
         this.setOptionsObservables(fetcher);
       }),
-      switchMap(() => this.buildDataObservable())
+      switchMap(() => this.buildDataObservable()),
+      map(data => data.sort((first, second) => second.value - first.value))
     );
   }
 
-  protected buildDataObservable(): Observable<TopNData[]> {
+  protected buildDataObservable(): Observable<SortNData[]> {
     return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 

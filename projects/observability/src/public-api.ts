@@ -157,10 +157,6 @@ export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visuali
 export * from './shared/components/histogram/histogram-chart.component';
 export * from './shared/components/histogram/histogram-chart.module';
 
-// Gauge Chart
-export * from './shared/components/gauge/gauge-chart.module';
-export * from './shared/components/gauge/gauge-chart.component';
-
 // Bubble
 export * from './shared/components/bubble/bubble-chart';
 export { BubbleChartComponent } from './shared/components/bubble/bubble-chart.component';
@@ -188,9 +184,9 @@ export * from './shared/components/timeline-card-list/timeline-card-list.module'
 export * from './shared/components/interval-select/interval-select.component';
 export * from './shared/components/interval-select/interval-select.module';
 
-// Top N Chart
-export * from './shared/components/top-n/top-n-chart.module';
-export * from './shared/components/top-n/top-n-chart.component';
+// Sort N Chart
+export * from './shared/components/sort-n/sort-n-chart.module';
+export * from './shared/components/sort-n/sort-n-chart.component';
 
 // Stepper
 export * from './shared/components/stepper/stepper.module';
