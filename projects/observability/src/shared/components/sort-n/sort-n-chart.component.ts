@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { maxBy } from 'lodash-es';
-import { HistogramBarData } from '../histogram/histogram-chart.component';
 
 @Component({
   selector: 'ht-sort-n-chart',
@@ -77,7 +76,7 @@ export class SortNChartComponent<T extends SortNData = SortNData> implements OnC
     }));
   }
 
-  private buildColorLookupForData(barData: HistogramBarData[]): Map<string, string> | undefined {
+  private buildColorLookupForData(barData: SortNData[]): Map<string, string> | undefined {
     const uniqueDataValues = new Set(barData.map(data => data.colorKey ?? data.label));
 
     return this.determineColor
