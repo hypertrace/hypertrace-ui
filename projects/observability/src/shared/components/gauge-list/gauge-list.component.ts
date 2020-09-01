@@ -69,19 +69,19 @@ export class GaugeListComponent<T extends SortNData = SortNData> implements OnCh
 
     this.itemOptions = this.items.map(option => ({
       label: option.label,
-      color: colorLookupMap?.get(option.colorKey ?? option.label),
+      color: colorLookupMap.get(option.colorKey ?? option.label),
       width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
       value: option.value,
       original: option
     }));
   }
 
-  private buildColorLookupForData(barData: SortNData[]): Map<string, string> | undefined {
+  private buildColorLookupForData(barData: SortNData[]): Map<string, string> {
     const uniqueDataValues = new Set(barData.map(data => data.colorKey ?? data.label));
 
     return this.determineColor
       ? new Map(Array.from(uniqueDataValues).map(value => [value, this.determineColor!(value)]))
-      : undefined;
+      : new Map();
   }
 }
 
