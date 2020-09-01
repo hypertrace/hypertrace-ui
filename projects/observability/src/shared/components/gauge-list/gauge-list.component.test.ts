@@ -1,12 +1,12 @@
 import { FormattingModule } from '@hypertrace/common';
-import { SortNChartComponent, SortNData } from '@hypertrace/observability';
+import { GaugeListComponent, SortNData } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 
-describe('Sort N Chart Component', () => {
-  let spectator: Spectator<SortNChartComponent>;
+describe('Gauge List Component', () => {
+  let spectator: Spectator<GaugeListComponent>;
 
   const createHost = createHostFactory({
-    component: SortNChartComponent,
+    component: GaugeListComponent,
     shallow: true,
     imports: [FormattingModule]
   });
@@ -28,8 +28,8 @@ describe('Sort N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-sort-n-chart [items]="data">
-      </ht-sort-n-chart>`,
+      `<ht-gauge-list [items]="data">
+      </ht-gauge-list>`,
       {
         hostProps: {
           data: data
@@ -61,8 +61,8 @@ describe('Sort N Chart Component', () => {
     const onItemClick: jest.Mock = jest.fn();
 
     spectator = createHost(
-      `<ht-sort-n-chart [items]="data" [itemClickable]="labelClickable" (itemClick)="onItemClick($event)">
-      </ht-sort-n-chart>`,
+      `<ht-gauge-list [items]="data" [itemClickable]="labelClickable" (itemClick)="onItemClick($event)">
+      </ht-gauge-list>`,
       {
         hostProps: {
           data: data,
@@ -85,8 +85,8 @@ describe('Sort N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-sort-n-chart [items]="data">
-      </ht-sort-n-chart>`,
+      `<ht-gauge-list [items]="data">
+      </ht-gauge-list>`,
       {
         hostProps: {
           data: data
@@ -115,8 +115,8 @@ describe('Sort N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-sort-n-chart [items]="data" [determineColor]="determineColor">
-      </ht-sort-n-chart>`,
+      `<ht-gauge-list [items]="data" [determineColor]="determineColor">
+      </ht-gauge-list>`,
       {
         hostProps: {
           data: data,
@@ -167,8 +167,8 @@ describe('Sort N Chart Component', () => {
     ];
 
     spectator = createHost(
-      `<ht-sort-n-chart [items]="data" [determineColor]="determineColor">
-      </ht-sort-n-chart>`,
+      `<ht-gauge-list [items]="data" [determineColor]="determineColor">
+      </ht-gauge-list>`,
       {
         hostProps: {
           data: data,

@@ -7,7 +7,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { SortNData } from '../../../components/sort-n/sort-n-chart.component';
+import { SortNData } from '../../../components/gauge-list/gauge-list.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
@@ -40,13 +40,13 @@ import { TopNWidgetModel } from './top-n-widget.model';
             [label]="option.label"
           ></htc-select-option>
         </htc-select>
-        <ht-sort-n-chart
+        <ht-gauge-list
           *htcLoadAsync="this.data$ as data"
           [items]="data"
           [itemClickable]="true"
           (itemClick)="this.onItemClicked($event)"
         >
-        </ht-sort-n-chart>
+        </ht-gauge-list>
       </htc-titled-content>
     </div>
   `

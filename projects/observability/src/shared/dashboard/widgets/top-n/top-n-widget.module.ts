@@ -4,7 +4,7 @@ import { FormattingModule } from '@hypertrace/common';
 import { LabelModule, LoadAsyncModule, SelectModule, TitledContentModule, TooltipModule } from '@hypertrace/components';
 import { GraphQlModule } from '@hypertrace/graphql-client';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
-import { SortNChartModule } from '../../../components/sort-n/sort-n-chart.module';
+import { GaugeListModule } from '../../../components/gauge-list/gauge-list.module';
 import { EntitiesGraphQlQueryHandlerService } from '../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 import { TopNDataSourceModel } from './data/top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
@@ -26,7 +26,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
     LabelModule,
     TooltipModule,
     FormattingModule,
-    SortNChartModule
+    GaugeListModule
   ]
 })
 export class TopNWidgetModule {}

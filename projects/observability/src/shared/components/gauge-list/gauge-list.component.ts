@@ -3,11 +3,11 @@ import { TypedSimpleChanges } from '@hypertrace/common';
 import { maxBy } from 'lodash-es';
 
 @Component({
-  selector: 'ht-sort-n-chart',
-  styleUrls: ['./sort-n-chart.component.scss'],
+  selector: 'ht-gauge-list',
+  styleUrls: ['./gauge-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="sort-n-chart">
+    <div class="gauge-list">
       <ng-container *ngFor="let item of this.itemOptions">
         <div class="border-top"></div>
         <div
@@ -29,7 +29,7 @@ import { maxBy } from 'lodash-es';
     </div>
   `
 })
-export class SortNChartComponent<T extends SortNData = SortNData> implements OnChanges {
+export class GaugeListComponent<T extends SortNData = SortNData> implements OnChanges {
   @Input()
   public items: T[] = [];
 
