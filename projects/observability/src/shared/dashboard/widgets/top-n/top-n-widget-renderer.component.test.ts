@@ -8,7 +8,6 @@ import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils'
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { TopNChartComponent } from '../../../components/top-n/top-n-chart.component';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher } from './data/top-n-data-source.model';
@@ -50,7 +49,7 @@ describe('Top N Widget renderer', () => {
     ],
     mocks: [NavigationService],
     imports: [FormattingModule, LoadAsyncModule],
-    declarations: [MockComponent(TopNChartComponent), MockComponent(TitledContentComponent)],
+    declarations: [MockComponent(TitledContentComponent)],
     shallow: true
   });
 
@@ -70,7 +69,7 @@ describe('Top N Widget renderer', () => {
     return topNOptionSpec;
   };
 
-  test('renders the widget', () => {
+  test('renders the widget with sorted data', () => {
     const data = [
       {
         label: 'Api 1',
@@ -106,7 +105,24 @@ describe('Top N Widget renderer', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.data$!).toBe('(x|)', {
-        x: data
+        x: [
+          {
+            label: 'Api 2',
+            value: 100,
+            entity: {
+              [entityIdKey]: 'test-id - 2',
+              [entityTypeKey]: ObservabilityEntityType.Api
+            }
+          },
+          {
+            label: 'Api 1',
+            value: 50,
+            entity: {
+              [entityIdKey]: 'test-id - 1',
+              [entityTypeKey]: ObservabilityEntityType.Api
+            }
+          }
+        ]
       });
       expectObservable(spectator.component.options$).toBe('(x|)', {
         x: [
@@ -153,7 +169,7 @@ describe('Top N Widget renderer', () => {
     spectator.component.onItemClicked(data[0]);
 
     expect(spectator.inject(EntityNavigationService).navigateToEntity).toHaveBeenCalledWith({
-      [entityIdKey]: 'test-id - 1',
+      [entityIdKey]: 'test-id - 2',
       [entityTypeKey]: ObservabilityEntityType.Api
     });
   });
