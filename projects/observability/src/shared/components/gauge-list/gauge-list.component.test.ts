@@ -1,6 +1,6 @@
 import { FormattingModule } from '@hypertrace/common';
-import { GaugeItem, GaugeListComponent } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { GaugeItem, GaugeListComponent } from './gauge-list.component';
 
 describe('Gauge List Component', () => {
   let spectator: Spectator<GaugeListComponent>;
