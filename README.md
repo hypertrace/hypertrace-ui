@@ -9,7 +9,13 @@ Install Node + NPM
 
 ## Setup
 
-`npm install`
+- Install Dependencies
+
+  `npm install`
+
+- Initialize Submodule (https://github.com/hypertrace/hypertrace-core-ui/)
+
+  `git submodule update --init`
 
 ## Development server
 
@@ -19,6 +25,38 @@ Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app 
 
 Run `npm run test` to execute the unit tests via Jest
 
-## Commit
+## Technologies
 
-Run `npm commit` and follow the prompts provided to create a properly formatted commit
+1. Angular
+2. Typescript
+3. RxJS
+4. [D3](https://d3js.org/)
+5. [Spectator](https://github.com/ngneat/spectator) (_Unit Testing_)
+
+## UI Architecture
+
+| <img src="https://hypertrace-docs.s3.amazonaws.com/ui-architecture.png" width="400" height="400"/> |
+| :------------------------------------------------------------------------------------------------: |
+|                                    _Hypertrace UI Architecture_                                    |
+
+## Submodules
+
+Pull all changes in the repository including changes in the submodules
+
+    git pull --recurse-submodules
+
+Pull all changes for the submodules
+
+    git submodule update --remote
+
+## Building Image locally
+
+Hypertrace UI uses gradlew to build docker image. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
+
+```
+./gradlew dockerBuildImages
+```
+
+## Docker Image Source:
+
+- [DockerHub > Hypertrace UI](https://hub.docker.com/r/hypertrace/hypertrace-ui)
