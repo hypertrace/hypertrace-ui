@@ -33,6 +33,12 @@ Run `npm run test` to execute the unit tests via Jest
 4. [D3](https://d3js.org/)
 5. [Spectator](https://github.com/ngneat/spectator) (_Unit Testing_)
 
+## UI Architecture
+
+| <img src="https://hypertrace-docs.s3.amazonaws.com/ui-architecture.png" width="400" height="400"/>| 
+|:--:| 
+| *Hypertrace UI Architecture* |
+
 ## Submodules
 
 Pull all changes in the repository including changes in the submodules
@@ -42,3 +48,13 @@ Pull all changes in the repository including changes in the submodules
 Pull all changes for the submodules
 
     git submodule update --remote
+
+## Building Image locally
+Hypertrace UI uses gradlew to compile/install/distribute. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
+
+```
+./gradlew clean build dockerBuildImages
+```
+
+## Docker Image Source:
+- [DockerHub > Hypertrace UI](https://hub.docker.com/r/hypertrace/hypertrace-ui)
