@@ -184,9 +184,9 @@ export * from './shared/components/timeline-card-list/timeline-card-list.module'
 export * from './shared/components/interval-select/interval-select.component';
 export * from './shared/components/interval-select/interval-select.module';
 
-// Top N Chart
-export * from './shared/components/top-n/top-n-chart.module';
-export * from './shared/components/top-n/top-n-chart.component';
+// Gauge List Chart
+export * from './shared/components/gauge-list/gauge-list.module';
+export * from './shared/components/gauge-list/gauge-list.component';
 
 // Stepper
 export * from './shared/components/stepper/stepper.module';

@@ -1,7 +1,7 @@
 @import 'color-palette';
 @import 'font';
 
-.top-n-chart {
+.gauge-list {
   height: 100%;
   width: 100%;
   display: grid;
@@ -23,7 +23,6 @@
   }
 
   .progress {
-    height: 100%;
     width: 100%;
     border-radius: 3px;
     height: 6px;

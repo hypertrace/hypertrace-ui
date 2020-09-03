@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
 import { TooltipModule } from '@hypertrace/components';
-import { TopNChartComponent } from './top-n-chart.component';
+import { GaugeListComponent } from './gauge-list.component';
 
 @NgModule({
-  declarations: [TopNChartComponent],
+  declarations: [GaugeListComponent],
   imports: [CommonModule, TooltipModule, FormattingModule],
-  exports: [TopNChartComponent]
+  exports: [GaugeListComponent]
 })
-export class TopNChartModule {}
+export class GaugeListModule {}
