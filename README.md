@@ -19,7 +19,7 @@ Install Node + NPM
 
 ## Development server
 
-Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Running unit tests
 
@@ -51,10 +51,10 @@ Pull all changes for the submodules
 
 ## Building Image locally
 
-Hypertrace UI uses gradlew to compile/install/distribute. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
+Hypertrace UI uses gradlew to build docker image. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
 
 ```
-./gradlew clean build dockerBuildImages
+./gradlew build dockerBuildImages
 ```
 
 ## Docker Image Source:
