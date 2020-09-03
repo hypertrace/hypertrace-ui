@@ -7,7 +7,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { SortNData } from '../../../components/gauge-list/gauge-list.component';
+import { GaugeItem } from '../../../components/gauge-list/gauge-list.component';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher, TopNWidgetValueData } from './data/top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './data/top-n-explore-selection-specification.model';
@@ -51,7 +51,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
     </div>
   `
 })
-export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, SortNData[]> {
+export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, GaugeItem[]> {
   public metricSpecification!: TopNExploreSelectionSpecificationModel;
   public options$!: Observable<SelectOption<TopNExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;
@@ -74,7 +74,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     this.entityNavService.navigateToEntity(item.entity);
   }
 
-  protected fetchData(): Observable<SortNData[]> {
+  protected fetchData(): Observable<GaugeItem[]> {
     return this.model.getData().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
@@ -86,7 +86,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     );
   }
 
-  protected buildDataObservable(): Observable<SortNData[]> {
+  protected buildDataObservable(): Observable<GaugeItem[]> {
     return this.fetcher ? this.fetcher.getData(this.metricSpecification) : NEVER;
   }
 

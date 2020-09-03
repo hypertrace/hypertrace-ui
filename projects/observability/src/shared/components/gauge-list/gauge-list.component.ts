@@ -29,7 +29,7 @@ import { maxBy } from 'lodash-es';
     </div>
   `
 })
-export class GaugeListComponent<T extends SortNData = SortNData> implements OnChanges {
+export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnChanges {
   @Input()
   public items: T[] = [];
 
@@ -42,7 +42,7 @@ export class GaugeListComponent<T extends SortNData = SortNData> implements OnCh
   @Output()
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
-  public itemOptions: SortItemOption<T>[] = [];
+  public itemOptions: GaugeItemOption<T>[] = [];
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.items && this.items) {
@@ -50,7 +50,7 @@ export class GaugeListComponent<T extends SortNData = SortNData> implements OnCh
     }
   }
 
-  public onItemClick(item: SortItemOption<T>): void {
+  public onItemClick(item: GaugeItemOption<T>): void {
     this.itemClickable && this.itemClick.emit(item.original);
   }
 
@@ -76,7 +76,7 @@ export class GaugeListComponent<T extends SortNData = SortNData> implements OnCh
     }));
   }
 
-  private buildColorLookupForData(barData: SortNData[]): Map<string, string> {
+  private buildColorLookupForData(barData: GaugeItem[]): Map<string, string> {
     const uniqueDataValues = new Set(barData.map(data => data.colorKey ?? data.label));
 
     return this.determineColor
@@ -85,13 +85,13 @@ export class GaugeListComponent<T extends SortNData = SortNData> implements OnCh
   }
 }
 
-export interface SortNData {
+export interface GaugeItem {
   label: string;
   value: number;
   colorKey?: string;
 }
 
-interface SortItemOption<T extends SortNData> extends SortNData {
+interface GaugeItemOption<T extends GaugeItem> extends GaugeItem {
   width: string;
   color?: string;
   original: T;

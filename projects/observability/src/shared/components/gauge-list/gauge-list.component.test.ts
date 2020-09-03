@@ -1,6 +1,6 @@
 import { FormattingModule } from '@hypertrace/common';
-import { GaugeListComponent, SortNData } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { GaugeItem, GaugeListComponent } from './gauge-list.component';
 
 describe('Gauge List Component', () => {
   let spectator: Spectator<GaugeListComponent>;
@@ -12,7 +12,7 @@ describe('Gauge List Component', () => {
   });
 
   test('should convert data in valid options', () => {
-    const data: SortNData[] = [
+    const data: GaugeItem[] = [
       {
         label: 'POST /api 1',
         value: 80
@@ -99,7 +99,7 @@ describe('Gauge List Component', () => {
   });
 
   test('should determine color using label', () => {
-    const data: SortNData[] = [
+    const data: GaugeItem[] = [
       {
         label: 'POST /api 1',
         value: 80
@@ -149,7 +149,7 @@ describe('Gauge List Component', () => {
   });
 
   test('should determine color using colorKey', () => {
-    const data: SortNData[] = [
+    const data: GaugeItem[] = [
       {
         label: 'POST /api 1',
         value: 80,
