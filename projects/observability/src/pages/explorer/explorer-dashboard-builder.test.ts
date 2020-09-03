@@ -1,4 +1,4 @@
-import { StandardTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -7,7 +7,7 @@ import {
   MetadataService,
   MetricAggregationType,
   TRACES_GQL_REQUEST,
-  TracingTableCellRenderer
+  TracingTableCellType
 } from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
@@ -118,7 +118,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Type',
                 width: '96px',
-                display: StandardTableCellRendererType.Text,
+                display: CoreTableCellRendererType.Text,
                 filterable: true,
                 value: {
                   type: 'attribute-specification',
@@ -158,7 +158,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Status',
                 width: '184px',
-                display: TracingTableCellRenderer.TraceStatus,
+                display: TracingTableCellType.TraceStatus,
                 value: {
                   type: 'trace-status-specification'
                 },
@@ -170,7 +170,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Duration',
                 width: '100px',
-                display: TracingTableCellRenderer.Metric,
+                display: TracingTableCellType.Metric,
                 filterable: true,
                 value: {
                   type: 'attribute-specification',
@@ -184,7 +184,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Start Time',
                 width: '220px',
-                display: StandardTableCellRendererType.Timestamp,
+                display: CoreTableCellRendererType.Timestamp,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'startTime'
@@ -198,7 +198,7 @@ describe('Explorer dashboard builder', () => {
                 type: 'table-widget-column',
                 title: 'Foo',
                 width: '1',
-                display: StandardTableCellRendererType.Number,
+                display: CoreTableCellRendererType.Number,
                 value: {
                   type: 'attribute-specification',
                   attribute: 'foo'

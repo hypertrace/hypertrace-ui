@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StandardTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { TracingTableCellRenderer } from '@hypertrace/distributed-tracing';
+import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { ObservabilityTableCellRenderer } from '../../../shared/components/table/observability-table-cell-renderer';
+import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 
 @Component({
@@ -25,7 +25,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Name',
-        display: ObservabilityTableCellRenderer.Entity,
+        display: ObservabilityTableCellType.Entity,
         width: '30%',
         value: {
           type: 'entity-specification',
@@ -35,7 +35,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Type',
-        display: ObservabilityTableCellRenderer.BackendIcon,
+        display: ObservabilityTableCellType.BackendIcon,
         width: '80px',
         value: {
           type: 'attribute-specification',
@@ -45,7 +45,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'p99 Latency',
-        display: TracingTableCellRenderer.Metric,
+        display: TracingTableCellType.Metric,
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
@@ -56,7 +56,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Avg Latency',
-        display: TracingTableCellRenderer.Metric,
+        display: TracingTableCellType.Metric,
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
@@ -66,7 +66,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Errors/s',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
@@ -76,7 +76,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Errors',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
@@ -86,7 +86,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Calls/s',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',
@@ -96,7 +96,7 @@ export class BackendListComponent {
       {
         type: 'table-widget-column',
         title: 'Calls',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',

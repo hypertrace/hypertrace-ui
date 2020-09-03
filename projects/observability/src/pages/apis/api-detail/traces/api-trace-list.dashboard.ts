@@ -1,5 +1,5 @@
-import { StandardTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { TracingTableCellRenderer } from '@hypertrace/distributed-tracing';
+import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 
 export const apiTraceListDashboard = {
@@ -23,7 +23,7 @@ export const apiTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Status',
         width: '20%',
-        display: TracingTableCellRenderer.TraceStatus,
+        display: TracingTableCellType.TraceStatus,
         value: {
           type: 'trace-status-specification'
         },
@@ -35,7 +35,7 @@ export const apiTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Duration',
         width: '10%',
-        display: TracingTableCellRenderer.Metric,
+        display: TracingTableCellType.Metric,
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',
@@ -49,7 +49,7 @@ export const apiTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Start Time',
         width: '220px',
-        display: StandardTableCellRendererType.Timestamp,
+        display: CoreTableCellRendererType.Timestamp,
         value: {
           type: 'attribute-specification',
           attribute: 'startTime'

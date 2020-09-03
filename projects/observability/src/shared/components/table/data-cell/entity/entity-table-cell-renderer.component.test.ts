@@ -2,10 +2,10 @@ import { NavigationService } from '@hypertrace/common';
 import {
   TableColumnConfig,
   TableRow,
-  TABLE_CELL_RENDERER_CELL_DATA,
-  TABLE_CELL_RENDERER_COLUMN_CONFIG,
-  TABLE_CELL_RENDERER_COLUMN_INDEX,
-  TABLE_CELL_RENDERER_ROW_DATA
+  TABLE_CELL_DATA,
+  TABLE_COLUMN_CONFIG,
+  TABLE_COLUMN_INDEX,
+  TABLE_ROW_DATA
 } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -22,22 +22,22 @@ describe('Entity table cell renderer component', () => {
   };
 
   const tableCellRendererColumnProvider = (column: TableColumnConfig) => ({
-    provide: TABLE_CELL_RENDERER_COLUMN_CONFIG,
+    provide: TABLE_COLUMN_CONFIG,
     useValue: column
   });
 
   const tableCellRendererIndexProvider = (index: number) => ({
-    provide: TABLE_CELL_RENDERER_COLUMN_INDEX,
+    provide: TABLE_COLUMN_INDEX,
     useValue: index
   });
 
   const tableCellDataRendererCellDataProvider = (cellData: unknown) => ({
-    provide: TABLE_CELL_RENDERER_CELL_DATA,
+    provide: TABLE_CELL_DATA,
     useValue: cellData
   });
 
   const tableRowDataRendererRowDataProvider = (rowData: TableRow) => ({
-    provide: TABLE_CELL_RENDERER_ROW_DATA,
+    provide: TABLE_ROW_DATA,
     useValue: rowData
   });
 
@@ -47,7 +47,7 @@ describe('Entity table cell renderer component', () => {
     providers: [
       mockProvider(EntityNavigationService),
       mockProvider(NavigationService),
-      tableCellRendererColumnProvider({ field: 'test' }),
+      tableCellRendererColumnProvider({ id: 'test' }),
       tableCellRendererIndexProvider(0),
       tableCellDataRendererCellDataProvider(entity),
       tableRowDataRendererRowDataProvider({})

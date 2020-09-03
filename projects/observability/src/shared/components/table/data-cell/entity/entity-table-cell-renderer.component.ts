@@ -1,13 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {
-  TableCellAlignmentType,
-  TableCellRenderer,
-  TableCellRendererComponent,
-  TableRow
-} from '@hypertrace/components';
+import { TableCellAlignmentType, TableCellRenderer, TableCellRendererBase } from '@hypertrace/components';
 import { Entity } from '../../../../graphql/model/schema/entity';
-import { ObservabilityTableCellRenderer } from '../../observability-table-cell-renderer';
-import { parseEntityFromTableRow } from './entity-table-cell-renderer-util';
+import { ObservabilityTableCellType } from '../../observability-table-cell-type';
 
 @Component({
   selector: 'ht-entity-table-cell-renderer',
@@ -20,11 +14,8 @@ import { parseEntityFromTableRow } from './entity-table-cell-renderer-util';
   `
 })
 @TableCellRenderer({
-  type: ObservabilityTableCellRenderer.Entity,
-  alignment: TableCellAlignmentType.Left
+  type: ObservabilityTableCellType.Entity,
+  alignment: TableCellAlignmentType.Left,
+  parser: ObservabilityTableCellType.Entity
 })
-export class EntityTableCellRendererComponent extends TableCellRendererComponent<Entity | undefined> {
-  public parseValue(cellData: Entity | undefined, row: TableRow): Entity | undefined {
-    return parseEntityFromTableRow(cellData, row);
-  }
-}
+export class EntityTableCellRendererComponent extends TableCellRendererBase<Entity | undefined> {}

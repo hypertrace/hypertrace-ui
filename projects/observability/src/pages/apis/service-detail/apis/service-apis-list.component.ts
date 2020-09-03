@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { StandardTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { TracingTableCellRenderer } from '@hypertrace/distributed-tracing';
+import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
-import { ObservabilityTableCellRenderer } from '../../../../shared/components/table/observability-table-cell-renderer';
+import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 import { ServiceDetailService } from '../service-detail.service';
 
@@ -31,7 +31,7 @@ export class ServiceApisListComponent {
         type: 'table-widget-column',
         title: 'Name',
         width: '30%',
-        display: ObservabilityTableCellRenderer.Entity,
+        display: ObservabilityTableCellType.Entity,
         value: {
           type: 'entity-specification',
           'entity-type': ObservabilityEntityType.Api
@@ -40,7 +40,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'p99 Latency',
-        display: TracingTableCellRenderer.Metric,
+        display: TracingTableCellType.Metric,
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
@@ -51,7 +51,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'Avg Latency',
-        display: TracingTableCellRenderer.Metric,
+        display: TracingTableCellType.Metric,
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
@@ -61,7 +61,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'Errors/s',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
@@ -71,7 +71,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'Errors',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
@@ -81,7 +81,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'Calls/s',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',
@@ -91,7 +91,7 @@ export class ServiceApisListComponent {
       {
         type: 'table-widget-column',
         title: 'Calls',
-        display: StandardTableCellRendererType.Number,
+        display: CoreTableCellRendererType.Number,
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',
