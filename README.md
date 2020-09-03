@@ -54,7 +54,7 @@ Pull all changes for the submodules
 Hypertrace UI uses gradlew to build docker image. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
 
 ```
-./gradlew build dockerBuildImages
+./gradlew dockerBuildImages
 ```
 
 ## Docker Image Source:
