@@ -1,0 +1,16 @@
+@import 'layout';
+
+.application-aware-dashboard {
+  @include scrollable-container(24px, 24px, 4px);
+
+  .model-editor {
+    padding: 12px;
+    display: block;
+    width: 300px;
+  }
+
+  .row-layout {
+    display: flex;
+    flex-direction: row;
+  }
+}

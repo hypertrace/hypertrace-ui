@@ -11,12 +11,12 @@ import { BackendDetailService } from '../backend-detail.service';
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-navigable-dashboard
+    <ht-navigable-dashboard
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"
     >
-    </htc-navigable-dashboard>
+    </ht-navigable-dashboard>
   `
 })
 export class BackendOverviewComponent {

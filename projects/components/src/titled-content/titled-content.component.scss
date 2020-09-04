@@ -1,0 +1,44 @@
+@import 'mixins';
+
+.titled-content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+
+    .link {
+      margin-left: 20px;
+      margin-top: 14px;
+    }
+
+    .controls {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .title {
+      @include widget-title($gray-5);
+      margin-top: 16px;
+    }
+  }
+
+  .content {
+    flex: 1 1;
+    overflow: hidden;
+  }
+
+  .footer {
+    .title {
+      @include widget-title($gray-4);
+      margin-top: 8px;
+    }
+  }
+}

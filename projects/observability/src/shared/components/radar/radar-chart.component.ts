@@ -16,7 +16,7 @@ import { RadarChartService } from './radar-chart.service';
 @Component({
   selector: 'ht-radar-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div class="ht-radar-chart" (htcLayoutChange)="this.buildChart()" #chartContainer></div> `,
+  template: ` <div class="ht-radar-chart" (htLayoutChange)="this.buildChart()" #chartContainer></div> `,
   styleUrls: ['./radar-chart.scss']
 })
 export class RadarChartComponent implements OnChanges {

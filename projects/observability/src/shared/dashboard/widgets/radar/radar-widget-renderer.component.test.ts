@@ -200,7 +200,7 @@ describe('Radar Widget renderer', () => {
       });
     });
 
-    const selectOptionElement = spectator.query('htc-select');
+    const selectOptionElement = spectator.query('ht-select');
     expect(selectOptionElement).toExist();
   }));
 

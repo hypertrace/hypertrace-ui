@@ -11,12 +11,12 @@ import { ServiceDetailService } from '../service-detail.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
   template: `
-    <htc-navigable-dashboard
+    <ht-navigable-dashboard
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"
     >
-    </htc-navigable-dashboard>
+    </ht-navigable-dashboard>
   `
 })
 export class ServiceApisListComponent {

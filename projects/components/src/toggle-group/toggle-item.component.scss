@@ -1,0 +1,21 @@
+@import 'mixins';
+
+.toggle-item {
+  @include center-contents();
+  height: calc(100% - 4px); // Subtract 4px for margin
+  margin: 2px;
+  border-radius: 5px; // 5px since its inside another bordered element of 6px
+  padding: 0 12px;
+  cursor: pointer;
+
+  .label {
+    z-index: 1; // Needs to stack above the active element
+    pointer-events: none; // Make this label ignore hover so active element gets it
+  }
+
+  &:hover {
+    color: $gray-6;
+    background: $gray-2;
+    @include filter-box-shadow();
+  }
+}

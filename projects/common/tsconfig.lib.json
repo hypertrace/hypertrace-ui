@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../../",
+    "declaration": true,
+    "sourceMap": true,
+    "importHelpers": true,
+    "types": [],
+    "paths": {
+      "@hypertrace/graphql-client": ["projects/graphql-client/src/public-api.ts"],
+      "@hypertrace/test-utils": ["projects/test-utils/src/public-api.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "enableResourceInlining": true
+  },
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}

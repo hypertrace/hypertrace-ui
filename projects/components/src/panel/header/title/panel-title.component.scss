@@ -1,0 +1,18 @@
+@import 'font';
+
+.ht-panel-title {
+  @include subtitle-2;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 2px;
+
+  .label {
+    margin-left: 10px;
+  }
+
+  &:hover {
+    background: $gray-1;
+    cursor: pointer;
+  }
+}

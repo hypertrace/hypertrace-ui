@@ -1,0 +1,107 @@
+@import 'color-palette';
+@import 'font';
+
+:host {
+  ::ng-deep .mat-ink-bar {
+    // Required deep since added dynamically by material
+    display: none;
+  }
+
+  .tab-group {
+    ::ng-deep .mat-tab-link {
+      @include body-1-medium($gray-5);
+      line-height: 20px;
+    }
+
+    ::ng-deep .mat-tab-label-active {
+      color: $gray-9;
+    }
+
+    ::ng-deep .mat-ink-bar {
+      // Required deep since added dynamically by material
+      height: 4px;
+      background-color: $gray-7;
+    }
+  }
+}
+
+.tab-group {
+  height: 48px;
+}
+
+.divider {
+  position: relative;
+  bottom: 2px;
+  width: 100%;
+  height: 1px;
+  border: 1px solid $gray-1;
+  border-radius: 1px;
+}
+
+.tab-button {
+  display: flex;
+  flex-direction: column;
+  margin: 0 12px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  &:hover {
+    .ink-bar {
+      background: $gray-3 radial-gradient(circle, transparent 1%, $gray-3 1%) center/12000%;
+
+      &.active {
+        background-color: $gray-6;
+      }
+    }
+  }
+
+  &:active {
+    .ink-bar {
+      background-color: $gray-7;
+      background-size: 100%;
+      transition: background 0s;
+    }
+  }
+}
+
+.tab-link {
+  height: 46px; // plus ink-bar is 48
+  min-width: 0;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: $gray-5;
+  opacity: 1;
+}
+
+.ink-bar {
+  height: 2px; // plus tab-link is 48
+  border-radius: 1px;
+
+  background-position: center;
+  transition: background 0.6s;
+
+  &.active {
+    background-color: $gray-7;
+  }
+}
+
+.soon-container {
+  flex: 0;
+  display: flex;
+  flex-direction: row;
+  vertical-align: center;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.soon {
+  background: $color-text-highlight;
+  border-radius: 2px;
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 600;
+  padding: 2px 4px;
+}

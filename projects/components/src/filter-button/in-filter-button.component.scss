@@ -1,0 +1,28 @@
+@import 'mixins';
+
+.filter-button {
+  color: $gray-7;
+  cursor: pointer;
+
+  &:hover {
+    color: $blue-5;
+  }
+}
+
+.popover-content {
+  @include dropdown();
+  padding: 4px 0;
+
+  .popover-item {
+    height: 36px;
+    padding: 2px 8px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: $gray-1;
+    }
+  }
+}

@@ -14,19 +14,19 @@ import { map, switchMap } from 'rxjs/operators';
       <span class="group-by-label">
         Group By
       </span>
-      <htc-select
+      <ht-select
         *ngIf="this.groupByKeyOptions$ | async as keyOptions"
         [showBorder]="true"
         class="group-by-selector"
         [selected]="this.groupByKey$ | async"
         (selectedChange)="this.onGroupByKeyChange($event)"
       >
-        <htc-select-option
+        <ht-select-option
           *ngFor="let option of keyOptions"
           [value]="option.value"
           [label]="option.label"
-        ></htc-select-option>
-      </htc-select>
+        ></ht-select-option>
+      </ht-select>
     </div>
   `
 })

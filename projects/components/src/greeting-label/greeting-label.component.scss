@@ -1,0 +1,9 @@
+@import 'color-palette';
+@import 'font';
+
+.greeting-label {
+  @include header-4;
+  color: $gray-6;
+  font-size: normal;
+  font-weight: normal;
+}

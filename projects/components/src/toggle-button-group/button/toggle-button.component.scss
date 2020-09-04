@@ -1,0 +1,132 @@
+@import 'color-palette';
+@import 'font';
+
+:host {
+  &:not(:first-child) {
+    .button-view-mode {
+      margin-left: 8px;
+    }
+  }
+}
+
+.ht-toggle-button {
+  .button {
+    @include body-2-medium;
+    font-family: $font-family;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+    background: white;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      opacity: 0.4;
+    }
+  }
+
+  .button-icon {
+    padding-right: 6px;
+    color: inherit;
+  }
+
+  button:focus {
+    outline: 0;
+  }
+}
+
+.button-group-view-mode {
+  min-width: 86px;
+  height: 36px;
+
+  .button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+    border-left: 1px solid $color-border;
+    border-right: none;
+
+    &:not(.selected):hover {
+      background-color: rgba($gray-9, 0.15);
+    }
+
+    &.selected {
+      background: $blue-5;
+      color: #ffffff;
+      border: none;
+
+      &:hover {
+        background-color: darken($blue-5, 15%);
+      }
+    }
+  }
+
+  .first {
+    border-radius: 4px 0px 0px 4px;
+  }
+
+  .last {
+    border-radius: 0px 4px 4px 0px;
+    border-right: 1px solid $color-border;
+  }
+}
+
+.button-view-mode {
+  height: 40px;
+
+  .button {
+    @include body-1-medium;
+    border-radius: 4px;
+    padding: 0px 20px;
+
+    &:not(.selected) {
+      border: 1px solid $color-border;
+
+      &:hover {
+        background-color: rgba($gray-9, 0.15);
+      }
+    }
+
+    &.selected {
+      background: $blue-5;
+      color: #ffffff;
+      border: none;
+
+      &:hover {
+        background-color: darken($blue-5, 15%);
+      }
+    }
+  }
+}
+
+.text-view-mode {
+  height: 32px;
+
+  .button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: $gray-5;
+  }
+
+  .selected {
+    color: $color-text-emphasis;
+  }
+
+  .first {
+    padding-right: 8px;
+  }
+
+  .last {
+    padding-left: 8px;
+  }
+}

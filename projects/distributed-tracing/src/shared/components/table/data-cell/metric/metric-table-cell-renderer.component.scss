@@ -1,0 +1,24 @@
+@import 'color-palette';
+
+.metric-cell {
+  border-radius: 2px;
+  color: $gray-7;
+  align-items: center;
+  justify-content: center;
+
+  &.healthy {
+    background-color: $green-1;
+  }
+
+  &.warning {
+    background-color: $orange-1;
+  }
+
+  &.severe {
+    background-color: $orange-3;
+  }
+
+  &.critical {
+    background-color: $red-3;
+  }
+}

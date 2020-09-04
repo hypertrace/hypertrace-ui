@@ -17,22 +17,22 @@ import { ComparisonDuration, RadarWidgetModel } from './radar-widget.model';
   styleUrls: ['./radar-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-titled-content [title]="this.model.title | htcDisplayTitle">
-      <htc-select
-        *htcTitledHeaderControl
+    <ht-titled-content [title]="this.model.title | htDisplayTitle">
+      <ht-select
+        *htTitledHeaderControl
         [selected]="this.selectedDuration"
         (selectedChange)="this.onSelection($event)"
         size="${SelectSize.Small}"
         class="duration-selector"
       >
-        <htc-select-option
+        <ht-select-option
           *ngFor="let selectedDuration of this.model.comparisonDurations"
           [value]="selectedDuration"
           [label]="selectedDuration | titlecase"
-        ></htc-select-option>
-      </htc-select>
+        ></ht-select-option>
+      </ht-select>
 
-      <ng-container *htcLoadAsync="this.data$ as data">
+      <ng-container *htLoadAsync="this.data$ as data">
         <ht-radar-chart
           [levels]="this.model.levels"
           [axes]="data.axes"
@@ -40,7 +40,7 @@ import { ComparisonDuration, RadarWidgetModel } from './radar-widget.model';
           [legendPosition]="this.model.legendPosition"
         ></ht-radar-chart>
       </ng-container>
-    </htc-titled-content>
+    </ht-titled-content>
   `
 })
 export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<RadarWidgetModel, RadarOptions> {

@@ -1,0 +1,43 @@
+@import 'font';
+@import 'color-palette';
+@import 'layout';
+
+.trace-detail {
+  @include flex-layout();
+  @include non-scrollable-container(24px, 24px);
+
+  .back {
+    display: flex;
+    align-items: center;
+    color: $color-text-emphasis;
+
+    .arrow {
+      cursor: pointer;
+    }
+
+    .label {
+      cursor: pointer;
+      margin-left: 8px;
+
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .title {
+    @include font-page-heading-large($color-text);
+    margin-top: 12px;
+  }
+
+  .summary-row {
+    display: flex;
+    margin-top: 12px;
+    height: 18px;
+  }
+
+  .summary-value {
+    margin-right: 24px;
+  }
+}

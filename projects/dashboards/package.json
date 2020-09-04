@@ -1,0 +1,35 @@
+{
+  "name": "@hypertrace/dashboards",
+  "version": "0.0.0-PLACEHOLDER",
+  "scripts": {
+    "build": "ng build dashboards",
+    "test": "pushd ../.. && ng test dashboards",
+    "lint": "ng lint dashboards",
+    "test:watch": "pushd ../.. && ng test dashboards --watch"
+  },
+  "peerDependencies": {
+    "@angular/common": "^10.0.4",
+    "@angular/core": "^10.0.4",
+    "@angular/cdk": "^10.0.2",
+    "@angular/platform-browser": "^10.0.4",
+    "@angular/material": "^10.0.2",
+    "@angular/forms": "^10.0.4",
+    "@angular/router": "^10.0.4",
+    "@angular/flex-layout": "^10.0.0-beta.32",
+    "@hypertrace/common": "^0.0.0",
+    "@hypertrace/components": "^0.0.0",
+    "@hypertrace/graphql-client": "^0.0.0",
+    "@hypertrace/hyperdash-angular": "^2.1.0",
+    "@hypertrace/hyperdash": "^1.1.2",
+    "uuid": "^8.2.0",
+    "rxjs": "~6.6.0",
+    "lodash-es": "^4.17.15",
+    "d3-selection": "^1.4.0"
+  },
+  "devDependencies": {
+    "@hypertrace/test-utils": "^0.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

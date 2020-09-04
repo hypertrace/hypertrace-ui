@@ -22,7 +22,7 @@ import { TopologyBuilderService } from './topology-builder.service';
   selector: 'ht-topology',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./topology.component.scss'],
-  template: ` <div #topologyContainer (htcLayoutChange)="this.redraw()" class="topology"></div> `
+  template: ` <div #topologyContainer (htLayoutChange)="this.redraw()" class="topology"></div> `
 })
 export class TopologyComponent implements OnChanges, OnDestroy {
   @Input()

@@ -22,7 +22,7 @@ import { Step } from '../../step';
         <div class="name">{{ this.step.name }}</div>
       </div>
       <div class="footer" *ngIf="this.step.subSteps.length > 0">
-        <htc-spinner
+        <ht-spinner
           class="spinner"
           *ngFor="let subStep of this.step.subSteps"
           [data$]="subStep.status$"
@@ -30,7 +30,7 @@ import { Step } from '../../step';
           [loadingLabel]="subStep.loadingLabel"
           [errorLabel]="subStep.errorLabel"
           [successLabel]="subStep.successLabel"
-        ></htc-spinner>
+        ></ht-spinner>
       </div>
     </div>
   `,

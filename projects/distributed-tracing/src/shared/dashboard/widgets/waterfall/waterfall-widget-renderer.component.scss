@@ -1,0 +1,53 @@
+@import 'color-palette';
+@import 'font';
+
+:host {
+  ::ng-deep {
+    .table .mat-table {
+      border-radius: 0;
+    }
+  }
+}
+
+.waterfall-widget-renderer {
+  .content {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .waterfall-widget {
+      display: flex;
+      min-height: 180px;
+      overflow: auto;
+      height: 100%;
+    }
+  }
+
+  .header {
+    display: flex;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+
+  .widget-title {
+    @include subtitle-1($gray-9);
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .expand-collapse-buttons {
+    display: flex;
+    height: 24px;
+    width: 280px;
+    justify-content: space-evenly;
+    align-items: center;
+    color: $gray-7;
+  }
+}
+
+.span-detail {
+  height: 100%;
+  width: 100%;
+}

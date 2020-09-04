@@ -6,7 +6,7 @@ import { homeDashboard } from './home.dashboard';
   styleUrls: ['./home.component.scss'],
   template: `
     <div class="home">
-      <htc-navigable-dashboard navLocation="${homeDashboard.location}"> </htc-navigable-dashboard>
+      <ht-navigable-dashboard navLocation="${homeDashboard.location}"> </ht-navigable-dashboard>
     </div>
   `
 })

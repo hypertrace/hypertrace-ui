@@ -27,12 +27,12 @@
               "src/favicon.png",
               {
                 "glob": "**/*",
-                "input": "./hypertrace-core-ui/projects/assets-library/assets",
+                "input": "./projects/assets-library/assets",
                 "output": "./assets"
               },
               {
                 "glob": "**/*",
-                "input": "./hypertrace-core-ui/projects/distributed-tracing/assets",
+                "input": "./projects/distributed-tracing/assets",
                 "output": "./assets"
               },
               {
@@ -43,7 +43,7 @@
             ],
             "styles": ["src/styles/main.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": ["./hypertrace-core-ui/projects/assets-library/assets/styles", "./node_modules"]
+              "includePaths": ["./projects/assets-library/assets/styles", "./node_modules"]
             },
             "scripts": [],
             "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"]
@@ -106,7 +106,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "hypertrace-core-ui/**"]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

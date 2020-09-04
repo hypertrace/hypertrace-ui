@@ -1,0 +1,21 @@
+@import 'layout';
+
+:host {
+  flex: 1 1; // When part of a flex layout, we want this element to take remaining space
+  min-height: 0;
+}
+
+.navigable-dashboard {
+  @include scrollable-container();
+  display: flex;
+  flex-direction: column;
+
+  .filter-bar {
+    padding: 24px 24px 0;
+  }
+
+  .dashboard {
+    flex: 1 1;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,25 @@
+@import 'color-palette';
+@import 'font';
+
+.snippet-viewer {
+  @include code($gray-5);
+  background: $gray-1;
+  border-radius: 3px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-column-gap: 16px;
+  grid-row-gap: 2px;
+
+  .line-number {
+    display: flex;
+    justify-content: center;
+    border-right: 1px solid white;
+  }
+
+  .content {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

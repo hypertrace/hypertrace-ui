@@ -12,25 +12,25 @@ import { CardListWidgetModel } from './card-list-widget-model';
   styleUrls: ['./card-list-widget-renderer.component.scss'],
   template: `
     <div class="card-list-widget">
-      <htc-titled-content
-        [title]="this.model.header?.title | htcDisplayTitle"
+      <ht-titled-content
+        [title]="this.model.header?.title | htDisplayTitle"
         [link]="this.model.header?.link?.url"
         [linkLabel]="this.model.header?.link?.displayText"
-        *htcLoadAsync="this.data$ as cards"
+        *htLoadAsync="this.data$ as cards"
       >
         <ht-card-list>
           <ht-card-container *ngFor="let card of cards" [ngSwitch]="this.model.cardType">
             <div class="summary-card" *ngSwitchCase="'${CardType.Summary}'">
-              <htc-summary-card
+              <ht-summary-card
                 [name]="card.name"
                 [color]="card.color"
                 [summaries]="card.summaries"
                 (click)="this.model.clickHandler?.execute(card.context)"
-              ></htc-summary-card>
+              ></ht-summary-card>
             </div>
           </ht-card-container>
         </ht-card-list>
-      </htc-titled-content>
+      </ht-titled-content>
     </div>
   `
 })

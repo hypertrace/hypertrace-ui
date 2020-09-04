@@ -1,0 +1,17 @@
+@import 'font';
+@import 'color-palette';
+@import 'layout';
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.filter {
+  width: 100%;
+  display: flex;
+
+  .combo-box {
+    width: 100%;
+  }
+}

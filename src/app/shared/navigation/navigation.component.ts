@@ -12,12 +12,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./navigation.component.scss'],
   template: `
     <div class="navigation">
-      <htc-navigation-list
+      <ht-navigation-list
         [navItems]="this.navItems"
-        *htcLetAsync="this.isCollapsed$ as isCollapsed"
+        *htLetAsync="this.isCollapsed$ as isCollapsed"
         [collapsed]="isCollapsed"
         (collapsedChange)="this.onViewToggle($event)"
-      ></htc-navigation-list>
+      ></ht-navigation-list>
     </div>
   `
 })

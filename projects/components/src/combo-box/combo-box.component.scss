@@ -1,0 +1,112 @@
+@import 'mixins';
+
+.popover-trigger {
+  display: flex;
+  height: 24px;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+
+  &.chip {
+    border: 1px solid transparent;
+
+    .trigger-clear-button {
+      color: $gray-4;
+    }
+
+    &:hover {
+      background-color: $gray-1;
+
+      .trigger-clear-button {
+        color: $gray-3;
+
+        &:hover {
+          color: $gray-5;
+        }
+      }
+    }
+
+    &:not(.input-focused).has-text {
+      background-color: $gray-2;
+
+      &:hover {
+        background-color: $gray-1;
+      }
+    }
+  }
+
+  .trigger-control {
+    height: 100%;
+    width: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .trigger-icon {
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .trigger-input {
+    @include ellipsis-overflow();
+    font: inherit;
+    background: inherit;
+    width: 100%;
+    border: none;
+    margin-left: 2px; // Need this so that the border radius of container isn't cut off when no icons
+    outline: none;
+  }
+
+  .invisible-text {
+    font: inherit;
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    white-space: nowrap;
+  }
+
+  .trigger-clear-button {
+    color: $gray-3;
+    cursor: pointer;
+    visibility: hidden;
+
+    &.has-text {
+      visibility: visible;
+    }
+
+    &.chip:not(.input-focused) {
+      visibility: visible;
+
+      &:not(.has-text) {
+        display: none;
+      }
+    }
+
+    &:hover {
+      color: $blue-5;
+    }
+  }
+}
+
+.popover-content {
+  @include dropdown();
+  max-height: 400px;
+
+  .popover-item {
+    height: 36px;
+    padding: 2px 8px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: $gray-1;
+    }
+
+    &.selected {
+      background: $blue-1;
+    }
+  }
+}

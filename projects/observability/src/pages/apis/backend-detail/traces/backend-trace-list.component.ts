@@ -9,12 +9,12 @@ import { backendTraceListDashboard } from './backend-trace-list.dashboard';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-navigable-dashboard
-      *htcLoadAsync="this.filterConfig$ as filterConfig"
+    <ht-navigable-dashboard
+      *htLoadAsync="this.filterConfig$ as filterConfig"
       navLocation="${backendTraceListDashboard.location}"
       [filterConfig]="filterConfig"
     >
-    </htc-navigable-dashboard>
+    </ht-navigable-dashboard>
   `
 })
 export class BackendTraceListComponent {

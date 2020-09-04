@@ -1,0 +1,28 @@
+@import 'font';
+@import 'color-palette';
+
+.ht-summary-value {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .dot {
+    background-color: $blue-9;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+
+  .label {
+    @include body-small;
+    margin-left: 6px;
+  }
+
+  .value {
+    @include body-small($gray-5);
+    margin-left: 6px;
+
+    min-width: 0;
+    @include ellipsis-overflow();
+  }
+}

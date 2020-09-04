@@ -85,7 +85,7 @@ describe('Card List Widget Renderer', () => {
     expect(cards[1].color).toEqual(card2.color);
     expect(cards[1].summaries).toEqual(card2.summaries);
 
-    spectator.triggerEventHandler('htc-summary-card', 'click', undefined);
+    spectator.triggerEventHandler('ht-summary-card', 'click', undefined);
     expect(mockInteractionHandler).toHaveBeenCalledWith(card1.context);
   });
 });

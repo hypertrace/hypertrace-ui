@@ -23,41 +23,41 @@ import { StepContentContext, StepDetail } from '../stepper';
         ></ng-container>
       </div>
       <div class="step-navigation">
-        <htc-button
+        <ht-button
           class="button back"
-          htcTooltip="Back"
+          htTooltip="Back"
           label="Back"
           role="${ButtonRole.Tertiary}"
           [disabled]="!this.canGoToPrevStep()"
           (click)="this.gotoPreviousStep()"
         >
-        </htc-button>
-        <htc-button
+        </ht-button>
+        <ht-button
           class="button next"
-          htcTooltip="Next"
+          htTooltip="Next"
           label="Next"
           role="${ButtonRole.Primary}"
           *ngIf="this.showNext()"
           [disabled]="!this.canGoToNextStep()"
           (click)="this.gotoNextStep()"
         >
-        </htc-button>
+        </ht-button>
 
-        <htc-button
+        <ht-button
           class="button done"
           *ngIf="this.showDone()"
           role="${ButtonRole.Primary}"
-          [htcTooltip]="this.doneLabel"
+          [htTooltip]="this.doneLabel"
           [label]="this.doneLabel"
           [disabled]="this.currentStepDetail.step.isIncomplete()"
           (click)="this.stepsCompleted.emit(true)"
         >
-        </htc-button>
+        </ht-button>
 
         <div class="summary">
           <ng-container *ngFor="let subStep of currentStepDetail.step.subSteps">
-            <ng-container *htcLetAsync="subStep.status$ as status">
-              <htc-spinner
+            <ng-container *htLetAsync="subStep.status$ as status">
+              <ht-spinner
                 class="spinner"
                 *ngIf="!status"
                 [data$]="subStep.status$"
@@ -65,7 +65,7 @@ import { StepContentContext, StepDetail } from '../stepper';
                 [loadingLabel]="subStep.loadingLabel"
                 [errorLabel]="subStep.errorLabel"
                 [successLabel]="subStep.successLabel"
-              ></htc-spinner>
+              ></ht-spinner>
             </ng-container>
           </ng-container>
         </div>

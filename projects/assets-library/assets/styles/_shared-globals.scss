@@ -1,0 +1,6 @@
+@import 'mixins';
+
+.modal-overlay-backdrop {
+  background: $gray-7;
+  opacity: 0.62 !important;
+}

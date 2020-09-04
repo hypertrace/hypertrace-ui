@@ -7,7 +7,7 @@ import { ApiDetailService } from './api-detail.service';
   providers: [ApiDetailService],
   template: `
     <div class="vertical-flex-layout">
-      <htc-page-header [tabs]="this.tabs"></htc-page-header>
+      <ht-page-header [tabs]="this.tabs"></ht-page-header>
       <div class="scrollable-container">
         <router-outlet></router-outlet>
       </div>

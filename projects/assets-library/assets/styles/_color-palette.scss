@@ -1,0 +1,118 @@
+/*
+ * General Color Palette
+ */
+
+$red-1: #fff3f1;
+$red-2: #fecac2;
+$red-3: #fea395;
+$red-4: #fd7c68;
+$red-5: #fd5138;
+$red-6: #f72202;
+$red-7: #bb1902;
+$red-8: #6a0e01;
+$red-9: #140300;
+
+$orange-1: #fff4eb;
+$orange-2: #fedbba;
+$orange-3: #fdc088;
+$orange-4: #fca555;
+$orange-5: #fb8b24;
+$orange-6: #dc6c04;
+$orange-7: #a04e03;
+$orange-8: #643102;
+$orange-9: #190c00;
+
+$yellow-1: #fffbeb;
+$yellow-2: #fff4c2;
+$yellow-3: #ffed94;
+$yellow-4: #ffe566;
+$yellow-5: #ffdd3a;
+$yellow-6: #facf00;
+$yellow-7: #bd9d00;
+$yellow-8: #6d5b00;
+$yellow-9: #181400;
+
+$green-1: #f0fcf6;
+$green-2: #c3f3db;
+$green-3: #95eabe;
+$green-4: #59de99;
+$green-5: #27c675;
+$green-6: #1f9e5c;
+$green-7: #187746;
+$green-8: #10512f;
+$green-9: #03110a;
+
+$blue-1: #f0f6ff;
+$blue-2: #b8d3ff;
+$blue-3: #70a7ff;
+$blue-4: #2478ff;
+$blue-5: #0053d7;
+$blue-6: #0043ad;
+$blue-7: #003385;
+$blue-8: #00235c;
+$blue-9: #000814;
+
+$blue-gray-1: #70a7ff;
+$blue-gray-2: #648fd2;
+$blue-gray-3: #5777a4;
+$blue-gray-4: #4b5f77;
+$blue-gray-5: #3f474a;
+
+$purple-1: #fcf4fd;
+$purple-2: #f2d0f5;
+$purple-3: #e295e9;
+$purple-4: #cb41d8;
+$purple-5: #94209f;
+$purple-6: #791b82;
+$purple-7: #5b1461;
+$purple-8: #3f0e44;
+$purple-9: #110412;
+
+$gray-1: #f4f5f5;
+$gray-2: #e1e4e5;
+$gray-3: #b7bfc2;
+$gray-4: #889499;
+$gray-5: #657277;
+$gray-6: #40474a;
+$gray-7: #272c2e;
+$gray-8: #171a1c;
+$gray-9: #080909;
+
+$cloud-1: #a1c5e0;
+$cloud-2: #c7ddec;
+$cloud-3: #edf4f9;
+
+$brown-5: #9e4c41;
+
+/*
+ * Specific Usage
+ *
+ * Always better to use one of these when available than use a color straight from the color palette
+ */
+
+// Health
+$color-health-green: $green-5;
+$color-health-yellow: $yellow-5;
+$color-health-orange: $orange-5;
+$color-health-red: $red-5;
+$color-health-unknown: $gray-7;
+
+// Risk
+$color-risk-high: $red-5;
+$color-risk-medium: $brown-5;
+$color-risk-low: $gray-6;
+
+// Status
+$color-status-success: $green-2;
+$color-status-fail: $red-2;
+
+// Text
+$color-text: $gray-7;
+$color-text-label: $gray-4;
+$color-text-body: $gray-9;
+$color-text-disabled: $gray-5;
+$color-text-highlight: $cloud-1;
+$color-text-emphasis: $blue-5;
+
+// Elements
+$color-border: $gray-2;

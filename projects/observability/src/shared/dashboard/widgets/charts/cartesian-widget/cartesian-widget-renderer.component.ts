@@ -14,7 +14,7 @@ import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.mo
   selector: 'ht-cartesian-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-titled-content *htcLoadAsync="this.data$ as data" [title]="this.model.title | htcDisplayTitle">
+    <ht-titled-content *htLoadAsync="this.data$ as data" [title]="this.model.title | htDisplayTitle">
       <ht-cartesian-chart
         class="fill-container"
         [series]="data"
@@ -29,7 +29,7 @@ import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.mo
         (selectedIntervalChange)="this.onIntervalChange($event)"
       >
       </ht-cartesian-chart>
-    </htc-titled-content>
+    </ht-titled-content>
   `
 })
 export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidgetRenderer<

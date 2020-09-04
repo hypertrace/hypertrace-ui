@@ -25,42 +25,42 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
   template: `
     <div class="control-container">
       <button (click)="this.runLayout()" class="topology-control topology-button">
-        <htc-icon
+        <ht-icon
           icon="${IconType.Refresh}"
           [size]="this.iconSize"
           label="Relayout"
           [showTooltip]="true"
           class="control-icon"
-        ></htc-icon>
+        ></ht-icon>
       </button>
       <ng-container *ngIf="this.canZoom()">
         <button (click)="this.zoomToFit()" class="topology-control topology-button">
-          <htc-icon
+          <ht-icon
             icon="${IconType.ZoomToFit}"
             [size]="this.iconSize"
             label="Zoom to fit"
             [showTooltip]="true"
             class="control-icon"
-          ></htc-icon>
+          ></ht-icon>
         </button>
         <div class="topology-control zoom-control">
           <button (click)="this.decrementZoom()" [disabled]="!this.canDecrement" class="topology-button">
-            <htc-icon
+            <ht-icon
               icon="${IconType.Remove}"
               [size]="this.iconSize"
               label="Decrease Zoom"
               [showTooltip]="true"
               class="control-icon"
-            ></htc-icon>
+            ></ht-icon>
           </button>
           <button (click)="this.incrementZoom()" [disabled]="!this.canIncrement" class="topology-button">
-            <htc-icon
+            <ht-icon
               icon="${IconType.Add}"
               [size]="this.iconSize"
               label="Increase Zoom"
               [showTooltip]="true"
               class="control-icon"
-            ></htc-icon>
+            ></ht-icon>
           </button>
 
           <span class="zoom-percentage"> {{ this.currentZoomPercentage }}%</span>

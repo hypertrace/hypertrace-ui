@@ -1,0 +1,19 @@
+@import 'mixins';
+
+.predefined-time-range-selection {
+  width: inherit;
+  padding: 8px;
+
+  .divider {
+    border: 1px solid $gray-1;
+  }
+
+  .popover-item {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 4px;
+
+    @include list-hover;
+  }
+}

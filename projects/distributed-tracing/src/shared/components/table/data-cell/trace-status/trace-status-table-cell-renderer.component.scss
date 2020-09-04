@@ -1,0 +1,28 @@
+@import 'font';
+@import 'color-palette';
+
+.trace-status {
+  width: fit-content;
+
+  .status {
+    padding: 2px 6px;
+    border-radius: 2px;
+    @include code($green-9);
+
+    &.success {
+      background: $color-status-success;
+    }
+
+    &.fail {
+      background: $color-status-fail;
+    }
+  }
+
+  .text {
+    @include ellipsis-overflow();
+  }
+}
+
+.clickable {
+  @include link-hover();
+}
