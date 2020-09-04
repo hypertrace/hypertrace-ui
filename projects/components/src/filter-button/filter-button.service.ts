@@ -46,7 +46,7 @@ export class FilterButtonService {
   }
 
   public removeUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    this.setUrlFilters([...this.getUrlFilters(attributes).filter(f => filter.field === f.field)]);
+    this.setUrlFilters([...this.getUrlFilters(attributes).filter(f => filter.field !== f.field)]);
   }
 
   private setUrlFilters(filters: Filter[]): void {

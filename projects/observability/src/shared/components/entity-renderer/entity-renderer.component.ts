@@ -36,7 +36,7 @@ export class EntityRendererComponent implements OnChanges {
   @Input()
   public showIcon: boolean = false;
 
-  public name?: unknown;
+  public name?: string;
   public entityIconType?: string;
 
   public constructor(
