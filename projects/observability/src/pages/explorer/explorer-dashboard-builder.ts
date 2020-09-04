@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
-import { StandardTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
 import {
   AttributeMetadata,
   AttributeMetadataType,
@@ -8,7 +8,7 @@ import {
   GraphQlFilterDataSourceModel,
   MetadataService,
   SPAN_SCOPE,
-  TracingTableCellRenderer
+  TracingTableCellType
 } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -137,11 +137,11 @@ export class ExplorerDashboardBuilder {
   private getRendererForType(type: AttributeMetadataType): string {
     switch (type) {
       case AttributeMetadataType.Number:
-        return StandardTableCellRendererType.Number;
+        return CoreTableCellRendererType.Number;
       case AttributeMetadataType.Timestamp:
-        return StandardTableCellRendererType.Timestamp;
+        return CoreTableCellRendererType.Timestamp;
       default:
-        return StandardTableCellRendererType.Text;
+        return CoreTableCellRendererType.Text;
     }
   }
 
@@ -153,7 +153,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Type',
             width: '96px',
-            display: StandardTableCellRendererType.Text,
+            display: CoreTableCellRendererType.Text,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -193,7 +193,8 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Status',
             width: '184px',
-            display: TracingTableCellRenderer.TraceStatus,
+            display: TracingTableCellType.TraceStatus,
+            filterable: true,
             value: {
               type: 'trace-status-specification'
             },
@@ -205,7 +206,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Duration',
             width: '100px',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -219,7 +220,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Start Time',
             width: '220px',
-            display: StandardTableCellRendererType.Timestamp,
+            display: CoreTableCellRendererType.Timestamp,
             value: {
               type: 'attribute-specification',
               attribute: 'startTime'
@@ -274,6 +275,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Status',
             width: '5%', // Use Status Cell Renderer
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'statusCode'
@@ -286,7 +288,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Duration',
             width: '100px',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -300,7 +302,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Start Time',
             width: '220px',
-            display: StandardTableCellRendererType.Timestamp,
+            display: CoreTableCellRendererType.Timestamp,
             value: {
               type: 'attribute-specification',
               attribute: 'startTime'

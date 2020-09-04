@@ -40,11 +40,11 @@ describe('Interactions table data source model', () => {
       },
       columns: [
         {
-          field: 'avg latency',
+          id: 'avg latency',
           specification: specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)
         },
         {
-          field: 'service name',
+          id: 'service name',
           specification: specBuilder.neighborAttributeSpecificationForKey(
             'name',
             ObservabilityEntityType.Service,

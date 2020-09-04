@@ -28,7 +28,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
 })
 export class EntityRendererComponent implements OnChanges {
   @Input()
-  public entity!: Entity;
+  public entity?: Entity;
 
   @Input()
   public navigable: boolean = true;
@@ -36,8 +36,8 @@ export class EntityRendererComponent implements OnChanges {
   @Input()
   public showIcon: boolean = false;
 
-  public name!: unknown;
-  public entityIconType!: string;
+  public name?: unknown;
+  public entityIconType?: string;
 
   public constructor(
     private readonly iconLookupService: EntityIconLookupService,
@@ -51,14 +51,14 @@ export class EntityRendererComponent implements OnChanges {
     }
   }
   public onClickNavigate(): void {
-    this.navigable && this.entityNavService.navigateToEntity(this.entity);
+    this.navigable && this.entity && this.entityNavService.navigateToEntity(this.entity);
   }
 
   private setName(): void {
-    this.name = this.entity.name as string;
+    this.name = this.entity?.name as string;
   }
 
   private setIconType(): void {
-    this.entityIconType = this.iconLookupService.forEntity(this.entity);
+    this.entityIconType = this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined;
   }
 }

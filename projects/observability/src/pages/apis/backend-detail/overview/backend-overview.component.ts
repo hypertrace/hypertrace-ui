@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { StandardTableCellRendererType, TableStyle } from '@hypertrace/components';
-import { MetricAggregationType, TracingTableCellRenderer } from '@hypertrace/distributed-tracing';
+import { CoreTableCellRendererType, TableStyle } from '@hypertrace/components';
+import { MetricAggregationType, TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
-import { ObservabilityTableCellRenderer } from '../../../../shared/components/table/observability-table-cell-renderer';
+import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
 import { BackendDetailService } from '../backend-detail.service';
 
 @Component({
@@ -459,7 +459,7 @@ export class BackendOverviewComponent {
           {
             type: 'table-widget-column',
             title: 'Upstream',
-            display: ObservabilityTableCellRenderer.Entity,
+            display: ObservabilityTableCellType.Entity,
             value: {
               type: 'neighbor-entity-specification',
               'neighbor-direction': 'upstream',
@@ -469,7 +469,7 @@ export class BackendOverviewComponent {
           {
             type: 'table-widget-column',
             title: 'Calls',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             width: '12%',
             value: {
               type: 'metric-aggregation',
@@ -480,7 +480,7 @@ export class BackendOverviewComponent {
           {
             type: 'table-widget-column',
             title: 'Avg. Latency',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             width: '14%',
             value: {
               type: 'metric-aggregation',

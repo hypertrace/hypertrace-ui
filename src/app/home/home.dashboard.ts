@@ -1,11 +1,11 @@
-import { StandardTableCellRendererType, TableMode, TableStyle, TitlePosition } from '@hypertrace/components';
+import { CoreTableCellRendererType, TableMode, TableStyle, TitlePosition } from '@hypertrace/components';
 import {
   DashboardDefaultConfiguration,
   GraphQlOperatorType,
   MetricAggregationType,
-  TracingTableCellRenderer
+  TracingTableCellType
 } from '@hypertrace/distributed-tracing';
-import { LegendPosition, ObservabilityTableCellRenderer } from '@hypertrace/observability';
+import { LegendPosition, ObservabilityTableCellType } from '@hypertrace/observability';
 
 // tslint:disable: max-file-line-count
 export const homeDashboard: DashboardDefaultConfiguration = {
@@ -651,7 +651,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Name',
-            display: ObservabilityTableCellRenderer.Entity,
+            display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
               type: 'entity-specification'
@@ -660,7 +660,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Avg Latency',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
@@ -670,7 +670,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -680,7 +680,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -690,7 +690,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -700,7 +700,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -733,7 +733,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Name',
-            display: ObservabilityTableCellRenderer.Entity,
+            display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
               type: 'entity-specification'
@@ -742,7 +742,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Avg Latency',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
@@ -752,7 +752,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -762,7 +762,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -772,7 +772,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -782,7 +782,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -816,7 +816,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Name',
-            display: ObservabilityTableCellRenderer.Entity,
+            display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
               type: 'entity-specification'
@@ -825,7 +825,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Avg Latency',
-            display: TracingTableCellRenderer.Metric,
+            display: TracingTableCellType.Metric,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
@@ -835,7 +835,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -845,7 +845,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Errors',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -855,7 +855,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls/s',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -865,7 +865,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Calls',
-            display: StandardTableCellRendererType.Number,
+            display: CoreTableCellRendererType.Number,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',

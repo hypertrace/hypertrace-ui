@@ -39,7 +39,7 @@ export * from './shared/components/entity-renderer/entity-renderer.module';
 export * from './shared/components/table/data-cell/entity/entity-table-cell-renderer-util';
 
 // Table
-export { ObservabilityTableCellRenderer } from './shared/components/table/observability-table-cell-renderer';
+export * from './shared/components/table/observability-table-cell-type';
 
 // Dashboard
 export * from './shared/dashboard/observability-dashboard.module';
