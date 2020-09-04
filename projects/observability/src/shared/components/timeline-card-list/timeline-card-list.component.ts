@@ -12,14 +12,14 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
         <ng-container *ngTemplateOutlet="timelineCard; context: { card: item.card }"></ng-container>
 
         <ng-container *ngIf="item.similarCards.length > 0">
-          <ht-button
+          <htc-button
             *ngIf="!item.showAll; else showSimilarCards"
             label="See {{ item.similarCards.length }} more similar event{{ item.similarCards.length > 1 ? 's' : '' }} >"
             role="${ButtonRole.Primary}"
             display="${ButtonStyle.Outlined}"
             (click)="item.showAll = true"
             class="button"
-          ></ht-button>
+          ></htc-button>
 
           <ng-template #showSimilarCards>
             <ng-container *ngFor="let similarCard of item.similarCards">
@@ -33,10 +33,10 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
     <ng-template #timelineCard let-card="card">
       <div class="card">
         <div class="time">
-          <div class="value">{{ card.timestamp | htDisplayDate: this.dateFormat }}</div>
+          <div class="value">{{ card.timestamp | htcDisplayDate: this.dateFormat }}</div>
           <div class="vertical-line"></div>
         </div>
-        <div class="content" [ngClass]="{ 'selected-card': this.isSelectedCard | htMemoize: card:this.selectedIndex }">
+        <div class="content" [ngClass]="{ 'selected-card': this.isSelectedCard | htcMemoize: card:this.selectedIndex }">
           <ng-container *ngTemplateOutlet="card.content"></ng-container>
         </div>
       </div>

@@ -12,14 +12,19 @@ import { SERIES_ARRAY_TYPE } from './series-array-type';
   selector: 'ht-series-array-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-label [label]="api.label"> </ht-label>
-    <ht-button label="Add" icon="${IconType.Add}" display="${ButtonStyle.Solid}" (click)="addSeries()"> </ht-button>
+    <htc-label [label]="api.label"> </htc-label>
+    <htc-button label="Add" icon="${IconType.Add}" display="${ButtonStyle.Solid}" (click)="addSeries()"> </htc-button>
     <div *ngFor="let series of currentSeries; index as index">
       <div style="display: flex; align-items: center;">
         <hda-model-json-editor [modelJson]="series" (modelJsonChange)="updateValue(series, $event)">
         </hda-model-json-editor>
-        <ht-button label="Remove" icon="${IconType.Delete}" display="${ButtonStyle.Text}" (click)="removeSeries(index)">
-        </ht-button>
+        <htc-button
+          label="Remove"
+          icon="${IconType.Delete}"
+          display="${ButtonStyle.Text}"
+          (click)="removeSeries(index)"
+        >
+        </htc-button>
       </div>
     </div>
   `

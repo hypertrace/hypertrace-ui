@@ -11,15 +11,15 @@ import { maxBy } from 'lodash-es';
       <div *ngFor="let histogramBar of histogramBars" class="histogram-bar">
         <div
           class="bar-label"
-          [htTooltip]="histogramBar.label"
+          [htcTooltip]="histogramBar.label"
           (click)="this.onLabelClick(histogramBar.label)"
           [ngClass]="{ clickable: this.labelClickable }"
         >
           {{ histogramBar.label }}
         </div>
-        <div class="bar-value" [htTooltip]="histogramBar.value">
+        <div class="bar-value" [htcTooltip]="histogramBar.value">
           <div class="bar" [ngStyle]="histogramBar.style"></div>
-          <div class="value">{{ histogramBar.value | htDisplayNumber }}</div>
+          <div class="value">{{ histogramBar.value | htcDisplayNumber }}</div>
         </div>
       </div>
     </div>

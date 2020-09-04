@@ -24,7 +24,7 @@ import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-d
   selector: 'ht-cartesian-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./cartesian-chart.component.scss'],
-  template: ` <div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
+  template: ` <div #chartContainer class="fill-container" (htcLayoutChange)="this.redraw()"></div> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()

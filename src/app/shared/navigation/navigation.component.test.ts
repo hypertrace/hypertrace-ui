@@ -51,7 +51,7 @@ describe('NavigationComponent', () => {
 
   test('should show a nav-item element for each NavItemConfig', () => {
     const linkNavItemCount = spectator.component.navItems.filter(value => value.type === NavItemType.Link).length;
-    expect(spectator.queryAll('ht-nav-item').length).toBe(linkNavItemCount);
+    expect(spectator.queryAll('htc-nav-item').length).toBe(linkNavItemCount);
   });
 
   test('should navigate to NavItemConfig path when nav-item element clicked', () => {

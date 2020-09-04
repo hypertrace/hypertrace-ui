@@ -9,11 +9,11 @@ import { IconSize } from '@hypertrace/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LayoutChangeService], // Provided as root layout
   template: `
-    <ht-application-header>
+    <htc-application-header>
       <div class="ht-logo" logo>
-        <ht-icon icon="${IconType.Hypertrace}" size="${IconSize.Inherit}"></ht-icon>
+        <htc-icon icon="${IconType.Hypertrace}" size="${IconSize.Inherit}"></htc-icon>
       </div>
-    </ht-application-header>
+    </htc-application-header>
     <div class="app-body">
       <ht-navigation class="left-nav"></ht-navigation>
       <div class="app-content">

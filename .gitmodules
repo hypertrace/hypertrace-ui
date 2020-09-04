@@ -1,0 +1,3 @@
+[submodule "hypertrace-core-ui"]
+	path = hypertrace-core-ui
+	url = git@github.com:hypertrace/hypertrace-core-ui.git

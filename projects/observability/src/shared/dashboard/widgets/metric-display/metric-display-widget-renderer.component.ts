@@ -10,9 +10,9 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
   selector: 'ht-metric-display-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content
-      *htLoadAsync="this.data$ as data"
-      [title]="this.model.title | htDisplayTitle: this.getUnits(data.units)"
+    <htc-titled-content
+      *htcLoadAsync="this.data$ as data"
+      [title]="this.model.title | htcDisplayTitle: this.getUnits(data.units)"
       [hideTitle]="this.hideTitle()"
       [titlePosition]="this.getTitlePosition()"
     >
@@ -24,7 +24,7 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
         [subscript]="model.subscript"
       >
       </ht-metric-display>
-    </ht-titled-content>
+    </htc-titled-content>
   `
 })
 export class MetricDisplayWidgetRendererComponent extends WidgetRenderer<

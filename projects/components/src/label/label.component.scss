@@ -1,9 +1,0 @@
-@import 'font';
-
-.truncate {
-  @include ellipsis-overflow;
-}
-
-.no-label {
-  opacity: 0;
-}

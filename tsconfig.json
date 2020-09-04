@@ -14,25 +14,25 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "./projects/common/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/common/tsconfig.lib.json"
     },
     {
-      "path": "./projects/graphql-client/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/graphql-client/tsconfig.lib.json"
     },
     {
-      "path": "./projects/distributed-tracing/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/distributed-tracing/tsconfig.lib.json"
     },
     {
-      "path": "./projects/components/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/components/tsconfig.lib.json"
     },
     {
-      "path": "./projects/dashboards/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/dashboards/tsconfig.lib.json"
     },
     {
-      "path": "./projects/test-utils/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/test-utils/tsconfig.lib.json"
     },
     {
-      "path": "./projects/assets-library/tsconfig.lib.json"
+      "path": "./hypertrace-core-ui/projects/assets-library/tsconfig.lib.json"
     },
     {
       "path": "./projects/observability/tsconfig.lib.json"

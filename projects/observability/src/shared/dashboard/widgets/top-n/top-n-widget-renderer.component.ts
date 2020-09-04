@@ -21,33 +21,33 @@ import { TopNWidgetModel } from './top-n-widget.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-top-n-widget-renderer">
-      <ht-titled-content
-        [title]="this.model.header?.title | htDisplayTitle"
+      <htc-titled-content
+        [title]="this.model.header?.title | htcDisplayTitle"
         [link]="this.model.header?.link?.url"
         [linkLabel]="this.model.header?.link?.displayText"
       >
-        <ht-select
-          *htTitledHeaderControl
+        <htc-select
+          *htcTitledHeaderControl
           [selected]="this.metricSpecification"
           (selectedChange)="this.onSelection($event)"
           size="${SelectSize.Small}"
-          htTooltip="Select Metric"
+          htcTooltip="Select Metric"
           class="metric-selector"
         >
-          <ht-select-option
+          <htc-select-option
             *ngFor="let option of this.options$ | async"
             [value]="option.value"
             [label]="option.label"
-          ></ht-select-option>
-        </ht-select>
+          ></htc-select-option>
+        </htc-select>
         <ht-gauge-list
-          *htLoadAsync="this.data$ as data"
+          *htcLoadAsync="this.data$ as data"
           [items]="data"
           [itemClickable]="true"
           (itemClick)="this.onItemClicked($event)"
         >
         </ht-gauge-list>
-      </ht-titled-content>
+      </htc-titled-content>
     </div>
   `
 })

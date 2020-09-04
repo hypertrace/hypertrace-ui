@@ -9,12 +9,12 @@ import { ApiDetailService } from '../api-detail.service';
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-navigable-dashboard
+    <htc-navigable-dashboard
       [navLocation]="this.location"
       [defaultJson]="this.defaultJson"
       (dashboardReady)="this.onDashboardReady($event)"
     >
-    </ht-navigable-dashboard>
+    </htc-navigable-dashboard>
   `
 })
 export class ApiOverviewComponent {

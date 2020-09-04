@@ -51,7 +51,7 @@ describe('Entity table cell renderer component', () => {
       providers: [tableCellIndexProvider(1)]
     });
 
-    expect(spectator.query('ht-icon')).not.toExist();
+    expect(spectator.query('htc-icon')).not.toExist();
     expect(spectator.query('.first-column')).not.toExist();
   });
 });

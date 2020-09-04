@@ -1,8 +1,0 @@
-{
-  "bundlerOptions": {
-    "entryFile": "./src/styles/main.scss",
-    "rootDir": "./src/styles/",
-    "outFile": "../../dist/assets-library/bundled.scss",
-    "includePaths": ["../../node_modules"]
-  }
-}

@@ -22,7 +22,7 @@
     "prettier:check": "prettier --check '**'",
     "test:ci": "ng test hypertrace-ui -i --ci --coverage",
     "docs": "compodoc -p tsconfig.json",
-    "core-ui:clean": "rm -rf node_modules"
+    "core-ui:clean": "rm -rf hypertrace-core-ui/node_modules"
   },
   "private": true,
   "dependencies": {

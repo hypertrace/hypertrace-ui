@@ -12,7 +12,7 @@ import { maxBy } from 'lodash-es';
         <div class="border-top"></div>
         <div
           class="label"
-          [htTooltip]="item.label"
+          [htcTooltip]="item.label"
           (click)="this.onItemClick(item)"
           [ngClass]="{ clickable: this.itemClickable }"
           [ngStyle]="{ color: item.color }"
@@ -23,7 +23,7 @@ import { maxBy } from 'lodash-es';
           <div class="progress-value" [ngStyle]="{ width: item.width, backgroundColor: item.color }"></div>
         </div>
         <div class="value">
-          <span>{{ item.value | htDisplayNumber }}</span>
+          <span>{{ item.value | htcDisplayNumber }}</span>
         </div>
       </ng-container>
     </div>

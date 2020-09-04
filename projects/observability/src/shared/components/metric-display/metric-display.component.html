@@ -3,7 +3,7 @@
     {{ metricTitle }}
   </div>
   <div class="metric-value">
-    <span class="value" [ngClass]="[health]">{{ value | htDisplayNumber }}</span>
+    <span class="value" [ngClass]="[health]">{{ value | htcDisplayNumber }}</span>
     <div class="script">
       <span class="superscript">{{ this.superscript }}</span>
       <span class="subscript">{{ this.subscript }}</span>

@@ -12,53 +12,53 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle, ApiTraceDetailService],
   template: `
-    <div class="trace-detail" *htLoadAsync="this.traceDetails$ as traceDetails">
+    <div class="trace-detail" *htcLoadAsync="this.traceDetails$ as traceDetails">
       <div class="header">
         <div class="back">
-          <ht-icon
+          <htc-icon
             (click)="this.onClickBack()"
             icon="${IconType.ArrowLeft}"
             size="${IconSize.Small}"
             class="arrow"
-          ></ht-icon>
-          <ht-label (click)="this.onClickBack()" label="Back" class="label"></ht-label>
+          ></htc-icon>
+          <htc-label (click)="this.onClickBack()" label="Back" class="label"></htc-label>
         </div>
 
-        <ht-label [label]="traceDetails.titleString" class="title"></ht-label>
+        <htc-label [label]="traceDetails.titleString" class="title"></htc-label>
 
         <div class="summary-row">
-          <ht-summary-value
+          <htc-summary-value
             class="summary-value"
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
-          ></ht-summary-value>
-          <ht-summary-value
+          ></htc-summary-value>
+          <htc-summary-value
             class="summary-value"
             icon="${IconType.Id}"
             [value]="traceDetails.traceId"
-          ></ht-summary-value>
+          ></htc-summary-value>
 
           <div class="separation"></div>
 
-          <ht-copy-shareable-link-to-clipboard class="share"></ht-copy-shareable-link-to-clipboard>
+          <htc-copy-shareable-link-to-clipboard class="share"></htc-copy-shareable-link-to-clipboard>
 
-          <ht-button
+          <htc-button
             class="full-trace-button"
             role="${ButtonRole.Tertiary}"
             display="${ButtonStyle.Bordered}"
             label="See Full Trace"
             (click)="this.navigateToFullTrace(traceDetails.traceId)"
-          ></ht-button>
+          ></htc-button>
         </div>
       </div>
 
       <div class="scrollable-container">
-        <ht-application-aware-dashboard
+        <htc-application-aware-dashboard
           [json]="this.defaultJson"
           [padding]="0"
           (dashboardReady)="this.onDashboardReady($event)"
         >
-        </ht-application-aware-dashboard>
+        </htc-application-aware-dashboard>
       </div>
     </div>
   `

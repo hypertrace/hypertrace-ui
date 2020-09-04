@@ -12,14 +12,14 @@ import { ExploreSeries } from '../explore-visualization-builder';
   template: `
     <div class="section-header-container">
       <h3 class="section-header">Select metrics</h3>
-      <ht-button
+      <htc-button
         class="add-series-button"
         icon="${IconType.Add}"
         role="${ButtonRole.Primary}"
         label="Add Metric"
         display="${ButtonStyle.Text}"
         (click)="this.onAddSeries()"
-      ></ht-button>
+      ></htc-button>
     </div>
     <div class="series-container" *ngFor="let series of this.series; let isFirst = first; let index = index">
       <div class="series-index-indicator">

@@ -142,7 +142,7 @@ describe('Interval Select component', () => {
       }
     );
 
-    spectator.triggerEventHandler('ht-select', 'selectedChange', new TimeDuration(1, TimeUnit.Minute));
+    spectator.triggerEventHandler('htc-select', 'selectedChange', new TimeDuration(1, TimeUnit.Minute));
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(new TimeDuration(1, TimeUnit.Minute));

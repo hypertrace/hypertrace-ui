@@ -10,11 +10,11 @@ import { DonutWidgetModel } from './donut-widget.model';
   selector: 'ht-donut-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content
-      [title]="this.model.header?.title | htDisplayTitle"
+    <htc-titled-content
+      [title]="this.model.header?.title | htcDisplayTitle"
       [link]="this.model.header?.link?.url"
       [linkLabel]="this.model.header?.link?.displayText"
-      *htLoadAsync="this.data$ as data"
+      *htcLoadAsync="this.data$ as data"
     >
       <ht-donut
         class="fill-container"
@@ -24,7 +24,7 @@ import { DonutWidgetModel } from './donut-widget.model';
         [displayLegendCounts]="this.model.displayLegendCounts"
       >
       </ht-donut>
-    </ht-titled-content>
+    </htc-titled-content>
   `
 })
 export class DonutWidgetRendererComponent extends WidgetRenderer<DonutWidgetModel, DonutResults> {

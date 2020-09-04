@@ -12,7 +12,7 @@ import { InputAppearance } from '@hypertrace/components';
           Max Results
         </span>
         <div class="limit-input-wrapper">
-          <ht-input
+          <htc-input
             [type]="this.getInputType()"
             class="limit-input"
             appearance="${InputAppearance.Border}"
@@ -20,19 +20,19 @@ import { InputAppearance } from '@hypertrace/components';
             [value]="this.getLimitValue()"
             (valueChange)="this.limitChange.emit($event)"
           >
-          </ht-input>
+          </htc-input>
         </div>
       </div>
       <div class="limit-include-rest-container" *ngIf="!this.disabled">
         <span class="limit-include-rest-label">
           Show Other:
         </span>
-        <ht-checkbox
+        <htc-checkbox
           [disabled]="this.disabled"
           [checked]="this.includeRest"
           (checkedChange)="this.includeRestChange.emit($event)"
         >
-        </ht-checkbox>
+        </htc-checkbox>
       </div>
     </div>
   `

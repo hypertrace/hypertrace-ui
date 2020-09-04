@@ -8,7 +8,7 @@ export const LEGEND_DATA = new InjectionToken<LegendData<unknown>>('LEGEND DATA'
   styleUrls: ['./legend.component.scss'],
   template: `
     <div class="legend-entries fill-container" [ngClass]="this.layoutClass">
-      <div *ngFor="let entry of this.entries" class="legend-entry" [htTooltip]="entry.name">
+      <div *ngFor="let entry of this.entries" class="legend-entry" [htcTooltip]="entry.name">
         <span class="legend-symbol" [style.backgroundColor]="entry.color"></span>
         <span class="legend-label">{{ entry.name }}</span>
         <span *ngIf="entry.data.value !== undefined" class="legend-value">{{ entry.data.value }}</span>

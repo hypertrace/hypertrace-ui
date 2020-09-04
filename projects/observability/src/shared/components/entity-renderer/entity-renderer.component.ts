@@ -13,15 +13,15 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
     <div
       class="ht-entity-renderer"
       [ngClass]="{ navigable: this.navigable }"
-      [htTooltip]="this.name"
+      [htcTooltip]="this.name"
       (click)="this.onClickNavigate()"
     >
-      <ht-icon
+      <htc-icon
         [icon]="this.entityIconType"
         class="icon"
         *ngIf="this.showIcon && this.entityIconType"
         size="${IconSize.Large}"
-      ></ht-icon>
+      ></htc-icon>
       <div class="name" *ngIf="this.name">{{ this.name }}</div>
     </div>
   `

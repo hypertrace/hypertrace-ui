@@ -9,12 +9,12 @@ import { apiTraceListDashboard } from './api-trace-list.dashboard';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-navigable-dashboard
-      *htLoadAsync="this.filterConfig$ as filterConfig"
+    <htc-navigable-dashboard
+      *htcLoadAsync="this.filterConfig$ as filterConfig"
       navLocation="${apiTraceListDashboard.location}"
       [filterConfig]="filterConfig"
     >
-    </ht-navigable-dashboard>
+    </htc-navigable-dashboard>
   `
 })
 export class ApiTraceListComponent {

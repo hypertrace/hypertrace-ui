@@ -21,22 +21,22 @@ import { ExploreSeries } from '../explore-visualization-builder';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="this.series" class="series-group">
-      <ht-select-group class="metric-selector">
-        <ht-select
+      <htc-select-group class="metric-selector">
+        <htc-select
           *ngIf="this.attributeOptions$ | async as attributeOptions"
           [selected]="this.selectedAttribute$ | async"
           (selectedChange)="this.onAttributeChange($event)"
           class="attribute-selector"
           [showBorder]="true"
         >
-          <ht-select-option
+          <htc-select-option
             *ngFor="let option of attributeOptions"
             [value]="option.value"
             [label]="option.label"
-          ></ht-select-option>
-        </ht-select>
+          ></htc-select-option>
+        </htc-select>
 
-        <ht-select
+        <htc-select
           *ngIf="this.aggregationOptions$ | async as aggregationOptions"
           [selected]="this.selectedAggregation$ | async"
           (selectedChange)="this.onAggregationChange($event)"
@@ -44,39 +44,39 @@ import { ExploreSeries } from '../explore-visualization-builder';
           [disabled]="aggregationOptions && aggregationOptions.length === 1"
           [showBorder]="true"
         >
-          <ht-select-option
+          <htc-select-option
             *ngFor="let option of aggregationOptions"
             [value]="option.value"
             [label]="option.label"
-          ></ht-select-option>
-        </ht-select>
-      </ht-select-group>
+          ></htc-select-option>
+        </htc-select>
+      </htc-select-group>
 
       <div class="visualization-type-selector-container">
         <span class="visualization-type-label">
           Type:
         </span>
-        <ht-select
+        <htc-select
           [selected]="this.selectedVisualizationType$ | async"
           (selectedChange)="this.onVisualizationTypeChange($event)"
           class="visualization-type-selector"
           [showBorder]="true"
         >
-          <ht-select-option
+          <htc-select-option
             *ngFor="let option of this.visualizationTypeOptions"
             [value]="option.value"
             [label]="option.label"
-          ></ht-select-option>
-        </ht-select>
+          ></htc-select-option>
+        </htc-select>
       </div>
-      <ht-button
+      <htc-button
         *ngIf="this.removable"
         class="series-remove-button"
-        htTooltip="Remove Series"
+        htcTooltip="Remove Series"
         icon="${IconType.Close}"
         display="${ButtonStyle.Text}"
         (click)="this.onRemove()"
-      ></ht-button>
+      ></htc-button>
     </div>
   `
 })

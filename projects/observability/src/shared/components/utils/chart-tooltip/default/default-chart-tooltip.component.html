@@ -7,13 +7,13 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" class="tooltip-data-color">
             <circle cx="50%" cy="50%" r="50%" [attr.fill]="labeledValue.color"></circle>
           </svg>
-          <ht-label [label]="labeledValue.label"></ht-label>
+          <htc-label [label]="labeledValue.label"></htc-label>
         </div>
       </td>
       <!-- Value Column -->
       <td>
         <div class="tooltip-data-value">
-          {{ labeledValue.value | htDisplayNumber }}
+          {{ labeledValue.value | htcDisplayNumber }}
         </div>
       </td>
       <!-- Units Column -->
