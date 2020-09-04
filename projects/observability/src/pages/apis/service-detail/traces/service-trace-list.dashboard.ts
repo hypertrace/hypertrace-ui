@@ -12,6 +12,7 @@ export const serviceTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Protocol',
         width: '10%',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'protocol'
@@ -24,6 +25,7 @@ export const serviceTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Endpoint',
         width: '20%',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'apiName'
@@ -35,6 +37,7 @@ export const serviceTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'URL',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'requestUrl'
@@ -48,6 +51,7 @@ export const serviceTraceListDashboard = {
         title: 'Status',
         width: '10%',
         display: TracingTableCellType.TraceStatus,
+        filterable: true,
         value: {
           type: 'trace-status-specification'
         },
@@ -60,6 +64,7 @@ export const serviceTraceListDashboard = {
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,
+        filterable: true,
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',

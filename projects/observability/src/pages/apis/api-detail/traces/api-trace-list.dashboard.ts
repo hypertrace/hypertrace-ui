@@ -11,6 +11,7 @@ export const apiTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'URL',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'requestUrl'
@@ -24,6 +25,7 @@ export const apiTraceListDashboard = {
         title: 'Status',
         width: '20%',
         display: TracingTableCellType.TraceStatus,
+        filterable: true,
         value: {
           type: 'trace-status-specification'
         },
@@ -36,6 +38,7 @@ export const apiTraceListDashboard = {
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,
+        filterable: true,
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',
