@@ -30,7 +30,7 @@ describe('Combo Box component', () => {
   ];
 
   beforeEach(fakeAsync(() => {
-    spectator = createHost(`<htc-combo-box [options]="options" [text]="text"></htc-combo-box>`, {
+    spectator = createHost(`<ht-combo-box [options]="options" [text]="text"></ht-combo-box>`, {
       hostProps: {
         options: comboBoxOptions,
         text: 'test-text'

@@ -17,14 +17,14 @@ import { MetricAggregation } from '../../../../../shared/graphql/model/metrics/m
 import { TracingTableCellType } from '../../tracing-table-cell-type';
 
 @Component({
-  selector: 'htc-metric-table-cell-renderer',
+  selector: 'ht-metric-table-cell-renderer',
   styleUrls: ['./metric-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="metric-cell" [htcTooltip]="this.tooltip">
+    <div class="metric-cell" [htTooltip]="this.tooltip">
       <!-- This displays as "<value> <unit>", e.g. 120 ms -->
       <span
-        >{{ this.value | htcDisplayNumber: this.formatter }} <span *ngIf="this.units">{{ this.units }}</span></span
+        >{{ this.value | htDisplayNumber: this.formatter }} <span *ngIf="this.units">{{ this.units }}</span></span
       >
     </div>
   `

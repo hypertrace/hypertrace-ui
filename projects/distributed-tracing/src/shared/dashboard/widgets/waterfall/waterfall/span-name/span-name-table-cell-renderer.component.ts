@@ -4,11 +4,11 @@ import { SpanNameCellData } from './span-name-cell-data';
 import { WaterfallTableCellType } from './span-name-cell-type';
 
 @Component({
-  selector: 'htc-span-name-table-cell-renderer',
+  selector: 'ht-span-name-table-cell-renderer',
   styleUrls: ['./span-name-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="span-title" [htcTooltip]="this.tooltip" [ngClass]="{ clickable: this.clickable }">
+    <div class="span-title" [htTooltip]="this.tooltip" [ngClass]="{ clickable: this.clickable }">
       <div class="color-bar" [style.backgroundColor]="this.value.color" *ngIf="this.value.color"></div>
       <div class="service-name">
         <span class="text">{{ this.value.serviceName }}</span>

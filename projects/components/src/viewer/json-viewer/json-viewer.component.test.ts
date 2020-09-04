@@ -29,7 +29,7 @@ describe('Json Tree Component', () => {
       ['stars', '4'],
       ['username', 'Foo Bar']
     ];
-    spectator = createHost(`<htc-json-viewer></htc-json-viewer>`);
+    spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
       json: inputJson
     });
@@ -51,7 +51,7 @@ describe('Json Tree Component', () => {
   test('should display string fields with correct style', () => {
     const inputJson = JSON.parse('{"comment":"product comment"}');
 
-    spectator = createHost(`<htc-json-viewer></htc-json-viewer>`);
+    spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
       json: inputJson
     });
@@ -79,7 +79,7 @@ describe('Json Tree Component', () => {
   test('should display numeric fields  with correct style', () => {
     const inputJson = JSON.parse('{"total":10001}');
 
-    spectator = createHost(`<htc-json-viewer></htc-json-viewer>`);
+    spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
       json: inputJson
     });
@@ -107,7 +107,7 @@ describe('Json Tree Component', () => {
   test('should display boolean fields with correct style', () => {
     const inputJson = JSON.parse('{"isHTTP":true}');
 
-    spectator = createHost(`<htc-json-viewer></htc-json-viewer>`);
+    spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
       json: inputJson
     });
@@ -135,7 +135,7 @@ describe('Json Tree Component', () => {
   test('should display array fields  with correct style and no default expansion', () => {
     const inputJson = JSON.parse('{"results":[{"name": "Test Item 1"}, {"name": "Test Item 2"}]}');
 
-    spectator = createHost(`<htc-json-viewer [json]="json" [showExpanded]="showExpanded"></htc-json-viewer>`, {
+    spectator = createHost(`<ht-json-viewer [json]="json" [showExpanded]="showExpanded"></ht-json-viewer>`, {
       hostProps: {
         json: inputJson,
         showExpanded: false
@@ -180,7 +180,7 @@ describe('Json Tree Component', () => {
   test('should display array fields with correct style', () => {
     const inputJson = JSON.parse('{"results":[{"name": "Test Item 1"}, {"name": "Test Item 2"}]}');
 
-    spectator = createHost(`<htc-json-viewer [json]="json" ></htc-json-viewer>`, {
+    spectator = createHost(`<ht-json-viewer [json]="json" ></ht-json-viewer>`, {
       hostProps: {
         json: inputJson
       }
@@ -217,7 +217,7 @@ describe('Json Tree Component', () => {
   test('should display object fields with correct style', () => {
     const inputJson = JSON.parse('{"employee":{"name": "Test 1", "id": "12345"}}');
 
-    spectator = createHost(`<htc-json-viewer></htc-json-viewer>`);
+    spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
       json: inputJson
     });
@@ -268,7 +268,7 @@ describe('Json Tree Component', () => {
   test('should display object fields with correct style and no default expansion', () => {
     const inputJson = JSON.parse('{"employee":{"name": "Test 1", "id": "12345"}}');
 
-    spectator = createHost(`<htc-json-viewer [json]="json" [showExpanded]="showExpanded"></htc-json-viewer>`, {
+    spectator = createHost(`<ht-json-viewer [json]="json" [showExpanded]="showExpanded"></ht-json-viewer>`, {
       hostProps: {
         json: inputJson,
         showExpanded: false

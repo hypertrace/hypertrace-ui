@@ -6,21 +6,21 @@ import { PopoverRef } from '../../popover/popover-ref';
 import { ModalOverlayConfig, ModalSize } from './modal';
 
 @Component({
-  selector: 'htc-modal-overlay',
+  selector: 'ht-modal-overlay',
   styleUrls: ['./modal-overlay.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="this.visible" class="modal-overlay" [ngClass]="'modal-size-' + this.size">
       <div *ngIf="this.showHeader" class="header">
-        <htc-button
+        <ht-button
           class="close-button"
           icon="${IconType.Close}"
           display="${ButtonStyle.Outlined}"
           size="${ButtonSize.ExtraSmall}"
-          htcTooltip="Close modal"
+          htTooltip="Close modal"
           (click)="this.close()"
         >
-        </htc-button>
+        </ht-button>
         <h3 class="header-title">{{ modalTitle }}</h3>
       </div>
       <div class="content-wrapper">

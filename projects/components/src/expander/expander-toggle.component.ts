@@ -3,17 +3,17 @@ import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-expander-toggle',
+  selector: 'ht-expander-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./expander-toggle.component.scss'],
   template: `
     <div class="expander-toggle">
-      <htc-icon
+      <ht-icon
         [icon]="this.getIconType()"
         size="${IconSize.Small}"
         [showTooltip]="this.showTooltip"
         [label]="this.getTooltipText()"
-      ></htc-icon>
+      ></ht-icon>
     </div>
   `
 })

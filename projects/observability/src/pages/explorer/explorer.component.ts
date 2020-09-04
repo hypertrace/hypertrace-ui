@@ -20,29 +20,29 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="vertical-flex-layout">
-      <htc-page-header></htc-page-header>
+      <ht-page-header></ht-page-header>
       <div class="fill-container explorer-container">
-        <htc-toggle-group
+        <ht-toggle-group
           [items]="this.contextItems"
           [activeItem]="this.activeContextItem$ | async"
           (activeItemChange)="this.onContextUpdated($event.value)"
-        ></htc-toggle-group>
+        ></ht-toggle-group>
 
-        <htc-filter-bar
+        <ht-filter-bar
           class="filter-bar"
           [attributes]="this.attributes$ | async"
           [syncWithUrl]="true"
           (filtersChange)="this.onFiltersUpdated($event)"
-        ></htc-filter-bar>
+        ></ht-filter-bar>
 
-        <htc-panel class="visualization-panel" [(expanded)]="this.visualizationExpanded">
-          <htc-panel-header>
-            <htc-panel-title [expanded]="this.visualizationExpanded"
-              ><span class="panel-title">Visualization</span></htc-panel-title
+        <ht-panel class="visualization-panel" [(expanded)]="this.visualizationExpanded">
+          <ht-panel-header>
+            <ht-panel-title [expanded]="this.visualizationExpanded"
+              ><span class="panel-title">Visualization</span></ht-panel-title
             >
-          </htc-panel-header>
+          </ht-panel-header>
 
-          <htc-panel-body>
+          <ht-panel-body>
             <div class="visualization-panel-content">
               <ht-explore-query-editor
                 [context]="this.context"
@@ -50,35 +50,33 @@ import {
                 [filters]="this.filters"
               ></ht-explore-query-editor>
 
-              <htc-application-aware-dashboard
+              <ht-application-aware-dashboard
                 *ngIf="this.vizDashboard$ | async as vizDashboard"
                 class="visualization-dashboard"
                 [padding]="0"
                 [json]="vizDashboard.json"
                 (dashboardReady)="vizDashboard.onReady($event)"
               >
-              </htc-application-aware-dashboard>
+              </ht-application-aware-dashboard>
             </div>
-          </htc-panel-body>
-        </htc-panel>
+          </ht-panel-body>
+        </ht-panel>
 
-        <htc-panel class="results-panel" [(expanded)]="this.resultsExpanded">
-          <htc-panel-header>
-            <htc-panel-title [expanded]="this.resultsExpanded"
-              ><span class="panel-title">Results</span>
-            </htc-panel-title>
-          </htc-panel-header>
-          <htc-panel-body>
-            <htc-application-aware-dashboard
+        <ht-panel class="results-panel" [(expanded)]="this.resultsExpanded">
+          <ht-panel-header>
+            <ht-panel-title [expanded]="this.resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
+          </ht-panel-header>
+          <ht-panel-body>
+            <ht-application-aware-dashboard
               *ngIf="this.resultsDashboard$ | async as resultsDashboard"
               class="results-panel-content"
               [padding]="0"
               [json]="resultsDashboard.json"
               (dashboardReady)="resultsDashboard.onReady($event)"
             >
-            </htc-application-aware-dashboard>
-          </htc-panel-body>
-        </htc-panel>
+            </ht-application-aware-dashboard>
+          </ht-panel-body>
+        </ht-panel>
       </div>
     </div>
   `

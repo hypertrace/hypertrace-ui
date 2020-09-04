@@ -17,7 +17,7 @@ import { PopoverTriggerComponent } from './popover-trigger.component';
 import { PopoverService } from './popover.service';
 
 @Component({
-  selector: 'htc-popover',
+  selector: 'ht-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <ng-container *ngTemplateOutlet="this.trigger.content"></ng-container> `
 })

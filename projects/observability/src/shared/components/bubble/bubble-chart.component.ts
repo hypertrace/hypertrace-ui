@@ -21,7 +21,7 @@ import { BubbleChartBuilderService } from './bubble-chart-builder.service';
   styleUrls: ['../utils/d3/d3-visualization.scss', './bubble-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fill-container bubble-chart-container" (htcLayoutChange)="this.reflow()" #bubbleChartContainer></div>
+    <div class="fill-container bubble-chart-container" (htLayoutChange)="this.reflow()" #bubbleChartContainer></div>
   `
 })
 export class BubbleChartComponent<TData extends BubbleChartData> implements OnChanges, OnDestroy, AfterViewInit {

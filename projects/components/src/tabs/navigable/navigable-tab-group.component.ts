@@ -6,15 +6,15 @@ import { map, startWith } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
 
 @Component({
-  selector: 'htc-navigable-tab-group',
+  selector: 'ht-navigable-tab-group',
   styleUrls: ['./navigable-tab-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="tab-group">
-      <nav mat-tab-nav-bar *htcLetAsync="this.activeTab$ as activeTab" disableRipple>
+      <nav mat-tab-nav-bar *htLetAsync="this.activeTab$ as activeTab" disableRipple>
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
-            <div class="tab-button" *htcIfFeature="tab.featureFlags | htcFeature as featureState">
+            <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
               <a mat-tab-link (click)="this.onTabClick(tab)" class="tab-link" [active]="activeTab === tab">
                 <ng-container *ngTemplateOutlet="tab.content"></ng-container>
                 <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">

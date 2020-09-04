@@ -5,13 +5,13 @@ import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'htc-span-tags-detail',
+  selector: 'ht-span-tags-detail',
   styleUrls: ['./span-tags-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="tags-details">
-      <ng-container *htcLoadAsync="this.tagRecords$ as tagRecords">
-        <htc-list-view [records]="tagRecords"></htc-list-view>
+      <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
+        <ht-list-view [records]="tagRecords"></ht-list-view>
       </ng-container>
     </div>
   `

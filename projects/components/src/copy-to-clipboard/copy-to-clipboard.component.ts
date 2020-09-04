@@ -22,12 +22,12 @@ import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
 
 @Component({
-  selector: 'htc-copy-to-clipboard',
+  selector: 'ht-copy-to-clipboard',
   styleUrls: ['./copy-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="htc-copy-to-clipboard" (click)="this.onCopyToClipboard()">
-      <htc-button class="icon" [icon]="this.icon" [display]="this.display" [size]="this.size"></htc-button>
+    <div class="ht-copy-to-clipboard" (click)="this.onCopyToClipboard()">
+      <ht-button class="icon" [icon]="this.icon" [display]="this.display" [size]="this.size"></ht-button>
       <span *ngIf="this.label" class="label">{{ this.label }}</span>
     </div>
     <ng-template #notification>

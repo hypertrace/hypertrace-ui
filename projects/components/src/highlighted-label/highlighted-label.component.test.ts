@@ -13,7 +13,7 @@ describe('Highlighted Label component', () => {
 
   test('should render interpolated string correctly', () => {
     spectator = createHost(
-      `<htc-highlighted-label [data]="data" [templateString]="templateString"></htc-highlighted-label>`,
+      `<ht-highlighted-label [data]="data" [templateString]="templateString"></ht-highlighted-label>`,
       {
         hostProps: {
           data: { a: 'first value', b: 2 },

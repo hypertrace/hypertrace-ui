@@ -26,7 +26,7 @@ describe('Feature pipe', () => {
   beforeEach(() => {
     featureState$ = EMPTY;
     spectator = createHost(`
-    <pipe-holder>{{ features | htcFeature }}</pipe-holder>`);
+    <pipe-holder>{{ features | htFeature }}</pipe-holder>`);
     getCombinedFeatureStateMock = spectator.inject(FeatureStateResolver).getCombinedFeatureState;
     getCombinedFeatureStateMock.mockClear();
   });

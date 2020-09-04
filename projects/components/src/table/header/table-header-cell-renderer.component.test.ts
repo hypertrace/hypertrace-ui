@@ -29,7 +29,7 @@ describe('Table Header Cell Renderer', () => {
     };
 
     const spectator = createHost(
-      `<htc-table-header-cell-renderer [columnConfig]="columnConfig" index="0"></htc-table-header-cell-renderer>`,
+      `<ht-table-header-cell-renderer [columnConfig]="columnConfig" index="0"></ht-table-header-cell-renderer>`,
       {
         hostProps: {
           columnConfig: columnConfig
@@ -50,7 +50,7 @@ describe('Table Header Cell Renderer', () => {
     };
 
     const spectator = createHost(
-      `<htc-table-header-cell-renderer [columnConfig]="columnConfig" index="0"></htc-table-header-cell-renderer>`,
+      `<ht-table-header-cell-renderer [columnConfig]="columnConfig" index="0"></ht-table-header-cell-renderer>`,
       {
         hostProps: {
           columnConfig: columnConfig

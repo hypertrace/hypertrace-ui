@@ -2,18 +2,18 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
 
 @Component({
-  selector: 'htc-application-header',
+  selector: 'ht-application-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./application-header.component.scss'],
   template: `
-    <div class="htc-header" [style.height]="this.height">
+    <div class="ht-header" [style.height]="this.height">
       <div class="left-side">
         <div class="logo" (click)="this.onLogoClick()">
           <ng-content select="[logo]"></ng-content>
         </div>
         <div class="divider"></div>
         <div class="time-range">
-          <htc-time-range></htc-time-range>
+          <ht-time-range></ht-time-range>
         </div>
       </div>
       <div class="right-side">

@@ -6,14 +6,14 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from './enum-property-type';
 
 @ModelPropertyEditor({ propertyType: ENUM_TYPE.type })
 @Component({
-  selector: 'htc-enum-property-type-editor',
+  selector: 'ht-enum-property-type-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-label [label]="api.label"></htc-label>
-    <htc-select [selected]="api.value" (selectedChange)="api.valueChange($event)">
-      <htc-select-option *ngFor="let option of options" [value]="option.value" [label]="option.label">
-      </htc-select-option>
-    </htc-select>
+    <ht-label [label]="api.label"></ht-label>
+    <ht-select [selected]="api.value" (selectedChange)="api.valueChange($event)">
+      <ht-select-option *ngFor="let option of options" [value]="option.value" [label]="option.label">
+      </ht-select-option>
+    </ht-select>
   `
 })
 export class EnumPropertyTypeEditorComponent {

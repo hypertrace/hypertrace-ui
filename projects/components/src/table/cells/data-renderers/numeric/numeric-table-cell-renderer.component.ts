@@ -6,12 +6,12 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-numeric-table-cell-renderer',
+  selector: 'ht-numeric-table-cell-renderer',
   styleUrls: ['./numeric-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div [ngClass]="{ clickable: this.clickable }" class="numeric-cell" [htcTooltip]="this.value">
-      {{ this.value | htcDisplayNumber }}
+    <div [ngClass]="{ clickable: this.clickable }" class="numeric-cell" [htTooltip]="this.value">
+      {{ this.value | htDisplayNumber }}
     </div>
   `
 })

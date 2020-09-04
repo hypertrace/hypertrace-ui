@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 @Pipe({
-  name: 'htcFeature',
+  name: 'htFeature',
   // tslint:disable-next-line: no-pipe-impure delegating to impure async pipe
   pure: false
 })

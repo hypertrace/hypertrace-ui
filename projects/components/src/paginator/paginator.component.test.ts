@@ -19,7 +19,7 @@ describe('Paginator component', () => {
   test('should notify when page size selection changes', () => {
     const onPageChangeSpy = jest.fn();
     const spectator = createHost(
-      `<htc-paginator [totalItems]="totalItems" (pageChange)="onPageChange($event)"></htc-paginator>`,
+      `<ht-paginator [totalItems]="totalItems" (pageChange)="onPageChange($event)"></ht-paginator>`,
       {
         hostProps: {
           totalItems: totalResults,
@@ -38,7 +38,7 @@ describe('Paginator component', () => {
   });
 
   test('should have the correct number of pages for the provided page size and total items', () => {
-    const spectator = createHost(`<htc-paginator [totalItems]="totalItems"></htc-paginator>`, {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
         totalItems: totalResults
       }
@@ -74,7 +74,7 @@ describe('Paginator component', () => {
   });
 
   test('should stop at the first page when trying to go to a lower page than available', () => {
-    const spectator = createHost(`<htc-paginator [totalItems]="totalItems"></htc-paginator>`, {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
         totalItems: totalResults
       }
@@ -91,7 +91,7 @@ describe('Paginator component', () => {
   });
 
   test('should navigate to first page when totalItems is changed', () => {
-    const spectator = createHost(`<htc-paginator [totalItems]="totalItems"></htc-paginator>`, {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
         totalItems: totalResults
       }

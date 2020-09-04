@@ -58,16 +58,16 @@ describe('Table component', () => {
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
     template: `
-    <htc-table
+    <ht-table
       [columnConfigs]="columnConfigs"
       [data]="data"
       [syncWithUrl]="syncWithUrl">
-    </htc-table>`
+    </ht-table>`
   });
 
   test('pass custom page size options to paginator', () => {
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [pageSizeOptions]="pageSizeOptions"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [pageSizeOptions]="pageSizeOptions"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -82,7 +82,7 @@ describe('Table component', () => {
 
   test('pass custom placeholder to search box', () => {
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" searchable="true" searchPlaceholder="Custom"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" searchable="true" searchPlaceholder="Custom"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -97,8 +97,8 @@ describe('Table component', () => {
   test('does not alter the URL on paging if syncWithUrl false', () => {
     const mockPageChange = jest.fn();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
-         (pageChange)="pageChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
+         (pageChange)="pageChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -125,8 +125,8 @@ describe('Table component', () => {
     const rows = buildData();
     const mockSelectionsChange = jest.fn();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" syncWithUrl="false"
-          (selectionsChange)="selectionsChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" syncWithUrl="false"
+          (selectionsChange)="selectionsChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -148,8 +148,8 @@ describe('Table component', () => {
     const rows = buildData();
     const mockSelectionsChange = jest.fn();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" syncWithUrl="false"
-         [selections]="selections" (selectionsChange)="selectionsChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" syncWithUrl="false"
+         [selections]="selections" (selectionsChange)="selectionsChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -171,8 +171,8 @@ describe('Table component', () => {
   test('updates the URL on paging if syncWithUrl true', () => {
     const mockPageChange = jest.fn();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
-         (pageChange)="pageChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
+         (pageChange)="pageChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: buildColumns(),
@@ -286,7 +286,7 @@ describe('Table component', () => {
   test('adds the multi select row column config for multi select mode', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(
-      '<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></htc-table>',
+      '<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
       {
         hostProps: {
           columnConfigs: columns,
@@ -317,7 +317,7 @@ describe('Table component', () => {
   test('skips the multi select row column config for single select mode', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(
-      '<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></htc-table>',
+      '<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
       {
         hostProps: {
           columnConfigs: columns,
@@ -343,7 +343,7 @@ describe('Table component', () => {
   test('expander column config and no multi select row column config for non flat table mode', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(
-      '<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></htc-table>',
+      '<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
       {
         hostProps: {
           columnConfigs: columns,
@@ -374,8 +374,8 @@ describe('Table component', () => {
   test('should trigger toggle row selection for multi row select config', () => {
     const columns = buildColumns();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" (selectionsChange)="selectionsChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
+         [mode]="mode" (selectionsChange)="selectionsChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: columns,
@@ -406,8 +406,8 @@ describe('Table component', () => {
     const mockSelectionsChange = jest.fn();
     const columns = buildColumns();
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" (selectionsChange)="selectionsChange($event)"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
+         [mode]="mode" (selectionsChange)="selectionsChange($event)"></ht-table>`,
       {
         hostProps: {
           columnConfigs: columns,
@@ -442,8 +442,8 @@ describe('Table component', () => {
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" [selections]="selections"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
+         [mode]="mode" [selections]="selections"></ht-table>`,
       {
         hostProps: {
           columnConfigs: columns,
@@ -474,8 +474,8 @@ describe('Table component', () => {
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" [selections]="selections"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
+         [mode]="mode" [selections]="selections"></ht-table>`,
       {
         hostProps: {
           columnConfigs: columns,
@@ -496,8 +496,8 @@ describe('Table component', () => {
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
     const spectator = createHost(
-      `<htc-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" [selections]="selections"></htc-table>`,
+      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
+         [mode]="mode" [selections]="selections"></ht-table>`,
       {
         hostProps: {
           columnConfigs: columns,

@@ -3,7 +3,7 @@ import { RelativeTimeRange, TimeDuration, TimeRangeService } from '@hypertrace/c
 import { PredefinedTimeDurationService } from './predefined-time-duration.service';
 
 @Component({
-  selector: 'htc-predefined-time-range-selection',
+  selector: 'ht-predefined-time-range-selection',
   styleUrls: ['./predefined-time-range-selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

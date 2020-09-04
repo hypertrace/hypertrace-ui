@@ -6,16 +6,16 @@ import { map } from 'rxjs/operators';
 import { ButtonSize } from '../button/button';
 
 @Component({
-  selector: 'htc-copy-shareable-link-to-clipboard',
+  selector: 'ht-copy-shareable-link-to-clipboard',
   styleUrls: ['./copy-shareable-link-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="shareable-link" htcTooltip="Copy shareable url link to clipboard">
-      <htc-copy-to-clipboard
+    <div class="shareable-link" htTooltip="Copy shareable url link to clipboard">
+      <ht-copy-to-clipboard
         [size]="this.size"
         icon="${IconType.Share}"
         [text]="this.shareableUrl$ | async"
-      ></htc-copy-to-clipboard>
+      ></ht-copy-to-clipboard>
     </div>
   `
 })

@@ -11,17 +11,17 @@ import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
 @Component({
-  selector: 'htc-table-widget-renderer',
+  selector: 'ht-table-widget-renderer',
   styleUrls: ['./table-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-titled-content
-      [title]="this.model.header?.title | htcDisplayTitle"
+    <ht-titled-content
+      [title]="this.model.header?.title | htDisplayTitle"
       [link]="this.model.header?.link?.url"
       [linkLabel]="this.model.header?.link?.displayText"
       class="table-widget-container"
     >
-      <htc-table
+      <ht-table
         class="table"
         [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
         [columnConfigs]="this.columnConfigs"
@@ -36,10 +36,10 @@ import { TableWidgetModel } from './table-widget.model';
         [syncWithUrl]="this.syncWithUrl"
         (selectionsChange)="this.onRowSelection($event)"
       >
-      </htc-table>
-    </htc-titled-content>
+      </ht-table>
+    </ht-titled-content>
     <ng-template #childDetail let-row="row">
-      <ng-container [hdaDashboardModel]="this.getChildModel | htcMemoize: row"></ng-container>
+      <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
     </ng-template>
   `
 })

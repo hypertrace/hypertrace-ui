@@ -29,16 +29,16 @@ import {
         </span>
         <ng-template #edgeTitle>
           <span class="title-text">{{ data.title.from }}</span>
-          <htc-icon icon="${IconType.ArrowUp}" size="${IconSize.Small}" class="edge-title-arrow"></htc-icon>
+          <ht-icon icon="${IconType.ArrowUp}" size="${IconSize.Small}" class="edge-title-arrow"></ht-icon>
           <span class="title-text">{{ data.title.to }}</span>
         </ng-template>
         <div class="hide-tooltip-button-container" *ngIf="data.showHideButton">
-          <htc-icon
+          <ht-icon
             icon="${IconType.Cancel}"
             size="${IconSize.Small}"
             class="hide-tooltip-button"
             (click)="this.onHide()"
-          ></htc-icon>
+          ></ht-icon>
         </div>
       </h3>
       <hr class="tooltip-divider" />
@@ -48,7 +48,7 @@ import {
             <div class="metric-label">
               {{ metric.label | titlecase }}
             </div>
-            <div class="metric-value">{{ metric.value | htcDisplayNumber }}</div>
+            <div class="metric-value">{{ metric.value | htDisplayNumber }}</div>
             <div class="metric-unit" *ngIf="metric.units">{{ metric.units }}</div>
           </div>
         </div>

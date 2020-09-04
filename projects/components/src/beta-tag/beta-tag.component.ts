@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'htc-beta-tag',
+  selector: 'ht-beta-tag',
   styleUrls: ['./beta-tag.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

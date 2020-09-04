@@ -7,21 +7,21 @@ import { PopoverRef } from '../../popover/popover-ref';
 import { SheetOverlayConfig, SheetSize } from './sheet';
 
 @Component({
-  selector: 'htc-sheet-overlay',
+  selector: 'ht-sheet-overlay',
   styleUrls: ['./sheet-overlay.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="this.visible" class="sheet-overlay" [ngClass]="'sheet-size-' + this.size">
       <div *ngIf="this.showHeader" class="header">
         <h3 class="header-title">{{ sheetTitle }}</h3>
-        <htc-button
+        <ht-button
           class="close-button"
           icon="${IconType.CloseCircle}"
           display="${ButtonStyle.Outlined}"
-          htcTooltip="Close Sheet"
+          htTooltip="Close Sheet"
           (click)="this.close()"
         >
-        </htc-button>
+        </ht-button>
       </div>
       <div class="content-wrapper">
         <div class="content">

@@ -13,8 +13,8 @@ describe('Input Component', () => {
 
   test('should apply disabled attribute when disabled', fakeAsync(() => {
     const spectator = hostFactory(`
-    <htc-input [disabled]="true">
-    </htc-input>`);
+    <ht-input [disabled]="true">
+    </ht-input>`);
 
     spectator.tick();
     expect(spectator.query(MatInput)!.disabled).toBe(true);
@@ -24,8 +24,8 @@ describe('Input Component', () => {
     const onChange = jest.fn();
     const spectator = hostFactory(
       `
-    <htc-input [disabled]="true" [type]="type" (valueChange)="onChange($event)">
-    </htc-input>`,
+    <ht-input [disabled]="true" [type]="type" (valueChange)="onChange($event)">
+    </ht-input>`,
       {
         hostProps: {
           onChange: onChange,
@@ -52,8 +52,8 @@ describe('Input Component', () => {
   test('should set correct placeholder value', () => {
     const spectator = hostFactory(
       `
-    <htc-input [type]="type" [placeholder]="placeholder">
-    </htc-input>`,
+    <ht-input [type]="type" [placeholder]="placeholder">
+    </ht-input>`,
       {
         hostProps: {
           type: 'string',

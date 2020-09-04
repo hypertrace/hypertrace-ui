@@ -10,7 +10,7 @@ describe('Beta Tag Component', () => {
   });
 
   test('renders the beta tag', () => {
-    spectator = createHost('<htc-beta-tag></htc-beta-tag>');
+    spectator = createHost('<ht-beta-tag></ht-beta-tag>');
     expect(spectator.query('.beta-tag')).toHaveText('Beta');
   });
 });

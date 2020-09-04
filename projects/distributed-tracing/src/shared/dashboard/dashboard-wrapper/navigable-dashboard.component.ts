@@ -12,25 +12,25 @@ import { MetadataService } from '../../services/metadata/metadata.service';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
 
 @Component({
-  selector: 'htc-navigable-dashboard',
+  selector: 'ht-navigable-dashboard',
   styleUrls: ['./navigable-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="navigable-dashboard" *htcLoadAsync="this.dashboardJson$ as dashboardJson">
-      <htc-filter-bar
+    <div class="navigable-dashboard" *htLoadAsync="this.dashboardJson$ as dashboardJson">
+      <ht-filter-bar
         class="filter-bar"
         *ngIf="this.filterConfig?.filterBar"
         [attributes]="this.attributes$ | async"
         [syncWithUrl]="true"
         (filtersChange)="this.onFilterChange($event)"
       >
-      </htc-filter-bar>
-      <htc-application-aware-dashboard
+      </ht-filter-bar>
+      <ht-application-aware-dashboard
         class="dashboard"
         [json]="dashboardJson"
         (dashboardReady)="this.onDashboardReady($event)"
       >
-      </htc-application-aware-dashboard>
+      </ht-application-aware-dashboard>
     </div>
   `
 })

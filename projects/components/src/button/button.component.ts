@@ -5,34 +5,34 @@ import { IconSize } from '../icon/icon-size';
 import { ButtonRole, ButtonSize, ButtonStyle } from './button';
 
 @Component({
-  selector: 'htc-button',
+  selector: 'ht-button',
   styleUrls: ['./button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-event-blocker event="click" class="button-container" [enabled]="this.disabled">
+    <ht-event-blocker event="click" class="button-container" [enabled]="this.disabled">
       <button class="button" [ngClass]="this.getStyleClasses()">
-        <htc-icon
+        <ht-icon
           *ngIf="this.icon && !this.trailingIcon"
           [icon]="this.icon"
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon leading"
-        ></htc-icon>
+        ></ht-icon>
 
         <div class="conditional-padding leading" *ngIf="this.label && this.icon && !this.trailingIcon"></div>
 
-        <htc-label *ngIf="this.label" [label]="label" class="label"></htc-label>
+        <ht-label *ngIf="this.label" [label]="label" class="label"></ht-label>
 
         <div class="conditional-padding trailing" *ngIf="this.label && this.icon && this.trailingIcon"></div>
-        <htc-icon
+        <ht-icon
           *ngIf="this.icon && this.trailingIcon"
           [icon]="this.icon"
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon trailing"
-        ></htc-icon>
+        ></ht-icon>
       </button>
-    </htc-event-blocker>
+    </ht-event-blocker>
   `
 })
 export class ButtonComponent {

@@ -8,12 +8,12 @@ import { PopoverService } from '../popover/popover.service';
 import { TooltipContentContainerComponent } from './tooltip-content-container.component';
 
 @Directive({
-  selector: '[htcTooltip]'
+  selector: '[htTooltip]'
 })
 export class TooltipDirective implements OnDestroy {
   private static readonly DEFAULT_HOVER_DELAY_MS: number = 400;
 
-  @Input('htcTooltip')
+  @Input('htTooltip')
   public content?: TemplateRef<unknown> | string | number;
 
   private readonly mouseEnter$: Subject<MouseEvent> = new Subject();

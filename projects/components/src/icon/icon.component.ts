@@ -4,16 +4,16 @@ import { assertUnreachable } from '@hypertrace/common';
 import { IconSize } from './icon-size';
 
 @Component({
-  selector: 'htc-icon',
+  selector: 'ht-icon',
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-icon
-      class="htc-icon"
+      class="ht-icon"
       [ngClass]="this.size"
       [ngStyle]="{ color: this.color ? this.color : '' }"
       [attr.aria-label]="this.labelToUse"
-      [htcTooltip]="this.showTooltip ? this.labelToUse : undefined"
+      [htTooltip]="this.showTooltip ? this.labelToUse : undefined"
       [fontSet]="this.fontSet"
       [svgIcon]="this.svgIcon"
       >{{ this.ligatureText }}</mat-icon

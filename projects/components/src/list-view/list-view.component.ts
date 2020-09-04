@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'htc-list-view',
+  selector: 'ht-list-view',
   styleUrls: ['./list-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

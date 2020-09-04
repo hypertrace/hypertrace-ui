@@ -28,7 +28,7 @@ describe('Spinner component', () => {
 
   test('should show spinner while observable is not complete', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
-      spectator = createHost(`<htc-spinner [data$]="data$" [loadingLabel]="loadingLabel"></htc-spinner>`, {
+      spectator = createHost(`<ht-spinner [data$]="data$" [loadingLabel]="loadingLabel"></ht-spinner>`, {
         hostProps: {
           data$: NEVER,
           loadingLabel: 'Loading...'
@@ -42,7 +42,7 @@ describe('Spinner component', () => {
   test('should show sucess label when observable completes', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
       spectator = createHost(
-        `<htc-spinner [data$]="data$" [loadingLabel]="loadingLabel" [successLabel]="successLabel"></htc-spinner>`,
+        `<ht-spinner [data$]="data$" [loadingLabel]="loadingLabel" [successLabel]="successLabel"></ht-spinner>`,
         {
           hostProps: {
             data$: of(true),
@@ -59,7 +59,7 @@ describe('Spinner component', () => {
   test('should show error when observable errors out', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
       spectator = createHost(
-        `<htc-spinner [data$]="data$" [loadingLabel]="loadingLabel" [errorLabel]="errorLabel"></htc-spinner>`,
+        `<ht-spinner [data$]="data$" [loadingLabel]="loadingLabel" [errorLabel]="errorLabel"></ht-spinner>`,
         {
           hostProps: {
             data$: throwError(new Error('Internal Error')),

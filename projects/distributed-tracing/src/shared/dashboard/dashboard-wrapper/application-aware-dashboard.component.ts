@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
 
 @Component({
-  selector: 'htc-application-aware-dashboard',
+  selector: 'ht-application-aware-dashboard',
   styleUrls: ['./application-aware-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -28,10 +28,10 @@ describe('Multi Select Component', () => {
   test('should display initial selections', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-multi-select [selected]="selected">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-multi-select>`,
+    <ht-multi-select [selected]="selected">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -56,15 +56,15 @@ describe('Multi Select Component', () => {
   test('should display provided options with icons when clicked', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-multi-select [selected]="selected">
-      <htc-select-option
+    <ht-multi-select [selected]="selected">
+      <ht-select-option
         *ngFor="let option of options"
         [label]="option.label"
         [value]="option.value"
         icon="${IconType.Label}"
         iconColor="#FEA395">
-      </htc-select-option>
-    </htc-multi-select>`,
+      </ht-select-option>
+    </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -84,7 +84,7 @@ describe('Multi Select Component', () => {
 
     optionElements.forEach((element, index) => {
       expect(element).toHaveText(selectionOptions[index].label);
-      expect(element.querySelector('htc-icon')).toExist();
+      expect(element.querySelector('ht-icon')).toExist();
     });
   }));
 
@@ -93,10 +93,10 @@ describe('Multi Select Component', () => {
 
     spectator = hostFactory(
       `
-    <htc-multi-select [selected]="selected" (selectedChange)="onChange($event)">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-multi-select>`,
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -121,10 +121,10 @@ describe('Multi Select Component', () => {
   test('should set correct label alignment', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-multi-select [selected]="selected" [showBorder]="showBorder">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-multi-select>`,
+    <ht-multi-select [selected]="selected" [showBorder]="showBorder">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,

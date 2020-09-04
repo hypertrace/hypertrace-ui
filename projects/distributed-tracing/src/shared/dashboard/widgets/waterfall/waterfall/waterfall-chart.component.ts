@@ -17,13 +17,13 @@ import { WaterfallData, WaterfallDataNode } from './waterfall-chart';
 import { WaterfallChartService } from './waterfall-chart.service';
 
 @Component({
-  selector: 'htc-waterfall-chart',
+  selector: 'ht-waterfall-chart',
   styleUrls: ['./waterfall-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="waterfall-chart" *ngIf="this.datasource">
       <div class="table">
-        <htc-table
+        <ht-table
           #table
           [columnConfigs]="this.columnDefs"
           [data]="this.datasource"
@@ -39,10 +39,10 @@ import { WaterfallChartService } from './waterfall-chart.service';
           (toggleRowChange)="this.onTableRowToggled($event)"
           (toggleAllChange)="this.onToggleAll($event)"
         >
-        </htc-table>
+        </ht-table>
       </div>
       <div class="sequence">
-        <htc-sequence-chart
+        <ht-sequence-chart
           unit="ms"
           [data]="this.segments"
           class="chart"
@@ -51,7 +51,7 @@ import { WaterfallChartService } from './waterfall-chart.service';
           [hovered]="this.hoveredNode"
           (hoveredChange)="this.onHover($event)"
         >
-        </htc-sequence-chart>
+        </ht-sequence-chart>
       </div>
     </div>
   `

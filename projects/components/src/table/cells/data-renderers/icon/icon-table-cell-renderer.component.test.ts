@@ -28,7 +28,7 @@ describe('Icon table cell renderer component', () => {
   test('should render an icon', () => {
     const spectator = buildComponent();
 
-    const element = spectator.query('.htc-icon');
+    const element = spectator.query('.ht-icon');
 
     expect(element).toHaveExactText(IconType.AddCircleOutline);
     expect(element).toHaveAttribute('aria-label', 'add_circle_outline');

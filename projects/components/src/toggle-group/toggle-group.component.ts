@@ -15,7 +15,7 @@ import { ToggleItem } from './toggle-item';
 import { ToggleItemComponent } from './toggle-item.component';
 
 @Component({
-  selector: 'htc-toggle-group',
+  selector: 'ht-toggle-group',
   styleUrls: ['./toggle-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -28,7 +28,7 @@ import { ToggleItemComponent } from './toggle-item.component';
         ></div>
         <div class="container" *ngFor="let item of this.items; let index = index">
           <div class="divider" *ngIf="index !== 0" [class.hide-divider]="this.shouldHideDivider(index)"></div>
-          <htc-toggle-item class="tab" [label]="item.label" (click)="this.setActiveItem(item)"></htc-toggle-item>
+          <ht-toggle-item class="tab" [label]="item.label" (click)="this.setActiveItem(item)"></ht-toggle-item>
         </div>
       </div>
     </div>

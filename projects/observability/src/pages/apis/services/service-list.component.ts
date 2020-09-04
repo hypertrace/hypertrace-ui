@@ -8,9 +8,8 @@ import { ObservabilityTableCellType } from '../../../shared/components/table/obs
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="vertical-flex-layout">
-      <htc-page-header></htc-page-header>
-      <htc-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson">
-      </htc-navigable-dashboard>
+      <ht-page-header></ht-page-header>
+      <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson"> </ht-navigable-dashboard>
     </div>
   `
 })

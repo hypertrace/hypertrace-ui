@@ -32,7 +32,7 @@ describe('Copy to Clipboard component', () => {
 
   test('correctly copies the text to clipboard', fakeAsync(() => {
     spectator = createHost(
-      `<htc-copy-to-clipboard [text]="textToBeCopied" label="Copy to Clipboard"></htc-copy-to-clipboard>`,
+      `<ht-copy-to-clipboard [text]="textToBeCopied" label="Copy to Clipboard"></ht-copy-to-clipboard>`,
       {
         hostProps: {
           textToBeCopied: 'Text to be copied'
@@ -49,7 +49,7 @@ describe('Copy to Clipboard component', () => {
     expect(spectator.query('.icon')).toExist();
     expect(spectator.query('.label')).toHaveText('Copy to Clipboard');
 
-    const element = spectator.query('.htc-copy-to-clipboard');
+    const element = spectator.query('.ht-copy-to-clipboard');
     expect(element).toExist();
 
     spectator.click(element!);

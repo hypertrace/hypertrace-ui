@@ -8,7 +8,7 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-select
+    <ht-select
       [selected]="this.interval"
       (selectedChange)="this.onIntervalChange($event)"
       [disabled]="this.isDisabledOrUnselectable()"
@@ -16,13 +16,9 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
       [showBorder]="true"
       [size]="this.size"
     >
-      <htc-select-option
-        *ngFor="let option of this.intervalSelectOptions"
-        [value]="option.value"
-        [label]="option.label"
-      >
-      </htc-select-option>
-    </htc-select>
+      <ht-select-option *ngFor="let option of this.intervalSelectOptions" [value]="option.value" [label]="option.label">
+      </ht-select-option>
+    </ht-select>
   `
 })
 export class IntervalSelectComponent implements OnChanges {

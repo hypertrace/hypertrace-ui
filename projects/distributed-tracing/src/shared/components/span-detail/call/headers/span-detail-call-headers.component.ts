@@ -5,15 +5,15 @@ import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'htc-span-detail-call-headers',
+  selector: 'ht-span-detail-call-headers',
   styleUrls: ['./span-detail-call-headers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="call-headers">
-      <htc-label label="Headers" class="title"></htc-label>
+      <ht-label label="Headers" class="title"></ht-label>
       <div class="container">
-        <ng-container *htcLoadAsync="this.headerRecords$ as headerRecords">
-          <htc-list-view [records]="headerRecords"></htc-list-view>
+        <ng-container *htLoadAsync="this.headerRecords$ as headerRecords">
+          <ht-list-view [records]="headerRecords"></ht-list-view>
         </ng-container>
       </div>
     </div>

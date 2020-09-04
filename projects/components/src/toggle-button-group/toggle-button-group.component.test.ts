@@ -20,9 +20,9 @@ describe('Toggle Button Group Component', () => {
     const labels = ['Parsed', 'Raw'];
     spectator = createHost(
       `
-      <htc-toggle-button-group>
-        <htc-toggle-button *ngFor="let label of this.labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group>
+        <ht-toggle-button *ngFor="let label of this.labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -33,7 +33,7 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    const buttonElements = spectator.queryAll('.htc-toggle-button > .button');
+    const buttonElements = spectator.queryAll('.ht-toggle-button > .button');
     expect(buttonElements.length).toBe(2);
 
     // Match rendered label values with data
@@ -47,9 +47,9 @@ describe('Toggle Button Group Component', () => {
     const labels = ['Parsed', 'Raw'];
     spectator = createHost(
       `
-      <htc-toggle-button-group [disableInitialSelection]="true">
-        <htc-toggle-button *ngFor="let label of this.labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group [disableInitialSelection]="true">
+        <ht-toggle-button *ngFor="let label of this.labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -67,9 +67,9 @@ describe('Toggle Button Group Component', () => {
   test('should show selected label', fakeAsync(() => {
     spectator = createHost(
       `
-      <htc-toggle-button-group [selectedLabel]="selectedLabel">
-        <htc-toggle-button *ngFor="let label of labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group [selectedLabel]="selectedLabel">
+        <ht-toggle-button *ngFor="let label of labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -81,7 +81,7 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    const selectedButtonElements = spectator.queryAll('.htc-toggle-button > .selected');
+    const selectedButtonElements = spectator.queryAll('.ht-toggle-button > .selected');
     expect(selectedButtonElements.length).toBe(1);
     expect(selectedButtonElements[0]).toHaveText('Raw');
   }));
@@ -90,9 +90,9 @@ describe('Toggle Button Group Component', () => {
     const labels: string[] = [];
     spectator = createHost(
       `
-      <htc-toggle-button-group>
-        <htc-toggle-button *ngFor="let label of labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group>
+        <ht-toggle-button *ngFor="let label of labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -103,20 +103,20 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    let buttonElements = spectator.queryAll('.htc-toggle-button');
+    let buttonElements = spectator.queryAll('.ht-toggle-button');
     expect(buttonElements.length).toBe(0);
 
     labels.push('first', 'second');
 
     spectator.tick();
 
-    buttonElements = spectator.queryAll('.htc-toggle-button');
+    buttonElements = spectator.queryAll('.ht-toggle-button');
     expect(buttonElements.length).toBe(2);
 
     labels.push('third');
     spectator.tick();
 
-    buttonElements = spectator.queryAll('.htc-toggle-button');
+    buttonElements = spectator.queryAll('.ht-toggle-button');
     expect(buttonElements.length).toBe(3);
   }));
 
@@ -124,9 +124,9 @@ describe('Toggle Button Group Component', () => {
     const spySelectionChange = jest.fn();
     spectator = createHost(
       `
-      <htc-toggle-button-group (selectedLabelChange)="selectedLabelChange($event)">
-        <htc-toggle-button *ngFor="let label of this.labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group (selectedLabelChange)="selectedLabelChange($event)">
+        <ht-toggle-button *ngFor="let label of this.labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -138,7 +138,7 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    const buttonElements = spectator.queryAll('.htc-toggle-button > button');
+    const buttonElements = spectator.queryAll('.ht-toggle-button > button');
     expect(buttonElements.length).toBe(2);
 
     spectator.dispatchFakeEvent(buttonElements[1], 'click', true);
@@ -150,9 +150,9 @@ describe('Toggle Button Group Component', () => {
   test('should disable all child buttons', fakeAsync(() => {
     spectator = createHost(
       `
-      <htc-toggle-button-group [disabled]="disabled">
-        <htc-toggle-button *ngFor="let label of this.labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group [disabled]="disabled">
+        <ht-toggle-button *ngFor="let label of this.labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -164,16 +164,16 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    const buttonElements = spectator.queryAll('.htc-toggle-button > .disabled');
+    const buttonElements = spectator.queryAll('.ht-toggle-button > .disabled');
     expect(buttonElements.length).toBe(2);
   }));
 
   test('should show specific first and last button border style', fakeAsync(() => {
     spectator = createHost(
       `
-      <htc-toggle-button-group>
-        <htc-toggle-button *ngFor="let label of this.labels" [label]="label"></htc-toggle-button>
-      </htc-toggle-button-group>
+      <ht-toggle-button-group>
+        <ht-toggle-button *ngFor="let label of this.labels" [label]="label"></ht-toggle-button>
+      </ht-toggle-button-group>
     `,
       {
         hostProps: {
@@ -184,15 +184,15 @@ describe('Toggle Button Group Component', () => {
 
     spectator.tick();
 
-    const buttonElements = spectator.queryAll('.htc-toggle-button > .button');
+    const buttonElements = spectator.queryAll('.ht-toggle-button > .button');
     expect(buttonElements).not.toBeNull();
     expect(buttonElements.length).toBe(2);
 
-    const firstButtonElements = spectator.queryAll('.htc-toggle-button > .first');
+    const firstButtonElements = spectator.queryAll('.ht-toggle-button > .first');
     expect(firstButtonElements).not.toBeNull();
     expect(firstButtonElements.length).toBe(1);
 
-    const lastButtonElements = spectator.queryAll('.htc-toggle-button > .last');
+    const lastButtonElements = spectator.queryAll('.ht-toggle-button > .last');
     expect(lastButtonElements).not.toBeNull();
     expect(lastButtonElements.length).toBe(1);
 

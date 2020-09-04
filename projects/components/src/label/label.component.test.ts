@@ -14,7 +14,7 @@ describe('Label component', () => {
   });
 
   test('should show label in DOM when provided', () => {
-    spectator = createHost(`<htc-label [label]="label"></htc-label>`, {
+    spectator = createHost(`<ht-label [label]="label"></ht-label>`, {
       hostProps: {
         label: 'test'
       }
@@ -24,7 +24,7 @@ describe('Label component', () => {
   });
 
   test('should keep label in DOM and apply "no-label" class when empty string', () => {
-    spectator = createHost(`<htc-label [label]="label"></htc-label>`, {
+    spectator = createHost(`<ht-label [label]="label"></ht-label>`, {
       hostProps: {
         label: ''
       }
@@ -35,7 +35,7 @@ describe('Label component', () => {
   });
 
   test('should keep label in DOM and apply "no-label" class when empty undefined', () => {
-    spectator = createHost(`<htc-label></htc-label>`);
+    spectator = createHost(`<ht-label></ht-label>`);
     expect(spectator.element).toHaveText('no-label');
     expect(spectator.query('.no-label')).toExist();
   });

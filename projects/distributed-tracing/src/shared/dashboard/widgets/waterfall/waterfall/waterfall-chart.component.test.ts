@@ -100,7 +100,7 @@ describe('Waterfall Chart component', () => {
   });
 
   test('renders the chart', fakeAsync(() => {
-    const spectator = createHost('<htc-waterfall-chart [data]="data"></htc-waterfall-chart>', {
+    const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
         data: data
       }
@@ -108,10 +108,10 @@ describe('Waterfall Chart component', () => {
 
     spectator.tick(200);
 
-    const table = spectator.query('htc-table')!;
+    const table = spectator.query('ht-table')!;
     expect(table).toExist();
 
-    const chart = spectator.query('htc-sequence-chart')!;
+    const chart = spectator.query('ht-sequence-chart')!;
     expect(chart).toExist();
 
     // Should set initial selection based on data
@@ -121,7 +121,7 @@ describe('Waterfall Chart component', () => {
   }));
 
   test('gets callback when collapsing all', fakeAsync(() => {
-    const spectator = createHost('<htc-waterfall-chart [data]="data"></htc-waterfall-chart>', {
+    const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
         data: data
       }
@@ -136,7 +136,7 @@ describe('Waterfall Chart component', () => {
   }));
 
   test('gets callback when expanding all', fakeAsync(() => {
-    const spectator = createHost('<htc-waterfall-chart [data]="data"></htc-waterfall-chart>', {
+    const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
         data: data
       }
@@ -151,7 +151,7 @@ describe('Waterfall Chart component', () => {
   }));
 
   test('assign color based on service names', fakeAsync(() => {
-    const spectator = createHost('<htc-waterfall-chart [data]="data"></htc-waterfall-chart>', {
+    const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
         data: data
       }

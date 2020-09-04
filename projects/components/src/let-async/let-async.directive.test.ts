@@ -13,7 +13,7 @@ describe('Let async directive', () => {
 
   beforeEach(() => {
     spectator = createDirective(`
-      <div class="content" *htcLetAsync="data$ as data">{{ data }}</div>
+      <div class="content" *htLetAsync="data$ as data">{{ data }}</div>
     `);
   });
 

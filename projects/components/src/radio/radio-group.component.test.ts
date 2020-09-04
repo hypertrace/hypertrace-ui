@@ -20,12 +20,12 @@ describe('Radio component', () => {
   }));
 
   test('should warn when title is not provided', () => {
-    spectator = createHost(`<htc-radio-group></htc-radio-group>`);
+    spectator = createHost(`<ht-radio-group></ht-radio-group>`);
     expect(logSpy).toHaveBeenCalled();
   });
 
   test('should not warn when title is provided', () => {
-    spectator = createHost(`<htc-radio-group [title]="title"></htc-radio-group>`, {
+    spectator = createHost(`<ht-radio-group [title]="title"></ht-radio-group>`, {
       hostProps: {
         title: 'TEST'
       }
@@ -35,7 +35,7 @@ describe('Radio component', () => {
   });
 
   test('should apply disabled attribute when disabled', () => {
-    spectator = createHost(`<htc-radio-group [title]="title" [disabled]="disabled"></htc-radio-group>`, {
+    spectator = createHost(`<ht-radio-group [title]="title" [disabled]="disabled"></ht-radio-group>`, {
       hostProps: {
         title: 'TEST',
         disabled: true
@@ -49,7 +49,7 @@ describe('Radio component', () => {
 
   test('should have an option for each radio value provided', () => {
     spectator = createHost(
-      `<htc-radio-group [title]="title" [disabled]="disabled" [options]="options"></htc-radio-group>`,
+      `<ht-radio-group [title]="title" [disabled]="disabled" [options]="options"></ht-radio-group>`,
       {
         hostProps: {
           title: 'TEST',
@@ -75,7 +75,7 @@ describe('Radio component', () => {
 
   test('should callback and change checked value when clicked', fakeAsync(() => {
     spectator = createHost(
-      `<htc-radio-group [title]="title" [disabled]="disabled" [options]="options"></htc-radio-group>`,
+      `<ht-radio-group [title]="title" [disabled]="disabled" [options]="options"></ht-radio-group>`,
       {
         hostProps: {
           title: 'TEST',

@@ -6,7 +6,7 @@ import { TextWidgetModel } from './text-widget.model';
 
 @Renderer({ modelClass: TextWidgetModel })
 @Component({
-  selector: 'htc-text-widget-renderer',
+  selector: 'ht-text-widget-renderer',
   styleUrls: ['./text-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

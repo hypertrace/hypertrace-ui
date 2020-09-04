@@ -5,45 +5,45 @@ import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 
 @Component({
-  selector: 'htc-span-detail',
+  selector: 'ht-span-detail',
   styleUrls: ['./span-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="span-detail" *ngIf="this.spanData">
-      <htc-span-detail-title-header
+      <ht-span-detail-title-header
         class="title-header"
         *ngIf="this.showTitleHeader"
         [serviceName]="this.spanData.serviceName"
         [protocolName]="this.spanData.protocolName"
         [apiName]="this.spanData.apiName"
         (closed)="this.closed.emit()"
-      ></htc-span-detail-title-header>
+      ></ht-span-detail-title-header>
 
       <div class="summary-container">
         <ng-content></ng-content>
       </div>
 
-      <htc-tab-group class="tabs-group">
-        <htc-tab label="Request" *ngIf="this.showRequestTab">
-          <htc-span-request-detail
+      <ht-tab-group class="tabs-group">
+        <ht-tab label="Request" *ngIf="this.showRequestTab">
+          <ht-span-request-detail
             class="request"
             [layout]="this.layout"
             [requestHeaders]="this.spanData.requestHeaders"
             [requestBody]="this.spanData.requestBody"
-          ></htc-span-request-detail>
-        </htc-tab>
-        <htc-tab label="Response" *ngIf="this.showResponseTab">
-          <htc-span-response-detail
+          ></ht-span-request-detail>
+        </ht-tab>
+        <ht-tab label="Response" *ngIf="this.showResponseTab">
+          <ht-span-response-detail
             class="response"
             [layout]="this.layout"
             [responseHeaders]="this.spanData.responseHeaders"
             [responseBody]="this.spanData.responseBody"
-          ></htc-span-response-detail>
-        </htc-tab>
-        <htc-tab label="Attributes" class="attributes">
-          <htc-span-tags-detail [tags]="this.spanData.tags"></htc-span-tags-detail>
-        </htc-tab>
-      </htc-tab-group>
+          ></ht-span-response-detail>
+        </ht-tab>
+        <ht-tab label="Attributes" class="attributes">
+          <ht-span-tags-detail [tags]="this.spanData.tags"></ht-span-tags-detail>
+        </ht-tab>
+      </ht-tab-group>
     </div>
   `
 })

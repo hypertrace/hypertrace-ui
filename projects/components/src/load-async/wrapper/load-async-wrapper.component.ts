@@ -10,21 +10,21 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
 );
 
 @Component({
-  selector: 'htc-load-async-wrapper',
+  selector: 'ht-load-async-wrapper',
   template: `
     <div *ngIf="this.state$ | async as state" class="fill-container" [ngSwitch]="state.type">
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Loading}'">
-        <htc-loader></htc-loader>
+        <ht-loader></ht-loader>
       </ng-container>
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Success}'">
         <ng-container *ngTemplateOutlet="this.content; context: state.context"></ng-container>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <htc-message-display
+        <ht-message-display
           [icon]="this.icon"
           [title]="this.title"
           [description]="this.description"
-        ></htc-message-display>
+        ></ht-message-display>
       </ng-container>
     </div>
   `,

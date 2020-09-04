@@ -44,17 +44,17 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
 // tslint:disable max-file-line-count
 @Component({
-  selector: 'htc-table',
+  selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Search -->
     <div *ngIf="this.searchable" class="table-controls">
-      <htc-search-box
+      <ht-search-box
         class="search-box"
         [placeholder]="this.searchPlaceholder"
         (valueChange)="this.applyFilter($event)"
-      ></htc-search-box>
+      ></ht-search-box>
     </div>
 
     <!-- Table -->
@@ -74,14 +74,14 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             [style.max-width]="columnDef.width"
             class="header-cell"
           >
-            <htc-table-header-cell-renderer
+            <ht-table-header-cell-renderer
               [metadata]="this.metadata"
               [columnConfig]="columnDef"
               [index]="index"
               [sort]="columnDef.sort"
               (sortChange)="this.onHeaderCellClick(columnDef)"
             >
-            </htc-table-header-cell-renderer>
+            </ht-table-header-cell-renderer>
           </cdk-header-cell>
           <cdk-cell
             *cdkCellDef="let row"
@@ -95,7 +95,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             }"
             class="data-cell"
           >
-            <htc-table-data-cell-renderer
+            <ht-table-data-cell-renderer
               class="data-cell-renderer"
               [metadata]="this.metadata"
               [columnConfig]="columnDef"
@@ -103,7 +103,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [rowData]="row"
               [cellData]="row[columnDef.id]"
               (click)="this.onDataCellClick(row)"
-            ></htc-table-data-cell-renderer>
+            ></ht-table-data-cell-renderer>
           </cdk-cell>
         </ng-container>
       </div>
@@ -111,12 +111,12 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       <!-- Expandable Detail Column -->
       <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
         <cdk-cell *cdkCellDef="let row" [attr.colspan]="this.columnConfigsSubject.value.length" class="expanded-cell">
-          <htc-table-expanded-detail-row-cell-renderer
+          <ht-table-expanded-detail-row-cell-renderer
             *ngIf="this.isRowExpanded(row)"
             [row]="row"
             [expanded]="this.isRowExpanded(row)"
             [content]="this.detailContent"
-          ></htc-table-expanded-detail-row-cell-renderer>
+          ></ht-table-expanded-detail-row-cell-renderer>
         </cdk-cell>
       </ng-container>
 
@@ -142,18 +142,18 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
     <!-- State Watcher -->
     <div class="state-watcher">
-      <ng-container class="state-watcher" *htcLoadAsync="this.dataSource?.loadingStateChange$ | async"></ng-container>
+      <ng-container class="state-watcher" *htLoadAsync="this.dataSource?.loadingStateChange$ | async"></ng-container>
     </div>
 
     <!-- Pagination -->
     <div class="pagination-controls" *ngIf="this.pageable" [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'">
-      <htc-paginator
-        *htcLetAsync="this.urlPageData$ as pageData"
+      <ht-paginator
+        *htLetAsync="this.urlPageData$ as pageData"
         (pageChange)="this.onPageChange($event)"
         [pageSizeOptions]="this.pageSizeOptions"
         [pageSize]="pageData?.pageSize"
         [pageIndex]="pageData?.pageIndex"
-      ></htc-paginator>
+      ></ht-paginator>
     </div>
   `
 })
@@ -598,7 +598,7 @@ export class TableComponent
     const sortColumn = columns.find(column => column.id === params.get(TableComponent.SORT_COLUMN_URL_PARAM));
     const sortDirection = params.get(TableComponent.SORT_DIRECTION_URL_PARAM) as TableSortDirection | null;
 
-    return sortColumn && sortDirection
+    return sortColumn !== undefined && sortDirection !== null
       ? {
           column: sortColumn,
           direction: sortDirection

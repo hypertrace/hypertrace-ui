@@ -4,7 +4,7 @@ import { ContainerLayoutData } from './container-layout';
 export const CONTAINER_LAYOUT = new InjectionToken<ContainerLayoutData>('CONTAINER_LAYOUT');
 
 @Component({
-  selector: 'htc-grid-container-layout-container',
+  selector: 'ht-grid-container-layout-container',
   styleUrls: ['./container-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, TemplateRef } from '@angula
 import { POPOVER_DATA } from '../popover/popover';
 
 @Component({
-  selector: 'htc-tooltip-content-container',
+  selector: 'ht-tooltip-content-container',
   styleUrls: ['./tooltip-content-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

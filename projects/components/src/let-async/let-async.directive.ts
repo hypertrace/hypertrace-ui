@@ -8,11 +8,11 @@ import { Observable } from 'rxjs';
  * ngIf the template will be instantiated immediately.
  */
 @Directive({
-  selector: '[htcLetAsync]',
+  selector: '[htLetAsync]',
   providers: [AsyncPipe]
 })
 export class LetAsyncDirective<T> implements DoCheck {
-  @Input('htcLetAsync')
+  @Input('htLetAsync')
   public data$?: Observable<T>;
 
   private readonly context: LetAsyncContext<T> = {};
@@ -31,7 +31,7 @@ export class LetAsyncDirective<T> implements DoCheck {
   }
 
   private updateContext(value?: T): void {
-    this.context.htcLetAsync = value;
+    this.context.htLetAsync = value;
     this.context.$implicit = value;
   }
 
@@ -42,6 +42,6 @@ export class LetAsyncDirective<T> implements DoCheck {
 }
 
 interface LetAsyncContext<T> {
-  htcLetAsync?: T;
+  htLetAsync?: T;
   $implicit?: T;
 }

@@ -15,7 +15,7 @@ describe('Summary Card Component', () => {
 
   test('should render card', () => {
     spectator = createHost(
-      `<htc-summary-card [name]="name" [color]="color" [summaries]="summaries"></htc-summary-card>`,
+      `<ht-summary-card [name]="name" [color]="color" [summaries]="summaries"></ht-summary-card>`,
       {
         hostProps: {
           name: 'I am Card',

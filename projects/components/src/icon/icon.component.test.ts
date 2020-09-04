@@ -17,32 +17,32 @@ describe('Icon component', () => {
 
   test('uses svg attribute for icons backed by svgs', () => {
     const spectator = buildHost(
-      `<htc-icon icon="${IconType.Hypertrace}">
-       </htc-icon>`
+      `<ht-icon icon="${IconType.Hypertrace}">
+       </ht-icon>`
     );
 
     expect(spectator.query(MatIcon)!.svgIcon).toBe('hypertrace');
     expect(spectator).toHaveExactText('');
-    expect(spectator.query('.htc-icon')).toHaveAttribute('aria-label', 'hypertrace');
+    expect(spectator.query('.ht-icon')).toHaveAttribute('aria-label', 'hypertrace');
   });
 
   test('should apply custom color if provided', () => {
     const spectator = buildHost(
-      `<htc-icon icon="${IconType.Hypertrace}" color="#FEA395">
-       </htc-icon>`
+      `<ht-icon icon="${IconType.Hypertrace}" color="#FEA395">
+       </ht-icon>`
     );
 
-    expect(spectator.query('.htc-icon')).toHaveAttribute('style', 'color: rgb(254, 163, 149);');
+    expect(spectator.query('.ht-icon')).toHaveAttribute('style', 'color: rgb(254, 163, 149);');
   });
 
   test('uses ligatures for icons backed by ligature', () => {
     const spectator = buildHost(
-      `<htc-icon icon="${IconType.Add}" label="other label">
-       </htc-icon>`
+      `<ht-icon icon="${IconType.Add}" label="other label">
+       </ht-icon>`
     );
 
     expect(spectator.query(MatIcon)!.svgIcon).toBe('');
-    expect(spectator.query('.htc-icon')).toHaveExactText(IconType.Add);
-    expect(spectator.query('.htc-icon')).toHaveAttribute('aria-label', 'other label');
+    expect(spectator.query('.ht-icon')).toHaveExactText(IconType.Add);
+    expect(spectator.query('.ht-icon')).toHaveAttribute('aria-label', 'other label');
   });
 });

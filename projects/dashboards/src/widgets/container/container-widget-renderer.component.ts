@@ -6,12 +6,12 @@ import { ContainerWidgetModel } from './container-widget.model';
 
 @Renderer({ modelClass: ContainerWidgetModel })
 @Component({
-  selector: 'htc-container-widget',
+  selector: 'ht-container-widget',
   styleUrls: ['./container-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="htc-container-widget">
-      <htc-label *ngIf="this.model.title" [label]="this.model.title | htcDisplayTitle" class="title"></htc-label>
+    <div class="ht-container-widget">
+      <ht-label *ngIf="this.model.title" [label]="this.model.title | htDisplayTitle" class="title"></ht-label>
       <div #containerContent></div>
     </div>
   `

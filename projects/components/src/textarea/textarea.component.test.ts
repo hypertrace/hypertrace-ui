@@ -19,13 +19,13 @@ describe('Textarea Component', () => {
   }));
 
   test('should warn when placeholder is not provided', () => {
-    spectator = createHost(`<htc-textarea></htc-textarea>`);
+    spectator = createHost(`<ht-textarea></ht-textarea>`);
 
     expect(logSpy).toHaveBeenCalled();
   });
 
   test('should not warn when placeholder is provided', () => {
-    spectator = createHost(`<htc-textarea [placeholder]="placeholder"></htc-textarea>`, {
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST'
       }
@@ -35,7 +35,7 @@ describe('Textarea Component', () => {
   });
 
   test('should apply disabled attribute when disabled', () => {
-    spectator = createHost(`<htc-textarea [placeholder]="placeholder" [disabled]="disabled"></htc-textarea>`, {
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [disabled]="disabled"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST',
         disabled: true

@@ -35,9 +35,9 @@ describe('Navigation List Component', () => {
         matchPaths: ['']
       }
     ];
-    spectator = createHost(`<htc-navigation-list></htc-navigation-list>`, { props: { navItems: navItems } });
+    spectator = createHost(`<ht-navigation-list></ht-navigation-list>`, { props: { navItems: navItems } });
     const linkNavItemCount = spectator.component.navItems.filter(value => value.type === NavItemType.Link).length;
-    expect(spectator.queryAll('htc-nav-item').length).toBe(linkNavItemCount);
+    expect(spectator.queryAll('ht-nav-item').length).toBe(linkNavItemCount);
   });
   test('should show a footer-item element for each FooterItemConfig', () => {
     const navItems: NavItemConfig[] = [
@@ -56,7 +56,7 @@ describe('Navigation List Component', () => {
       }
     ];
     spectator = createHost(
-      `<htc-navigation-list [navItems]="navItems" [footerItems]="footerItems"></htc-navigation-list>`,
+      `<ht-navigation-list [navItems]="navItems" [footerItems]="footerItems"></ht-navigation-list>`,
       {
         hostProps: { navItems: navItems, footerItems: footerItems }
       }
@@ -66,7 +66,7 @@ describe('Navigation List Component', () => {
   });
 
   test('should update layout when collapsed preference is updated', () => {
-    spectator = createHost(`<htc-navigation-list></htc-navigation-list>`);
+    spectator = createHost(`<ht-navigation-list></ht-navigation-list>`);
     expect(spectator.query('.navigation-list')).toHaveClass('expanded');
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.TriangleLeft);
     spectator.setInput({

@@ -15,46 +15,46 @@ import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 
 @Component({
-  selector: 'htc-time-range',
+  selector: 'ht-time-range',
   styleUrls: ['./time-range.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="time-range" *ngIf="this.timeRange$ | async as timeRange">
       <div class="time-range-selector">
-        <htc-popover (popoverOpen)="this.onPopoverOpen($event)" [closeOnNavigate]="false">
-          <htc-popover-trigger>
+        <ht-popover (popoverOpen)="this.onPopoverOpen($event)" [closeOnNavigate]="false">
+          <ht-popover-trigger>
             <div class="trigger">
-              <htc-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Large}"></htc-icon>
-              <htc-label class="trigger-label" [label]="timeRange.toDisplayString()"></htc-label>
-              <htc-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></htc-icon>
+              <ht-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Large}"></ht-icon>
+              <ht-label class="trigger-label" [label]="timeRange.toDisplayString()"></ht-label>
+              <ht-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
-          </htc-popover-trigger>
-          <htc-popover-content>
+          </ht-popover-trigger>
+          <ht-popover-content>
             <div class="popover-content">
               <!-- Predefined Time Ranges -->
-              <htc-predefined-time-range-selection
+              <ht-predefined-time-range-selection
                 class="predefined"
                 *ngIf="!this.showCustom"
                 (showCustomSelected)="this.showCustom = true"
                 (selection)="this.setToRelativeTimeRange($event)"
               >
-              </htc-predefined-time-range-selection>
+              </ht-predefined-time-range-selection>
 
               <!-- Custom Time Range -->
-              <htc-custom-time-range-selection
+              <ht-custom-time-range-selection
                 *ngIf="this.showCustom"
                 [timeRange]="timeRange"
                 (cancel)="this.onPopoverCancel()"
                 (timeRangeChange)="this.setToFixedTimeRange($event)"
               >
-              </htc-custom-time-range-selection>
+              </ht-custom-time-range-selection>
             </div>
-          </htc-popover-content>
-        </htc-popover>
+          </ht-popover-content>
+        </ht-popover>
       </div>
 
-      <htc-button
-        *ngIf="this.getRefreshButtonData | htcMemoize: timeRange | async as refreshButton"
+      <ht-button
+        *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         class="refresh"
         [label]="refreshButton.text$ | async"
         icon="${IconType.Refresh}"
@@ -62,7 +62,7 @@ import { PopoverRef } from '../popover/popover-ref';
         [role]="refreshButton.role"
         (click)="refreshButton.onClick()"
       >
-      </htc-button>
+      </ht-button>
     </div>
   `
 })

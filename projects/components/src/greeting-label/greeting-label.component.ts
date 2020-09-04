@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
-  selector: 'htc-greeting-label',
+  selector: 'ht-greeting-label',
   styleUrls: ['./greeting-label.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <div class="greeting-label">{{ this.greetingMessage }}</div>`

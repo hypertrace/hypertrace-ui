@@ -31,14 +31,14 @@ describe('Span detail component', () => {
       requestUrl: 'test-url'
     };
 
-    spectator = createHost(`<htc-span-detail [spanData]="spanData"></htc-span-detail>`, {
+    spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
         spanData: spanData
       }
     });
 
-    expect(spectator.query<HTMLElement>('htc-tab-group')).toExist();
-    expect(spectator.query<HTMLElement>('htc-span-request-detail')).toExist();
+    expect(spectator.query<HTMLElement>('ht-tab-group')).toExist();
+    expect(spectator.query<HTMLElement>('ht-span-request-detail')).toExist();
   });
 
   test('should hide Request tab if both request header params and body are absent', fakeAsync(() => {
@@ -55,7 +55,7 @@ describe('Span detail component', () => {
       requestUrl: 'test-url'
     };
 
-    spectator = createHost(`<htc-span-detail [spanData]="spanData"></htc-span-detail>`, {
+    spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
         spanData: spanData
       }
@@ -80,7 +80,7 @@ describe('Span detail component', () => {
       requestUrl: 'test-url'
     };
 
-    spectator = createHost(`<htc-span-detail [spanData]="spanData"></htc-span-detail>`, {
+    spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
         spanData: spanData
       }
@@ -104,7 +104,7 @@ describe('Span detail component', () => {
       requestUrl: 'test-url'
     };
 
-    spectator = createHost(`<htc-span-detail [spanData]="spanData"></htc-span-detail>`, {
+    spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
         spanData: spanData
       }

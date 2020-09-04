@@ -7,11 +7,11 @@ import { HighlightedLabelWidgetModel } from './highlighted-label-widget.model';
 
 @Renderer({ modelClass: HighlightedLabelWidgetModel })
 @Component({
-  selector: 'htc-highlighted-label-widget-renderer',
+  selector: 'ht-highlighted-label-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-highlighted-label *htcLoadAsync="this.data$ as data" [data]="data" [templateString]="this.model.labelTemplate">
-    </htc-highlighted-label>
+    <ht-highlighted-label *htLoadAsync="this.data$ as data" [data]="data" [templateString]="this.model.labelTemplate">
+    </ht-highlighted-label>
   `
 })
 export class HighlightedLabelWidgetRendererComponent extends WidgetRenderer<

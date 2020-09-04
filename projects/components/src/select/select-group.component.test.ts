@@ -17,11 +17,11 @@ describe('Select group component', () => {
 
   test('renders a single select with appropriate styles', fakeAsync(() => {
     const spectator = hostFactory(`
-    <htc-select-group>
-        <htc-select selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-    </htc-select-group>`);
+    <ht-select-group>
+        <ht-select selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+    </ht-select-group>`);
     spectator.tick();
     const selects = spectator.queryAll('.select');
     expect(selects.length).toBe(1);
@@ -30,14 +30,14 @@ describe('Select group component', () => {
 
   test('renders two selects with appropriate styles', fakeAsync(() => {
     const spectator = hostFactory(`
-    <htc-select-group>
-        <htc-select selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-        <htc-select selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-    </htc-select-group>`);
+    <ht-select-group>
+        <ht-select selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+        <ht-select selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+    </ht-select-group>`);
     spectator.tick();
     const selects = spectator.queryAll('.select');
     expect(selects.length).toBe(2);
@@ -47,17 +47,17 @@ describe('Select group component', () => {
 
   test('renders more than two selects with appropriate styles', fakeAsync(() => {
     const spectator = hostFactory(`
-    <htc-select-group>
-        <htc-select selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-        <htc-select selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-        <htc-select selected="value">
-        <htc-select-option value="value" label="Label"></htc-select-option>
-      </htc-select>
-    </htc-select-group>`);
+    <ht-select-group>
+        <ht-select selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+        <ht-select selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+        <ht-select selected="value">
+        <ht-select-option value="value" label="Label"></ht-select-option>
+      </ht-select>
+    </ht-select-group>`);
     spectator.tick();
     const selects = spectator.queryAll('.select');
     expect(selects.length).toBe(3);
@@ -69,11 +69,11 @@ describe('Select group component', () => {
   test('updates styling with select content has changed', fakeAsync(() => {
     const spectator = hostFactory(
       `
-    <htc-select-group>
-        <htc-select *ngFor="let index of selectCount" selected="value">
-          <htc-select-option value="value" label="Label"></htc-select-option>
-        </htc-select>
-    </htc-select-group>`,
+    <ht-select-group>
+        <ht-select *ngFor="let index of selectCount" selected="value">
+          <ht-select-option value="value" label="Label"></ht-select-option>
+        </ht-select>
+    </ht-select-group>`,
       {
         hostProps: {
           selectCount: Array(1).fill(undefined)

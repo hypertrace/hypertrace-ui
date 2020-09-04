@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { LoggerService } from '@hypertrace/common';
 
 @Component({
-  selector: 'htc-textarea',
+  selector: 'ht-textarea',
   styleUrls: ['./textarea.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

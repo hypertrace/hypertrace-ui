@@ -7,7 +7,7 @@ import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
 
 @Component({
-  selector: 'htc-page-header',
+  selector: 'ht-page-header',
   styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -17,29 +17,29 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       [class.bottom-border]="!this.tabs?.length"
     >
       <div class="breadcrumb-container">
-        <htc-breadcrumbs [breadcrumbs]="breadcrumbs"></htc-breadcrumbs>
+        <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
 
         <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
-          <htc-icon
+          <ht-icon
             class="icon"
             *ngIf="titlecrumb.icon"
             [icon]="titlecrumb.icon"
             [label]="titlecrumb.label"
             size="${IconSize.Large}"
-          ></htc-icon>
+          ></ht-icon>
 
-          <htc-label [label]="titlecrumb.label"></htc-label>
-          <htc-beta-tag class="beta" *ngIf="this.isBeta"></htc-beta-tag>
+          <ht-label [label]="titlecrumb.label"></ht-label>
+          <ht-beta-tag class="beta" *ngIf="this.isBeta"></ht-beta-tag>
         </div>
       </div>
 
       <ng-content></ng-content>
 
-      <htc-navigable-tab-group *ngIf="this.tabs?.length" class="tabs">
-        <htc-navigable-tab *ngFor="let tab of this.tabs" [path]="tab.path" [hidden]="tab.hidden">
+      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs">
+        <ht-navigable-tab *ngFor="let tab of this.tabs" [path]="tab.path" [hidden]="tab.hidden">
           {{ tab.label }}
-        </htc-navigable-tab>
-      </htc-navigable-tab-group>
+        </ht-navigable-tab>
+      </ht-navigable-tab-group>
     </div>
   `
 })

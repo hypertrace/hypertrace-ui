@@ -17,12 +17,12 @@ describe('Panel component', () => {
 
   test('renders header content', () => {
     spectator = createHost(
-      `<htc-panel>
-        <htc-panel-header>
+      `<ht-panel>
+        <ht-panel-header>
           <div class="title">{{title}}</div>
           <div class="summary">{{summary}}</div>
-        </htc-panel-header>
-      </htc-panel>`,
+        </ht-panel-header>
+      </ht-panel>`,
       {
         hostProps: {
           title: 'Results',
@@ -36,15 +36,15 @@ describe('Panel component', () => {
 
   test('renders body content', () => {
     spectator = createHost(
-      `<htc-panel [expanded]="expanded">
-        <htc-panel-header>
+      `<ht-panel [expanded]="expanded">
+        <ht-panel-header>
           <div class="title">{{title}}</div>
           <div class="summary">{{summary}}</div>
-        </htc-panel-header>
-        <htc-panel-body>
+        </ht-panel-header>
+        <ht-panel-body>
           <div>Body Content</div>
-        </htc-panel-body>
-      </htc-panel>`,
+        </ht-panel-body>
+      </ht-panel>`,
       {
         hostProps: {
           expanded: false,
@@ -63,11 +63,11 @@ describe('Panel component', () => {
 
   test('renders body content with no header', () => {
     spectator = createHost(
-      `<htc-panel [expanded]="true">
-        <htc-panel-body>
+      `<ht-panel [expanded]="true">
+        <ht-panel-body>
           <div>Body Content</div>
-        </htc-panel-body>
-      </htc-panel>`,
+        </ht-panel-body>
+      </ht-panel>`,
       {
         hostProps: {
           expanded: false
@@ -82,11 +82,11 @@ describe('Panel component', () => {
     const onExpansionChange: jest.Mock = jest.fn();
 
     spectator = createHost(
-      `<htc-panel (expandedChange)="onExpansionChange($event)">
-        <htc-panel-header>
+      `<ht-panel (expandedChange)="onExpansionChange($event)">
+        <ht-panel-header>
           <span class="test">Test Content</span>
-        </htc-panel-header>
-      </htc-panel>`,
+        </ht-panel-header>
+      </ht-panel>`,
       {
         hostProps: {
           onExpansionChange: onExpansionChange

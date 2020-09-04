@@ -29,7 +29,7 @@ describe('Span Tags Detail Component', () => {
   });
 
   test('should display tag records', () => {
-    spectator = createHost(`<htc-span-tags-detail [tags]="tags"></htc-span-tags-detail>`, {
+    spectator = createHost(`<ht-span-tags-detail [tags]="tags"></ht-span-tags-detail>`, {
       hostProps: {
         tags: { tag1: 'value1', tag2: 'value2' }
       }

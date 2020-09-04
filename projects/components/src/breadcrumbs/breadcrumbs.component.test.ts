@@ -23,7 +23,7 @@ describe('BreadcrumbsComponent', () => {
   });
 
   beforeEach(() => {
-    spectator = createHost(`<htc-breadcrumbs [breadcrumbs]="breadcrumbs"></htc-breadcrumbs>`, {
+    spectator = createHost(`<ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>`, {
       hostProps: {
         breadcrumbs: [
           {
@@ -55,10 +55,10 @@ describe('BreadcrumbsComponent', () => {
 
   it('should show icon only on the first crumb', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
-    expect(crumbs[0].querySelector('htc-icon')).toExist();
+    expect(crumbs[0].querySelector('ht-icon')).toExist();
 
     crumbs.shift();
-    crumbs.forEach(crumb => expect(crumb.querySelector('htc-icon')).toBeNull());
+    crumbs.forEach(crumb => expect(crumb.querySelector('ht-icon')).toBeNull());
   });
 
   it('should make last crumb inactive', () => {

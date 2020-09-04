@@ -22,7 +22,7 @@ describe('Snippet Viewer Component', () => {
     This is a text snippet line 8\n\
     This is a text snippet line 9';
 
-    spectator = createHost(`<htc-snippet-viewer [snippet]="snippet"></htc-snippet-viewer>`, {
+    spectator = createHost(`<ht-snippet-viewer [snippet]="snippet"></ht-snippet-viewer>`, {
       hostProps: {
         snippet: snippet
       }

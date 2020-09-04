@@ -29,8 +29,8 @@ describe('Toggle Group Component', () => {
 
     spectator = createHost(
       `
-      <htc-toggle-group [items]="this.items" [activeItem]="this.activeItem" (activeItemChange)="this.activeItemChange($event)">
-      </htc-toggle-group>
+      <ht-toggle-group [items]="this.items" [activeItem]="this.activeItem" (activeItemChange)="this.activeItemChange($event)">
+      </ht-toggle-group>
     `,
       {
         hostProps: {
@@ -44,7 +44,7 @@ describe('Toggle Group Component', () => {
     spectator.tick();
     expect(activeItemChangeSpy).toHaveBeenCalledWith(items[1]);
 
-    spectator.click(spectator.queryAll('htc-toggle-item')[0]);
+    spectator.click(spectator.queryAll('ht-toggle-item')[0]);
     expect(activeItemChangeSpy).toHaveBeenCalledWith(items[0]);
   }));
 });

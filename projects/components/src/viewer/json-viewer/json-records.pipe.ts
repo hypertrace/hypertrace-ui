@@ -4,7 +4,7 @@ import { isNil } from 'lodash-es';
 import { JsonElementType, JsonRecord } from './json-viewer.type';
 
 @Pipe({
-  name: 'htcJsonRecords'
+  name: 'htJsonRecords'
 })
 export class JsonRecordsPipe implements PipeTransform {
   public transform(inputObject: Json | undefined, showExpanded: boolean = true): JsonRecord[] {

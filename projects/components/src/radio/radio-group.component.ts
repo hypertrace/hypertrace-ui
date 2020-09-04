@@ -4,14 +4,14 @@ import { LoggerService } from '@hypertrace/common';
 import { RadioOption } from './radio-option';
 
 @Component({
-  selector: 'htc-radio-group',
+  selector: 'ht-radio-group',
   styleUrls: ['./radio-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-label [label]="title"></htc-label>
+    <ht-label [label]="title"></ht-label>
     <mat-radio-group [ngModel]="this.selected!.value" (change)="this.onRadioChange($event)" [disabled]="this.disabled">
       <mat-radio-button *ngFor="let option of options" class="radio-button" [value]="option.value">
-        <htc-label [label]="option.label"></htc-label>
+        <ht-label [label]="option.label"></ht-label>
       </mat-radio-button>
     </mat-radio-group>
   `

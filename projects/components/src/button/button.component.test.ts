@@ -17,7 +17,7 @@ describe('Button Component', () => {
   });
 
   test('should have correct default style', () => {
-    spectator = createHost(`<htc-button [label]="label"></htc-button>`, {
+    spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
         label: 'Button'
       }
@@ -27,7 +27,7 @@ describe('Button Component', () => {
   });
 
   test('should have correct style class for selected role', () => {
-    spectator = createHost(`<htc-button [label]="label"></htc-button>`, {
+    spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
         label: 'Button'
       }
@@ -59,7 +59,7 @@ describe('Button Component', () => {
   });
 
   test('should have correct style class for selected size', () => {
-    spectator = createHost(`<htc-button [label]="label"></htc-button>`, {
+    spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
         label: 'Button'
       }
@@ -92,7 +92,7 @@ describe('Button Component', () => {
   });
 
   test('should have correct style class for disabled state', () => {
-    spectator = createHost(`<htc-button [label]="label"></htc-button>`, {
+    spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
         label: 'Button'
       }
@@ -109,7 +109,7 @@ describe('Button Component', () => {
   });
 
   test('should have correct style for button-style', () => {
-    spectator = createHost(`<htc-button></htc-button>`);
+    spectator = createHost(`<ht-button></ht-button>`);
 
     // Default
     expect(spectator.query('.button')).toHaveClass('button secondary medium solid');
@@ -140,7 +140,7 @@ describe('Button Component', () => {
   });
 
   test('should render Icon and label correctly', () => {
-    spectator = createHost(`<htc-button [icon]="icon"></htc-button>`, {
+    spectator = createHost(`<ht-button [icon]="icon"></ht-button>`, {
       hostProps: {
         icon: IconType.Add
       }

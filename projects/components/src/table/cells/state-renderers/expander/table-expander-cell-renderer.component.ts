@@ -7,16 +7,16 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-table-expander-cell-renderer',
+  selector: 'ht-table-expander-cell-renderer',
   styleUrls: ['./table-expander-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="row-expander-cell">
-      <htc-expander-toggle
+      <ht-expander-toggle
         *ngIf="!this.value.leaf"
         [expanded]="this.value.expanded"
         [showTooltip]="false"
-      ></htc-expander-toggle>
+      ></ht-expander-toggle>
     </div>
   `
 })

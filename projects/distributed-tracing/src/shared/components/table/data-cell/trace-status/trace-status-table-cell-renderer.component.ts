@@ -4,11 +4,11 @@ import { TraceStatus } from '../../../../../shared/graphql/model/schema/trace';
 import { TracingTableCellType } from '../../tracing-table-cell-type';
 
 @Component({
-  selector: 'htc-status-table-cell-renderer',
+  selector: 'ht-status-table-cell-renderer',
   styleUrls: ['./trace-status-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="trace-status" [htcTooltip]="this.value.status" [ngClass]="{ clickable: this.clickable }">
+    <div class="trace-status" [htTooltip]="this.value.status" [ngClass]="{ clickable: this.clickable }">
       <div class="status" [ngClass]="this.value.status.toString().toLowerCase()">
         <span class="text">{{ this.value.statusCode }} - {{ this.value.statusMessage }}</span>
       </div>

@@ -6,12 +6,12 @@ import { Filter } from './filter-api';
 import { FilterService, IncompleteFilter } from './filter.service';
 
 @Component({
-  selector: 'htc-filter',
+  selector: 'ht-filter',
   styleUrls: ['./filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="filter">
-      <htc-combo-box
+      <ht-combo-box
         class="combo-box"
         mode="${ComboBoxMode.Chip}"
         [exactMatch]="false"
@@ -23,7 +23,7 @@ import { FilterService, IncompleteFilter } from './filter.service';
         (selection)="this.onApply($event)"
         (clear)="this.onClear()"
         (escape)="this.onClear()"
-      ></htc-combo-box>
+      ></ht-combo-box>
     </div>
   `
 })

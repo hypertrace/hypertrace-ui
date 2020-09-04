@@ -6,22 +6,22 @@ import { IconSize } from '../icon/icon-size';
 import { FilterButtonService } from './filter-button.service';
 
 @Component({
-  selector: 'htc-filter-button',
+  selector: 'ht-filter-button',
   styleUrls: ['./filter-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="filter-button">
-      <htc-popover
+      <ht-popover
         [closeOnClick]="true"
         (popoverOpen)="this.popoverOpen.emit(true)"
         (popoverClose)="this.popoverOpen.emit(false)"
       >
-        <htc-popover-trigger>
+        <ht-popover-trigger>
           <div #trigger>
-            <htc-icon icon="${IconType.Filter}" size="${IconSize.Small}"></htc-icon>
+            <ht-icon icon="${IconType.Filter}" size="${IconSize.Small}"></ht-icon>
           </div>
-        </htc-popover-trigger>
-        <htc-popover-content>
+        </ht-popover-trigger>
+        <ht-popover-content>
           <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
             <div
               *ngFor="let availableFilter of this.availableFilters"
@@ -31,8 +31,8 @@ import { FilterButtonService } from './filter-button.service';
               <div>{{ availableFilter.userString }}</div>
             </div>
           </div>
-        </htc-popover-content>
-      </htc-popover>
+        </ht-popover-content>
+      </ht-popover>
     </div>
   `
 })

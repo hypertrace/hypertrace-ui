@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
-  selector: 'htc-highlighted-label',
+  selector: 'ht-highlighted-label',
   styleUrls: ['./highlighted-label.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <div class="highlighted-label">

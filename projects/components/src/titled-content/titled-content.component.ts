@@ -5,23 +5,23 @@ import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { TitledHeaderControlDirective } from './header-controls/titled-header-control.directive';
 
 @Component({
-  selector: 'htc-titled-content',
+  selector: 'ht-titled-content',
   styleUrls: ['./titled-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="titled-content-container">
       <div class="header">
-        <htc-label *ngIf="this.shouldShowTitleInHeader" [label]="this.title" class="title"></htc-label>
-        <htc-link [url]="this.link" class="link" *ngIf="this.link">
-          <htc-button
+        <ht-label *ngIf="this.shouldShowTitleInHeader" [label]="this.title" class="title"></ht-label>
+        <ht-link [url]="this.link" class="link" *ngIf="this.link">
+          <ht-button
             [label]="this.linkLabel"
             role="${ButtonRole.Primary}"
             display="${ButtonStyle.Text}"
             size="${ButtonSize.Small}"
             icon="${IconType.ChevronRight}"
             [trailingIcon]="true"
-          ></htc-button>
-        </htc-link>
+          ></ht-button>
+        </ht-link>
         <div *ngIf="!!this.headerControl" class="controls">
           <ng-container *ngTemplateOutlet="this.headerControl!.getTemplateRef()"></ng-container>
         </div>
@@ -30,7 +30,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
         <ng-content></ng-content>
       </div>
       <div class="footer">
-        <htc-label *ngIf="this.shouldShowTitleInFooter" [label]="this.title" class="title"></htc-label>
+        <ht-label *ngIf="this.shouldShowTitleInFooter" [label]="this.title" class="title"></ht-label>
       </div>
     </div>
   `

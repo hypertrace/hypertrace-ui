@@ -7,11 +7,11 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-table-checkbox-cell-renderer',
+  selector: 'ht-table-checkbox-cell-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="row-checkbox-cell">
-      <htc-checkbox [checked]="this.value.selected"></htc-checkbox>
+      <ht-checkbox [checked]="this.value.selected"></ht-checkbox>
     </div>
   `
 })

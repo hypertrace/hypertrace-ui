@@ -15,11 +15,11 @@ import { PanelBodyComponent } from './body/panel-body.component';
 import { PanelHeaderComponent } from './header/panel-header.component';
 
 @Component({
-  selector: 'htc-panel',
+  selector: 'ht-panel',
   styleUrls: ['./panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="htc-panel fill-container" [htcLayoutChangeTrigger]="this.expanded">
+    <div class="ht-panel fill-container" [htLayoutChangeTrigger]="this.expanded">
       <div *ngIf="this.header" [ngClass]="{ disabled: this.disabled, expanded: this.expanded }" class="header">
         <ng-container #headerContainer></ng-container>
       </div>

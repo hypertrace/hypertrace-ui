@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-message-display',
+  selector: 'ht-message-display',
   styleUrls: ['./message-display.component.scss'],
   template: `
-    <div class="htc-message-display">
-      <htc-icon [icon]="this.icon" size="${IconSize.Large}"></htc-icon>
+    <div class="ht-message-display">
+      <ht-icon [icon]="this.icon" size="${IconSize.Large}"></ht-icon>
       <div class="title">{{ this.title }}</div>
       <div class="description">{{ this.description }}</div>
     </div>

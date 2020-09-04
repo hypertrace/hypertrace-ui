@@ -16,12 +16,12 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-timestamp-table-cell-renderer',
+  selector: 'ht-timestamp-table-cell-renderer',
   styleUrls: ['./timestamp-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="cell-value" [htcTooltip]="this.value | htcDisplayDate: this.dateFormat">
-      {{ this.value | htcDisplayDate: this.dateFormat }}
+    <div class="cell-value" [htTooltip]="this.value | htDisplayDate: this.dateFormat">
+      {{ this.value | htDisplayDate: this.dateFormat }}
     </div>
   `
 })

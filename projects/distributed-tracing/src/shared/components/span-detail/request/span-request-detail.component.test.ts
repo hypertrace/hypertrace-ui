@@ -18,7 +18,7 @@ describe('Span request detail component', () => {
   });
 
   test('should display headers and body title', () => {
-    spectator = createHost(`<htc-span-request-detail></htc-span-request-detail>`);
+    spectator = createHost(`<ht-span-request-detail></ht-span-request-detail>`);
 
     const headerTitleElement = spectator.query<HTMLElement>('.call-headers > .title');
     expect(headerTitleElement).not.toBeNull();
@@ -30,7 +30,7 @@ describe('Span request detail component', () => {
   });
 
   test('should display header records', () => {
-    spectator = createHost(`<htc-span-request-detail [requestHeaders]="requestHeaders"></htc-span-request-detail>`, {
+    spectator = createHost(`<ht-span-request-detail [requestHeaders]="requestHeaders"></ht-span-request-detail>`, {
       hostProps: {
         requestHeaders: { header1: 'value1', header2: 'value2' }
       }
@@ -41,7 +41,7 @@ describe('Span request detail component', () => {
   });
 
   test('should display body', () => {
-    spectator = createHost(`<htc-span-request-detail [requestBody]="requestBody"></htc-span-request-detail>`, {
+    spectator = createHost(`<ht-span-request-detail [requestBody]="requestBody"></ht-span-request-detail>`, {
       hostProps: {
         requestBody: '[{"data": 5000}]'
       }

@@ -17,19 +17,19 @@ describe('Toggle Button Component', () => {
   });
 
   test('should show a label button', () => {
-    spectator = createHost('<htc-toggle-button [label]="label"> </htc-toggle-button>', {
+    spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
         label: 'Parsed'
       }
     });
 
-    const buttonElement = spectator.query<HTMLElement>('.htc-toggle-button > .button');
+    const buttonElement = spectator.query<HTMLElement>('.ht-toggle-button > .button');
     expect(buttonElement).toExist();
     expect(buttonElement).toHaveText('Parsed');
   });
 
   test('should set correct styles with set state mode', () => {
-    spectator = createHost('<htc-toggle-button [label]="label"> </htc-toggle-button>', {
+    spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
         label: 'Parsed'
       }
@@ -47,7 +47,7 @@ describe('Toggle Button Component', () => {
     expect(spectator.query('.last')).not.toExist();
     expect(spectator.query('.selected')).toExist();
     expect(spectator.query('.disabled')).not.toExist();
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
 
     // Set to last element
     spectator.component.setState({
@@ -62,7 +62,7 @@ describe('Toggle Button Component', () => {
     expect(spectator.query('.last')).toExist();
     expect(spectator.query('.selected')).toExist();
     expect(spectator.query('.disabled')).not.toExist();
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
 
     // Selected Label doesn't match
     spectator.component.setState({
@@ -77,7 +77,7 @@ describe('Toggle Button Component', () => {
     expect(spectator.query('.last')).toExist();
     expect(spectator.query('.selected')).not.toExist();
     expect(spectator.query('.disabled')).not.toExist();
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
 
     // Selected Label doesn't match
     spectator.component.setState({
@@ -93,11 +93,11 @@ describe('Toggle Button Component', () => {
     expect(spectator.query('.selected')).not.toExist();
     expect(spectator.query('.disabled')).toExist();
 
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
   });
 
   test('should set correct view mode styles', () => {
-    spectator = createHost('<htc-toggle-button [label]="label"> </htc-toggle-button>', {
+    spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
         label: 'Parsed'
       }
@@ -106,24 +106,24 @@ describe('Toggle Button Component', () => {
     spectator.component.setState({
       viewMode: ToggleViewMode.Text
     });
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.text-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.text-view-mode'));
 
     spectator.component.setState({
       viewMode: ToggleViewMode.Button
     });
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
 
     spectator.component.setState({
       viewMode: ToggleViewMode.ButtonGroup
     });
-    expect(spectator.query('.htc-toggle-button')).toBe(spectator.query('.button-group-view-mode'));
+    expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-group-view-mode'));
   });
 
   test('should propogate click events', fakeAsync(() => {
     const labelClickedSpy = jest.fn();
 
     spectator = createHost(
-      '<htc-toggle-button [label]="label" (labelClick)="onlabelClicked($event)"></htc-toggle-button>',
+      '<ht-toggle-button [label]="label" (labelClick)="onlabelClicked($event)"></ht-toggle-button>',
       {
         hostProps: {
           label: 'Raw',
@@ -132,7 +132,7 @@ describe('Toggle Button Component', () => {
       }
     );
 
-    spectator.click(spectator.query('.htc-toggle-button')!);
+    spectator.click(spectator.query('.ht-toggle-button')!);
     tick();
     expect(labelClickedSpy).toHaveBeenCalledWith('Raw');
   }));

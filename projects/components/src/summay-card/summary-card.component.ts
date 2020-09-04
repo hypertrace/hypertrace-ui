@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SummaryCardColor, SummaryValue } from './summary-card';
 
 @Component({
-  selector: 'htc-summary-card',
+  selector: 'ht-summary-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./summary-card.component.scss'],
   template: `
@@ -15,14 +15,14 @@ import { SummaryCardColor, SummaryValue } from './summary-card';
           {{ this.name }}
         </div>
         <div class="footer">
-          <htc-summary-value
+          <ht-summary-value
             class="summary"
             *ngFor="let summary of this.summaries"
             [value]="summary.value"
             [icon]="summary.icon"
             [label]="summary.label"
             [tooltip]="summary.tooltip"
-          ></htc-summary-value>
+          ></ht-summary-value>
         </div>
       </div>
     </div>

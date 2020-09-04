@@ -17,7 +17,7 @@ import { createTableCellInjector } from '../table-cell-injection';
 import { TableCellAlignmentType } from '../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-table-data-cell-renderer',
+  selector: 'ht-table-data-cell-renderer',
   styleUrls: ['./table-data-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -33,13 +33,13 @@ import { TableCellAlignmentType } from '../types/table-cell-alignment-type';
       </ng-container>
 
       <ng-template #filterButton>
-        <htc-filter-button
+        <ht-filter-button
           class="filter-button"
           [metadata]="this.metadata"
           [attribute]="this.columnConfig?.attribute"
           [value]="this.filterValue"
           (popoverOpen)="this.popoverOpen = $event"
-        ></htc-filter-button>
+        ></ht-filter-button>
       </ng-template>
     </div>
   `

@@ -8,32 +8,32 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
 
 @Renderer({ modelClass: SpanDetailWidgetModel })
 @Component({
-  selector: 'htc-span-detail-widget-renderer',
+  selector: 'ht-span-detail-widget-renderer',
   styleUrls: ['./span-detail-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="span-detail-widget-renderer fill-container">
-      <div class="content" *htcLoadAsync="this.data$ as data">
-        <htc-span-detail [spanData]="data" [showTitleHeader]="false">
-          <htc-summary-value
+      <div class="content" *htLoadAsync="this.data$ as data">
+        <ht-span-detail [spanData]="data" [showTitleHeader]="false">
+          <ht-summary-value
             class="summary-value"
             icon="${IconType.TraceId}"
             label="Span ID"
             [value]="data.id"
-          ></htc-summary-value>
-          <htc-summary-value
+          ></ht-summary-value>
+          <ht-summary-value
             class="summary-value"
             icon="${IconType.StatusCode}"
             label="Status Code"
             [value]="data.statusCode"
-          ></htc-summary-value>
-          <htc-summary-value
+          ></ht-summary-value>
+          <ht-summary-value
             class="summary-value"
             icon="${IconType.LinkUrl}"
             label="URI"
             [value]="data.requestUrl"
-          ></htc-summary-value>
-        </htc-span-detail>
+          ></ht-summary-value>
+        </ht-span-detail>
       </div>
     </div>
   `

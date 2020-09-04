@@ -32,10 +32,10 @@ describe('Select Component', () => {
   test('should display intial selection', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-select [selected]="selected">
-      <htc-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-select>`,
+    <ht-select [selected]="selected">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -58,10 +58,10 @@ describe('Select Component', () => {
   test('should display provided options when clicked', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-select [selected]="selected">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-select>`,
+    <ht-select [selected]="selected">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -84,10 +84,10 @@ describe('Select Component', () => {
 
     spectator = hostFactory(
       `
-    <htc-select [selected]="selected" (selectedChange)="onChange($event)">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-select>`,
+    <ht-select [selected]="selected" (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
       {
         hostProps: {
           options: selectionOptions,
@@ -112,10 +112,10 @@ describe('Select Component', () => {
   test('should set correct label alignment', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <htc-select [selected]="selected" [showBorder]="showBorder">
-      <htc-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </htc-select-option>
-    </htc-select>`,
+    <ht-select [selected]="selected" [showBorder]="showBorder">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
       {
         hostProps: {
           options: selectionOptions,

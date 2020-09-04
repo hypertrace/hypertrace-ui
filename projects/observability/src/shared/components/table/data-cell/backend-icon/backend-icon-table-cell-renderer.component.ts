@@ -8,7 +8,7 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="icon-cell" [ngClass]="{ clickable: this.clickable }">
-      <htc-icon class="icon" [icon]="this.value" size="${IconSize.Medium}" [showTooltip]="true"></htc-icon>
+      <ht-icon class="icon" [icon]="this.value" size="${IconSize.Medium}" [showTooltip]="true"></ht-icon>
     </div>
   `
 })

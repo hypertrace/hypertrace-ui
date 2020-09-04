@@ -19,12 +19,12 @@ import { PopoverComponent } from '../popover/popover.component';
 import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
 
 @Component({
-  selector: 'htc-combo-box',
+  selector: 'ht-combo-box',
   styleUrls: ['./combo-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
-      <htc-popover-trigger>
+    <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
+      <ht-popover-trigger>
         <div
           #trigger
           class="popover-trigger"
@@ -34,7 +34,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
         >
           <!-- Optional Icon -->
           <div *ngIf="this.icon" class="trigger-icon trigger-control">
-            <htc-icon [icon]="this.icon" size="${IconSize.Small}"></htc-icon>
+            <ht-icon [icon]="this.icon" size="${IconSize.Small}"></ht-icon>
           </div>
 
           <!-- Input -->
@@ -70,11 +70,11 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
             class="trigger-clear-button trigger-control"
             (click)="this.onInputClear($event)"
           >
-            <htc-icon icon="${IconType.CloseCircleFilled}" size="${IconSize.ExtraSmall}"></htc-icon>
+            <ht-icon icon="${IconType.CloseCircleFilled}" size="${IconSize.ExtraSmall}"></ht-icon>
           </div>
         </div>
-      </htc-popover-trigger>
-      <htc-popover-content>
+      </ht-popover-trigger>
+      <ht-popover-content>
         <div
           *ngIf="this.arePopoverOptionsAvailable()"
           [style.min-width.px]="trigger.offsetWidth"
@@ -85,14 +85,14 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
             *ngFor="let option of this.filteredOptions; index as i"
             [class.selected]="this.highlightedOptionIndex === i"
             (click)="this.onOptionClick(option)"
-            [htcTooltip]="option.tooltip"
+            [htTooltip]="option.tooltip"
             class="popover-item"
           >
-            <div [innerHtml]="option.text | htcHighlight: this.text"></div>
+            <div [innerHtml]="option.text | htHighlight: this.text"></div>
           </div>
         </div>
-      </htc-popover-content>
-    </htc-popover>
+      </ht-popover-content>
+    </ht-popover>
   `
 })
 export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy {

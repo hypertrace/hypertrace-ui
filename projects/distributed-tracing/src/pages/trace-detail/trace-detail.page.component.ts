@@ -12,37 +12,37 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle, TraceDetailService],
   template: `
-    <div class="trace-detail" *htcLoadAsync="this.traceDetails$ as traceDetails">
+    <div class="trace-detail" *htLoadAsync="this.traceDetails$ as traceDetails">
       <div class="header">
         <div class="back">
-          <htc-icon
+          <ht-icon
             (click)="this.onClickBack()"
             icon="${IconType.ArrowLeft}"
             size="${IconSize.Small}"
             class="arrow"
-          ></htc-icon>
-          <htc-label (click)="this.onClickBack()" label="Back" class="label"></htc-label>
+          ></ht-icon>
+          <ht-label (click)="this.onClickBack()" label="Back" class="label"></ht-label>
         </div>
 
-        <htc-label [label]="traceDetails.titleString" class="title"></htc-label>
+        <ht-label [label]="traceDetails.titleString" class="title"></ht-label>
 
         <div class="summary-row">
-          <htc-summary-value
+          <ht-summary-value
             class="summary-value"
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
-          ></htc-summary-value>
-          <htc-summary-value class="summary-value" icon="${IconType.Id}" [value]="traceDetails.id"></htc-summary-value>
+          ></ht-summary-value>
+          <ht-summary-value class="summary-value" icon="${IconType.Id}" [value]="traceDetails.id"></ht-summary-value>
         </div>
       </div>
 
       <div class="scrollable-container">
-        <htc-application-aware-dashboard
+        <ht-application-aware-dashboard
           [json]="this.defaultJson"
           [padding]="0"
           (dashboardReady)="this.onDashboardReady($event)"
         >
-        </htc-application-aware-dashboard>
+        </ht-application-aware-dashboard>
       </div>
     </div>
   `

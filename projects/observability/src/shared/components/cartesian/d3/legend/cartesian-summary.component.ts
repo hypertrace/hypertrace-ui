@@ -10,7 +10,7 @@ export const SUMMARIES_DATA = new InjectionToken<number>('SUMMARIES_DATA');
   template: `
     <div class="summary-control" *ngIf="this.summaries.length > 0">
       <div class="summary" *ngFor="let summary of this.summaries">
-        {{ summary.value | htcDisplayNumber }}
+        {{ summary.value | htDisplayNumber }}
       </div>
     </div>
   `

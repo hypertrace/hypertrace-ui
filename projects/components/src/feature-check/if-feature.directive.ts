@@ -3,15 +3,15 @@ import { FeatureState } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 
 @Directive({
-  selector: '[htcIfFeature]'
+  selector: '[htIfFeature]'
 })
 export class IfFeatureDirective implements OnChanges {
-  @Input('htcIfFeature')
+  @Input('htIfFeature')
   public featureState?: FeatureState;
 
   private embeddedViewRef?: EmbeddedViewRef<FeatureFlagsContext>;
   private readonly context: FeatureFlagsContext = {
-    htcIfFeature: FeatureState.Disabled,
+    htIfFeature: FeatureState.Disabled,
     $implicit: FeatureState.Disabled
   };
 
@@ -26,7 +26,7 @@ export class IfFeatureDirective implements OnChanges {
 
   private updateView(state: FeatureState): void {
     this.context.$implicit = state;
-    this.context.htcIfFeature = state;
+    this.context.htIfFeature = state;
     if (state === FeatureState.Disabled) {
       // If shouldn't be rendered, destroy if exists
       this.clearView();
@@ -46,6 +46,6 @@ export class IfFeatureDirective implements OnChanges {
 }
 
 interface FeatureFlagsContext {
-  htcIfFeature: FeatureState;
+  htIfFeature: FeatureState;
   $implicit: FeatureState;
 }

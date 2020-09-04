@@ -6,15 +6,15 @@ import { InputAppearance } from '../input/input-appearance';
 import { PredefinedTimeService } from '../time-range/predefined-time.service';
 
 @Component({
-  selector: 'htc-datetime-picker',
+  selector: 'ht-datetime-picker',
   styleUrls: ['./datetime-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="datetime-picker">
-      <htc-label *ngIf="this.label" [label]="this.label" class="datetime-label"></htc-label>
+      <ht-label *ngIf="this.label" [label]="this.label" class="datetime-label"></ht-label>
 
       <div class="datetime-controls">
-        <htc-input
+        <ht-input
           type="date"
           class="date-selector"
           required="true"
@@ -22,24 +22,24 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
           [value]="this.getInputDate()"
           (valueChange)="this.onDateChange($event)"
         >
-        </htc-input>
+        </ht-input>
 
-        <htc-popover class="time-selector" [closeOnClick]="true">
-          <htc-popover-trigger>
+        <ht-popover class="time-selector" [closeOnClick]="true">
+          <ht-popover-trigger>
             <div class="popover-trigger">
-              <htc-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Large}"></htc-icon>
-              <htc-label class="trigger-label" [label]="this.getInputTime()"></htc-label>
-              <htc-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></htc-icon>
+              <ht-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Large}"></ht-icon>
+              <ht-label class="trigger-label" [label]="this.getInputTime()"></ht-label>
+              <ht-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
-          </htc-popover-trigger>
-          <htc-popover-content>
+          </ht-popover-trigger>
+          <ht-popover-content>
             <div class="popover-content">
               <div class="popover-item" *ngFor="let time of this.predefinedTimes" (click)="this.onTimeChange(time)">
                 {{ time.label }}
               </div>
             </div>
-          </htc-popover-content>
-        </htc-popover>
+          </ht-popover-content>
+        </ht-popover>
       </div>
     </div>
   `

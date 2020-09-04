@@ -8,8 +8,8 @@ import { PopoverRef } from '../../popover/popover-ref';
 import { ModalSize } from './modal';
 import { ModalOverlayComponent } from './modal-overlay.component';
 
-// tslint:disable-next-line:component-selector
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'test-modal-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="test-modal-content">Test Component Content</div> `
@@ -37,8 +37,8 @@ describe('Modal Overlay component', () => {
   test('should display the title', () => {
     spectator = createHost(
       `
-    <htc-modal-overlay>
-    </htc-modal-overlay>
+    <ht-modal-overlay>
+    </ht-modal-overlay>
     `,
       {
         providers: [
@@ -61,8 +61,8 @@ describe('Modal Overlay component', () => {
   test('uses the requested size', () => {
     spectator = createHost(
       `
-    <htc-modal-overlay size="${ModalSize.Small}">
-    </htc-modal-overlay>
+    <ht-modal-overlay size="${ModalSize.Small}">
+    </ht-modal-overlay>
     `,
       {
         providers: [
@@ -84,8 +84,8 @@ describe('Modal Overlay component', () => {
   test('closes on close button click', () => {
     spectator = createHost(
       `
-    <htc-modal-overlay>
-    </htc-modal-overlay>
+    <ht-modal-overlay>
+    </ht-modal-overlay>
     `,
       {
         providers: [
@@ -108,8 +108,8 @@ describe('Modal Overlay component', () => {
   test('displays contents provided', () => {
     spectator = createHost(
       `
-      <htc-modal-overlay>
-      </htc-modal-overlay>
+      <ht-modal-overlay>
+      </ht-modal-overlay>
       `,
       {
         providers: [

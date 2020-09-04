@@ -31,11 +31,11 @@ describe('In Filter Button service', () => {
     ],
     declarations: [],
     template: `
-      <htc-in-filter-button
+      <ht-in-filter-button
         [metadata]="attributes"
         [attribute]="attribute"
         [values]="values"
-      ></htc-in-filter-button>
+      ></ht-in-filter-button>
     `
   });
 

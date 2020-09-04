@@ -3,12 +3,12 @@ import { isEmpty } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-summary-value',
+  selector: 'ht-summary-value',
   styleUrls: ['./summary-value.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="htc-summary-value" *ngIf="this.value" [htcTooltip]="this.tooltipText">
-      <htc-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></htc-icon>
+    <div class="ht-summary-value" *ngIf="this.value" [htTooltip]="this.tooltipText">
+      <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
       <div class="dot" *ngIf="!this.icon"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>
       <div class="value">{{ this.value }}</div>

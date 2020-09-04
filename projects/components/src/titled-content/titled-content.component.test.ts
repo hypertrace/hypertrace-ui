@@ -17,9 +17,9 @@ describe('Titled content component', () => {
   test('should render content with no title provided', () => {
     spectator = createHost(
       `
-    <htc-titled-content>
+    <ht-titled-content>
       My content
-    </htc-titled-content>
+    </ht-titled-content>
     `
     );
 
@@ -30,9 +30,9 @@ describe('Titled content component', () => {
   test('should render content and title i', () => {
     spectator = createHost(
       `
-      <htc-titled-content>
+      <ht-titled-content>
         My content
-      </htc-titled-content>
+      </ht-titled-content>
       `,
       {
         props: {
@@ -48,10 +48,10 @@ describe('Titled content component', () => {
   test('should render header control', fakeAsync(() => {
     spectator = createHost(
       `
-      <htc-titled-content>
+      <ht-titled-content>
         My content
-        <div *htcTitledHeaderControl class="projected-control">Header Control</div>
-      </htc-titled-content>
+        <div *htTitledHeaderControl class="projected-control">Header Control</div>
+      </ht-titled-content>
       `
     );
     spectator.tick();

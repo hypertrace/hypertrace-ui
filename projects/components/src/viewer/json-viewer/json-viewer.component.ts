@@ -4,19 +4,19 @@ import { Json } from '@hypertrace/common';
 import { JsonElementType, JsonRecord } from './json-viewer.type';
 
 @Component({
-  selector: 'htc-json-viewer',
+  selector: 'ht-json-viewer',
   styleUrls: ['./json-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="json-viewer">
-      <div class="property" *ngFor="let record of this.json | htcJsonRecords: this.showExpanded">
+      <div class="property" *ngFor="let record of this.json | htJsonRecords: this.showExpanded">
         <div class="record" (click)="onToggle(record)">
           <div class="toggle">
-            <htc-icon
+            <ht-icon
               *ngIf="record.isExpandable"
               icon="{{ !record.expanded ? this.collapsedIcon : this.expandedIcon }}"
               size="extra-small"
-            ></htc-icon>
+            ></ht-icon>
           </div>
 
           <span class="key">{{ record.keyDisplay }}:</span>
@@ -27,7 +27,7 @@ import { JsonElementType, JsonRecord } from './json-viewer.type';
         </div>
 
         <div class="expanded-object" *ngIf="record.isExpandable && record.expanded">
-          <htc-json-viewer [json]="record.value" [showExpanded]="this.showExpanded"></htc-json-viewer>
+          <ht-json-viewer [json]="record.value" [showExpanded]="this.showExpanded"></ht-json-viewer>
         </div>
       </div>
     </div>

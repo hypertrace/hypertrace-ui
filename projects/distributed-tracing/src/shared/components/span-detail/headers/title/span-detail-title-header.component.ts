@@ -4,13 +4,13 @@ import { ButtonSize, ButtonStyle } from '@hypertrace/components';
 import { SpanTitle } from '../../span-title';
 
 @Component({
-  selector: 'htc-span-detail-title-header',
+  selector: 'ht-span-detail-title-header',
   styleUrls: ['./span-detail-title-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="header">
       <!-- Left Side Title -->
-      <div class="title" [htcTooltip]="this.tooltip">
+      <div class="title" [htTooltip]="this.tooltip">
         <div class="service-name">
           <span class="text">{{ this.serviceName }}</span>
         </div>
@@ -23,22 +23,22 @@ import { SpanTitle } from '../../span-title';
       </div>
       <!-- Right Side Button Controls -->
       <div class="controls">
-        <htc-copy-shareable-link-to-clipboard
+        <ht-copy-shareable-link-to-clipboard
           class="share"
           size="${ButtonSize.Large}"
-        ></htc-copy-shareable-link-to-clipboard>
+        ></ht-copy-shareable-link-to-clipboard>
 
         <div class="divider"></div>
 
-        <htc-button
+        <ht-button
           class="close"
           size="${ButtonSize.Large}"
           icon="${IconType.CloseCircle}"
           display="${ButtonStyle.Outlined}"
-          htcTooltip="Close Details"
+          htTooltip="Close Details"
           (click)="this.closed.emit()"
         >
-        </htc-button>
+        </ht-button>
       </div>
     </div>
   `

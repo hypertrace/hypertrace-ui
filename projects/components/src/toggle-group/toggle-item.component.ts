@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
 
 @Component({
-  selector: 'htc-toggle-item',
+  selector: 'ht-toggle-item',
   styleUrls: ['./toggle-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="toggle-item">
-      <htc-label class="label" [label]="this.label"></htc-label>
+      <ht-label class="label" [label]="this.label"></ht-label>
     </div>
   `
 })

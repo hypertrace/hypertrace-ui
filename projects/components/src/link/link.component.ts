@@ -3,11 +3,11 @@ import { NavigationService } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 
 @Component({
-  selector: 'htc-link',
+  selector: 'ht-link',
   styleUrls: ['./link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a *ngIf="this.shouldShowLink" class="htc-link" (click)="this.navigateToUrl()">
+    <a *ngIf="this.shouldShowLink" class="ht-link" (click)="this.navigateToUrl()">
       <ng-content></ng-content>
     </a>
   `

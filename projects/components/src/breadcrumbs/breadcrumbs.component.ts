@@ -4,7 +4,7 @@ import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-breadcrumbs',
+  selector: 'ht-breadcrumbs',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./breadcrumbs.component.scss'],
   template: `
@@ -14,20 +14,20 @@ import { IconSize } from '../icon/icon-size';
           class="breadcrumb"
           [ngClass]="{ navigable: breadcrumb.url !== undefined }"
           *ngFor="let breadcrumb of this.breadcrumbs; last as isLast; first as isFirst"
-          [htcTooltip]="this.tooltipMap.get(breadcrumb)"
+          [htTooltip]="this.tooltipMap.get(breadcrumb)"
         >
-          <htc-icon
+          <ht-icon
             class="icon"
             *ngIf="isFirst"
             [icon]="breadcrumb.icon"
             [label]="breadcrumb.label"
             size="${IconSize.Small}"
-          ></htc-icon>
-          <htc-label
+          ></ht-icon>
+          <ht-label
             [label]="breadcrumb.label"
             [ngClass]="{ 'inactive-crumb': isLast }"
             (click)="this.onNavigate(breadcrumb)"
-          ></htc-label>
+          ></ht-label>
           <div class="divider" *ngIf="!isLast"></div>
         </div>
       </div>

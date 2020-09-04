@@ -6,18 +6,18 @@ import { JsonWidgetModel } from './json-widget.model';
 
 @Renderer({ modelClass: JsonWidgetModel })
 @Component({
-  selector: 'htc-json-widget-renderer',
+  selector: 'ht-json-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-titled-content>
+    <ht-titled-content>
       <div
-        *htcLoadAsync="this.data$ as data"
+        *htLoadAsync="this.data$ as data"
         [style.backgroundColor]="'background-color' | themeProp"
         [style.color]="'text-color' | themeProp"
       >
         <pre style="overflow-x: auto">{{ data | json }}</pre>
       </div>
-    </htc-titled-content>
+    </ht-titled-content>
   `
 })
 export class JsonWidgetRendererComponent extends WidgetRenderer<JsonWidgetModel, string> {

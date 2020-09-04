@@ -20,40 +20,40 @@ import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 
 @Component({
-  selector: 'htc-multi-select',
+  selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       class="multi-select"
       [ngClass]="[this.size, this.showBorder ? 'border' : '', this.disabled ? 'disabled' : '']"
-      *htcLetAsync="this.selected$ as selected"
+      *htLetAsync="this.selected$ as selected"
     >
-      <htc-popover [disabled]="this.disabled" class="multi-select-container">
-        <htc-popover-trigger>
+      <ht-popover [disabled]="this.disabled" class="multi-select-container">
+        <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="this.justifyClass">
-            <htc-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </htc-icon>
-            <htc-label class="trigger-label" [label]="this.triggerLabel"></htc-label>
-            <htc-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></htc-icon>
+            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
+            </ht-icon>
+            <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
+            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
           </div>
-        </htc-popover-trigger>
-        <htc-popover-content>
+        </ht-popover-trigger>
+        <ht-popover-content>
           <div class="multi-select-content">
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="multi-select-option">
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
-              <htc-icon
+              <ht-icon
                 class="icon"
                 *ngIf="item.icon"
                 [icon]="item.icon"
                 size="${IconSize.ExtraSmall}"
                 [color]="item.iconColor"
-              ></htc-icon>
+              ></ht-icon>
               <span class="label">{{ item.label }}</span>
             </div>
           </div>
-        </htc-popover-content>
-      </htc-popover>
+        </ht-popover-content>
+      </ht-popover>
     </div>
   `
 })

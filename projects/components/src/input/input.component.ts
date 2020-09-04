@@ -3,7 +3,7 @@ import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance } from './input-appearance';
 
 @Component({
-  selector: 'htc-input',
+  selector: 'ht-input',
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -21,7 +21,7 @@ import { FilterBarService } from './filter-bar.service';
 import { Filter } from './filter/filter-api';
 
 @Component({
-  selector: 'htc-filter-bar',
+  selector: 'ht-filter-bar',
   styleUrls: ['./filter-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -33,29 +33,29 @@ import { Filter } from './filter/filter-api';
     >
       <div class="content">
         <!-- Search Icon -->
-        <htc-icon icon="${IconType.Filter}" size="${IconSize.Medium}" class="search-icon"></htc-icon>
+        <ht-icon icon="${IconType.Filter}" size="${IconSize.Medium}" class="search-icon"></ht-icon>
 
         <!-- Filters -->
         <div class="filters">
-          <htc-filter
+          <ht-filter
             *ngFor="let filter of this.internalFilters$ | async; let index = index"
             class="filter"
             [filter]="filter"
             [attributes]="this.attributes"
             (apply)="this.onApply($event)"
             (clear)="this.onClear(filter)"
-          ></htc-filter>
-          <htc-filter
+          ></ht-filter>
+          <ht-filter
             #filterInput
             class="filter filter-input"
             [clearOnEnter]="true"
             [attributes]="this.attributes"
             (apply)="this.onInputApply($event)"
-          ></htc-filter>
+          ></ht-filter>
         </div>
 
         <!-- Clear Button -->
-        <htc-icon
+        <ht-icon
           *ngIf="this.internalFilters$ | async"
           class="clear-icon"
           icon="${IconType.CloseCircleFilled}"
@@ -63,7 +63,7 @@ import { Filter } from './filter/filter-api';
           tabindex="0"
           (keydown.enter)="this.onClearAll()"
           (click)="this.onClearAll()"
-        ></htc-icon>
+        ></ht-icon>
       </div>
     </div>
     <div [innerHTML]="this.instructions" class="instructions"></div>

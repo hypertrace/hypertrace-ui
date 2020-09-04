@@ -3,12 +3,12 @@ import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-search-box',
+  selector: 'ht-search-box',
   styleUrls: ['./search-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="htc-search-box" [class.focused]="this.isFocused">
-      <htc-icon icon="${IconType.Search}" size="${IconSize.Medium}" class="icon" (click)="onSubmit()"></htc-icon>
+    <div class="ht-search-box" [class.focused]="this.isFocused">
+      <ht-icon icon="${IconType.Search}" size="${IconSize.Medium}" class="icon" (click)="onSubmit()"></ht-icon>
       <input
         class="input"
         type="text"
@@ -19,13 +19,13 @@ import { IconSize } from '../icon/icon-size';
         (focus)="this.isFocused = true"
         (blur)="this.isFocused = false"
       />
-      <htc-icon
+      <ht-icon
         icon="${IconType.CloseCircleFilled}"
         size="${IconSize.Small}"
         class="icon close"
         *ngIf="value"
         (click)="this.clearValue()"
-      ></htc-icon>
+      ></ht-icon>
     </div>
   `
 })

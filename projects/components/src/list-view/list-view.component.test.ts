@@ -5,8 +5,8 @@ import { ListViewComponent, ListViewRecord } from './list-view.component';
 
 describe('List View Component', () => {
   @Component({
-    selector: 'htc-test-host-component',
-    template: ` <htc-list-view [records]="this.records"></htc-list-view> `
+    selector: 'ht-test-host-component',
+    template: ` <ht-list-view [records]="this.records"></ht-list-view> `
   })
   class TestHostComponent {
     public records: ListViewRecord[] = [

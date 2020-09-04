@@ -41,9 +41,9 @@ describe('Link widget renderer component', () => {
     mockModel.displayText = 'Test';
     spectator = createComponent();
 
-    expect(spectator.query('.htc-link')).toExist();
-    expect(spectator.query('.htc-link')).toHaveText(mockModel.displayText);
-    spectator.triggerEventHandler('.htc-link', 'click', {});
+    expect(spectator.query('.ht-link')).toExist();
+    expect(spectator.query('.ht-link')).toHaveText(mockModel.displayText);
+    spectator.triggerEventHandler('.ht-link', 'click', {});
     expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(mockModel.url);
   }));
 
@@ -51,9 +51,9 @@ describe('Link widget renderer component', () => {
     mockModel.url = '#';
     spectator = createComponent();
 
-    expect(spectator.query('htc-link')).toExist();
-    expect(spectator.query('.htc-link')).toHaveText(mockModel.url);
-    spectator.triggerEventHandler('.htc-link', 'click', {});
+    expect(spectator.query('ht-link')).toExist();
+    expect(spectator.query('.ht-link')).toHaveText(mockModel.url);
+    spectator.triggerEventHandler('.ht-link', 'click', {});
     expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(mockModel.url);
   }));
 });

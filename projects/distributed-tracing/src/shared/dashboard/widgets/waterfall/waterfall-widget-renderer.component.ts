@@ -20,51 +20,51 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
 
 @Renderer({ modelClass: WaterfallWidgetModel })
 @Component({
-  selector: 'htc-waterfall-widget-renderer',
+  selector: 'ht-waterfall-widget-renderer',
   styleUrls: ['./waterfall-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="waterfall-widget-renderer fill-container">
-      <div class="content" *htcLoadAsync="this.data$ as data">
+      <div class="content" *htLoadAsync="this.data$ as data">
         <div class="header">
-          <htc-label class="widget-title" *ngIf="this.model.title" [label]="this.model.title"></htc-label>
+          <ht-label class="widget-title" *ngIf="this.model.title" [label]="this.model.title"></ht-label>
 
           <div class="expand-collapse-buttons">
-            <htc-button
+            <ht-button
               display="${ButtonStyle.Text}"
               icon="${IconType.CollapseAll}"
               label="Collapse All"
               (click)="this.onCollapseAll()"
-            ></htc-button>
-            <htc-button
+            ></ht-button>
+            <ht-button
               display="${ButtonStyle.Text}"
               icon="${IconType.ExpandAll}"
               label="Expand All"
               (click)="this.onExpandAll()"
-            ></htc-button>
+            ></ht-button>
           </div>
         </div>
 
-        <htc-waterfall-chart
+        <ht-waterfall-chart
           #chart
           class="waterfall-widget"
           [data]="data"
           (selectionChange)="this.onTableRowSelection($event)"
-        ></htc-waterfall-chart>
+        ></ht-waterfall-chart>
       </div>
     </div>
 
     <!-- Sidebar Details -->
     <ng-template #sidebarDetails>
       <div class="span-detail">
-        <htc-span-detail
+        <ht-span-detail
           [spanData]="this.selectedData"
           [showTitleHeader]="true"
           layout="${SpanDetailLayoutStyle.Vertical}"
           (closed)="this.closeSheet()"
         >
-          <htc-summary-value icon="${IconType.Id}" label="Span ID" [value]="this.selectedData!.id"></htc-summary-value>
-        </htc-span-detail>
+          <ht-summary-value icon="${IconType.Id}" label="Span ID" [value]="this.selectedData!.id"></ht-summary-value>
+        </ht-span-detail>
       </div>
     </ng-template>
   `

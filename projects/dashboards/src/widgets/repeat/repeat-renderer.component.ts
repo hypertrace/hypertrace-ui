@@ -7,7 +7,7 @@ import { RepeatModel } from './repeat.model';
 
 @Renderer({ modelClass: RepeatModel })
 @Component({
-  selector: 'htc-repeat',
+  selector: 'ht-repeat',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <div #repeaterContent></div> `
 })

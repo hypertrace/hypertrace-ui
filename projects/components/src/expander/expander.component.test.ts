@@ -17,8 +17,8 @@ describe('Expander component', () => {
 
   test('renders correct icon and tooltip for expanded state', () => {
     spectator = createHost(
-      `<htc-expander-toggle [expanded]="expanded">
-      </htc-expander-toggle>`,
+      `<ht-expander-toggle [expanded]="expanded">
+      </ht-expander-toggle>`,
       {
         hostProps: {
           expanded: true
@@ -26,15 +26,15 @@ describe('Expander component', () => {
       }
     );
 
-    expect(spectator.query('htc-icon')).toExist();
+    expect(spectator.query('ht-icon')).toExist();
     expect(spectator.component.getTooltipText()).toEqual(ExpanderToggleComponent.COLLAPSE);
     expect(spectator.component.getIconType()).toEqual(IconType.Expanded);
   });
 
   test('renders correct icon and tooltip for collapsed state', () => {
     spectator = createHost(
-      `<htc-expander-toggle [expanded]="expanded">
-      </htc-expander-toggle>`,
+      `<ht-expander-toggle [expanded]="expanded">
+      </ht-expander-toggle>`,
       {
         hostProps: {
           expanded: false
@@ -42,7 +42,7 @@ describe('Expander component', () => {
       }
     );
 
-    expect(spectator.query('htc-icon')).toExist();
+    expect(spectator.query('ht-icon')).toExist();
     expect(spectator.component.getTooltipText()).toEqual(ExpanderToggleComponent.EXPAND);
     expect(spectator.component.getIconType()).toEqual(IconType.Collapsed);
   });

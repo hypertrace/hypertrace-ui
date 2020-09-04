@@ -16,13 +16,13 @@ import { ToggleButtonComponent } from './button/toggle-button.component';
 import { ToggleButtonState, ToggleViewMode } from './toggle-button';
 
 @Component({
-  selector: 'htc-toggle-button-group',
+  selector: 'ht-toggle-button-group',
   styleUrls: ['./toggle-button-group.scss'],
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="toggle-button-group">
-      <ng-content select="htc-toggle-button"></ng-content>
+      <ng-content select="ht-toggle-button"></ng-content>
     </div>
   `
 })

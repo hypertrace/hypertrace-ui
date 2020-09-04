@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'htcMemoize'
+  name: 'htMemoize'
 })
 export class MemoizePipe implements PipeTransform {
   // tslint:disable-next-line: no-any any required for template type check

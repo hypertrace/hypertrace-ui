@@ -22,7 +22,7 @@ import { SelectOptionComponent } from './select-option.component';
 import { SelectSize } from './select-size';
 
 @Component({
-  selector: 'htc-select',
+  selector: 'ht-select',
   styleUrls: ['./select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
@@ -36,32 +36,32 @@ import { SelectSize } from './select-size';
         this.showBorder ? 'border' : '',
         this.disabled ? 'disabled' : ''
       ]"
-      *htcLetAsync="this.selected$ as selected"
+      *htLetAsync="this.selected$ as selected"
     >
-      <htc-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container">
-        <htc-popover-trigger>
+      <ht-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container">
+        <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="this.justifyClass">
-            <htc-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </htc-icon>
-            <htc-label class="trigger-label" [label]="selected?.label || this.placeholder"> </htc-label>
-            <htc-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </htc-icon>
+            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
+            </ht-icon>
+            <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
+            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
           </div>
-        </htc-popover-trigger>
-        <htc-popover-content>
+        </ht-popover-trigger>
+        <ht-popover-content>
           <div class="select-content">
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="select-option">
               <span class="label">{{ item.label }}</span>
-              <htc-icon
+              <ht-icon
                 class="status-icon"
                 *ngIf="this.highlightSelected && this.isSelectedItem(item)"
                 icon="${IconType.Checkmark}"
                 size="${IconSize.Small}"
               >
-              </htc-icon>
+              </ht-icon>
             </div>
           </div>
-        </htc-popover-content>
-      </htc-popover>
+        </ht-popover-content>
+      </ht-popover>
     </div>
   `
 })

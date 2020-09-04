@@ -6,7 +6,7 @@ import { catchError, endWith, ignoreElements, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-spinner',
+  selector: 'ht-spinner',
   styleUrls: ['./spinner.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -20,16 +20,16 @@ import { IconSize } from '../icon/icon-size';
       }"
     >
       <ng-container *ngSwitchCase="'${SpinnerAsyncState.Success}'">
-        <htc-icon class="success-icon" icon="${IconType.Done}" size="${IconSize.Small}"></htc-icon>
-        <htc-label [label]="this.successLabel" class="label"></htc-label>
+        <ht-icon class="success-icon" icon="${IconType.Done}" size="${IconSize.Small}"></ht-icon>
+        <ht-label [label]="this.successLabel" class="label"></ht-label>
       </ng-container>
       <ng-container *ngSwitchCase="'${SpinnerAsyncState.Error}'">
-        <htc-icon class="error-icon" icon="${IconType.Error}" size="${IconSize.Small}"></htc-icon>
-        <htc-label [label]="this.errorLabel" class="label"></htc-label>
+        <ht-icon class="error-icon" icon="${IconType.Error}" size="${IconSize.Small}"></ht-icon>
+        <ht-label [label]="this.errorLabel" class="label"></ht-label>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <htc-icon class="loading-icon" icon="${IconType.Spinner}" size="${IconSize.Small}"></htc-icon>
-        <htc-label [label]="this.loadingLabel" class="label"></htc-label>
+        <ht-icon class="loading-icon" icon="${IconType.Spinner}" size="${IconSize.Small}"></ht-icon>
+        <ht-label [label]="this.loadingLabel" class="label"></ht-label>
       </ng-container>
     </div>
   `

@@ -5,7 +5,7 @@ import { POPOVER_DATA } from '../popover';
 export const POPOVER_CONTAINER_DATA = new InjectionToken<PopoverContainerData>('POPOVER_CONTAINER_DATA');
 
 @Component({
-  selector: 'htc-popover-container',
+  selector: 'ht-popover-container',
   styleUrls: ['./popover-container.component.scss'],
   providers: [LayoutChangeService], // Provided here since popovers are in detached state
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -48,7 +48,7 @@ describe('Sequence Chart component', () => {
         color: 'green'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData
       }
@@ -94,7 +94,7 @@ describe('Sequence Chart component', () => {
         color: 'blue'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [unit]="unit"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [unit]="unit"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         unit: 'ms'
@@ -120,7 +120,7 @@ describe('Sequence Chart component', () => {
         color: 'blue'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [rowHeight]="rowHeight"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [rowHeight]="rowHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         rowHeight: 50
@@ -142,7 +142,7 @@ describe('Sequence Chart component', () => {
         color: 'blue'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [barHeight]="barHeight"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [barHeight]="barHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         barHeight: 30
@@ -167,7 +167,7 @@ describe('Sequence Chart component', () => {
         color: 'blue'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [headerHeight]="headerHeight"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [headerHeight]="headerHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         headerHeight: 20
@@ -196,7 +196,7 @@ describe('Sequence Chart component', () => {
         color: 'green'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [hovered]="hovered"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [hovered]="hovered"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         hovered: segmentsData[0]
@@ -240,7 +240,7 @@ describe('Sequence Chart component', () => {
         color: 'green'
       }
     ];
-    const chart = createHost(`<htc-sequence-chart [data]="data" [selection]="selection"></htc-sequence-chart>`, {
+    const chart = createHost(`<ht-sequence-chart [data]="data" [selection]="selection"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
         selection: segmentsData[0]

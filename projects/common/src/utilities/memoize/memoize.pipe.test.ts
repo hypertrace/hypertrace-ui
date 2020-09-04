@@ -15,7 +15,7 @@ describe('Memoize pipe', () => {
     const spectator = createHost(
       `
     <pipe-holder>
-      {{ hostFn | htcMemoize }}
+      {{ hostFn | htMemoize }}
     </pipe-holder>`,
       {
         hostProps: {
@@ -34,7 +34,7 @@ describe('Memoize pipe', () => {
     const spectator = createHost(
       `
     <pipe-holder>
-      {{ hostFn | htcMemoize : arg1 : arg2 }}
+      {{ hostFn | htMemoize : arg1 : arg2 }}
     </pipe-holder>`,
       {
         hostProps: {

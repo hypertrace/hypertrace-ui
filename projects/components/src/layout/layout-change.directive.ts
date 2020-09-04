@@ -2,11 +2,11 @@ import { AfterViewInit, Directive, EventEmitter, Output } from '@angular/core';
 import { LayoutChangeService, SubscriptionLifecycle } from '@hypertrace/common';
 
 @Directive({
-  selector: '[htcLayoutChange]',
+  selector: '[htLayoutChange]',
   providers: [SubscriptionLifecycle, LayoutChangeService]
 })
 export class LayoutChangeDirective implements AfterViewInit {
-  @Output('htcLayoutChange')
+  @Output('htLayoutChange')
   public readonly changeEmitter: EventEmitter<void> = new EventEmitter();
 
   public constructor(private readonly layoutChange: LayoutChangeService, subscriptionLifecycle: SubscriptionLifecycle) {

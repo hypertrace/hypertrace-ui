@@ -33,8 +33,8 @@ import { TopologyWidgetModel } from './topology-widget.model';
   providers: [TopologyNodeRendererService, TopologyEdgeRendererService, TopologyTooltipRendererService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-titled-content [title]="this.model.title | htcDisplayTitle">
-      <div class="visualization" *htcLoadAsync="this.data$ as data">
+    <ht-titled-content [title]="this.model.title | htDisplayTitle">
+      <div class="visualization" *htLoadAsync="this.data$ as data">
         <div class="legend">
           <div class="latency">
             <div class="label">P99 Latency:</div>
@@ -62,7 +62,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
         >
         </ht-topology>
       </div>
-    </htc-titled-content>
+    </ht-titled-content>
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {

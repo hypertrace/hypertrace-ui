@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
-  selector: 'htc-snippet-viewer',
+  selector: 'ht-snippet-viewer',
   styleUrls: ['./snippet-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -6,48 +6,48 @@ import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'htc-navigation-list',
+  selector: 'ht-navigation-list',
   styleUrls: ['./navigation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
-      <div class="content" *htcLetAsync="this.activeItem$ as activeItem" [htcLayoutChangeTrigger]="this.collapsed">
+      <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
         <ng-container *ngFor="let item of this.navItems">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
               <div *ngSwitchCase="'${NavItemType.Header}'" class="nav-header">
                 <div class="label">{{ item.label }}</div>
-                <htc-beta-tag *ngIf="item.isBeta" class="beta"></htc-beta-tag>
+                <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
               </div>
             </div>
 
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <htc-nav-item
+              <ht-nav-item
                 [config]="item"
                 [active]="item === activeItem"
                 [collapsed]="this.collapsed"
                 (click)="this.navigate(item)"
               >
-              </htc-nav-item>
+              </ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
       </div>
 
       <div class="resize-tab-button" (click)="this.toggleView()" *ngIf="this.resizable">
-        <htc-icon class="resize-icon" [icon]="this.getResizeIcon()" size="${IconSize.Small}"></htc-icon>
+        <ht-icon class="resize-icon" [icon]="this.getResizeIcon()" size="${IconSize.Small}"></ht-icon>
       </div>
 
       <div class="footer" *ngIf="this.footerItems">
         <hr class="nav-divider" />
 
         <div *ngFor="let footerItem of footerItems" class="footer-item">
-          <htc-link class="link" [url]="footerItem.url">
-            <htc-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></htc-icon>
-            <htc-label *ngIf="!this.collapsed" [label]="footerItem.label"></htc-label>
-          </htc-link>
+          <ht-link class="link" [url]="footerItem.url">
+            <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
+            <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>
+          </ht-link>
         </div>
       </div>
     </nav>

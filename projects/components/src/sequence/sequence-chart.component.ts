@@ -15,10 +15,10 @@ import { SequenceChartService } from './sequence-chart.service';
 import { SequenceObject } from './sequence-object';
 
 @Component({
-  selector: 'htc-sequence-chart',
+  selector: 'ht-sequence-chart',
   styleUrls: ['./sequence-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div class="htc-sequence-chart" (htcLayoutChange)="this.buildChart()" #chartContainer></div> `
+  template: ` <div class="ht-sequence-chart" (htLayoutChange)="this.buildChart()" #chartContainer></div> `
 })
 export class SequenceChartComponent implements OnChanges {
   @Input()

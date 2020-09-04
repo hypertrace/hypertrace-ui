@@ -11,7 +11,7 @@ describe('If feature directive', () => {
   const getTestDiv = () => spectator.query('.test-div');
 
   beforeEach(() => {
-    spectator = createHost(`<div class="test-div" *htcIfFeature="state as featureState">{{featureState}}</div>`);
+    spectator = createHost(`<div class="test-div" *htIfFeature="state as featureState">{{featureState}}</div>`);
   });
 
   test('does not render template if feature disabled', () => {

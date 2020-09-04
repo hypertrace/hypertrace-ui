@@ -3,16 +3,16 @@ import { Dictionary } from '@hypertrace/common';
 import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
 
 @Component({
-  selector: 'htc-span-response-detail',
+  selector: 'ht-span-response-detail',
   styleUrls: ['./span-response-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="span-response-detail" [ngClass]="this.layout">
       <div class="section">
-        <htc-span-detail-call-headers [headers]="this.responseHeaders"></htc-span-detail-call-headers>
+        <ht-span-detail-call-headers [headers]="this.responseHeaders"></ht-span-detail-call-headers>
       </div>
       <div class="section">
-        <htc-span-detail-call-body [body]="this.responseBody"></htc-span-detail-call-body>
+        <ht-span-detail-call-body [body]="this.responseBody"></ht-span-detail-call-body>
       </div>
     </div>
   `

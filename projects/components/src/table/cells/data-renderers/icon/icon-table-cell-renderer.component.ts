@@ -7,12 +7,12 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-icon-table-cell-renderer',
+  selector: 'ht-icon-table-cell-renderer',
   styleUrls: ['./icon-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="icon-cell" [ngClass]="{ clickable: this.clickable }">
-      <htc-icon [icon]="this.value" size="${IconSize.Small}" [showTooltip]="true"></htc-icon>
+      <ht-icon [icon]="this.value" size="${IconSize.Small}" [showTooltip]="true"></ht-icon>
     </div>
   `
 })

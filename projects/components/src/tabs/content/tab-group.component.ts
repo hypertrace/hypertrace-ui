@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '
 import { TabComponent } from './tab/tab.component';
 
 @Component({
-  selector: 'htc-tab-group',
+  selector: 'ht-tab-group',
   styleUrls: ['./tab-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -8,8 +8,8 @@ import { PopoverRef } from '../../popover/popover-ref';
 import { SheetSize } from './sheet';
 import { SheetOverlayComponent } from './sheet-overlay.component';
 
-// tslint:disable-next-line:component-selector
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'test-sheet-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="test-modal-content">Test Component Content</div> `
@@ -41,8 +41,8 @@ describe('Sheet Overlay component', () => {
   test('should display the title', () => {
     spectator = createHost(
       `
-    <htc-sheet-overlay>
-    </htc-sheet-overlay>
+    <ht-sheet-overlay>
+    </ht-sheet-overlay>
     `,
       {
         providers: [
@@ -65,8 +65,8 @@ describe('Sheet Overlay component', () => {
   test('uses the requested size', () => {
     spectator = createHost(
       `
-    <htc-sheet-overlay>
-    </htc-sheet-overlay>
+    <ht-sheet-overlay>
+    </ht-sheet-overlay>
     `,
       {
         providers: [
@@ -89,8 +89,8 @@ describe('Sheet Overlay component', () => {
   test('closes on close button click', () => {
     spectator = createHost(
       `
-    <htc-sheet-overlay>
-    </htc-sheet-overlay>
+    <ht-sheet-overlay>
+    </ht-sheet-overlay>
     `,
       {
         providers: [
@@ -114,8 +114,8 @@ describe('Sheet Overlay component', () => {
   test('displays contents provided', () => {
     spectator = createHost(
       `
-      <htc-sheet-overlay>
-      </htc-sheet-overlay>
+      <ht-sheet-overlay>
+      </ht-sheet-overlay>
       `,
       {
         providers: [

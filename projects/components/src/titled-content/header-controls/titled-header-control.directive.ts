@@ -1,7 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 @Directive({
-  selector: '[htcTitledHeaderControl]'
+  selector: '[htTitledHeaderControl]'
 })
 export class TitledHeaderControlDirective {
   public constructor(private readonly templateRef: TemplateRef<unknown>) {}

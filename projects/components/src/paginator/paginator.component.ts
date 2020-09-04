@@ -15,46 +15,46 @@ import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
 
 @Component({
-  selector: 'htc-paginator',
+  selector: 'ht-paginator',
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="paginator" *ngIf="this.totalItems">
-      <htc-label
+      <ht-label
         class="label"
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
       >
-      </htc-label>
+      </ht-label>
 
       <div class="pagination-buttons">
         <!-- TODO: Change ToggleButtonComponent to be more generic ButtonGroupComponent to accommodate this use case -->
-        <htc-button
+        <ht-button
           class="button previous-button"
-          htcTooltip="Go to previous page"
+          htTooltip="Go to previous page"
           display="${ButtonStyle.Bordered}"
           icon="${IconType.Previous}"
           [disabled]="!this.hasPrevPage()"
           (click)="this.gotoPreviousPage()"
         >
-        </htc-button>
-        <htc-button
+        </ht-button>
+        <ht-button
           class="button next-button"
-          htcTooltip="Go to next page"
+          htTooltip="Go to next page"
           display="${ButtonStyle.Bordered}"
           icon="${IconType.Next}"
           [disabled]="!this.hasNextPage()"
           (click)="this.gotoNextPage()"
         >
-        </htc-button>
+        </ht-button>
       </div>
 
-      <htc-label class="label" label="Rows per Page:"></htc-label>
+      <ht-label class="label" label="Rows per Page:"></ht-label>
 
       <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
-        <htc-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
-          <htc-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
-          </htc-select-option>
-        </htc-select>
+        <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
+          <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
+          </ht-select-option>
+        </ht-select>
       </div>
     </div>
   `

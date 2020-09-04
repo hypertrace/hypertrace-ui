@@ -12,12 +12,12 @@ import { IconSize } from '../../icon/icon-size';
 import { ToggleButtonState, ToggleViewMode } from '../toggle-button';
 
 @Component({
-  selector: 'htc-toggle-button',
+  selector: 'ht-toggle-button',
   styleUrls: ['./toggle-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="htc-toggle-button"
+      class="ht-toggle-button"
       [ngClass]="{
         'button-view-mode': this.state.viewMode === '${ToggleViewMode.Button}',
         'button-group-view-mode': this.state.viewMode === '${ToggleViewMode.ButtonGroup}',
@@ -36,14 +36,14 @@ import { ToggleButtonState, ToggleViewMode } from '../toggle-button';
         }"
       >
         <div class="center-contents">
-          <htc-icon
+          <ht-icon
             *ngIf="this.showIcon"
             [icon]="this.icon"
             [label]="this.label"
             [size]="this.iconSize"
             class="center-contents button-icon"
-          ></htc-icon>
-          <htc-label *ngIf="this.showLabel" [label]="this.label" class="label"></htc-label>
+          ></ht-icon>
+          <ht-label *ngIf="this.showLabel" [label]="this.label" class="label"></ht-label>
         </div>
         <ng-content></ng-content>
       </button>

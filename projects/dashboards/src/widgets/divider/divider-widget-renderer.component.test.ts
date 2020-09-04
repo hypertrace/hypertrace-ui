@@ -25,6 +25,6 @@ describe('Divider Widget Renderer Component', () => {
 
   test('should use divider component', () => {
     spectator = createComponent();
-    expect(spectator.query('htc-divider')).toExist();
+    expect(spectator.query('ht-divider')).toExist();
   });
 });

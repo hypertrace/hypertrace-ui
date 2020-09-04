@@ -22,11 +22,11 @@ describe('Navigable dashboard component', () => {
       })
     ],
     template: `
-      <htc-navigable-dashboard
+      <ht-navigable-dashboard
         [defaultJson]="defaultJson"
         [navLocation]="navLocation"
         [filterConfig]="filterConfig">
-      </htc-navigable-dashboard>
+      </ht-navigable-dashboard>
     `
   });
 

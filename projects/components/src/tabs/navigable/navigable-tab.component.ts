@@ -4,7 +4,7 @@ import { NavigationService } from '@hypertrace/common';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-holder';
 
 @Component({
-  selector: 'htc-navigable-tab',
+  selector: 'ht-navigable-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: CONTENT_HOLDER_TEMPLATE
 })

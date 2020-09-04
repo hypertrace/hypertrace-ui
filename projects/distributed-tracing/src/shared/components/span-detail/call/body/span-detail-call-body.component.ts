@@ -4,30 +4,30 @@ import { Json } from '@hypertrace/common';
 import { ToggleViewMode } from '@hypertrace/components';
 
 @Component({
-  selector: 'htc-span-detail-call-body',
+  selector: 'ht-span-detail-call-body',
   styleUrls: ['./span-detail-call-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="call-body">
-      <htc-label label="Body" class="title"></htc-label>
+      <ht-label label="Body" class="title"></ht-label>
       <div class="content">
         <div class="toggle-button">
-          <htc-toggle-button-group [(selectedLabel)]="this.selectedTab" viewMode="${ToggleViewMode.Text}">
-            <htc-toggle-button [label]="this.parsedLabel"></htc-toggle-button>
-            <htc-toggle-button [label]="this.rawLabel"></htc-toggle-button>
-          </htc-toggle-button-group>
+          <ht-toggle-button-group [(selectedLabel)]="this.selectedTab" viewMode="${ToggleViewMode.Text}">
+            <ht-toggle-button [label]="this.parsedLabel"></ht-toggle-button>
+            <ht-toggle-button [label]="this.rawLabel"></ht-toggle-button>
+          </ht-toggle-button-group>
         </div>
 
         <div class="body-viewer" [ngSwitch]="this.selectedTab">
           <section *ngSwitchCase="this.parsedLabel">
-            <htc-json-viewer *ngIf="this.isParsable()" [json]="this.parsedBody"> </htc-json-viewer>
-            <htc-message-display
+            <ht-json-viewer *ngIf="this.isParsable()" [json]="this.parsedBody"> </ht-json-viewer>
+            <ht-message-display
               *ngIf="!this.isParsable()"
               [icon]="this.icon"
               [title]="this.title"
               [description]="this.description"
             >
-            </htc-message-display>
+            </ht-message-display>
           </section>
           <section *ngSwitchCase="this.rawLabel">
             <pre class="pre-body">{{ this.body | json }}</pre>

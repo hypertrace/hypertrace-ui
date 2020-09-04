@@ -1,15 +1,15 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
 
 @Component({
-  selector: 'htc-label',
+  selector: 'ht-label',
   styleUrls: ['./label.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      (htcLayoutChange)="this.remeasure()"
+      (htLayoutChange)="this.remeasure()"
       [attr.aria-label]="label"
       [ngClass]="{ truncate: !this.wrap, 'no-label': this.isNoLabel() }"
-      [htcTooltip]="this.showTooltip() ? label : ''"
+      [htTooltip]="this.showTooltip() ? label : ''"
     >
       {{ this.isNoLabel() ? 'no-label' : label }}
     </div>
@@ -18,13 +18,13 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, O
 export class LabelComponent implements OnChanges, AfterViewInit {
   /*
    * There is a potential for poor performance here. Accessing offsetWidth below causes the browser to calculate that
-   * value on read. If calling that function in the DOM binding for [htcTooltip] that read happens every change
+   * value on read. If calling that function in the DOM binding for [htTooltip] that read happens every change
    * detection cycle.
    *
    * This means that when the window resizes, every label remeasures. It also means that any event causes a remeasure.
    * For instance when hovering the label. One of these two remeasures is desired, but not both.
    *
-   * To eliminate the remeasure on the hover we are using (htcLayoutChange) to only measure when a resize event
+   * To eliminate the remeasure on the hover we are using (htLayoutChange) to only measure when a resize event
    * happens.
    *
    * Then, instead of remeasuring in showTooltip(), we will just access the precalculated (on resize) value.

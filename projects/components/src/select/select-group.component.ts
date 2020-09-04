@@ -6,12 +6,12 @@ import { SelectGroupPosition } from './select-group-position';
 import { SelectComponent } from './select.component';
 
 @Component({
-  selector: 'htc-select-group',
+  selector: 'ht-select-group',
   styleUrls: ['./select-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="select-group-container">
-      <ng-content select="htc-select"></ng-content>
+      <ng-content select="ht-select"></ng-content>
     </div>
   `
 })

@@ -6,12 +6,12 @@ import { EDITOR_API } from '@hypertrace/hyperdash-angular';
   propertyType: STRING_PROPERTY.type
 })
 @Component({
-  selector: 'htc-string-property-editor',
+  selector: 'ht-string-property-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-label [label]="label"> </htc-label>
-    <htc-input [(value)]="currentValue" placeholder="" (keyup.enter)="propagateChange()" (focusout)="propagateChange()">
-    </htc-input>
+    <ht-label [label]="label"> </ht-label>
+    <ht-input [(value)]="currentValue" placeholder="" (keyup.enter)="propagateChange()" (focusout)="propagateChange()">
+    </ht-input>
   `
 })
 export class StringPropertyEditorComponent {

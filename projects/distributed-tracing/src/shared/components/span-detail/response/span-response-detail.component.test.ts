@@ -18,7 +18,7 @@ describe('Span response detail component', () => {
   });
 
   test('should display headers and body title', () => {
-    spectator = createHost(`<htc-span-response-detail></htc-span-response-detail>`);
+    spectator = createHost(`<ht-span-response-detail></ht-span-response-detail>`);
 
     const headerTitleElement = spectator.query<HTMLElement>('.call-headers > .title');
     expect(headerTitleElement).not.toBeNull();
@@ -30,21 +30,18 @@ describe('Span response detail component', () => {
   });
 
   test('should display header records', () => {
-    spectator = createHost(
-      `<htc-span-response-detail [responseHeaders]="responseHeaders"></htc-span-response-detail>`,
-      {
-        hostProps: {
-          responseHeaders: { header1: 'value1', header2: 'value2' }
-        }
+    spectator = createHost(`<ht-span-response-detail [responseHeaders]="responseHeaders"></ht-span-response-detail>`, {
+      hostProps: {
+        responseHeaders: { header1: 'value1', header2: 'value2' }
       }
-    );
+    });
 
     const listViewElement = spectator.query(ListViewComponent);
     expect(listViewElement).not.toBeNull();
   });
 
   test('should display body', () => {
-    spectator = createHost(`<htc-span-response-detail [responseBody]="responseBody"></htc-span-response-detail>`, {
+    spectator = createHost(`<ht-span-response-detail [responseBody]="responseBody"></ht-span-response-detail>`, {
       hostProps: {
         responseBody: '[{"data": 5000}]'
       }

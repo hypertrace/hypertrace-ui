@@ -20,12 +20,12 @@ describe('Page Header Component', () => {
   });
 
   test('should display beta tag', () => {
-    spectator = createHost('<htc-page-header isBeta="true"></htc-page-header>');
+    spectator = createHost('<ht-page-header isBeta="true"></ht-page-header>');
     expect(spectator.query('.beta')).toExist();
   });
 
   test('should not display beta tag by default', () => {
-    spectator = createHost('<htc-page-header></htc-page-header>');
+    spectator = createHost('<ht-page-header></ht-page-header>');
     expect(spectator.query('.beta')).not.toExist();
   });
 });

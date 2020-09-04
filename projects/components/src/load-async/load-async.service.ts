@@ -24,7 +24,7 @@ export class LoadAsyncService {
       type: LoadAsyncStateType.Success,
       context: {
         $implicit: data,
-        htcLoadAsync: data
+        htLoadAsync: data
       }
     };
   }
@@ -46,7 +46,7 @@ export class LoadAsyncService {
 }
 
 export interface LoadAsyncContext {
-  htcLoadAsync: unknown;
+  htLoadAsync: unknown;
   $implicit: unknown;
 }
 

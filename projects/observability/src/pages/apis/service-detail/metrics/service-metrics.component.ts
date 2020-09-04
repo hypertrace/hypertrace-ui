@@ -8,12 +8,12 @@ import { serviceMetricsDashboard } from './service-metrics.dashboard';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-navigable-dashboard
-      *htcLoadAsync="this.filterConfig$ as filterConfig"
+    <ht-navigable-dashboard
+      *htLoadAsync="this.filterConfig$ as filterConfig"
       navLocation="${serviceMetricsDashboard.location}"
       [filterConfig]="filterConfig"
     >
-    </htc-navigable-dashboard>
+    </ht-navigable-dashboard>
   `
 })
 export class ServiceMetricsComponent {

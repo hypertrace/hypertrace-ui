@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular
 import { StatefulTableRow } from '../../table-api';
 
 @Component({
-  selector: 'htc-table-expanded-detail-row-cell-renderer',
+  selector: 'ht-table-expanded-detail-row-cell-renderer',
   styleUrls: ['./table-expanded-detail-row-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [

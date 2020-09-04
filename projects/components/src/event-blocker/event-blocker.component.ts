@@ -12,7 +12,7 @@ import { TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 
 @Component({
-  selector: 'htc-event-blocker',
+  selector: 'ht-event-blocker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <ng-content> </ng-content> `
 })

@@ -50,7 +50,7 @@ describe('Time range component', () => {
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
 
-    spectator.click(spectator.queryAll('.custom-time-range-selection htc-button', { root: true })[0]);
+    spectator.click(spectator.queryAll('.custom-time-range-selection ht-button', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).not.toExist();
   });
 
@@ -60,7 +60,7 @@ describe('Time range component', () => {
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
 
-    spectator.click(spectator.queryAll('.custom-time-range-selection htc-button', { root: true })[1]);
+    spectator.click(spectator.queryAll('.custom-time-range-selection ht-button', { root: true })[1]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).not.toExist();
   });
 
@@ -70,7 +70,7 @@ describe('Time range component', () => {
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
 
-    spectator.click(spectator.queryAll('.custom-time-range-selection htc-button', { root: true })[1]);
+    spectator.click(spectator.queryAll('.custom-time-range-selection ht-button', { root: true })[1]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).not.toExist();
 
     spectator.click(spectator.queryAll('.popover-item', { root: true })[1]);
@@ -88,7 +88,7 @@ describe('Time range component', () => {
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
 
-    spectator.click(spectator.queryAll('.custom-time-range-selection htc-button', { root: true })[1]);
+    spectator.click(spectator.queryAll('.custom-time-range-selection ht-button', { root: true })[1]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).not.toExist();
 
     spectator.click(spectator.queryAll('.popover-item', { root: true })[1]);

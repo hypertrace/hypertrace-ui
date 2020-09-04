@@ -7,14 +7,14 @@ import { TableSortDirection } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
 
 @Component({
-  selector: 'htc-table-header-cell-renderer',
+  selector: 'ht-table-header-cell-renderer',
   styleUrls: ['./table-header-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       *ngIf="this.columnConfig"
       [ngClass]="this.classes"
-      [htcTooltip]="this.columnConfig.titleTooltip || this.columnConfig.title"
+      [htTooltip]="this.columnConfig.titleTooltip || this.columnConfig.title"
       class="table-header-cell-renderer"
     >
       <ng-container *ngIf="this.columnConfig?.filterable && this.leftAlignFilterButton">
@@ -26,12 +26,12 @@ import { TableColumnConfigExtended } from '../table.service';
       </ng-container>
 
       <ng-template #filterButton>
-        <htc-in-filter-button
+        <ht-in-filter-button
           class="filter-button"
           [metadata]="this.metadata"
           [attribute]="this.columnConfig.attribute"
           [values]="this.columnConfig.filterValues"
-        ></htc-in-filter-button>
+        ></ht-in-filter-button>
       </ng-template>
     </div>
   `
@@ -79,8 +79,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   private buildClasses(): string[] {
     return [
-      ...(this.alignment ? [this.alignment.toLowerCase()] : []),
-      ...(this.sort ? [this.sort.toLowerCase()] : []),
+      ...(this.alignment !== undefined ? [this.alignment.toLowerCase()] : []),
+      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : []),
       ...(this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig) ? ['sortable'] : [])
     ];
   }

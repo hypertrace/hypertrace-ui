@@ -18,8 +18,8 @@ describe('Summary Value Component', () => {
 
   test('should not display anything if value is not present', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: undefined
@@ -35,8 +35,8 @@ describe('Summary Value Component', () => {
 
   test('should display only value', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23'
@@ -52,8 +52,8 @@ describe('Summary Value Component', () => {
 
   test('should display both label and value', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value" [label]="label">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value" [label]="label">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23',
@@ -69,8 +69,8 @@ describe('Summary Value Component', () => {
 
   test('should display icon, label and value', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value" [label]="label" [icon]="icon">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value" [label]="label" [icon]="icon">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23',
@@ -81,15 +81,15 @@ describe('Summary Value Component', () => {
     );
 
     expect(spectator.query('.dot')).not.toExist();
-    expect(spectator.query('htc-icon')).toExist();
+    expect(spectator.query('ht-icon')).toExist();
     expect(spectator.query('.label')).toHaveText('Ip Address:');
     expect(spectator.query('.value')).toHaveText('98.23.456.23');
   });
 
   test('includes label in tooltip only if provided', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value" [label]="label" [icon]="icon">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value" [label]="label" [icon]="icon">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23',
@@ -110,8 +110,8 @@ describe('Summary Value Component', () => {
 
   test('use custom tooltip if provided', () => {
     spectator = createHost(
-      `<htc-summary-value [value]="value" [label]="label" [icon]="icon" [tooltip]="tooltip">
-      </htc-summary-value>`,
+      `<ht-summary-value [value]="value" [label]="label" [icon]="icon" [tooltip]="tooltip">
+      </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23',

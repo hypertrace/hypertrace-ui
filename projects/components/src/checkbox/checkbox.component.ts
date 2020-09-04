@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'htc-checkbox',
+  selector: 'ht-checkbox',
   styleUrls: ['./checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -11,9 +11,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
       [checked]="this.checked"
       [disabled]="this.disabled"
       (change)="onCheckboxChange($event)"
-      class="htc-checkbox"
+      class="ht-checkbox"
     >
-      <htc-label class="label" *ngIf="this.label !== undefined && this.label !== ''" [label]="this.label"></htc-label>
+      <ht-label class="label" *ngIf="this.label !== undefined && this.label !== ''" [label]="this.label"></ht-label>
     </mat-checkbox>
   `
 })

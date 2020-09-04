@@ -16,8 +16,8 @@ describe('Checkbox component', () => {
 
   test('should apply disabled attribute when disabled', () => {
     spectator = createHost(
-      `<htc-checkbox [label]="label" [disabled]="disabled">
-    </htc-checkbox>`,
+      `<ht-checkbox [label]="label" [disabled]="disabled">
+    </ht-checkbox>`,
       {
         hostProps: {
           label: 'TEST',
@@ -34,8 +34,8 @@ describe('Checkbox component', () => {
   test('should callback and change checked value when clicked', fakeAsync(() => {
     const checkboxChangeSpy = jest.fn();
     spectator = createHost(
-      `<htc-checkbox [label]="label" [checked]="checked" [disabled]="disabled" (checkedChange)="onCheckboxChange($event)">
-    </htc-checkbox>`,
+      `<ht-checkbox [label]="label" [checked]="checked" [disabled]="disabled" (checkedChange)="onCheckboxChange($event)">
+    </ht-checkbox>`,
       {
         hostProps: {
           label: 'TEST',

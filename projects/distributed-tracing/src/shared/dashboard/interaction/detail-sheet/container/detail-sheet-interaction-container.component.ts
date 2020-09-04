@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken } from '@angular/core';
 
 @Component({
-  selector: 'htc-detail-sheet-interaction-container',
+  selector: 'ht-detail-sheet-interaction-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-container [hdaDashboardModel]="this.detailModel"></ng-container>`
 })

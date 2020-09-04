@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { SelectOption } from './select-option';
 
 @Component({
-  selector: 'htc-select-option',
+  selector: 'ht-select-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '' // No template, just gathering data
 })

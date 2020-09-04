@@ -3,42 +3,42 @@ import { TimeRange, TimeRangeService, TypedSimpleChanges } from '@hypertrace/com
 import { ButtonRole } from '../button/button';
 
 @Component({
-  selector: 'htc-custom-time-range-selection',
+  selector: 'ht-custom-time-range-selection',
   styleUrls: ['./custom-time-range-selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="custom-time-range-selection">
-      <htc-label class="custom-title" label="Custom Date Range"></htc-label>
+      <ht-label class="custom-title" label="Custom Date Range"></ht-label>
 
       <form class="custom-form">
         <div class="form-inputs">
           <!-- From Date & Time -->
-          <htc-datetime-picker label="From" [(date)]="this.from"></htc-datetime-picker>
+          <ht-datetime-picker label="From" [(date)]="this.from"></ht-datetime-picker>
 
           <div style="width: 24px;"></div>
 
           <!-- To Date & Time -->
-          <htc-datetime-picker label="To" [(date)]="this.to"></htc-datetime-picker>
+          <ht-datetime-picker label="To" [(date)]="this.to"></ht-datetime-picker>
         </div>
 
         <div class="divider"></div>
 
         <div class="buttons">
           <!-- Cancel -->
-          <htc-button class="button" label="Cancel" role="${ButtonRole.Destructive}" (click)="this.onCancel()">
-          </htc-button>
+          <ht-button class="button" label="Cancel" role="${ButtonRole.Destructive}" (click)="this.onCancel()">
+          </ht-button>
 
           <div style="flex: 1 1 auto;"></div>
 
           <!-- Apply -->
-          <htc-button
+          <ht-button
             class="button apply-button"
             label="Apply"
             role="${ButtonRole.Primary}"
             (click)="this.onApply()"
             [disabled]="!this.from || !this.to"
           >
-          </htc-button>
+          </ht-button>
         </div>
       </form>
     </div>

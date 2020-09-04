@@ -6,14 +6,14 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 @Component({
-  selector: 'htc-text-table-cell-renderer',
+  selector: 'ht-text-table-cell-renderer',
   styleUrls: ['./text-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       [ngClass]="{ clickable: this.clickable, 'first-column': this.isFirstColumn }"
       class="text-cell"
-      [htcTooltip]="this.value"
+      [htTooltip]="this.value"
     >
       {{ this.value }}
     </div>

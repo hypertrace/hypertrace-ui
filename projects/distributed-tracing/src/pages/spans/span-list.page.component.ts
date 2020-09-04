@@ -6,8 +6,8 @@ import { spanListDashboard } from './span-list.page.dashboard';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <htc-navigable-dashboard navLocation="${spanListDashboard.location}" [filterConfig]="this.filterConfig">
-    </htc-navigable-dashboard>
+    <ht-navigable-dashboard navLocation="${spanListDashboard.location}" [filterConfig]="this.filterConfig">
+    </ht-navigable-dashboard>
   `
 })
 export class SpanListPageComponent {

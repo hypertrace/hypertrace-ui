@@ -6,12 +6,12 @@ import { DividerWidgetModel } from './divider-widget.model';
 
 @Renderer({ modelClass: DividerWidgetModel })
 @Component({
-  selector: 'htc-divider-widget-renderer',
+  selector: 'ht-divider-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./divider-widget-renderer.component.scss'],
   template: `
     <div class="divider-widget">
-      <htc-divider class="divider"></htc-divider>
+      <ht-divider class="divider"></ht-divider>
     </div>
   `
 })

@@ -4,23 +4,23 @@ import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation-list.component';
 
 @Component({
-  selector: 'htc-nav-item',
+  selector: 'ht-nav-item',
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      *htcIfFeature="this.config.features | htcFeature as featureState"
+      *htIfFeature="this.config.features | htFeature as featureState"
       class="nav-item"
       [ngClass]="{ active: this.active }"
     >
-      <htc-icon
+      <ht-icon
         class="icon"
         [icon]="this.config.icon"
         size="${IconSize.Medium}"
         [label]="this.config.label"
         [showTooltip]="this.collapsed"
       >
-      </htc-icon>
+      </ht-icon>
 
       <div class="label-container" *ngIf="!this.collapsed">
         <span class="label">{{ this.config.label }}</span>

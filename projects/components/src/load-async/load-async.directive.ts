@@ -19,10 +19,10 @@ import {
 } from './wrapper/load-async-wrapper.component';
 
 @Directive({
-  selector: '[htcLoadAsync]'
+  selector: '[htLoadAsync]'
 })
 export class LoadAsyncDirective implements OnChanges, OnDestroy {
-  @Input('htcLoadAsync')
+  @Input('htLoadAsync')
   public data$?: Observable<unknown>;
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
   private readonly wrapperInjector: Injector;
