@@ -1,0 +1,58 @@
+@import 'color-palette';
+@import 'font';
+
+.htc-header {
+  width: 100%;
+  // Height set from config
+  display: flex;
+  background: $blue-9;
+  padding: 12px 0;
+  color: white;
+
+  .left-side {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+  }
+
+  .divider {
+    height: 32px;
+    width: 1px;
+    background: $gray-6;
+    margin-right: 16px;
+  }
+
+  .time-range {
+    display: flex;
+    justify-content: center;
+  }
+
+  .name {
+    color: white;
+    padding: 0 8px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .space-selector {
+    padding-left: 46px;
+  }
+
+  .right-side {
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+  }
+
+  .header-action {
+    cursor: pointer;
+    padding: 0 12px;
+  }
+}

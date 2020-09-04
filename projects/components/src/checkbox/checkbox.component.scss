@@ -1,0 +1,17 @@
+@import 'color-palette';
+
+:host {
+  ::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+  .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: $blue-5;
+  }
+
+  ::ng-deep .mat-checkbox:not(.mat-checkbox-disabled) .mat-checkbox-ripple .mat-ripple-element {
+    background-color: $blue-5;
+  }
+}
+
+.htc-checkbox {
+  display: flex;
+  flex-direction: column;
+}

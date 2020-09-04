@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "target": "es2015",
+    "declaration": true,
+    "inlineSources": true,
+    "types": []
+  },
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "enableResourceInlining": true
+  },
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+}

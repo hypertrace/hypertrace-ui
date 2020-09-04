@@ -1,0 +1,28 @@
+@import 'font';
+
+.htc-message-display {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2px;
+
+  .title {
+    font-size: 14px;
+    line-height: 18px;
+
+    letter-spacing: -0.02em;
+
+    color: $color-text;
+  }
+
+  .description {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: -0.02em;
+    color: $gray-5;
+  }
+}

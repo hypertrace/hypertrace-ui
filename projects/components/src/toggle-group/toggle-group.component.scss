@@ -1,0 +1,49 @@
+@import 'mixins';
+
+.toggle-group {
+  display: flex;
+
+  .items {
+    @include body-1-medium($gray-5);
+    display: flex;
+    position: relative;
+    border: 1px solid $color-border;
+    border-radius: 6px;
+    background: $gray-1;
+    height: 36px;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  .divider {
+    width: 1px;
+    margin: 6px 1px;
+    background: $gray-2;
+
+    &.hide-divider {
+      background: $gray-1;
+    }
+  }
+
+  .active {
+    @include center-contents();
+    @include filter-box-shadow();
+    height: calc(100% - 4px); // Subtract 4px for margin
+    margin: 2px 0;
+    position: absolute;
+    width: 0; // Modified in html/ts
+    left: 0; // Modified in html/ts
+    background: white;
+    border-radius: 5px; // 5px since its inside another bordered element of 6px
+    cursor: pointer;
+    transition: all 0.4s ease;
+    transition-property: left, width; // Not color, background (for hover)
+
+    &:hover {
+      color: $gray-6;
+      background: $gray-2;
+    }
+  }
+}

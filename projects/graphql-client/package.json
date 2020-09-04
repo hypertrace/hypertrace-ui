@@ -1,0 +1,22 @@
+{
+  "name": "@hypertrace/graphql-client",
+  "version": "0.0.1",
+  "private": true,
+  "peerDependencies": {
+    "@angular/core": "^10.0.4",
+    "core-js": "^3.5.0",
+    "rxjs": "~6.6.0",
+    "lodash-es": "^4.17.15",
+    "apollo-angular": "^1.10.0",
+    "apollo-angular-link-http": "^1.11.0",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "graphql-tag": "^2.10.1"
+  },
+  "devDependencies": {
+    "@hypertrace/test-utils": "^0.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

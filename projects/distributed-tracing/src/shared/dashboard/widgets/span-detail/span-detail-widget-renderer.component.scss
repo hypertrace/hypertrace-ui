@@ -1,0 +1,12 @@
+.span-detail-widget-renderer {
+  .content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+    padding: 0 16px;
+  }
+
+  .summary-value {
+    padding-right: 24px;
+  }
+}

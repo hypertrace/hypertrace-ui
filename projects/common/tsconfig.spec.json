@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/spec",
+    "types": ["webpack-env", "jest"],
+    "module": "commonjs"
+  },
+  "include": ["**/*.spec.ts", "**/*.test.ts"]
+}

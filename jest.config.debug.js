@@ -18,14 +18,14 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
-    '@hypertrace/assets-library': '<rootDir>/hypertrace-core-ui/projects/assets-library/src/public-api.ts',
-    '@hypertrace/common$': '<rootDir>/hypertrace-core-ui/projects/common/src/public-api.ts',
-    '@hypertrace/components': '<rootDir>/hypertrace-core-ui/projects/components/src/public-api.ts',
-    '@hypertrace/dashboards$': '<rootDir>/hypertrace-core-ui/projects/dashboards/src/public-api.ts',
-    '@hypertrace/dashboards/testing': '<rootDir>/hypertrace-core-ui/projects/dashboards/src/test/public-api.ts',
-    '@hypertrace/test-utils': '<rootDir>/hypertrace-core-ui/projects/test-utils/src/public-api.ts',
-    '@hypertrace/graphql-client': '<rootDir>/hypertrace-core-ui/projects/graphql-client/src/public-api.ts',
-    '@hypertrace/distributed-tracing': '<rootDir>/hypertrace-core-ui/projects/distributed-tracing/src/public-api.ts',
+    '@hypertrace/assets-library': '<rootDir>/projects/assets-library/src/public-api.ts',
+    '@hypertrace/common$': '<rootDir>/projects/common/src/public-api.ts',
+    '@hypertrace/components': '<rootDir>/projects/components/src/public-api.ts',
+    '@hypertrace/dashboards$': '<rootDir>/projects/dashboards/src/public-api.ts',
+    '@hypertrace/dashboards/testing': '<rootDir>/projects/dashboards/src/test/public-api.ts',
+    '@hypertrace/test-utils': '<rootDir>/projects/test-utils/src/public-api.ts',
+    '@hypertrace/graphql-client': '<rootDir>/projects/graphql-client/src/public-api.ts',
+    '@hypertrace/distributed-tracing': '<rootDir>/projects/distributed-tracing/src/public-api.ts',
     '@hypertrace/observability': '<rootDir>/projects/observability/src/public-api.ts'
   }
 };

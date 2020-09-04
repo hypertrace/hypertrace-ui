@@ -1,0 +1,37 @@
+@import 'color-palette';
+@import 'font';
+
+.call-body {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  min-height: 200px;
+
+  .title {
+    @include font-heading;
+    padding-bottom: 12px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+
+    .toggle-button {
+      align-self: flex-end;
+    }
+
+    .body-viewer {
+      width: 100%;
+      flex: 1 1 auto;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid $gray-1;
+      border-radius: 4px;
+    }
+
+    .pre-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}

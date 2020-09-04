@@ -1,0 +1,35 @@
+@import 'color-palette';
+
+.custom-time-range-selection {
+  padding: 24px;
+}
+
+.custom-title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+
+  .form-inputs {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .divider {
+    width: 100%;
+    border: 1px solid $gray-1;
+    margin: 24px 0;
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .button {
+    height: 32px;
+  }
+}

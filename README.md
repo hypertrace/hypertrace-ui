@@ -13,7 +13,7 @@ Install Node + NPM
 
   `npm install`
 
-- Initialize Submodule (https://github.com/hypertrace/hypertrace-core-ui/)
+- Initialize Submodule (https://github.com/hypertrace/)
 
   `git submodule update --init`
 

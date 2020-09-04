@@ -1,0 +1,7 @@
+@import 'font';
+@import 'color-palette';
+
+.htc-link-anchor {
+  @include link;
+  text-decoration-line: none;
+}

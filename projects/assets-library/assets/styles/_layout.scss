@@ -1,0 +1,47 @@
+@import 'color-palette';
+
+$paginator-height: 50px;
+
+@mixin flex-layout($direction: column) {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: $direction;
+}
+
+@mixin scrollable-container($padding-sides: 0, $padding-top: 0, $padding-bottom: 0) {
+  height: 100%;
+  min-height: 0;
+  padding: $padding-top $padding-sides $padding-bottom;
+  overflow: auto;
+}
+
+@mixin non-scrollable-container($padding-sides: 0, $padding-top: 0, $padding-bottom: 0) {
+  height: 100%;
+  padding: $padding-top $padding-sides $padding-bottom;
+  overflow: hidden;
+}
+
+@mixin center-contents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin fill-container {
+  height: 100%;
+  width: 100%;
+}
+
+@mixin no-outside-spacing {
+  margin: 0;
+  padding: 0;
+}
+
+@mixin hidden {
+  display: none !important;
+}
+
+@mixin frame-border {
+  border: 1px solid $color-border;
+}

@@ -1,0 +1,16 @@
+@import 'font';
+@import 'color-palette';
+
+:host {
+  overflow: hidden;
+}
+
+.numeric-cell {
+  @include ellipsis-overflow();
+  @include body-1-regular();
+  font-weight: inherit;
+}
+
+.clickable {
+  @include link-hover();
+}
