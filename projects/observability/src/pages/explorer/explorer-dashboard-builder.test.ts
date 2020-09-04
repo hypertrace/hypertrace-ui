@@ -159,6 +159,7 @@ describe('Explorer dashboard builder', () => {
                 title: 'Status',
                 width: '184px',
                 display: TracingTableCellType.TraceStatus,
+                filterable: true,
                 value: {
                   type: 'trace-status-specification'
                 },
