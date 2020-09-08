@@ -12,6 +12,7 @@ export const backendTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Type',
         width: '10%',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'type'
@@ -21,6 +22,7 @@ export const backendTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Name',
         width: '1',
+        filterable: true,
         value: {
           type: 'attribute-specification',
           attribute: 'name'
@@ -31,6 +33,7 @@ export const backendTraceListDashboard = {
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,
+        filterable: true,
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',
