@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, PreferenceService, TraceRoute } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
@@ -69,7 +70,8 @@ export class NavigationComponent {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.navItems = this.navItemDefinitions.map(definition => this.decorateNavItem(definition));
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
@@ -84,7 +86,7 @@ export class NavigationComponent {
       return { ...navItem };
     }
     const features = navItem.matchPaths
-      .map(path => this.navigationService.getRouteConfig([path], this.navigationService.rootRoute()))
+      .map(path => this.navigationService.getRouteConfig([path], this.activatedRoute))
       .filter((maybeRoute): maybeRoute is TraceRoute => maybeRoute !== undefined)
       .flatMap(route => this.getFeaturesForRoute(route))
       .concat(navItem.features || []);

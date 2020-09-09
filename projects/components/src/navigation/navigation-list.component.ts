@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
@@ -71,7 +72,10 @@ export class NavigationListComponent {
 
   public readonly activeItem$: Observable<NavItemLinkConfig | undefined>;
 
-  public constructor(private readonly navigationService: NavigationService) {
+  public constructor(
+    private readonly navigationService: NavigationService,
+    private readonly activatedRoute: ActivatedRoute
+  ) {
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
       map(() => this.findActiveItem(this.navItems))
@@ -79,7 +83,7 @@ export class NavigationListComponent {
   }
 
   public navigate(item: NavItemLinkConfig): void {
-    this.navigationService.navigateWithinApp(item.matchPaths[0]);
+    this.navigationService.navigateWithinApp(item.matchPaths[0], { relativeTo: this.activatedRoute });
   }
 
   public toggleView(): void {
@@ -98,7 +102,7 @@ export class NavigationListComponent {
       .filter((item): item is NavItemLinkConfig => item.type === NavItemType.Link)
       .find(linkItem =>
         linkItem.matchPaths.some(matchPath =>
-          this.navigationService.isRelativePathActive([matchPath], this.navigationService.rootRoute())
+          this.navigationService.isRelativePathActive([matchPath], this.activatedRoute)
         )
       );
   }

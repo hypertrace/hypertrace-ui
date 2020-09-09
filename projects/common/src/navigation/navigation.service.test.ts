@@ -14,13 +14,21 @@ describe('Navigation Service', () => {
     path: '**',
     children: []
   };
+  const secondFirstChildRouteConfig = {
+    path: 'second-first',
+    children: [defaultChildRouteConfig]
+  };
   const passThroughRouteConfig = {
     path: '',
-    children: [defaultChildRouteConfig]
+    children: [secondFirstChildRouteConfig]
+  };
+  const secondSecondChildRouteConfig = {
+    path: 'second-second',
+    children: []
   };
   const secondChildRouteConfig = {
     path: 'second',
-    children: [passThroughRouteConfig]
+    children: [passThroughRouteConfig, secondSecondChildRouteConfig]
   };
 
   let spectator: SpectatorService<NavigationService>;
@@ -57,7 +65,17 @@ describe('Navigation Service', () => {
 
   test('can retrieve a wildcard route config relative to the current route', () => {
     router.navigate(['root']);
-    expect(spectator.service.getRouteConfig(['second', 'something'])).toEqual(defaultChildRouteConfig);
+    expect(spectator.service.getRouteConfig(['second', 'second-first', 'something'])).toEqual(defaultChildRouteConfig);
+  });
+
+  test('can skip a non matching pass through route config', () => {
+    router.navigate(['root']);
+    expect(spectator.service.getRouteConfig(['second', 'second-second'])).toEqual(secondSecondChildRouteConfig);
+  });
+
+  test('can flatten and match a multisegment path', () => {
+    router.navigate(['root']);
+    expect(spectator.service.getRouteConfig(['second/second-second'])).toEqual(secondSecondChildRouteConfig);
   });
 
   test('can build a url tree from segments', () => {
