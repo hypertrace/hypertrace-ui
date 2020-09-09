@@ -10,3 +10,8 @@ export interface Specification {
   asGraphQlOrderByFragment(): GraphQlSortWithoutDirection;
   extractFromServerData(resultContainer: Dictionary<unknown>): unknown;
 }
+
+export interface SpecificationResult {
+  alias: string;
+  data: unknown;
+}

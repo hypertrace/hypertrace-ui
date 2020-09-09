@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FixedTimeRange } from '@hypertrace/common';
+import { Dictionary, FixedTimeRange, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
   AttributeMetadataType,
   GraphQlFilterType,
@@ -7,7 +7,8 @@ import {
   GraphQlTimeRange,
   MetadataService,
   MetricAggregationType,
-  MetricHealth
+  MetricHealth,
+  Specification
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -36,7 +37,16 @@ describe('Interactions graphql query handler', () => {
             scope: scope,
             requiresAggregation: false,
             allowedAggregations: [MetricAggregationType.Average]
-          })
+          }),
+        buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
+          forkJoinSafeEmpty(
+            specifications.map(spec =>
+              of({
+                alias: spec.resultAlias(),
+                data: spec.extractFromServerData(rawResult)
+              })
+            )
+          )
       }),
       {
         provide: ENTITY_METADATA,

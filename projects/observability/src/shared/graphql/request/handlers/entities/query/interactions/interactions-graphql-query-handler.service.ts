@@ -3,12 +3,11 @@ import { DeepReadonly, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
 import {
   GraphQlSelectionBuilder,
   GraphQlTimeRange,
-  isMetricAggregation,
-  isMetricSpecification,
+  MetadataService,
   Specification
 } from '@hypertrace/distributed-tracing';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityType, Interaction, INTERACTION_SCOPE } from '../../../../../model/schema/entity';
 import { GraphQlObservabilityArgumentBuilder } from '../../../../builders/argument/graphql-observability-argument-builder';
@@ -29,7 +28,8 @@ export class InteractionsGraphQlQueryHandlerService
 
   public constructor(
     private readonly entityGraphQlQueryHandler: EntityGraphQlQueryHandlerService,
-    private readonly entitiesGraphqlQueryBuilderService: EntitiesGraphqlQueryBuilderService
+    private readonly entitiesGraphqlQueryBuilderService: EntitiesGraphqlQueryBuilderService,
+    private readonly metaDataService: MetadataService
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlInteractionsRequest {
@@ -108,25 +108,10 @@ export class InteractionsGraphQlQueryHandlerService
         entityType: request.neighborType,
         properties: request.neighborSpecifications
       }),
-      forkJoinSafeEmpty(
-        request.interactionSpecifications.map(spec => {
-          const alias = spec.resultAlias();
-          const data = spec.extractFromServerData(serverInteraction);
-
-          if (isMetricSpecification(spec) && isMetricAggregation(data)) {
-            return this.entitiesGraphqlQueryBuilderService.resultUnits(INTERACTION_SCOPE, spec).pipe(
-              map(units => ({
-                alias: alias,
-                data: { units: units, ...(data as object) }
-              }))
-            );
-          }
-
-          return of({
-            alias: alias,
-            data: data
-          });
-        })
+      this.metaDataService.buildSpecificationResultWithUnits(
+        serverInteraction,
+        request.interactionSpecifications,
+        INTERACTION_SCOPE
       )
     ]).pipe(
       map(([neighbor, properties]) => {
