@@ -16,12 +16,4 @@ describe('Label Tag Component', () => {
     expect(labelElement.style.backgroundColor).toEqual('rgb(242, 208, 245)');
     expect(labelElement.style.color).toEqual('rgb(148, 32, 159)');
   });
-
-  test('renders the tag with default colors if colors are not specified', () => {
-    spectator = createHost('<ht-label-tag label="Default"></ht-label-tag>');
-    const labelElement = spectator.query('.label-tag') as HTMLElement;
-    expect(labelElement).toHaveText('Default');
-    expect(labelElement.style.backgroundColor).toEqual('rgb(244, 245, 245)');
-    expect(labelElement.style.color).toEqual('rgb(8, 9, 9)');
-  });
 });
