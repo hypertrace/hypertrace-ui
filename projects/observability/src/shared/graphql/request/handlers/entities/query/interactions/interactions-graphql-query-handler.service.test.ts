@@ -187,8 +187,7 @@ describe('Interactions graphql query handler', () => {
             {
               'avg(duration)': {
                 value: 1,
-                health: MetricHealth.NotSpecified,
-                units: 'ms'
+                health: MetricHealth.NotSpecified
               },
               neighbor: {
                 [entityIdKey]: '1',
@@ -199,8 +198,7 @@ describe('Interactions graphql query handler', () => {
             {
               'avg(duration)': {
                 value: 2,
-                health: MetricHealth.NotSpecified,
-                units: 'ms'
+                health: MetricHealth.NotSpecified
               },
               neighbor: {
                 [entityIdKey]: '2',
