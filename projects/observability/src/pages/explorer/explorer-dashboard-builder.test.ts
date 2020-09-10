@@ -99,7 +99,7 @@ describe('Explorer dashboard builder', () => {
           json: {
             type: 'table-widget',
             mode: TableMode.Detail,
-            style: TableStyle.FullPage,
+            style: TableStyle.Embedded,
             data: {
               type: 'traces-table-data-source',
               trace: ObservabilityTraceType.Api

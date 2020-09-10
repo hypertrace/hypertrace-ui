@@ -116,7 +116,7 @@ export class ExplorerDashboardBuilder {
     return {
       type: 'table-widget',
       mode: TableMode.Detail,
-      style: TableStyle.FullPage,
+      style: TableStyle.Embedded,
       columns: columns,
       'child-template': {
         type: 'trace-detail-widget',
