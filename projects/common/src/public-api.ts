@@ -19,6 +19,7 @@ export * from './utilities/coercers/number-coercer';
 
 // Color
 export * from './color/color.service';
+export * from './color/colors';
 
 // Constants
 export * from './constants/application-constants';

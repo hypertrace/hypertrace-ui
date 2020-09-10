@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
+import { Colors } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Colors } from '../../../common/src/color/colors';
 import { IconSize } from '../icon/icon-size';
 
 @Component({

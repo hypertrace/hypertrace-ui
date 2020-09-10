@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Breadcrumb } from '@hypertrace/common';
+import { Breadcrumb, Colors } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Colors } from '../../../../common/src/color/colors';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';

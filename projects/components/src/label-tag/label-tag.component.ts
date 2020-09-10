@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Colors } from '../../../common/src/color/colors';
+import { Colors } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-label-tag',
