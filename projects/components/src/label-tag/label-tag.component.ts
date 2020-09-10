@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Colors } from '@hypertrace/common';
+import { Color } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-label-tag',
@@ -11,18 +11,13 @@ import { Colors } from '@hypertrace/common';
     </div>
   `
 })
-export class LabelTagComponent implements OnInit {
+export class LabelTagComponent {
   @Input()
   public label?: string;
 
   @Input()
-  public labelColor?: string;
+  public labelColor?: Color;
 
   @Input()
-  public backgroundColor?: string;
-
-  public ngOnInit() {
-    this.backgroundColor = this.backgroundColor ?? Colors.Gray1;
-    this.labelColor = this.labelColor ?? Colors.Gray9;
-  }
+  public backgroundColor?: Color;
 }

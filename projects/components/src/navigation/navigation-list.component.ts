@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { Colors } from '@hypertrace/common';
+import { Color } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -23,8 +23,8 @@ import { IconSize } from '../icon/icon-size';
                   *ngIf="item.isBeta"
                   class="beta"
                   label="Beta"
-                  backgroundColor="${Colors.Purple2_15pOpacity}"
-                  labelColor="${Colors.Purple5}"
+                  backgroundColor="${Color.Purple2}"
+                  labelColor="${Color.Purple5}"
                 ></ht-label-tag>
               </div>
             </div>
