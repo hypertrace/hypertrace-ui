@@ -13,7 +13,7 @@ import { Colors } from '../../../common/src/color/colors';
 })
 export class LabelTagComponent implements OnInit {
   @Input()
-  public label!: string;
+  public label?: string;
 
   @Input()
   public labelColor?: string;

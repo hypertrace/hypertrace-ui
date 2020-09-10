@@ -36,7 +36,6 @@ export namespace TableCdkRowUtil {
     parent: parent,
     expanded: false,
     selected: false,
-    hovered: false,
     root: !parent,
     children: isStatefulPrefetchedTreeTableRow(row) ? row.$$state.children : undefined,
     leaf: isStatefulPrefetchedTreeTableRow(row) ? row.$$state.children.length === 0 : !!parent,
