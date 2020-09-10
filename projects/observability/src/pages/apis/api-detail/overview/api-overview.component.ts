@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SubscriptionLifecycle } from '@hypertrace/common';
+import { Color, SubscriptionLifecycle } from '@hypertrace/common';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
@@ -272,7 +272,7 @@ export class ApiOverviewComponent {
               {
                 type: 'series',
                 name: 'Calls',
-                color: '#272c2e',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 hide: true,
                 data: {
@@ -351,7 +351,7 @@ export class ApiOverviewComponent {
                 type: 'series',
                 name: 'Calls',
                 hide: true,
-                color: '#272c2e',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 data: {
                   type: 'entity-metric-timeseries-data-source',
@@ -384,7 +384,7 @@ export class ApiOverviewComponent {
               {
                 type: 'series',
                 name: 'Calls',
-                color: '#272c2e',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 data: {
                   type: 'entity-metric-timeseries-data-source',
