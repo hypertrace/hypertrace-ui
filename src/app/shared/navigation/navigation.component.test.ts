@@ -1,76 +1,45 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ChangeDetectorRef } from '@angular/core';
-import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import {
-  FeatureState,
-  FeatureStateResolver,
-  LayoutChangeService,
-  NavigationService,
-  PreferenceService,
-  SubscriptionLifecycle
-} from '@hypertrace/common';
-import { ButtonModule, NavItemType } from '@hypertrace/components';
-import { byLabel, createRoutingFactory, mockProvider, SpectatorRouting } from '@ngneat/spectator/jest';
-import { BehaviorSubject, EMPTY, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { NavigationService, PreferenceService } from '@hypertrace/common';
+import { LetAsyncModule, NavigationListComponent } from '@hypertrace/components';
+import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
+import { BehaviorSubject, of } from 'rxjs';
 import { NavigationComponent } from './navigation.component';
-import { NavigationModule } from './navigation.module';
 
 describe('NavigationComponent', () => {
-  let spectator: SpectatorRouting<NavigationComponent>;
-  let spy: jest.SpyInstance;
-
-  const createRoutingComponent = createRoutingFactory({
-    declareComponent: false,
+  const createComponent = createComponentFactory({
     component: NavigationComponent,
-    imports: [NavigationModule, HttpClientTestingModule, IconLibraryTestingModule, ButtonModule],
+    shallow: true,
+    imports: [LetAsyncModule],
+    declarations: [MockComponent(NavigationListComponent)],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: EMPTY,
-        navigateWithinApp: jest.fn(),
-        getCurrentActivatedRoute: jest.fn().mockReturnValue(
-          of({
-            root: {}
-          })
-        )
+        getRouteConfig: () => ({
+          data: {
+            features: ['example-feature']
+          }
+        })
       }),
-      mockProvider(ChangeDetectorRef),
-      mockProvider(SubscriptionLifecycle),
-      mockProvider(LayoutChangeService),
-      mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Enabled)
-      }),
+      mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })
     ]
   });
-
-  beforeEach(() => {
-    spectator = createRoutingComponent();
-
-    spy = spectator.inject(NavigationService).navigateWithinApp;
+  test('should decorate the config list', () => {
+    const spectator = createComponent();
+    expect(spectator.query(NavigationListComponent)?.navItems).toContainEqual(
+      expect.objectContaining({ features: ['example-feature'] })
+    );
   });
 
-  test('should show a nav-item element for each NavItemConfig', () => {
-    const linkNavItemCount = spectator.component.navItems.filter(value => value.type === NavItemType.Link).length;
-    expect(spectator.queryAll('ht-nav-item').length).toBe(linkNavItemCount);
-  });
-
-  test('should navigate to NavItemConfig path when nav-item element clicked', () => {
-    const element = spectator.query(byLabel('Explorer'));
-    spectator.click(element!);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  test('should update preference when collapse nav-item element is clicked', () => {
-    const collapsedSubject = new BehaviorSubject(false);
-
-    spectator = createRoutingComponent({
+  test('should update preference when collapsedChange is emitted', () => {
+    const spectator = createComponent({
       providers: [
         mockProvider(PreferenceService, {
-          get: jest.fn().mockReturnValue(collapsedSubject)
+          get: jest.fn().mockReturnValue(new BehaviorSubject(false))
         })
       ]
     });
-    spectator.component.onViewToggle(true);
+    spectator.triggerEventHandler(NavigationListComponent, 'collapsedChange', true);
     expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith('app-navigation.collapsed', true);
   });
 });

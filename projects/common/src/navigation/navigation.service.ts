@@ -122,6 +122,11 @@ export class NavigationService {
     return this.router.isActive(this.router.createUrlTree(path, { relativeTo: relativeTo }), false);
   }
 
+  /**
+   * Gets the defined route config if available. Note that this will _not_ traverse
+   * lazy loaded module boundaries, as the config for a lazy loaded module may or may
+   * not be available.
+   */
   public getRouteConfig(
     path: string[],
     relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()
@@ -213,12 +218,13 @@ export class NavigationService {
     if (path.length === 0) {
       return undefined;
     }
-    const nextChildRoute = this.findMatchingRoute(path[0], routes);
-    if (!nextChildRoute || path.length === 1) {
+    const flattenedPathSegments = path.flatMap(segment => segment.split('/'));
+    const nextChildRoute = this.findMatchingRoute(flattenedPathSegments[0], routes);
+    if (!nextChildRoute || flattenedPathSegments.length === 1) {
       return nextChildRoute;
     }
 
-    return this.findRouteConfig(path.slice(1), nextChildRoute.children || []);
+    return this.findRouteConfig(flattenedPathSegments.slice(1), nextChildRoute.children || []);
   }
 
   private get currentParamMap(): ParamMap {
@@ -226,26 +232,23 @@ export class NavigationService {
   }
 
   private findMatchingRoute(pathSegment: string, routes: TraceRoute[]): TraceRoute | undefined {
-    const firstMatch = routes.find(
-      route =>
-        (route.path === pathSegment && route.pathMatch === 'full') || // Exact match
-        (typeof route.path === 'string' && route.path.startsWith(pathSegment) && route.pathMatch !== 'full') || // Prefix match
-        route.path === '**' || // Wildcard match
-        (route.path === '' && route.pathMatch !== 'full') // Pass through
-    );
-
-    switch (firstMatch && firstMatch.path) {
-      case pathSegment: // Exact match
-      case '**': // Wildcard match
-        return firstMatch;
-      case '': // Pass through route, recurse
-        return this.findMatchingRoute(pathSegment, firstMatch!.children || []);
-      case undefined: // No match
-        return undefined;
-      default:
-        // Prefix match
-        return firstMatch;
-    }
+    return routes
+      .filter(
+        // First, filter to anything that potentially matches
+        route =>
+          (route.path === pathSegment && route.pathMatch === 'full') || // Exact match
+          (typeof route.path === 'string' && route.path.startsWith(pathSegment) && route.pathMatch !== 'full') || // Prefix match
+          route.path === '**' || // Wildcard match
+          (route.path === '' && route.pathMatch !== 'full') // Pass through
+      )
+      .map(
+        // Now resolve any pass through matches which may or may not ultimately match
+        match => (match.path === '' ? this.findMatchingRoute(pathSegment, match.children || []) : match)
+      )
+      .find(
+        // Now take first defined match
+        match => match !== undefined
+      );
   }
 }
 
