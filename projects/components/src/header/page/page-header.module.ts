@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { BetaTagModule } from '../../beta-tag/beta-tag.module';
+import { LabelTagModule } from '../../label-tag/label-tag.module';
 import { BreadcrumbsModule } from '../../breadcrumbs/breadcrumbs.module';
 import { IconModule } from '../../icon/icon.module';
 import { LabelModule } from '../../label/label.module';
@@ -18,7 +18,7 @@ import { PageHeaderComponent } from './page-header.component';
     BreadcrumbsModule,
     LabelModule,
     NavigableTabModule,
-    BetaTagModule
+    LabelTagModule
   ]
 })
 export class PageHeaderModule {}

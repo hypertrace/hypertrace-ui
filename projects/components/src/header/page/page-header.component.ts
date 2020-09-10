@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Breadcrumb } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Colors } from '../../../../common/src/color/colors';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
@@ -29,7 +30,13 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           ></ht-icon>
 
           <ht-label [label]="titlecrumb.label"></ht-label>
-          <ht-beta-tag class="beta" *ngIf="this.isBeta"></ht-beta-tag>
+          <ht-label-tag
+            *ngIf="this.isBeta"
+            class="beta"
+            label="Beta"
+            backgroundColor="${Colors.Purple2_15pOpacity}"
+            labelColor="${Colors.Purple5}"
+          ></ht-label-tag>
         </div>
       </div>
 

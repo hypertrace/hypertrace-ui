@@ -1,8 +1,8 @@
 @import 'color-palette';
 @import 'font';
 
-.beta-tag {
-  @include overline($purple-5);
+.label-tag {
+  @include overline($gray-9);
 
   width: 46px;
   height: 16px;
@@ -11,6 +11,5 @@
   align-items: center;
   justify-content: center;
 
-  background-color: rgba($purple-2, 0.15);
   border-radius: 8px;
 }

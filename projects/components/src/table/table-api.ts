@@ -40,6 +40,7 @@ export interface TableRowState {
   children?: StatefulPrefetchedTreeTableRow[];
   expanded: boolean;
   selected: boolean;
+  hovered: boolean;
   root: boolean;
   leaf: boolean;
   depth: number;

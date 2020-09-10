@@ -4,6 +4,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Colors } from '../../../common/src/color/colors';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -18,7 +19,13 @@ import { IconSize } from '../icon/icon-size';
             <div *ngIf="!this.collapsed">
               <div *ngSwitchCase="'${NavItemType.Header}'" class="nav-header">
                 <div class="label">{{ item.label }}</div>
-                <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
+                <ht-label-tag
+                  *ngIf="item.isBeta"
+                  class="beta"
+                  label="Beta"
+                  backgroundColor="${Colors.Purple2_15pOpacity}"
+                  labelColor="${Colors.Purple5}"
+                ></ht-label-tag>
               </div>
             </div>
 
