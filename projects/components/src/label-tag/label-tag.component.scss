@@ -2,6 +2,7 @@
 @import 'font';
 
 .label-tag {
+  // Default color. Could be overridden by the component
   @include overline($gray-9);
 
   width: 46px;
@@ -11,6 +12,7 @@
   align-items: center;
   justify-content: center;
 
+  // Default color. Could be overridden by the component
   background-color: $gray-1;
   border-radius: 8px;
 }
