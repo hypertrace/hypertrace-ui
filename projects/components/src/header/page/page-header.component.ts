@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Breadcrumb, Color } from '@hypertrace/common';
+import { Breadcrumb } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
@@ -29,13 +29,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           ></ht-icon>
 
           <ht-label [label]="titlecrumb.label"></ht-label>
-          <ht-label-tag
-            *ngIf="this.isBeta"
-            class="beta"
-            label="Beta"
-            backgroundColor="${Color.Purple2}"
-            labelColor="${Color.Purple5}"
-          ></ht-label-tag>
+          <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
         </div>
       </div>
 

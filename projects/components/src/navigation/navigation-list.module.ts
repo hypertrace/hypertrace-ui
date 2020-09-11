@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { BetaTagModule } from '../beta-tag/beta-tag.module';
 import { ButtonModule } from '../button/button.module';
 import { FeatureConfigCheckModule } from '../feature-check/feature-config-check.module';
 import { IconModule } from '../icon/icon.module';
-import { LabelTagModule } from '../label-tag/label-tag.module';
 import { LabelModule } from '../label/label.module';
 import { LayoutChangeModule } from '../layout/layout-change.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
@@ -23,7 +23,7 @@ import { NavigationListComponent } from './navigation-list.component';
     ButtonModule,
     LinkModule,
     LabelModule,
-    LabelTagModule
+    BetaTagModule
   ],
   declarations: [NavigationListComponent, NavItemComponent],
   exports: [NavigationListComponent]

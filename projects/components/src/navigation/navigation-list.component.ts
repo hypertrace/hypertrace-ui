@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { Color, NavigationService } from '@hypertrace/common';
+import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -18,13 +18,7 @@ import { IconSize } from '../icon/icon-size';
             <div *ngIf="!this.collapsed">
               <div *ngSwitchCase="'${NavItemType.Header}'" class="nav-header">
                 <div class="label">{{ item.label }}</div>
-                <ht-label-tag
-                  *ngIf="item.isBeta"
-                  class="beta"
-                  label="Beta"
-                  backgroundColor="${Color.Purple2}"
-                  labelColor="${Color.Purple5}"
-                ></ht-label-tag>
+                <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
               </div>
             </div>
 
