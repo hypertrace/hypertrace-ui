@@ -7,7 +7,7 @@ describe('Beta Tag Component', () => {
 
   const createHost = createHostFactory({
     component: BetaTagComponent,
-    entryComponents: [LabelTagComponent],
+    declarations: [LabelTagComponent],
     shallow: true
   });
 
