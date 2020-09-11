@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { Dictionary, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -7,7 +7,8 @@ import {
   GraphQlTimeRange,
   MetadataService,
   MetricAggregationType,
-  MetricHealth
+  MetricHealth,
+  Specification
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument, GraphQlRequestCacheability, GraphQlSelection } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -38,7 +39,9 @@ describe('Entities graphql query handler', () => {
             scope: scope,
             requiresAggregation: false,
             allowedAggregations: []
-          })
+          }),
+        buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
+          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)])))
       }),
       {
         provide: ENTITY_METADATA,
@@ -264,13 +267,11 @@ describe('Entities graphql query handler', () => {
               [entityTypeKey]: ObservabilityEntityType.Service,
               'avgrate_min(some_metric)': {
                 value: 60,
-                health: MetricHealth.NotSpecified,
-                units: 'My Units/m'
+                health: MetricHealth.NotSpecified
               },
               'avgrate_sec(some_metric)': {
                 value: 1,
-                health: MetricHealth.NotSpecified,
-                units: 'My Units/s'
+                health: MetricHealth.NotSpecified
               }
             }
           ],

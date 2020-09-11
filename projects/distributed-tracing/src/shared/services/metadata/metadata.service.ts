@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
-import { forkJoinSafeEmpty, ReplayObservable } from '@hypertrace/common';
+import { Dictionary, forkJoinSafeEmpty, ReplayObservable } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, shareReplay, tap, throwIfEmpty } from 'rxjs/operators';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
-import { addAggregationToDisplayName, getAggregationDisplayName } from '../../graphql/model/metrics/metric-aggregation';
+import {
+  addAggregationToDisplayName,
+  getAggregationDisplayName,
+  getAggregationUnitDisplayName,
+  isMetricAggregation,
+  MetricAggregation
+} from '../../graphql/model/metrics/metric-aggregation';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
-import { isMetricSpecification } from '../../graphql/model/specifications/metric-specification';
+import { isMetricSpecification, MetricSpecification } from '../../graphql/model/specifications/metric-specification';
 import {
   MetadataGraphQlQueryHandlerService,
   METADATA_GQL_REQUEST
@@ -18,35 +24,6 @@ export class MetadataService {
   private attributes$?: Observable<AttributeMetadata[]>;
 
   public constructor(private readonly graphqlQueryService: GraphQlRequestService) {}
-
-  private fetchAttributes(): ReplayObservable<AttributeMetadata[]> {
-    this.attributes$ = this.graphqlQueryService
-      .queryImmediately<MetadataGraphQlQueryHandlerService>({ requestType: METADATA_GQL_REQUEST })
-      .pipe(
-        throwIfEmpty(),
-        catchError(() => of([])),
-        tap(this.sortByDisplayName),
-        tap(this.sortSupportedAggregations),
-        shareReplay(1)
-      );
-
-    return this.attributes$;
-  }
-
-  private sortByDisplayName(attributeMetadata: AttributeMetadata[]): void {
-    attributeMetadata.sort((a, b) => a.displayName.localeCompare(b.displayName));
-  }
-
-  private sortSupportedAggregations(attributeMetadata: AttributeMetadata[]): void {
-    attributeMetadata.forEach(attribute =>
-      attribute.allowedAggregations.sort((a, b): number => {
-        const displayNameA = getAggregationDisplayName(a);
-        const displayNameB = getAggregationDisplayName(b);
-
-        return displayNameA.localeCompare(displayNameB);
-      })
-    );
-  }
 
   public getFilterAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return this.getServerDefinedAttributes(scope);
@@ -116,6 +93,68 @@ export class MetadataService {
     return !isEmpty(attribute.displayName) ? attribute.displayName : attribute.name;
   }
 
+  /**
+   * This is used for adding units to metric restults.
+   * @param rawResult raw result from server
+   * @param specifications all request specifications
+   * @param scope scope of attributes
+   */
+  public buildSpecificationResultWithUnits(
+    rawResult: Dictionary<unknown>,
+    specifications: Specification[],
+    scope: string
+  ): Observable<Map<Specification, unknown>> {
+    return forkJoinSafeEmpty(
+      specifications.map(spec => {
+        const data = spec.extractFromServerData(rawResult);
+
+        if (isMetricSpecification(spec) && isMetricAggregation(data)) {
+          return this.resultUnits(scope, spec).pipe(
+            map(units => [spec, { units: units, ...(data as object) }] as [Specification, unknown])
+          );
+        }
+
+        return of([spec, data] as [Specification, unknown]);
+      })
+    ).pipe(map((results: [Specification, unknown][]) => new Map(results)));
+  }
+
+  private resultUnits(scope: string, specification: MetricSpecification): Observable<string> {
+    return this.getAttribute(scope, specification.name).pipe(
+      map(attribute => getAggregationUnitDisplayName(attribute, specification.aggregation)),
+      defaultIfEmpty('') // FIXME: getAttribute() will complete if it can't find any attribute
+    );
+  }
+
+  private fetchAttributes(): ReplayObservable<AttributeMetadata[]> {
+    this.attributes$ = this.graphqlQueryService
+      .queryImmediately<MetadataGraphQlQueryHandlerService>({ requestType: METADATA_GQL_REQUEST })
+      .pipe(
+        throwIfEmpty(),
+        catchError(() => of([])),
+        tap(this.sortByDisplayName),
+        tap(this.sortSupportedAggregations),
+        shareReplay(1)
+      );
+
+    return this.attributes$;
+  }
+
+  private sortByDisplayName(attributeMetadata: AttributeMetadata[]): void {
+    attributeMetadata.sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }
+
+  private sortSupportedAggregations(attributeMetadata: AttributeMetadata[]): void {
+    attributeMetadata.forEach(attribute =>
+      attribute.allowedAggregations.sort((a, b): number => {
+        const displayNameA = getAggregationDisplayName(a);
+        const displayNameB = getAggregationDisplayName(b);
+
+        return displayNameA.localeCompare(displayNameB);
+      })
+    );
+  }
+
   private getServerDefinedAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return (this.attributes$ || this.fetchAttributes()).pipe(
       map(attributes => attributes.filter(attribute => this.matchesScopes(attribute, [scope])))
@@ -138,3 +177,5 @@ export class MetadataService {
     return displayName;
   }
 }
+
+export type MaybeWithUnits<T> = T extends MetricAggregation ? T & { units: string } : T;

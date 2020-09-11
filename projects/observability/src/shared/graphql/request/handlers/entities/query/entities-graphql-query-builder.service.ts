@@ -1,15 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
-  getAggregationUnitDisplayName,
   GraphQlFilter,
   GraphQlSelectionBuilder,
   GraphQlSortBySpecification,
   GraphQlTimeRange,
-  isMetricAggregation,
-  isMetricSpecification,
   MetadataService,
-  MetricSpecification,
   Specification
 } from '@hypertrace/distributed-tracing';
 import {
@@ -18,8 +14,8 @@ import {
   GraphQlRequestOptions,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
-import { Observable, of } from 'rxjs';
-import { defaultIfEmpty, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { EntityMetadataMap, ENTITY_METADATA } from '../../../../../constants/entity-metadata';
 import {
   Entity,
@@ -92,44 +88,20 @@ export class EntitiesGraphqlQueryBuilderService {
   }
 
   public normalizeEntity(rawResult: Dictionary<unknown>, request: EntityDescriptor): Observable<Entity> {
-    return forkJoinSafeEmpty(
-      request.properties.map(spec => {
-        const alias = spec.resultAlias();
-        const data = spec.extractFromServerData(rawResult);
+    return this.metadataService
+      .buildSpecificationResultWithUnits(rawResult, request.properties, request.entityType)
+      .pipe(
+        map(mappedResult => {
+          const entity: Entity = {
+            [entityIdKey]: rawResult.id as string,
+            [entityTypeKey]: request.entityType
+          };
 
-        if (isMetricSpecification(spec) && isMetricAggregation(data)) {
-          return this.resultUnits(request.entityType, spec).pipe(
-            map(units => ({
-              alias: alias,
-              data: { units: units, ...(data as object) }
-            }))
-          );
-        }
+          mappedResult.forEach((data, specification) => (entity[specification.resultAlias()] = data));
 
-        return of({
-          alias: alias,
-          data: data
-        });
-      })
-    ).pipe(
-      map(results => {
-        const entity: Entity = {
-          [entityIdKey]: rawResult.id as string,
-          [entityTypeKey]: request.entityType
-        };
-
-        results.forEach(result => (entity[result.alias] = result.data));
-
-        return entity;
-      })
-    );
-  }
-
-  public resultUnits(scope: string, specification: MetricSpecification): Observable<string> {
-    return this.metadataService.getAttribute(scope, specification.name).pipe(
-      map(attribute => getAggregationUnitDisplayName(attribute, specification.aggregation)),
-      defaultIfEmpty('') // FIXME: getAttribute() will complete if it can't find any attribute
-    );
+          return entity;
+        })
+      );
   }
 
   public getRequestOptions(request: Pick<GraphQlEntitiesRequest, 'entityType'>): GraphQlRequestOptions {

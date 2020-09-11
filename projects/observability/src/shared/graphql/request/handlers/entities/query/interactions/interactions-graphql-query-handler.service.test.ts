@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FixedTimeRange } from '@hypertrace/common';
+import { Dictionary, FixedTimeRange } from '@hypertrace/common';
 import {
   AttributeMetadataType,
   GraphQlFilterType,
@@ -7,7 +7,8 @@ import {
   GraphQlTimeRange,
   MetadataService,
   MetricAggregationType,
-  MetricHealth
+  MetricHealth,
+  Specification
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -36,7 +37,9 @@ describe('Interactions graphql query handler', () => {
             scope: scope,
             requiresAggregation: false,
             allowedAggregations: [MetricAggregationType.Average]
-          })
+          }),
+        buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
+          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)])))
       }),
       {
         provide: ENTITY_METADATA,
@@ -177,8 +180,7 @@ describe('Interactions graphql query handler', () => {
             {
               'avg(duration)': {
                 value: 1,
-                health: MetricHealth.NotSpecified,
-                units: 'ms'
+                health: MetricHealth.NotSpecified
               },
               neighbor: {
                 [entityIdKey]: '1',
@@ -189,8 +191,7 @@ describe('Interactions graphql query handler', () => {
             {
               'avg(duration)': {
                 value: 2,
-                health: MetricHealth.NotSpecified,
-                units: 'ms'
+                health: MetricHealth.NotSpecified
               },
               neighbor: {
                 [entityIdKey]: '2',
