@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Color } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-beta-tag',
-  styleUrls: ['./beta-tag.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="beta-tag">
-      Beta
-    </div>
+    <ht-label-tag label="Beta" backgroundColor="${Color.Purple2}" labelColor="${Color.Purple5}"></ht-label-tag>
   `
 })
 export class BetaTagComponent {}

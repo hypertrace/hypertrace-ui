@@ -1,3 +1,4 @@
+import { Color } from '@hypertrace/common';
 import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
@@ -301,7 +302,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   {
                     type: 'series',
                     name: 'Calls',
-                    color: '#272c2e',
+                    color: Color.Gray7,
                     'visualization-type': 'line',
                     hide: true,
                     data: {
@@ -380,7 +381,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'series',
                     name: 'Calls',
                     hide: true,
-                    color: '#272c2e',
+                    color: Color.Gray7,
                     'visualization-type': 'line',
                     data: {
                       type: 'entity-metric-timeseries-data-source',
@@ -413,7 +414,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   {
                     type: 'series',
                     name: 'Calls',
-                    color: '#272c2e',
+                    color: Color.Gray7,
                     'visualization-type': 'line',
                     data: {
                       type: 'entity-metric-timeseries-data-source',
@@ -604,7 +605,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             series: {
               type: 'radar-series',
               name: 'Current Time Range',
-              color: '#272c2e'
+              color: Color.Gray7
             },
             data: {
               type: 'entity-radar-data-source',
