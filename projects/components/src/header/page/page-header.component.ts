@@ -29,7 +29,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           ></ht-icon>
 
           <ht-label [label]="titlecrumb.label"></ht-label>
-          <ht-beta-tag class="beta" *ngIf="this.isBeta"></ht-beta-tag>
+          <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
         </div>
       </div>
 

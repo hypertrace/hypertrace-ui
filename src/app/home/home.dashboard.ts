@@ -1,3 +1,4 @@
+import { Color } from '@hypertrace/common';
 import { CoreTableCellRendererType, TableMode, TableStyle, TitlePosition } from '@hypertrace/components';
 import {
   DashboardDefaultConfiguration,
@@ -322,7 +323,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         series: {
           type: 'radar-series',
           name: 'Current Time Range',
-          color: '#272c2e'
+          color: Color.Gray7
         },
         data: {
           type: 'observe-system-radar-data-source'
@@ -448,7 +449,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'Calls',
-                color: '#272C2E',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 hide: true,
                 data: {
@@ -496,7 +497,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'Calls',
-                color: '#272C2E',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 data: {
                   type: 'trace-metric-timeseries-data-source',
@@ -617,7 +618,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'Calls',
-                color: '#272C2E',
+                color: Color.Gray7,
                 'visualization-type': 'line',
                 hide: true,
                 data: {
