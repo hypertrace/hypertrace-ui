@@ -114,12 +114,12 @@ export class InteractionsGraphQlQueryHandlerService
         INTERACTION_SCOPE
       )
     ]).pipe(
-      map(([neighbor, properties]) => {
+      map(([neighbor, mappedResult]) => {
         const interaction: Interaction = {
           neighbor: neighbor
         };
 
-        properties.forEach(property => (interaction[property.alias] = property.data));
+        mappedResult.forEach((data, specification) => (interaction[specification.resultAlias()] = data));
 
         return interaction;
       })

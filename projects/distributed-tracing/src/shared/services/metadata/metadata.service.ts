@@ -9,9 +9,10 @@ import {
   addAggregationToDisplayName,
   getAggregationDisplayName,
   getAggregationUnitDisplayName,
-  isMetricAggregation
+  isMetricAggregation,
+  MetricAggregation
 } from '../../graphql/model/metrics/metric-aggregation';
-import { Specification, SpecificationResult } from '../../graphql/model/schema/specifier/specification';
+import { Specification } from '../../graphql/model/schema/specifier/specification';
 import { isMetricSpecification, MetricSpecification } from '../../graphql/model/specifications/metric-specification';
 import {
   MetadataGraphQlQueryHandlerService,
@@ -102,27 +103,20 @@ export class MetadataService {
     rawResult: Dictionary<unknown>,
     specifications: Specification[],
     scope: string
-  ): Observable<SpecificationResult[]> {
+  ): Observable<Map<Specification, unknown>> {
     return forkJoinSafeEmpty(
       specifications.map(spec => {
-        const alias = spec.resultAlias();
         const data = spec.extractFromServerData(rawResult);
 
         if (isMetricSpecification(spec) && isMetricAggregation(data)) {
           return this.resultUnits(scope, spec).pipe(
-            map(units => ({
-              alias: alias,
-              data: { units: units, ...(data as object) }
-            }))
+            map(units => [spec, { units: units, ...(data as object) }] as [Specification, unknown])
           );
         }
 
-        return of({
-          alias: alias,
-          data: data
-        });
+        return of([spec, data] as [Specification, unknown]);
       })
-    );
+    ).pipe(map((results: [Specification, unknown][]) => new Map(results)));
   }
 
   private resultUnits(scope: string, specification: MetricSpecification): Observable<string> {
@@ -183,3 +177,5 @@ export class MetadataService {
     return displayName;
   }
 }
+
+export type MaybeWithUnits<T> = T extends MetricAggregation ? T & { units: string } : T;

@@ -91,13 +91,13 @@ export class EntitiesGraphqlQueryBuilderService {
     return this.metadataService
       .buildSpecificationResultWithUnits(rawResult, request.properties, request.entityType)
       .pipe(
-        map(results => {
+        map(mappedResult => {
           const entity: Entity = {
             [entityIdKey]: rawResult.id as string,
             [entityTypeKey]: request.entityType
           };
 
-          results.forEach(result => (entity[result.alias] = result.data));
+          mappedResult.forEach((data, specification) => (entity[specification.resultAlias()] = data));
 
           return entity;
         })

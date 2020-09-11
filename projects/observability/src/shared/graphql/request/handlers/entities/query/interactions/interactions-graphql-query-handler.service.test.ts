@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { Dictionary, FixedTimeRange, forkJoinSafeEmpty } from '@hypertrace/common';
+import { Dictionary, FixedTimeRange } from '@hypertrace/common';
 import {
   AttributeMetadataType,
   GraphQlFilterType,
@@ -39,14 +39,7 @@ describe('Interactions graphql query handler', () => {
             allowedAggregations: [MetricAggregationType.Average]
           }),
         buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
-          forkJoinSafeEmpty(
-            specifications.map(spec =>
-              of({
-                alias: spec.resultAlias(),
-                data: spec.extractFromServerData(rawResult)
-              })
-            )
-          )
+          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)])))
       }),
       {
         provide: ENTITY_METADATA,
