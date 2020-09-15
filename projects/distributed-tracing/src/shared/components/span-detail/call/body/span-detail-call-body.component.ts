@@ -59,7 +59,6 @@ export class SpanDetailCallBodyComponent implements OnChanges {
       this.determineNonParsableType();
     } else {
       this.selectedTab = this.parsedLabel;
-
     }
   }
 
