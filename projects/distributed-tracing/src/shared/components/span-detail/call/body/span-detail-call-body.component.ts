@@ -30,7 +30,7 @@ import { ToggleViewMode } from '@hypertrace/components';
             </ht-message-display>
           </section>
           <section *ngSwitchCase="this.rawLabel">
-            <pre class="pre-body">{{ this.body | json }}</pre>
+            <pre class="pre-body">{{ this.rawBody }}</pre>
           </section>
         </div>
       </div>
@@ -46,18 +46,29 @@ export class SpanDetailCallBodyComponent implements OnChanges {
   public body?: string;
 
   public parsedBody?: Json;
+  public rawBody?: string;
 
   public icon?: IconType;
   public title?: string;
   public description?: string;
 
   public ngOnChanges(): void {
+    this.rawBody = this.preProcess(this.body);
     this.parsedBody = this.parseBody(this.body);
     if (this.parsedBody === undefined) {
       this.determineNonParsableType();
     } else {
       this.selectedTab = this.parsedLabel;
+
     }
+  }
+
+  public isParsable(): boolean {
+    return this.parsedBody !== undefined;
+  }
+
+  private preProcess(body?: string): string | undefined {
+    return body?.replace(/\\"/g, '"');
   }
 
   private parseBody(body: string | undefined): Json | undefined {
@@ -66,10 +77,6 @@ export class SpanDetailCallBodyComponent implements OnChanges {
     } catch (e) {
       return undefined;
     }
-  }
-
-  public isParsable(): boolean {
-    return this.parsedBody !== undefined;
   }
 
   private determineNonParsableType(): void {
