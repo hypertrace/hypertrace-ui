@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Input, OnInit, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
 import { MenuItemComponent } from './menu-item.component';
@@ -34,7 +34,7 @@ import { MenuItemComponent } from './menu-item.component';
     </div>
   `
 })
-export class MenuDropdownComponent implements OnInit {
+export class MenuDropdownComponent {
   @Input()
   public icon?: IconType;
 
@@ -43,6 +43,4 @@ export class MenuDropdownComponent implements OnInit {
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
-
-  public ngOnInit(): void {}
 }
