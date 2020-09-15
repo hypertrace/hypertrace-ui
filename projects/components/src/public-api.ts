@@ -252,3 +252,8 @@ export { TooltipModule } from './tooltip/tooltip.module';
 // Greeting label
 export { GreetingLabelModule } from './greeting-label/greeting-label.module';
 export { GreetingLabelComponent } from './greeting-label/greeting-label.component';
+
+// Dropdown menu
+export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
+export { MenuItemComponent } from './menu-dropdown/menu-item.component';
+export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
