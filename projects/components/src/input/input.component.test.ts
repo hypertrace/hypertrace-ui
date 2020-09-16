@@ -62,7 +62,7 @@ describe('Input Component', () => {
       }
     );
 
-    const inputEl = spectator.query('input') as HTMLInputElement;
-    expect(inputEl.placeholder).toEqual('placeholder');
+    const matInput = spectator.query(MatInput);
+    expect(matInput?.placeholder).toEqual('placeholder');
   });
 });
