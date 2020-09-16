@@ -496,7 +496,7 @@ export class TableComponent
   }
 
   public isExpanderColumn(columnConfig: TableColumnConfig): boolean {
-    return columnConfig === this.expandableToggleColumnConfig;
+    return columnConfig.display === this.expandableToggleColumnConfig.display;
   }
 
   public shouldHighlightRowAsSelection(row: StatefulTableRow): boolean {

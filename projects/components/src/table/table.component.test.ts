@@ -15,6 +15,7 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { TableCellStringParser } from './cells/data-parsers/table-cell-string-parser';
 import { TextTableCellRendererComponent } from './cells/data-renderers/text/text-table-cell-renderer.component';
@@ -356,6 +357,14 @@ describe('Table component', () => {
     spectator.tick();
 
     runFakeRxjs(({ expectObservable }) => {
+      expectObservable(
+        spectator.component.columnConfigs$.pipe(
+          map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig)))
+        )
+      ).toBe('x', {
+        x: [true, false]
+      });
+
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
