@@ -1,5 +1,5 @@
 import { Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable, Injector } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
 import {
@@ -53,7 +53,7 @@ export class PopoverService {
   private buildContainerInjector(options: PopoverOptions<unknown>, popoverRef: PopoverRef): Injector {
     const parentInjector = options.parentInjector || this.defaultInjector;
 
-    return new PortalInjector(
+    return Injector.get(
       parentInjector,
       new WeakMap([[POPOVER_CONTAINER_DATA, this.buildContainerData(options, popoverRef)]])
     );
@@ -70,7 +70,7 @@ export class PopoverService {
     // Child of provided injector, sibling to container injector
     const parentInjector = options.parentInjector || this.defaultInjector;
 
-    return new PortalInjector(
+    return Injector.get(
       parentInjector,
       new WeakMap<object, unknown>([
         [POPOVER_DATA, options.data],

@@ -1,4 +1,4 @@
-import { ComponentPortal, DomPortalOutlet, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import {
   ApplicationRef,
   ComponentFactoryResolver,
@@ -253,7 +253,7 @@ export class D3Topology implements Topology {
     );
     const applicationRef = this.injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, this.injector);
-    const interactionInjector = new PortalInjector(
+    const interactionInjector = Injector.get(
       this.injector,
       new WeakMap<InjectionToken<unknown>, TopologyInteractionControlData<SVGSVGElement, SVGGElement>>([
         [
