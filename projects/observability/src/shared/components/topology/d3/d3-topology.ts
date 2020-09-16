@@ -1,10 +1,9 @@
-import { ComponentPortal, DomPortalOutlet, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import {
   ApplicationRef,
   ComponentFactoryResolver,
   ComponentRef,
   ElementRef,
-  InjectionToken,
   Injector,
   Renderer2,
   Type
@@ -37,7 +36,6 @@ import { TopologyHover, TopologyHoverEvent } from './interactions/hover/topology
 import { TopologyStateManager } from './interactions/state/topology-state-manager';
 import {
   TopologyInteractionControlComponent,
-  TopologyInteractionControlData,
   TOPOLOGY_INTERACTION_CONTROL_DATA
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
@@ -253,21 +251,21 @@ export class D3Topology implements Topology {
     );
     const applicationRef = this.injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, this.injector);
-    const interactionInjector = new PortalInjector(
-      this.injector,
-      new WeakMap<InjectionToken<unknown>, TopologyInteractionControlData<SVGSVGElement, SVGGElement>>([
-        [
-          TOPOLOGY_INTERACTION_CONTROL_DATA,
-          {
+    const interactionInjector = Injector.create({
+      providers: [
+        {
+          provide: TOPOLOGY_INTERACTION_CONTROL_DATA,
+          useValue: {
             stateManager: this.stateManager,
             topologyConfig: this.config,
             layout: () => this.updateLayout(),
             currentTopology: () => this.topologyData,
             zoom: this.config.zoomable ? this.zoom : undefined
           }
-        ]
-      ])
-    );
+        }
+      ],
+      parent: this.injector
+    });
     const componentPortal = new ComponentPortal(TopologyInteractionControlComponent, undefined, interactionInjector);
     const componentRef = domPortalOutlet.attach(componentPortal);
 
