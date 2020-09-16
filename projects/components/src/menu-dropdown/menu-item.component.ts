@@ -18,5 +18,5 @@ export class MenuItemComponent {
   public iconColor?: string;
 
   @Input()
-  public action?: () => Observable<unknown>;
+  public action?: () => Observable<any>;
 }

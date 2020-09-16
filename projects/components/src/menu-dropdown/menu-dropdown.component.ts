@@ -54,7 +54,7 @@ export class MenuDropdownComponent {
   public items?: QueryList<MenuItemComponent>;
 
   @Output()
-  public output: EventEmitter<() => Observable<unknown>> = new EventEmitter();
+  public output: EventEmitter<() => Observable<any>> = new EventEmitter();
 
   public onMenuItemClick(item: MenuItemComponent): void {
     this.output.emit(item.action);
