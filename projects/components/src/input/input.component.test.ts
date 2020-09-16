@@ -62,12 +62,7 @@ describe('Input Component', () => {
       }
     );
 
-    const inputEl = spectator.query('input') as HTMLInputElement;
-    /*
-     * Upgrading @angular/material from 10.0.2 to 10.2.1 made this test fail. The HTML5 placeholder attribute is not
-     * being set even though testing in the browser shows the placeholder working correctly. Changed to check for
-     * data-placeholder as that attribute is still correct and confirms we are setting it correctly in our component.
-     */
-    expect(inputEl.getAttribute('data-placeholder')).toEqual('placeholder');
+    const matInput = spectator.query(MatInput);
+    expect(matInput?.placeholder).toEqual('placeholder');
   });
 });
