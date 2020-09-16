@@ -28,6 +28,10 @@ export class TimeRangeService {
     this.initializeTimeRange();
   }
 
+  public refresh(): void {
+    this.currentTimeRange && this.setTimeRange(this.currentTimeRange);
+  }
+
   public getShareableCurrentUrl(): string {
     const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
     const timeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${timeRangeParamValue}`;

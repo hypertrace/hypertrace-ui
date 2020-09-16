@@ -81,4 +81,21 @@ describe('Time range service', () => {
       });
     });
   });
+
+  test('refresh should emits the current time range again', () => {
+    runFakeRxjs(({ cold, expectObservable }) => {
+      timeRange$ = of('1573255100253-1573255111159');
+
+      const spectator = buildService();
+      const currentTimeRange = spectator.service.getCurrentTimeRange();
+      expect(currentTimeRange).toEqual(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)));
+
+      cold('5ms x').subscribe(() => spectator.service.refresh());
+
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x 4ms y', {
+        x: currentTimeRange,
+        y: currentTimeRange
+      });
+    });
+  });
 });
