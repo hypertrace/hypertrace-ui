@@ -1,4 +1,3 @@
-import { PortalInjector } from '@angular/cdk/portal';
 import {
   ComponentFactoryResolver,
   ComponentRef,
@@ -34,10 +33,15 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     private readonly loadAsyncService: LoadAsyncService,
     public readonly templateRef: TemplateRef<LoadAsyncContext>
   ) {
-    this.wrapperInjector = new PortalInjector(
-      this.viewContainer.injector,
-      new WeakMap([[ASYNC_WRAPPER_PARAMETERS$, this.wrapperParamsSubject.asObservable()]])
-    );
+    this.wrapperInjector = Injector.create({
+      providers: [
+        {
+          provide: ASYNC_WRAPPER_PARAMETERS$,
+          useValue: this.wrapperParamsSubject.asObservable()
+        }
+      ],
+      parent: this.viewContainer.injector
+    });
   }
 
   public ngOnChanges(): void {

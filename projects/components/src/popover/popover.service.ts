@@ -1,5 +1,5 @@
 import { Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable, Injector } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
 import {
@@ -53,10 +53,15 @@ export class PopoverService {
   private buildContainerInjector(options: PopoverOptions<unknown>, popoverRef: PopoverRef): Injector {
     const parentInjector = options.parentInjector || this.defaultInjector;
 
-    return new PortalInjector(
-      parentInjector,
-      new WeakMap([[POPOVER_CONTAINER_DATA, this.buildContainerData(options, popoverRef)]])
-    );
+    return Injector.create({
+      providers: [
+        {
+          provide: POPOVER_CONTAINER_DATA,
+          useValue: this.buildContainerData(options, popoverRef)
+        }
+      ],
+      parent: parentInjector
+    });
   }
 
   private buildContainerData(options: PopoverOptions<unknown>, popoverRef: PopoverRef): PopoverContainerData {
@@ -70,13 +75,19 @@ export class PopoverService {
     // Child of provided injector, sibling to container injector
     const parentInjector = options.parentInjector || this.defaultInjector;
 
-    return new PortalInjector(
-      parentInjector,
-      new WeakMap<object, unknown>([
-        [POPOVER_DATA, options.data],
-        [PopoverRef, popoverRef]
-      ])
-    );
+    return Injector.create({
+      providers: [
+        {
+          provide: POPOVER_DATA,
+          useValue: options.data
+        },
+        {
+          provide: PopoverRef,
+          useValue: popoverRef
+        }
+      ],
+      parent: parentInjector
+    });
   }
 
   private hasBackdrop(backdrop?: PopoverBackdrop): boolean {

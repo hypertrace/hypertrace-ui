@@ -1,4 +1,3 @@
-import { PortalInjector } from '@angular/cdk/portal';
 import { ComponentRef, Injector } from '@angular/core';
 import { DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
@@ -104,22 +103,34 @@ export class CartesianLegend {
   }
 
   private drawIntervalControl(container: ContainerElement, intervalData: CartesianIntervalData): ComponentRef<unknown> {
-    return this.injector
-      .get(DynamicComponentService)
-      .insertComponent(
-        container as Element,
-        CartesianIntervalControlComponent,
-        new PortalInjector(this.injector, new WeakMap([[INTERVAL_DATA, intervalData]]))
-      );
+    return this.injector.get(DynamicComponentService).insertComponent(
+      container as Element,
+      CartesianIntervalControlComponent,
+      Injector.create({
+        providers: [
+          {
+            provide: INTERVAL_DATA,
+            useValue: intervalData
+          }
+        ],
+        parent: this.injector
+      })
+    );
   }
 
   private drawSummaryControl(container: ContainerElement, summaries: Summary[]): ComponentRef<unknown> {
-    return this.injector
-      .get(DynamicComponentService)
-      .insertComponent(
-        container as Element,
-        CartesianSummaryComponent,
-        new PortalInjector(this.injector, new WeakMap([[SUMMARIES_DATA, summaries]]))
-      );
+    return this.injector.get(DynamicComponentService).insertComponent(
+      container as Element,
+      CartesianSummaryComponent,
+      Injector.create({
+        providers: [
+          {
+            provide: SUMMARIES_DATA,
+            useValue: summaries
+          }
+        ],
+        parent: this.injector
+      })
+    );
   }
 }
