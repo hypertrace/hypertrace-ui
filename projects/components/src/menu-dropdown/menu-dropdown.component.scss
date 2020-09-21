@@ -1,0 +1,19 @@
+@import 'interaction';
+
+.menu-dropdown {
+  .trigger-content {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    cursor: pointer;
+    height: 34px;
+
+    .trigger-label:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}
+
+.dropdown-content {
+  @include popover-menu-content;
+}

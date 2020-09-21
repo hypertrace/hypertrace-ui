@@ -1,0 +1,5 @@
+@import 'interaction';
+
+.menu-item {
+  @include popover-menu-item;
+}
