@@ -16,8 +16,4 @@
 
 .dropdown-content {
   @include popover-menu-content;
-
-  .menu-item {
-    @include popover-menu-item;
-  }
 }

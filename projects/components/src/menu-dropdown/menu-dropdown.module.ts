@@ -4,7 +4,7 @@ import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
 import { PopoverModule } from '../popover/popover.module';
 import { MenuDropdownComponent } from './menu-dropdown.component';
-import { MenuItemComponent } from './menu-item.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 
 @NgModule({
   declarations: [MenuDropdownComponent, MenuItemComponent],

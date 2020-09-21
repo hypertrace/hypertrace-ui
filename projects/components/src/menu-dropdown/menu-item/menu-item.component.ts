@@ -1,11 +1,21 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { Observable } from 'rxjs';
+import { IconSize } from '../../icon/icon-size';
 
 @Component({
   selector: 'ht-menu-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '' // No template, just gathering data
+  styleUrls: ['./menu-item.component.scss'],
+  template: `<div class="menu-item">
+    <ht-icon
+      class="icon"
+      *ngIf="this.icon"
+      [icon]="this.icon"
+      size="${IconSize.Small}"
+      [color]="this.iconColor"
+    ></ht-icon>
+    <span class="label">{{ this.label }}</span>
+  </div>`
 })
 export class MenuItemComponent {
   @Input()
@@ -16,7 +26,4 @@ export class MenuItemComponent {
 
   @Input()
   public iconColor?: string;
-
-  @Input()
-  public action?: () => Observable<any>;
 }

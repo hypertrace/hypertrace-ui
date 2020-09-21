@@ -1,16 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ContentChildren,
-  EventEmitter,
-  Input,
-  Output,
-  QueryList
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { Observable } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
-import { MenuItemComponent } from './menu-item.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 
 @Component({
   selector: 'ht-menu-dropdown',
@@ -27,16 +18,7 @@ import { MenuItemComponent } from './menu-item.component';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="dropdown-content">
-            <div *ngFor="let item of items" (click)="this.onMenuItemClick(item)" class="menu-item">
-              <ht-icon
-                class="icon"
-                *ngIf="item.icon"
-                [icon]="item.icon"
-                size="${IconSize.Small}"
-                [color]="item.iconColor"
-              ></ht-icon>
-              <span class="label">{{ item.label }}</span>
-            </div>
+            <ng-content select="ht-menu-item"></ng-content>
           </div>
         </ht-popover-content>
       </ht-popover>
@@ -52,11 +34,4 @@ export class MenuDropdownComponent {
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
-
-  @Output()
-  public output: EventEmitter<() => Observable<any>> = new EventEmitter();
-
-  public onMenuItemClick(item: MenuItemComponent): void {
-    this.output.emit(item.action);
-  }
 }

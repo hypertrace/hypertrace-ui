@@ -255,5 +255,5 @@ export { GreetingLabelComponent } from './greeting-label/greeting-label.componen
 
 // Dropdown menu
 export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
-export { MenuItemComponent } from './menu-dropdown/menu-item.component';
+export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
