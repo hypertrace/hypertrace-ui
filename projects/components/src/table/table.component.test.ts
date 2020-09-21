@@ -28,19 +28,31 @@ describe('Table component', () => {
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
     {
-      foo: 'bar'
+      firstId: 'first 1',
+      secondId: 'second 1'
     },
     {
-      foo: 'baz'
+      firstId: 'first 2',
+      secondId: 'second 2'
     }
   ];
 
   const buildColumns = (): TableColumnConfigExtended[] => [
     {
-      id: 'foo',
+      id: 'firstId',
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
-      filterValues: []
+      filterValues: [],
+      width: 100,
+      visible: true
+    },
+    {
+      id: 'secondId',
+      renderer: TextTableCellRendererComponent,
+      parser: new TableCellStringParser(undefined!),
+      filterValues: [],
+      width: 200,
+      visible: true
     }
   ];
   const createHost = createHostFactory({
@@ -59,11 +71,12 @@ describe('Table component', () => {
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
     template: `
-    <ht-table
-      [columnConfigs]="columnConfigs"
-      [data]="data"
-      [syncWithUrl]="syncWithUrl">
-    </ht-table>`
+      <ht-table
+        [columnConfigs]="columnConfigs"
+        [data]="data"
+        [syncWithUrl]="syncWithUrl">
+      </ht-table>
+    `
   });
 
   test('pass custom page size options to paginator', () => {
@@ -234,7 +247,7 @@ describe('Table component', () => {
         mockProvider(ActivatedRoute, {
           queryParamMap: of(
             convertToParamMap({
-              'sort-by': 'foo',
+              'sort-by': 'firstId',
               'sort-direction': TableSortDirection.Ascending
             })
           )
@@ -246,7 +259,7 @@ describe('Table component', () => {
     expect(spectator.component.columnConfigs![0]).toEqual(
       expect.objectContaining({
         sort: TableSortDirection.Ascending,
-        id: 'foo'
+        id: 'firstId'
       })
     );
   }));
@@ -279,7 +292,7 @@ describe('Table component', () => {
     spectator.component.onHeaderCellClick(columns[0]);
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenCalledWith({
-      'sort-by': 'foo',
+      'sort-by': 'firstId',
       'sort-direction': TableSortDirection.Ascending
     });
   });
@@ -308,7 +321,10 @@ describe('Table component', () => {
             visible: true
           }),
           expect.objectContaining({
-            id: 'foo'
+            id: 'firstId'
+          }),
+          expect.objectContaining({
+            id: 'secondId'
           })
         ]
       });
@@ -334,7 +350,10 @@ describe('Table component', () => {
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            id: 'foo'
+            id: 'firstId'
+          }),
+          expect.objectContaining({
+            id: 'secondId'
           })
         ]
       });
@@ -362,7 +381,7 @@ describe('Table component', () => {
           map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig)))
         )
       ).toBe('x', {
-        x: [true, false]
+        x: [true, false, false]
       });
 
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
@@ -373,7 +392,10 @@ describe('Table component', () => {
             visible: true
           }),
           expect.objectContaining({
-            id: 'foo'
+            id: 'firstId'
+          }),
+          expect.objectContaining({
+            id: 'secondId'
           })
         ]
       });
@@ -521,4 +543,50 @@ describe('Table component', () => {
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeFalsy();
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[1])).toBeFalsy();
   });
+
+  test('should allow column width resize', fakeAsync(() => {
+    const spectator = createHost(`<ht-table [columnConfigs]="columnConfigs" [data]="data"></ht-table>`, {
+      hostProps: {
+        columnConfigs: buildColumns(),
+        data: {
+          getData: buildData
+        }
+      }
+    });
+    spectator.tick();
+
+    const mouseEvent = {
+      clientX: 0,
+      preventDefault: () => {
+        /* No-op */
+      }
+    };
+
+    spectator.component.queryHeaderRowElement = () =>
+      // tslint:disable-next-line:no-object-literal-type-assertion
+      ({
+        offsetLeft: 0,
+        offsetWidth: 300
+      } as HTMLElement);
+
+    spectator.component.queryHeaderCellElement = (index: number) =>
+      // tslint:disable-next-line:no-object-literal-type-assertion
+      [
+        {
+          offsetLeft: 0,
+          offsetWidth: 100
+        },
+        {
+          offsetLeft: 100,
+          offsetWidth: 200
+        }
+      ][index] as HTMLElement;
+
+    spectator.component.onResizeMouseDown(mouseEvent as MouseEvent, 1);
+    spectator.dispatchMouseEvent('cdk-table', 'mousemove', 1, 0);
+    spectator.dispatchMouseEvent('cdk-table', 'mouseup');
+
+    expect(spectator.component.columnConfigsSubject.value[0].width).toBe('101px');
+    expect(spectator.component.columnConfigsSubject.value[1].width).toBe('199px');
+  }));
 });

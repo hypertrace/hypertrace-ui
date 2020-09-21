@@ -3,11 +3,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   Output,
+  Renderer2,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -66,7 +68,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       class="table"
     >
       <!-- Columns -->
-      <div *ngFor="let columnDef of this.columnConfigsSubject.value; index as index">
+      <div *ngFor="let columnDef of this.columnConfigs$ | async; trackBy: this.trackItem; index as index">
         <ng-container [cdkColumnDef]="columnDef.id">
           <cdk-header-cell
             *cdkHeaderCellDef
@@ -74,7 +76,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             [style.max-width]="columnDef.width"
             class="header-cell"
           >
+            <div *ngIf="index !== 0" class="header-column-handle" (mousedown)="this.onResizeMouseDown($event, index)">
+              <div class="header-column-divider"></div>
+            </div>
             <ht-table-header-cell-renderer
+              class="header-cell-renderer"
               [metadata]="this.metadata"
               [columnConfig]="columnDef"
               [index]="index"
@@ -261,7 +267,7 @@ export class TableComponent
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   @ViewChild(PaginatorComponent)
-  public paginator?: PaginatorComponent;
+  private readonly paginator?: PaginatorComponent;
 
   public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
@@ -287,10 +293,16 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
+  private lastOffsetX: number = 0;
+  private mouseMoveFunction?: () => void;
+  private mouseUpFunction?: () => void;
+
   public constructor(
+    private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly renderer: Renderer2,
     private readonly tableService: TableService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
@@ -307,21 +319,22 @@ export class TableComponent
     }
 
     if (changes.columnConfigs || changes.detailContent || changes.metadata) {
-      this.columnConfigsSubject.next(this.buildColumnConfigExtendeds());
+      this.initializeColumns();
     }
 
-    if (changes.data || changes.columnConfigs || changes.pageSize || changes.pageSizeOptions || changes.pageable) {
+    if (changes.data || changes.pageSize || changes.pageSizeOptions || changes.pageable) {
       this.initializeData();
     }
 
     if (changes.selections) {
-      this.toggleRowSelections(this.selections);
+      this.initializeRows();
     }
   }
 
   public ngAfterViewInit(): void {
     setTimeout(() => {
       !this.dataSource && this.initializeData();
+      this.initializeColumns();
     });
   }
 
@@ -330,6 +343,85 @@ export class TableComponent
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
+
+    this.mouseMoveFunction && this.mouseMoveFunction();
+    this.mouseUpFunction && this.mouseUpFunction();
+  }
+
+  public trackItem(_index: number, column: TableColumnConfigExtended): string {
+    return `${column.id}-${column.width}`;
+  }
+
+  public queryHeaderRowElement(): HTMLElement {
+    return this.elementRef.nativeElement.querySelector('cdk-header-row');
+  }
+
+  public queryHeaderCellElement(index: number): HTMLElement {
+    return this.elementRef.nativeElement.querySelectorAll('cdk-header-cell').item(index);
+  }
+
+  private getVisibleColumnConfig(index: number): TableColumnConfigExtended {
+    return this.columnConfigsSubject.value.filter(cc => cc.visible)[index];
+  }
+
+  public onResizeMouseDown(event: MouseEvent, index: number): void {
+    const leftColumn: ColumnInfo = this.buildColumnInfo(index - 1);
+    const rightColumn: ColumnInfo = this.buildColumnInfo(index);
+
+    this.lastOffsetX = this.calcOffsetX(event, 0, leftColumn.bounds.left, rightColumn.bounds.right);
+    this.mouseMoveFunction = this.renderer.listen('document', 'mousemove', e =>
+      this.onResizeMouseMove(e, leftColumn, rightColumn)
+    );
+    this.mouseUpFunction = this.renderer.listen('document', 'mouseup', () => this.onResizeMouseUp());
+
+    event.preventDefault();
+  }
+
+  private onResizeMouseMove(event: MouseEvent, leftColumn: ColumnInfo, rightColumn: ColumnInfo): void {
+    const offsetX = this.calcOffsetX(event, this.lastOffsetX, leftColumn.bounds.left, rightColumn.bounds.right);
+    this.lastOffsetX = this.lastOffsetX + offsetX;
+
+    leftColumn.config.width = `${leftColumn.element.offsetWidth + offsetX}px`;
+    rightColumn.config.width = `${rightColumn.element.offsetWidth - offsetX}px`;
+
+    this.changeDetector.markForCheck();
+  }
+
+  private onResizeMouseUp(): void {
+    this.mouseMoveFunction && this.mouseMoveFunction();
+    this.mouseUpFunction && this.mouseUpFunction();
+  }
+
+  private buildColumnInfo(index: number): ColumnInfo {
+    const element = this.queryHeaderCellElement(index);
+
+    return {
+      config: this.getVisibleColumnConfig(index),
+      element: element,
+      bounds: this.calcBounds(element)
+    };
+  }
+
+  private calcBounds(element: HTMLElement): ColumnBounds {
+    return {
+      left: element.offsetLeft + 12,
+      right: element.offsetLeft + element.offsetWidth - 8
+    };
+  }
+
+  private calcOffsetX(event: MouseEvent, startX: number, minX: number, maxX: number): number {
+    const relativeOffsetX = this.calcRelativeOffsetX(event);
+    const isResizeLeft = relativeOffsetX - startX < 0;
+
+    return isResizeLeft ? Math.max(minX, relativeOffsetX) - startX : Math.min(maxX, relativeOffsetX) - startX;
+  }
+
+  private calcRelativeOffsetX(event: MouseEvent): number {
+    return event.clientX - this.queryHeaderRowElement().offsetLeft;
+  }
+
+  private initializeColumns(): void {
+    this.columnConfigsSubject.next(this.buildColumnConfigExtendeds());
   }
 
   private initializeData(): void {
@@ -343,7 +435,11 @@ export class TableComponent
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
     });
-    this.columnConfigsSubject.next(this.buildColumnConfigExtendeds());
+
+    this.initializeRows();
+  }
+
+  private initializeRows(): void {
     this.rowStateSubject.next(undefined);
     this.toggleRowSelections(this.selections);
   }
@@ -413,7 +509,7 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(): TableColumnConfigExtended[] {
-    if (!this.columnConfigs || !this.dataSource) {
+    if (!this.columnConfigs) {
       return [];
     }
 
@@ -428,7 +524,7 @@ export class TableComponent
     return this.tableService.buildExtendedColumnConfigs(colConfigs, this.dataSource, this.metadata || []);
   }
 
-  private buildDataSource(): TableCdkDataSource | undefined {
+  private buildDataSource(): TableCdkDataSource {
     if (!this.canBuildDataSource()) {
       throw new Error('Undefined data, columnConfigs, or paginator');
     }
@@ -610,4 +706,15 @@ export class TableComponent
 interface SortedColumn {
   column: TableColumnConfigExtended;
   direction?: TableSortDirection;
+}
+
+interface ColumnBounds {
+  left: number;
+  right: number;
+}
+
+interface ColumnInfo {
+  config: TableColumnConfigExtended;
+  element: HTMLElement;
+  bounds: ColumnBounds;
 }
