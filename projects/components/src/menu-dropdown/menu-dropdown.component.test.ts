@@ -2,12 +2,13 @@ import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { MenuDropdownComponent, MenuItemComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
 
 describe('Menu dropdown Component', () => {
   const hostFactory = createHostFactory<MenuDropdownComponent>({
     component: MenuDropdownComponent,
-    declarations: [LabelComponent, MenuItemComponent],
+    declarations: [MockComponent(LabelComponent), MenuItemComponent],
     shallow: true
   });
 

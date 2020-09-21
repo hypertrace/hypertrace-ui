@@ -1,13 +1,15 @@
 import { fakeAsync } from '@angular/core/testing';
-import { IconType } from '@hypertrace/assets-library';
-import { Color } from '@hypertrace/common';
-import { MenuItemComponent } from '@hypertrace/components';
-import { createHostFactory } from '@ngneat/spectator/jest';
+import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { Color, NavigationService } from '@hypertrace/common';
+import { IconComponent, IconModule, MenuItemComponent } from '@hypertrace/components';
+import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 
 describe('Menu Item Component', () => {
   const createHost = createHostFactory<MenuItemComponent>({
     component: MenuItemComponent,
-    shallow: true
+    imports: [IconModule, IconLibraryTestingModule],
+    shallow: true,
+    providers: [mockProvider(NavigationService)]
   });
 
   test('should display icon and label as expected', fakeAsync(() => {
@@ -17,8 +19,10 @@ describe('Menu Item Component', () => {
         hostProps: { icon: IconType.MoreHorizontal, label: 'Item', iconColor: Color.Gray1 }
       }
     );
-    expect(spectator.query('.menu-item', { root: true })).toExist();
-    expect(spectator.query('.icon', { root: true })).toExist();
-    expect(spectator.query('.label', { root: true })).toHaveText('Item');
+    expect(spectator.query('.menu-item')).toExist();
+    expect(spectator.query('.icon')).toExist();
+    expect(spectator.query('.label')).toHaveText('Item');
+    expect(spectator.query(IconComponent)?.icon).toBe(IconType.MoreHorizontal);
+    expect(spectator.query(IconComponent)?.color).toBe(Color.Gray1);
   }));
 });
