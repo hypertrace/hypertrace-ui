@@ -1,15 +1,16 @@
 import { fakeAsync } from '@angular/core/testing';
-import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { IconType } from '@hypertrace/assets-library';
 import { Color, NavigationService } from '@hypertrace/common';
-import { IconComponent, IconModule, MenuItemComponent } from '@hypertrace/components';
+import { IconComponent, MenuItemComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 
 describe('Menu Item Component', () => {
   const createHost = createHostFactory<MenuItemComponent>({
     component: MenuItemComponent,
-    imports: [IconModule, IconLibraryTestingModule],
-    shallow: true,
-    providers: [mockProvider(NavigationService)]
+    declarations: [MockComponent(IconComponent)],
+    providers: [mockProvider(NavigationService)],
+    shallow: true
   });
 
   test('should display icon and label as expected', fakeAsync(() => {

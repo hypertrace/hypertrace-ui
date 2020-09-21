@@ -8,7 +8,7 @@ import { LabelComponent } from '../label/label.component';
 describe('Menu dropdown Component', () => {
   const hostFactory = createHostFactory<MenuDropdownComponent>({
     component: MenuDropdownComponent,
-    declarations: [MockComponent(LabelComponent), MenuItemComponent],
+    declarations: [MockComponent(LabelComponent), MockComponent(MenuItemComponent)],
     shallow: true
   });
 
@@ -36,11 +36,11 @@ describe('Menu dropdown Component', () => {
     );
 
     spectator.click('.trigger-content');
-    const optionElements = spectator.queryAll('.menu-item', { root: true });
-    expect(spectator.query('.dropdown-content', { root: true })).toExist();
-    expect(optionElements.length).toBe(2);
+    const optionComponents = spectator.queryAll(MenuItemComponent);
+    expect(spectator.query('.dropdown-content')).toExist();
+    expect(optionComponents.length).toBe(2);
 
-    expect(optionElements[0]).toHaveText('Do X');
-    expect(optionElements[1]).toHaveText('Do Y');
+    expect(optionComponents[0].label).toBe('Do X');
+    expect(optionComponents[1].label).toBe('Do Y');
   }));
 });
