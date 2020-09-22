@@ -562,12 +562,13 @@ describe('Table component', () => {
       }
     };
 
-    spectator.component.queryHeaderRowElement = () =>
+    spectator.component.headerRowElement = {
       // tslint:disable-next-line:no-object-literal-type-assertion
-      ({
+      nativeElement: {
         offsetLeft: 0,
         offsetWidth: 300
-      } as HTMLElement);
+      } as HTMLElement
+    };
 
     spectator.component.queryHeaderCellElement = (index: number) =>
       // tslint:disable-next-line:no-object-literal-type-assertion

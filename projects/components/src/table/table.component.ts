@@ -1,3 +1,4 @@
+import { CdkHeaderRow } from '@angular/cdk/table';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -5,11 +6,11 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
   Output,
-  Renderer2,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -267,7 +268,10 @@ export class TableComponent
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   @ViewChild(PaginatorComponent)
-  private readonly paginator?: PaginatorComponent;
+  public paginator?: PaginatorComponent;
+
+  @ViewChild(CdkHeaderRow, { read: ElementRef })
+  public headerRowElement!: ElementRef;
 
   public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
@@ -293,16 +297,15 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
-  private lastOffsetX: number = 0;
-  private mouseMoveFunction?: () => void;
-  private mouseUpFunction?: () => void;
+  private headerOffsetLeft: number = 0;
+  private startX: number = 0;
+  private resizeIndex?: number;
 
   public constructor(
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly renderer: Renderer2,
     private readonly tableService: TableService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
@@ -343,17 +346,10 @@ export class TableComponent
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
-
-    this.mouseMoveFunction && this.mouseMoveFunction();
-    this.mouseUpFunction && this.mouseUpFunction();
   }
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
     return `${column.id}-${column.width}`;
-  }
-
-  public queryHeaderRowElement(): HTMLElement {
-    return this.elementRef.nativeElement.querySelector('cdk-header-row');
   }
 
   public queryHeaderCellElement(index: number): HTMLElement {
@@ -365,31 +361,39 @@ export class TableComponent
   }
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
-    const leftColumn: ColumnInfo = this.buildColumnInfo(index - 1);
-    const rightColumn: ColumnInfo = this.buildColumnInfo(index);
-
-    this.lastOffsetX = this.calcOffsetX(event, 0, leftColumn.bounds.left, rightColumn.bounds.right);
-    this.mouseMoveFunction = this.renderer.listen('document', 'mousemove', e =>
-      this.onResizeMouseMove(e, leftColumn, rightColumn)
-    );
-    this.mouseUpFunction = this.renderer.listen('document', 'mouseup', () => this.onResizeMouseUp());
-
+    this.headerOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
+    this.resizeIndex = index;
+    this.startX = event.clientX;
     event.preventDefault();
   }
 
-  private onResizeMouseMove(event: MouseEvent, leftColumn: ColumnInfo, rightColumn: ColumnInfo): void {
-    const offsetX = this.calcOffsetX(event, this.lastOffsetX, leftColumn.bounds.left, rightColumn.bounds.right);
-    this.lastOffsetX = this.lastOffsetX + offsetX;
+  @HostListener('mousemove', ['$event'])
+  public onResizeMouseMove(event: MouseEvent): void {
+    if (this.resizeIndex === undefined) {
+      return;
+    }
+
+    const leftColumn: ColumnInfo = this.buildColumnInfo(this.resizeIndex - 1);
+    const rightColumn: ColumnInfo = this.buildColumnInfo(this.resizeIndex);
+
+    const offsetX = this.calcOffsetX(
+      event,
+      this.startX,
+      this.headerOffsetLeft + leftColumn.bounds.left,
+      this.headerOffsetLeft + rightColumn.bounds.right
+    );
 
     leftColumn.config.width = `${leftColumn.element.offsetWidth + offsetX}px`;
     rightColumn.config.width = `${rightColumn.element.offsetWidth - offsetX}px`;
 
+    this.startX = this.startX + offsetX;
+
     this.changeDetector.markForCheck();
   }
 
-  private onResizeMouseUp(): void {
-    this.mouseMoveFunction && this.mouseMoveFunction();
-    this.mouseUpFunction && this.mouseUpFunction();
+  @HostListener('mouseup')
+  public onResizeMouseUp(): void {
+    this.resizeIndex = undefined;
   }
 
   private buildColumnInfo(index: number): ColumnInfo {
@@ -403,6 +407,7 @@ export class TableComponent
   }
 
   private calcBounds(element: HTMLElement): ColumnBounds {
+    // We add additional padding so a portion of the column remains visible to resize (asymmetry due to resize-handle)
     return {
       left: element.offsetLeft + 12,
       right: element.offsetLeft + element.offsetWidth - 8
@@ -410,14 +415,9 @@ export class TableComponent
   }
 
   private calcOffsetX(event: MouseEvent, startX: number, minX: number, maxX: number): number {
-    const relativeOffsetX = this.calcRelativeOffsetX(event);
-    const isResizeLeft = relativeOffsetX - startX < 0;
+    const isResizeLeft = event.clientX - startX < 0;
 
-    return isResizeLeft ? Math.max(minX, relativeOffsetX) - startX : Math.min(maxX, relativeOffsetX) - startX;
-  }
-
-  private calcRelativeOffsetX(event: MouseEvent): number {
-    return event.clientX - this.queryHeaderRowElement().offsetLeft;
+    return isResizeLeft ? Math.max(minX, event.clientX) - startX : Math.min(maxX, event.clientX) - startX;
   }
 
   private initializeColumns(): void {
@@ -509,7 +509,7 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(): TableColumnConfigExtended[] {
-    if (!this.columnConfigs) {
+    if (!this.columnConfigs || !this.dataSource) {
       return [];
     }
 
