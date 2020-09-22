@@ -137,7 +137,8 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private readFromUrlFilters(): void {
-    this.internalFiltersSubject$.next(this.filterBarService.getUrlFilters(this.attributes || []));
+    const filters = this.filterBarService.getUrlFilters(this.attributes || []);
+    this.onFiltersChanged(filters, true, false);
   }
 
   private writeToUrlFilter(): void {
