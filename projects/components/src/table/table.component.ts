@@ -297,9 +297,9 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
-  private headerOffsetLeft: number = 0;
-  private startX: number = 0;
-  private resizeIndex?: number;
+  private resizeHeaderOffsetLeft: number = 0;
+  private resizeStartX: number = 0;
+  private resizeColumns?: ResizeColumns;
 
   public constructor(
     private readonly elementRef: ElementRef,
@@ -361,39 +361,41 @@ export class TableComponent
   }
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
-    this.headerOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
-    this.resizeIndex = index;
-    this.startX = event.clientX;
+    this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
+
+    this.resizeColumns = {
+      left: this.buildColumnInfo(index - 1),
+      right: this.buildColumnInfo(index)
+    };
+
+    this.resizeStartX = event.clientX;
     event.preventDefault();
   }
 
   @HostListener('mousemove', ['$event'])
   public onResizeMouseMove(event: MouseEvent): void {
-    if (this.resizeIndex === undefined) {
+    if (this.resizeColumns === undefined) {
       return;
     }
 
-    const leftColumn: ColumnInfo = this.buildColumnInfo(this.resizeIndex - 1);
-    const rightColumn: ColumnInfo = this.buildColumnInfo(this.resizeIndex);
-
     const offsetX = this.calcOffsetX(
       event,
-      this.startX,
-      this.headerOffsetLeft + leftColumn.bounds.left,
-      this.headerOffsetLeft + rightColumn.bounds.right
+      this.resizeStartX,
+      this.resizeHeaderOffsetLeft + this.resizeColumns.left.bounds.left,
+      this.resizeHeaderOffsetLeft + this.resizeColumns.right.bounds.right
     );
 
-    leftColumn.config.width = `${leftColumn.element.offsetWidth + offsetX}px`;
-    rightColumn.config.width = `${rightColumn.element.offsetWidth - offsetX}px`;
+    this.resizeColumns.left.config.width = `${this.resizeColumns.left.element.offsetWidth + offsetX}px`;
+    this.resizeColumns.right.config.width = `${this.resizeColumns.right.element.offsetWidth - offsetX}px`;
 
-    this.startX = this.startX + offsetX;
+    this.resizeStartX = this.resizeStartX + offsetX;
 
     this.changeDetector.markForCheck();
   }
 
   @HostListener('mouseup')
   public onResizeMouseUp(): void {
-    this.resizeIndex = undefined;
+    this.resizeColumns = undefined;
   }
 
   private buildColumnInfo(index: number): ColumnInfo {
@@ -711,6 +713,11 @@ interface SortedColumn {
 interface ColumnBounds {
   left: number;
   right: number;
+}
+
+interface ResizeColumns {
+  left: ColumnInfo;
+  right: ColumnInfo;
 }
 
 interface ColumnInfo {
