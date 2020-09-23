@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { sortUnknown, TypedSimpleChanges } from '@hypertrace/common';
 import { FilterAttribute } from '../filter-bar/filter-attribute';
 import { UserFilterOperator } from '../filter-bar/filter/filter-api';
-import { IconSize } from '../icon/icon-size';
+import { IconSize } from '../../icon/icon-size';
 import { FilterButtonService } from './filter-button.service';
 
 @Component({

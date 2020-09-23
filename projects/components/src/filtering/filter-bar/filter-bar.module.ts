@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Inject, NgModule } from '@angular/core';
-import { ButtonModule } from '../button/button.module';
-import { ComboBoxModule } from '../combo-box/combo-box.module';
-import { IconModule } from '../icon/icon.module';
+import { ButtonModule } from '../../button/button.module';
+import { ComboBoxModule } from '../../combo-box/combo-box.module';
+import { IconModule } from '../../icon/icon.module';
 import { FilterBarComponent } from './filter-bar.component';
 import { FilterBuilderConstructor, FILTER_BUILDERS } from './filter/builder/filter-builder';
 import { FilterBuilderService } from './filter/builder/filter-builder.service';
