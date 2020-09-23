@@ -19,7 +19,7 @@ import { isEqualIgnoreFunctions, NavigationService, NumberCoercer, TypedSimpleCh
 import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { FilterAttribute } from '../filter-bar/filter-attribute';
+import { FilterAttribute } from '../filtering/filter-bar/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';

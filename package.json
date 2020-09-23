@@ -17,6 +17,7 @@
     "build:ci": "node --max_old_space_size=3584 node_modules/@angular/cli/bin/ng build --prod --no-progress",
     "test": "ng test hypertrace-ui --cache",
     "lint": "ng lint hypertrace-ui",
+    "lint:fix": "ng lint --fix hypertrace-ui",
     "start:clean": "npm run core-ui:clean && ng serve",
     "test:clean": "npm run core-ui:clean && ng test hypertrace-ui --cache",
     "prettier:check": "prettier --check '**'",
