@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../combo-box/combo-box-api';
+import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../../combo-box/combo-box-api';
 import { FilterAttribute } from '../filter-attribute';
 import { Filter } from './filter-api';
 import { FilterService, IncompleteFilter } from './filter.service';

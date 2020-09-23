@@ -4,7 +4,7 @@ import { Inject, InjectionToken, NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
 import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
-import { FilterButtonModule } from '../../filter-button/filter-button.module';
+import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
 import { IconModule } from '../../icon/icon.module';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
