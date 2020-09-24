@@ -7,6 +7,7 @@ import { SheetOverlayConfig } from './sheet/sheet';
 import { Subscription } from 'rxjs';
 import { ModalOverlayConfig } from './modal/modal';
 import { ModalOverlayComponent } from './modal/modal-overlay.component';
+import { ModalRef } from './modal/modal-ref';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
@@ -46,7 +47,10 @@ export class OverlayService implements OnDestroy {
     return popover;
   }
 
-  public createModal(config: ModalOverlayConfig, injector: Injector = this.defaultInjector): PopoverRef {
+  public createModal<TData = unknown>(
+    config: ModalOverlayConfig<TData>,
+    injector: Injector = this.defaultInjector
+  ): ModalRef {
     this.activeModalPopover?.close();
 
     const popover = this.popoverService.drawPopover({
@@ -64,7 +68,7 @@ export class OverlayService implements OnDestroy {
 
     this.setActiveModalPopover(popover);
 
-    return popover;
+    return new ModalRef(popover);
   }
 
   private setActiveSheetPopover(popover: PopoverRef): void {

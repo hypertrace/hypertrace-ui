@@ -1,7 +1,8 @@
 import { OverlayConfig } from './../overlay';
 
-export interface ModalOverlayConfig extends OverlayConfig {
+export interface ModalOverlayConfig<TData> extends OverlayConfig {
   size: ModalSize;
+  data?: TData;
 }
 
 export const enum ModalSize {

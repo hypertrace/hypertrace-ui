@@ -25,9 +25,9 @@ export class PopoverRef {
   private _visible: boolean = false;
 
   public constructor(
-    private readonly overlayRef: OverlayRef,
-    private readonly positionBuilder: PopoverPositionBuilder,
-    private readonly navigationService: NavigationService
+    public readonly overlayRef: OverlayRef,
+    public readonly positionBuilder: PopoverPositionBuilder,
+    public readonly navigationService: NavigationService
   ) {
     this.backdropClick$ = overlayRef.backdropClick();
     this.shown$ = overlayRef.attachments();

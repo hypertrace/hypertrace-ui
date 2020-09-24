@@ -257,3 +257,7 @@ export { GreetingLabelComponent } from './greeting-label/greeting-label.componen
 export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
+
+// Confirmation modal
+export { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
+export { ConfirmationModalModule } from './confirmation-modal/confirmation-modal.module';
