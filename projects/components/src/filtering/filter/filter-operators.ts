@@ -1,14 +1,4 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterAttribute } from './filter-attribute';
-
-export interface Filter<T> {
-  metadata: FilterAttribute;
-  field: string;
-  operator: FilterOperator;
-  value: T;
-  userString: string;
-  urlString: string;
-}
 
 export const enum FilterOperator {
   Equals = '=',

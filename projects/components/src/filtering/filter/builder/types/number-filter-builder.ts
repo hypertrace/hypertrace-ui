@@ -1,5 +1,5 @@
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { FilterOperator } from '../../filter-operators';
 import { FilterBuilder } from '../filter-builder.decorator';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
@@ -21,12 +21,6 @@ export class NumberFilterBuilder extends AbstractFilterBuilder<number> {
 
   public supportedOperators(): FilterOperator[] {
     return NumberFilterBuilder.supportedOperators;
-  }
-
-  public convertStringToValue(value: string): number | undefined {
-    const val = Number(value);
-
-    return isNaN(val) ? undefined : val;
   }
 
   public convertValueToString(value: number): string {

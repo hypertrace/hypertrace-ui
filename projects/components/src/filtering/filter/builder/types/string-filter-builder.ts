@@ -1,5 +1,5 @@
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { FilterOperator } from '../../filter-operators';
 import { FilterBuilder } from '../filter-builder.decorator';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
@@ -14,10 +14,6 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string> {
 
   public supportedOperators(): FilterOperator[] {
     return StringFilterBuilder.supportedOperators;
-  }
-
-  public convertStringToValue(value: string): string | undefined {
-    return value;
   }
 
   public convertValueToString(value: string): string {

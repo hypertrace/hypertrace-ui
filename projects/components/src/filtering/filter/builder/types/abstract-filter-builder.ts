@@ -1,7 +1,8 @@
 import { collapseWhitespace } from '@hypertrace/common';
-import { Filter, FilterOperator, toUrlFilterOperator } from '../../filter-api';
+import { Filter } from '../../filter';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { FilterOperator, toUrlFilterOperator } from '../../filter-operators';
 
 export abstract class AbstractFilterBuilder<TValue> {
   public static supportedAttributeTypes: FilterAttributeType[];
@@ -10,10 +11,9 @@ export abstract class AbstractFilterBuilder<TValue> {
   protected abstract supportedAttributeTypes(): FilterAttributeType[];
   protected abstract supportedOperators(): FilterOperator[];
 
-  protected abstract convertStringToValue(value: string): TValue | undefined;
   protected abstract convertValueToString(value: TValue): string;
 
-  public buildFilters(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {
+  public buildFiltersForSupportedOperators(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {
     return this.supportedOperators().map(operator => this.buildFilter(attribute, operator, value));
   }
 

@@ -1,5 +1,5 @@
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { FilterOperator } from '../../filter-operators';
 import { FilterBuilder } from '../filter-builder.decorator';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
@@ -16,16 +16,6 @@ export class NumberArrayFilterBuilder extends AbstractFilterBuilder<number[]> {
 
   public supportedOperators(): FilterOperator[] {
     return NumberArrayFilterBuilder.supportedOperators;
-  }
-
-  public convertStringToValue(value: string): number[] | undefined {
-    const array = value.split(NumberArrayFilterBuilder.DELIMITER).map(str => {
-      const val = Number(str.trim());
-
-      return isNaN(val) ? undefined : val;
-    });
-
-    return array.includes(undefined) ? undefined : (array as number[]);
   }
 
   public convertValueToString(value: number[]): string {
