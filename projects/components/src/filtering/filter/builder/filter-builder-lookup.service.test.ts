@@ -1,11 +1,11 @@
 import { FilterAttribute, FilterType } from '@hypertrace/components';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
-import { FilterBuilderService } from './filter-builder.service';
-import { NumberFilterBuilder } from './number-filter-builder';
-import { StringFilterBuilder } from './string-filter-builder';
+import { FilterBuilderLookupService } from './filter-builder.service';
+import { NumberFilterBuilder } from '../../filter-bar/filter/builder/number-filter-builder';
+import { StringFilterBuilder } from '../../filter-bar/filter/builder/string-filter-builder';
 
 describe('Filter Builder service', () => {
-  let spectator: SpectatorService<FilterBuilderService>;
+  let spectator: SpectatorService<FilterBuilderLookupService>;
 
   const attributes: FilterAttribute[] = [
     {
@@ -41,7 +41,7 @@ describe('Filter Builder service', () => {
   ];
 
   const buildService = createServiceFactory({
-    service: FilterBuilderService
+    service: FilterBuilderLookupService
   });
 
   beforeEach(() => {

@@ -6,7 +6,7 @@ import { FilterBarService } from './filter-bar.service';
 import { NumberFilterBuilder } from './filter/builder/number-filter-builder';
 import { StringFilterBuilder } from './filter/builder/string-filter-builder';
 import { Filter, UserFilterOperator } from './filter/filter-api';
-import { FilterParserService } from './filter/parser/filter-parser.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser.service';
 
 describe('Filter Bar service', () => {
   let spectator: SpectatorService<FilterBarService>;
@@ -40,7 +40,7 @@ describe('Filter Bar service', () => {
         addQueryParametersToUrl: jest.fn(),
         getAllValuesForQueryParameter: () => ['duration_gte_50']
       }),
-      mockProvider(FilterParserService, {
+      mockProvider(FilterParserLookupService, {
         parseUrlFilterString: () => filters[0]
       })
     ]

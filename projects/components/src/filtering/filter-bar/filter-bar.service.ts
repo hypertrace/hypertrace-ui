@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterAttribute } from './filter-attribute';
 import { Filter } from './filter/filter-api';
-import { FilterParserService } from './filter/parser/filter-parser.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser.service';
 
 @Injectable({ providedIn: 'root' })
 export class FilterBarService {
@@ -12,7 +12,7 @@ export class FilterBarService {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly filterParserService: FilterParserService
+    private readonly filterParserService: FilterParserLookupService
   ) {}
 
   public getUrlFiltersChanges$(attributes: FilterAttribute[]): Observable<Filter[]> {

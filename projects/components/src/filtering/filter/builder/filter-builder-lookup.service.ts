@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { FilterAttribute } from '../../filter-attribute';
-import { AbstractFilterBuilder } from './abstract-filter-builder';
-import { FilterBuilderConstructor } from './filter-builder';
+import { FilterAttribute } from '../filter-attribute';
+import { FilterAttributeType } from '../filter-attribute-type';
+import { FilterBuilderConstructor } from './filter-builder-injection-token';
+import { AbstractFilterBuilder } from './types/abstract-filter-builder';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FilterBuilderService {
-  private readonly filterBuilders: Map<string, AbstractFilterBuilder<unknown>> = new Map();
+export class FilterBuilderLookupService {
+  private readonly filterBuilders: Map<FilterAttributeType, AbstractFilterBuilder<unknown>> = new Map();
 
   public registerAll(filterBuilderConstructors: FilterBuilderConstructor<unknown>[]): void {
     filterBuilderConstructors.forEach(filterBuilderConstructor => {
       const filterBuilder = new filterBuilderConstructor();
-      this.filterBuilders.set(filterBuilder.supportedValue(), filterBuilder);
+      this.filterBuilders.set(filterBuilder.supportedAttributeType(), filterBuilder);
     });
   }
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FilterAttribute } from '../filter-attribute';
-import { FilterBuilderService } from './builder/filter-builder.service';
+import { FilterBuilderLookupService } from '../../filter/builder/filter-builder.service';
 import { UserFilterOperator, USER_FILTER_OPERATORS } from './filter-api';
-import { FilterParserService } from './parser/filter-parser.service';
+import { FilterParserLookupService } from '../../filter/parser/filter-parser.service';
 
 export interface IncompleteFilter {
   metadata: FilterAttribute;
@@ -17,8 +17,8 @@ export interface IncompleteFilter {
 })
 export class FilterService {
   public constructor(
-    private readonly filterBuilderService: FilterBuilderService,
-    private readonly filterParserService: FilterParserService
+    private readonly filterBuilderService: FilterBuilderLookupService,
+    private readonly filterParserService: FilterParserLookupService
   ) {}
 
   public lookupAvailableMatchingFilters(attributes: FilterAttribute[], text: string = ''): IncompleteFilter[] {

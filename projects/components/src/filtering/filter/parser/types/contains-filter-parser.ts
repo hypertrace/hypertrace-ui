@@ -2,22 +2,17 @@ import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
-import { FilterParser } from '../filter-parser.decorator';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
-@FilterParser({
-  supportedAttributeTypes: [FilterAttributeType.StringMap],
-  supportedOperators: [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue]
-})
-export class MapFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
+export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   private static readonly DELIMITER: string = ':';
 
   protected supportedAttributeTypes(): FilterAttributeType[] {
-    return MapFilterParser.supportedAttributeTypes;
+    return [FilterAttributeType.StringMap];
   }
 
-  protected supportedOperators(): FilterOperator[] {
-    return MapFilterParser.supportedOperators;
+  public supportedOperators(): FilterOperator[] {
+    return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
   protected parseValueString(attribute: FilterAttribute, valueString: string): PossibleValuesTypes | undefined {
@@ -35,7 +30,7 @@ export class MapFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 
   private parseStringMapValue(valueString: string): string[] {
-    return valueString.split(MapFilterParser.DELIMITER).map(String);
+    return valueString.split(ContainsFilterParser.DELIMITER).map(String);
   }
 }
 

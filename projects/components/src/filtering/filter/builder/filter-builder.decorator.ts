@@ -1,18 +1,18 @@
 import { Type } from '@angular/core';
-import { FilterOperator } from '../filter-api';
 import { FilterAttributeType } from '../filter-attribute-type';
+import { FilterOperator } from '../filter-operators';
 import { AbstractFilterBuilder } from './types/abstract-filter-builder';
 
 // tslint:disable-next-line:only-arrow-functions
 export function FilterBuilder(metadata: FilterBuilderMetadata): FilterBuilderDecorator {
   return (constructor: FilterBuilderDecoratorConstructor): void => {
-    constructor.supportedAttributeTypes = metadata.supportedAttributeTypes;
+    constructor.supportedAttributeType = metadata.supportedAttributeType;
     constructor.supportedOperators = metadata.supportedOperators;
   };
 }
 
 interface FilterBuilderMetadata {
-  supportedAttributeTypes: FilterAttributeType[];
+  supportedAttributeType: FilterAttributeType;
   supportedOperators: FilterOperator[];
 }
 

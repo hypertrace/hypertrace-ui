@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
 import { FilterAttribute } from '../filter-bar/filter-attribute';
-import { FilterBuilderService } from '../filter-bar/filter/builder/filter-builder.service';
+import { FilterBuilderLookupService } from '../filter/builder/filter-builder.service';
 import { Filter, UserFilterOperator } from '../filter-bar/filter/filter-api';
-import { FilterParserService } from '../filter-bar/filter/parser/filter-parser.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser.service';
 
 @Injectable({ providedIn: 'root' })
 export class FilterButtonService {
@@ -11,8 +11,8 @@ export class FilterButtonService {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly filterBuilderService: FilterBuilderService,
-    private readonly filterParserService: FilterParserService
+    private readonly filterBuilderService: FilterBuilderLookupService,
+    private readonly filterParserService: FilterParserLookupService
   ) {}
 
   public buildAvailableFilters(attribute: FilterAttribute, value: unknown): Filter[] {

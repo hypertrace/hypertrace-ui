@@ -3,27 +3,22 @@ import { isBoolean } from 'lodash-es';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
-import { FilterParser } from '../filter-parser.decorator';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
-@FilterParser({
-  supportedAttributeTypes: [FilterAttributeType.Boolean, FilterAttributeType.Number, FilterAttributeType.String],
-  supportedOperators: [
-    FilterOperator.Equals,
-    FilterOperator.NotEquals,
-    FilterOperator.LessThan,
-    FilterOperator.LessThanOrEqualTo,
-    FilterOperator.GreaterThan,
-    FilterOperator.GreaterThanOrEqualTo
-  ]
-})
 export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   protected supportedAttributeTypes(): FilterAttributeType[] {
-    return ComparisonFilterParser.supportedAttributeTypes;
+    return [FilterAttributeType.Boolean, FilterAttributeType.Number, FilterAttributeType.String];
   }
 
-  protected supportedOperators(): FilterOperator[] {
-    return ComparisonFilterParser.supportedOperators;
+  public supportedOperators(): FilterOperator[] {
+    return [
+      FilterOperator.Equals,
+      FilterOperator.NotEquals,
+      FilterOperator.LessThan,
+      FilterOperator.LessThanOrEqualTo,
+      FilterOperator.GreaterThan,
+      FilterOperator.GreaterThanOrEqualTo
+    ];
   }
 
   protected parseValueString(attribute: FilterAttribute, valueString: string): PossibleValuesTypes | undefined {

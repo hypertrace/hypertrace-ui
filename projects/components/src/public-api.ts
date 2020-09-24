@@ -65,7 +65,7 @@ export * from './filtering/filter-bar/filter-type';
 export * from './filtering/filter-bar/filter-attribute';
 
 // Filter Builder
-export * from './filtering/filter-bar/filter/builder/filter-builder';
+export * from './filtering/filter/builder/filter-builder';
 
 // Filter Button
 export * from './filtering/filter-button/filter-button.module';

@@ -4,11 +4,8 @@ import { FilterOperator } from '../../filter-operators';
 import { ParsedFilter } from '../parsed-filter';
 
 export abstract class AbstractFilterParser<TValue> {
-  public static supportedAttributeTypes: FilterAttributeType[];
-  public static supportedOperators: FilterOperator[];
-
   protected abstract supportedAttributeTypes(): FilterAttributeType[];
-  protected abstract supportedOperators(): FilterOperator[];
+  public abstract supportedOperators(): FilterOperator[];
 
   protected abstract parseValueString(attribute: FilterAttribute, valueString: string): TValue | undefined;
 
@@ -40,7 +37,7 @@ export abstract class AbstractFilterParser<TValue> {
 
   protected splitFilterString(filterString: string): ParsedFilter<string> | undefined {
     const matchingOperator = this.supportedOperators()
-      .sort((o1: string, o2: string) => o2.length - o1.length) // Sort on length so we check multichar first
+      .sort((o1: string, o2: string) => o2.length - o1.length) // Sort by length to check multichar ops first
       .map(op => ` ${op} `)
       .find(op => filterString.includes(op));
 
@@ -51,7 +48,7 @@ export abstract class AbstractFilterParser<TValue> {
     const parts = filterString
       .split(matchingOperator)
       .map(str => str.trim())
-      .filter((part: string | undefined) => (part ?? '').length > 0);
+      .filter(strPart => strPart.length > 0);
 
     if (parts.length < 3) {
       return undefined;

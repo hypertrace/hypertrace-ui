@@ -1,13 +1,13 @@
 import { FilterAttribute, FilterType } from '@hypertrace/components';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { FilterBuilderService } from '../builder/filter-builder.service';
-import { NumberFilterBuilder } from '../builder/number-filter-builder';
-import { StringFilterBuilder } from '../builder/string-filter-builder';
-import { UserFilterOperator } from '../filter-api';
-import { FilterParserService } from './filter-parser.service';
+import { FilterBuilderLookupService } from '../builder/filter-builder.service';
+import { NumberFilterBuilder } from '../../filter-bar/filter/builder/number-filter-builder';
+import { StringFilterBuilder } from '../../filter-bar/filter/builder/string-filter-builder';
+import { UserFilterOperator } from '../../filter-bar/filter/filter-api';
+import { FilterParserLookupService } from './filter-parser.service';
 
 describe('Filter Parser service', () => {
-  let spectator: SpectatorService<FilterParserService>;
+  let spectator: SpectatorService<FilterParserLookupService>;
 
   const attributes: FilterAttribute[] = [
     {
@@ -34,9 +34,9 @@ describe('Filter Parser service', () => {
   const stringBuilder = new StringFilterBuilder();
 
   const buildService = createServiceFactory({
-    service: FilterParserService,
+    service: FilterParserLookupService,
     providers: [
-      mockProvider(FilterBuilderService, {
+      mockProvider(FilterBuilderLookupService, {
         lookup: (attribute: FilterAttribute) => {
           switch (attribute.type) {
             case FilterType.Number:

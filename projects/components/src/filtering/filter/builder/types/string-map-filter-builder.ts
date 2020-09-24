@@ -1,24 +1,19 @@
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
-import { FilterBuilder } from '../filter-builder.decorator';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-@FilterBuilder({
-  supportedAttributeTypes: [FilterAttributeType.StringMap],
-  supportedOperators: [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue]
-})
 export class StringMapFilterBuilder extends AbstractFilterBuilder<string[]> {
   private static readonly DELIMITER: string = ':';
 
-  public supportedAttributeTypes(): FilterAttributeType[] {
-    return StringMapFilterBuilder.supportedAttributeTypes;
+  public supportedAttributeType(): FilterAttributeType {
+    return FilterAttributeType.StringMap;
   }
 
-  public supportedOperators(): FilterOperator[] {
-    return StringMapFilterBuilder.supportedOperators;
+  protected supportedOperators(): FilterOperator[] {
+    return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
-  public convertValueToString(value: string[]): string {
+  protected convertValueToString(value: string[]): string {
     return value.join(StringMapFilterBuilder.DELIMITER);
   }
 }

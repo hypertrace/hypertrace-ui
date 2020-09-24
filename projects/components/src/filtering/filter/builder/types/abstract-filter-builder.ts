@@ -5,12 +5,8 @@ import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator, toUrlFilterOperator } from '../../filter-operators';
 
 export abstract class AbstractFilterBuilder<TValue> {
-  public static supportedAttributeTypes: FilterAttributeType[];
-  public static supportedOperators: FilterOperator[];
-
-  protected abstract supportedAttributeTypes(): FilterAttributeType[];
+  public abstract supportedAttributeType(): FilterAttributeType;
   protected abstract supportedOperators(): FilterOperator[];
-
   protected abstract convertValueToString(value: TValue): string;
 
   public buildFiltersForSupportedOperators(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {

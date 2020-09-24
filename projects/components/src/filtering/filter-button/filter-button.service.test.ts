@@ -4,7 +4,7 @@ import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/sp
 import { EMPTY } from 'rxjs';
 import { NumberFilterBuilder } from '../filter-bar/filter/builder/number-filter-builder';
 import { StringFilterBuilder } from '../filter-bar/filter/builder/string-filter-builder';
-import { FilterParserService } from '../filter-bar/filter/parser/filter-parser.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser.service';
 import { FilterButtonService } from './filter-button.service';
 
 describe('Filter Button service', () => {
@@ -39,7 +39,7 @@ describe('Filter Button service', () => {
         addQueryParametersToUrl: jest.fn(),
         getAllValuesForQueryParameter: () => ['duration_gte_50']
       }),
-      mockProvider(FilterParserService, {
+      mockProvider(FilterParserLookupService, {
         parseUrlFilterString: () => filters[0]
       })
     ]
