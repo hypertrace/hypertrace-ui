@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute } from '../../filter-bar/filter-attribute';
+import { FilterAttribute } from '../../filtering/filter-bar/filter-attribute';
 import { TableCellAlignmentType } from '../cells/types/table-cell-alignment-type';
 import { TableCdkColumnUtil } from '../data/table-cdk-column-util';
 import { TableSortDirection } from '../table-api';

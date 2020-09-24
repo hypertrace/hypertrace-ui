@@ -57,20 +57,20 @@ export * from './expander/expander-toggle.module';
 export * from './feature-check/feature-config-check.module';
 
 // Filter Bar
-export * from './filter-bar/filter-bar.module';
-export * from './filter-bar/filter-bar.service';
-export * from './filter-bar/filter-bar.component';
-export * from './filter-bar/filter/filter-api';
-export * from './filter-bar/filter-type';
-export * from './filter-bar/filter-attribute';
+export * from './filtering/filter-bar/filter-bar.module';
+export * from './filtering/filter-bar/filter-bar.service';
+export * from './filtering/filter-bar/filter-bar.component';
+export * from './filtering/filter-bar/filter/filter-api';
+export * from './filtering/filter-bar/filter-type';
+export * from './filtering/filter-bar/filter-attribute';
 
 // Filter Builder
-export * from './filter-bar/filter/builder/filter-builder';
+export * from './filtering/filter-bar/filter/builder/filter-builder';
 
 // Filter Button
-export * from './filter-button/filter-button.module';
-export * from './filter-button/filter-button.component';
-export * from './filter-button/in-filter-button.component';
+export * from './filtering/filter-button/filter-button.module';
+export * from './filtering/filter-button/filter-button.component';
+export * from './filtering/filter-button/in-filter-button.component';
 
 // Header
 export * from './header/application/application-header.component';

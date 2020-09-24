@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
-import { FilterAttribute } from '../filter-bar/filter-attribute';
-import { FilterType } from '../filter-bar/filter-type';
+import { FilterAttribute } from '../filtering/filter-bar/filter-attribute';
+import { FilterType } from '../filtering/filter-bar/filter-type';
 import { TableCellParserBase } from './cells/table-cell-parser-base';
 import { TableCellParserLookupService } from './cells/table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
