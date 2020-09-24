@@ -43,11 +43,13 @@ export class ConfirmationModalComponent {
   }
 
   public onConfirmation(): void {
-    this.modalRef.output$.next(true);
+    console.log('Confirm clicked');
+    this.modalRef.output({ proceed: true });
+    this.modalRef.close();
   }
 
   public onCancel(): void {
-    this.modalRef.output$.next(false);
+    this.modalRef.output({ proceed: false });
     this.modalRef.close();
   }
 }
@@ -55,4 +57,8 @@ export class ConfirmationModalComponent {
 export interface ConfirmationModalData {
   confirmButtonText: string;
   descriptionText: string;
+}
+
+export interface ConfirmationModalInteractionResponse {
+  proceed: boolean;
 }

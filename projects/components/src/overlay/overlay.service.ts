@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ModalOverlayConfig } from './modal/modal';
 import { ModalOverlayComponent } from './modal/modal-overlay.component';
 import { ModalRef } from './modal/modal-ref';
+import { ModalService } from './modal/modal-service';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
@@ -20,7 +21,11 @@ export class OverlayService implements OnDestroy {
   private sheetCloseSubscription?: Subscription;
   private modalCloseSubscription?: Subscription;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly defaultInjector: Injector) {}
+  public constructor(
+    private readonly popoverService: PopoverService,
+    private readonly modalService: ModalService,
+    private readonly defaultInjector: Injector
+  ) {}
 
   public ngOnDestroy(): void {
     this.sheetCloseSubscription?.unsubscribe();
@@ -53,7 +58,7 @@ export class OverlayService implements OnDestroy {
   ): ModalRef {
     this.activeModalPopover?.close();
 
-    const popover = this.popoverService.drawPopover({
+    const modal = this.modalService.drawPopover({
       componentOrTemplate: ModalOverlayComponent,
       parentInjector: injector,
       position: {
@@ -64,11 +69,11 @@ export class OverlayService implements OnDestroy {
       backdrop: PopoverBackdrop.Opaque
     });
 
-    popover.closeOnNavigation();
+    modal.closeOnNavigation();
 
-    this.setActiveModalPopover(popover);
+    this.setActiveModalPopover(modal);
 
-    return new ModalRef(popover);
+    return modal;
   }
 
   private setActiveSheetPopover(popover: PopoverRef): void {

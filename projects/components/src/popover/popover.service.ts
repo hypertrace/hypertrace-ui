@@ -14,10 +14,10 @@ import { PopoverRef } from './popover-ref';
 @Injectable()
 export class PopoverService {
   public constructor(
-    private readonly overlay: Overlay,
-    private readonly defaultInjector: Injector,
-    private readonly positionBuilder: PopoverPositionBuilder,
-    private readonly navigationService: NavigationService
+    public readonly overlay: Overlay,
+    public readonly defaultInjector: Injector,
+    public readonly positionBuilder: PopoverPositionBuilder,
+    public readonly navigationService: NavigationService
   ) {}
 
   public drawPopover<TData = unknown>(options: PopoverOptions<TData>): PopoverRef {
@@ -39,7 +39,7 @@ export class PopoverService {
     return popoverRef;
   }
 
-  private convertToPortal(
+  protected convertToPortal(
     options: PopoverOptions<unknown>,
     popoverRef: PopoverRef
   ): ComponentPortal<unknown> & { injector: Injector } {
@@ -71,7 +71,7 @@ export class PopoverService {
     };
   }
 
-  private buildPopoverInjector(options: PopoverOptions<unknown>, popoverRef: PopoverRef): Injector {
+  protected buildPopoverInjector(options: PopoverOptions<unknown>, popoverRef: PopoverRef): Injector {
     // Child of provided injector, sibling to container injector
     const parentInjector = options.parentInjector || this.defaultInjector;
 
@@ -90,11 +90,11 @@ export class PopoverService {
     });
   }
 
-  private hasBackdrop(backdrop?: PopoverBackdrop): boolean {
+  protected hasBackdrop(backdrop?: PopoverBackdrop): boolean {
     return backdrop === PopoverBackdrop.Opaque || backdrop === PopoverBackdrop.Transparent;
   }
 
-  private getBackdropClass(backdrop?: PopoverBackdrop): string {
+  protected getBackdropClass(backdrop?: PopoverBackdrop): string {
     switch (backdrop) {
       case PopoverBackdrop.Transparent:
         return 'cdk-overlay-transparent-backdrop';
