@@ -1,29 +1,43 @@
 import { Inject, InjectionToken, Injector, ModuleWithProviders, NgModule } from '@angular/core';
-import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink, HttpLinkModule } from 'apollo-angular-link-http';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { ApolloClientOptions } from 'apollo-client';
 import { GraphQlQueryHandler, GRAPHQL_REQUEST_HANDLERS_TOKENS, GRAPHQL_URI } from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
-
-// tslint:disable-next-line: only-arrow-functions
-export function createApollo(httpLink: HttpLink, uri: string): ApolloClientOptions<NormalizedCacheObject> {
-  return {
-    link: httpLink.create({ uri: uri }),
-    cache: new InMemoryCache({
-      // Never assume an object with an ID is safe to cache, use the whole request path as the key only
-      dataIdFromObject: () => undefined
-    })
-  };
-}
+import { InMemoryCache } from '@apollo/client/core';
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpBatchLink } from 'apollo-angular/http';
 
 @NgModule({
-  imports: [HttpLinkModule, ApolloModule],
   providers: [
     {
       provide: APOLLO_OPTIONS,
-      useFactory: createApollo,
-      deps: [HttpLink, GRAPHQL_URI]
+      useFactory(httpLink: HttpBatchLink, uri: string) {
+        return {
+          cache: new InMemoryCache({
+            typePolicies: {
+              Query: {
+                fields: {
+                  actor: (_, {args, toReference}) => {
+                    return toReference({
+                      __typename: 'Actor',
+                      id: args?.id,
+                    });
+                  }
+                }
+              },
+              ActorResultSet: {
+                keyFields: []
+              },
+              Actor: {
+                keyFields: (object, _context ) => object.id as string
+              }
+            }
+          }),
+          link: httpLink.create({
+            uri: uri,
+            batchMax: 4
+          })
+        };
+      },
+      deps: [HttpBatchLink, GRAPHQL_URI]
     },
     {
       provide: GRAPHQL_REQUEST_HANDLERS_TOKENS,
