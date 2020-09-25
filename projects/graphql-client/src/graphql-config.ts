@@ -4,6 +4,7 @@ import { GraphQlSelection } from './model/graphql-selection';
 
 export const GRAPHQL_REQUEST_HANDLERS_TOKENS = new InjectionToken<unknown[][]>('GRAPHQL_REQUEST_HANDLERS_TOKENS');
 export const GRAPHQL_URI = new InjectionToken<string>('GRAPHQL_URI');
+export const GRAPHQL_BATCH_SIZE = new InjectionToken<string>('GRAPHQL_BATCH_SIZE');
 
 export interface GraphQlHandler<TRequest, TResponse> {
   readonly type: GraphQlHandlerType;
@@ -34,6 +35,7 @@ export interface GraphQlMutationHandler<TRequest, TResponse> extends GraphQlHand
 
 export interface GraphQlRequestOptions {
   cacheability: GraphQlRequestCacheability;
+  isolated?: boolean;
 }
 
 export const enum GraphQlRequestCacheability {

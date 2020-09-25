@@ -40,7 +40,7 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
   private fetchEntity(id: string): Observable<ServiceEntity> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
-        this.graphQlQueryService.queryImmediately<EntityGraphQlQueryHandlerService, ServiceEntity>({
+        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ServiceEntity>({
           requestType: ENTITY_GQL_REQUEST,
           entityType: ObservabilityEntityType.Service,
           id: id,

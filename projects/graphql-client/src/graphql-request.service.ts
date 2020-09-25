@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
+import { Apollo, gql } from 'apollo-angular';
 import { includes } from 'lodash-es';
-import { defer, EMPTY, Observable, Observer, of, Subject } from 'rxjs';
+import { defer, EMPTY, Observable, Observer, of, Subject, zip } from 'rxjs';
 import { buffer, catchError, debounceTime, filter, map, mergeMap, take } from 'rxjs/operators';
 import {
   GraphQlHandler,
@@ -43,14 +42,23 @@ export class GraphQlRequestService {
       .subscribe(this.bufferedResultStream);
   }
 
-  public queryImmediately<
+  public query<
+    THandler extends GraphQlQueryHandler<unknown, unknown>,
+    TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
+  >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
+    return requestOptions?.isolated === true
+      ? this.queryIsolated(request, requestOptions)
+      : this.queryDebounced(request, requestOptions);
+  }
+
+  private queryIsolated<
     THandler extends GraphQlQueryHandler<unknown, unknown>,
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
   >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
     return this.getResultFromMap(request, this.fireRequests({ request: request, options: requestOptions }));
   }
 
-  public queryDebounced<
+  private queryDebounced<
     THandler extends GraphQlQueryHandler<unknown, unknown>,
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
   >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
@@ -100,13 +108,16 @@ export class GraphQlRequestService {
       ...allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat()
     );
 
+    const selectionResponseMap = new Map(
+      Array.from(requestBuilder.buildSelectionToGqlRequestStringMap().entries()).map(([selection, requestString]) => [
+        selection,
+        this.executeRequest(requestString, type, options)
+      ])
+    );
+
     return this.buildResultMap(
       requests,
-      this.buildResponseGetter(
-        this.executeRequest(requestBuilder.build(), type, options),
-        requestBuilder,
-        selectionMapByRequest
-      )
+      this.buildResponseGetter(requestBuilder, selectionResponseMap, selectionMapByRequest)
     );
   }
 
@@ -202,22 +213,28 @@ export class GraphQlRequestService {
   }
 
   private buildResponseGetter(
-    response$: Observable<{ [key: string]: unknown }>,
     queryBuilder: GraphQlRequestBuilder,
+    selectionResponseMap: Map<GraphQlSelection, Observable<{ [key: string]: unknown }>>,
     selectionMultiMap: Map<GraphQlRequest, Map<unknown, GraphQlSelection>>
   ): ResponseGetter {
-    return request =>
-      response$.pipe(
+    return request => {
+      const requestSelectionsMap = selectionMultiMap.get(request)!;
+
+      return zip(
+        ...Array.from(requestSelectionsMap.values()).map(selection => selectionResponseMap.get(selection)!)
+      ).pipe(
+        map(selectionResponses => Object.assign({}, ...selectionResponses)),
         map(response =>
           this.convertResponseForRequest(
             request,
-            this.extractor.extractAll(selectionMultiMap.get(request)!, queryBuilder, response)
+            this.extractor.extractAll(requestSelectionsMap, queryBuilder, response)
           )
         ),
         mergeMap(convertedResponse =>
           convertedResponse instanceof Observable ? convertedResponse : of(convertedResponse)
         )
       );
+    };
   }
 
   private buildResultMap(

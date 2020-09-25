@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ALTERNATE_COLOR_PALETTES, DEFAULT_COLOR_PALETTE, GLOBAL_HEADER_HEIGHT } from '@hypertrace/common';
-import { GRAPHQL_URI } from '@hypertrace/graphql-client';
+import { GRAPHQL_BATCH_SIZE, GRAPHQL_URI } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
 import { entityMetadata } from './entity-metadata';
@@ -11,6 +11,10 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
   providers: [
     {
       provide: GRAPHQL_URI,
+      useValue: environment.graphqlUri
+    },
+    {
+      provide: GRAPHQL_BATCH_SIZE,
       useValue: environment.graphqlUri
     },
     {

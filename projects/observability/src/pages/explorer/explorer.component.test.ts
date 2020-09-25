@@ -72,7 +72,7 @@ describe('Explorer component', () => {
     componentProviders: [LayoutChangeService],
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
@@ -115,7 +115,7 @@ describe('Explorer component', () => {
     spectator.tick();
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
-    querySpy = spectator.inject(GraphQlRequestService).queryImmediately;
+    querySpy = spectator.inject(GraphQlRequestService).query;
   };
 
   test('fires query on init for traces', fakeAsync(() => {
