@@ -81,7 +81,7 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^9.1.1",
     "@compodoc/compodoc": "^1.1.11",
-    "@ngneat/spectator": "^5.13.1",
+    "@ngneat/spectator": "^5.13.3",
     "@types/d3-array": "^2.0.0",
     "@types/d3-axis": "^1.0.12",
     "@types/d3-brush": "^1.1.1",
