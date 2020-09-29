@@ -5,7 +5,7 @@ import { ModalRef } from '../overlay/modal/modal-ref';
 import { POPOVER_DATA } from '../popover/popover';
 
 @Component({
-  selector: 'lib-confirmation-modal',
+  selector: 'ht-confirmation-modal',
   styleUrls: ['./confirmation-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

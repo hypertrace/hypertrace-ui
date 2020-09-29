@@ -4,7 +4,7 @@ import { PopoverRef } from '../../popover/popover-ref';
 import { PopoverService } from '../../popover/popover.service';
 import { ModalRef } from './modal-ref';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ModalService extends PopoverService {
   public drawPopover<TData = unknown>(options: PopoverOptions<TData>): ModalRef {
     const initialPositionStrategy = this.positionBuilder.buildPositionStrategy(options.position);
