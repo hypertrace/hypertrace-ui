@@ -53,7 +53,6 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
 
     this.querySubject.next({
       buildRequest: this.convertToBuilder(requestOrBuilder),
-      isolated: true,
       responseObserver: resultSubject as Observer<unknown>
     });
 

@@ -3,10 +3,10 @@ import { InMemoryCache } from '@apollo/client/core';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpBatchLink } from 'apollo-angular/http';
 import {
+  GraphQlOptions,
   GraphQlQueryHandler,
-  GRAPHQL_BATCH_SIZE,
-  GRAPHQL_REQUEST_HANDLERS_TOKENS,
-  GRAPHQL_URI
+  GRAPHQL_OPTIONS,
+  GRAPHQL_REQUEST_HANDLERS_TOKENS
 } from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
 
@@ -14,14 +14,15 @@ import { GraphQlRequestService } from './graphql-request.service';
   providers: [
     {
       provide: APOLLO_OPTIONS,
-      useFactory: (httpLink: HttpBatchLink, uri: string, batchSize: number) => ({
+      useFactory: (httpLink: HttpBatchLink, options: GraphQlOptions) => ({
         cache: new InMemoryCache(),
         link: httpLink.create({
-          uri: uri,
-          batchMax: batchSize
+          uri: options.uri,
+          batchMax: options.batchSize ?? 5,
+          batchInterval: 0 // We are already adding debounce time while merging the query. No need to add batch Interval here
         })
       }),
-      deps: [HttpBatchLink, GRAPHQL_URI, GRAPHQL_BATCH_SIZE]
+      deps: [HttpBatchLink, GRAPHQL_OPTIONS]
     },
     {
       provide: GRAPHQL_REQUEST_HANDLERS_TOKENS,

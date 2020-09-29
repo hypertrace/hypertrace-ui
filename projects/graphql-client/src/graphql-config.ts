@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { GraphQlSelection } from './model/graphql-selection';
 
 export const GRAPHQL_REQUEST_HANDLERS_TOKENS = new InjectionToken<unknown[][]>('GRAPHQL_REQUEST_HANDLERS_TOKENS');
-export const GRAPHQL_URI = new InjectionToken<string>('GRAPHQL_URI');
-export const GRAPHQL_BATCH_SIZE = new InjectionToken<string>('GRAPHQL_BATCH_SIZE');
+export const GRAPHQL_OPTIONS = new InjectionToken<GraphQlOptions>('GRAPHQL_OPTIONS');
 
 export interface GraphQlHandler<TRequest, TResponse> {
   readonly type: GraphQlHandlerType;
@@ -34,7 +33,7 @@ export interface GraphQlMutationHandler<TRequest, TResponse> extends GraphQlHand
 }
 
 export interface GraphQlRequestOptions {
-  cacheability: GraphQlRequestCacheability;
+  cacheability?: GraphQlRequestCacheability;
   isolated?: boolean;
 }
 
@@ -46,4 +45,10 @@ export const enum GraphQlRequestCacheability {
 export const enum GraphQlHandlerType {
   Mutation = 'mutation',
   Query = 'query'
+}
+
+export interface GraphQlOptions {
+  uri: string;
+  batchSize?: number;
+  batchDuration: number;
 }

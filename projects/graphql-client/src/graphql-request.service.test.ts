@@ -1,6 +1,7 @@
-import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
-import { NetworkStatus } from '@apollo/client/core';
-import { createHttpFactory, HttpMethod, SpectatorHttp } from '@ngneat/spectator/jest';
+import { Injector } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
+import { gql, NetworkStatus } from '@apollo/client/core';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { Apollo } from 'apollo-angular';
 import { of } from 'rxjs';
 import {
@@ -9,33 +10,31 @@ import {
   GraphQlQueryHandler,
   GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GRAPHQL_URI
+  GRAPHQL_OPTIONS
 } from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
-import { GraphQlModule } from './graphql.module';
 import { GraphQlSelection } from './model/graphql-selection';
+import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
 
 describe('GraphQl Request Service', () => {
   const graphQlUri = '/graphql';
-  const TEST_REQUEST = Symbol('TEST_REQUEST');
-  let spectator: SpectatorHttp<GraphQlRequestService>;
+  const graphQlBatchSize = 1;
+
+  const TEST_REQUEST_ONE = Symbol('TEST_REQUEST_ONE');
+  let spectator: SpectatorService<GraphQlRequestService>;
   const debounceTimeMs = 10;
 
-  interface TestRequest {
-    requestType: typeof TEST_REQUEST;
+  interface TestRequestOne {
+    requestType: typeof TEST_REQUEST_ONE;
     select: GraphQlSelection;
   }
 
-  const createService = createHttpFactory({
-    service: GraphQlRequestService,
-    imports: [GraphQlModule],
-    providers: [{ provide: GRAPHQL_URI, useValue: graphQlUri }]
-  });
+  const TEST_REQUEST_TWO = Symbol('TWO');
 
-  const buildRequest = (): TestRequest => ({
-    requestType: TEST_REQUEST,
-    select: { path: 'test', children: [{ path: 'id' }, { path: 'value' }] }
-  });
+  interface TestRequestTwo {
+    requestType: typeof TEST_REQUEST_TWO;
+    select: GraphQlSelection;
+  }
 
   const buildServerResponse = () => ({
     data: {
@@ -47,8 +46,59 @@ describe('GraphQl Request Service', () => {
     }
   });
 
-  const mockQueryMethod = (): jest.SpyInstance =>
-    jest.spyOn(spectator.inject(Apollo), 'query').mockReturnValueOnce(
+  const createService = createServiceFactory({
+    service: GraphQlRequestService,
+    providers: [
+      {
+        provide: GRAPHQL_OPTIONS,
+        useValue: {
+          uri: graphQlUri,
+          batchSize: graphQlBatchSize,
+          batchDuration: debounceTimeMs
+        }
+      },
+      {
+        provide: Apollo,
+        useValue: {
+          query: jest.fn().mockReturnValueOnce(
+            of({
+              ...buildServerResponse(),
+              networkStatus: NetworkStatus.ready,
+              stale: false,
+              loading: false
+            })
+          ),
+          mutate: jest.fn().mockReturnValueOnce(
+            of({
+              ...buildServerResponse(),
+              networkStatus: NetworkStatus.ready,
+              stale: false,
+              loading: false
+            })
+          )
+        }
+      },
+      {
+        provide: Injector,
+        useValue: {
+          get: () => []
+        }
+      }
+    ]
+  });
+
+  const buildRequestOne = (valuePathName: string = 'value'): TestRequestOne => ({
+    requestType: TEST_REQUEST_ONE,
+    select: { path: 'testone', children: [{ path: 'id' }, { path: valuePathName }] }
+  });
+
+  const buildRequestTwo = (valuePathName: string = 'value'): TestRequestTwo => ({
+    requestType: TEST_REQUEST_TWO,
+    select: { path: 'testtwo', children: [{ path: 'id' }, { path: valuePathName }] }
+  });
+
+  const mockQueryMethod = (): jest.SpyInstance => {
+    const queryMock = jest.spyOn(spectator.inject(Apollo), 'query').mockReturnValue(
       of({
         ...buildServerResponse(),
         networkStatus: NetworkStatus.ready,
@@ -56,9 +106,12 @@ describe('GraphQl Request Service', () => {
         loading: false
       })
     );
+    queryMock.mockClear();
 
+    return queryMock;
+  };
   const mockMutateMethod = (): jest.SpyInstance =>
-    jest.spyOn(spectator.inject(Apollo), 'mutate').mockReturnValueOnce(
+    jest.spyOn(spectator.inject(Apollo), 'mutate').mockReturnValue(
       of({
         ...buildServerResponse(),
         networkStatus: NetworkStatus.ready,
@@ -67,20 +120,31 @@ describe('GraphQl Request Service', () => {
       })
     );
 
-  const buildQueryHandler = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
+  const buildQueryHandlerOne = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Query,
     // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
-    matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST) as any,
-    convertRequest: jest.fn((request: TestRequest) => request.select),
+    matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
+    convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
     getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
   });
 
-  const buildMutationHandler = (requestOptions?: GraphQlRequestOptions): GraphQlMutationHandler<unknown, unknown> => ({
+  const buildQueryHandlerTwo = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
+    type: GraphQlHandlerType.Query,
+    // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
+    matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_TWO) as any,
+    convertRequest: jest.fn((request: TestRequestOne) => request.select),
+    convertResponse: jest.fn(response => response),
+    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
+  });
+
+  const buildMutationHandlerOne = (
+    requestOptions?: GraphQlRequestOptions
+  ): GraphQlMutationHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Mutation,
     // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
-    matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST) as any,
-    convertRequest: jest.fn((request: TestRequest) => request.select),
+    matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
+    convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
     getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
   });
@@ -91,154 +155,142 @@ describe('GraphQl Request Service', () => {
   });
 
   test('fires isolated queries without delay', () => {
-    spectator.service.registerHandler(buildQueryHandler());
+    spectator.service.registerHandler(buildQueryHandlerOne());
     const queryFnMock = mockQueryMethod();
-    spectator.service.query(buildRequest(), { cacheability: GraphQlRequestCacheability.Cacheable, isolated: true });
+    spectator.service.query(buildRequestOne(), { cacheability: GraphQlRequestCacheability.Cacheable, isolated: true });
     expect(queryFnMock).toHaveBeenCalled();
   });
 
   test('fires mutation requests immediately without delay', () => {
-    spectator.service.registerHandler(buildMutationHandler());
+    spectator.service.registerHandler(buildMutationHandlerOne());
     const mutateFnMock = mockMutateMethod();
-    spectator.service.mutate(buildRequest());
+    spectator.service.mutate(buildRequestOne());
     expect(mutateFnMock).toHaveBeenCalled();
   });
 
-  test('collects and fires debounced queries together', fakeAsync(() => {
-    spectator.service.registerHandler(buildQueryHandler());
+  test('collects and fires different requests separately. Apollo bataches them', fakeAsync(() => {
+    spectator.service.registerHandler(buildQueryHandlerOne());
+    spectator.service.registerHandler(buildQueryHandlerTwo());
     const queryFnMock = mockQueryMethod();
-    spectator.service.query(buildRequest()).subscribe();
-    spectator.service.query(buildRequest()).subscribe();
+    spectator.service.query(buildRequestOne()).subscribe();
+    spectator.service.query(buildRequestTwo()).subscribe();
+    tick(debounceTimeMs);
+    expect(queryFnMock).toHaveBeenCalledTimes(2);
+    expect(queryFnMock).toHaveBeenNthCalledWith(1, {
+      query: gql(
+        new GraphQlRequestBuilder()
+          .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+          .build()
+      ),
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-first'
+    });
+
+    expect(queryFnMock).toHaveBeenNthCalledWith(2, {
+      query: gql(
+        new GraphQlRequestBuilder()
+          .withSelects({ path: 'testtwo', children: [{ path: 'id' }, { path: 'value' }] })
+          .build()
+      ),
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-first'
+    });
+  }));
+
+  test('only fires request for unique queries', fakeAsync(() => {
+    spectator.service.registerHandler(buildQueryHandlerOne());
+    const queryFnMock = mockQueryMethod();
+    spectator.service.query(buildRequestOne()).subscribe();
+    spectator.service.query(buildRequestOne()).subscribe();
     expect(queryFnMock).not.toHaveBeenCalled();
     tick(debounceTimeMs);
     expect(queryFnMock).toHaveBeenCalledTimes(1);
-  }));
-
-  test('caches on identical queries', () => {
-    spectator.service.registerHandler(buildQueryHandler());
-    spectator.service.query(buildRequest()).subscribe();
-    // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    // Make second request
-    spectator.service.query(buildRequest()).subscribe();
-    // Verify no request sent
-    spectator.controller.verify();
-  });
-  test('does not cache entities, even if they share an id', fakeAsync(() => {
-    spectator.service.registerHandler(buildQueryHandler());
-    spectator.service.query(buildRequest()).subscribe();
-    // Return an object to be cached
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    // Make a new query, but tweak params so it's not cached and return same id with differen val
-    const modifiedRequest = buildRequest();
-    modifiedRequest.select.arguments = [{ name: 'a', value: 'b' }];
-    spectator.service.query(modifiedRequest).subscribe();
-    // Return a response with same id but different value
-    const modifiedResponse = buildServerResponse();
-    modifiedResponse.data.test.value = 'baz';
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(modifiedResponse);
-    // Now make the first request again - it should be the original result
-    spectator.service.query(buildRequest()).subscribe(result => {
-      expect((result as { value: string }).value).toEqual('bar');
+    expect(queryFnMock).toHaveBeenCalledWith({
+      query: gql(
+        new GraphQlRequestBuilder()
+          .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+          .build()
+      ),
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-first'
     });
-    // Tick, our responses are always async
-    tick();
   }));
 
-  test('only fires queries that are subscribed', () => {
-    spectator.service.registerHandler(buildQueryHandler());
-    spectator.service.query(buildRequest());
-    spectator.controller.expectNone(graphQlUri);
-    spectator.service.query(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST);
-  });
-
-  test('supports custom request options from query request handlers', () => {
-    const handler = buildQueryHandler({ cacheability: GraphQlRequestCacheability.NotCacheable });
-    spectator.service.registerHandler(handler);
-    spectator.service.query(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    // Make second identical request - should not be cached
-    spectator.service.query(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    expect(handler.getRequestOptions).toHaveBeenCalledTimes(2);
-  });
-
-  test('supports custom request options from mutation request handlers', () => {
-    const handler = buildMutationHandler({ cacheability: GraphQlRequestCacheability.NotCacheable });
-    spectator.service.registerHandler(handler);
-    spectator.service.mutate(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    // Make second identical request - should not be cached
-    spectator.service.mutate(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    expect(handler.getRequestOptions).toHaveBeenCalledTimes(2);
-  });
-
-  test('late subscribers to a debounced query can access results', fakeAsync(() => {
-    spectator.service.registerHandler(buildQueryHandler());
-    const query$ = spectator.service.query(buildRequest());
-    tick(50); // Late subscriber
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
-    let result;
-    const subscription = query$.subscribe(res => (result = res));
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
+  test('merges requests together when possible', fakeAsync(() => {
+    const queryFnMock = mockQueryMethod();
+    queryFnMock.mockClear();
+    spectator.service.registerHandler(buildQueryHandlerOne());
+    spectator.service.query(buildRequestOne()).subscribe();
+    spectator.service.query(buildRequestOne('value2')).subscribe();
     tick(debounceTimeMs);
-    spectator.controller.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    tick();
-    expect(result).toEqual(expect.objectContaining({ id: 'foo' }));
-    expect(subscription.closed).toBe(true);
+    expect(queryFnMock).toHaveBeenCalledTimes(1);
+    expect(queryFnMock).toHaveBeenCalledWith({
+      query: gql(
+        new GraphQlRequestBuilder()
+          .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }, { path: 'value2' }] })
+          .build()
+      ),
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-first'
+    });
   }));
 
-  test('resubscribing to an immediate query triggers an immediate new request', () => {
-    spectator.service.registerHandler(buildQueryHandler({ cacheability: GraphQlRequestCacheability.NotCacheable }));
-    const query$ = spectator.service.query(buildRequest()); // ??Fix this
-    query$.subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    query$.subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST);
-  });
-
-  test('resubscribing to a mutation triggers an immediate new request', () => {
-    spectator.service.registerHandler(buildMutationHandler({ cacheability: GraphQlRequestCacheability.NotCacheable }));
-    const mutate$ = spectator.service.mutate(buildRequest());
-    mutate$.subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    mutate$.subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST);
-  });
-
-  test('supports custom request options on request', () => {
-    spectator.service.registerHandler(buildQueryHandler({ cacheability: GraphQlRequestCacheability.NotCacheable }));
-    spectator.service.query(buildRequest(), { cacheability: GraphQlRequestCacheability.Cacheable }).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    // Make second request - should be cached
-    spectator.service.query(buildRequest(), { cacheability: GraphQlRequestCacheability.Cacheable }).subscribe();
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
-    // Make third request but falling back to handler options now, shouldn't be cached
-    spectator.service.query(buildRequest()).subscribe();
-    spectator.expectOne(graphQlUri, HttpMethod.POST);
-  });
-
-  test('resubscribing to a debounced query after execution triggers a debounced new request', fakeAsync(() => {
-    spectator.service.registerHandler(buildQueryHandler({ cacheability: GraphQlRequestCacheability.NotCacheable }));
-    const query$ = spectator.service.query(buildRequest());
-    query$.subscribe();
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
+  test('supports custom request options from query request handlers', fakeAsync(() => {
+    const handler = buildQueryHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable });
+    spectator.service.registerHandler(handler);
+    spectator.service.query(buildRequestOne()).subscribe();
+    const queryFnMock = mockQueryMethod();
     tick(debounceTimeMs);
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    flushMicrotasks();
-    // Now two more, should trigger one more request
-    query$.subscribe();
-    query$.subscribe();
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
+    expect(queryFnMock).toHaveBeenCalledWith({
+      query: gql(
+        new GraphQlRequestBuilder()
+          .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+          .build()
+      ),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+    expect(handler.getRequestOptions).toHaveBeenCalledTimes(1);
+  }));
+
+  test('supports custom request options from mutation request handlers', fakeAsync(() => {
+    const handler = buildMutationHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable });
+    spectator.service.registerHandler(handler);
+    spectator.service.mutate(buildRequestOne()).subscribe();
+    const mutateFnMock = mockMutateMethod();
     tick(debounceTimeMs);
-    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-    flushMicrotasks();
-    // Now one last one, one more request
-    query$.subscribe();
-    spectator.controller.expectNone(graphQlUri, HttpMethod.POST);
+    expect(mutateFnMock).toHaveBeenCalledWith({
+      mutation: gql(
+        `mutation ${new GraphQlRequestBuilder()
+          .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+          .build()}`
+      )
+    });
+    expect(handler.getRequestOptions).toHaveBeenCalledTimes(1);
+  }));
+
+  test('supports custom request options on request', fakeAsync(() => {
+    spectator.service.registerHandler(buildQueryHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable }));
+    const queryFnMock = mockQueryMethod();
+    spectator.service.query(buildRequestOne(), { cacheability: GraphQlRequestCacheability.Cacheable }).subscribe();
+
+    const requestString = new GraphQlRequestBuilder()
+      .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+      .build();
     tick(debounceTimeMs);
-    spectator.expectOne(graphQlUri, HttpMethod.POST);
+    expect(queryFnMock).toHaveBeenNthCalledWith(1, {
+      query: gql(requestString),
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-first'
+    });
+
+    spectator.service.query(buildRequestOne()).subscribe();
+    tick(debounceTimeMs);
+
+    expect(queryFnMock).toHaveBeenNthCalledWith(2, {
+      query: gql(requestString),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
   }));
 });

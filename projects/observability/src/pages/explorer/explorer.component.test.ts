@@ -119,7 +119,13 @@ describe('Explorer component', () => {
   };
 
   test('fires query on init for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     // Traces tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
       2,
@@ -142,7 +148,13 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on filter change for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     querySpy.mockClear();
     const filterBar = spectator.query(FilterBarComponent)!;
 
@@ -182,7 +194,13 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on init for spans', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     querySpy.mockClear();
 
     // Select Spans tab
@@ -210,7 +228,13 @@ describe('Explorer component', () => {
   }));
 
   test('fires query on init for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     // Select traces tab
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     detectQueryChange();
@@ -255,7 +279,13 @@ describe('Explorer component', () => {
   }));
 
   test('traces table fires query on series change', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -272,7 +302,15 @@ describe('Explorer component', () => {
   }));
 
   test('visualization fires query on series change', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
+    querySpy.mockClear();
+
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();

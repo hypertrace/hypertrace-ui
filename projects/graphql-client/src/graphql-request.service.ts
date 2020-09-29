@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { includes } from 'lodash-es';
+import { includes, uniq } from 'lodash-es';
 import { defer, EMPTY, Observable, Observer, of, Subject, zip } from 'rxjs';
 import { buffer, catchError, debounceTime, filter, map, mergeMap, take } from 'rxjs/operators';
 import {
   GraphQlHandler,
   GraphQlHandlerType,
   GraphQlMutationHandler,
+  GraphQlOptions,
   GraphQlQueryHandler,
   GraphQlRequestCacheability,
-  GraphQlRequestOptions
+  GraphQlRequestOptions,
+  GRAPHQL_OPTIONS
 } from './graphql-config';
 import { GraphQlSelection } from './model/graphql-selection';
 import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
@@ -28,15 +30,15 @@ export class GraphQlRequestService {
   );
   private readonly bufferedRequestObserver: Observer<RequestWithOptions>;
   private readonly bufferedResultStream: Subject<Map<GraphQlRequest, Observable<GraphQlResult>>> = new Subject();
-  private readonly debounceTimeMs: number = 10;
+  private readonly defaultDebounceTimeMs: number = 10;
   private readonly queryHandlers: GraphQlHandler<unknown, unknown>[] = [];
 
-  public constructor(private readonly apollo: Apollo) {
+  public constructor(private readonly apollo: Apollo, @Inject(GRAPHQL_OPTIONS) graphqlOptions: GraphQlOptions) {
     const requestSubject = new Subject<RequestWithOptions>();
     this.bufferedRequestObserver = requestSubject;
     requestSubject
       .pipe(
-        buffer(requestSubject.pipe(debounceTime(this.debounceTimeMs))),
+        buffer(requestSubject.pipe(debounceTime(graphqlOptions.batchDuration ?? this.defaultDebounceTimeMs))),
         map(requests => this.fireRequests(...requests))
       )
       .subscribe(this.bufferedResultStream);
@@ -104,14 +106,22 @@ export class GraphQlRequestService {
   ): Map<GraphQlRequest, Observable<GraphQlResult>> {
     const selectionMapByRequest = this.buildSelectionMultiMap(requests);
     const allSelectionMaps = Array.from(selectionMapByRequest.values());
-    const requestBuilder = new GraphQlRequestBuilder().withSelects(
-      ...allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat()
+    const allSelections = allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat();
+    const requestBuilder = new GraphQlRequestBuilder().withSelects(...allSelections);
+
+    const selectionToRequestStringMap = requestBuilder.buildSelectionToGqlRequestStringMap();
+
+    const requestStringToResponseMap = new Map(
+      uniq(Array.from(selectionToRequestStringMap.values())).map(requestString => [
+        requestString,
+        this.executeRequest(requestString, type, options)
+      ])
     );
 
     const selectionResponseMap = new Map(
-      Array.from(requestBuilder.buildSelectionToGqlRequestStringMap().entries()).map(([selection, requestString]) => [
+      allSelections.map(selection => [
         selection,
-        this.executeRequest(requestString, type, options)
+        requestStringToResponseMap.get(selectionToRequestStringMap.get(selection)!)!
       ])
     );
 

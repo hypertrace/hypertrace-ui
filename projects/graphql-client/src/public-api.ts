@@ -10,8 +10,7 @@ export {
   GraphQlRequestOptions,
   GraphQlRequestCacheability,
   GraphQlHandlerType,
-  GRAPHQL_URI,
-  GRAPHQL_BATCH_SIZE
+  GRAPHQL_OPTIONS
 } from './graphql-config';
 export { GraphQlSelection } from './model/graphql-selection';
 export * from './model/graphql-argument';

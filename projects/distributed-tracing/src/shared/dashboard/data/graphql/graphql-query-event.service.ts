@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   GraphQlQueryHandler,
-  GraphQlRequestCacheability,
   GraphQlRequestService,
   RequestTypeForHandler,
   ResponseTypeForHandler
@@ -40,10 +39,7 @@ export class GraphQlQueryEventService extends ModelScopedDashboardEvent<Observed
   protected delegateQuery(event: RequestEvent): Observable<unknown> {
     const request = event.data.buildRequest(this.collectFilters(event.source));
 
-    return this.graphqlQueryService.query(request, {
-      cacheability: GraphQlRequestCacheability.Cacheable,
-      isolated: event.data.isolated
-    });
+    return this.graphqlQueryService.query(request);
   }
 
   private collectFilters(source: object): GraphQlFilter[] {
