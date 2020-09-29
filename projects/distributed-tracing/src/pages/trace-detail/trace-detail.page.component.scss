@@ -35,6 +35,11 @@
     display: flex;
     margin-top: 12px;
     height: 18px;
+    align-items: center;
+
+    .separation {
+      flex: 1 1 auto;
+    }
   }
 
   .summary-value {
