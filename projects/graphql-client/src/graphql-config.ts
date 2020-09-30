@@ -50,5 +50,5 @@ export const enum GraphQlHandlerType {
 export interface GraphQlOptions {
   uri: string;
   batchSize?: number;
-  batchDuration: number;
+  batchDebounceTimeMs?: number;
 }

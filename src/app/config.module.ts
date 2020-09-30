@@ -13,7 +13,7 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
       provide: GRAPHQL_OPTIONS,
       useValue: {
         uri: environment.graphqlUri,
-        batchSize: environment.graphqlBatchSize
+        batchSize: 5
       }
     },
     {

@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { gql, NetworkStatus } from '@apollo/client/core';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { Apollo } from 'apollo-angular';
@@ -54,7 +54,7 @@ describe('GraphQl Request Service', () => {
         useValue: {
           uri: graphQlUri,
           batchSize: graphQlBatchSize,
-          batchDuration: debounceTimeMs
+          batchDebounceTimeMs: debounceTimeMs
         }
       },
       {
@@ -293,4 +293,69 @@ describe('GraphQl Request Service', () => {
       fetchPolicy: 'no-cache'
     });
   }));
+
+  test('resubscribing to a debounced query after execution triggers a debounced new request', fakeAsync(() => {
+    spectator.service.registerHandler(buildQueryHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable }));
+    const queryFnMock = mockQueryMethod();
+    const query$ = spectator.service.query(buildRequestOne());
+    const requestString = new GraphQlRequestBuilder()
+      .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+      .build();
+    query$.subscribe();
+    expect(queryFnMock).not.toHaveBeenCalled();
+
+    tick(debounceTimeMs);
+
+    expect(queryFnMock).toHaveBeenNthCalledWith(1, {
+      query: gql(requestString),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+    flushMicrotasks();
+
+    // Now two more, should trigger one more request
+    query$.subscribe();
+    query$.subscribe();
+    expect(queryFnMock).toHaveBeenCalledTimes(1);
+    tick(debounceTimeMs);
+    expect(queryFnMock).toHaveBeenNthCalledWith(2, {
+      query: gql(requestString),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+    flushMicrotasks();
+    // Now one last one, one more request
+    query$.subscribe();
+    expect(queryFnMock).toHaveBeenCalledTimes(2);
+
+    tick(debounceTimeMs);
+    expect(queryFnMock).toHaveBeenNthCalledWith(3, {
+      query: gql(requestString),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+  }));
+
+  // test('resubscribing to a mutation triggers an immediate new request', fakeAsync(() => {
+  //   spectator.service.registerHandler(
+  //     buildMutationHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable })
+  //   );
+  //   const mutateFnMock = mockMutateMethod();
+
+  //   const mutate$ = spectator.service.mutate(buildRequestOne());
+  //   mutate$.subscribe();
+  //   const requestString = new GraphQlRequestBuilder()
+  //     .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
+  //     .build();
+  //   expect(mutateFnMock).toHaveBeenNthCalledWith(1, {
+  //     mutation: gql(`mutation ${requestString}`)
+  //   });
+  //   flushMicrotasks();
+
+  //   mutate$.subscribe();
+  //   flushMicrotasks();
+  //   expect(mutateFnMock).toHaveBeenNthCalledWith(2, {
+  //     mutation: gql(`mutation ${requestString}`)
+  //   });
+  // }));
 });

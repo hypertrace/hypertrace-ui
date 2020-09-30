@@ -38,7 +38,7 @@ export class GraphQlRequestService {
     this.bufferedRequestObserver = requestSubject;
     requestSubject
       .pipe(
-        buffer(requestSubject.pipe(debounceTime(graphqlOptions.batchDuration ?? this.defaultDebounceTimeMs))),
+        buffer(requestSubject.pipe(debounceTime(graphqlOptions.batchDebounceTimeMs ?? this.defaultDebounceTimeMs))),
         map(requests => this.fireRequests(...requests))
       )
       .subscribe(this.bufferedResultStream);
