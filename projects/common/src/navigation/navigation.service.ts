@@ -5,6 +5,7 @@ import {
   ActivatedRouteSnapshot,
   Event,
   NavigationEnd,
+  NavigationExtras,
   ParamMap,
   Params,
   Router,
@@ -60,6 +61,53 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
+  public navigateToUrl(url: string): Observable<boolean> {
+    const navigationParams = this.buildNavigationParams(url)!;
+
+    return from(this.router.navigate([navigationParams[0]], navigationParams[1]));
+  }
+
+  public buildNavigationParams(url: string): [NavigationPath, NavigationExtras] | undefined {
+    if (url === '') {
+      return undefined;
+    }
+
+    return this.isExternalUrl(url) ? this.buildExternalNavigationParams(url) : this.buildInternalNavigationParams(url);
+  }
+
+  private buildExternalNavigationParams(
+    url: string,
+    navigationType: NavigationType = NavigationType.SameWindow
+  ): [NavigationPath, NavigationExtras] {
+    return [
+      [
+        '/external',
+        {
+          [ExternalNavigationParams.Url]: url,
+          [ExternalNavigationParams.NavigationType]: navigationType
+        }
+      ],
+      {
+        skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
+      }
+    ];
+  }
+
+  private buildInternalNavigationParams(
+    url: string,
+    navigationExtras?: InternalNavigationExtras
+  ): [NavigationPath, NavigationExtras] {
+    return [
+      url,
+      {
+        queryParams: navigationExtras?.queryParams ?? this.buildParamsForNavigation(),
+        queryParamsHandling: navigationExtras?.queryParamsHandling,
+        replaceUrl: navigationExtras?.replaceUrl,
+        relativeTo: navigationExtras?.relativeTo
+      }
+    ];
+  }
+
   /**
    * Navigate within the app.
    * To be used for URLs with pattern '/partial_path' or 'partial_path'
@@ -83,20 +131,9 @@ export class NavigationService {
     url: string,
     navigationType: NavigationType = NavigationType.SameWindow
   ): Observable<boolean> {
-    return from(
-      this.router.navigate(
-        [
-          '/external',
-          {
-            [ExternalNavigationParams.Url]: url,
-            [ExternalNavigationParams.NavigationType]: navigationType
-          }
-        ],
-        {
-          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
-        }
-      )
-    );
+    const params = this.buildExternalNavigationParams(url, navigationType);
+
+    return from(this.router.navigate(Array.isArray(params[0]) ? params[0] : [params[0]], params[1]));
   }
 
   public buildParamsForNavigation(preserveParameters: string[] = []): QueryParamObject {

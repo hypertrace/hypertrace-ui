@@ -1,7 +1,8 @@
 @import 'font';
 @import 'color-palette';
 
-.ht-link-anchor {
+.ht-link {
   @include link;
   text-decoration-line: none;
+  text-decoration: none;
 }
