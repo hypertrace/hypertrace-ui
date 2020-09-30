@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ButtonRole } from '../button/button';
-import { ModalOverlayConfig } from '../overlay/modal/modal';
+import { ModalOverlayConfig, MODAL_DATA } from '../overlay/modal/modal';
 import { ModalRef } from '../overlay/modal/modal-ref';
-import { POPOVER_DATA } from '../popover/popover';
 
 @Component({
   selector: 'ht-confirmation-modal',
@@ -36,29 +35,22 @@ export class ConfirmationModalComponent {
 
   public constructor(
     private readonly modalRef: ModalRef,
-    @Inject(POPOVER_DATA) private readonly popoverData: ModalOverlayConfig<ConfirmationModalData>
+    @Inject(MODAL_DATA) private readonly modalData: ModalOverlayConfig<ConfirmationModalData>
   ) {
-    this.actionButtonText = this.popoverData?.data?.confirmButtonText;
-    this.descriptionText = this.popoverData?.data?.descriptionText;
+    this.actionButtonText = this.modalData?.data?.confirmButtonText;
+    this.descriptionText = this.modalData?.data?.descriptionText;
   }
 
   public onConfirmation(): void {
-    console.log('Confirm clicked');
-    this.modalRef.output({ proceed: true });
-    this.modalRef.close();
+    this.modalRef.close(true);
   }
 
   public onCancel(): void {
-    this.modalRef.output({ proceed: false });
-    this.modalRef.close();
+    this.modalRef.close(false);
   }
 }
 
 export interface ConfirmationModalData {
   confirmButtonText: string;
   descriptionText: string;
-}
-
-export interface ConfirmationModalInteractionResponse {
-  proceed: boolean;
 }

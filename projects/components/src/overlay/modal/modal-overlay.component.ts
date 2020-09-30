@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonSize, ButtonStyle } from '../../button/button';
-import { POPOVER_DATA } from '../../popover/popover';
-import { ModalOverlayConfig, ModalSize } from './modal';
+import { ModalOverlayConfig, ModalSize, MODAL_DATA } from './modal';
 import { ModalRef } from './modal-ref';
 
 @Component({
@@ -45,7 +44,7 @@ export class ModalOverlayComponent {
 
   public visible: boolean = true;
 
-  public constructor(private readonly modalRef: ModalRef, @Inject(POPOVER_DATA) config: ModalOverlayConfig<unknown>) {
+  public constructor(private readonly modalRef: ModalRef, @Inject(MODAL_DATA) config: ModalOverlayConfig<unknown>) {
     this.showHeader = config.showHeader === true;
     this.modalTitle = config.title === undefined ? '' : config.title;
     this.size = config.size;
@@ -55,6 +54,6 @@ export class ModalOverlayComponent {
 
   public close(): void {
     this.visible = false;
-    this.modalRef.close();
+    this.modalRef.close(false);
   }
 }

@@ -258,6 +258,11 @@ export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 
+// Modal
+export * from './overlay/modal/modal';
+export * from './overlay/modal/modal-ref';
+export * from './overlay/modal/modal-service';
+
 // Confirmation modal
 export { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 export { ConfirmationModalModule } from './confirmation-modal/confirmation-modal.module';

@@ -1,3 +1,10 @@
+import { InjectionToken, Injector, TemplateRef, Type } from '@angular/core';
+import {
+  PopoverBackdrop,
+  PopoverFixedPositionLocation,
+  PopoverPosition,
+  PopoverPositionType
+} from '../../popover/popover';
 import { OverlayConfig } from './../overlay';
 
 export interface ModalOverlayConfig<TData> extends OverlayConfig {
@@ -8,3 +15,17 @@ export interface ModalOverlayConfig<TData> extends OverlayConfig {
 export const enum ModalSize {
   Small = 'small'
 }
+
+export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
+
+export interface ModalOptions<TData = never> {
+  componentOrTemplate: Type<unknown> | TemplateRef<TData>;
+  data?: TData;
+  parentInjector?: Injector;
+  backdrop?: PopoverBackdrop;
+}
+
+export const ModalPosition: PopoverPosition = {
+  type: PopoverPositionType.Fixed,
+  location: PopoverFixedPositionLocation.Centered
+};
