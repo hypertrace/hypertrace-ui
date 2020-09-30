@@ -168,12 +168,13 @@ describe('GraphQl Request Service', () => {
     expect(mutateFnMock).toHaveBeenCalled();
   });
 
-  test('collects and fires different requests separately. Apollo bataches them', fakeAsync(() => {
+  test('collects and fires different requests separately. Apollo batches them', fakeAsync(() => {
     spectator.service.registerHandler(buildQueryHandlerOne());
     spectator.service.registerHandler(buildQueryHandlerTwo());
     const queryFnMock = mockQueryMethod();
     spectator.service.query(buildRequestOne()).subscribe();
     spectator.service.query(buildRequestTwo()).subscribe();
+    expect(queryFnMock).not.toHaveBeenCalled();
     tick(debounceTimeMs);
     expect(queryFnMock).toHaveBeenCalledTimes(2);
     expect(queryFnMock).toHaveBeenNthCalledWith(1, {

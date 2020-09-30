@@ -190,28 +190,28 @@ describe('GraphQl Apollo Integration Service', () => {
   //   tick();
   // }));
 
-  // test('late subscribers to a debounced query can access results', fakeAsync(() => {
-  //   spectator = createService();
-  //   const query$ = spectator.service.query({
-  //     query: gql(buildRequestString()),
-  //     errorPolicy: 'all',
-  //     fetchPolicy: 'no-cache'
-  //   });
-  //   tick();
-  //   spectator.controller.expectNone(graphQlUri);
+  test('late subscribers to a debounced query can access results', fakeAsync(() => {
+    spectator = createService();
+    const query$ = spectator.service.query({
+      query: gql(buildRequestString()),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+    tick();
+    spectator.controller.expectNone(graphQlUri);
 
-  //   tick(10);
-  //   query$.subscribe();
+    tick(10);
+    query$.subscribe();
 
-  //   // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
-  //   expect(spectator.expectOne(graphQlUri, HttpMethod.POST).request.body).toEqual([
-  //     {
-  //       variables: {},
-  //       query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-  //     }
-  //   ]);
-  //   flush();
-  // }));
+    // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
+    expect(spectator.expectOne(graphQlUri, HttpMethod.POST).request.body).toEqual([
+      {
+        variables: {},
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
+      }
+    ]);
+    flush();
+  }));
 
   // test('resubscribing to a query triggers an immediate new request', fakeAsync(() => {
   //   spectator = createService();
