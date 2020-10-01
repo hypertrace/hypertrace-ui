@@ -44,7 +44,10 @@ export class ModalOverlayComponent {
 
   public visible: boolean = true;
 
-  public constructor(private readonly modalRef: ModalRef, @Inject(MODAL_DATA) config: ModalOverlayConfig<unknown>) {
+  public constructor(
+    private readonly modalRef: ModalRef<unknown>,
+    @Inject(MODAL_DATA) config: ModalOverlayConfig<unknown>
+  ) {
     this.showHeader = config.showHeader === true;
     this.modalTitle = config.title === undefined ? '' : config.title;
     this.size = config.size;
@@ -54,6 +57,6 @@ export class ModalOverlayComponent {
 
   public close(): void {
     this.visible = false;
-    this.modalRef.close(false);
+    this.modalRef.close();
   }
 }

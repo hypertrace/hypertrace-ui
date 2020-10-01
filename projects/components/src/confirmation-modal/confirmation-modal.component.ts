@@ -34,7 +34,7 @@ export class ConfirmationModalComponent {
   public descriptionText?: string;
 
   public constructor(
-    private readonly modalRef: ModalRef,
+    private readonly modalRef: ModalRef<boolean>,
     @Inject(MODAL_DATA) private readonly modalData: ModalOverlayConfig<ConfirmationModalData>
   ) {
     this.actionButtonText = this.modalData?.data?.confirmButtonText;
