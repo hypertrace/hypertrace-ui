@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { IconType } from '@hypertrace/assets-library';
 import { sortUnknown, TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
-import { FilterAttribute } from '../filter-bar/filter-attribute';
-import { UserFilterOperator } from '../filter-bar/filter/filter-api';
-import { FilterButtonService } from './filter-button.service';
+import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
+import { FilterAttribute } from '../filter/filter-attribute';
+import { FilterOperator } from '../filter/filter-operators';
+import { FilterService } from '../filter/filter.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser-lookup.service';
 
 @Component({
   selector: 'ht-in-filter-button',
@@ -33,7 +35,7 @@ import { FilterButtonService } from './filter-button.service';
     </div>
   `
 })
-export class InFilterButtonComponent<T = unknown> implements OnChanges {
+export class InFilterButtonComponent implements OnChanges {
   @Input()
   public metadata?: FilterAttribute[];
 
@@ -41,20 +43,24 @@ export class InFilterButtonComponent<T = unknown> implements OnChanges {
   public attribute?: FilterAttribute;
 
   @Input()
-  public values?: T[];
+  public values?: unknown[];
 
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
   public isSupported: boolean = false;
-  public selected: Set<T> = new Set<T>();
+  public selected: Set<unknown> = new Set<unknown>();
 
-  public constructor(private readonly filterButtonService: FilterButtonService) {}
+  public constructor(
+    private readonly filterService: FilterService,
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
+    private readonly filterParserLookupService: FilterParserLookupService
+  ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.attribute) {
       this.isSupported = this.attribute
-        ? this.filterButtonService.isSupportedOperator(this.attribute, UserFilterOperator.In)
+        ? this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.attribute.type)
         : false;
     }
   }
@@ -66,15 +72,13 @@ export class InFilterButtonComponent<T = unknown> implements OnChanges {
 
     this.selected.clear();
 
-    this.filterButtonService
-      .getUrlFilters<T>([this.attribute])
-      .forEach(filter => {
-        if (filter.value instanceof Array) {
-          filter.value.forEach(value => this.selected.add(value));
-        } else {
-          this.selected.add(filter.value);
-        }
-      });
+    this.filterService.getUrlFilters([this.attribute]).forEach(filter => {
+      if (filter.value instanceof Array) {
+        filter.value.forEach(value => this.selected.add(value));
+      } else {
+        this.selected.add(filter.value);
+      }
+    });
   }
 
   public onPopoverClose(): void {
@@ -82,16 +86,18 @@ export class InFilterButtonComponent<T = unknown> implements OnChanges {
       return;
     }
 
-    const filter = this.filterButtonService.buildFilter(this.attribute, [...this.selected.values()].sort(sortUnknown));
+    const filter = this.filterBuilderLookupService
+      .lookup(this.attribute.type)
+      .buildFilter(this.attribute, FilterOperator.In, [...this.selected.values()].sort(sortUnknown));
 
     if (this.selected.size > 0) {
-      this.filterButtonService.applyUrlFilter(this.metadata, filter);
+      this.filterService.applyUrlFilter(this.metadata, filter);
     } else {
-      this.filterButtonService.removeUrlFilter(this.metadata, filter);
+      this.filterService.removeUrlFilter(this.metadata, filter);
     }
   }
 
-  public onChecked(checked: boolean, value: T): void {
+  public onChecked(checked: boolean, value: unknown): void {
     checked ? this.selected.add(value) : this.selected.delete(value);
   }
 }

@@ -12,7 +12,7 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { FilterBarComponent, FilterType, UserFilterOperator } from '@hypertrace/components';
+import { FilterAttributeType, FilterBarComponent, FilterOperator } from '@hypertrace/components';
 import {
   GraphQlFieldFilter,
   GraphQlOperatorType,
@@ -46,13 +46,13 @@ describe('Explorer component', () => {
       name: 'first',
       displayName: 'First',
       allowedAggregations: [],
-      type: FilterType.String
+      type: FilterAttributeType.String
     },
     {
       name: 'second',
       displayName: 'Second',
       allowedAggregations: [],
-      type: FilterType.Timestamp
+      type: FilterAttributeType.Timestamp
     }
   ];
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
@@ -151,7 +151,7 @@ describe('Explorer component', () => {
       {
         metadata: mockAttributes[0],
         field: mockAttributes[0].name,
-        operator: UserFilterOperator.Equals,
+        operator: FilterOperator.Equals,
         value: 'foo',
         userString: '',
         urlString: ''
@@ -224,7 +224,7 @@ describe('Explorer component', () => {
       {
         metadata: mockAttributes[0],
         field: mockAttributes[0].name,
-        operator: UserFilterOperator.Equals,
+        operator: FilterOperator.Equals,
         value: 'foo',
         userString: '',
         urlString: ''

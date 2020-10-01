@@ -1,8 +1,8 @@
 export const enum FilterAttributeType {
   // From AttributeMetadataType
   Boolean = 'BOOLEAN',
-  String = 'STRING',
   Number = 'LONG',
+  String = 'STRING',
   StringMap = 'STRING_MAP',
   Timestamp = 'TIMESTAMP'
 }

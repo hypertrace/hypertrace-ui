@@ -16,9 +16,9 @@ import { TypedSimpleChanges } from '@hypertrace/common';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
-import { FilterAttribute } from './filter-attribute';
-import { FilterBarService } from './filter-bar.service';
-import { Filter } from './filter/filter-api';
+import { Filter } from '../filter/filter';
+import { FilterAttribute } from '../filter/filter-attribute';
+import { FilterService } from '../filter/filter.service';
 
 @Component({
   selector: 'ht-filter-bar',
@@ -37,21 +37,21 @@ import { Filter } from './filter/filter-api';
 
         <!-- Filters -->
         <div class="filters">
-          <ht-filter
+          <ht-filter-chip
             *ngFor="let filter of this.internalFilters$ | async; let index = index"
             class="filter"
             [filter]="filter"
             [attributes]="this.attributes"
             (apply)="this.onApply($event)"
             (clear)="this.onClear(filter)"
-          ></ht-filter>
-          <ht-filter
+          ></ht-filter-chip>
+          <ht-filter-chip
             #filterInput
             class="filter filter-input"
             [clearOnEnter]="true"
             [attributes]="this.attributes"
             (apply)="this.onInputApply($event)"
-          ></ht-filter>
+          ></ht-filter-chip>
         </div>
 
         <!-- Clear Button -->
@@ -99,7 +99,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   public constructor(
     private readonly changeDetector: ChangeDetectorRef,
-    private readonly filterBarService: FilterBarService
+    private readonly filterService: FilterService
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -121,7 +121,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscribeToUrlFilterChanges(): void {
     this.subscription = this.attributeSubject$
-      .pipe(mergeMap(attributes => this.filterBarService.getUrlFiltersChanges$(attributes)))
+      .pipe(mergeMap(attributes => this.filterService.getUrlFiltersChanges$(attributes)))
       .subscribe(filters => this.onFiltersChanged(filters, true, false));
   }
 
@@ -137,12 +137,12 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private readFromUrlFilters(): void {
-    const filters = this.filterBarService.getUrlFilters(this.attributes || []);
+    const filters = this.filterService.getUrlFilters(this.attributes || []);
     this.onFiltersChanged(filters, true, false);
   }
 
   private writeToUrlFilter(): void {
-    this.filterBarService.setUrlFilters(this.internalFiltersSubject$.value);
+    this.filterService.setUrlFilters(this.internalFiltersSubject$.value);
   }
 
   public onInputApply(filter: Filter): void {
