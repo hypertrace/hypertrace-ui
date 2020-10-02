@@ -33,6 +33,10 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             [value]="traceDetails.timeString"
           ></ht-summary-value>
           <ht-summary-value class="summary-value" icon="${IconType.Id}" [value]="traceDetails.id"></ht-summary-value>
+
+          <div class="separation"></div>
+
+          <ht-copy-shareable-link-to-clipboard class="share"></ht-copy-shareable-link-to-clipboard>
         </div>
       </div>
 

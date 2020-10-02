@@ -77,12 +77,12 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
-    if (changeObject.filters) {
-      this.visualizationBuilder.filters(this.filters);
-    }
-
     if (changeObject.context) {
       this.visualizationBuilder.context(this.context);
+    }
+
+    if (changeObject.filters) {
+      this.visualizationBuilder.filters(this.filters);
     }
   }
 

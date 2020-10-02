@@ -15,7 +15,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { IconSize } from '../icon/icon-size';
+import { IconSize } from '../../icon/icon-size';
 import { FilterAttribute } from './filter-attribute';
 import { FilterBarService } from './filter-bar.service';
 import { Filter } from './filter/filter-api';
@@ -137,7 +137,8 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private readFromUrlFilters(): void {
-    this.internalFiltersSubject$.next(this.filterBarService.getUrlFilters(this.attributes || []));
+    const filters = this.filterBarService.getUrlFilters(this.attributes || []);
+    this.onFiltersChanged(filters, true, false);
   }
 
   private writeToUrlFilter(): void {
