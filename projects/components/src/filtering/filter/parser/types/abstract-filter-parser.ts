@@ -1,65 +1,59 @@
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { FilterOperator, fromUrlFilterOperator, toUrlFilterOperator } from '../../filter-operators';
+import { FilterOperator, fromUrlFilterOperator, toUrlFilterOperator, UrlFilterOperator } from '../../filter-operators';
 import { ParsedFilter, SplitFilter } from '../parsed-filter';
 
 export abstract class AbstractFilterParser<TValue> {
   public abstract supportedAttributeTypes(): FilterAttributeType[];
   public abstract supportedOperators(): FilterOperator[];
 
-  protected abstract parseValueString(attribute: FilterAttribute, valueString: string): TValue | undefined;
+  protected abstract parseValueString(
+    attribute: FilterAttribute,
+    splitFilter: SplitFilter<FilterOperator>
+  ): TValue | undefined;
+
+  protected parseKeyString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
+    return attribute.displayName.toLowerCase() !== splitFilter.lhs.toLowerCase() ? undefined : attribute.name;
+  }
 
   public parseFilterString(attribute: FilterAttribute, filterString: string): ParsedFilter<TValue> | undefined {
-    const splitFilter = AbstractFilterParser.splitFilterStringByOperator(this.supportedOperators(), filterString, true);
+    const splitFilter: SplitFilter<FilterOperator> | undefined = AbstractFilterParser.splitFilterStringByOperator(
+      this.supportedOperators(),
+      filterString,
+      true
+    );
 
-    if (splitFilter === undefined) {
-      // Unable to split on operator
-      return undefined;
-    }
-
-    if (attribute.displayName.toLowerCase() !== splitFilter.lhs.toLowerCase()) {
-      // TODO: lhs parsing for new Tag dot syntax
-      // Unable to parse attribute from lhs
-      return undefined;
-    }
-
-    const parsedValue = this.parseValueString(attribute, splitFilter.rhs);
-
-    if (parsedValue === undefined) {
-      // Unable to parse value from rhs
-      return undefined;
-    }
-
-    // Successfully parsed filter
-
-    return {
-      field: attribute.name,
-      operator: splitFilter.operator,
-      value: parsedValue
-    };
+    return splitFilter !== undefined ? this.parseSplitFilter(attribute, splitFilter) : undefined;
   }
 
   public parseUrlFilterString(attribute: FilterAttribute, urlFilterString: string): ParsedFilter<TValue> | undefined {
-    const filterString = decodeURIComponent(urlFilterString);
-
-    const splitUrlFilter = AbstractFilterParser.splitFilterStringByOperator(
+    const splitUrlFilter: SplitFilter<UrlFilterOperator> | undefined = AbstractFilterParser.splitFilterStringByOperator(
       this.supportedOperators().map(toUrlFilterOperator),
-      filterString,
+      decodeURIComponent(urlFilterString),
       false
     );
 
-    if (splitUrlFilter === undefined) {
-      // Unable to split on operator
-      return undefined;
-    }
+    return splitUrlFilter !== undefined
+      ? this.parseSplitFilter(attribute, {
+          lhs: attribute.displayName,
+          operator: fromUrlFilterOperator(splitUrlFilter.operator),
+          rhs: splitUrlFilter.rhs
+        })
+      : undefined;
+  }
 
-    if (attribute.name.toLowerCase() !== splitUrlFilter.lhs.toLowerCase()) {
-      // TODO: lhs parsing for new Tag dot syntax
+  private parseSplitFilter(
+    attribute: FilterAttribute,
+    splitFilter: SplitFilter<FilterOperator>
+  ): ParsedFilter<TValue> | undefined {
+    const parsedKey = this.parseKeyString(attribute, splitFilter);
+
+    if (parsedKey === undefined) {
       // Unable to parse attribute from lhs
       return undefined;
     }
 
-    const parsedValue = this.parseValueString(attribute, splitUrlFilter.rhs);
+    const parsedValue = this.parseValueString(attribute, splitFilter);
 
     if (parsedValue === undefined) {
       // Unable to parse value from rhs
@@ -70,7 +64,7 @@ export abstract class AbstractFilterParser<TValue> {
 
     return {
       field: attribute.name,
-      operator: fromUrlFilterOperator(splitUrlFilter.operator),
+      operator: splitFilter.operator,
       value: parsedValue
     };
   }

@@ -2,10 +2,11 @@ import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
+import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
-  private static readonly DELIMITER: string = ',';
+  private static readonly IN_DELIMITER: string = ',';
 
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [FilterAttributeType.String, FilterAttributeType.Number];
@@ -15,12 +16,15 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
     return [FilterOperator.In];
   }
 
-  protected parseValueString(attribute: FilterAttribute, valueString: string): PossibleValuesTypes | undefined {
+  protected parseValueString(
+    attribute: FilterAttribute,
+    splitFilter: SplitFilter<FilterOperator>
+  ): PossibleValuesTypes | undefined {
     switch (attribute.type) {
       case FilterAttributeType.String:
-        return this.parseStringArrayValue(valueString);
+        return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Number:
-        return this.parseNumberArrayValue(valueString);
+        return this.parseNumberArrayValue(splitFilter.rhs);
       case FilterAttributeType.Boolean: // Unsupported
       case FilterAttributeType.StringMap: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
@@ -31,11 +35,11 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 
   private parseStringArrayValue(valueString: string): string[] {
-    return valueString.split(InFilterParser.DELIMITER).map(str => str.trim());
+    return valueString.split(InFilterParser.IN_DELIMITER).map(str => str.trim());
   }
 
   private parseNumberArrayValue(valueString: string): number[] | undefined {
-    const array = valueString.split(InFilterParser.DELIMITER).map(str => {
+    const array = valueString.split(InFilterParser.IN_DELIMITER).map(str => {
       const val = Number(str.trim());
 
       return isNaN(val) ? undefined : val;

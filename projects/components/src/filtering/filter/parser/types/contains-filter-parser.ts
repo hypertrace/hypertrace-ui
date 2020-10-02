@@ -2,10 +2,11 @@ import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
+import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
-  private static readonly DELIMITER: string = ':';
+  private static readonly CONTAINS_DELIMITER: string = ':';
 
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [FilterAttributeType.StringMap];
@@ -15,10 +16,13 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
-  protected parseValueString(attribute: FilterAttribute, valueString: string): PossibleValuesTypes | undefined {
+  protected parseValueString(
+    attribute: FilterAttribute,
+    splitFilter: SplitFilter<FilterOperator>
+  ): PossibleValuesTypes | undefined {
     switch (attribute.type) {
       case FilterAttributeType.StringMap:
-        return this.parseStringMapValue(valueString);
+        return this.parseStringMapValue(splitFilter.rhs);
       case FilterAttributeType.Number: // Unsupported
       case FilterAttributeType.Boolean: // Unsupported
       case FilterAttributeType.String: // Unsupported
@@ -30,7 +34,7 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
   }
 
   private parseStringMapValue(valueString: string): string[] {
-    return valueString.split(ContainsFilterParser.DELIMITER).map(String);
+    return valueString.split(ContainsFilterParser.CONTAINS_DELIMITER).map(String);
   }
 }
 

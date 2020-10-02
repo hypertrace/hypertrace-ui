@@ -3,6 +3,7 @@ import { isBoolean } from 'lodash-es';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
+import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
@@ -21,14 +22,17 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
     ];
   }
 
-  protected parseValueString(attribute: FilterAttribute, valueString: string): PossibleValuesTypes | undefined {
+  protected parseValueString(
+    attribute: FilterAttribute,
+    splitFilter: SplitFilter<FilterOperator>
+  ): PossibleValuesTypes | undefined {
     switch (attribute.type) {
       case FilterAttributeType.Boolean:
-        return this.parseBooleanValue(valueString);
+        return this.parseBooleanValue(splitFilter.rhs);
       case FilterAttributeType.Number:
-        return this.parseNumberValue(valueString);
+        return this.parseNumberValue(splitFilter.rhs);
       case FilterAttributeType.String:
-        return this.parseStringValue(valueString);
+        return this.parseStringValue(splitFilter.rhs);
       case FilterAttributeType.StringMap: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
