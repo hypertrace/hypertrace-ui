@@ -336,27 +336,4 @@ describe('GraphQl Request Service', () => {
       fetchPolicy: 'no-cache'
     });
   }));
-
-  // test('resubscribing to a mutation triggers an immediate new request', fakeAsync(() => {
-  //   spectator.service.registerHandler(
-  //     buildMutationHandlerOne({ cacheability: GraphQlRequestCacheability.NotCacheable })
-  //   );
-  //   const mutateFnMock = mockMutateMethod();
-
-  //   const mutate$ = spectator.service.mutate(buildRequestOne());
-  //   mutate$.subscribe();
-  //   const requestString = new GraphQlRequestBuilder()
-  //     .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
-  //     .build();
-  //   expect(mutateFnMock).toHaveBeenNthCalledWith(1, {
-  //     mutation: gql(`mutation ${requestString}`)
-  //   });
-  //   flushMicrotasks();
-
-  //   mutate$.subscribe();
-  //   flushMicrotasks();
-  //   expect(mutateFnMock).toHaveBeenNthCalledWith(2, {
-  //     mutation: gql(`mutation ${requestString}`)
-  //   });
-  // }));
 });

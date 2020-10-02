@@ -24,14 +24,23 @@ describe('GraphQl Apollo Integration Service', () => {
     ]
   });
 
-  const buildRequestString = (rootPath: string = 'test'): string =>
-    new GraphQlRequestBuilder().withSelects({ path: rootPath, children: [{ path: 'id' }, { path: 'value' }] }).build();
+  const buildRequestString = (rootPath: string = 'test', params: string[] = []): string =>
+    new GraphQlRequestBuilder()
+      .withSelects({
+        path: rootPath,
+        children: [{ path: 'id' }, { path: 'value' }],
+        ...params.map(param => ({ path: param }))
+      })
+      .build();
 
-  const buildServerResponse = (rootPath: string = 'test') => ({
+  const buildServerResponse = (rootPath: string = 'test', params: string[] = []) => ({
     data: {
       [`${rootPath}`]: {
         id: 'foo',
         value: 'bar',
+        ...params
+          .map(param => ({ [`${param}`]: param }))
+          .reduce((previousVal, current) => ({ ...previousVal, ...current }), {}),
         __typename: 'test-type'
       }
     }
@@ -169,28 +178,7 @@ describe('GraphQl Apollo Integration Service', () => {
     flush();
   }));
 
-  // test('does not cache entities, even if they share an id', fakeAsync(() => {
-  //   spectator.service.registerHandler(buildQueryHandler());
-  //   spectator.service.queryImmediately(buildRequest()).subscribe();
-  //   // Return an object to be cached
-  //   spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
-  //   // Make a new query, but tweak params so it's not cached and return same id with differen val
-  //   const modifiedRequest = buildRequest();
-  //   modifiedRequest.select.arguments = [{ name: 'a', value: 'b' }];
-  //   spectator.service.queryImmediately(modifiedRequest).subscribe();
-  //   // Return a response with same id but different value
-  //   const modifiedResponse = buildServerResponse();
-  //   modifiedResponse.data.test.value = 'baz';
-  //   spectator.expectOne(graphQlUri, HttpMethod.POST).flush(modifiedResponse);
-  //   // Now make the first request again - it should be the original result
-  //   spectator.service.queryImmediately(buildRequest()).subscribe(result => {
-  //     expect((result as { value: string }).value).toEqual('bar');
-  //   });
-  //   // Tick, our responses are always async
-  //   tick();
-  // }));
-
-  test('late subscribers to a debounced query can access results', fakeAsync(() => {
+  test('late subscribers to a query can trigger query and access results', fakeAsync(() => {
     spectator = createService();
     const query$ = spectator.service.query({
       query: gql(buildRequestString()),
@@ -213,31 +201,36 @@ describe('GraphQl Apollo Integration Service', () => {
     flush();
   }));
 
-  // test('resubscribing to a query triggers an immediate new request', fakeAsync(() => {
-  //   spectator = createService();
-  //   const query$ = spectator.service.query({
-  //     query: gql(buildRequestString()),
-  //     errorPolicy: 'all',
-  //     fetchPolicy: 'no-cache'
-  //   });
-  //   query$.subscribe();
-  //   tick();
-  //   expect(spectator.expectOne(graphQlUri, HttpMethod.POST).request.body).toEqual([
-  //     {
-  //       variables: {},
-  //       query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-  //     }
-  //   ]);
+  test('resubscribing to a query triggers an immediate new request', fakeAsync(() => {
+    spectator = createService();
+    const query$ = spectator.service.query({
+      query: gql(buildRequestString()),
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
+    });
+    query$.subscribe();
+    tick();
+    let testRequest = spectator.expectOne(graphQlUri, HttpMethod.POST);
+    testRequest.flush(buildServerResponse());
 
-  //   query$.subscribe();
-  //   tick();
-  //   flush();
-  //   expect(spectator.expectOne(graphQlUri, HttpMethod.POST).request.body).toEqual([
-  //     {
-  //       variables: {},
-  //       query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-  //     }
-  //   ]);
-  //   flush();
-  // }));
+    expect(testRequest.request.body).toEqual([
+      {
+        variables: {},
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
+      }
+    ]);
+
+    query$.subscribe();
+    tick();
+    flush();
+    testRequest = spectator.expectOne(graphQlUri, HttpMethod.POST);
+    testRequest.flush(buildServerResponse());
+    expect(testRequest.request.body).toEqual([
+      {
+        variables: {},
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
+      }
+    ]);
+    flush();
+  }));
 });
