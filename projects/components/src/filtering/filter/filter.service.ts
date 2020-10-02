@@ -87,7 +87,9 @@ export class FilterService {
           return undefined;
         }
 
-        return filterBuilder.buildFilter(attribute, parsedFilter.operator, parsedFilter.value);
+        return splitUrlFilter.lhs === parsedFilter.field
+          ? filterBuilder.buildFilter(attribute, parsedFilter.operator, parsedFilter.value)
+          : undefined;
       })
       .find(splitFilter => splitFilter !== undefined);
   }
