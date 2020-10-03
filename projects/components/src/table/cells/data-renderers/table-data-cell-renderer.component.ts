@@ -10,7 +10,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute } from '../../../filter-bar/filter-attribute';
+import { FilterAttribute } from '../../../filtering/filter-bar/filter-attribute';
 import { TableRow } from '../../table-api';
 import { TableColumnConfigExtended } from '../../table.service';
 import { createTableCellInjector } from '../table-cell-injection';
