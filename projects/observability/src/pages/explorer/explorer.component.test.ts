@@ -134,7 +134,8 @@ describe('Explorer component', () => {
         context: ObservabilityTraceType.Api,
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -143,7 +144,8 @@ describe('Explorer component', () => {
         requestType: TRACES_GQL_REQUEST,
         filters: [],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
@@ -180,7 +182,8 @@ describe('Explorer component', () => {
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -189,7 +192,8 @@ describe('Explorer component', () => {
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
@@ -214,7 +218,8 @@ describe('Explorer component', () => {
         context: SPAN_SCOPE,
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -223,7 +228,8 @@ describe('Explorer component', () => {
         requestType: SPANS_GQL_REQUEST,
         filters: [],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
@@ -265,7 +271,8 @@ describe('Explorer component', () => {
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -274,7 +281,8 @@ describe('Explorer component', () => {
         requestType: SPANS_GQL_REQUEST,
         limit: 500,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
-      })
+      }),
+      undefined
     );
   }));
 
@@ -297,7 +305,8 @@ describe('Explorer component', () => {
             name: 'second'
           })
         ])
-      })
+      }),
+      undefined
     );
   }));
 
@@ -322,7 +331,8 @@ describe('Explorer component', () => {
             name: 'second'
           })
         ])
-      })
+      }),
+      undefined
     );
   }));
 
