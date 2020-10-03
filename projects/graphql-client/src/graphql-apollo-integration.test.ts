@@ -24,26 +24,38 @@ describe('GraphQl Apollo Integration Service', () => {
     ]
   });
 
-  const buildRequestString = (rootPath: string = 'test', params: string[] = []): string =>
+  const buildRequestString = (rootPath: string = 'test', params: string[] = [], fields: string[] = []): string =>
     new GraphQlRequestBuilder()
       .withSelects({
-        path: rootPath,
-        children: [{ path: 'id' }, { path: 'value' }],
-        ...params.map(param => ({ path: param }))
+        path: `${rootPath}${params.length > 0 ? `(${params.map(param => `${param}: ${param}`).join(',')})` : ''}`,
+        children: [{ path: 'id' }, { path: 'value' }, ...fields.map(field => ({ path: field }))]
       })
       .build();
 
-  const buildServerResponse = (rootPath: string = 'test', params: string[] = []) => ({
+  const buildRequestIdString = (rootPath: string = 'test', fields: string[] = []): string =>
+    buildRequestString(rootPath, ['id'], fields);
+
+  const buildServerResponse = (rootPath: string = 'test', fields: string[] = []) => ({
     data: {
       [`${rootPath}`]: {
         id: 'foo',
         value: 'bar',
-        ...params
-          .map(param => ({ [`${param}`]: param }))
-          .reduce((previousVal, current) => ({ ...previousVal, ...current }), {}),
+        ...fields.map(field => ({ [`${field}`]: field })),
         __typename: 'test-type'
       }
     }
+  });
+
+  const buildServerArrayResponse = (rootPath: string = 'test') => ({
+    data: [
+      {
+        [`${rootPath}`]: {
+          id: 'foo',
+          value: 'bar',
+          __typename: 'test-type'
+        }
+      }
+    ]
   });
 
   test('fires queries in batches', fakeAsync(() => {
@@ -175,6 +187,97 @@ describe('GraphQl Apollo Integration Service', () => {
 
     // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
     spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
+    flush();
+  }));
+
+  test('does not cache entities', fakeAsync(() => {
+    spectator = createService();
+    spectator.service
+      .query({
+        query: gql(buildRequestString()),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe();
+    tick();
+    // Return an object to be cached
+    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerArrayResponse());
+
+    // Make a new query, but tweak params so it's not cached and return same id with differen val
+    const modifiedRequest = buildRequestString('test', ['a', 'b']);
+    spectator.service
+      .query({
+        query: gql(modifiedRequest),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe();
+    tick();
+
+    const modifiedResponse = buildServerArrayResponse('test');
+    modifiedResponse.data[0].test.value = 'baz';
+
+    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(modifiedResponse);
+
+    // Now make the first request again - it should be the original result
+    spectator.service
+      .query({
+        query: gql(buildRequestString()),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe(result => {
+        expect((result.data as { test: { value: string } }[])[0].test.value).toEqual('bar');
+      });
+    // Tick, our responses are always async
+    tick();
+    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerArrayResponse());
+    flush();
+  }));
+
+  test('cache entity and merge response when they share an id', fakeAsync(() => {
+    spectator = createService();
+    spectator.service
+      .query({
+        query: gql(buildRequestIdString('test')),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe();
+    tick();
+    // Return an object to be cached
+    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
+
+    // Make a new query, but tweak params so it's not cached and return same id with differen val
+    const modifiedRequest = buildRequestIdString('test', ['a', 'b']);
+    spectator.service
+      .query({
+        query: gql(modifiedRequest),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe();
+    tick();
+
+    const modifiedResponse = buildServerResponse('test', ['a', 'b']);
+    modifiedResponse.data.test.value = 'baz';
+
+    spectator.expectOne(graphQlUri, HttpMethod.POST).flush(modifiedResponse);
+
+    // Now make the first request again - it should show the merged value
+    spectator.service
+      .query({
+        query: gql(buildRequestIdString()),
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first'
+      })
+      .subscribe(result => {
+        expect((result.data as { test: { value: string } }).test.value).toEqual('baz'); // Should not be bar
+      });
+    // Tick, our responses are always async
+    tick();
+    // Should not have fired any new query
+    spectator.controller.expectNone(graphQlUri);
     flush();
   }));
 
