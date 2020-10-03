@@ -8,7 +8,12 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 
-import { GraphQlQueryHandler, RequestTypeForHandler, ResponseTypeForHandler } from '@hypertrace/graphql-client';
+import {
+  GraphQlQueryHandler,
+  GraphQlRequestOptions,
+  RequestTypeForHandler,
+  ResponseTypeForHandler
+} from '@hypertrace/graphql-client';
 import { Observable, Observer, ReplaySubject, Subject } from 'rxjs';
 import { GraphQlFilter, GraphQlFilterable } from '../../../graphql/model/schema/filter/graphql-filter';
 import { GraphQlTimeRange } from '../../../graphql/model/schema/timerange/graphql-time-range';
@@ -48,11 +53,15 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
   public query<
     THandler extends GraphQlQueryHandler<unknown, unknown>,
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
-  >(requestOrBuilder: RequestOrBuilder<RequestTypeForHandler<THandler>>): Observable<TResponse> {
+  >(
+    requestOrBuilder: RequestOrBuilder<RequestTypeForHandler<THandler>>,
+    requestOptions?: GraphQlRequestOptions
+  ): Observable<TResponse> {
     const resultSubject = new ReplaySubject<TResponse>();
 
     this.querySubject.next({
       buildRequest: this.convertToBuilder(requestOrBuilder),
+      requestOptions: requestOptions,
       responseObserver: resultSubject as Observer<unknown>
     });
 
