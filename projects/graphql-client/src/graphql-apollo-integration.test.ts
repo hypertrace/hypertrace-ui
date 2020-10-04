@@ -27,7 +27,8 @@ describe('GraphQl Apollo Integration Service', () => {
   const buildRequestString = (rootPath: string = 'test', params: string[] = [], fields: string[] = []): string =>
     new GraphQlRequestBuilder()
       .withSelects({
-        path: `${rootPath}${params.length > 0 ? `(${params.map(param => `${param}: ${param}`).join(',')})` : ''}`,
+        path: rootPath,
+        arguments: params.map(param => ({ name: param, value: param })),
         children: [{ path: 'id' }, { path: 'value' }, ...fields.map(field => ({ path: field }))]
       })
       .build();
@@ -37,10 +38,12 @@ describe('GraphQl Apollo Integration Service', () => {
 
   const buildServerResponse = (rootPath: string = 'test', fields: string[] = []) => ({
     data: {
-      [`${rootPath}`]: {
+      [rootPath]: {
         id: 'foo',
         value: 'bar',
-        ...fields.map(field => ({ [`${field}`]: field })),
+        ...fields
+          .map(field => ({ [field]: field }))
+          .reduce((combinedObject, currentValue) => ({ ...combinedObject, ...currentValue }), {}),
         __typename: 'test-type'
       }
     }
@@ -49,7 +52,7 @@ describe('GraphQl Apollo Integration Service', () => {
   const buildServerArrayResponse = (rootPath: string = 'test') => ({
     data: [
       {
-        [`${rootPath}`]: {
+        [rootPath]: {
           id: 'foo',
           value: 'bar',
           __typename: 'test-type'
