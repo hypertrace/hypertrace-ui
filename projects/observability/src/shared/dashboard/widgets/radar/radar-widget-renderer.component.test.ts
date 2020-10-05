@@ -127,7 +127,7 @@ describe('Radar Widget renderer', () => {
         useFactory: rendererApiFactory
       },
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn(() => EMPTY)
+        query: jest.fn(() => EMPTY)
       }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
       mockProvider(DomElementMeasurerService, {

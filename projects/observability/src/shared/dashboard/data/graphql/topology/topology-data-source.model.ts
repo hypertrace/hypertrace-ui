@@ -1,5 +1,6 @@
 import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/distributed-tracing';
+import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ARRAY_PROPERTY, Model, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
@@ -83,23 +84,30 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   public edgeMetricSpecifications: MetricAggregationSpecification[] = [];
 
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly requestOptions: GraphQlRequestOptions = {
+    cacheability: GraphQlRequestCacheability.Cacheable,
+    isolated: true
+  };
   public getData(): Observable<TopologyData> {
     const rootEntitySpec = this.buildEntitySpec();
     const edgeSpec = {
       metricSpecifications: this.edgeMetricSpecifications
     };
 
-    return this.query<EntityTopologyGraphQlQueryHandlerService>(filters => ({
-      requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
-      rootNodeType: this.entityType,
-      rootNodeLimit: 100,
-      rootNodeSpecification: rootEntitySpec,
-      rootNodeFilters: filters,
-      edgeSpecification: edgeSpec,
-      upstreamNodeSpecifications: this.buildUpstreamSpecifications(),
-      downstreamNodeSpecifications: this.buildDownstreamSpecifications(),
-      timeRange: this.getTimeRangeOrThrow()
-    })).pipe(
+    return this.query<EntityTopologyGraphQlQueryHandlerService>(
+      filters => ({
+        requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
+        rootNodeType: this.entityType,
+        rootNodeLimit: 100,
+        rootNodeSpecification: rootEntitySpec,
+        rootNodeFilters: filters,
+        edgeSpecification: edgeSpec,
+        upstreamNodeSpecifications: this.buildUpstreamSpecifications(),
+        downstreamNodeSpecifications: this.buildDownstreamSpecifications(),
+        timeRange: this.getTimeRangeOrThrow()
+      }),
+      this.requestOptions
+    ).pipe(
       map(nodes => ({
         nodes: nodes,
         nodeSpecification: rootEntitySpec,

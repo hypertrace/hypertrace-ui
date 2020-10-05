@@ -40,7 +40,7 @@ describe('Feature Guard', () => {
     providers: [
       NavigationService,
       mockProvider(GraphQlRequestService, {
-        queryImmediately: () =>
+        query: () =>
           of([
             { key: 'test-feature-1', value: true },
             { key: 'test-feature-2', value: false },
