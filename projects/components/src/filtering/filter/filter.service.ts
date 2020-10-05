@@ -9,7 +9,7 @@ import { FilterAttribute } from './filter-attribute';
 import { FilterOperator, fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
 import { SplitFilter } from './parser/parsed-filter';
-import { AbstractFilterParser } from './parser/types/abstract-filter-parser';
+import { AbstractFilterParser, splitFilterStringByOperator } from './parser/types/abstract-filter-parser';
 
 @Injectable({
   providedIn: 'root'
@@ -69,11 +69,7 @@ export class FilterService {
         const filterBuilder = this.filterBuilderLookupService.lookup(attribute.type);
         const supportedUrlOperators = filterBuilder.supportedOperators().map(toUrlFilterOperator);
 
-        const splitUrlFilter = AbstractFilterParser.splitFilterStringByOperator(
-          supportedUrlOperators,
-          filterString,
-          false
-        );
+        const splitUrlFilter = splitFilterStringByOperator(supportedUrlOperators, filterString, false);
 
         if (splitUrlFilter === undefined) {
           return undefined;
@@ -123,11 +119,7 @@ export class FilterService {
 
     // Check for operator
 
-    const splitFilter = AbstractFilterParser.splitFilterStringByOperator(
-      filterBuilder.supportedOperators(),
-      text,
-      true
-    );
+    const splitFilter = splitFilterStringByOperator(filterBuilder.supportedOperators(), text, true);
 
     if (splitFilter === undefined) {
       // Unable to find operator

@@ -34,7 +34,7 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
   }
 
   private parseStringMapValue(valueString: string): string[] {
-    return valueString.split(ContainsFilterParser.CONTAINS_DELIMITER).map(String);
+    return valueString.split(ContainsFilterParser.CONTAINS_DELIMITER);
   }
 }
 

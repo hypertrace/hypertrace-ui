@@ -17,7 +17,7 @@ export abstract class AbstractFilterParser<TValue> {
   }
 
   public parseFilterString(attribute: FilterAttribute, filterString: string): ParsedFilter<TValue> | undefined {
-    const splitFilter: SplitFilter<FilterOperator> | undefined = AbstractFilterParser.splitFilterStringByOperator(
+    const splitFilter: SplitFilter<FilterOperator> | undefined = splitFilterStringByOperator(
       this.supportedOperators(),
       filterString,
       true
@@ -27,7 +27,7 @@ export abstract class AbstractFilterParser<TValue> {
   }
 
   public parseUrlFilterString(attribute: FilterAttribute, urlFilterString: string): ParsedFilter<TValue> | undefined {
-    const splitUrlFilter: SplitFilter<UrlFilterOperator> | undefined = AbstractFilterParser.splitFilterStringByOperator(
+    const splitUrlFilter: SplitFilter<UrlFilterOperator> | undefined = splitFilterStringByOperator(
       this.supportedOperators().map(toUrlFilterOperator),
       decodeURIComponent(urlFilterString),
       false
@@ -68,27 +68,27 @@ export abstract class AbstractFilterParser<TValue> {
       value: parsedValue
     };
   }
-
-  public static splitFilterStringByOperator<TOperator extends string>(
-    possibleOperators: TOperator[],
-    filterString: string,
-    expectSpaceAroundOperator: boolean = true
-  ): SplitFilter<TOperator> | undefined {
-    const matchingOperator = possibleOperators
-      .sort((o1: string, o2: string) => o2.length - o1.length) // Sort by length to check multichar ops first
-      .map(op => (expectSpaceAroundOperator ? ` ${op as string} ` : op))
-      .find(op => filterString.includes(op));
-
-    if (matchingOperator === undefined) {
-      return undefined;
-    }
-
-    const parts = filterString.split(matchingOperator).map(str => str.trim());
-
-    return {
-      lhs: parts[0],
-      operator: matchingOperator.trim() as TOperator,
-      rhs: parts[1]
-    };
-  }
 }
+
+export const splitFilterStringByOperator = <TOperator extends string>(
+  possibleOperators: TOperator[],
+  filterString: string,
+  expectSpaceAroundOperator: boolean = true
+): SplitFilter<TOperator> | undefined => {
+  const matchingOperator = possibleOperators
+    .sort((o1: string, o2: string) => o2.length - o1.length) // Sort by length to check multichar ops first
+    .map(op => (expectSpaceAroundOperator ? ` ${op as string} ` : op))
+    .find(op => filterString.includes(op));
+
+  if (matchingOperator === undefined) {
+    return undefined;
+  }
+
+  const parts = filterString.split(matchingOperator).map(str => str.trim());
+
+  return {
+    lhs: parts[0],
+    operator: matchingOperator.trim() as TOperator,
+    rhs: parts[1]
+  };
+};

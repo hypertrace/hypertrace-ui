@@ -1,5 +1,4 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { isBoolean } from 'lodash-es';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { FilterOperator } from '../../filter-operators';
@@ -42,9 +41,14 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
   }
 
   private parseBooleanValue(valueString: string): boolean | undefined {
-    const val = valueString === 'false' ? false : valueString === 'true';
-
-    return isBoolean(val) ? val : undefined;
+    switch (valueString.toLowerCase()) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      default:
+        return undefined;
+    }
   }
 
   private parseNumberValue(valueString: string): number | undefined {
