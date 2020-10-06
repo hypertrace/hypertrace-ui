@@ -61,7 +61,7 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
-  public buildNavigationParams(url: string): {path: NavigationPath, extras?: NavigationExtras} {
+  public buildNavigationParams(url: string): { path: NavigationPath; extras?: NavigationExtras } {
     if (url === '') {
       throw Error('Empty Url used for navigation');
     }
@@ -72,7 +72,7 @@ export class NavigationService {
   private buildExternalNavigationParams(
     url: string,
     navigationType: NavigationType = NavigationType.SameWindow
-  ): {path: NavigationPath, extras?: NavigationExtras} {
+  ): { path: NavigationPath; extras?: NavigationExtras } {
     return {
       path: [
         '/external',
@@ -81,8 +81,7 @@ export class NavigationService {
           [ExternalNavigationParams.NavigationType]: navigationType
         }
       ],
-      extras:
-      {
+      extras: {
         skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
       }
     };
@@ -91,7 +90,7 @@ export class NavigationService {
   private buildInternalNavigationParams(
     url: string,
     navigationExtras?: InternalNavigationExtras
-  ): {path: NavigationPath, extras?: NavigationExtras} {
+  ): { path: NavigationPath; extras?: NavigationExtras } {
     return {
       path: url,
       extras: {

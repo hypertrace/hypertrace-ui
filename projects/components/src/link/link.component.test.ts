@@ -52,7 +52,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({path: ['test'], extra: {}})
+          buildNavigationParams: jest.fn().mockReturnValue({ path: ['test'], extra: {} })
         })
       ]
     });
@@ -67,7 +67,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({path: ['/test'], extra: {}})
+          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extra: {} })
         })
       ]
     });
