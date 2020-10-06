@@ -101,7 +101,6 @@ export class NavigationService {
   /**
    * Navigate within the app.
    * To be used for URLs with pattern '/partial_path' or 'partial_path'
-   * @deprecated
    */
   public navigateWithinApp(
     path: NavigationPath,
@@ -115,17 +114,6 @@ export class NavigationService {
       relativeTo: relativeTo
     });
   }
-
-  // private navigateInternal(path: NavigationPath, navigationExtras: InternalNavigationExtras): Observable<boolean> {
-  //   return from(
-  //     this.router.navigate(Array.isArray(path) ? path : [path], {
-  //       queryParams: navigationExtras.queryParams || this.buildQueryParam(),
-  //       queryParamsHandling: navigationExtras.queryParamsHandling,
-  //       replaceUrl: navigationExtras.replaceUrl,
-  //       relativeTo: navigationExtras.relativeTo
-  //     })
-  //   );
-  // }
 
   private buildQueryParam(preserveParameters: string[] = []): QueryParamObject {
     return ['time', ...preserveParameters].reduce<Params>(

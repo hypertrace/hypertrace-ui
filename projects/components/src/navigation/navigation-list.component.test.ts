@@ -93,8 +93,9 @@ describe('Navigation List Component', () => {
     });
 
     spectator.click(spectator.query(NavItemComponent, { read: ElementRef })!);
-    expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith('foo', {
-      relativeTo: spectator.inject(ActivatedRoute)
-    });
+    expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(
+      'foo',
+      spectator.inject(ActivatedRoute)
+    );
   });
 });
