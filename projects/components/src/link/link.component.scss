@@ -2,7 +2,8 @@
 @import 'color-palette';
 
 .ht-link {
-  @include link;
   text-decoration-line: none;
   text-decoration: none;
+  color: $gray-9;
+  @include link-hover;
 }
