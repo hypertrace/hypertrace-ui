@@ -1,4 +1,4 @@
-import { FilterType } from '@hypertrace/components';
+import { FilterAttributeType } from '@hypertrace/components';
 import { MetricAggregationType } from '../metrics/metric-aggregation';
 
 export interface AttributeMetadata {
@@ -21,18 +21,18 @@ export const enum AttributeMetadataType {
   Timestamp = 'TIMESTAMP'
 }
 
-export const toFilterType = (type: AttributeMetadataType): FilterType => {
+export const toFilterType = (type: AttributeMetadataType): FilterAttributeType => {
   switch (type) {
     case 'BOOLEAN':
-      return FilterType.Boolean;
+      return FilterAttributeType.Boolean;
     case 'STRING':
-      return FilterType.String;
+      return FilterAttributeType.String;
     case 'LONG':
-      return FilterType.Number;
+      return FilterAttributeType.Number;
     case 'STRING_MAP':
-      return FilterType.StringMap;
+      return FilterAttributeType.StringMap;
     case 'TIMESTAMP':
-      return FilterType.Timestamp;
+      return FilterAttributeType.Timestamp;
     default:
       throw Error(`Unable to convert type '${type}' to FilterType`);
   }

@@ -1,4 +1,4 @@
-import { FilterAttribute, FilterType, UserFilterOperator } from '@hypertrace/components';
+import { FilterAttribute, FilterAttributeType, FilterOperator } from '@hypertrace/components';
 import { createServiceFactory } from '@ngneat/spectator/jest';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
@@ -6,7 +6,7 @@ import { GraphQlFilterBuilderService } from './graphql-filter-builder.service';
 
 describe('Graphql filter builder service', () => {
   const serviceFactory = createServiceFactory({ service: GraphQlFilterBuilderService });
-  const buildFilter = (metadata: FilterAttribute, operator: UserFilterOperator, value: string | number) => ({
+  const buildFilter = (metadata: FilterAttribute, operator: FilterOperator, value: string | number) => ({
     metadata: metadata,
     field: metadata.name,
     operator: operator,
@@ -18,14 +18,14 @@ describe('Graphql filter builder service', () => {
   const attribute1: FilterAttribute = {
     name: 'attr1',
     displayName: 'Attribute 1',
-    type: FilterType.Number
+    type: FilterAttributeType.Number
   };
 
   // tslint:disable-next-line: no-object-literal-type-assertion
   const attribute2: FilterAttribute = {
     name: 'attr2',
     displayName: 'Attribute 2',
-    type: FilterType.String
+    type: FilterAttributeType.String
   };
 
   test('can build graphql filters', () => {
@@ -33,12 +33,12 @@ describe('Graphql filter builder service', () => {
 
     expect(
       spectator.service.buildGraphQlFilters([
-        buildFilter(attribute2, UserFilterOperator.Equals, 'foo'),
-        buildFilter(attribute2, UserFilterOperator.NotEquals, 'bar'),
-        buildFilter(attribute1, UserFilterOperator.GreaterThan, 5),
-        buildFilter(attribute1, UserFilterOperator.GreaterThanOrEqualTo, 10),
-        buildFilter(attribute1, UserFilterOperator.LessThan, 15),
-        buildFilter(attribute1, UserFilterOperator.LessThanOrEqualTo, 20)
+        buildFilter(attribute2, FilterOperator.Equals, 'foo'),
+        buildFilter(attribute2, FilterOperator.NotEquals, 'bar'),
+        buildFilter(attribute1, FilterOperator.GreaterThan, 5),
+        buildFilter(attribute1, FilterOperator.GreaterThanOrEqualTo, 10),
+        buildFilter(attribute1, FilterOperator.LessThan, 15),
+        buildFilter(attribute1, FilterOperator.LessThanOrEqualTo, 20)
       ])
     ).toEqual([
       new GraphQlFieldFilter(attribute2.name, GraphQlOperatorType.Equals, 'foo'),
