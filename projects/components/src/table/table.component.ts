@@ -330,7 +330,7 @@ export class TableComponent
     }
 
     if (changes.selections) {
-      this.initializeRows();
+      this.toggleRowSelections(this.selections);
     }
   }
 
