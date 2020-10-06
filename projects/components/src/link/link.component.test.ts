@@ -1,14 +1,16 @@
+import { RouterLinkWithHref } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { LinkComponent } from './link.component';
 
 describe('Link component', () => {
-  let spectator: Spectator<LinkComponent>;
+  let spectator: SpectatorHost<LinkComponent>;
 
   const createHost = createHostFactory({
     component: LinkComponent,
-    shallow: true,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
+    declarations: [MockDirective(RouterLinkWithHref)]
   });
 
   test('Link should not be displayed if url is undefined', () => {
@@ -36,13 +38,27 @@ describe('Link component', () => {
                 navType: 'same_window'
               }
             ],
-            extra: { skipLocationChange: true }
+            extras: { skipLocationChange: true }
           })
         })
       ]
     });
 
     expect(spectator.query('.ht-link')).toExist();
+    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+
+    expect(routerLinkDirective).toBeDefined();
+    expect(routerLinkDirective?.routerLink).toEqual([
+      '/external',
+      {
+        url: 'http://test.hypertrace.ai',
+        navType: 'same_window'
+      }
+    ]);
+    expect(routerLinkDirective!.skipLocationChange).toBeTruthy();
+    expect(routerLinkDirective!.queryParams).toBeUndefined();
+    expect(routerLinkDirective!.queryParamsHandling).toBeUndefined();
+    expect(routerLinkDirective!.replaceUrl).toBeUndefined();
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
@@ -52,12 +68,20 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['test'], extra: {} })
+          buildNavigationParams: jest.fn().mockReturnValue({ path: ['test'], extras: {} })
         })
       ]
     });
 
     expect(spectator.query('.ht-link')).toExist();
+    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+
+    expect(routerLinkDirective).toBeDefined();
+    expect(routerLinkDirective?.routerLink).toEqual(['test']);
+    expect(routerLinkDirective!.skipLocationChange).toBeUndefined();
+    expect(routerLinkDirective!.queryParams).toBeUndefined();
+    expect(routerLinkDirective!.queryParamsHandling).toBeUndefined();
+    expect(routerLinkDirective!.replaceUrl).toBeUndefined();
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
@@ -67,11 +91,19 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extra: {} })
+          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extras: {} })
         })
       ]
     });
 
     expect(spectator.query('.ht-link')).toExist();
+    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+
+    expect(routerLinkDirective).toBeDefined();
+    expect(routerLinkDirective?.routerLink).toEqual(['/test']);
+    expect(routerLinkDirective!.skipLocationChange).toBeUndefined();
+    expect(routerLinkDirective!.queryParams).toBeUndefined();
+    expect(routerLinkDirective!.queryParamsHandling).toBeUndefined();
+    expect(routerLinkDirective!.replaceUrl).toBeUndefined();
   });
 });
