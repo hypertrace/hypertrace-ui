@@ -12,7 +12,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
     <div class="titled-content-container">
       <div class="header">
         <ht-label *ngIf="this.shouldShowTitleInHeader" [label]="this.title" class="title"></ht-label>
-        <ht-link [url]="this.link" class="link" *ngIf="this.link">
+        <ht-link [paramsOrUrl]="this.link" class="link" *ngIf="this.link">
           <ht-button
             [label]="this.linkLabel"
             role="${ButtonRole.Primary}"

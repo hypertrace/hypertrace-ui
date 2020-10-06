@@ -191,7 +191,7 @@ describe('Navigation Service', () => {
 
   test('can route to an external URL', () => {
     router.navigate = jest.fn().mockResolvedValue(true);
-    spectator.service.navigateExternal('https://www.google.com');
+    spectator.service.navigate('https://www.google.com');
     expect(router.navigate).toHaveBeenCalledWith(
       [
         '/external',
