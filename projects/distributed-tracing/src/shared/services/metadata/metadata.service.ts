@@ -128,7 +128,7 @@ export class MetadataService {
 
   private fetchAttributes(): ReplayObservable<AttributeMetadata[]> {
     this.attributes$ = this.graphqlQueryService
-      .queryImmediately<MetadataGraphQlQueryHandlerService>({ requestType: METADATA_GQL_REQUEST })
+      .query<MetadataGraphQlQueryHandlerService>({ requestType: METADATA_GQL_REQUEST })
       .pipe(
         throwIfEmpty(),
         catchError(() => of([])),

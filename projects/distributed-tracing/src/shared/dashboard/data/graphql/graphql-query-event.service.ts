@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   GraphQlQueryHandler,
+  GraphQlRequestOptions,
   GraphQlRequestService,
   RequestTypeForHandler,
   ResponseTypeForHandler
@@ -38,11 +39,8 @@ export class GraphQlQueryEventService extends ModelScopedDashboardEvent<Observed
 
   protected delegateQuery(event: RequestEvent): Observable<unknown> {
     const request = event.data.buildRequest(this.collectFilters(event.source));
-    if (event.data.isolated) {
-      return this.graphqlQueryService.queryImmediately(request);
-    }
 
-    return this.graphqlQueryService.queryDebounced(request);
+    return this.graphqlQueryService.query(request, event.data.requestOptions);
   }
 
   private collectFilters(source: object): GraphQlFilter[] {
@@ -73,7 +71,7 @@ export interface ObservedGraphQlRequest<
   TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
 > {
   responseObserver: Observer<TResponse>;
-  isolated?: boolean;
+  requestOptions?: GraphQlRequestOptions;
   buildRequest(inheritedFilters: GraphQlFilter[]): RequestTypeForHandler<THandler>;
 }
 

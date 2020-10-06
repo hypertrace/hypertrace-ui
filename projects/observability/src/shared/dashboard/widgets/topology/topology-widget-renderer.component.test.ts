@@ -108,7 +108,7 @@ describe('Topology Widget renderer', () => {
         getComputedTextLength: () => 0
       }),
       mockProvider(GraphQlRequestService, {
-        queryImmediately: () => EMPTY
+        query: () => EMPTY
       }),
       mockProvider(NavigationService),
       {

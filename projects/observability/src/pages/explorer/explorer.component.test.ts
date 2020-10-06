@@ -72,7 +72,7 @@ describe('Explorer component', () => {
     componentProviders: [LayoutChangeService],
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
@@ -115,11 +115,17 @@ describe('Explorer component', () => {
     spectator.tick();
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
-    querySpy = spectator.inject(GraphQlRequestService).queryImmediately;
+    querySpy = spectator.inject(GraphQlRequestService).query;
   };
 
   test('fires query on init for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     // Traces tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
       2,
@@ -128,7 +134,8 @@ describe('Explorer component', () => {
         context: ObservabilityTraceType.Api,
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -137,12 +144,19 @@ describe('Explorer component', () => {
         requestType: TRACES_GQL_REQUEST,
         filters: [],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
   test('fires query on filter change for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     querySpy.mockClear();
     const filterBar = spectator.query(FilterBarComponent)!;
 
@@ -168,7 +182,8 @@ describe('Explorer component', () => {
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -177,12 +192,19 @@ describe('Explorer component', () => {
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
   test('fires query on init for spans', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     querySpy.mockClear();
 
     // Select Spans tab
@@ -196,7 +218,8 @@ describe('Explorer component', () => {
         context: SPAN_SCOPE,
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second)
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -205,12 +228,19 @@ describe('Explorer component', () => {
         requestType: SPANS_GQL_REQUEST,
         filters: [],
         limit: 500
-      })
+      }),
+      undefined
     );
   }));
 
   test('fires query on init for traces', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     // Select traces tab
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     detectQueryChange();
@@ -241,7 +271,8 @@ describe('Explorer component', () => {
         limit: 10000,
         interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
-      })
+      }),
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -250,12 +281,19 @@ describe('Explorer component', () => {
         requestType: SPANS_GQL_REQUEST,
         limit: 500,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
-      })
+      }),
+      undefined
     );
   }));
 
   test('traces table fires query on series change', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -267,12 +305,21 @@ describe('Explorer component', () => {
             name: 'second'
           })
         ])
-      })
+      }),
+      undefined
     );
   }));
 
   test('visualization fires query on series change', fakeAsync(() => {
-    init();
+    init({
+      providers: [
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+        })
+      ]
+    });
+    querySpy.mockClear();
+
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -284,7 +331,8 @@ describe('Explorer component', () => {
             name: 'second'
           })
         ])
-      })
+      }),
+      undefined
     );
   }));
 
