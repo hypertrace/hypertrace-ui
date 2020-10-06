@@ -40,7 +40,7 @@ describe('Top N Widget renderer', () => {
         useFactory: rendererApiFactory
       },
       mockProvider(GraphQlRequestService, {
-        queryImmediately: () => EMPTY
+        query: () => EMPTY
       }),
       mockProvider(EntityNavigationService, {
         navigateToEntity: jest.fn()

@@ -1,35 +1,27 @@
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { FilterBuilder } from '../filter-builder.decorator';
+import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-@FilterBuilder({
-  supportedAttributeTypes: [FilterAttributeType.Number],
-  supportedOperators: [
-    FilterOperator.Equals,
-    FilterOperator.NotEquals,
-    FilterOperator.LessThan,
-    FilterOperator.LessThanOrEqualTo,
-    FilterOperator.GreaterThan,
-    FilterOperator.GreaterThanOrEqualTo
-  ]
-})
-export class NumberFilterBuilder extends AbstractFilterBuilder<number> {
-  public supportedAttributeTypes(): FilterAttributeType[] {
-    return NumberFilterBuilder.supportedAttributeTypes;
+export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]> {
+  private static readonly DELIMITER: string = ',';
+
+  public supportedAttributeType(): FilterAttributeType {
+    return FilterAttributeType.Number;
   }
 
   public supportedOperators(): FilterOperator[] {
-    return NumberFilterBuilder.supportedOperators;
+    return [
+      FilterOperator.Equals,
+      FilterOperator.NotEquals,
+      FilterOperator.LessThan,
+      FilterOperator.LessThanOrEqualTo,
+      FilterOperator.GreaterThan,
+      FilterOperator.GreaterThanOrEqualTo,
+      FilterOperator.In
+    ];
   }
 
-  public convertStringToValue(value: string): number | undefined {
-    const val = Number(value);
-
-    return isNaN(val) ? undefined : val;
-  }
-
-  public convertValueToString(value: number): string {
-    return String(value);
+  protected buildValueString(value: number | number[]): string {
+    return Array.isArray(value) ? String(value.join(`${NumberFilterBuilder.DELIMITER} `).trim()) : String(value);
   }
 }

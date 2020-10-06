@@ -75,7 +75,7 @@ describe('Explore query editor', () => {
         getCurrentTimeRange: () => defaultTimeRange
       }),
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn(() => of(metadata))
+        query: jest.fn(() => of(metadata))
       }),
       mockProvider(IntervalDurationService, {
         availableIntervals$: of('AUTO'),

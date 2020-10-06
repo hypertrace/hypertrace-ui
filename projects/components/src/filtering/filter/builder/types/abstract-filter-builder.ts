@@ -1,19 +1,16 @@
 import { collapseWhitespace } from '@hypertrace/common';
-import { Filter, FilterOperator, toUrlFilterOperator } from '../../filter-api';
+import { Filter } from '../../filter';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { FilterOperator, toUrlFilterOperator } from '../../filter-operators';
 
 export abstract class AbstractFilterBuilder<TValue> {
-  public static supportedAttributeTypes: FilterAttributeType[];
-  public static supportedOperators: FilterOperator[];
+  public abstract supportedAttributeType(): FilterAttributeType;
+  public abstract supportedOperators(): FilterOperator[];
 
-  protected abstract supportedAttributeTypes(): FilterAttributeType[];
-  protected abstract supportedOperators(): FilterOperator[];
+  protected abstract buildValueString(value: TValue): string;
 
-  protected abstract convertStringToValue(value: string): TValue | undefined;
-  protected abstract convertValueToString(value: TValue): string;
-
-  public buildFilters(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {
+  public buildFiltersForSupportedOperators(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {
     return this.supportedOperators().map(operator => this.buildFilter(attribute, operator, value));
   }
 
@@ -28,11 +25,13 @@ export abstract class AbstractFilterBuilder<TValue> {
     };
   }
 
-  protected buildUserFilterString(attribute: FilterAttribute, operator: FilterOperator, value: TValue): string {
-    return collapseWhitespace(`${attribute.displayName} ${operator} ${this.convertValueToString(value)}`).trim();
+  public buildUserFilterString(attribute: FilterAttribute, operator?: FilterOperator, value?: TValue): string {
+    return collapseWhitespace(
+      `${attribute.displayName} ${operator ?? ''} ${value !== undefined ? this.buildValueString(value) : ''}`
+    ).trim();
   }
 
   protected buildUrlFilterString(attribute: FilterAttribute, operator: FilterOperator, value: TValue): string {
-    return encodeURIComponent(`${attribute.name}${toUrlFilterOperator(operator)}${this.convertValueToString(value)}`);
+    return encodeURIComponent(`${attribute.name}${toUrlFilterOperator(operator)}${this.buildValueString(value)}`);
   }
 }

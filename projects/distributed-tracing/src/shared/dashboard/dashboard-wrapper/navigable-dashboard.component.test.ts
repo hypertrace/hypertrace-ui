@@ -1,4 +1,10 @@
-import { Filter, FilterBarComponent, FilterType, LoadAsyncModule, UserFilterOperator } from '@hypertrace/components';
+import {
+  Filter,
+  FilterAttributeType,
+  FilterBarComponent,
+  FilterOperator,
+  LoadAsyncModule
+} from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
@@ -128,10 +134,10 @@ describe('Navigable dashboard component', () => {
       metadata: {
         name: 'test',
         displayName: 'Test',
-        type: FilterType.String
+        type: FilterAttributeType.String
       },
       field: 'foo',
-      operator: UserFilterOperator.Equals,
+      operator: FilterOperator.Equals,
       value: 'bar',
       userString: '',
       urlString: ''

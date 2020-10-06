@@ -1,29 +1,28 @@
 import { Inject, InjectionToken, Injector, ModuleWithProviders, NgModule } from '@angular/core';
-import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink, HttpLinkModule } from 'apollo-angular-link-http';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { ApolloClientOptions } from 'apollo-client';
-import { GraphQlQueryHandler, GRAPHQL_REQUEST_HANDLERS_TOKENS, GRAPHQL_URI } from './graphql-config';
+import { InMemoryCache } from '@apollo/client/core';
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpBatchLink } from 'apollo-angular/http';
+import {
+  GraphQlOptions,
+  GraphQlQueryHandler,
+  GRAPHQL_OPTIONS,
+  GRAPHQL_REQUEST_HANDLERS_TOKENS
+} from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
 
-// tslint:disable-next-line: only-arrow-functions
-export function createApollo(httpLink: HttpLink, uri: string): ApolloClientOptions<NormalizedCacheObject> {
-  return {
-    link: httpLink.create({ uri: uri }),
-    cache: new InMemoryCache({
-      // Never assume an object with an ID is safe to cache, use the whole request path as the key only
-      dataIdFromObject: () => undefined
-    })
-  };
-}
-
 @NgModule({
-  imports: [HttpLinkModule, ApolloModule],
   providers: [
     {
       provide: APOLLO_OPTIONS,
-      useFactory: createApollo,
-      deps: [HttpLink, GRAPHQL_URI]
+      useFactory: (httpLink: HttpBatchLink, options: GraphQlOptions) => ({
+        cache: new InMemoryCache(),
+        link: httpLink.create({
+          uri: options.uri,
+          batchMax: options.batchSize ?? 5,
+          batchInterval: 0 // We are already adding debounce time while merging the query. No need to add batch Interval here
+        })
+      }),
+      deps: [HttpBatchLink, GRAPHQL_OPTIONS]
     },
     {
       provide: GRAPHQL_REQUEST_HANDLERS_TOKENS,
