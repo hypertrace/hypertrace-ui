@@ -24,7 +24,7 @@ describe('Backend detail breadcrumb resolver', () => {
     service: BackendDetailBreadcrumbResolver,
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn().mockReturnValue(
+        query: jest.fn().mockReturnValue(
           of({
             [entityTypeKey]: ObservabilityEntityType.Backend,
             [entityIdKey]: 'test-id',
@@ -69,7 +69,7 @@ describe('Backend detail breadcrumb resolver', () => {
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).queryImmediately).toHaveBeenCalledWith(
+    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
       expect.objectContaining({
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Backend,

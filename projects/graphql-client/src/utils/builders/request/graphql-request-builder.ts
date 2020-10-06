@@ -4,16 +4,19 @@ import { GraphQlSelection } from '../../../model/graphql-selection';
 
 export class GraphQlRequestBuilder {
   private readonly mergedRequest: MergedRequestFragment = {};
-  private readonly keyBySelection: WeakMap<GraphQlSelection, string> = new WeakMap();
+  private readonly keyBySelection: Map<GraphQlSelection, string> = new Map();
+  private readonly originalSelections: GraphQlSelection[] = [];
 
   public withSelects(...selects: GraphQlSelection[]): this {
+    this.originalSelections.push(...selects);
+
     selects.forEach(select => this.addSelect(select));
 
     return this;
   }
 
   public build(): string {
-    return this.translateMergedRequestToGql(this.mergedRequest);
+    return this.translateMergedRequestFragmentsToGql(this.mergedRequest);
   }
 
   public getKeyForSelection(selection: GraphQlSelection): string {
@@ -24,21 +27,33 @@ export class GraphQlRequestBuilder {
     return this.keyBySelection.get(selection)!;
   }
 
-  private translateMergedRequestToGql(mergedRequest: MergedRequestFragment): string {
-    const contents = Object.keys(mergedRequest)
-      .map(key => {
-        const value = mergedRequest[key];
-        const valueAsString = isEmpty(value.childFragment)
-          ? ''
-          : ` ${this.translateMergedRequestToGql(value.childFragment)}`;
-        const keyAsString = this.convertKeyToFieldExpression(key, value);
-        const argString = this.convertArgumentMapToString(value.argMap);
+  public buildSelectionToGqlRequestStringMap(): Map<GraphQlSelection, string> {
+    return new Map(
+      this.originalSelections.map(selection => {
+        const key = this.getKeyForSelection(selection);
+        const requestString = `{ ${this.translateRequestFragmentToGql(key, this.mergedRequest[key])} }`;
 
-        return `${keyAsString}${argString}${valueAsString}`;
+        return [selection, requestString];
       })
+    );
+  }
+
+  private translateMergedRequestFragmentsToGql(mergedRequest: MergedRequestFragment): string {
+    const contents = Object.keys(mergedRequest)
+      .map(key => this.translateRequestFragmentToGql(key, mergedRequest[key]))
       .join(' ');
 
     return `{ ${contents} }`;
+  }
+
+  private translateRequestFragmentToGql(key: string, value: MergedRequestKeyData): string {
+    const valueAsString = isEmpty(value.childFragment)
+      ? ''
+      : ` ${this.translateMergedRequestFragmentsToGql(value.childFragment)}`;
+    const keyAsString = this.convertKeyToFieldExpression(key, value);
+    const argString = this.convertArgumentMapToString(value.argMap);
+
+    return `${keyAsString}${argString}${valueAsString}`;
   }
 
   private addSelect(select: GraphQlSelection): void {

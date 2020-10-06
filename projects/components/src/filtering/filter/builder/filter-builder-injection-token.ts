@@ -1,5 +1,5 @@
 import { InjectionToken, Type } from '@angular/core';
-import { AbstractFilterBuilder } from './abstract-filter-builder';
+import { AbstractFilterBuilder } from './types/abstract-filter-builder';
 
 export type FilterBuilderConstructor<T> = Type<AbstractFilterBuilder<T>>;
 

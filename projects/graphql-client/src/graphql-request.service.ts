@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
-import { includes } from 'lodash-es';
-import { defer, EMPTY, Observable, Observer, of, Subject } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { Apollo, gql } from 'apollo-angular';
+import { includes, uniq } from 'lodash-es';
+import { defer, EMPTY, Observable, Observer, of, Subject, zip } from 'rxjs';
 import { buffer, catchError, debounceTime, filter, map, mergeMap, take } from 'rxjs/operators';
 import {
   GraphQlHandler,
   GraphQlHandlerType,
   GraphQlMutationHandler,
+  GraphQlOptions,
   GraphQlQueryHandler,
   GraphQlRequestCacheability,
-  GraphQlRequestOptions
+  GraphQlRequestOptions,
+  GRAPHQL_OPTIONS
 } from './graphql-config';
 import { GraphQlSelection } from './model/graphql-selection';
 import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
@@ -29,28 +30,37 @@ export class GraphQlRequestService {
   );
   private readonly bufferedRequestObserver: Observer<RequestWithOptions>;
   private readonly bufferedResultStream: Subject<Map<GraphQlRequest, Observable<GraphQlResult>>> = new Subject();
-  private readonly debounceTimeMs: number = 10;
+  private readonly defaultDebounceTimeMs: number = 10;
   private readonly queryHandlers: GraphQlHandler<unknown, unknown>[] = [];
 
-  public constructor(private readonly apollo: Apollo) {
+  public constructor(private readonly apollo: Apollo, @Inject(GRAPHQL_OPTIONS) graphqlOptions: GraphQlOptions) {
     const requestSubject = new Subject<RequestWithOptions>();
     this.bufferedRequestObserver = requestSubject;
     requestSubject
       .pipe(
-        buffer(requestSubject.pipe(debounceTime(this.debounceTimeMs))),
+        buffer(requestSubject.pipe(debounceTime(graphqlOptions.batchDebounceTimeMs ?? this.defaultDebounceTimeMs))),
         map(requests => this.fireRequests(...requests))
       )
       .subscribe(this.bufferedResultStream);
   }
 
-  public queryImmediately<
+  public query<
+    THandler extends GraphQlQueryHandler<unknown, unknown>,
+    TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
+  >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
+    return requestOptions?.isolated === true
+      ? this.queryIsolated(request, requestOptions)
+      : this.queryDebounced(request, requestOptions);
+  }
+
+  private queryIsolated<
     THandler extends GraphQlQueryHandler<unknown, unknown>,
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
   >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
     return this.getResultFromMap(request, this.fireRequests({ request: request, options: requestOptions }));
   }
 
-  public queryDebounced<
+  private queryDebounced<
     THandler extends GraphQlQueryHandler<unknown, unknown>,
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
   >(request: RequestTypeForHandler<THandler>, requestOptions?: GraphQlRequestOptions): Observable<TResponse> {
@@ -96,17 +106,28 @@ export class GraphQlRequestService {
   ): Map<GraphQlRequest, Observable<GraphQlResult>> {
     const selectionMapByRequest = this.buildSelectionMultiMap(requests);
     const allSelectionMaps = Array.from(selectionMapByRequest.values());
-    const requestBuilder = new GraphQlRequestBuilder().withSelects(
-      ...allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat()
+    const allSelections = allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat();
+    const requestBuilder = new GraphQlRequestBuilder().withSelects(...allSelections);
+
+    const selectionToRequestStringMap = requestBuilder.buildSelectionToGqlRequestStringMap();
+
+    const requestStringToResponseMap = new Map(
+      uniq(Array.from(selectionToRequestStringMap.values())).map(requestString => [
+        requestString,
+        this.executeRequest(requestString, type, options)
+      ])
+    );
+
+    const selectionResponseMap = new Map(
+      allSelections.map(selection => [
+        selection,
+        requestStringToResponseMap.get(selectionToRequestStringMap.get(selection)!)!
+      ])
     );
 
     return this.buildResultMap(
       requests,
-      this.buildResponseGetter(
-        this.executeRequest(requestBuilder.build(), type, options),
-        requestBuilder,
-        selectionMapByRequest
-      )
+      this.buildResponseGetter(requestBuilder, selectionResponseMap, selectionMapByRequest)
     );
   }
 
@@ -202,22 +223,28 @@ export class GraphQlRequestService {
   }
 
   private buildResponseGetter(
-    response$: Observable<{ [key: string]: unknown }>,
     queryBuilder: GraphQlRequestBuilder,
+    selectionResponseMap: Map<GraphQlSelection, Observable<{ [key: string]: unknown }>>,
     selectionMultiMap: Map<GraphQlRequest, Map<unknown, GraphQlSelection>>
   ): ResponseGetter {
-    return request =>
-      response$.pipe(
+    return request => {
+      const requestSelectionsMap = selectionMultiMap.get(request)!;
+
+      return zip(
+        ...Array.from(requestSelectionsMap.values()).map(selection => selectionResponseMap.get(selection)!)
+      ).pipe(
+        map(selectionResponses => Object.assign({}, ...selectionResponses)),
         map(response =>
           this.convertResponseForRequest(
             request,
-            this.extractor.extractAll(selectionMultiMap.get(request)!, queryBuilder, response)
+            this.extractor.extractAll(requestSelectionsMap, queryBuilder, response)
           )
         ),
         mergeMap(convertedResponse =>
           convertedResponse instanceof Observable ? convertedResponse : of(convertedResponse)
         )
       );
+    };
   }
 
   private buildResultMap(

@@ -1,5 +1,6 @@
 import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
@@ -14,6 +15,7 @@ describe('topology data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model!: TopologyDataSourceModel;
   let lastEmittedQuery: unknown;
+  let lastEmittedQueryRequestOption: GraphQlRequestOptions | undefined;
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
@@ -30,7 +32,10 @@ describe('topology data source model', () => {
       specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)
     ];
     model.api = mockApi as ModelApi;
-    model.query$.subscribe(query => (lastEmittedQuery = query.buildRequest([])));
+    model.query$.subscribe(query => {
+      lastEmittedQuery = query.buildRequest([]);
+      lastEmittedQueryRequestOption = query.requestOptions;
+    });
     model.getData();
   });
 
@@ -77,5 +82,10 @@ describe('topology data source model', () => {
         }
       })
     ).toBe(true);
+
+    expect(lastEmittedQueryRequestOption).toEqual({
+      cacheability: GraphQlRequestCacheability.Cacheable,
+      isolated: true
+    });
   });
 });
