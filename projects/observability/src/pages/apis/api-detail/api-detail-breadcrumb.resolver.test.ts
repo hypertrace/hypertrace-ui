@@ -20,7 +20,7 @@ describe('Api detail breadcrumb resolver', () => {
     service: ApiDetailBreadcrumbResolver,
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn().mockReturnValue(
+        query: jest.fn().mockReturnValue(
           of({
             [entityTypeKey]: ObservabilityEntityType.Api,
             [entityIdKey]: 'test-id',
@@ -102,7 +102,7 @@ describe('Api detail breadcrumb resolver', () => {
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).queryImmediately).toHaveBeenCalledWith(
+    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
       expect.objectContaining({
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Api,
@@ -130,7 +130,7 @@ describe('Api detail breadcrumb resolver', () => {
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).queryImmediately).toHaveBeenCalledWith(
+    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
       expect.objectContaining({
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Api,
