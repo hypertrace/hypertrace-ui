@@ -9,13 +9,13 @@ import { isEmpty } from 'lodash-es';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
-      *ngIf="this.navigationParams"
+      *ngIf="this.navigationPath"
       class="ht-link"
-      [routerLink]="this.navigationParams[0]"
-      [queryParams]="this.navigationParams[1].queryParams"
-      [queryParamsHandling]="this.navigationParams[1].queryParamsHandling"
-      [skipLocationChange]="this.navigationParams[1].skipLocationChange"
-      [replaceUrl]="this.navigationParams[1].replaceUrl"
+      [routerLink]="this.navigationPath"
+      [queryParams]="this.navigationOptions?.queryParams"
+      [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"
+      [skipLocationChange]="this.navigationOptions?.skipLocationChange"
+      [replaceUrl]="this.navigationOptions?.replaceUrl"
     >
       <ng-content></ng-content>
     </a>
@@ -25,7 +25,8 @@ export class LinkComponent implements OnChanges {
   @Input()
   public url: string | undefined;
 
-  public navigationParams?: [NavigationPath, NavigationExtras];
+  public navigationPath?: NavigationPath;
+  public navigationOptions?: NavigationExtras;
 
   public constructor(private readonly navigationService: NavigationService) {}
 
@@ -35,7 +36,9 @@ export class LinkComponent implements OnChanges {
 
   private setNavigationParams(): void {
     if (!isEmpty(this.url)) {
-      this.navigationParams = this.navigationService.buildNavigationParams(this.url!);
+      const params = this.navigationService.buildNavigationParams(this.url!);
+      this.navigationPath = params.path;
+      this.navigationOptions = params.extras;
     }
   }
 }

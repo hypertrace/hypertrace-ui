@@ -28,16 +28,16 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue([
-            [
+          buildNavigationParams: jest.fn().mockReturnValue({
+            path: [
               '/external',
               {
                 url: 'http://test.hypertrace.ai',
                 navType: 'same_window'
               }
             ],
-            { skipLocationChange: true }
-          ])
+            extra: { skipLocationChange: true }
+          })
         })
       ]
     });
@@ -52,7 +52,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue([['test'], {}])
+          buildNavigationParams: jest.fn().mockReturnValue({path: ['test'], extra: {}})
         })
       ]
     });
@@ -67,7 +67,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue([['/test'], {}])
+          buildNavigationParams: jest.fn().mockReturnValue({path: ['/test'], extra: {}})
         })
       ]
     });

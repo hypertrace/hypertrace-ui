@@ -61,15 +61,9 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
-  public navigateToUrl(url: string): Observable<boolean> {
-    const navigationParams = this.buildNavigationParams(url)!;
-
-    return from(this.router.navigate([navigationParams[0]], navigationParams[1]));
-  }
-
-  public buildNavigationParams(url: string): [NavigationPath, NavigationExtras] | undefined {
+  public buildNavigationParams(url: string): {path: NavigationPath, extras?: NavigationExtras} {
     if (url === '') {
-      return undefined;
+      throw Error('Empty Url used for navigation');
     }
 
     return this.isExternalUrl(url) ? this.buildExternalNavigationParams(url) : this.buildInternalNavigationParams(url);
@@ -78,34 +72,35 @@ export class NavigationService {
   private buildExternalNavigationParams(
     url: string,
     navigationType: NavigationType = NavigationType.SameWindow
-  ): [NavigationPath, NavigationExtras] {
-    return [
-      [
+  ): {path: NavigationPath, extras?: NavigationExtras} {
+    return {
+      path: [
         '/external',
         {
           [ExternalNavigationParams.Url]: url,
           [ExternalNavigationParams.NavigationType]: navigationType
         }
       ],
+      extras:
       {
         skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
       }
-    ];
+    };
   }
 
   private buildInternalNavigationParams(
     url: string,
     navigationExtras?: InternalNavigationExtras
-  ): [NavigationPath, NavigationExtras] {
-    return [
-      url,
-      {
+  ): {path: NavigationPath, extras?: NavigationExtras} {
+    return {
+      path: url,
+      extras: {
         queryParams: navigationExtras?.queryParams ?? this.buildParamsForNavigation(),
         queryParamsHandling: navigationExtras?.queryParamsHandling,
         replaceUrl: navigationExtras?.replaceUrl,
         relativeTo: navigationExtras?.relativeTo
       }
-    ];
+    };
   }
 
   /**
@@ -133,7 +128,7 @@ export class NavigationService {
   ): Observable<boolean> {
     const params = this.buildExternalNavigationParams(url, navigationType);
 
-    return from(this.router.navigate(Array.isArray(params[0]) ? params[0] : [params[0]], params[1]));
+    return from(this.router.navigate(Array.isArray(params.path) ? params.path : [params.path], params.extras));
   }
 
   public buildParamsForNavigation(preserveParameters: string[] = []): QueryParamObject {

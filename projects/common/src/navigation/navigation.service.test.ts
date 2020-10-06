@@ -205,24 +205,24 @@ describe('Navigation Service', () => {
   });
 
   test('builds navigation Params correctly', () => {
-    expect(spectator.service.buildNavigationParams('https://www.google.com')).toEqual([
-      [
+    expect(spectator.service.buildNavigationParams('https://www.google.com')).toEqual({
+      path: [
         '/external',
         {
           url: 'https://www.google.com',
           navType: 'same_window'
         }
       ],
-      { skipLocationChange: true }
-    ]);
+      extras: { skipLocationChange: true }
+    });
 
-    expect(spectator.service.buildNavigationParams('/services')).toEqual([
-      '/services',
-      expect.objectContaining({
+    expect(spectator.service.buildNavigationParams('/services')).toEqual({
+      path: '/services',
+      extras: expect.objectContaining({
         // tslint:disable-next-line: no-null-keyword
         queryParams: { time: null },
         relativeTo: undefined
       })
-    ]);
+    });
   });
 });
