@@ -20,7 +20,7 @@ export class FilterChipService {
   public autocompleteFilters(attributes: FilterAttribute[], text: string = ''): IncompleteFilter[] {
     return attributes
       .filter(attribute => this.filterBuilderLookupService.isBuildableType(attribute.type))
-      .flatMap(attribute => this.autocompleteFilter(attribute, text))
+      .flatMap(attribute => this.toIncompleteFilters(attribute, text))
       .filter(incompleteFilter => this.filterMatchesUserText(text, incompleteFilter));
   }
 
@@ -46,7 +46,7 @@ export class FilterChipService {
     );
   }
 
-  private autocompleteFilter(attribute: FilterAttribute, text: string): IncompleteFilter[] {
+  private toIncompleteFilters(attribute: FilterAttribute, text: string): IncompleteFilter[] {
     const filterBuilder = this.filterBuilderLookupService.lookup(attribute.type);
 
     // Check for operator
@@ -55,17 +55,17 @@ export class FilterChipService {
 
     if (splitFilter === undefined) {
       // Unable to find operator
-      return this.autocompleteWithoutOperator(filterBuilder, attribute, text);
+      return this.toIncompleteFiltersWithoutOperator(filterBuilder, attribute, text);
     }
 
     // Operator found
 
     const filterParser = this.filterParserLookupService.lookup(splitFilter.operator);
 
-    return this.autocompleteWithOperator(filterBuilder, filterParser, splitFilter, attribute, text);
+    return this.toIncompleteFiltersWithOperator(filterBuilder, filterParser, splitFilter, attribute, text);
   }
 
-  private autocompleteWithoutOperator(
+  private toIncompleteFiltersWithoutOperator(
     filterBuilder: AbstractFilterBuilder<unknown>,
     attribute: FilterAttribute,
     text: string
@@ -99,7 +99,7 @@ export class FilterChipService {
     ];
   }
 
-  private autocompleteWithOperator(
+  private toIncompleteFiltersWithOperator(
     filterBuilder: AbstractFilterBuilder<unknown>,
     filterParser: AbstractFilterParser<unknown>,
     splitFilter: SplitFilter<FilterOperator>,
