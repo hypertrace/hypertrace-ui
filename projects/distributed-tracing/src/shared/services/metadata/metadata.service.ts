@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty, ReplayObservable } from '@hypertrace/common';
+import { FilterBuilderLookupService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, shareReplay, tap, throwIfEmpty } from 'rxjs/operators';
-import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
+import { AttributeMetadata, toFilterAttributeType } from '../../graphql/model/metadata/attribute-metadata';
 import {
   addAggregationToDisplayName,
   getAggregationDisplayName,
@@ -23,10 +24,23 @@ import {
 export class MetadataService {
   private attributes$?: Observable<AttributeMetadata[]>;
 
-  public constructor(private readonly graphqlQueryService: GraphQlRequestService) {}
+  public constructor(
+    private readonly graphqlQueryService: GraphQlRequestService,
+    private readonly filterBuilderLookupService: FilterBuilderLookupService
+  ) {}
 
   public getFilterAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
-    return this.getServerDefinedAttributes(scope);
+    return this.getServerDefinedAttributes(scope).pipe(
+      map(attributes =>
+        attributes.filter(attribute => {
+          try {
+            return this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type));
+          } catch {
+            return false;
+          }
+        })
+      )
+    );
   }
 
   public getSelectionAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
