@@ -1,6 +1,10 @@
 import { ActivatedRouteSnapshot, convertToParamMap } from '@angular/router';
-import { NavigationService } from '@hypertrace/common';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import {
+  ExternalNavigationPathParams,
+  ExternalNavigationWindowHandling,
+  NavigationService
+} from '../navigation/navigation.service';
 import { ExternalUrlNavigator } from './external-url-navigator';
 
 describe('External URL navigator', () => {
@@ -25,7 +29,9 @@ describe('External URL navigator', () => {
 
     // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
-      paramMap: convertToParamMap({ navType: 'new_window' })
+      paramMap: convertToParamMap({
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
+      })
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(2);
@@ -35,14 +41,17 @@ describe('External URL navigator', () => {
   test('navigates when a url is provided', () => {
     // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
-      paramMap: convertToParamMap({ url: 'https://www.google.com' })
+      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(1, 'https://www.google.com', '_self');
 
     // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
-      paramMap: convertToParamMap({ url: 'https://www.bing.com', navType: 'new_window' })
+      paramMap: convertToParamMap({
+        [ExternalNavigationPathParams.Url]: 'https://www.bing.com',
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
+      })
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(2, 'https://www.bing.com', undefined);
