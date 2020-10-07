@@ -31,6 +31,14 @@ export class FilterChipService {
       return isStringMatch;
     }
 
+    /*
+     * In most cases, the isStringMatch should be the only check that is needed, however this check fails for
+     * STRING_MAP types with an operator since the LHS includes a user entered key between the attribute name
+     * and the operator. We fix this by sending the full string through our parsing logic to see if we can pull
+     * the key value off the LHS and build a filter out of it. If so, its a valid match and we want to include
+     * it as an autocomplete option.
+     */
+
     const isCompleteFilter =
       this.filterParserLookupService
         .lookup(incompleteFilter.operator)
