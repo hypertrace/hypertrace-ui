@@ -15,10 +15,6 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
-  protected requiresNameParsing(operator: FilterOperator): boolean {
-    return operator === FilterOperator.ContainsKeyValue;
-  }
-
   public parseNameString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
     const splitLhs = this.splitLhs(attribute, splitFilter);
 

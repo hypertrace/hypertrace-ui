@@ -68,10 +68,6 @@ export abstract class AbstractFilterParser<TValue> {
       value: parsedValue
     };
   }
-
-  protected requiresNameParsing(_operator: FilterOperator): boolean {
-    return false;
-  }
 }
 
 export const splitFilterStringByOperator = <TOperator extends string>(
