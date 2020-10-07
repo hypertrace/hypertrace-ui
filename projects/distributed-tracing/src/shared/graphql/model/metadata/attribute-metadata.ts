@@ -13,7 +13,7 @@ export interface AttributeMetadata {
 }
 
 export const enum AttributeMetadataType {
-  // Duplicated for FilterType in filter-type.ts
+  // Duplicated for FilterAttributeType in filter-attribute-type.ts
   Boolean = 'BOOLEAN',
   String = 'STRING',
   Number = 'LONG',

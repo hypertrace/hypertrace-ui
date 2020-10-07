@@ -64,6 +64,9 @@ export * from './filtering/filter/filter-operators';
 export * from './filtering/filter/builder/filter-builder-injection-token';
 export * from './filtering/filter/parser/filter-parser-injection-token';
 
+// Filter Builder
+export * from './filtering/filter/builder/filter-builder-lookup.service';
+
 // Filter Bar
 export * from './filtering/filter-bar/filter-bar.module';
 export * from './filtering/filter-bar/filter-bar.component';
