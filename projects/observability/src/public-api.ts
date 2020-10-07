@@ -201,3 +201,6 @@ export * from './shared/components/utils/chart-tooltip/chart-tooltip-builder.ser
 export * from './shared/components/utils/chart-tooltip/chart-tooltip.module';
 export * from './shared/components/utils/svg/svg-util.service';
 export * from './shared/components/legend/legend.component';
+
+// Explorer service
+export * from './pages/explorer/explorer-service';
