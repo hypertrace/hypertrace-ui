@@ -39,12 +39,11 @@ export class FilterChipService {
      * it as an autocomplete option.
      */
 
-    const isCompleteFilter =
+    return (
       this.filterParserLookupService
         .lookup(incompleteFilter.operator)
-        .parseFilterString(incompleteFilter.metadata, incompleteFilter.userString) !== undefined;
-
-    return isCompleteFilter || isStringMatch;
+        .parseFilterString(incompleteFilter.metadata, incompleteFilter.userString) !== undefined
+    );
   }
 
   private autocompleteFilter(attribute: FilterAttribute, text: string): IncompleteFilter[] {
