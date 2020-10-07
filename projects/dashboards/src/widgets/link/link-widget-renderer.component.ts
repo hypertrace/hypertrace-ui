@@ -8,7 +8,7 @@ import { LinkWidgetModel } from './link-widget.model';
 @Component({
   selector: 'ht-link-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ht-link [url]="this.model.url">{{ this.getDisplayText() }}</ht-link> `
+  template: ` <ht-link [url]="this.model.url" class="link">{{ this.getDisplayText() }}</ht-link> `
 })
 export class LinkWidgetRendererComponent extends WidgetRenderer<LinkWidgetModel> {
   protected fetchData(): Observable<never> {
