@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty, ReplayObservable } from '@hypertrace/common';
-import { FilterAttributeType, FilterBuilderLookupService } from '@hypertrace/components';
+import { FilterBuilderLookupService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
