@@ -5,7 +5,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { AttributeMetadata, toFilterType } from '../../../graphql/model/metadata/attribute-metadata';
+import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -86,7 +86,7 @@ export class TableWidgetRendererComponent
       map((attributes: AttributeMetadata[]) =>
         attributes.map(attribute => ({
           ...attribute,
-          type: toFilterType(attribute.type)
+          type: toFilterAttributeType(attribute.type)
         }))
       )
     );

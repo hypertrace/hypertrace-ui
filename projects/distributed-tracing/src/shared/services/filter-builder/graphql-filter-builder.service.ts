@@ -48,6 +48,7 @@ export class GraphQlFilterBuilderService {
       case FilterAttributeType.Boolean:
       case FilterAttributeType.Number:
       case FilterAttributeType.String:
+      case FilterAttributeType.StringArray:
       case FilterAttributeType.StringMap:
       case FilterAttributeType.Timestamp:
         return value as GraphQlArgumentValue;
