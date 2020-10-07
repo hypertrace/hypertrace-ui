@@ -23,6 +23,7 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     switch (attribute.type) {
       case FilterAttributeType.StringMap:
         return this.parseStringMapValue(splitFilter.rhs);
+      case FilterAttributeType.StringArray: // Unsupported
       case FilterAttributeType.Number: // Unsupported
       case FilterAttributeType.Boolean: // Unsupported
       case FilterAttributeType.String: // Unsupported
