@@ -39,6 +39,7 @@ describe('Filter Chip service', () => {
               return new StringFilterBuilder();
             case FilterAttributeType.StringMap:
               return new StringMapFilterBuilder();
+            case FilterAttributeType.StringArray:
             case FilterAttributeType.Timestamp:
               return undefined;
             default:
