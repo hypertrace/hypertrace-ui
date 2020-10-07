@@ -27,7 +27,7 @@ export class FilterChipService {
   private filterMatchesUserText(text: string, incompleteFilter: IncompleteFilter): boolean {
     const isStringMatch = incompleteFilter.userString.toLowerCase().includes(text.trim().toLowerCase());
 
-    if (incompleteFilter.operator === undefined) {
+    if (isStringMatch || incompleteFilter.operator === undefined) {
       return isStringMatch;
     }
 
