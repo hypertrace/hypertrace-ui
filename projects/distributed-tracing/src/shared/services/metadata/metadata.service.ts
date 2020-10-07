@@ -33,15 +33,11 @@ export class MetadataService {
     return this.getServerDefinedAttributes(scope).pipe(
       map(attributes =>
         attributes.filter(attribute => {
-          let filterType: FilterAttributeType;
-
           try {
-            filterType = toFilterAttributeType(attribute.type);
+            return this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type));
           } catch {
             return false;
           }
-
-          return this.filterBuilderLookupService.isBuildableType(filterType);
         })
       )
     );
