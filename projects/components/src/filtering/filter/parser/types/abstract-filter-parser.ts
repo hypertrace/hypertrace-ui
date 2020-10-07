@@ -7,14 +7,14 @@ export abstract class AbstractFilterParser<TValue> {
   public abstract supportedAttributeTypes(): FilterAttributeType[];
   public abstract supportedOperators(): FilterOperator[];
 
-  protected abstract parseValueString(
+  public parseNameString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
+    return attribute.displayName.toLowerCase() !== splitFilter.lhs.toLowerCase() ? undefined : attribute.name;
+  }
+
+  public abstract parseValueString(
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
   ): TValue | undefined;
-
-  protected parseKeyString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
-    return attribute.displayName.toLowerCase() !== splitFilter.lhs.toLowerCase() ? undefined : attribute.name;
-  }
 
   public parseFilterString(attribute: FilterAttribute, filterString: string): ParsedFilter<TValue> | undefined {
     const splitFilter: SplitFilter<FilterOperator> | undefined = splitFilterStringByOperator(
@@ -23,7 +23,7 @@ export abstract class AbstractFilterParser<TValue> {
       true
     );
 
-    return splitFilter !== undefined ? this.parseSplitFilter(attribute, splitFilter) : undefined;
+    return splitFilter === undefined ? undefined : this.parseSplitFilter(attribute, splitFilter);
   }
 
   public parseUrlFilterString(attribute: FilterAttribute, urlFilterString: string): ParsedFilter<TValue> | undefined {
@@ -46,9 +46,9 @@ export abstract class AbstractFilterParser<TValue> {
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
   ): ParsedFilter<TValue> | undefined {
-    const parsedKey = this.parseKeyString(attribute, splitFilter);
+    const parsedName = this.parseNameString(attribute, splitFilter);
 
-    if (parsedKey === undefined) {
+    if (parsedName === undefined) {
       // Unable to parse attribute from lhs
       return undefined;
     }

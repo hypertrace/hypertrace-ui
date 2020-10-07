@@ -18,7 +18,7 @@ import { mergeMap } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { Filter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
-import { FilterService } from '../filter/filter.service';
+import { FilterUrlService } from '../filter/filter-url.service';
 
 @Component({
   selector: 'ht-filter-bar',
@@ -99,7 +99,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   public constructor(
     private readonly changeDetector: ChangeDetectorRef,
-    private readonly filterService: FilterService
+    private readonly filterUrlService: FilterUrlService
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -121,7 +121,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscribeToUrlFilterChanges(): void {
     this.subscription = this.attributeSubject$
-      .pipe(mergeMap(attributes => this.filterService.getUrlFiltersChanges$(attributes)))
+      .pipe(mergeMap(attributes => this.filterUrlService.getUrlFiltersChanges$(attributes)))
       .subscribe(filters => this.onFiltersChanged(filters, true, false));
   }
 
@@ -137,12 +137,12 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private readFromUrlFilters(): void {
-    const filters = this.filterService.getUrlFilters(this.attributes || []);
+    const filters = this.filterUrlService.getUrlFilters(this.attributes || []);
     this.onFiltersChanged(filters, true, false);
   }
 
   private writeToUrlFilter(): void {
-    this.filterService.setUrlFilters(this.internalFiltersSubject$.value);
+    this.filterUrlService.setUrlFilters(this.internalFiltersSubject$.value);
   }
 
   public onInputApply(filter: Filter): void {
