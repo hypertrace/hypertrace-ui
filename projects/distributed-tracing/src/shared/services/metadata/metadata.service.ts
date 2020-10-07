@@ -5,7 +5,7 @@ import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, shareReplay, tap, throwIfEmpty } from 'rxjs/operators';
-import { AttributeMetadata, toFilterType } from '../../graphql/model/metadata/attribute-metadata';
+import { AttributeMetadata, toFilterAttributeType } from '../../graphql/model/metadata/attribute-metadata';
 import {
   addAggregationToDisplayName,
   getAggregationDisplayName,
@@ -36,7 +36,7 @@ export class MetadataService {
           let filterType: FilterAttributeType;
 
           try {
-            filterType = toFilterType(attribute.type);
+            filterType = toFilterAttributeType(attribute.type);
           } catch {
             return false;
           }
