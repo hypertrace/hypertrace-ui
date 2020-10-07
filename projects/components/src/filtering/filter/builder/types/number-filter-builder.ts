@@ -3,7 +3,7 @@ import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
 export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]> {
-  private static readonly DELIMITER: string = ',';
+  private static readonly NUMBER_DELIMITER: string = ',';
 
   public supportedAttributeType(): FilterAttributeType {
     return FilterAttributeType.Number;
@@ -22,6 +22,6 @@ export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]
   }
 
   protected buildValueString(value: number | number[]): string {
-    return Array.isArray(value) ? String(value.join(`${NumberFilterBuilder.DELIMITER} `).trim()) : String(value);
+    return Array.isArray(value) ? String(value.join(`${NumberFilterBuilder.NUMBER_DELIMITER} `).trim()) : String(value);
   }
 }

@@ -16,7 +16,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
     return [FilterOperator.In];
   }
 
-  protected parseValueString(
+  public parseValueString(
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
   ): PossibleValuesTypes | undefined {
@@ -40,7 +40,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
 
   private parseNumberArrayValue(valueString: string): number[] | undefined {
     const array = valueString.split(InFilterParser.IN_DELIMITER).map(str => {
-      const val = Number(str.trim());
+      const val = str.trim() === '' ? NaN : Number(str.trim());
 
       return isNaN(val) ? undefined : val;
     });
