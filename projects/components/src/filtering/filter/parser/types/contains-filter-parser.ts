@@ -1,14 +1,12 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
-  private static readonly CONTAINS_LHS_DELIMITER: string = '.';
-  private static readonly CONTAINS_RHS_DELIMITER: string = ':';
-
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [FilterAttributeType.StringMap];
   }
@@ -51,7 +49,7 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     splitFilter: SplitFilter<FilterOperator>
   ): string[] | undefined {
     if (splitFilter.lhs === attribute.displayName) {
-      return splitFilter.rhs.split(ContainsFilterParser.CONTAINS_RHS_DELIMITER);
+      return splitFilter.rhs.split(MAP_RHS_DELIMITER);
     }
 
     const splitLhs = this.splitLhs(attribute, splitFilter);
@@ -64,13 +62,13 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
       return { displayName: attribute.displayName };
     }
 
-    const parts = splitFilter.lhs.split(ContainsFilterParser.CONTAINS_LHS_DELIMITER);
+    const parts = splitFilter.lhs.split(MAP_LHS_DELIMITER);
 
     return parts.length < 2
       ? undefined
       : {
           displayName: attribute.displayName,
-          key: parts.slice(1).join(ContainsFilterParser.CONTAINS_LHS_DELIMITER)
+          key: parts.slice(1).join(MAP_LHS_DELIMITER)
         };
   }
 }

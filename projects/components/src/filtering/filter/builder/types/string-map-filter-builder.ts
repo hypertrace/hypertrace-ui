@@ -1,13 +1,11 @@
 import { collapseWhitespace } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-export class StringMapFilterBuilder extends AbstractFilterBuilder<string | string[]> {
-  private static readonly STRING_MAP_LHS_DELIMITER: string = '.';
-  private static readonly STRING_MAP_RHS_DELIMITER: string = ':';
-
+export class StringMapFilterBuilder extends AbstractFilterBuilder<string | [string, string]> {
   public supportedAttributeType(): FilterAttributeType {
     return FilterAttributeType.StringMap;
   }
@@ -16,14 +14,14 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string | strin
     return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
-  protected buildValueString(value: string | string[]): string {
-    return Array.isArray(value) ? value.join(StringMapFilterBuilder.STRING_MAP_RHS_DELIMITER) : value;
+  protected buildValueString(value: string | [string, string]): string {
+    return Array.isArray(value) ? value.join(MAP_RHS_DELIMITER) : value;
   }
 
   public buildUserFilterString(
     attribute: FilterAttribute,
     operator?: FilterOperator,
-    value?: string | string[]
+    value?: string | [string, string]
   ): string {
     const lhs = this.buildUserFilterStringLhs(attribute, operator, value);
     const rhs = this.buildUserFilterStringRhs(operator, value);
@@ -34,18 +32,22 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string | strin
   private buildUserFilterStringLhs(
     attribute: FilterAttribute,
     operator?: FilterOperator,
-    value?: string | string[]
+    value?: string | [string, string]
   ): string {
     if (operator === FilterOperator.ContainsKey || operator === undefined || value === undefined) {
       return attribute.displayName;
     }
 
-    return `${attribute.displayName}${StringMapFilterBuilder.STRING_MAP_LHS_DELIMITER}${
-      Array.isArray(value) ? value[0] : value
-    }`;
+    return `${attribute.displayName}${MAP_LHS_DELIMITER}${Array.isArray(value) ? value[0] : value}`;
   }
 
   private buildUserFilterStringRhs(operator?: FilterOperator, value?: string | string[]): string {
-    return Array.isArray(value) ? value[operator === FilterOperator.ContainsKey ? 0 : 1] ?? '' : value ?? '';
+    return operator === FilterOperator.ContainsKey
+      ? Array.isArray(value)
+        ? value[0] ?? ''
+        : value ?? ''
+      : Array.isArray(value)
+      ? value[1] ?? ''
+      : value ?? '';
   }
 }

@@ -1,10 +1,9 @@
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { ARRAY_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
 export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]> {
-  private static readonly STRING_DELIMITER: string = ',';
-
   public supportedAttributeType(): FilterAttributeType {
     return FilterAttributeType.String;
   }
@@ -14,6 +13,6 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]
   }
 
   protected buildValueString(value: string | string[]): string {
-    return Array.isArray(value) ? value.join(`${StringFilterBuilder.STRING_DELIMITER} `).trim() : value;
+    return Array.isArray(value) ? value.join(`${ARRAY_DELIMITER} `).trim() : value;
   }
 }

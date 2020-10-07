@@ -1,13 +1,12 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { ARRAY_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
-  private static readonly IN_DELIMITER: string = ',';
-
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [FilterAttributeType.String, FilterAttributeType.Number];
   }
@@ -35,11 +34,11 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 
   private parseStringArrayValue(valueString: string): string[] {
-    return valueString.split(InFilterParser.IN_DELIMITER).map(str => str.trim());
+    return valueString.split(ARRAY_DELIMITER).map(str => str.trim());
   }
 
   private parseNumberArrayValue(valueString: string): number[] | undefined {
-    const array = valueString.split(InFilterParser.IN_DELIMITER).map(str => {
+    const array = valueString.split(ARRAY_DELIMITER).map(str => {
       const val = str.trim() === '' ? NaN : Number(str.trim());
 
       return isNaN(val) ? undefined : val;
