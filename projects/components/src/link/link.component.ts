@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
-import { NavigationPath, NavigationService } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
+import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-link',
@@ -23,7 +22,7 @@ import { isEmpty } from 'lodash-es';
 })
 export class LinkComponent implements OnChanges {
   @Input()
-  public url: string | undefined;
+  public paramsOrUrl?: NavigationParams | string;
 
   public navigationPath?: NavigationPath;
   public navigationOptions?: NavigationExtras;
@@ -35,10 +34,10 @@ export class LinkComponent implements OnChanges {
   }
 
   private setNavigationParams(): void {
-    if (!isEmpty(this.url)) {
-      const params = this.navigationService.buildNavigationParams(this.url!);
-      this.navigationPath = params.path;
-      this.navigationOptions = params.extras;
+    if (this.paramsOrUrl !== undefined) {
+      const { path, extras } = this.navigationService.buildNavigationParams(this.paramsOrUrl);
+      this.navigationPath = path;
+      this.navigationOptions = extras;
     }
   }
 }

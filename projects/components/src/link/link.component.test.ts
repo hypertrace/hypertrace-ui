@@ -14,9 +14,9 @@ describe('Link component', () => {
   });
 
   test('Link should not be displayed if url is undefined', () => {
-    spectator = createHost(`<ht-link [url]="url"></ht-link>`, {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       props: {
-        url: undefined
+        paramsOrUrl: undefined
       }
     });
 
@@ -24,9 +24,9 @@ describe('Link component', () => {
   });
 
   test('Link should navigate correctly to external URLs', () => {
-    spectator = createHost(`<ht-link [url]="url"></ht-link>`, {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        url: 'http://test.hypertrace.ai'
+        paramsOrUrl: 'http://test.hypertrace.ai'
       },
       providers: [
         mockProvider(NavigationService, {
@@ -62,9 +62,9 @@ describe('Link component', () => {
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
-    spectator = createHost(`<ht-link [url]="url"></ht-link>`, {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        url: 'test'
+        paramsOrUrl: 'test'
       },
       providers: [
         mockProvider(NavigationService, {
@@ -85,9 +85,9 @@ describe('Link component', () => {
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
-    spectator = createHost(`<ht-link [url]="url"></ht-link>`, {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        url: '/test'
+        paramsOrUrl: '/test'
       },
       providers: [
         mockProvider(NavigationService, {
