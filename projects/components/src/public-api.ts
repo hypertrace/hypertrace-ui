@@ -261,7 +261,3 @@ export { GreetingLabelComponent } from './greeting-label/greeting-label.componen
 export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
-
-// Filter builders
-export { NumberFilterBuilder } from './filtering/filter/builder/types/number-filter-builder';
-export { StringFilterBuilder } from './filtering/filter/builder/types/string-filter-builder';

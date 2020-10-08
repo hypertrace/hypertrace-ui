@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
 import { MetadataService, SPAN_SCOPE, toFilterAttributeType } from '@hypertrace/distributed-tracing';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ScopeQueryParam } from './explorer.component';
@@ -34,7 +34,7 @@ export class ExplorerService {
         )
     );
 
-    return combineLatest(filterStrings$).pipe(
+    return forkJoinSafeEmpty(filterStrings$).pipe(
       map(filterStrings => ({
         navType: NavigationParamsType.InApp,
         path: '/explorer',
