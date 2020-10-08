@@ -21,7 +21,7 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
     ];
   }
 
-  protected parseValueString(
+  public parseValueString(
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
   ): PossibleValuesTypes | undefined {
@@ -32,6 +32,7 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
         return this.parseNumberValue(splitFilter.rhs);
       case FilterAttributeType.String:
         return this.parseStringValue(splitFilter.rhs);
+      case FilterAttributeType.StringArray: // Unsupported
       case FilterAttributeType.StringMap: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
@@ -52,7 +53,7 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
   }
 
   private parseNumberValue(valueString: string): number | undefined {
-    const val = Number(valueString);
+    const val = valueString === '' ? NaN : Number(valueString);
 
     return isNaN(val) ? undefined : val;
   }

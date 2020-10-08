@@ -185,7 +185,7 @@ describe('Filter Builder Lookup service', () => {
       field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
       operator: FilterOperator.ContainsKeyValue,
       value: ['myKey', 'myValue'],
-      userString: 'String Map Attribute CONTAINS_KEY_VALUE myKey:myValue',
+      userString: 'String Map Attribute.myKey CONTAINS_KEY_VALUE myValue',
       urlString: 'stringMapAttribute_ckv_myKey%3AmyValue'
     });
   });

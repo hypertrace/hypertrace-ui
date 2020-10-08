@@ -5,7 +5,7 @@ import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterOperator } from '../filter/filter-operators';
-import { FilterService } from '../filter/filter.service';
+import { FilterUrlService } from '../filter/filter-url.service';
 import { FilterParserLookupService } from '../filter/parser/filter-parser-lookup.service';
 
 @Component({
@@ -52,7 +52,7 @@ export class InFilterButtonComponent implements OnChanges {
   public selected: Set<unknown> = new Set<unknown>();
 
   public constructor(
-    private readonly filterService: FilterService,
+    private readonly filterUrlService: FilterUrlService,
     private readonly filterBuilderLookupService: FilterBuilderLookupService,
     private readonly filterParserLookupService: FilterParserLookupService
   ) {}
@@ -72,7 +72,7 @@ export class InFilterButtonComponent implements OnChanges {
 
     this.selected.clear();
 
-    this.filterService.getUrlFilters([this.attribute]).forEach(filter => {
+    this.filterUrlService.getUrlFilters([this.attribute]).forEach(filter => {
       if (filter.value instanceof Array) {
         filter.value.forEach(value => this.selected.add(value));
       } else {
@@ -91,9 +91,9 @@ export class InFilterButtonComponent implements OnChanges {
       .buildFilter(this.attribute, FilterOperator.In, [...this.selected.values()].sort(sortUnknown));
 
     if (this.selected.size > 0) {
-      this.filterService.applyUrlFilter(this.metadata, filter);
+      this.filterUrlService.applyUrlFilter(this.metadata, filter);
     } else {
-      this.filterService.removeUrlFilter(this.metadata, filter);
+      this.filterUrlService.removeUrlFilter(this.metadata, filter);
     }
   }
 

@@ -4,7 +4,7 @@ import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { Filter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
-import { FilterService } from '../filter/filter.service';
+import { FilterUrlService } from '../filter/filter-url.service';
 
 @Component({
   selector: 'ht-filter-button',
@@ -53,7 +53,7 @@ export class FilterButtonComponent implements OnChanges {
   public availableFilters: Filter[] = [];
 
   public constructor(
-    private readonly filterService: FilterService,
+    private readonly filterUrlService: FilterUrlService,
     private readonly filterBuilderLookupService: FilterBuilderLookupService
   ) {}
 
@@ -67,6 +67,6 @@ export class FilterButtonComponent implements OnChanges {
   }
 
   public onFilterClick(filter: Filter): void {
-    this.filterService.applyUrlFilter(this.metadata || [], filter);
+    this.filterUrlService.applyUrlFilter(this.metadata || [], filter);
   }
 }

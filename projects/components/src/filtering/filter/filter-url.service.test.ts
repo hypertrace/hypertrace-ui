@@ -8,12 +8,12 @@ import { NumberFilterBuilder } from './builder/types/number-filter-builder';
 import { StringFilterBuilder } from './builder/types/string-filter-builder';
 import { Filter } from './filter';
 import { FilterOperator } from './filter-operators';
-import { FilterService } from './filter.service';
+import { FilterUrlService } from './filter-url.service';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
 import { ComparisonFilterParser } from './parser/types/comparison-filter-parser';
 
-describe('Filter service', () => {
-  let spectator: SpectatorService<FilterService>;
+describe('Filter URL service', () => {
+  let spectator: SpectatorService<FilterUrlService>;
   let navigationService: NavigationService;
 
   const attributes: FilterAttribute[] = [
@@ -35,7 +35,7 @@ describe('Filter service', () => {
   ];
 
   const buildService = createServiceFactory({
-    service: FilterService,
+    service: FilterUrlService,
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
@@ -85,66 +85,5 @@ describe('Filter service', () => {
     expect(navigationService.addQueryParametersToUrl).toHaveBeenCalledWith({
       filter: ['numberAttribute_gte_50', 'stringAttribute_neq_test']
     });
-  });
-
-  test('correctly finds matching filters with no user text', () => {
-    expect(spectator.service.autocompleteFilters(attributes)).toEqual([
-      {
-        metadata: attributes[0],
-        field: attributes[0].name,
-        userString: attributes[0].displayName
-      },
-      {
-        metadata: attributes[1],
-        field: attributes[1].name,
-        userString: attributes[1].displayName
-      }
-    ]);
-  });
-
-  test('correctly finds matching filters with partial user text', () => {
-    expect(spectator.service.autocompleteFilters(attributes, 'attr')).toEqual([
-      {
-        metadata: attributes[0],
-        field: attributes[0].name,
-        userString: attributes[0].displayName
-      },
-      {
-        metadata: attributes[1],
-        field: attributes[1].name,
-        userString: attributes[1].displayName
-      }
-    ]);
-
-    expect(spectator.service.autocompleteFilters(attributes, 'nu')).toEqual([
-      {
-        metadata: attributes[0],
-        field: attributes[0].name,
-        userString: attributes[0].displayName
-      }
-    ]);
-  });
-
-  test('correctly builds operator filters when field is matched', () => {
-    expect(spectator.service.autocompleteFilters(attributes, 'String Attribute')).toEqual([
-      {
-        metadata: attributes[1],
-        field: attributes[1].name,
-        operator: FilterOperator.Equals,
-        userString: `${attributes[1].displayName} ${FilterOperator.Equals}`
-      },
-      {
-        metadata: attributes[1],
-        field: attributes[1].name,
-        operator: FilterOperator.NotEquals,
-        userString: `${attributes[1].displayName} ${FilterOperator.NotEquals}`
-      },
-      {
-        metadata: attributes[1],
-        field: attributes[1].name,
-        operator: FilterOperator.In,
-        userString: `${attributes[1].displayName} ${FilterOperator.In}`
-      }
-    ]);
   });
 });

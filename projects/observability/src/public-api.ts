@@ -67,6 +67,7 @@ export * from './shared/components/donut/donut';
 export * from './pages/apis/backends/backend-list.module';
 export * from './pages/apis/backends/backend-list.component';
 export * from './pages/apis/services/service-list.component';
+export * from './pages/apis/services/services-list-dashboard';
 export * from './pages/apis/topology/application-flow.component';
 export * from './pages/apis/topology/application-flow.module';
 
