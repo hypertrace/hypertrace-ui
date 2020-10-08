@@ -31,8 +31,8 @@ describe('Explorer service', () => {
             groupable: false
           }
         : {
-            name: 'userIdentifier',
-            displayName: 'User ID',
+            name: 'status',
+            displayName: 'Status',
             units: '',
             type: AttributeMetadataType.String,
             scope: scope,
@@ -57,14 +57,14 @@ describe('Explorer service', () => {
     spectator.service
       .buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
         { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
-        { field: 'userIdentifier', operator: FilterOperator.Equals, value: 'test' }
+        { field: 'status', operator: FilterOperator.Equals, value: 404 }
       ])
       .subscribe(data =>
         expect(data).toEqual({
           navType: NavigationParamsType.InApp,
           path: '/explorer',
           queryParams: {
-            filter: ['duration_gt_200', 'userIdentifier_eq_test'],
+            filter: ['duration_gt_200', 'status_eq_test'],
             scope: ScopeQueryParam.EndpointTraces
           }
         })
