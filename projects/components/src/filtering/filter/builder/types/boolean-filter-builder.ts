@@ -1,29 +1,17 @@
-import { isBoolean } from 'lodash-es';
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { FilterBuilder } from '../filter-builder.decorator';
+import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-@FilterBuilder({
-  supportedAttributeTypes: [FilterAttributeType.Boolean],
-  supportedOperators: [FilterOperator.Equals, FilterOperator.NotEquals]
-})
 export class BooleanFilterBuilder extends AbstractFilterBuilder<boolean> {
-  public supportedAttributeTypes(): FilterAttributeType[] {
-    return BooleanFilterBuilder.supportedAttributeTypes;
+  public supportedAttributeType(): FilterAttributeType {
+    return FilterAttributeType.Boolean;
   }
 
   public supportedOperators(): FilterOperator[] {
-    return BooleanFilterBuilder.supportedOperators;
+    return [FilterOperator.Equals, FilterOperator.NotEquals];
   }
 
-  public convertStringToValue(value: string): boolean | undefined {
-    const val = Boolean(value);
-
-    return isBoolean(val) ? val : undefined;
-  }
-
-  public convertValueToString(value: boolean): string {
+  protected buildValueString(value: boolean): string {
     return String(value);
   }
 }

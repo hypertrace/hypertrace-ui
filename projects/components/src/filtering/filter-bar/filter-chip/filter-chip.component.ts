@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../../combo-box/combo-box-api';
-import { FilterAttribute } from '../filter-attribute';
-import { Filter } from './filter-api';
-import { FilterService, IncompleteFilter } from './filter.service';
+import { Filter, IncompleteFilter } from '../../filter/filter';
+import { FilterAttribute } from '../../filter/filter-attribute';
+import { FilterChipService } from './filter-chip.service';
 
 @Component({
-  selector: 'ht-filter',
-  styleUrls: ['./filter.component.scss'],
+  selector: 'ht-filter-chip',
+  styleUrls: ['./filter-chip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="filter">
@@ -27,7 +27,7 @@ import { FilterService, IncompleteFilter } from './filter.service';
     </div>
   `
 })
-export class FilterComponent implements OnInit, OnChanges {
+export class FilterChipComponent implements OnInit, OnChanges {
   @Input()
   public attributes?: FilterAttribute[];
 
@@ -46,7 +46,7 @@ export class FilterComponent implements OnInit, OnChanges {
   public text?: string;
   public options?: ComboBoxOption<IncompleteFilter>[];
 
-  public constructor(private readonly filterService: FilterService) {}
+  public constructor(private readonly filterChipService: FilterChipService) {}
 
   public ngOnInit(): void {
     this.onFilterChange();
@@ -93,7 +93,7 @@ export class FilterComponent implements OnInit, OnChanges {
   private setOptions(): ComboBoxOption<IncompleteFilter>[] {
     return !this.attributes
       ? []
-      : this.mapToComboBoxOptions(this.filterService.lookupAvailableMatchingFilters(this.attributes, this.text));
+      : this.mapToComboBoxOptions(this.filterChipService.autocompleteFilters(this.attributes, this.text));
   }
 
   private mapToComboBoxOptions(filters: IncompleteFilter[]): ComboBoxOption<IncompleteFilter>[] {

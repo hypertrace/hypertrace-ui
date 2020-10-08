@@ -1,3 +1,4 @@
+import { FilterBuilderLookupService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -40,6 +41,16 @@ describe('Metadata Service', () => {
       allowedAggregations: [],
       requiresAggregation: false,
       groupable: false
+    },
+    {
+      name: 'attr4',
+      displayName: 'Attribute 4',
+      units: '',
+      type: 'UNKNOWN_TYPE',
+      scope: SPAN_SCOPE,
+      allowedAggregations: [],
+      requiresAggregation: false,
+      groupable: false
     }
   ];
   const specBuilder = new SpecificationBuilder();
@@ -48,6 +59,10 @@ describe('Metadata Service', () => {
     providers: [
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValue(of(testAttributes))
+      }),
+      mockProvider(FilterBuilderLookupService, {
+        isBuildableType: (type: AttributeMetadataType) =>
+          type === AttributeMetadataType.String || type === AttributeMetadataType.Number
       })
     ]
   });
@@ -57,6 +72,7 @@ describe('Metadata Service', () => {
       expectObservable(observable).toBe('(x|)', { x: value });
     });
   };
+
   test('caches attribute response', () => {
     const spectator = createService();
     expectSingleValueObservable(spectator.service.getFilterAttributes('Scope1'), [testAttributes[0]]);
@@ -136,5 +152,14 @@ describe('Metadata Service', () => {
       })
     ]);
     expectSingleValueObservable(spectator.service.getGroupableAttributes(SPAN_SCOPE), []);
+  });
+
+  test('should only return filterable attributes', () => {
+    const spectator = createService();
+
+    expectSingleValueObservable(spectator.service.getFilterAttributes(SPAN_SCOPE), [
+      testAttributes[1],
+      testAttributes[2]
+    ]);
   });
 });

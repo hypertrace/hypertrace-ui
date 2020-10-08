@@ -1,26 +1,18 @@
-import { FilterOperator } from '../../filter-api';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { FilterBuilder } from '../filter-builder.decorator';
+import { ARRAY_DELIMITER } from '../../filter-delimiters';
+import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-@FilterBuilder({
-  supportedAttributeTypes: [FilterAttributeType.String],
-  supportedOperators: [FilterOperator.Equals, FilterOperator.NotEquals]
-})
-export class StringFilterBuilder extends AbstractFilterBuilder<string> {
-  public supportedAttributeTypes(): FilterAttributeType[] {
-    return StringFilterBuilder.supportedAttributeTypes;
+export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]> {
+  public supportedAttributeType(): FilterAttributeType {
+    return FilterAttributeType.String;
   }
 
   public supportedOperators(): FilterOperator[] {
-    return StringFilterBuilder.supportedOperators;
+    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In];
   }
 
-  public convertStringToValue(value: string): string | undefined {
-    return value;
-  }
-
-  public convertValueToString(value: string): string {
-    return value;
+  protected buildValueString(value: string | string[]): string {
+    return Array.isArray(value) ? value.join(`${ARRAY_DELIMITER} `).trim() : value;
   }
 }

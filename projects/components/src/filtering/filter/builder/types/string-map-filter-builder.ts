@@ -1,28 +1,53 @@
-import { FilterOperator } from '../../filter-api';
+import { collapseWhitespace } from '@hypertrace/common';
+import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { FilterBuilder } from '../filter-builder.decorator';
+import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER } from '../../filter-delimiters';
+import { FilterOperator } from '../../filter-operators';
 import { AbstractFilterBuilder } from './abstract-filter-builder';
 
-@FilterBuilder({
-  supportedAttributeTypes: [FilterAttributeType.StringMap],
-  supportedOperators: [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue]
-})
-export class StringMapFilterBuilder extends AbstractFilterBuilder<string[]> {
-  private static readonly DELIMITER: string = ':';
-
-  public supportedAttributeTypes(): FilterAttributeType[] {
-    return StringMapFilterBuilder.supportedAttributeTypes;
+export class StringMapFilterBuilder extends AbstractFilterBuilder<string | [string, string]> {
+  public supportedAttributeType(): FilterAttributeType {
+    return FilterAttributeType.StringMap;
   }
 
   public supportedOperators(): FilterOperator[] {
-    return StringMapFilterBuilder.supportedOperators;
+    return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
-  public convertStringToValue(value: string): string[] | undefined {
-    return value.split(StringMapFilterBuilder.DELIMITER);
+  protected buildValueString(value: string | [string, string]): string {
+    return Array.isArray(value) ? value.join(MAP_RHS_DELIMITER) : value;
   }
 
-  public convertValueToString(value: string[]): string {
-    return value.join(StringMapFilterBuilder.DELIMITER);
+  public buildUserFilterString(
+    attribute: FilterAttribute,
+    operator?: FilterOperator,
+    value?: string | [string, string]
+  ): string {
+    const lhs = this.buildUserFilterStringLhs(attribute, operator, value);
+    const rhs = this.buildUserFilterStringRhs(operator, value);
+
+    return collapseWhitespace(`${lhs} ${operator ?? ''} ${rhs}`).trim();
+  }
+
+  private buildUserFilterStringLhs(
+    attribute: FilterAttribute,
+    operator?: FilterOperator,
+    value?: string | [string, string]
+  ): string {
+    if (operator === FilterOperator.ContainsKey || operator === undefined || value === undefined) {
+      return attribute.displayName;
+    }
+
+    return `${attribute.displayName}${MAP_LHS_DELIMITER}${Array.isArray(value) ? value[0] : value}`;
+  }
+
+  private buildUserFilterStringRhs(operator?: FilterOperator, value?: string | string[]): string {
+    return operator === FilterOperator.ContainsKey
+      ? Array.isArray(value)
+        ? value[0] ?? ''
+        : value ?? ''
+      : Array.isArray(value)
+      ? value[1] ?? ''
+      : value ?? '';
   }
 }

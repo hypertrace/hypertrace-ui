@@ -151,27 +151,7 @@ describe('Navigation Service', () => {
   test('can do relative navigation', () => {
     router.navigate = jest.fn().mockResolvedValue(true);
     spectator.service.navigateWithinApp(['root']);
-    spectator.service.navigateWithinApp(['child'], {
-      preserveParameters: [],
-      relativeTo: spectator.service.getCurrentActivatedRoute()
-    });
-    expect(router.navigate).toHaveBeenLastCalledWith(
-      ['child'],
-      expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
-        relativeTo: spectator.service.getCurrentActivatedRoute()
-      })
-    );
-  });
-
-  test('can do relative navigation with default relativeTo if default param is specified', () => {
-    router.navigate = jest.fn().mockResolvedValue(true);
-    spectator.service.navigateWithinApp(['root']);
-    spectator.service.navigateWithinApp(['child'], {
-      preserveParameters: [],
-      useDefaultRelativeTo: true
-    });
+    spectator.service.navigateWithinApp(['child'], spectator.service.getCurrentActivatedRoute(), []);
     expect(router.navigate).toHaveBeenLastCalledWith(
       ['child'],
       expect.objectContaining({
@@ -191,16 +171,38 @@ describe('Navigation Service', () => {
 
   test('can route to an external URL', () => {
     router.navigate = jest.fn().mockResolvedValue(true);
-    spectator.service.navigateExternal('https://www.google.com');
+    spectator.service.navigate('https://www.google.com');
     expect(router.navigate).toHaveBeenCalledWith(
       [
         '/external',
         {
           url: 'https://www.google.com',
-          navType: 'same_window'
+          windowHandling: 'same_window'
         }
       ],
-      { skipLocationChange: true }
+      expect.objectContaining({ skipLocationChange: true })
     );
+  });
+
+  test('builds navigation Params correctly', () => {
+    expect(spectator.service.buildNavigationParams('https://www.google.com')).toEqual({
+      path: [
+        '/external',
+        {
+          url: 'https://www.google.com',
+          windowHandling: 'same_window'
+        }
+      ],
+      extras: { skipLocationChange: true }
+    });
+
+    expect(spectator.service.buildNavigationParams('/services')).toEqual({
+      path: '/services',
+      extras: expect.objectContaining({
+        // tslint:disable-next-line: no-null-keyword
+        queryParams: { time: null },
+        relativeTo: undefined
+      })
+    });
   });
 });

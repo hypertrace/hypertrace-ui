@@ -1,14 +1,4 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterAttribute } from './filter-attribute';
-
-export interface Filter<T> {
-  metadata: FilterAttribute;
-  field: string;
-  operator: FilterOperator;
-  value: T;
-  userString: string;
-  urlString: string;
-}
 
 export const enum FilterOperator {
   Equals = '=',
@@ -33,30 +23,6 @@ export const enum UrlFilterOperator {
   ContainsKey = '_ck_',
   ContainsKeyValue = '_ckv_'
 }
-
-export const USER_FILTER_OPERATORS: FilterOperator[] = [
-  FilterOperator.Equals,
-  FilterOperator.NotEquals,
-  FilterOperator.LessThan,
-  FilterOperator.LessThanOrEqualTo,
-  FilterOperator.GreaterThan,
-  FilterOperator.GreaterThanOrEqualTo,
-  FilterOperator.In,
-  FilterOperator.ContainsKey,
-  FilterOperator.ContainsKeyValue
-];
-
-export const URL_FILTER_OPERATORS: UrlFilterOperator[] = [
-  UrlFilterOperator.Equals,
-  UrlFilterOperator.NotEquals,
-  UrlFilterOperator.LessThan,
-  UrlFilterOperator.LessThanOrEqualTo,
-  UrlFilterOperator.GreaterThan,
-  UrlFilterOperator.GreaterThanOrEqualTo,
-  UrlFilterOperator.In,
-  UrlFilterOperator.ContainsKey,
-  UrlFilterOperator.ContainsKeyValue
-];
 
 export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator => {
   switch (operator) {

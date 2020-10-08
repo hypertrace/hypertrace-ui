@@ -1,6 +1,9 @@
-import { FilterAttribute, FilterType, InFilterButtonComponent } from '@hypertrace/components';
+import { FilterAttribute, FilterAttributeType, InFilterButtonComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { FilterButtonService } from './filter-button.service';
+import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
+import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
+import { FilterUrlService } from '../filter/filter-url.service';
+import { FilterParserLookupService } from '../filter/parser/filter-parser-lookup.service';
 
 describe('In Filter Button service', () => {
   const attributes: FilterAttribute[] = [
@@ -8,13 +11,13 @@ describe('In Filter Button service', () => {
       name: 'duration',
       displayName: 'Latency',
       units: 'ms',
-      type: FilterType.Number
+      type: FilterAttributeType.Number
     },
     {
       name: 'apiName',
       displayName: 'API Name',
       units: '',
-      type: FilterType.String
+      type: FilterAttributeType.String
     }
   ];
 
@@ -23,10 +26,14 @@ describe('In Filter Button service', () => {
     shallow: true,
     imports: [],
     providers: [
-      mockProvider(FilterButtonService, {
-        isSupportedOperator: () => true,
-        getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }],
-        buildFilter: (_attribute: FilterAttribute, value: unknown) => ({ value: value })
+      mockProvider(FilterUrlService, {
+        getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }]
+      }),
+      mockProvider(FilterBuilderLookupService, {
+        lookup: () => new NumberFilterBuilder()
+      }),
+      mockProvider(FilterParserLookupService, {
+        isParsableOperatorForType: () => true
       })
     ],
     declarations: [],
@@ -51,7 +58,7 @@ describe('In Filter Button service', () => {
     spectator.component.selected.add(2);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterButtonService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2]
@@ -77,7 +84,7 @@ describe('In Filter Button service', () => {
     spectator.component.onChecked(false, 5);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterButtonService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2, 8]
@@ -103,6 +110,6 @@ describe('In Filter Button service', () => {
     spectator.component.selected.delete(8);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterButtonService).removeUrlFilter).toHaveBeenCalled();
+    expect(spectator.inject(FilterUrlService).removeUrlFilter).toHaveBeenCalled();
   });
 });

@@ -1,45 +1,43 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NavigationService } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { NavigationExtras } from '@angular/router';
+import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-link',
   styleUrls: ['./link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a *ngIf="this.shouldShowLink" class="ht-link" (click)="this.navigateToUrl()">
+    <a
+      *ngIf="this.navigationPath"
+      class="ht-link"
+      [routerLink]="this.navigationPath"
+      [queryParams]="this.navigationOptions?.queryParams"
+      [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"
+      [skipLocationChange]="this.navigationOptions?.skipLocationChange"
+      [replaceUrl]="this.navigationOptions?.replaceUrl"
+    >
       <ng-content></ng-content>
     </a>
   `
 })
-export class LinkComponent {
+export class LinkComponent implements OnChanges {
   @Input()
-  public url: string | undefined;
+  public paramsOrUrl?: NavigationParams | string;
 
-  /**
-   * Returns true if URL is defined and not an empty string
-   */
-  public get shouldShowLink(): boolean {
-    return !isEmpty(this.url);
-  }
-
-  /**
-   * Navigate to the URL relatively or absolutely based on the
-   * pattern of the URL
-   */
-  public navigateToUrl(): void {
-    const url = this.url ?? '';
-
-    if (url === '') {
-      return;
-    }
-
-    if (this.navigationService.isExternalUrl(url)) {
-      this.navigationService.navigateExternal(url);
-    } else {
-      this.navigationService.navigateWithinApp(url);
-    }
-  }
+  public navigationPath?: NavigationPath;
+  public navigationOptions?: NavigationExtras;
 
   public constructor(private readonly navigationService: NavigationService) {}
+
+  public ngOnChanges(): void {
+    this.setNavigationParams();
+  }
+
+  private setNavigationParams(): void {
+    if (this.paramsOrUrl !== undefined) {
+      const { path, extras } = this.navigationService.buildNavigationParams(this.paramsOrUrl);
+      this.navigationPath = path;
+      this.navigationOptions = extras;
+    }
+  }
 }

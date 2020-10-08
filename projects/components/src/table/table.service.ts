@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
-import { FilterAttribute } from '../filtering/filter-bar/filter-attribute';
-import { FilterType } from '../filtering/filter-bar/filter-type';
+import { FilterAttribute } from '../filtering/filter/filter-attribute';
+import { FilterAttributeType } from '../filtering/filter/filter-attribute-type';
 import { TableCellParserBase } from './cells/table-cell-parser-base';
 import { TableCellParserLookupService } from './cells/table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
@@ -23,7 +23,7 @@ export class TableService {
   private static readonly STATE_ATTRIBUTE: FilterAttribute = {
     name: '$$state',
     displayName: 'Row State',
-    type: '$$state' as FilterType
+    type: '$$state' as FilterAttributeType
   };
 
   public constructor(

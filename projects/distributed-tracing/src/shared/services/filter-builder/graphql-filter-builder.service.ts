@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
-import { Filter, FilterType, UserFilterOperator } from '@hypertrace/components';
+import { Filter, FilterAttributeType, FilterOperator } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
@@ -18,38 +18,39 @@ export class GraphQlFilterBuilderService {
     );
   }
 
-  private toGraphQlOperator(operator: UserFilterOperator): GraphQlOperatorType {
+  private toGraphQlOperator(operator: FilterOperator): GraphQlOperatorType {
     switch (operator) {
-      case UserFilterOperator.Equals:
+      case FilterOperator.Equals:
         return GraphQlOperatorType.Equals;
-      case UserFilterOperator.NotEquals:
+      case FilterOperator.NotEquals:
         return GraphQlOperatorType.NotEquals;
-      case UserFilterOperator.LessThan:
+      case FilterOperator.LessThan:
         return GraphQlOperatorType.LessThan;
-      case UserFilterOperator.LessThanOrEqualTo:
+      case FilterOperator.LessThanOrEqualTo:
         return GraphQlOperatorType.LessThanOrEqualTo;
-      case UserFilterOperator.GreaterThan:
+      case FilterOperator.GreaterThan:
         return GraphQlOperatorType.GreaterThan;
-      case UserFilterOperator.GreaterThanOrEqualTo:
+      case FilterOperator.GreaterThanOrEqualTo:
         return GraphQlOperatorType.GreaterThanOrEqualTo;
-      case UserFilterOperator.In:
+      case FilterOperator.In:
         return GraphQlOperatorType.In;
-      case UserFilterOperator.ContainsKey:
+      case FilterOperator.ContainsKey:
         return GraphQlOperatorType.ContainsKey;
-      case UserFilterOperator.ContainsKeyValue:
+      case FilterOperator.ContainsKeyValue:
         return GraphQlOperatorType.ContainsKeyValue;
       default:
         return assertUnreachable(operator);
     }
   }
 
-  private toGraphQlArgumentValue(type: FilterType, value: unknown): GraphQlArgumentValue {
+  private toGraphQlArgumentValue(type: FilterAttributeType, value: unknown): GraphQlArgumentValue {
     switch (type) {
-      case FilterType.Boolean:
-      case FilterType.Number:
-      case FilterType.String:
-      case FilterType.StringMap:
-      case FilterType.Timestamp:
+      case FilterAttributeType.Boolean:
+      case FilterAttributeType.Number:
+      case FilterAttributeType.String:
+      case FilterAttributeType.StringArray:
+      case FilterAttributeType.StringMap:
+      case FilterAttributeType.Timestamp:
         return value as GraphQlArgumentValue;
       default:
         return assertUnreachable(type);

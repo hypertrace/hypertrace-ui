@@ -5,6 +5,7 @@ import {
   ActivatedRouteSnapshot,
   Event,
   NavigationEnd,
+  NavigationExtras,
   ParamMap,
   Params,
   Router,
@@ -38,17 +39,21 @@ export class NavigationService {
   }
 
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
-    return this.navigateInternal([], {
+    return this.navigate({
+      navType: NavigationParamsType.InApp,
+      path: [],
       queryParams: newParams,
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      replaceCurrentHistory: true
     });
   }
 
   public replaceQueryParametersInUrl(newParams: QueryParamObject): Observable<boolean> {
-    return this.navigateInternal([], {
+    return this.navigate({
+      navType: NavigationParamsType.InApp,
+      path: [],
       queryParams: newParams,
-      replaceUrl: true
+      replaceCurrentHistory: true
     });
   }
 
@@ -60,46 +65,57 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
+  public buildNavigationParams(
+    paramsOrUrl: NavigationParams | string
+  ): { path: NavigationPath; extras?: NavigationExtras } {
+    const params = typeof paramsOrUrl === 'string' ? this.convertUrlToNavParams(paramsOrUrl) : paramsOrUrl;
+
+    if (params.navType === NavigationParamsType.External) {
+      // External
+      return {
+        path: [
+          '/external',
+          {
+            [ExternalNavigationPathParams.Url]: params.url,
+            [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
+          }
+        ],
+        extras: {
+          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
+        }
+      };
+    }
+
+    // In App
+    return {
+      path: params.path,
+      extras: {
+        queryParams: params?.queryParams ?? this.buildQueryParam(),
+        queryParamsHandling: params?.queryParamsHandling,
+        replaceUrl: params?.replaceCurrentHistory,
+        relativeTo: params?.relativeTo
+      }
+    };
+  }
+
   /**
    * Navigate within the app.
    * To be used for URLs with pattern '/partial_path' or 'partial_path'
    */
-  public navigateWithinApp(path: NavigationPath, navigationExtras?: WithinAppNavigationExtras): Observable<boolean> {
-    const params: InternalNavigationExtras = {
-      queryParams: this.buildParamsForNavigation(navigationExtras?.preserveParameters ?? []),
-      relativeTo: navigationExtras?.useDefaultRelativeTo
-        ? this.getCurrentActivatedRoute()
-        : navigationExtras?.relativeTo
-    };
-
-    return this.navigateInternal(path, params);
-  }
-
-  /**
-   * Navigate to an external URL.
-   * URL should be of the form 'https://url' or 'http://url'
-   */
-  public navigateExternal(
-    url: string,
-    navigationType: NavigationType = NavigationType.SameWindow
+  public navigateWithinApp(
+    path: NavigationPath,
+    relativeTo?: ActivatedRoute,
+    preserveParameters?: string[]
   ): Observable<boolean> {
-    return from(
-      this.router.navigate(
-        [
-          '/external',
-          {
-            [ExternalNavigationParams.Url]: url,
-            [ExternalNavigationParams.NavigationType]: navigationType
-          }
-        ],
-        {
-          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
-        }
-      )
-    );
+    return this.navigate({
+      navType: NavigationParamsType.InApp,
+      path: path,
+      queryParams: this.buildQueryParam(preserveParameters ?? []),
+      relativeTo: relativeTo
+    });
   }
 
-  public buildParamsForNavigation(preserveParameters: string[] = []): QueryParamObject {
+  private buildQueryParam(preserveParameters: string[] = []): QueryParamObject {
     return ['time', ...preserveParameters].reduce<Params>(
       (paramObj, param) => ({
         ...paramObj,
@@ -107,6 +123,31 @@ export class NavigationService {
       }),
       {}
     );
+  }
+
+  public navigate(paramsOrUrl: NavigationParams | string): Observable<boolean> {
+    const { path, extras } = this.buildNavigationParams(paramsOrUrl);
+
+    return from(this.router.navigate(Array.isArray(path) ? path : [path], extras));
+  }
+
+  public convertUrlToNavParams(url: string): NavigationParams {
+    if (url === '') {
+      throw Error('Empty Url used for navigation');
+    }
+
+    if (this.isExternalUrl(url)) {
+      return {
+        navType: NavigationParamsType.External,
+        url: url,
+        windowHandling: ExternalNavigationWindowHandling.SameWindow
+      };
+    }
+
+    return {
+      navType: NavigationParamsType.InApp,
+      path: url
+    };
   }
 
   public getCurrentActivatedRoute(): ActivatedRoute {
@@ -195,23 +236,20 @@ export class NavigationService {
     return !this.isFirstNavigation;
   }
 
-  public navigateToErrorPage(replaceUrl: boolean = true): Observable<boolean> {
-    return this.navigateInternal(['error'], { replaceUrl: replaceUrl });
+  public navigateToErrorPage(replaceCurrentHistory: boolean = true): Observable<boolean> {
+    return this.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['error'],
+      replaceCurrentHistory: replaceCurrentHistory
+    });
   }
 
-  public navigateToHome(replaceUrl: boolean = true): Observable<boolean> {
-    return this.navigateInternal(['/'], { replaceUrl: replaceUrl });
-  }
-
-  private navigateInternal(path: NavigationPath, navigationExtras: InternalNavigationExtras): Observable<boolean> {
-    return from(
-      this.router.navigate(Array.isArray(path) ? path : [path], {
-        queryParams: navigationExtras.queryParams || this.buildParamsForNavigation(),
-        queryParamsHandling: navigationExtras.queryParamsHandling,
-        replaceUrl: navigationExtras.replaceUrl,
-        relativeTo: navigationExtras.relativeTo
-      })
-    );
+  public navigateToHome(replaceCurrentHistory: boolean = true): Observable<boolean> {
+    return this.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['/'],
+      replaceCurrentHistory: replaceCurrentHistory
+    });
   }
 
   private findRouteConfig(path: string[], routes: TraceRoute[]): TraceRoute | undefined {
@@ -256,27 +294,36 @@ export interface QueryParamObject extends Params {
   [key: string]: string | string[] | number | number[] | undefined;
 }
 
-interface InternalNavigationExtras {
-  replaceUrl?: boolean;
+export type NavigationPath = string | (string | Dictionary<string>)[];
+
+export type NavigationParams = InAppNavigationParams | ExternalNavigationParamsNew;
+export interface InAppNavigationParams {
+  navType: NavigationParamsType.InApp;
+  path: NavigationPath;
+  replaceCurrentHistory?: boolean;
   queryParams?: QueryParamObject;
-  queryParamsHandling?: 'merge';
+  queryParamsHandling?: 'merge' | 'preserve';
   relativeTo?: ActivatedRoute;
 }
 
-interface WithinAppNavigationExtras {
-  preserveParameters?: string[];
-  relativeTo?: ActivatedRoute;
-  useDefaultRelativeTo?: boolean;
+export interface ExternalNavigationParamsNew {
+  navType: NavigationParamsType.External;
+  url: string;
+  windowHandling: ExternalNavigationWindowHandling; // Currently an enum called NavigationType
+  queryParams?: QueryParamObject;
 }
 
-export const enum ExternalNavigationParams {
+export const enum ExternalNavigationPathParams {
   Url = 'url',
-  NavigationType = 'navType'
+  WindowHandling = 'windowHandling'
 }
 
-export const enum NavigationType {
+export const enum ExternalNavigationWindowHandling {
   SameWindow = 'same_window',
   NewWindow = 'new_window'
 }
 
-export type NavigationPath = string | (string | Dictionary<string>)[];
+export const enum NavigationParamsType {
+  InApp = 'in-app',
+  External = 'external'
+}

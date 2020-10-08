@@ -2,6 +2,7 @@
  * Public API Surface of test-utils
  */
 
+export { getTestFilterAttribute } from './attributes/attributes';
 export { getMockFlexLayoutProviders } from './flex/flex';
 export { patchRouterNavigateForTest } from './router/router';
 export { runFakeRxjs, recordObservable, expectSingleEmissisonFromCallback } from './rxjs/rxjs';

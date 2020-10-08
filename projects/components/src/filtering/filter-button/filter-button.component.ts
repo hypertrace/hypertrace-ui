@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../../icon/icon-size';
-import { FilterAttribute } from '../filter-bar/filter-attribute';
-import { Filter } from '../filter-bar/filter/filter-api';
-import { FilterButtonService } from './filter-button.service';
+import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
+import { Filter } from '../filter/filter';
+import { FilterAttribute } from '../filter/filter-attribute';
+import { FilterUrlService } from '../filter/filter-url.service';
 
 @Component({
   selector: 'ht-filter-button',
@@ -36,7 +37,7 @@ import { FilterButtonService } from './filter-button.service';
     </div>
   `
 })
-export class FilterButtonComponent<T = unknown> implements OnChanges {
+export class FilterButtonComponent implements OnChanges {
   @Input()
   public metadata?: FilterAttribute[];
 
@@ -44,21 +45,28 @@ export class FilterButtonComponent<T = unknown> implements OnChanges {
   public attribute?: FilterAttribute;
 
   @Input()
-  public value?: T;
+  public value?: unknown;
 
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
   public availableFilters: Filter[] = [];
 
-  public constructor(private readonly filterButtonService: FilterButtonService) {}
+  public constructor(
+    private readonly filterUrlService: FilterUrlService,
+    private readonly filterBuilderLookupService: FilterBuilderLookupService
+  ) {}
 
   public ngOnChanges(): void {
     this.availableFilters =
-      this.attribute !== undefined ? this.filterButtonService.buildAvailableFilters(this.attribute, this.value) : [];
+      this.attribute !== undefined && this.value !== undefined
+        ? this.filterBuilderLookupService
+            .lookup(this.attribute.type)
+            .buildFiltersForSupportedOperators(this.attribute, this.value)
+        : [];
   }
 
   public onFilterClick(filter: Filter): void {
-    this.filterButtonService.applyUrlFilter(this.metadata || [], filter);
+    this.filterUrlService.applyUrlFilter(this.metadata || [], filter);
   }
 }
