@@ -16,14 +16,14 @@ export class WaterfallChartService {
     private readonly iconLookupService: TracingIconLookupService
   ) {
     this.colorService.registerColorPalette(WaterfallChartService.SEQUENCE_COLORS, [
-      '#0053D7',
+      Color.Blue5,
       Color.Blue3,
-      '#272C2E',
+      Color.Gray7,
       '#B7C0C2',
-      '#FB8B24',
-      '#FDC088',
-      '#94209F',
-      '#E295E9'
+      Color.Orange5,
+      Color.Orange3,
+      Color.Purple5,
+      Color.Purple3
     ]);
   }
 
