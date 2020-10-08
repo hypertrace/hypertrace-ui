@@ -230,7 +230,7 @@ export class ApiOverviewComponent {
                 type: 'series',
                 name: 'p99',
                 'visualization-type': 'line',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -244,7 +244,7 @@ export class ApiOverviewComponent {
                 type: 'series',
                 name: 'p50',
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -259,7 +259,7 @@ export class ApiOverviewComponent {
                 name: 'Errors',
                 'visualization-type': 'line',
                 hide: true,
-                color: '#fd5138',
+                color: Color.Red5,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -307,7 +307,7 @@ export class ApiOverviewComponent {
                 type: 'series',
                 name: 'Errors',
                 'visualization-type': 'line',
-                color: '#fd5138',
+                color: Color.Red5,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -321,7 +321,7 @@ export class ApiOverviewComponent {
                 type: 'series',
                 name: 'p99 Latency',
                 'visualization-type': 'line',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 hide: true,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
@@ -337,7 +337,7 @@ export class ApiOverviewComponent {
                 name: 'p50 Latency',
                 hide: true,
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -400,7 +400,7 @@ export class ApiOverviewComponent {
                 name: 'p99 Latency',
                 hide: true,
                 'visualization-type': 'line',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -415,7 +415,7 @@ export class ApiOverviewComponent {
                 name: 'p50 Latency',
                 hide: true,
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
@@ -430,7 +430,7 @@ export class ApiOverviewComponent {
                 name: 'Errors',
                 'visualization-type': 'line',
                 hide: true,
-                color: '#fd5138',
+                color: Color.Red5,
                 data: {
                   type: 'entity-metric-timeseries-data-source',
                   metric: {
