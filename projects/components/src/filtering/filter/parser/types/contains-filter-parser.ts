@@ -15,6 +15,10 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyValue];
   }
 
+  public conflictingOperators(): FilterOperator[] {
+    return [];
+  }
+
   public parseNameString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
     const splitLhs = this.splitLhs(attribute, splitFilter);
 

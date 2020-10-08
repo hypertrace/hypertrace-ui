@@ -15,6 +15,10 @@ export abstract class AbstractFilterBuilder<TValue> {
   }
 
   public buildFilter(attribute: FilterAttribute, operator: FilterOperator, value: TValue): Filter<TValue> {
+    if (!this.supportedOperators().includes(operator)) {
+      throw Error(`Operator '${operator}' not supported for filter attribute type '${attribute.type}'`);
+    }
+
     return {
       metadata: attribute,
       field: attribute.name,

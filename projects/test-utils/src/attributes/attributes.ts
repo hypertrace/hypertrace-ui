@@ -29,6 +29,15 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
     }
   ],
   [
+    FilterAttributeType.StringArray,
+    {
+      name: 'stringArrayAttribute',
+      displayName: 'String Array Attribute',
+      units: '',
+      type: FilterAttributeType.StringArray
+    }
+  ],
+  [
     FilterAttributeType.StringMap,
     {
       name: 'stringMapAttribute',
@@ -49,3 +58,4 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
 ]);
 
 export const getTestFilterAttribute = (type: FilterAttributeType) => filterAttributeMap.get(type)!;
+export const getAllTestFilterAttributes = () => Array.from(filterAttributeMap.values());

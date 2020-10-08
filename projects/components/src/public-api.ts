@@ -66,6 +66,10 @@ export * from './filtering/filter/parser/filter-parser-injection-token';
 
 // Filter Builder
 export * from './filtering/filter/builder/filter-builder-lookup.service';
+export * from './filtering/filter/builder/types/boolean-filter-builder';
+export * from './filtering/filter/builder/types/number-filter-builder';
+export * from './filtering/filter/builder/types/string-filter-builder';
+export * from './filtering/filter/builder/types/string-map-filter-builder';
 
 // Filter Bar
 export * from './filtering/filter-bar/filter-bar.module';
@@ -75,6 +79,12 @@ export * from './filtering/filter-bar/filter-bar.component';
 export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
 export * from './filtering/filter-button/in-filter-button.component';
+
+// Filter Parser
+export * from './filtering/filter/parser/filter-parser-lookup.service';
+export * from './filtering/filter/parser/types/comparison-filter-parser';
+export * from './filtering/filter/parser/types/contains-filter-parser';
+export * from './filtering/filter/parser/types/in-filter-parser';
 
 // Header
 export * from './header/application/application-header.component';

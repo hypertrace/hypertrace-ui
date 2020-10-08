@@ -3,7 +3,7 @@ import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
-import { Filter } from './filter';
+import { Filter, IncompleteFilter } from './filter';
 import { FilterAttribute } from './filter-attribute';
 import { fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
@@ -38,22 +38,30 @@ export class FilterUrlService {
     });
   }
 
-  public applyUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    const filters = this.getUrlFilters(attributes);
+  public addUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
+    const filterParser = this.filterParserLookupService.lookup(filter.operator);
 
-    const foundIndex = filters.findIndex(f => filter.field === f.field);
+    const urlFilters = this.getUrlFilters(attributes);
+    const otherFilters = urlFilters.filter(f => f.field !== filter.field);
 
-    if (foundIndex !== -1) {
-      filters[foundIndex] = filter;
-    } else {
-      filters.push(filter);
-    }
+    const remainingFiltersForAttribute = urlFilters
+      .filter(f => f.field === filter.field)
+      .filter(f => !filterParser.conflictingOperators(filter.operator).includes(f.operator));
 
-    this.setUrlFilters([...filters]);
+    this.setUrlFilters([...otherFilters, ...remainingFiltersForAttribute, filter]);
   }
 
-  public removeUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    this.setUrlFilters([...this.getUrlFilters(attributes).filter(f => filter.field !== f.field)]);
+  public removeUrlFilter(attributes: FilterAttribute[], filter: IncompleteFilter): void {
+    const urlFilters = this.getUrlFilters(attributes);
+    const remainingFilters = urlFilters.filter(f => {
+      const matchField = f.field === filter.field;
+      const matchOperator = filter.operator === undefined || f.operator === filter.operator;
+      const matchValue = filter.value === undefined || f.value === filter.value;
+
+      return !(matchField && matchOperator && matchValue);
+    });
+
+    this.setUrlFilters([...remainingFilters]);
   }
 
   private parseUrlFilterString(attributes: FilterAttribute[], filterString: string): Filter | undefined {

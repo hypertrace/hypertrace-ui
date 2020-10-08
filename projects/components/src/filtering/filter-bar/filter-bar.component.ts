@@ -225,6 +225,8 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private findFilter(filter: Filter): number {
-    return this.internalFiltersSubject$.value.findIndex(f => f.field === filter.field);
+    return this.internalFiltersSubject$.value.findIndex(
+      f => f.field === filter.field && f.operator === filter.operator && f.value === filter.value
+    );
   }
 }
