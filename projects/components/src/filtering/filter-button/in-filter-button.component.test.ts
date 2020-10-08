@@ -2,7 +2,7 @@ import { FilterAttribute, FilterAttributeType, InFilterButtonComponent } from '@
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
-import { FilterService } from '../filter/filter.service';
+import { FilterUrlService } from '../filter/filter-url.service';
 import { FilterParserLookupService } from '../filter/parser/filter-parser-lookup.service';
 
 describe('In Filter Button service', () => {
@@ -26,7 +26,7 @@ describe('In Filter Button service', () => {
     shallow: true,
     imports: [],
     providers: [
-      mockProvider(FilterService, {
+      mockProvider(FilterUrlService, {
         getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }]
       }),
       mockProvider(FilterBuilderLookupService, {
@@ -58,7 +58,7 @@ describe('In Filter Button service', () => {
     spectator.component.selected.add(2);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2]
@@ -84,7 +84,7 @@ describe('In Filter Button service', () => {
     spectator.component.onChecked(false, 5);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2, 8]
@@ -110,6 +110,6 @@ describe('In Filter Button service', () => {
     spectator.component.selected.delete(8);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterService).removeUrlFilter).toHaveBeenCalled();
+    expect(spectator.inject(FilterUrlService).removeUrlFilter).toHaveBeenCalled();
   });
 });

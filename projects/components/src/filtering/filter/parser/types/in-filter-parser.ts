@@ -1,13 +1,12 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
+import { ARRAY_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
-  private static readonly IN_DELIMITER: string = ',';
-
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [FilterAttributeType.String, FilterAttributeType.Number];
   }
@@ -16,7 +15,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
     return [FilterOperator.In];
   }
 
-  protected parseValueString(
+  public parseValueString(
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
   ): PossibleValuesTypes | undefined {
@@ -26,6 +25,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
       case FilterAttributeType.Number:
         return this.parseNumberArrayValue(splitFilter.rhs);
       case FilterAttributeType.Boolean: // Unsupported
+      case FilterAttributeType.StringArray: // Unsupported
       case FilterAttributeType.StringMap: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
@@ -35,12 +35,12 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 
   private parseStringArrayValue(valueString: string): string[] {
-    return valueString.split(InFilterParser.IN_DELIMITER).map(str => str.trim());
+    return valueString.split(ARRAY_DELIMITER).map(str => str.trim());
   }
 
   private parseNumberArrayValue(valueString: string): number[] | undefined {
-    const array = valueString.split(InFilterParser.IN_DELIMITER).map(str => {
-      const val = Number(str.trim());
+    const array = valueString.split(ARRAY_DELIMITER).map(str => {
+      const val = str.trim() === '' ? NaN : Number(str.trim());
 
       return isNaN(val) ? undefined : val;
     });

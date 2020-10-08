@@ -13,27 +13,30 @@ export interface AttributeMetadata {
 }
 
 export const enum AttributeMetadataType {
-  // Duplicated for FilterType in filter-type.ts
+  // Duplicated for FilterAttributeType in filter-attribute-type.ts
   Boolean = 'BOOLEAN',
   String = 'STRING',
   Number = 'LONG',
+  StringArray = 'STRING_ARRAY',
   StringMap = 'STRING_MAP',
   Timestamp = 'TIMESTAMP'
 }
 
-export const toFilterType = (type: AttributeMetadataType): FilterAttributeType => {
+export const toFilterAttributeType = (type: AttributeMetadataType): FilterAttributeType => {
   switch (type) {
-    case 'BOOLEAN':
+    case AttributeMetadataType.Boolean:
       return FilterAttributeType.Boolean;
-    case 'STRING':
-      return FilterAttributeType.String;
-    case 'LONG':
+    case AttributeMetadataType.Number:
       return FilterAttributeType.Number;
-    case 'STRING_MAP':
+    case AttributeMetadataType.String:
+      return FilterAttributeType.String;
+    case AttributeMetadataType.StringArray:
+      return FilterAttributeType.StringArray;
+    case AttributeMetadataType.StringMap:
       return FilterAttributeType.StringMap;
-    case 'TIMESTAMP':
+    case AttributeMetadataType.Timestamp:
       return FilterAttributeType.Timestamp;
     default:
-      throw Error(`Unable to convert type '${type}' to FilterType`);
+      throw Error(`Unable to convert type '${type}' to FilterAttributeType`);
   }
 };
