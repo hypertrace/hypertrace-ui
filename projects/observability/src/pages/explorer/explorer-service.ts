@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NavigationParams, NavigationParamsType } from '@hypertrace/common';
-import { Filter } from '@hypertrace/components';
-import { MetadataService, SPAN_SCOPE, toFilterType } from '@hypertrace/distributed-tracing';
+import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
+import { MetadataService, SPAN_SCOPE, toFilterAttributeType } from '@hypertrace/distributed-tracing';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FilterBuilderLookupService } from '../../../../components/src/filtering/filter/builder/filter-builder-lookup.service';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ScopeQueryParam } from './explorer.component';
 
@@ -25,7 +24,7 @@ export class ExplorerService {
           filter.field
         )
         .pipe(
-          map(attribute => ({ ...attribute, type: toFilterType(attribute.type) })),
+          map(attribute => ({ ...attribute, type: toFilterAttributeType(attribute.type) })),
           map(
             filterAttribute =>
               this.filterBuilderLookupService
