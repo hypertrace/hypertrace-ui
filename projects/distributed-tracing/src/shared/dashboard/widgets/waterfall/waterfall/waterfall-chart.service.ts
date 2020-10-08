@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ColorService } from '@hypertrace/common';
+import { Color, ColorService } from '@hypertrace/common';
 import { SequenceSegment } from '@hypertrace/components';
 import { isNil, sortBy } from 'lodash-es';
 import { of } from 'rxjs';
@@ -17,7 +17,7 @@ export class WaterfallChartService {
   ) {
     this.colorService.registerColorPalette(WaterfallChartService.SEQUENCE_COLORS, [
       '#0053D7',
-      '#70A7FF',
+      Color.Blue3,
       '#272C2E',
       '#B7C0C2',
       '#FB8B24',
