@@ -15,12 +15,19 @@ export class EntitySpecificationBuilder {
 
   private readonly argBuilder: GraphQlArgumentBuilder = new GraphQlArgumentBuilder();
 
-  public build(idKey: string, nameKey: string, entityType?: EntityType): EntitySpecification {
+  public build(
+    idKey: string,
+    nameKey: string,
+    entityType?: EntityType,
+    additionalAttributes?: string[]
+  ): EntitySpecification {
     return {
       resultAlias: () => this.buildResultAlias(idKey, nameKey, entityType),
       name: idKey,
-      asGraphQlSelections: () => this.buildGraphQlSelections(idKey, nameKey, entityType === undefined),
-      extractFromServerData: serverData => this.extractFromServerData(serverData, idKey, nameKey, entityType),
+      asGraphQlSelections: () =>
+        this.buildGraphQlSelections(idKey, nameKey, entityType === undefined, additionalAttributes),
+      extractFromServerData: serverData =>
+        this.extractFromServerData(serverData, idKey, nameKey, entityType, additionalAttributes),
       asGraphQlOrderByFragment: () => ({
         key: nameKey
       })
@@ -31,7 +38,12 @@ export class EntitySpecificationBuilder {
     return `entity_${idKey}_${nameKey}_${entityType === undefined ? 'unknownType' : entityType}`;
   }
 
-  private buildGraphQlSelections(idKey: string, nameKey: string, withEntityType: boolean): GraphQlSelection[] {
+  private buildGraphQlSelections(
+    idKey: string,
+    nameKey: string,
+    withEntityType: boolean,
+    additionalAttributes?: string[]
+  ): GraphQlSelection[] {
     const graphqlSelections: GraphQlSelection[] = [
       {
         path: 'attribute',
@@ -42,7 +54,12 @@ export class EntitySpecificationBuilder {
         path: 'attribute',
         alias: nameKey,
         arguments: [this.argBuilder.forAttributeKey(nameKey)]
-      }
+      },
+      ...(additionalAttributes ?? []).map(attribute => ({
+        path: 'attribute',
+        alias: attribute,
+        arguments: [this.argBuilder.forAttributeKey(attribute)]
+      }))
     ];
 
     if (withEntityType) {
@@ -56,13 +73,19 @@ export class EntitySpecificationBuilder {
     serverData: Dictionary<unknown>,
     idKey: string,
     nameKey: string,
-    entityType?: EntityType
+    entityType?: EntityType,
+    additionalAttributes?: string[]
   ): Entity {
-    return {
+    let entity = {
       [entityIdKey]: serverData[idKey] as string,
       [entityTypeKey]: entityType !== undefined ? entityType : this.extractEntityType(serverData),
       name: serverData[nameKey] as string
     };
+    additionalAttributes?.forEach(attribute => {
+      entity = { ...entity, [attribute]: serverData[attribute] };
+    });
+
+    return entity;
   }
 
   private extractEntityType(serverData: Dictionary<unknown>): ObservabilityEntityType {
