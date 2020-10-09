@@ -1,4 +1,10 @@
-import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
+import {
+  CoreTableCellRendererType,
+  FilterBuilderLookupService,
+  TableMode,
+  TableSortDirection,
+  TableStyle
+} from '@hypertrace/components';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -30,7 +36,7 @@ describe('Explorer dashboard builder', () => {
     }
   });
   test('can build dashboard JSON for visualization', done => {
-    const builder = new ExplorerDashboardBuilder(MockService(MetadataService));
+    const builder = new ExplorerDashboardBuilder(MockService(MetadataService), MockService(FilterBuilderLookupService));
 
     runFakeRxjs(({ expectObservable }) => {
       const dashboardRecording = recordObservable(builder.visualizationDashboard$);
@@ -67,15 +73,18 @@ describe('Explorer dashboard builder', () => {
   });
 
   test('can build dashboard JSON for traces', done => {
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    const builder = new ExplorerDashboardBuilder({
-      getAttribute: (_: never, name: string) =>
-        of({
-          name: name,
-          displayName: capitalize(name),
-          type: AttributeMetadataType.Number
-        })
-    } as MetadataService);
+    const builder = new ExplorerDashboardBuilder(
+      // tslint:disable-next-line: no-object-literal-type-assertion
+      {
+        getAttribute: (_: never, name: string) =>
+          of({
+            name: name,
+            displayName: capitalize(name),
+            type: AttributeMetadataType.Number
+          })
+      } as MetadataService,
+      MockService(FilterBuilderLookupService)
+    );
 
     runFakeRxjs(({ expectObservable }) => {
       const dashboardRecording = recordObservable(builder.resultsDashboard$);
