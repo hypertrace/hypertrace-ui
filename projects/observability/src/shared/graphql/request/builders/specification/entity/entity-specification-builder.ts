@@ -19,7 +19,7 @@ export class EntitySpecificationBuilder {
     idKey: string,
     nameKey: string,
     entityType?: EntityType,
-    additionalAttributes?: string[]
+    additionalAttributes: string[] = []
   ): EntitySpecification {
     return {
       resultAlias: () => this.buildResultAlias(idKey, nameKey, entityType),
@@ -42,7 +42,7 @@ export class EntitySpecificationBuilder {
     idKey: string,
     nameKey: string,
     withEntityType: boolean,
-    additionalAttributes?: string[]
+    additionalAttributes: string[] = []
   ): GraphQlSelection[] {
     const graphqlSelections: GraphQlSelection[] = [
       {
@@ -55,7 +55,7 @@ export class EntitySpecificationBuilder {
         alias: nameKey,
         arguments: [this.argBuilder.forAttributeKey(nameKey)]
       },
-      ...(additionalAttributes ?? []).map(attribute => ({
+      ...additionalAttributes.map(attribute => ({
         path: 'attribute',
         alias: attribute,
         arguments: [this.argBuilder.forAttributeKey(attribute)]
@@ -74,14 +74,14 @@ export class EntitySpecificationBuilder {
     idKey: string,
     nameKey: string,
     entityType?: EntityType,
-    additionalAttributes?: string[]
+    additionalAttributes: string[] = []
   ): Entity {
     let entity = {
       [entityIdKey]: serverData[idKey] as string,
       [entityTypeKey]: entityType !== undefined ? entityType : this.extractEntityType(serverData),
       name: serverData[nameKey] as string
     };
-    additionalAttributes?.forEach(attribute => {
+    additionalAttributes.forEach(attribute => {
       entity = { ...entity, [attribute]: serverData[attribute] };
     });
 
