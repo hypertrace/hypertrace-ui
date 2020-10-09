@@ -1,13 +1,11 @@
 import { fakeAsync } from '@angular/core/testing';
 import { NavigationParamsType } from '@hypertrace/common';
-import { FilterAttributeType, FilterBuilderLookupService, FilterOperator } from '@hypertrace/components';
-import { AttributeMetadataType, MetadataService } from '@hypertrace/distributed-tracing';
+import { FilterBuilderLookupService, FilterOperator, toUrlFilterOperator } from '@hypertrace/components';
+import { AttributeMetadata, AttributeMetadataType, MetadataService } from '@hypertrace/distributed-tracing';
 import { ExplorerService, ScopeQueryParam } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { NumberFilterBuilder } from '../../../../components/src/filtering/filter/builder/types/number-filter-builder';
-import { StringFilterBuilder } from '../../../../components/src/filtering/filter/builder/types/string-filter-builder';
 
 describe('Explorer service', () => {
   const createService = createServiceFactory({
@@ -28,8 +26,8 @@ describe('Explorer service', () => {
             groupable: false
           }
         : {
-            name: 'userIdentifier',
-            displayName: 'User ID',
+            name: 'status',
+            displayName: 'Status',
             units: '',
             type: AttributeMetadataType.String,
             scope: scope,
@@ -40,9 +38,16 @@ describe('Explorer service', () => {
     )
   );
 
-  const lookupMock = jest.fn(filterAttributeType =>
-    filterAttributeType === FilterAttributeType.Number ? new NumberFilterBuilder() : new StringFilterBuilder()
-  );
+  const lookupMock = jest.fn(() => ({
+    buildFilter: (attribute: AttributeMetadata, operator: FilterOperator, value: string | number) => ({
+      metadata: attribute,
+      field: attribute.name,
+      operator: operator,
+      value: value,
+      userString: '',
+      urlString: `${attribute.name}${toUrlFilterOperator(operator)}${value}`
+    })
+  }));
 
   test('creates nav params correctly', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
@@ -55,14 +60,14 @@ describe('Explorer service', () => {
       expectObservable(
         spectator.service.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
           { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
-          { field: 'userIdentifier', operator: FilterOperator.Equals, value: 'test' }
+          { field: 'status', operator: FilterOperator.Equals, value: 404 }
         ])
       ).toBe('(x|)', {
         x: {
           navType: NavigationParamsType.InApp,
           path: '/explorer',
           queryParams: {
-            filter: ['duration_gt_200', 'userIdentifier_eq_test'],
+            filter: ['duration_gt_200', 'status_eq_404'],
             scope: ScopeQueryParam.EndpointTraces
           }
         }
