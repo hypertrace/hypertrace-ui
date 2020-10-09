@@ -12,7 +12,12 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { FilterAttributeType, FilterBarComponent, FilterOperator } from '@hypertrace/components';
+import {
+  FilterAttributeType,
+  FilterBarComponent,
+  FilterBuilderLookupService,
+  FilterOperator
+} from '@hypertrace/components';
 import {
   GraphQlFieldFilter,
   GraphQlOperatorType,
@@ -60,8 +65,9 @@ describe('Explorer component', () => {
     component: ExplorerComponent,
     imports: [
       ExplorerModule.withDashboardBuilderFactory({
-        useFactory: (metadataService: MetadataService) => new ExplorerDashboardBuilder(metadataService),
-        deps: [MetadataService]
+        useFactory: (metadataService: MetadataService, filterBuilderLookupService: FilterBuilderLookupService) =>
+          new ExplorerDashboardBuilder(metadataService, filterBuilderLookupService),
+        deps: [MetadataService, FilterBuilderLookupService]
       }),
       ExplorerModule,
       RouterTestingModule,
