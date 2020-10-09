@@ -97,7 +97,9 @@ export class EntitiesGraphqlQueryBuilderService {
             [entityTypeKey]: request.entityType
           };
 
-          mappedResult.forEach((data, specification) => (entity[specification.resultAlias()] = data));
+          mappedResult.forEach((data, specification) => {
+            entity[specification.resultAlias()] = data;
+          });
 
           return entity;
         })
