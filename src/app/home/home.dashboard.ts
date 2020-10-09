@@ -421,7 +421,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'p99',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 'visualization-type': 'line',
                 data: {
                   type: 'trace-metric-timeseries-data-source',
@@ -436,7 +436,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 type: 'series',
                 name: 'p50',
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 data: {
                   type: 'trace-metric-timeseries-data-source',
                   metric: {
@@ -466,7 +466,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 name: 'Errors',
                 'visualization-type': 'line',
                 hide: true,
-                color: '#FD5138',
+                color: Color.Red5,
                 data: {
                   type: 'trace-metric-timeseries-data-source',
                   metric: {
@@ -511,7 +511,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'p99',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 'visualization-type': 'line',
                 hide: true,
                 data: {
@@ -527,7 +527,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 type: 'series',
                 name: 'p50',
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 hide: true,
                 data: {
                   type: 'trace-metric-timeseries-data-source',
@@ -543,7 +543,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 name: 'Errors',
                 'visualization-type': 'line',
                 hide: true,
-                color: '#FD5138',
+                color: Color.Red5,
                 data: {
                   type: 'trace-metric-timeseries-data-source',
                   metric: {
@@ -575,7 +575,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 type: 'series',
                 name: 'Errors',
                 'visualization-type': 'line',
-                color: '#FD5138',
+                color: Color.Red5,
                 data: {
                   type: 'trace-metric-timeseries-data-source',
                   metric: {
@@ -588,7 +588,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               {
                 type: 'series',
                 name: 'p99',
-                color: '#4b5f77',
+                color: Color.BlueGray4,
                 'visualization-type': 'line',
                 hide: true,
                 data: {
@@ -604,7 +604,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                 type: 'series',
                 name: 'p50',
                 'visualization-type': 'line',
-                color: '#70a7ff',
+                color: Color.Blue3,
                 hide: true,
                 data: {
                   type: 'trace-metric-timeseries-data-source',

@@ -39,7 +39,7 @@ describe('Explorer service', () => {
   );
 
   const lookupMock = jest.fn(() => ({
-    buildFilter: (attribute: AttributeMetadata, operator: FilterOperator, value: string | number) => ({
+    buildFilter: (attribute: AttributeMetadata, operator: FilterOperator, value: number) => ({
       metadata: attribute,
       field: attribute.name,
       operator: operator,
