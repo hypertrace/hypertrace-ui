@@ -1,6 +1,12 @@
 import { InjectionToken } from '@angular/core';
 import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
-import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
+import {
+  CoreTableCellRendererType,
+  FilterBuilderLookupService,
+  TableMode,
+  TableSortDirection,
+  TableStyle
+} from '@hypertrace/components';
 import {
   AttributeMetadata,
   AttributeMetadataType,
@@ -8,6 +14,7 @@ import {
   GraphQlFilterDataSourceModel,
   MetadataService,
   SPAN_SCOPE,
+  toFilterAttributeType,
   TracingTableCellType
 } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
@@ -24,7 +31,10 @@ export class ExplorerDashboardBuilder {
   public readonly visualizationDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
 
-  public constructor(private readonly metadataService: MetadataService) {
+  public constructor(
+    private readonly metadataService: MetadataService,
+    private readonly filterBuilderLookupService: FilterBuilderLookupService
+  ) {
     // We only want to rebuild a dashboard if we actually have a meaningful request change
     const uniqueRequests$ = this.requestSubject.pipe(distinctUntilChanged(isEqualIgnoreFunctions));
 
@@ -351,6 +361,7 @@ export class ExplorerDashboardBuilder {
         title: attribute.displayName,
         width: '1',
         display: this.getRendererForType(attribute.type),
+        filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
         value: {
           type: 'attribute-specification',
           attribute: attribute.name

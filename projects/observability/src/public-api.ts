@@ -85,13 +85,13 @@ export * from './pages/apis/services/service-list.module';
 export * from './pages/apis/service-detail/service-detail.module';
 export * from './pages/apis/service-detail/service-detail.component';
 export * from './pages/apis/service-detail/service-detail.service';
-export * from './pages/apis/service-detail/apis/service-apis-list-dashboard';
 export * from './pages/apis/service-detail/service-detail-breadcrumb.resolver';
 export * from './pages/apis/service-detail/metrics/service-metrics.component';
 export * from './pages/apis/service-detail/overview/service-overview.component';
 export * from './pages/apis/service-detail/traces/service-trace-list.component';
 export * from './pages/apis/service-detail/traces/service-trace-list.dashboard';
 export * from './pages/apis/service-detail/apis/service-apis-list.component';
+export * from './pages/apis/service-detail/apis/service-apis-list-dashboard';
 
 export * from './pages/apis/backend-detail/backend-detail.module';
 export * from './pages/apis/backend-detail/backend-detail.component';
@@ -203,3 +203,9 @@ export * from './shared/components/utils/chart-tooltip/chart-tooltip-builder.ser
 export * from './shared/components/utils/chart-tooltip/chart-tooltip.module';
 export * from './shared/components/utils/svg/svg-util.service';
 export * from './shared/components/legend/legend.component';
+
+// Entity Specification Model
+export * from './shared/dashboard/data/graphql/specifiers/entity-specification.model';
+
+// Explorer service
+export * from './pages/explorer/explorer-service';
