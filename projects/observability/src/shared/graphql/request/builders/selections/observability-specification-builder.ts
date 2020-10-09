@@ -32,8 +32,13 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
   protected readonly argBuilder: GraphQlObservabilityArgumentBuilder = new GraphQlObservabilityArgumentBuilder();
   protected readonly entitySpecBuilder: EntitySpecificationBuilder = new EntitySpecificationBuilder();
 
-  public buildEntitySpecification(idKey: string, nameKey: string, entityType?: EntityType): EntitySpecification {
-    return this.entitySpecBuilder.build(idKey, nameKey, entityType);
+  public buildEntitySpecification(
+    idKey: string,
+    nameKey: string,
+    entityType?: EntityType,
+    additionalAttributes?: string[]
+  ): EntitySpecification {
+    return this.entitySpecBuilder.build(idKey, nameKey, entityType, additionalAttributes);
   }
 
   public neighborAttributeSpecificationForKey(
