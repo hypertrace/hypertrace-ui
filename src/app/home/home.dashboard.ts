@@ -557,7 +557,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           },
           {
             type: 'cartesian-widget',
-            titile: 'Errors',
+            title: 'Errors',
             'legend-position': LegendPosition.None,
             'selectable-interval': false,
             'x-axis': {

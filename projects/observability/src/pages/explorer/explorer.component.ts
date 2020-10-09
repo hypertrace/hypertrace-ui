@@ -167,7 +167,7 @@ interface ExplorerContextScope {
   scopeQueryParam: ScopeQueryParam;
 }
 
-const enum ScopeQueryParam {
+export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
 }

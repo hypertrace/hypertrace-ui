@@ -108,7 +108,7 @@ export class MetadataService {
   }
 
   /**
-   * This is used for adding units to metric restults.
+   * This is used for adding units to metric results.
    * @param rawResult raw result from server
    * @param specifications all request specifications
    * @param scope scope of attributes
