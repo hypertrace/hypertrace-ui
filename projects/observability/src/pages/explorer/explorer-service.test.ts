@@ -1,4 +1,3 @@
-import { fakeAsync } from '@angular/core/testing';
 import { NavigationParamsType } from '@hypertrace/common';
 import { FilterBuilderLookupService, FilterOperator, toUrlFilterOperator } from '@hypertrace/components';
 import { AttributeMetadata, AttributeMetadataType, MetadataService } from '@hypertrace/distributed-tracing';
@@ -49,7 +48,7 @@ describe('Explorer service', () => {
     })
   }));
 
-  test('creates nav params correctly', fakeAsync(() => {
+  test('creates nav params correctly', () => {
     runFakeRxjs(({ expectObservable }) => {
       const spectator = createService({
         providers: [
@@ -73,5 +72,5 @@ describe('Explorer service', () => {
         }
       });
     });
-  }));
+  });
 });
