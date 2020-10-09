@@ -205,3 +205,6 @@ export * from './shared/components/legend/legend.component';
 
 // Entity Specification Model
 export * from './shared/dashboard/data/graphql/specifiers/entity-specification.model';
+
+// Explorer service
+export * from './pages/explorer/explorer-service';
