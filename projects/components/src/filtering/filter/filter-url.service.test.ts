@@ -3,14 +3,12 @@ import { FilterAttribute, FilterAttributeType, IncompleteFilter } from '@hypertr
 import { getAllTestFilterAttributes, getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
-import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from './builder/types/number-filter-builder';
 import { StringFilterBuilder } from './builder/types/string-filter-builder';
 import { StringMapFilterBuilder } from './builder/types/string-map-filter-builder';
 import { Filter } from './filter';
 import { FilterOperator } from './filter-operators';
 import { FilterUrlService } from './filter-url.service';
-import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
 
 describe('Filter URL service', () => {
   let spectator: SpectatorService<FilterUrlService>;
@@ -64,9 +62,7 @@ describe('Filter URL service', () => {
         navigation$: EMPTY,
         addQueryParametersToUrl: (paramObject: QueryParamObject) => (testQueryParamObject = paramObject),
         getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
-      }),
-      FilterBuilderLookupService,
-      FilterParserLookupService
+      })
     ]
   });
 

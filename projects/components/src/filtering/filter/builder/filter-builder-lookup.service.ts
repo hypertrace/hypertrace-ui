@@ -25,9 +25,8 @@ export class FilterBuilderLookupService {
       case FilterAttributeType.Timestamp: // Unsupported
         throw new Error(`Filter builder not found for attribute of type '${type}'.`);
       default:
-        assertUnreachable(type);
+        return assertUnreachable(type);
     }
-    throw new Error(`Filter builder not found for attribute of type '${type}'.`);
   }
 
   public isBuildableType(type: FilterAttributeType): boolean {

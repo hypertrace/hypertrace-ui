@@ -26,10 +26,8 @@ export class FilterParserLookupService {
       case FilterOperator.ContainsKeyValue:
         return new ContainsFilterParser();
       default:
-        assertUnreachable(operator);
+        return assertUnreachable(operator);
     }
-
-    throw new Error(`Filter parser not found for operator '${operator}'.`);
   }
 
   public isParsableOperatorForType(operator: FilterOperator, type: FilterAttributeType): boolean {
