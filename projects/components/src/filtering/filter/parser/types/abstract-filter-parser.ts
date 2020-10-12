@@ -6,7 +6,6 @@ import { ParsedFilter, SplitFilter } from '../parsed-filter';
 export abstract class AbstractFilterParser<TValue> {
   public abstract supportedAttributeTypes(): FilterAttributeType[];
   public abstract supportedOperators(): FilterOperator[];
-  public abstract conflictingOperators(operator: FilterOperator): FilterOperator[];
 
   public parseNameString(attribute: FilterAttribute, splitFilter: SplitFilter<FilterOperator>): string | undefined {
     return attribute.displayName.toLowerCase() !== splitFilter.lhs.toLowerCase() ? undefined : attribute.name;

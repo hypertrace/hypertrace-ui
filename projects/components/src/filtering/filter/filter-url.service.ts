@@ -3,7 +3,7 @@ import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
-import { Filter, IncompleteFilter } from './filter';
+import { areCompatibleFilters, Filter, IncompleteFilter } from './filter';
 import { FilterAttribute } from './filter-attribute';
 import { fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
@@ -39,16 +39,9 @@ export class FilterUrlService {
   }
 
   public addUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    const filterParser = this.filterParserLookupService.lookup(filter.operator);
+    const remainingFilters = this.getUrlFilters(attributes).filter(f => areCompatibleFilters(f, filter));
 
-    const urlFilters = this.getUrlFilters(attributes);
-    const otherFilters = urlFilters.filter(f => f.field !== filter.field);
-
-    const remainingFiltersForAttribute = urlFilters
-      .filter(f => f.field === filter.field)
-      .filter(f => !filterParser.conflictingOperators(filter.operator).includes(f.operator));
-
-    this.setUrlFilters([...otherFilters, ...remainingFiltersForAttribute, filter]);
+    this.setUrlFilters([...remainingFilters, filter]);
   }
 
   public removeUrlFilter(attributes: FilterAttribute[], filter: IncompleteFilter): void {

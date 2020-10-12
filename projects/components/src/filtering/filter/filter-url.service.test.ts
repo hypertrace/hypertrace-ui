@@ -1,16 +1,12 @@
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
-import { FilterAttribute, FilterAttributeType, IncompleteFilter, StringMapFilterBuilder } from '@hypertrace/components';
-import {
-  getAllTestFilterAttributes,
-  getTestFilterAttribute,
-  mockFilterBuilderLookup,
-  mockFilterParserLookup
-} from '@hypertrace/test-utils';
+import { FilterAttribute, FilterAttributeType, IncompleteFilter } from '@hypertrace/components';
+import { getAllTestFilterAttributes, getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from './builder/types/number-filter-builder';
 import { StringFilterBuilder } from './builder/types/string-filter-builder';
+import { StringMapFilterBuilder } from './builder/types/string-map-filter-builder';
 import { Filter } from './filter';
 import { FilterOperator } from './filter-operators';
 import { FilterUrlService } from './filter-url.service';
@@ -69,13 +65,8 @@ describe('Filter URL service', () => {
         addQueryParametersToUrl: (paramObject: QueryParamObject) => (testQueryParamObject = paramObject),
         getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
       }),
-      mockProvider(FilterBuilderLookupService, {
-        isBuildableType: (type: FilterAttributeType) => mockFilterBuilderLookup(type) !== undefined,
-        lookup: mockFilterBuilderLookup
-      }),
-      mockProvider(FilterParserLookupService, {
-        lookup: mockFilterParserLookup
-      })
+      FilterBuilderLookupService,
+      FilterParserLookupService
     ]
   });
 
@@ -103,7 +94,7 @@ describe('Filter URL service', () => {
 
   test('correctly adds filters to url', () => {
     /*
-     * Add a string filter that should be ignored
+     * Add a string filter that should not replace any existing filters
      */
     spectator.service.addUrlFilter(
       attributes,
@@ -179,7 +170,7 @@ describe('Filter URL service', () => {
     });
 
     /*
-     * Add a not equals
+     * Add a not equals that should not replace any existing filters
      */
     spectator.service.addUrlFilter(
       attributes,
@@ -216,7 +207,7 @@ describe('Filter URL service', () => {
     });
 
     /*
-     * Add a not equals that should replace the equals
+     * Add a not equals that should replace the equals filter
      */
     spectator.service.addUrlFilter(
       attributes,
@@ -229,6 +220,55 @@ describe('Filter URL service', () => {
 
     expect(testQueryParamObject).toEqual({
       filter: ['stringAttribute_neq_test', 'numberAttribute_neq_2020']
+    });
+
+    /*
+     * Add an IN that should replace all existing number filters
+     */
+    spectator.service.addUrlFilter(
+      attributes,
+      new NumberFilterBuilder().buildFilter(getTestFilterAttribute(FilterAttributeType.Number), FilterOperator.In, 1984)
+    );
+
+    expect(testQueryParamObject).toEqual({
+      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984']
+    });
+
+    /*
+     * Add a StringMap CONTAINS_KEY_VALUE that should not replace any existing filters
+     */
+    spectator.service.addUrlFilter(
+      attributes,
+      new StringMapFilterBuilder().buildFilter(
+        getTestFilterAttribute(FilterAttributeType.StringMap),
+        FilterOperator.ContainsKeyValue,
+        ['myKey', 'myValue']
+      )
+    );
+
+    expect(testQueryParamObject).toEqual({
+      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984', 'stringMapAttribute_ckv_myKey%3AmyValue']
+    });
+
+    /*
+     * Add a StringMap CONTAINS_KEY that should not replace any existing filters
+     */
+    spectator.service.addUrlFilter(
+      attributes,
+      new StringMapFilterBuilder().buildFilter(
+        getTestFilterAttribute(FilterAttributeType.StringMap),
+        FilterOperator.ContainsKey,
+        'myTestKey'
+      )
+    );
+
+    expect(testQueryParamObject).toEqual({
+      filter: [
+        'stringAttribute_neq_test',
+        'numberAttribute_in_1984',
+        'stringMapAttribute_ckv_myKey%3AmyValue',
+        'stringMapAttribute_ck_myTestKey'
+      ]
     });
   });
 

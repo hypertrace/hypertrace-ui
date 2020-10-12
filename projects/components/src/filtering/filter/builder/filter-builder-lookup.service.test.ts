@@ -17,13 +17,6 @@ describe('Filter Builder Lookup service', () => {
 
   beforeEach(() => {
     spectator = buildService();
-
-    spectator.service.registerAll([
-      BooleanFilterBuilder,
-      NumberFilterBuilder,
-      StringFilterBuilder,
-      StringMapFilterBuilder
-    ]);
   });
 
   test('correctly looks up registered filter builders', () => {

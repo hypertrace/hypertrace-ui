@@ -1,30 +1,33 @@
 import { Injectable } from '@angular/core';
+import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttributeType } from '../filter-attribute-type';
-import { FilterBuilderConstructor } from './filter-builder-injection-token';
 import { AbstractFilterBuilder } from './types/abstract-filter-builder';
+import { BooleanFilterBuilder } from './types/boolean-filter-builder';
+import { NumberFilterBuilder } from './types/number-filter-builder';
+import { StringFilterBuilder } from './types/string-filter-builder';
+import { StringMapFilterBuilder } from './types/string-map-filter-builder';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilterBuilderLookupService {
-  private readonly filterBuilders: Map<FilterAttributeType, AbstractFilterBuilder<unknown>> = new Map();
-
-  public registerAll(filterBuilderConstructors: FilterBuilderConstructor<unknown>[]): void {
-    filterBuilderConstructors.forEach(filterBuilderConstructor => {
-      const filterBuilder = new filterBuilderConstructor();
-      this.filterBuilders.set(filterBuilder.supportedAttributeType(), filterBuilder);
-    });
-  }
-
   public lookup(type: FilterAttributeType): AbstractFilterBuilder<unknown> {
-    const filterBuilder = this.filterBuilders.get(type);
-
-    if (filterBuilder === undefined) {
-      throw new Error(`Filter builder not found for attribute of type '${type}'.
-      Available builders are '${String(Array.from(this.filterBuilders.keys()))}'`);
+    switch (type) {
+      case FilterAttributeType.Boolean:
+        return new BooleanFilterBuilder();
+      case FilterAttributeType.Number:
+        return new NumberFilterBuilder();
+      case FilterAttributeType.String:
+        return new StringFilterBuilder();
+      case FilterAttributeType.StringMap:
+        return new StringMapFilterBuilder();
+      case FilterAttributeType.StringArray: // Unsupported
+      case FilterAttributeType.Timestamp: // Unsupported
+        throw new Error(`Filter builder not found for attribute of type '${type}'.`);
+      default:
+        assertUnreachable(type);
     }
-
-    return filterBuilder;
+    throw new Error(`Filter builder not found for attribute of type '${type}'.`);
   }
 
   public isBuildableType(type: FilterAttributeType): boolean {

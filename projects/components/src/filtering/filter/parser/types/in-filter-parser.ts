@@ -15,10 +15,6 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
     return [FilterOperator.In];
   }
 
-  public conflictingOperators(): FilterOperator[] {
-    return [FilterOperator.In];
-  }
-
   public parseValueString(
     attribute: FilterAttribute,
     splitFilter: SplitFilter<FilterOperator>
