@@ -67,6 +67,6 @@ export class FilterButtonComponent implements OnChanges {
   }
 
   public onFilterClick(filter: Filter): void {
-    this.filterUrlService.applyUrlFilter(this.metadata || [], filter);
+    this.filterUrlService.addUrlFilter(this.metadata || [], filter);
   }
 }

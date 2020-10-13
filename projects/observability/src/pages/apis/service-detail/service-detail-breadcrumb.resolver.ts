@@ -20,7 +20,7 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
   public constructor(
     private readonly timeRangeService: TimeRangeService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly iconLookupService: EntityIconLookupService
+    protected readonly iconLookupService: EntityIconLookupService
   ) {}
 
   public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>> {
@@ -37,7 +37,7 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
     );
   }
 
-  private fetchEntity(id: string): Observable<ServiceEntity> {
+  protected fetchEntity(id: string): Observable<ServiceEntity> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
         this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ServiceEntity>({
@@ -53,7 +53,7 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
     );
   }
 
-  private getAttributeKeys(): string[] {
+  protected getAttributeKeys(): string[] {
     return ['name'];
   }
 }

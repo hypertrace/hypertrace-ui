@@ -61,8 +61,6 @@ export * from './filtering/filter/filter';
 export * from './filtering/filter/filter-attribute';
 export * from './filtering/filter/filter-attribute-type';
 export * from './filtering/filter/filter-operators';
-export * from './filtering/filter/builder/filter-builder-injection-token';
-export * from './filtering/filter/parser/filter-parser-injection-token';
 
 // Filter Builder
 export * from './filtering/filter/builder/filter-builder-lookup.service';
@@ -75,6 +73,9 @@ export * from './filtering/filter-bar/filter-bar.component';
 export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
 export * from './filtering/filter-button/in-filter-button.component';
+
+// Filter Parser
+export * from './filtering/filter/parser/filter-parser-lookup.service';
 
 // Header
 export * from './header/application/application-header.component';
