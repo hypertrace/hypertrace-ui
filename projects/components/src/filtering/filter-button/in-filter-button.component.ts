@@ -3,6 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { sortUnknown, TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
+import { IncompleteFilter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterOperator } from '../filter/filter-operators';
 import { FilterUrlService } from '../filter/filter-url.service';
@@ -72,13 +73,16 @@ export class InFilterButtonComponent implements OnChanges {
 
     this.selected.clear();
 
-    this.filterUrlService.getUrlFilters([this.attribute]).forEach(filter => {
-      if (filter.value instanceof Array) {
-        filter.value.forEach(value => this.selected.add(value));
-      } else {
-        this.selected.add(filter.value);
-      }
-    });
+    this.filterUrlService
+      .getUrlFilters([this.attribute])
+      .filter(filter => filter.operator === FilterOperator.In)
+      .forEach(filter => {
+        if (filter.value instanceof Array) {
+          filter.value.forEach(value => this.selected.add(value));
+        } else {
+          this.selected.add(filter.value);
+        }
+      });
   }
 
   public onPopoverClose(): void {
@@ -91,9 +95,13 @@ export class InFilterButtonComponent implements OnChanges {
       .buildFilter(this.attribute, FilterOperator.In, [...this.selected.values()].sort(sortUnknown));
 
     if (this.selected.size > 0) {
-      this.filterUrlService.applyUrlFilter(this.metadata, filter);
+      this.filterUrlService.addUrlFilter(this.metadata, filter);
     } else {
-      this.filterUrlService.removeUrlFilter(this.metadata, filter);
+      const incompleteFilter: IncompleteFilter = {
+        ...filter,
+        value: undefined
+      };
+      this.filterUrlService.removeUrlFilter(this.metadata, incompleteFilter);
     }
   }
 
