@@ -53,7 +53,11 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
     );
   }
 
-  protected getAttributeKeys(): string[] {
-    return ['name'];
+  private getAttributeKeys(): string[] {
+    return ['name', ...this.getExtraAttributeKeys()];
+  }
+
+  protected getExtraAttributeKeys(): string[] {
+    return [];
   }
 }
