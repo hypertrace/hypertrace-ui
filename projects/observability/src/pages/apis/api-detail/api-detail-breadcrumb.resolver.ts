@@ -22,7 +22,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     private readonly navigationService: NavigationService,
     private readonly timeRangeService: TimeRangeService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly breadcrumbService: BreadcrumbsService<Breadcrumb>,
+    private readonly breadcrumbService: BreadcrumbsService,
     @Inject(ENTITY_METADATA) private readonly entityMetadataMap: EntityMetadataMap
   ) {
     this.apiEntityMetadata = this.entityMetadataMap.get(ObservabilityEntityType.Api);

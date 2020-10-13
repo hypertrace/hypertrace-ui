@@ -6,7 +6,7 @@ import { concat, defer, EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, toArray } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class BreadcrumbsService<T extends Breadcrumb> {
+export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
   public readonly breadcrumbs$: ReplayObservable<T[]>;
 
   public constructor(private readonly navigationService: NavigationService) {

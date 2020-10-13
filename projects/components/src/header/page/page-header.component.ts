@@ -58,5 +58,5 @@ export class PageHeaderComponent {
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : {}))
   );
 
-  public constructor(protected readonly breadcrumbsService: BreadcrumbsService<Breadcrumb>) {}
+  public constructor(protected readonly breadcrumbsService: BreadcrumbsService) {}
 }
