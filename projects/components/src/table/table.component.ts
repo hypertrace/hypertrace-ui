@@ -77,7 +77,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             [style.max-width]="columnDef.width"
             class="header-cell"
           >
-            <div *ngIf="index !== 0" class="header-column-handle" (mousedown)="this.onResizeMouseDown($event, index)">
+            <div
+              *ngIf="index !== 0"
+              class="header-column-resize-handle"
+              (mousedown)="this.onResizeMouseDown($event, index)"
+            >
               <div class="header-column-divider"></div>
             </div>
             <ht-table-header-cell-renderer
