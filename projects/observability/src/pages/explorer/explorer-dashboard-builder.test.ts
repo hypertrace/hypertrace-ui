@@ -126,7 +126,7 @@ describe('Explorer dashboard builder', () => {
               {
                 type: 'table-widget-column',
                 title: 'Type',
-                width: '96px',
+                width: '80px',
                 display: CoreTableCellRendererType.Text,
                 filterable: true,
                 value: {
