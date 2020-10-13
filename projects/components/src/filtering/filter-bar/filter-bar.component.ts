@@ -19,6 +19,7 @@ import { IconSize } from '../../icon/icon-size';
 import { Filter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterUrlService } from '../filter/filter-url.service';
+import { FilterBarService } from './filter-bar.service';
 
 @Component({
   selector: 'ht-filter-bar',
@@ -42,7 +43,7 @@ import { FilterUrlService } from '../filter/filter-url.service';
             class="filter"
             [filter]="filter"
             [attributes]="this.attributes"
-            (apply)="this.onApply($event)"
+            (apply)="this.onApply(filter, $event)"
             (clear)="this.onClear(filter)"
           ></ht-filter-chip>
           <ht-filter-chip
@@ -99,7 +100,8 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   public constructor(
     private readonly changeDetector: ChangeDetectorRef,
-    private readonly filterUrlService: FilterUrlService
+    private readonly filterUrlService: FilterUrlService,
+    private readonly filterBarService: FilterBarService
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -146,17 +148,12 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onInputApply(filter: Filter): void {
-    const foundIndex = this.findFilterIndex(filter);
-    if (foundIndex !== undefined) {
-      this.updateFilter(filter);
-    } else {
-      this.insertFilter(filter, this.internalFiltersSubject$.value.length + 1);
-    }
+    this.onFiltersChanged(this.filterBarService.addFilter(this.internalFiltersSubject$.value, filter));
     this.resetFocus();
   }
 
-  public onApply(filter: Filter): void {
-    this.updateFilter(filter);
+  public onApply(originalFilter: Filter, newFilter: Filter): void {
+    this.updateFilter(originalFilter, newFilter);
     this.resetFocus();
   }
 
@@ -174,57 +171,11 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
     this.filterInput?.nativeElement.focus();
   }
 
-  private findFilterIndex(filter: Filter): number | undefined {
-    if (this.internalFiltersSubject$.value.length <= 0) {
-      return undefined;
-    }
-
-    const index = this.findFilter(filter);
-
-    return index >= 0 ? index : undefined;
-  }
-
-  private insertFilter(filter: Filter, index: number = 0): void {
-    const clonedFilters = [...this.internalFiltersSubject$.value];
-    const i = Math.min(clonedFilters.length, index);
-
-    clonedFilters.splice(i, 0, filter);
-    this.onFiltersChanged(clonedFilters);
-  }
-
-  private updateFilter(filter: Filter): void {
-    const clonedFilters = [...this.internalFiltersSubject$.value];
-    if (clonedFilters.length === 0) {
-      throw new Error(`Unable to update filter. Filters are empty.`);
-    }
-
-    const index = this.findFilter(filter);
-
-    if (index < 0) {
-      throw new Error(`Unable to update filter. Filter for '${filter.field}' not found.`);
-    }
-
-    clonedFilters.splice(index, 1, filter);
-    this.onFiltersChanged(clonedFilters);
+  private updateFilter(oldFilter: Filter, newFilter: Filter): void {
+    this.onFiltersChanged(this.filterBarService.updateFilter(this.internalFiltersSubject$.value, oldFilter, newFilter));
   }
 
   private deleteFilter(filter: Filter): void {
-    const clonedFilters = [...this.internalFiltersSubject$.value];
-    if (clonedFilters.length === 0) {
-      throw new Error(`Unable to delete filter. Filters are empty.`);
-    }
-
-    const index = this.findFilter(filter);
-
-    if (index < 0) {
-      throw new Error(`Unable to delete filter. Filter for '${filter.field}' not found.`);
-    }
-
-    clonedFilters.splice(index, 1);
-    this.onFiltersChanged(clonedFilters);
-  }
-
-  private findFilter(filter: Filter): number {
-    return this.internalFiltersSubject$.value.findIndex(f => f.field === filter.field);
+    this.onFiltersChanged(this.filterBarService.deleteFilter(this.internalFiltersSubject$.value, filter));
   }
 }

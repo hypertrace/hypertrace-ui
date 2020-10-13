@@ -6,8 +6,8 @@ import { concat, defer, EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, toArray } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class BreadcrumbsService {
-  public readonly breadcrumbs$: ReplayObservable<Breadcrumb[]>;
+export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
+  public readonly breadcrumbs$: ReplayObservable<T[]>;
 
   public constructor(private readonly navigationService: NavigationService) {
     this.breadcrumbs$ = concat(
@@ -19,7 +19,7 @@ export class BreadcrumbsService {
     );
   }
 
-  private buildBreadcrumbs(activatedRoute: ActivatedRouteSnapshot): Observable<Breadcrumb[]> {
+  private buildBreadcrumbs(activatedRoute: ActivatedRouteSnapshot): Observable<T[]> {
     const breadcrumbRoutes = activatedRoute.pathFromRoot
       .filter(activatedRouteSnapshot => this.hasUrlSegment(activatedRouteSnapshot))
       .filter(activatedRouteSnapshot => this.hasBreadcrumb(activatedRouteSnapshot));
@@ -40,7 +40,7 @@ export class BreadcrumbsService {
     return !isEmpty(activatedRouteSnapshot.data) && !isEmpty(activatedRouteSnapshot.data.breadcrumb);
   }
 
-  private mapBreadcrumbs(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Breadcrumb[]> {
+  private mapBreadcrumbs(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<T[]> {
     return this.getBreadcrumb(activatedRouteSnapshot).pipe(
       catchError(() => {
         // If we fail to resolve a breadcrumb, that page doesn't have the appropriate data to load. Treat as error.
@@ -59,7 +59,7 @@ export class BreadcrumbsService {
     );
   }
 
-  private getBreadcrumb(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Breadcrumb> {
+  private getBreadcrumb(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<T> {
     if (activatedRouteSnapshot.data.breadcrumb instanceof Observable) {
       return activatedRouteSnapshot.data.breadcrumb;
     }

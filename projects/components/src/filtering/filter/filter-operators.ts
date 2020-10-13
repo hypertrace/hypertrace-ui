@@ -73,3 +73,40 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
       return assertUnreachable(operator);
   }
 };
+
+export const incompatibleOperators = (operator: FilterOperator): FilterOperator[] => {
+  switch (operator) {
+    case FilterOperator.In:
+    case FilterOperator.Equals:
+      return [
+        FilterOperator.In,
+        FilterOperator.Equals,
+        FilterOperator.NotEquals,
+        FilterOperator.LessThan,
+        FilterOperator.LessThanOrEqualTo,
+        FilterOperator.GreaterThan,
+        FilterOperator.GreaterThanOrEqualTo,
+        FilterOperator.ContainsKey,
+        FilterOperator.ContainsKeyValue
+      ];
+    case FilterOperator.ContainsKey:
+    case FilterOperator.ContainsKeyValue:
+    case FilterOperator.NotEquals:
+      return [FilterOperator.In, FilterOperator.Equals];
+    case FilterOperator.LessThan:
+    case FilterOperator.LessThanOrEqualTo:
+      return [FilterOperator.In, FilterOperator.Equals, FilterOperator.LessThan, FilterOperator.LessThanOrEqualTo];
+    case FilterOperator.GreaterThan:
+    case FilterOperator.GreaterThanOrEqualTo:
+      return [
+        FilterOperator.In,
+        FilterOperator.Equals,
+        FilterOperator.GreaterThan,
+        FilterOperator.GreaterThanOrEqualTo
+      ];
+    default:
+      assertUnreachable(operator);
+  }
+
+  throw Error(`Unknown operator type '${operator}'.`);
+};

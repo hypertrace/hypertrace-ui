@@ -31,7 +31,6 @@
   position: sticky;
   top: 0;
   height: 32px;
-  padding: 6px 0;
   background: $gray-1;
   border-bottom: 1px solid $gray-2;
   border-top-left-radius: 3px;
@@ -69,13 +68,21 @@
 
   .header-cell-renderer {
     width: 100%;
-    padding: 4px 12px;
+    padding: 10px 12px;
   }
 
-  .header-column-handle {
-    padding: 0 2px;
+  .header-column-resize-handle {
+    padding: 6px 2px;
     height: 100%;
     cursor: col-resize;
+
+    &:hover {
+      padding: 0 2px;
+
+      .header-column-divider {
+        background-color: $gray-9;
+      }
+    }
 
     .header-column-divider {
       width: 1px;

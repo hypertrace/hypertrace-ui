@@ -3,7 +3,7 @@ import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
-import { Filter } from './filter';
+import { areCompatibleFilters, Filter, IncompleteFilter } from './filter';
 import { FilterAttribute } from './filter-attribute';
 import { fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
@@ -38,22 +38,23 @@ export class FilterUrlService {
     });
   }
 
-  public applyUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    const filters = this.getUrlFilters(attributes);
+  public addUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
+    const remainingFilters = this.getUrlFilters(attributes).filter(f => areCompatibleFilters(f, filter));
 
-    const foundIndex = filters.findIndex(f => filter.field === f.field);
-
-    if (foundIndex !== -1) {
-      filters[foundIndex] = filter;
-    } else {
-      filters.push(filter);
-    }
-
-    this.setUrlFilters([...filters]);
+    this.setUrlFilters([...remainingFilters, filter]);
   }
 
-  public removeUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
-    this.setUrlFilters([...this.getUrlFilters(attributes).filter(f => filter.field !== f.field)]);
+  public removeUrlFilter(attributes: FilterAttribute[], filter: IncompleteFilter): void {
+    const urlFilters = this.getUrlFilters(attributes);
+    const remainingFilters = urlFilters.filter(f => {
+      const matchField = f.field === filter.field;
+      const matchOperator = filter.operator === undefined || f.operator === filter.operator;
+      const matchValue = filter.value === undefined || f.value === filter.value;
+
+      return !(matchField && matchOperator && matchValue);
+    });
+
+    this.setUrlFilters([...remainingFilters]);
   }
 
   private parseUrlFilterString(attributes: FilterAttribute[], filterString: string): Filter | undefined {

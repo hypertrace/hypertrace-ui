@@ -15,8 +15,6 @@ describe('Filter Parser Lookup service', () => {
 
   beforeEach(() => {
     spectator = buildService();
-
-    spectator.service.registerAll([ComparisonFilterParser, InFilterParser, ContainsFilterParser]);
   });
   test('correctly looks up registered filter parsers', () => {
     expect(spectator.service.lookup(FilterOperator.Equals)).toEqual(expect.any(ComparisonFilterParser));

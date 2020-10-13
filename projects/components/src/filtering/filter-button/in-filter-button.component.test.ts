@@ -58,7 +58,7 @@ describe('In Filter Button service', () => {
     spectator.component.selected.add(2);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2]
@@ -84,7 +84,7 @@ describe('In Filter Button service', () => {
     spectator.component.onChecked(false, 5);
     spectator.component.onPopoverClose();
 
-    expect(spectator.inject(FilterUrlService).applyUrlFilter).toHaveBeenCalledWith(
+    expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
         value: [2, 8]
