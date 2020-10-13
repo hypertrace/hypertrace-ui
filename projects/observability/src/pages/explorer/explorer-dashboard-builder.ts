@@ -155,14 +155,14 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelJson[] {
+  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelJson[] {
     switch (context) {
       case ObservabilityTraceType.Api:
         return [
           {
             type: 'table-widget-column',
             title: 'Type',
-            width: '96px',
+            width: '80px',
             display: CoreTableCellRendererType.Text,
             filterable: true,
             value: {
@@ -246,7 +246,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Protocol',
-            width: '10%',
+            width: '100px',
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -259,7 +259,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Service',
-            width: '20%',
+            width: '2',
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -272,6 +272,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Name',
+            width: '2',
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -284,7 +285,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Status',
-            width: '5%', // Use Status Cell Renderer
+            width: '90px', // Use Status Cell Renderer
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -337,7 +338,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
+  protected getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
     switch (context) {
       case ObservabilityTraceType.Api:
         return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime']);
