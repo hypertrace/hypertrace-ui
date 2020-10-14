@@ -141,10 +141,11 @@ export * from './shared/components/topology/topology.module';
 export * from './shared/dashboard/data/graphql/waterfall/api-trace-waterfall-data-source.model';
 
 // Dashboards
-export * from './pages/apis/service-detail/metrics/service-metrics.dashboard';
-export * from './pages/apis/backend-detail/metrics/backend-metrics.dashboard';
 export * from './pages/apis/api-detail/metrics/api-metrics-dashboard';
+export * from './pages/apis/api-detail/overview/api-overview.dashboard';
+export * from './pages/apis/service-detail/metrics/service-metrics.dashboard';
 export * from './pages/apis/service-detail/overview/service-overview.dashboard';
+export * from './pages/apis/backend-detail/metrics/backend-metrics.dashboard';
 
 // Cartesian
 export * from './shared/components/cartesian/cartesian-chart.component';
