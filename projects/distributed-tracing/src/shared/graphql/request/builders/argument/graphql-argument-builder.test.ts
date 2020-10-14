@@ -7,7 +7,7 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 
-describe('Graphql Specification Builder', () => {
+describe('Graphql Argument Builder', () => {
   const argBuilder = new GraphQlArgumentBuilder();
   const specBuilder = new SpecificationBuilder();
 
