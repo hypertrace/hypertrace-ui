@@ -37,14 +37,21 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
         take(1),
         switchMap(api => [
           ...this.getParentBreadcrumbs(api, parentType),
-          {
-            label: api.name,
-            icon: this.apiEntityMetadata?.icon,
-            url: this.breadcrumbService.getPath(activatedRouteSnapshot)
-          }
+          this.createBreadcrumbForEntity(api, activatedRouteSnapshot)
         ])
       )
     );
+  }
+
+  protected createBreadcrumbForEntity(
+    api: ApiBreadcrumbDetails,
+    activatedRouteSnapshot: ActivatedRouteSnapshot
+  ): Breadcrumb {
+    return {
+      label: api.name,
+      icon: this.apiEntityMetadata?.icon,
+      url: this.breadcrumbService.getPath(activatedRouteSnapshot)
+    };
   }
 
   protected getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
@@ -64,7 +71,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
       : [];
   }
 
-  protected fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
+  private fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
         this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>({
@@ -131,7 +138,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
   }
 }
 
-interface ApiBreadcrumbDetails extends Entity<ObservabilityEntityType.Api> {
+export interface ApiBreadcrumbDetails extends Entity<ObservabilityEntityType.Api> {
   name: string;
   parentName: string;
   parentId: string;
