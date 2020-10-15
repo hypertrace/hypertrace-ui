@@ -9,6 +9,6 @@
 
   .title {
     @include widget-title($gray-7);
-    margin-top: 15px;
+    padding-bottom: 12px;
   }
 }
