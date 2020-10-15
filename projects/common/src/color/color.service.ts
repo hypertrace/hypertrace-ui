@@ -38,11 +38,11 @@ export class ColorService {
   }
 
   public brighter(colorHex: string, basis: number): string {
-    return rgb(colorHex).brighter(basis).formatHex();
+    return rgb(colorHex).brighter(basis).hex();
   }
 
   public darker(colorHex: string, basis: number): string {
-    return rgb(colorHex).darker(basis).formatHex();
+    return rgb(colorHex).darker(basis).hex();
   }
 
   private getBasisColors(key: ColorPaletteKey): string[] {
