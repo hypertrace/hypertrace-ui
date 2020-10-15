@@ -8,7 +8,7 @@
   flex-direction: column;
 
   .title {
-    @include widget-title($gray-7);
+    @include widget-title($gray-9);
     padding-bottom: 12px;
   }
 }
