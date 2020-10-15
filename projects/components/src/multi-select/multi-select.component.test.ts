@@ -6,7 +6,7 @@ import { LabelComponent } from '../label/label.component';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { SelectJustify } from '../select/select-justify';
 import { SelectOptionComponent } from '../select/select-option.component';
-import { MultiSelectComponent } from './multi-select.component';
+import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.component';
 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
@@ -115,6 +115,38 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query(LabelComponent)?.label).toEqual('second and 1 more');
+    flush();
+  }));
+
+  test('should notify but not change trigger label if triggerLabelDisplayMode is placeholder', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" placeholder="Placeholder" [triggerLabelDisplayMode]="triggerDisplayMode">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          onChange: onChange,
+          triggerDisplayMode: TriggerLabelDisplayMode.Placeholder
+        }
+      }
+    );
+
+    spectator.tick();
+    expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
+    spectator.click('.trigger-content');
+
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    spectator.click(optionElements[2]);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
+    expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
     flush();
   }));
 

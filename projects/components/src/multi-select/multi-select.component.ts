@@ -114,7 +114,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   private setTriggerLabel(): void {
-    console.log(this.triggerLabelDisplayMode);
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
       this.triggerLabel = this.placeholder;
 
