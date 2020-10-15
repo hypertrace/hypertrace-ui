@@ -16,13 +16,13 @@ import {
 @Injectable({ providedIn: 'root' })
 export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrumb>> {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
-  private readonly apiEntityMetadata: EntityMetadata | undefined;
+  protected readonly apiEntityMetadata: EntityMetadata | undefined;
 
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly timeRangeService: TimeRangeService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly breadcrumbService: BreadcrumbsService,
+    protected readonly breadcrumbService: BreadcrumbsService,
     @Inject(ENTITY_METADATA) private readonly entityMetadataMap: EntityMetadataMap
   ) {
     this.apiEntityMetadata = this.entityMetadataMap.get(ObservabilityEntityType.Api);
@@ -47,7 +47,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     );
   }
 
-  private getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
+  protected getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
     return parentEntityMetadata !== undefined
       ? [
           {
@@ -64,7 +64,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
       : [];
   }
 
-  private fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
+  protected fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
         this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>({
@@ -89,7 +89,11 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
       ? [this.getParentNameAttribute(parentTypeMetadata), this.getParentIdAttribute(parentTypeMetadata)]
       : [];
 
-    return ['name', ...parentAttributes];
+    return ['name', ...this.getExtraAttributeKeys(), ...parentAttributes];
+  }
+
+  protected getExtraAttributeKeys(): string[] {
+    return [];
   }
 
   private getParentPartial(
@@ -106,7 +110,7 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     };
   }
 
-  private resolveParentType(): EntityMetadata | undefined {
+  protected resolveParentType(): EntityMetadata | undefined {
     const sourceRoute = this.apiEntityMetadata?.sourceRoutes?.find(item =>
       this.navigationService.isRelativePathActive([item], this.navigationService.rootRoute())
     );
