@@ -79,6 +79,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   @Input()
   public justify?: SelectJustify;
 
+  @Input()
+  public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
+
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
@@ -111,6 +114,12 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   private setTriggerLabel(): void {
+    if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
+      this.triggerLabel = this.placeholder;
+
+      return;
+    }
+
     const selectedItems: SelectOptionComponent<V>[] | undefined = this.items?.filter(item => this.isSelectedItem(item));
     if (selectedItems === undefined || selectedItems.length === 0) {
       this.triggerLabel = this.placeholder;
@@ -156,4 +165,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
     return this.items.filter(item => this.isSelectedItem(item));
   }
+}
+
+export const enum TriggerLabelDisplayMode {
+  Placeholder = 'placeholder',
+  Selection = 'selection'
 }
