@@ -38,6 +38,8 @@ export * from './external/external-url-navigator';
 export { FeatureGuard } from './feature/feature.guard';
 export { FeatureStateResolver } from './feature/state/feature-state.resolver';
 export { FeatureState } from './feature/state/feature.state';
+export { FeatureResolverModule } from './feature/feature-resolver/feature-resolver.module';
+export { FeatureResolverService } from './feature/feature-resolver/feature-resolver.service';
 
 // Formatters
 export * from './utilities/formatters/date/date-formatter';

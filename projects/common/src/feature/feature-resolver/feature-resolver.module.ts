@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FeatureStateResolver } from '@hypertrace/common';
+import { FeatureStateResolver } from '../state/feature-state.resolver';
 import { FeatureResolverService } from './feature-resolver.service';
 
 @NgModule({

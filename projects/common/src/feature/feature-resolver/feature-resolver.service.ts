@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
+import { FeatureStateResolver } from '../state/feature-state.resolver';
+import { FeatureState } from '../state/feature.state';
 
 @Injectable()
 export class FeatureResolverService extends FeatureStateResolver {
