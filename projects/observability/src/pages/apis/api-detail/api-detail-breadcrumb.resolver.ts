@@ -43,7 +43,10 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
     );
   }
 
-  protected createBreadcrumbForEntity(api: ApiBreadcrumbDetails, activatedRouteSnapshot: ActivatedRouteSnapshot) {
+  protected createBreadcrumbForEntity(
+    api: ApiBreadcrumbDetails,
+    activatedRouteSnapshot: ActivatedRouteSnapshot
+  ): Breadcrumb {
     return {
       label: api.name,
       icon: this.apiEntityMetadata?.icon,
