@@ -8,7 +8,16 @@
   flex-direction: column;
 
   .title {
+    height: 28px;
     @include widget-title($gray-9);
     padding-bottom: 16px;
+  }
+
+  .content {
+    height: 100%;
+
+    &.with-title {
+      height: calc(100% - 28px);
+    }
   }
 }
