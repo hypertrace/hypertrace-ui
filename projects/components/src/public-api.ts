@@ -232,6 +232,10 @@ export { TableCellParser } from './table/cells/table-cell-parser';
 export * from './textarea/textarea.component';
 export * from './textarea/textarea.module';
 
+// Time Picker
+export * from './time-picker/time-picker.component';
+export * from './time-picker/time-picker.module';
+
 // Time Range
 export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
@@ -250,6 +254,10 @@ export { ToggleViewMode } from './toggle-button-group/toggle-button';
 export * from './toggle-group/toggle-group.module';
 export * from './toggle-group/toggle-group.component';
 export * from './toggle-group/toggle-item';
+
+// Toggle Switch
+export * from './toggle-switch/toggle-switch.component';
+export * from './toggle-switch/toggle-switch.module';
 
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';

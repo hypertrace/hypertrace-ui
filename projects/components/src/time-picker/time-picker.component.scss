@@ -1,34 +1,17 @@
 @import 'mixins';
 
-.datetime-picker {
-  @include body-1-medium($gray-7);
-
+.time-picker {
   display: flex;
-  flex-direction: column;
-
-  .datetime-label {
-    padding-bottom: 8px;
-  }
-
-  .datetime-controls {
-    display: flex;
-    align-items: center;
-  }
-
-  .date-selector {
-    height: 32px;
-    width: 160px;
-    border: 1px solid $gray-1;
-    margin-right: 12px;
-  }
 
   .time-selector {
+    @include body-1-medium($gray-7);
     height: 32px;
     border: 1px solid $gray-1;
     background: $gray-1;
     border-radius: 4px;
   }
 }
+
 
 .popover-trigger {
   @include body-1-medium($gray-7);
@@ -53,7 +36,6 @@
   background: white;
   overflow: auto;
   max-height: 320px;
-  padding: 8px;
 
   .popover-item {
     @include list-hover;
@@ -61,6 +43,12 @@
     display: flex;
     align-items: center;
     height: 36px;
-    padding: 4px;
+    padding: 12px;
+
+    &.selected {
+      background: $blue-1;
+    }
   }
+
+
 }

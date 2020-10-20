@@ -8,10 +8,14 @@ export class Time {
   private readonly dateFormatter: DateFormatter = new DateFormatter({ mode: DateFormatMode.TimeOnly });
 
   public get label(): string {
+    return this.dateFormatter.format(this.dateObj);
+  }
+
+  public get dateObj(): Date {
     const date = new Date();
     date.setHours(this.hours, this.minutes, this.seconds, this.milliseconds);
 
-    return this.dateFormatter.format(date);
+    return date;
   }
 
   public constructor(
