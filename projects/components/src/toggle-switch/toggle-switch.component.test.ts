@@ -1,49 +1,40 @@
-import { async } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { fakeAsync } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { TextareaComponent } from './textarea.component';
-import { TraceTextareaModule } from './textarea.module';
+import { ToggleSwitchComponent } from './toggle-switch.component';
 
-describe('Textarea Component', () => {
-  let spectator: Spectator<TextareaComponent>;
-  let logSpy: jasmine.Spy;
+describe('Toggle Switch Component', () => {
+  let spectator: Spectator<ToggleSwitchComponent>;
 
   const createHost = createHostFactory({
-    component: TextareaComponent,
-    imports: [TraceTextareaModule, NoopAnimationsModule],
-    declareComponent: false
+    component: ToggleSwitchComponent,
+    shallow: true,
+    imports: [MatSlideToggleModule, FormsModule]
   });
 
-  beforeEach(async(() => {
-    logSpy = spyOn(console, 'warn');
+  test('should pass properties to Mat Slide toggle correctly', fakeAsync(() => {
+    const onCheckedChangeSpy = jest.fn();
+    spectator = createHost(
+      `<ht-toggle-switch [checked]="checked" [label]="label" [disabled]="disabled" (checkedChange)="onCheckedChange($event)"></ht-toggle-switch>`,
+      {
+        hostProps: {
+          checked: true,
+          label: 'label',
+          disabled: false,
+          onCheckedChange: onCheckedChangeSpy
+        }
+      }
+    );
+    const matToggleComponent = spectator.query(MatSlideToggle);
+    spectator.tick();
+
+    expect(matToggleComponent).toExist();
+    expect(matToggleComponent?.checked).toBeTruthy();
+    expect(matToggleComponent?.disabled).toBeFalsy();
+    expect(spectator.query('.label')).toHaveText('label');
+
+    spectator.triggerEventHandler(MatSlideToggle, 'change', new MatSlideToggleChange(matToggleComponent!, false));
+    expect(onCheckedChangeSpy).toHaveBeenCalledWith(false);
   }));
-
-  test('should warn when placeholder is not provided', () => {
-    spectator = createHost(`<ht-textarea></ht-textarea>`);
-
-    expect(logSpy).toHaveBeenCalled();
-  });
-
-  test('should not warn when placeholder is provided', () => {
-    spectator = createHost(`<ht-textarea [placeholder]="placeholder"></ht-textarea>`, {
-      hostProps: {
-        placeholder: 'TEST'
-      }
-    });
-
-    expect(logSpy).not.toHaveBeenCalled();
-  });
-
-  test('should apply disabled attribute when disabled', () => {
-    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [disabled]="disabled"></ht-textarea>`, {
-      hostProps: {
-        placeholder: 'TEST',
-        disabled: true
-      }
-    });
-
-    const disabled = spectator.query('textarea')!.getAttribute('ng-reflect-disabled');
-
-    expect(disabled).toBe('true');
-  });
 });

@@ -24,7 +24,7 @@ export class ToggleSwitchComponent {
   public label?: string = '';
 
   @Input()
-  public disabled: boolean | undefined;
+  public disabled?: boolean;
 
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
