@@ -251,6 +251,10 @@ export * from './toggle-group/toggle-group.module';
 export * from './toggle-group/toggle-group.component';
 export * from './toggle-group/toggle-item';
 
+// Toggle Switch
+export * from './toggle-switch/toggle-switch.component';
+export * from './toggle-switch/toggle-switch.module';
+
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 
