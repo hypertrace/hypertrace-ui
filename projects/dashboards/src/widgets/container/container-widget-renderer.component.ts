@@ -12,7 +12,9 @@ import { ContainerWidgetModel } from './container-widget.model';
   template: `
     <div class="ht-container-widget">
       <ht-label *ngIf="this.model.title" [label]="this.model.title | htDisplayTitle" class="title"></ht-label>
-      <div #containerContent></div>
+      <div class="content" [ngClass]="{ 'with-title': this.model.title }">
+        <div #containerContent></div>
+      </div>
     </div>
   `
 })
