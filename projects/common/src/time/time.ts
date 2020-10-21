@@ -7,21 +7,17 @@ import { DateFormatMode, DateFormatter } from '../utilities/formatters/date/date
 export class Time {
   private readonly dateFormatter: DateFormatter = new DateFormatter({ mode: DateFormatMode.TimeOnly });
 
-  public get label(): string {
-    return this.dateFormatter.format(this.dateObj);
-  }
-
-  public get dateObj(): Date {
-    const date = new Date();
-    date.setHours(this.hours, this.minutes, this.seconds, this.milliseconds);
-
-    return date;
-  }
-
   public constructor(
     public readonly hours: number,
     public readonly minutes: number = 0,
     public readonly seconds: number = 0,
     public readonly milliseconds: number = 0
   ) {}
+
+  public get label(): string {
+    const date = new Date();
+    date.setHours(this.hours, this.minutes, this.seconds, this.milliseconds);
+
+    return this.dateFormatter.format(date);
+  }
 }
