@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Time, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance } from '../input/input-appearance';
 
@@ -72,6 +65,7 @@ export class DatetimePickerComponent implements OnChanges {
     const d: Date = new Date(this.date!);
     const yearMonthDay = date.split('-');
     d.setFullYear(Number(yearMonthDay[0]), Number(yearMonthDay[1]) - 1, Number(yearMonthDay[2]));
+    this.date = d;
     this.dateChange.emit(d);
   }
 
