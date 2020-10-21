@@ -39,7 +39,7 @@ export class NavigableDashboardComponent implements OnChanges {
   public readonly defaultJson?: ModelJson;
 
   @Input()
-  public navLocation?: string | null;
+  public navLocation?: string;
 
   @Input()
   public filterConfig?: NavigableDashboardFilterConfig;
@@ -64,10 +64,9 @@ export class NavigableDashboardComponent implements OnChanges {
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.navLocation) {
-      const persistedDashboard$ =
-        this.navLocation === undefined || this.navLocation === null
-          ? EMPTY
-          : this.dashboardPersistenceService.getForLocation(this.navLocation);
+      const persistedDashboard$ = !this.navLocation
+        ? EMPTY
+        : this.dashboardPersistenceService.getForLocation(this.navLocation);
       this.dashboardJson$ = persistedDashboard$.pipe(
         map(dashboard => dashboard.content),
         catchError(() => EMPTY),
