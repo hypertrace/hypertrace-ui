@@ -39,7 +39,7 @@ export class NavigableDashboardComponent implements OnChanges {
   public readonly defaultJson?: ModelJson;
 
   @Input()
-  public navLocation?: string;
+  public navLocation?: string | null;
 
   @Input()
   public filterConfig?: NavigableDashboardFilterConfig;
