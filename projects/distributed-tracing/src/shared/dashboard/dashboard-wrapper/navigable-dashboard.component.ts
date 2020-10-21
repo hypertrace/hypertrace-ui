@@ -65,7 +65,9 @@ export class NavigableDashboardComponent implements OnChanges {
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.navLocation) {
       const persistedDashboard$ =
-        this.navLocation === undefined ? EMPTY : this.dashboardPersistenceService.getForLocation(this.navLocation);
+        this.navLocation === undefined || this.navLocation === null
+          ? EMPTY
+          : this.dashboardPersistenceService.getForLocation(this.navLocation);
       this.dashboardJson$ = persistedDashboard$.pipe(
         map(dashboard => dashboard.content),
         catchError(() => EMPTY),
