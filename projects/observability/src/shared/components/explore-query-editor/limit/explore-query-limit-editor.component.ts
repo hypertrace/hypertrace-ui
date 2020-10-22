@@ -8,9 +8,7 @@ import { InputAppearance } from '@hypertrace/components';
   template: `
     <div class="limit-container">
       <div class="limit-number-input-container">
-        <span class="limit-label" [ngClass]="{ disabled: this.disabled }">
-          Max Results
-        </span>
+        <span class="limit-label" [ngClass]="{ disabled: this.disabled }"> Max Results </span>
         <div class="limit-input-wrapper">
           <ht-input
             [type]="this.getInputType()"
@@ -24,9 +22,7 @@ import { InputAppearance } from '@hypertrace/components';
         </div>
       </div>
       <div class="limit-include-rest-container" *ngIf="!this.disabled">
-        <span class="limit-include-rest-label">
-          Show Other:
-        </span>
+        <span class="limit-include-rest-label"> Show Other: </span>
         <ht-checkbox
           [disabled]="this.disabled"
           [checked]="this.includeRest"

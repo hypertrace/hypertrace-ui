@@ -11,9 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="group-by-container">
-      <span class="group-by-label">
-        Group By
-      </span>
+      <span class="group-by-label"> Group By </span>
       <ht-select
         *ngIf="this.groupByKeyOptions$ | async as keyOptions"
         [showBorder]="true"
