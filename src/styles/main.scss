@@ -1,6 +1,8 @@
 @import 'shared-globals';
 @import '@angular/material/theming';
 
+@include mat-core(mat-typography-config($font-family: $font-family));
+
 .vertical-flex-layout {
   @include flex-layout(column);
 }
