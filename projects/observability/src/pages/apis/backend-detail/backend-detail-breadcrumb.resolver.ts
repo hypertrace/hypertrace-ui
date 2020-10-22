@@ -41,7 +41,7 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
   private fetchEntity(id: string): Observable<BackendEntity> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
-        this.graphQlQueryService.queryImmediately<EntityGraphQlQueryHandlerService, BackendEntity>({
+        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, BackendEntity>({
           requestType: ENTITY_GQL_REQUEST,
           entityType: ObservabilityEntityType.Backend,
           id: id,

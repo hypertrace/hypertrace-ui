@@ -47,7 +47,7 @@ describe('Metadata Service', () => {
     service: MetadataService,
     providers: [
       mockProvider(GraphQlRequestService, {
-        queryImmediately: jest.fn().mockReturnValue(of(testAttributes))
+        query: jest.fn().mockReturnValue(of(testAttributes))
       })
     ]
   });
@@ -61,14 +61,14 @@ describe('Metadata Service', () => {
     const spectator = createService();
     expectSingleValueObservable(spectator.service.getFilterAttributes('Scope1'), [testAttributes[0]]);
     expectSingleValueObservable(spectator.service.getFilterAttributes('Scope1'), [testAttributes[0]]);
-    expect(spectator.inject(GraphQlRequestService).queryImmediately).toHaveBeenCalledTimes(1);
+    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledTimes(1);
   });
 
   test('returns empty array if server response is error', () => {
     const spectator = createService({
       providers: [
         mockProvider(GraphQlRequestService, {
-          queryImmediately: jest.fn().mockReturnValue(throwError('error'))
+          query: jest.fn().mockReturnValue(throwError('error'))
         })
       ]
     });
