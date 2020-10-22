@@ -11,9 +11,7 @@ import { IntervalValue } from '../../interval-select/interval-select.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="interval-container">
-      <span class="interval-label">
-        Interval
-      </span>
+      <span class="interval-label"> Interval </span>
       <ht-interval-select
         [interval]="this.selectedInterval$ | async"
         [intervalOptions]="this.intervalOptions$ | async"

@@ -12,7 +12,8 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
   type: 'explore-selection',
   displayName: 'Explore Selection'
 })
-export class ExploreSelectionSpecificationModel extends SpecificationModel<ExploreSpecification>
+export class ExploreSelectionSpecificationModel
+  extends SpecificationModel<ExploreSpecification>
   implements ExploreSpecification {
   @ModelProperty({
     key: 'metric',

@@ -53,9 +53,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
       </ht-select-group>
 
       <div class="visualization-type-selector-container">
-        <span class="visualization-type-label">
-          Type:
-        </span>
+        <span class="visualization-type-label"> Type: </span>
         <ht-select
           [selected]="this.selectedVisualizationType$ | async"
           (selectedChange)="this.onVisualizationTypeChange($event)"
