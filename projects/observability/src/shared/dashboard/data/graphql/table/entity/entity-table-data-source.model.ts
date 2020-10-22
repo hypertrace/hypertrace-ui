@@ -1,19 +1,21 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
-import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
+import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
 import {
+  GraphQlFieldFilter,
   GraphQlFilter,
+  GraphQlOperatorType,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
-import { EMPTY, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Entity, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
+import { EMPTY, Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { Entity, entityIdKey, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
-  EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
+  EntitiesGraphQlQueryHandlerService,
   GraphQlEntitiesQueryRequest
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 
@@ -38,8 +40,18 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   })
   public childEntityType?: ObservabilityEntityType;
 
+  @ModelProperty({
+    key: 'flattenedId',
+    type: STRING_PROPERTY.type
+  })
+  public flattenedId?: string;
+
   public getScope(): string {
     return this.entityType; // TODO: How to deal with children
+  }
+
+  protected getSearchFilterAttribute(): string {
+    return 'name';
   }
 
   protected buildGraphQlRequest(
@@ -51,12 +63,12 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequestType: 'root',
       tableRequest: request,
       entityType: this.entityType,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.filter(c => !c.flattenedColumn).map(c => c.specification),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
-        key: request.sort.column.specification
+        key: request.sort.column.flattenedColumn ? request.columns[0].specification : request.sort.column.specification
       },
       filters: [...filters, ...this.buildSearchFilters(request)],
       timeRange: this.getTimeRangeOrThrow(),
@@ -66,16 +78,64 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   protected buildTableResponse(
     response: EntitiesResponse,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): TableDataResponse<TableRow> {
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    flattenedTree: boolean
+  ): Observable<TableDataResponse<TableRow>> {
+    if (flattenedTree) {
+      return this.queryFlattenedTree(response, request).pipe(
+        map(rows => this.buildTableDataResponse(rows, response.total!))
+      );
+    }
+
+    return this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined).pipe(
+      map(rows => this.buildTableDataResponse(rows, response.total!))
+    );
+  }
+
+  private buildTableDataResponse(rows: TableRow[], total: number): TableDataResponse<TableRow> {
     return {
-      data: this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined),
-      totalCount: response.total!
+      data: rows,
+      totalCount: total
     };
   }
 
-  protected getSearchFilterAttribute(): string {
-    return 'name';
+  private queryFlattenedTree(
+    response: EntitiesResponse,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): Observable<TableRow[]> {
+    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildFlattenedTreeRequest(response, request)).pipe(
+      mergeMap(response => this.resultsAsTreeRows(response.results, request, false))
+    );
+  }
+
+  private buildFlattenedTreeRequest(
+    response: EntitiesResponse,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): EntityTableGraphQlRequest {
+    return {
+      requestType: ENTITIES_GQL_REQUEST,
+      tableRequestType: 'root',
+      tableRequest: request,
+      entityType: this.childEntityType!,
+      properties: request.columns.map(column => column.specification),
+      limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
+      offset: request.position.startIndex,
+      sort: request.sort && {
+        direction: request.sort.direction,
+        key: request.sort.column.specification
+      },
+      filters: [this.buildFlattenedTreeFilter(response.results)],
+      timeRange: this.getTimeRangeOrThrow(),
+      includeTotal: true
+    };
+  }
+
+  private buildFlattenedTreeFilter(entities: Entity[]): GraphQlFilter {
+    return new GraphQlFieldFilter(
+      this.flattenedId!,
+      GraphQlOperatorType.In,
+      entities.map(e => e[entityIdKey])
+    );
   }
 
   private buildChildEntityRequest(
@@ -102,12 +162,14 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     results: Entity[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
     expandable: boolean
-  ): TableRow[] {
-    return results.map(entity => ({
-      ...entity,
-      getChildren: () => (expandable ? this.queryEntityChildren(entity, request) : EMPTY),
-      isExpandable: () => expandable
-    }));
+  ): Observable<TableRow[]> {
+    return of(
+      results.map(entity => ({
+        ...entity,
+        getChildren: () => (expandable ? this.queryEntityChildren(entity, request) : EMPTY),
+        isExpandable: () => expandable
+      }))
+    );
   }
 
   private queryEntityChildren(
@@ -115,7 +177,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): Observable<TableRow[]> {
     return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
-      map(response => this.resultsAsTreeRows(response.results, request, false))
+      mergeMap(response => this.resultsAsTreeRows(response.results, request, false))
     );
   }
 }

@@ -1,8 +1,8 @@
 import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
-  EnumPropertyTypeInstance,
   ENUM_TYPE,
+  EnumPropertyTypeInstance,
   ModelTemplatePropertyType,
   WidgetHeaderModel
 } from '@hypertrace/dashboards';
@@ -17,7 +17,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
@@ -113,6 +113,13 @@ export class TableWidgetModel {
   public searchable?: boolean = false;
 
   @ModelProperty({
+    key: 'flattenable',
+    displayName: 'Flattenable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public flattenable?: boolean = false;
+
+  @ModelProperty({
     key: 'pageable',
     displayName: 'Pageable',
     type: BOOLEAN_PROPERTY.type
@@ -127,7 +134,13 @@ export class TableWidgetModel {
   }
 
   public getColumns(): SpecificationBackedTableColumnDef[] {
-    return this.columns.map(column => column.asTableColumnDef());
+    return this.columns
+      .filter(column => this.filterFlattenedTreeColumns(column))
+      .map(column => column.asTableColumnDef(column.flattened));
+  }
+
+  private filterFlattenedTreeColumns(column: TableWidgetColumnModel): boolean {
+    return !column.flattened || (this.flattenable === true && this.mode === TableMode.Flat && column.flattened);
   }
 
   public getChildModel(row: TableRow): object | undefined {

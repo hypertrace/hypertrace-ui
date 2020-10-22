@@ -22,6 +22,7 @@ import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
+import { ToggleItem } from '../toggle-group/toggle-item';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
 import { TableCdkColumnUtil } from './data/table-cdk-column-util';
 import { TableCdkDataSource } from './data/table-cdk-data-source';
@@ -51,13 +52,24 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Search -->
-    <div *ngIf="this.searchable" class="table-controls">
+    <!-- Header Controls -->
+    <div *ngIf="this.searchable || this.flattenable" class="table-controls">
+      <!-- Search -->
       <ht-search-box
+        *ngIf="this.searchable"
         class="search-box"
         [placeholder]="this.searchPlaceholder"
         (valueChange)="this.applyFilter($event)"
       ></ht-search-box>
+
+      <!-- Flatten Toggle -->
+      <ht-toggle-group
+        *ngIf="this.flattenable"
+        class="mode-toggle-group"
+        [items]="this.toggleModes"
+        [activeItem]="this.activeToggleMode"
+        (activeItemChange)="this.onToggleModeChange($event)"
+      ></ht-toggle-group>
     </div>
 
     <!-- Table -->
@@ -203,6 +215,18 @@ export class TableComponent
     id: '$$detail'
   };
 
+  public readonly toggleModes: ToggleItem<TableMode>[] = [
+    {
+      label: 'Tree',
+      value: TableMode.Tree
+    },
+    {
+      label: 'Flat',
+      value: TableMode.Flat
+    }
+  ];
+  public activeToggleMode?: ToggleItem<TableMode> = this.toggleModes[0];
+
   @Input()
   public columnConfigs?: TableColumnConfig[];
 
@@ -226,6 +250,9 @@ export class TableComponent
 
   @Input()
   public searchable?: boolean = false;
+
+  @Input()
+  public flattenable?: boolean = false;
 
   @Input()
   public pageable?: boolean = true;
@@ -253,6 +280,9 @@ export class TableComponent
 
   @Input()
   public searchPlaceholder: string = 'Search';
+
+  @Output()
+  public readonly modeChange: EventEmitter<TableMode> = new EventEmitter<TableMode>();
 
   @Output()
   public readonly selectionsChange: EventEmitter<StatefulTableRow[]> = new EventEmitter<StatefulTableRow[]>();
@@ -300,6 +330,7 @@ export class TableComponent
 
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
+  public flattenedTree: boolean = false;
 
   private resizeHeaderOffsetLeft: number = 0;
   private resizeStartX: number = 0;
@@ -325,11 +356,13 @@ export class TableComponent
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.columnConfigs || changes.detailContent || changes.metadata) {
+    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
+      this.activeToggleMode = this.toggleModes.find(item => item.value === this.mode);
+      this.flattenedTree = this.flattenable === true && this.mode === TableMode.Flat;
       this.initializeColumns();
     }
 
-    if (changes.data || changes.pageSize || changes.pageSizeOptions || changes.pageable) {
+    if (changes.mode || changes.data || changes.pageSize || changes.pageSizeOptions || changes.pageable) {
       this.initializeData();
     }
 
@@ -540,6 +573,10 @@ export class TableComponent
 
   public applyFilter(value: string): void {
     this.filterSubject.next(value);
+  }
+
+  public onToggleModeChange(toggleItem: ToggleItem<TableMode>): void {
+    this.modeChange.emit(toggleItem.value);
   }
 
   public visibleColumns(): string[] {

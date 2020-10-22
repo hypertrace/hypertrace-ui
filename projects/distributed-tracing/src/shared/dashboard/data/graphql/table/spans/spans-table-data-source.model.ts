@@ -1,5 +1,6 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model } from '@hypertrace/hyperdash';
+import { Observable, of } from 'rxjs';
 
 import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { SPAN_SCOPE } from '../../../../../graphql/model/schema/span';
@@ -37,11 +38,11 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(response: SpansResponse): TableDataResponse<TableRow> {
-    return {
+  protected buildTableResponse(response: SpansResponse): Observable<TableDataResponse<TableRow>> {
+    return of({
       data: response.results,
       totalCount: response.total
-    };
+    });
   }
   protected getSearchFilterAttribute(): string {
     // Todo: Figure this out

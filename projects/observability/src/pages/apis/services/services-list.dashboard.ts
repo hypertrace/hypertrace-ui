@@ -6,9 +6,10 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_LIST',
   json: {
     type: 'table-widget',
-    mode: TableMode.Tree,
     style: TableStyle.FullPage,
+    mode: TableMode.Tree,
     searchable: true,
+    flattenable: true,
     columns: [
       {
         type: 'table-widget-column',
@@ -17,6 +18,17 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
         width: '30%',
         value: {
           type: 'entity-specification'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Service Name',
+        display: CoreTableCellRendererType.Text,
+        width: '30%',
+        flattened: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'serviceName'
         }
       },
       {
@@ -84,7 +96,8 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     data: {
       type: 'entity-table-data-source',
       entity: 'SERVICE',
-      childEntity: 'API'
+      childEntity: 'API',
+      flattenedId: 'serviceId'
     }
   }
 };

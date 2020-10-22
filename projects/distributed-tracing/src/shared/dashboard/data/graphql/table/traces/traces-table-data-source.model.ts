@@ -1,5 +1,6 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { Observable, of } from 'rxjs';
 import { GraphQlFilter } from '../../../../../../shared/graphql/model/schema/filter/graphql-filter';
 import { TraceType, TRACE_SCOPE } from '../../../../../../shared/graphql/model/schema/trace';
 import {
@@ -49,11 +50,11 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(response: TracesResponse): TableDataResponse<TableRow> {
-    return {
+  protected buildTableResponse(response: TracesResponse): Observable<TableDataResponse<TableRow>> {
+    return of({
       data: response.results,
       totalCount: response.total
-    };
+    });
   }
 
   protected getSearchFilterAttribute(): string {

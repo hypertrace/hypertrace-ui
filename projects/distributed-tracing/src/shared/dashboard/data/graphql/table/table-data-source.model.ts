@@ -2,7 +2,7 @@ import { TableDataRequest, TableDataResponse, TableDataSource, TableRow } from '
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { isEmpty } from 'lodash-es';
 import { Observable, of as observableOf } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { GraphQlFieldFilter } from '../../../../../shared/graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../../../../shared/graphql/model/schema/filter/graphql-filter';
 import { SpecificationBackedTableColumnDef } from '../../../widgets/table/table-widget-column.model';
@@ -18,9 +18,9 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({
-      getData: request =>
-        this.query(filters => this.buildGraphQlRequest(filters, request)).pipe(
-          map(response => this.buildTableResponse(response, request))
+      getData: (request, flattenedTree) =>
+        this.query(filters => this.buildGraphQlRequest(filters, request, flattenedTree)).pipe(
+          switchMap(response => this.buildTableResponse(response, request, flattenedTree))
         ),
       getScope: () => this.getScope()
     });
@@ -30,13 +30,15 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   protected abstract buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    flattenedTree?: boolean
   ): unknown;
 
   protected abstract buildTableResponse(
     response: unknown,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): TableDataResponse<TableRow>;
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    flattenedTree?: boolean
+  ): Observable<TableDataResponse<TableRow>>;
 
   protected abstract getSearchFilterAttribute(request: TableDataRequest<SpecificationBackedTableColumnDef>): string;
 

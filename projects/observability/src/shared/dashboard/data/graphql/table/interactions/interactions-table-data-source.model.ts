@@ -6,6 +6,7 @@ import {
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { Observable, of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { NeighborDirection, specificationDefinesNeighbor } from '../../../../../graphql/model/schema/neighbor';
@@ -41,11 +42,11 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(response: InteractionsResponse): TableDataResponse<TableRow> {
-    return {
+  protected buildTableResponse(response: InteractionsResponse): Observable<TableDataResponse<TableRow>> {
+    return of({
       data: response.results,
       totalCount: response.results.length
-    };
+    });
   }
 
   protected getSearchFilterAttribute(): never {

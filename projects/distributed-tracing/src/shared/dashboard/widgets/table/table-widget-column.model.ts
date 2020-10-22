@@ -66,6 +66,13 @@ export class TableWidgetColumnModel {
   public filterable?: boolean = false;
 
   @ModelProperty({
+    key: 'flattened',
+    displayName: 'Flattened Column',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public flattened?: boolean = false;
+
+  @ModelProperty({
     key: 'display',
     displayName: 'Display',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -91,7 +98,7 @@ export class TableWidgetColumnModel {
   })
   public sort?: TableSortDirection;
 
-  public asTableColumnDef(): SpecificationBackedTableColumnDef {
+  public asTableColumnDef(flattenedColumn?: boolean): SpecificationBackedTableColumnDef {
     return {
       id: this.value.resultAlias(),
       name: this.value.name,
@@ -104,7 +111,8 @@ export class TableWidgetColumnModel {
       filterable: this.filterable,
       sort: this.sort,
       onClick: this.buildClickHandlerIfDefined(),
-      specification: this.value
+      specification: this.value,
+      flattenedColumn: flattenedColumn
     };
   }
 
@@ -119,4 +127,5 @@ export class TableWidgetColumnModel {
 
 export interface SpecificationBackedTableColumnDef extends TableColumnConfig {
   specification: Specification;
+  flattenedColumn?: boolean;
 }

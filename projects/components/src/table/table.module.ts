@@ -6,6 +6,7 @@ import { LetAsyncModule } from '../let-async/let-async.module';
 import { LoadAsyncModule } from '../load-async/load-async.module';
 import { PaginatorModule } from '../paginator/paginator.module';
 import { TraceSearchBoxModule } from '../search-box/search-box.module';
+import { ToggleGroupModule } from '../toggle-group/toggle-group.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { TableCellParserConstructor } from './cells/table-cell-parser';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
@@ -22,7 +23,8 @@ import { TableComponent } from './table.component';
     PaginatorModule,
     TraceSearchBoxModule,
     LoadAsyncModule,
-    LetAsyncModule
+    LetAsyncModule,
+    ToggleGroupModule
   ],
   declarations: [TableComponent],
   exports: [TableComponent]

@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FilterAttribute, TableColumnConfig, TableDataSource, TableRow, TableStyle } from '@hypertrace/components';
+import {
+  FilterAttribute,
+  TableColumnConfig,
+  TableDataSource,
+  TableMode,
+  TableRow,
+  TableStyle
+} from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -31,9 +38,11 @@ import { TableWidgetModel } from './table-widget.model';
         [display]="this.model.style"
         [data]="this.data$ | async"
         [searchable]="this.api.model.searchable"
+        [flattenable]="this.api.model.flattenable"
         [pageable]="this.api.model.pageable"
         [detailContent]="childDetail"
         [syncWithUrl]="this.syncWithUrl"
+        (modeChange)="this.onTableModeChange($event)"
         (selectionsChange)="this.onRowSelection($event)"
       >
       </ht-table>
@@ -94,6 +103,11 @@ export class TableWidgetRendererComponent
 
   private getColumnConfigs(): TableColumnConfig[] {
     return this.model.getColumns();
+  }
+
+  public onTableModeChange(mode: TableMode): void {
+    this.model.mode = mode;
+    this.columnConfigs = this.getColumnConfigs();
   }
 
   public onRowSelection(selections: TableRow[]): void {

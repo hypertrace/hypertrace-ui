@@ -5,6 +5,7 @@ import { TableDataSource } from './table-data-source';
 
 export interface TableDataSourceProvider {
   data?: TableDataSource<TableRow>;
+  flattenedTree?: boolean;
 }
 
 export interface ColumnConfigProvider {
