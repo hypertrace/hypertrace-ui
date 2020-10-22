@@ -1,8 +1,6 @@
 @import 'shared-globals';
 @import '@angular/material/theming';
 
-@include mat-core(mat-typography-config($font-family: $font-family));
-
 .vertical-flex-layout {
   @include flex-layout(column);
 }
@@ -66,4 +64,4 @@ mark {
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat-core(mat-typography-config($font-family: $font-family));
