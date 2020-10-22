@@ -69,7 +69,8 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
     </ng-template>
   `
 })
-export class WaterfallWidgetRendererComponent extends WidgetRenderer<WaterfallWidgetModel, WaterfallData[]>
+export class WaterfallWidgetRendererComponent
+  extends WidgetRenderer<WaterfallWidgetModel, WaterfallData[]>
   implements OnInit {
   @ViewChild('chart')
   private readonly waterfallChart!: WaterfallChartComponent;
