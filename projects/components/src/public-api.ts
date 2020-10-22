@@ -232,6 +232,10 @@ export { TableCellParser } from './table/cells/table-cell-parser';
 export * from './textarea/textarea.component';
 export * from './textarea/textarea.module';
 
+// Time Picker
+export * from './time-picker/time-picker.component';
+export * from './time-picker/time-picker.module';
+
 // Time Range
 export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
