@@ -1,11 +1,11 @@
-import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
+import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   GraphQlFilter,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
@@ -38,11 +38,33 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   })
   public childEntityType?: ObservabilityEntityType;
 
+  @ModelProperty({
+    key: 'flattenedFilters',
+    type: ARRAY_PROPERTY.type
+  })
+  public flattenedFilters: GraphQlFilter[] = [];
+
   public getScope(): string {
     return this.entityType; // TODO: How to deal with children
   }
 
+  protected getSearchFilterAttribute(): string {
+    return 'name';
+  }
+
   protected buildGraphQlRequest(
+    filters: GraphQlFilter[],
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode: TableMode
+  ): EntityTableGraphQlRequest {
+    if (mode === TableMode.Flat && this.flattenedFilters.length > 0) {
+      return this.buildFlattenedEntityRequest(filters, request);
+    }
+
+    return this.buildEntityRequest(filters, request);
+  }
+
+  private buildEntityRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): EntityTableGraphQlRequest {
@@ -51,12 +73,14 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequestType: 'root',
       tableRequest: request,
       entityType: this.entityType,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.map(c => c.specification),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
-        key: request.sort.column.specification
+        key: request.columns.includes(request.sort.column)
+          ? request.sort.column.specification
+          : request.columns[0].specification
       },
       filters: [...filters, ...this.buildSearchFilters(request)],
       timeRange: this.getTimeRangeOrThrow(),
@@ -64,18 +88,26 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(
-    response: EntitiesResponse,
+  private buildFlattenedEntityRequest(
+    filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): TableDataResponse<TableRow> {
+  ): EntityTableGraphQlRequest {
     return {
-      data: this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined),
-      totalCount: response.total!
+      requestType: ENTITIES_GQL_REQUEST,
+      tableRequestType: 'root',
+      tableRequest: request,
+      entityType: this.childEntityType!,
+      properties: request.columns.map(column => column.specification),
+      limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
+      offset: request.position.startIndex,
+      sort: request.sort && {
+        direction: request.sort.direction,
+        key: request.sort.column.specification
+      },
+      filters: [...filters, ...this.buildSearchFilters(request), ...this.flattenedFilters],
+      timeRange: this.getTimeRangeOrThrow(),
+      includeTotal: true
     };
-  }
-
-  protected getSearchFilterAttribute(): string {
-    return 'name';
   }
 
   private buildChildEntityRequest(
@@ -98,6 +130,25 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
+  protected buildTableResponse(
+    response: EntitiesResponse,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): TableDataResponse<TableRow> {
+    return {
+      data: this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined),
+      totalCount: response.total!
+    };
+  }
+
+  private queryEntityChildren(
+    entity: Entity,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): Observable<TableRow[]> {
+    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
+      map(response => this.resultsAsTreeRows(response.results, request, false))
+    );
+  }
+
   private resultsAsTreeRows(
     results: Entity[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
@@ -108,15 +159,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       getChildren: () => (expandable ? this.queryEntityChildren(entity, request) : EMPTY),
       isExpandable: () => expandable
     }));
-  }
-
-  private queryEntityChildren(
-    entity: Entity,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): Observable<TableRow[]> {
-    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
-      map(response => this.resultsAsTreeRows(response.results, request, false))
-    );
   }
 }
 

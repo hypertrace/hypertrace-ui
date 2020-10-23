@@ -1,6 +1,5 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model } from '@hypertrace/hyperdash';
-
 import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { SPAN_SCOPE } from '../../../../../graphql/model/schema/span';
 import {

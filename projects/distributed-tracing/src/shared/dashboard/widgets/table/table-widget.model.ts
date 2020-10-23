@@ -113,6 +113,13 @@ export class TableWidgetModel {
   public searchable?: boolean = false;
 
   @ModelProperty({
+    key: 'flattenable',
+    displayName: 'Flattenable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public flattenable?: boolean = false;
+
+  @ModelProperty({
     key: 'pageable',
     displayName: 'Pageable',
     type: BOOLEAN_PROPERTY.type
@@ -127,7 +134,13 @@ export class TableWidgetModel {
   }
 
   public getColumns(): SpecificationBackedTableColumnDef[] {
-    return this.columns.map(column => column.asTableColumnDef());
+    return this.columns
+      .filter(column => this.filterFlattenedTreeColumns(column))
+      .map(column => column.asTableColumnDef());
+  }
+
+  private filterFlattenedTreeColumns(column: TableWidgetColumnModel): boolean {
+    return !column.flattenedOnly || (this.flattenable === true && this.mode === TableMode.Flat && column.flattenedOnly);
   }
 
   public getChildModel(row: TableRow): object | undefined {

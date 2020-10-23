@@ -1,4 +1,4 @@
-import { TableDataRequest, TableDataResponse, TableDataSource, TableRow } from '@hypertrace/components';
+import { TableDataRequest, TableDataResponse, TableDataSource, TableMode, TableRow } from '@hypertrace/components';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { isEmpty } from 'lodash-es';
 import { Observable, of as observableOf } from 'rxjs';
@@ -18,9 +18,9 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({
-      getData: request =>
-        this.query(filters => this.buildGraphQlRequest(filters, request)).pipe(
-          map(response => this.buildTableResponse(response, request))
+      getData: (request, mode) =>
+        this.query(filters => this.buildGraphQlRequest(filters, request, mode)).pipe(
+          map(response => this.buildTableResponse(response, request, mode))
         ),
       getScope: () => this.getScope()
     });
@@ -30,12 +30,14 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   protected abstract buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode?: TableMode
   ): unknown;
 
   protected abstract buildTableResponse(
     response: unknown,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode?: TableMode
   ): TableDataResponse<TableRow>;
 
   protected abstract getSearchFilterAttribute(request: TableDataRequest<SpecificationBackedTableColumnDef>): string;
