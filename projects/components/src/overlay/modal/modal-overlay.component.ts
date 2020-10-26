@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonSize, ButtonStyle } from '../../button/button';
+import { ModalSize } from '../../modal/modal';
 import { POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
-import { ModalOverlayConfig, ModalSize } from './modal';
+import { ModalOverlayConfig } from './modal';
 
 @Component({
   selector: 'ht-modal-overlay',

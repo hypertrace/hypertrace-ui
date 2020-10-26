@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { ButtonModule } from '../../button/button.module';
+import { ModalSize } from '../../modal/modal';
 import { POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
-import { ModalSize } from './modal';
 import { ModalOverlayComponent } from './modal-overlay.component';
 
 @Component({

@@ -274,3 +274,8 @@ export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 // Beta tag
 export * from './beta-tag/beta-tag.component';
 export * from './beta-tag/beta-tag.module';
+
+// Multi-select
+export * from './modal/modal';
+export * from './modal/modal.module';
+export * from './modal/modal.service';
