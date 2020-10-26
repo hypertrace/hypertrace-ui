@@ -1,5 +1,7 @@
 import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ModalConfig, ModalRef } from '../modal/modal';
+import { ModalService } from '../modal/modal.service';
 import { PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
@@ -14,7 +16,11 @@ export class OverlayService implements OnDestroy {
 
   private sheetCloseSubscription?: Subscription;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly defaultInjector: Injector) {}
+  public constructor(
+    private readonly popoverService: PopoverService,
+    private readonly modalService: ModalService,
+    private readonly defaultInjector: Injector
+  ) {}
 
   public ngOnDestroy(): void {
     this.sheetCloseSubscription?.unsubscribe();
@@ -38,6 +44,11 @@ export class OverlayService implements OnDestroy {
     this.setActiveSheetPopover(popover);
 
     return popover;
+  }
+
+  // @deprecated provided for backwards compatibility
+  public createModal(config: ModalConfig, injector: Injector = this.defaultInjector): ModalRef<never> {
+    return this.modalService.createModal(config, injector);
   }
 
   private setActiveSheetPopover(popover: PopoverRef): void {
