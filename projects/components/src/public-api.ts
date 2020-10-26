@@ -278,3 +278,6 @@ export * from './beta-tag/beta-tag.module';
 export * from './modal/modal';
 export * from './modal/modal.module';
 export * from './modal/modal.service';
+
+export * from './confirmation/confirmation.module';
+export * from './confirmation/confirmation.service';

@@ -1,5 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { PopoverBackdrop, PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
+import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
 import { DefaultModalRef } from './default-modal-ref';
 import { ModalConfig, ModalRef, MODAL_DATA } from './modal';
@@ -18,21 +19,11 @@ export class ModalService {
     injector: Injector = this.defaultInjector
   ): ModalRef<TResponse> {
     this.activeModal?.close();
+
     const newModal = new DefaultModalRef();
     this.activeModal = newModal;
 
-    const popover = this.popoverService.drawPopover({
-      componentOrTemplate: ModalContainerComponent,
-      parentInjector: injector,
-      position: {
-        type: PopoverPositionType.Fixed,
-        location: PopoverFixedPositionLocation.Centered
-      },
-      data: this.buildMetadata(config, newModal, injector),
-      backdrop: PopoverBackdrop.Opaque
-    });
-
-    popover.closeOnNavigation();
+    const popover = this.buildPopover(injector, this.buildMetadata(config, newModal, injector));
     newModal.initialize(popover);
 
     return newModal as ModalRef<TResponse>;
@@ -59,5 +50,22 @@ export class ModalService {
         parent: parentInjector
       })
     };
+  }
+
+  private buildPopover(injector: Injector, modalContainerData: ModalConstructionData): PopoverRef {
+    const popover = this.popoverService.drawPopover({
+      componentOrTemplate: ModalContainerComponent,
+      parentInjector: injector,
+      position: {
+        type: PopoverPositionType.Fixed,
+        location: PopoverFixedPositionLocation.Centered
+      },
+      data: modalContainerData,
+      backdrop: PopoverBackdrop.Opaque
+    });
+
+    popover.closeOnNavigation();
+
+    return popover;
   }
 }
