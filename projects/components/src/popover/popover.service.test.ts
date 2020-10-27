@@ -39,7 +39,7 @@ describe('Popover service', () => {
       case PopoverBackdrop.Transparent:
         return spectator.query('.cdk-overlay-transparent-backdrop', { root: true })!;
       case PopoverBackdrop.Opaque:
-        return spectator.query('.modal-overlay-backdrop', { root: true })!;
+        return spectator.query('.opaque-backdrop', { root: true })!;
       case PopoverBackdrop.None:
       default:
         return undefined;

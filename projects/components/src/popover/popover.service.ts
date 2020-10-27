@@ -99,7 +99,7 @@ export class PopoverService {
       case PopoverBackdrop.Transparent:
         return 'cdk-overlay-transparent-backdrop';
       case PopoverBackdrop.Opaque:
-        return 'modal-overlay-backdrop';
+        return 'opaque-backdrop';
       case PopoverBackdrop.None:
       default:
         return '';

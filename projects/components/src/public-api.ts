@@ -193,7 +193,6 @@ export { OverlayService } from './overlay/overlay.service';
 export * from './overlay/overlay';
 export * from './overlay/overlay.module';
 export * from './overlay/sheet/sheet';
-export * from './overlay/modal/modal';
 
 // Snippet
 export { SnippetViewerComponent } from './viewer/snippet-viewer/snippet-viewer.component';
@@ -274,3 +273,8 @@ export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 // Beta tag
 export * from './beta-tag/beta-tag.component';
 export * from './beta-tag/beta-tag.module';
+
+// Modal
+export * from './modal/modal';
+export * from './modal/modal.module';
+export * from './modal/modal.service';
