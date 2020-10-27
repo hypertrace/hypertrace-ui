@@ -11,7 +11,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./icon-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="icon-cell" [ngClass]="{ clickable: this.clickable }">
+    <div class="icon-cell" [ngClass]="this.classes">
       <ht-icon [icon]="this.value" size="${IconSize.Small}" [showTooltip]="true"></ht-icon>
     </div>
   `

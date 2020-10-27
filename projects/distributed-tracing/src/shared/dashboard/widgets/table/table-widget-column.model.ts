@@ -6,7 +6,14 @@ import {
   TableSortDirection
 } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import {
+  ARRAY_PROPERTY,
+  BOOLEAN_PROPERTY,
+  Model,
+  ModelProperty,
+  ModelPropertyType,
+  STRING_PROPERTY
+} from '@hypertrace/hyperdash';
 import { Specification } from '../../../graphql/model/schema/specifier/specification';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 
@@ -50,6 +57,12 @@ export class TableWidgetColumnModel {
     type: STRING_PROPERTY.type
   })
   public alignment?: TableCellAlignmentType;
+
+  @ModelProperty({
+    key: 'classes',
+    type: ARRAY_PROPERTY.type
+  })
+  public classes: string[] = [];
 
   @ModelProperty({
     key: 'visible',
@@ -96,6 +109,7 @@ export class TableWidgetColumnModel {
       id: this.value.resultAlias(),
       name: this.value.name,
       display: this.display,
+      classes: this.classes,
       title: this.title,
       titleTooltip: this.titleTooltip,
       alignment: this.alignment,

@@ -6,6 +6,7 @@ export interface TableColumnConfig {
   id: string; // This is the unique ID for the column (often same as 'name' except for composite fields)
   name?: string; // Attribute name (for composite columns use the attribute that should be filtered/sorted)
   display?: string;
+  classes?: string[];
   title?: string;
   titleTooltip?: string;
   sort?: TableSortDirection;

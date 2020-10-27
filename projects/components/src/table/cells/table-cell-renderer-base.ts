@@ -22,6 +22,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
   private _value!: TValue;
   private _units!: string;
   private _tooltip!: string;
+  private _classes!: string[];
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
 
@@ -40,6 +41,8 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
     this._value = this.parser.parseValue(this.cellData, this.rowData);
     this._units = this.parser.parseUnits(this.cellData, this.rowData);
     this._tooltip = this.parser.parseTooltip(this.cellData, this.rowData);
+
+    this._classes = [...(this.clickable ? ['clickable'] : []), ...(this.columnConfig.classes ?? [])];
   }
 
   public get value(): TValue {
@@ -52,5 +55,9 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
 
   public get tooltip(): string {
     return this._tooltip;
+  }
+
+  public get classes(): string[] {
+    return this._classes;
   }
 }
