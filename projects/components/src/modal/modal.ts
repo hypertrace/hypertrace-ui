@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 export interface ModalConfig<TData = unknown> {
   size: ModalSize;
   content: TemplateRef<unknown> | Type<unknown>;
-  showHeader?: boolean;
+  showControls?: boolean;
   title?: string;
   data?: TData;
 }
