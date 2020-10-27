@@ -40,7 +40,7 @@ describe('Confirmation modal', () => {
 
     expect(buttons[0].label).toEqual('Cancel');
     expect(buttons[1].role).toEqual(ButtonRole.Additive);
-    expect(buttons[1].label).toEqual('OK');
+    expect(buttons[1].label).toEqual('Confirm');
   });
 
   test('displays provided labels and text', () => {

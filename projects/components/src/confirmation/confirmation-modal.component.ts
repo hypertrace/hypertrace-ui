@@ -23,7 +23,7 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
   `
 })
 export class ConfirmationModalComponent {
-  private static readonly DEFAULT_CONFIRM_LABEL: string = 'OK';
+  private static readonly DEFAULT_CONFIRM_LABEL: string = 'Confirm';
   private static readonly DEFAULT_CANCEL_LABEL: string = 'Cancel';
   private static readonly DEFAULT_CONFIRM_ROLE: ButtonRole = ButtonRole.Additive;
   public readonly confirmButtonLabel: string;
