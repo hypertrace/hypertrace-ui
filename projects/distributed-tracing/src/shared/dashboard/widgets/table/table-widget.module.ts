@@ -8,12 +8,12 @@ import { TracingTableCellRendererModule } from '../../../components/table/tracin
 import { TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
 import { TableWidgetModel } from './table-widget.model';
-
+import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 @NgModule({
   declarations: [TableWidgetRendererComponent],
   imports: [
     DashboardCoreModule.with({
-      models: [TableWidgetModel, TableWidgetColumnModel, WidgetHeaderModel],
+      models: [TableWidgetModel, TableWidgetColumnModel, TableWidgetRowSelectionModel,  WidgetHeaderModel],
       renderers: [TableWidgetRendererComponent],
       propertyTypes: []
     }),
