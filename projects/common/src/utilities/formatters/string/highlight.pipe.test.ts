@@ -1,4 +1,4 @@
-import { HighlightPipe } from '@hypertrace/common';
+import { HighlightPipe } from './highlight.pipe';
 
 describe('Highlight pipe', () => {
   let pipe: HighlightPipe;
