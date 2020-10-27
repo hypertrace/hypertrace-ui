@@ -17,10 +17,7 @@ export class MappedAttributeSpecificationModel extends AttributeSpecificationMod
 
   public extractFromServerData(resultContainer: Dictionary<unknown>): unknown {
     const returnedKey = super.extractFromServerData(resultContainer);
-    const returnedKeyString = String(returnedKey);
-    if (returnedKeyString in this.map) {
-      return this.map[returnedKeyString];
-    }
-    return returnedKey;
+
+    return this.map[String(returnedKey)];
   }
 }
