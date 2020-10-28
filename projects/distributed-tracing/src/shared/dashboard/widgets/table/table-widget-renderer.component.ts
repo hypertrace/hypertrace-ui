@@ -1,12 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FilterAttribute, TableColumnConfig, TableDataSource, TableRow, TableStyle } from '@hypertrace/components';
+import {
+  FilterAttribute,
+  StatefulTableRow,
+  TableColumnConfig,
+  TableDataSource,
+  TableRow,
+  TableSelectionMode,
+  TableStyle
+} from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
+import { InteractionHandler } from './../../interaction/interaction-handler';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
@@ -48,6 +58,7 @@ export class TableWidgetRendererComponent
   implements OnInit {
   public metadata$: Observable<FilterAttribute[]>;
   public columnConfigs: TableColumnConfig[];
+  private selectedRowInteractionHandler?: InteractionHandler;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
@@ -62,12 +73,27 @@ export class TableWidgetRendererComponent
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
 
-  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
-    return this.model.getData().pipe(startWith(undefined));
+  public onRowSelection(selections: StatefulTableRow[]): void {
+    if (this.api.model.selectionMode === TableSelectionMode.Single) {
+      /**
+       * Execute selection handler for single selection mode only
+       */
+      let selectedRow;
+      if (selections.length > 0) {
+        selectedRow = selections[0];
+        this.selectedRowInteractionHandler = this.getInteractionHandler(selectedRow);
+      }
+
+      this.selectedRowInteractionHandler?.execute(selectedRow);
+    }
   }
 
   public get syncWithUrl(): boolean {
     return this.model.style === TableStyle.FullPage;
+  }
+
+  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
+    return this.model.getData().pipe(startWith(undefined));
   }
 
   private getScope(): Observable<string | undefined> {
@@ -96,7 +122,11 @@ export class TableWidgetRendererComponent
     return this.model.getColumns();
   }
 
-  public onRowSelection(selections: TableRow[]): void {
-    this.api.model.selectionHandler?.execute(selections);
+  private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
+    const matchedSelectionHandlers = this.api.model.rowSelectionHandlers
+      ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
+      .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
+
+    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers![0].handler : undefined;
   }
 }
