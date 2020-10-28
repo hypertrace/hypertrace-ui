@@ -19,6 +19,7 @@ import { isEqualIgnoreFunctions, NavigationService, NumberCoercer, TypedSimpleCh
 import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { GraphQlFilter } from '../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
@@ -28,7 +29,7 @@ import { TableCdkDataSource } from './data/table-cdk-data-source';
 import {
   ColumnConfigProvider,
   ColumnStateChangeProvider,
-  FilterProvider,
+  FiltersProvider,
   RowStateChangeProvider,
   TableDataSourceProvider
 } from './data/table-cdk-data-source-api';
@@ -51,16 +52,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Search -->
-    <div *ngIf="this.searchable" class="table-controls">
-      <ht-search-box
-        class="search-box"
-        [placeholder]="this.searchPlaceholder"
-        (valueChange)="this.applyFilter($event)"
-      ></ht-search-box>
-    </div>
-
-    <!-- Table -->
     <cdk-table
       *ngIf="this.dataSource"
       [multiTemplateDataRows]="this.isDetailType()"
@@ -175,7 +166,7 @@ export class TableComponent
     OnDestroy,
     ColumnConfigProvider,
     TableDataSourceProvider,
-    FilterProvider,
+    FiltersProvider,
     ColumnStateChangeProvider,
     RowStateChangeProvider {
   private static readonly PAGE_INDEX_URL_PARAM: string = 'page';
@@ -213,6 +204,9 @@ export class TableComponent
   public data?: TableDataSource<TableRow>;
 
   @Input()
+  public filters?: GraphQlFilter[];
+
+  @Input()
   public mode?: TableMode = TableMode.Flat;
 
   @Input()
@@ -223,9 +217,6 @@ export class TableComponent
 
   @Input()
   public title?: string;
-
-  @Input()
-  public searchable?: boolean = false;
 
   @Input()
   public pageable?: boolean = true;
@@ -250,9 +241,6 @@ export class TableComponent
 
   @Input()
   public pageSize?: number;
-
-  @Input()
-  public searchPlaceholder: string = 'Search';
 
   @Output()
   public readonly selectionsChange: EventEmitter<StatefulTableRow[]> = new EventEmitter<StatefulTableRow[]>();
@@ -280,7 +268,7 @@ export class TableComponent
   public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
-  private readonly filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private readonly filtersSubject: BehaviorSubject<GraphQlFilter[]> = new BehaviorSubject<GraphQlFilter[]>([]);
   private readonly rowStateSubject: BehaviorSubject<StatefulTableRow | undefined> = new BehaviorSubject<
     StatefulTableRow | undefined
   >(undefined);
@@ -289,7 +277,7 @@ export class TableComponent
   >(undefined);
 
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
-  public readonly filter$: Observable<string> = this.filterSubject.asObservable();
+  public readonly filters$: Observable<GraphQlFilter[]> = this.filtersSubject.asObservable();
   public readonly rowState$: Observable<StatefulTableRow | undefined> = this.rowStateSubject.asObservable();
   public readonly columnState$: Observable<
     TableColumnConfigExtended | undefined
@@ -325,11 +313,18 @@ export class TableComponent
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.columnConfigs || changes.detailContent || changes.metadata) {
+    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
       this.initializeColumns();
     }
 
-    if (changes.data || changes.pageSize || changes.pageSizeOptions || changes.pageable) {
+    if (
+      changes.mode ||
+      changes.data ||
+      changes.filters ||
+      changes.pageSize ||
+      changes.pageSizeOptions ||
+      changes.pageable
+    ) {
       this.initializeData();
     }
 
@@ -346,7 +341,7 @@ export class TableComponent
   }
 
   public ngOnDestroy(): void {
-    this.filterSubject.complete();
+    this.filtersSubject.complete();
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
@@ -441,6 +436,7 @@ export class TableComponent
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
     });
+    this.filtersSubject.next(this.filters || []);
 
     this.initializeRows();
   }
@@ -536,10 +532,6 @@ export class TableComponent
     }
 
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
-  }
-
-  public applyFilter(value: string): void {
-    this.filterSubject.next(value);
   }
 
   public visibleColumns(): string[] {

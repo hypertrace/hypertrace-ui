@@ -32,7 +32,7 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.buildSearchFilters(request)],
+      filters: [...filters, ...request.filters],
       timeRange: this.getTimeRangeOrThrow()
     };
   }
@@ -42,9 +42,5 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
       data: response.results,
       totalCount: response.total
     };
-  }
-  protected getSearchFilterAttribute(): string {
-    // Todo: Figure this out
-    return '';
   }
 }

@@ -45,7 +45,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
     this.fetchAndRunChangeDetection();
   }
 
-  private onDashboardRefresh(): void {
+  protected onDashboardRefresh(): void {
     this.fetchAndRunChangeDetection();
   }
 

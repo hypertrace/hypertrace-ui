@@ -19,7 +19,7 @@ export class BackendListComponent {
   public readonly defaultJson: ModelJson = {
     type: 'table-widget',
     style: TableStyle.FullPage,
-    searchable: true,
+    searchAttribute: 'name',
     columns: [
       {
         type: 'table-widget-column',

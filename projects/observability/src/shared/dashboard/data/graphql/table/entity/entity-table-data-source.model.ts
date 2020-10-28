@@ -58,7 +58,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.buildSearchFilters(request)],
+      filters: [...filters, ...request.filters],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
     };
@@ -72,10 +72,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       data: this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined),
       totalCount: response.total!
     };
-  }
-
-  protected getSearchFilterAttribute(): string {
-    return 'name';
   }
 
   private buildChildEntityRequest(

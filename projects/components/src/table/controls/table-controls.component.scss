@@ -1,0 +1,25 @@
+.table-controls {
+  display: flex;
+  padding-bottom: 16px;
+  justify-content: space-between;
+
+  .control {
+    &:not(:first-child) {
+      margin-left: 12px;
+    }
+  }
+
+  .filter-controls {
+    display: flex;
+
+    .search-box {
+      width: 256px;
+    }
+
+    .filter-toggle-group {
+    }
+  }
+
+  .mode-toggle-group {
+  }
+}

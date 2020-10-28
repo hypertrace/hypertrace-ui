@@ -48,12 +48,8 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected getSearchFilterAttribute(): never {
-    throw Error('Interaction data source does not support filtering');
-  }
-
   private assertRequestSupported(request: TableDataRequest): void {
-    if (typeof request.filter === 'string' && request.filter.length > 0) {
+    if (request.filters.length > 0) {
       throw Error('Interaction data source does not support filtering');
     }
     if (request.position.startIndex > 0) {

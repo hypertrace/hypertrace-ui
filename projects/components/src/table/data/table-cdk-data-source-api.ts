@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { GraphQlFilter } from '../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { StatefulTableRow, TableMode, TableRow, TableSelectionMode } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
 import { TableDataSource } from './table-data-source';
@@ -11,8 +12,8 @@ export interface ColumnConfigProvider {
   columnConfigs$: Observable<TableColumnConfigExtended[]>;
 }
 
-export interface FilterProvider {
-  filter$: Observable<string>;
+export interface FiltersProvider {
+  filters$: Observable<GraphQlFilter[]>;
 }
 
 export interface ColumnStateChangeProvider {

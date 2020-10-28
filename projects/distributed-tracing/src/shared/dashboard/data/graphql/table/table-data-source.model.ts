@@ -1,10 +1,8 @@
 import { TableDataRequest, TableDataResponse, TableDataSource, TableRow } from '@hypertrace/components';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
-import { isEmpty } from 'lodash-es';
 import { Observable, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GraphQlFieldFilter } from '../../../../../shared/graphql/model/schema/filter/field/graphql-field-filter';
-import { GraphQlFilter, GraphQlOperatorType } from '../../../../../shared/graphql/model/schema/filter/graphql-filter';
+import { GraphQlFilter } from '../../../../../shared/graphql/model/schema/filter/graphql-filter';
 import { SpecificationBackedTableColumnDef } from '../../../widgets/table/table-widget-column.model';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
@@ -37,14 +35,4 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     response: unknown,
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow>;
-
-  protected abstract getSearchFilterAttribute(request: TableDataRequest<SpecificationBackedTableColumnDef>): string;
-
-  protected buildSearchFilters(request: TableDataRequest<SpecificationBackedTableColumnDef>): GraphQlFilter[] {
-    if (isEmpty(request.filter)) {
-      return [];
-    }
-
-    return [new GraphQlFieldFilter(this.getSearchFilterAttribute(request), GraphQlOperatorType.Like, request.filter!)];
-  }
 }
