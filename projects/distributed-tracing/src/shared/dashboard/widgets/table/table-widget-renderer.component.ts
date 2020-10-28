@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash-es';
-import { InteractionHandler } from './../../interaction/interaction-handler';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
   FilterAttribute,
@@ -13,10 +11,12 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
+import { InteractionHandler } from './../../interaction/interaction-handler';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
@@ -78,7 +78,7 @@ export class TableWidgetRendererComponent
       /**
        * Execute selection handler for single selection mode only
        */
-      let selectedRow = undefined;
+      let selectedRow;
       if (selections.length > 0) {
         selectedRow = selections[0];
         this.selectedRowInteractionHandler = this.getInteractionHandler(selectedRow);

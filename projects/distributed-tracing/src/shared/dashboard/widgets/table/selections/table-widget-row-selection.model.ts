@@ -28,6 +28,6 @@ export class TableWidgetRowSelectionModel {
   public applyToChildRows: boolean = true;
 
   public appliesToCurrentRowDepth(depth: number): boolean {
-    return this.applyToChildRows ? (this.rowDepth >= depth) : (this.rowDepth === depth)
+    return this.applyToChildRows ? depth >= this.rowDepth : this.rowDepth === depth;
   }
 }

@@ -6,7 +6,7 @@ import {
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY, ARRAY_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
@@ -42,7 +42,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   @ModelProperty({
     key: 'additional-child-specifications',
     displayName: 'Value',
-    required: true,
+    required: false,
     type: ARRAY_PROPERTY.type
   })
   public additionalChildSpecifications: Specification[] = [];

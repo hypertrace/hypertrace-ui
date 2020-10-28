@@ -8,7 +8,7 @@ describe('TableWidgetRowSelectionModel applies to current row depth', () => {
     };
 
     expect(model.appliesToCurrentRowDepth(0)).toBeTruthy();
-    // all higher depth should also be true
+    // All higher depth should also be true
     expect(model.appliesToCurrentRowDepth(1)).toBeTruthy();
   });
 
