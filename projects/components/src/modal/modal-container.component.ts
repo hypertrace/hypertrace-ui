@@ -12,8 +12,9 @@ import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="this.visible" class="modal-container" [ngClass]="'modal-size-' + this.size">
-      <div *ngIf="this.showHeader" class="header">
+      <div class="header">
         <ht-button
+          *ngIf="this.showControls"
           class="close-button"
           icon="${IconType.Close}"
           display="${ButtonStyle.Outlined}"
@@ -22,7 +23,7 @@ import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
           (click)="this.close()"
         >
         </ht-button>
-        <h3 class="header-title">{{ modalTitle }}</h3>
+        <h3 *ngIf="this.modalTitle" class="header-title">{{ this.modalTitle }}</h3>
       </div>
       <div class="content-wrapper">
         <div class="content">
@@ -39,7 +40,7 @@ import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
 })
 export class ModalContainerComponent {
   public readonly modalTitle: string;
-  public readonly showHeader: boolean = true;
+  public readonly showControls: boolean;
   public readonly size: ModalSize;
   public readonly isComponentModal: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
@@ -54,8 +55,8 @@ export class ModalContainerComponent {
     layoutChange: LayoutChangeService
   ) {
     const config = constructionData.config;
-    this.showHeader = config.showHeader === true;
-    this.modalTitle = config.title === undefined ? '' : config.title;
+    this.showControls = config.showControls ?? false;
+    this.modalTitle = config.title ?? '';
     this.size = config.size;
     this.isComponentModal = !(config.content instanceof TemplateRef);
     this.renderer = config.content;

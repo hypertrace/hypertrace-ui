@@ -68,7 +68,7 @@ describe('Modal Container component', () => {
 
   test('should display the title', () => {
     spectator = createConfiguredHost({
-      showHeader: true,
+      showControls: true,
       title: 'Create User',
       content: TestComponent,
       size: ModalSize.Small
@@ -79,7 +79,7 @@ describe('Modal Container component', () => {
 
   test('uses the requested size', () => {
     spectator = createConfiguredHost({
-      showHeader: true,
+      showControls: true,
       title: 'Create User',
       content: TestComponent,
       size: ModalSize.Small
@@ -91,7 +91,7 @@ describe('Modal Container component', () => {
     const closeFn = jest.fn();
     spectator = createConfiguredHost(
       {
-        showHeader: true,
+        showControls: true,
         title: 'Create User',
         content: TestComponent,
         size: ModalSize.Small
@@ -107,7 +107,7 @@ describe('Modal Container component', () => {
   test('displays contents provided', () => {
     spectator = createConfiguredHost(
       {
-        showHeader: true,
+        showControls: true,
         title: 'Create User',
         content: TestComponent,
         size: ModalSize.Small
