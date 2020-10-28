@@ -210,3 +210,6 @@ export * from './shared/dashboard/data/graphql/specifiers/entity-specification.m
 
 // Explorer service
 export * from './pages/explorer/explorer-service';
+
+// Explorer filter on hover
+export * from './shared/components/explorer-filter-on-hover/explorer-filter-on-hover.module';

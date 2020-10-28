@@ -1,0 +1,21 @@
+@import 'color-palette';
+@import 'font';
+@import 'interaction';
+
+.hover-filter-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: -15px; //extending bounding box for overlay so that filter icon is outside of content
+
+  .filter-icon {
+    @include filter-box-shadow;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: $blue-3;
+      cursor: pointer;
+      transform: scale(1.2);
+    }
+  }
+}

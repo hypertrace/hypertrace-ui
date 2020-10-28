@@ -58,7 +58,8 @@ export const enum PopoverRelativePositionLocation {
   AboveLeftAligned,
   LeftCentered,
   RightCentered,
-  InsideTopLeft
+  InsideTopLeft,
+  InsideCenterRight
 }
 
 export const enum PopoverFixedPositionLocation {

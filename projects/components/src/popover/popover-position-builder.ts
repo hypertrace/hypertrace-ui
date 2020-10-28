@@ -86,6 +86,11 @@ export class PopoverPositionBuilder {
         );
       case PopoverRelativePositionLocation.InsideTopLeft:
         return new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' });
+      case PopoverRelativePositionLocation.InsideCenterRight:
+        return new ConnectionPositionPair(
+          { originX: 'end', originY: 'center' },
+          { overlayX: 'end', overlayY: 'center' }
+        );
       default:
         return assertUnreachable(location);
     }

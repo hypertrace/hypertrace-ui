@@ -48,3 +48,8 @@ export class ExplorerService {
 }
 
 type DrilldownFilter = Omit<Filter, 'metadata' | 'userString' | 'urlString'>;
+
+export interface ExplorerFilterNavParams {
+  scopeQueryParam: ScopeQueryParam;
+  filters: DrilldownFilter[];
+}
