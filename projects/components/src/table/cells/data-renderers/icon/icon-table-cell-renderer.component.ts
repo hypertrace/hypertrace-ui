@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconSize } from '../../../../icon/icon-size';
+import { IconData } from '../../data-parsers/table-cell-icon-parser';
 import { TableCellRenderer } from '../../table-cell-renderer';
 import { TableCellRendererBase } from '../../table-cell-renderer-base';
 import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type';
@@ -11,8 +12,9 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./icon-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="icon-cell" [ngClass]="{ clickable: this.clickable }">
-      <ht-icon [icon]="this.value" size="${IconSize.Small}" [showTooltip]="true"></ht-icon>
+    <div class="icon-cell" [ngClass]="{ clickable: this.clickable }" *ngIf="this.value">
+      <ht-icon [icon]="this.value.icon" [size]="this.iconSize" [showTooltip]="true" [ngClass]="this.value.color"
+      ></ht-icon>
     </div>
   `
 })
@@ -21,4 +23,17 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Center,
   parser: CoreTableCellParserType.Icon
 })
-export class IconTableCellRendererComponent extends TableCellRendererBase<string> {}
+export class IconTableCellRendererComponent extends TableCellRendererBase<CellData, Value> {
+  public iconSize: IconSize = IconSize.Small;
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+
+    if (this.value?.size) {
+      this.iconSize = this.value?.size;
+    }
+  }
+}
+
+type CellData = string | IconData | undefined;
+type Value = IconData | undefined;
