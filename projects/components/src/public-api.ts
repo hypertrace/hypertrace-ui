@@ -227,7 +227,7 @@ export * from './table/cells/table-cell-parser-lookup.service';
 export { TableCellRenderer } from './table/cells/table-cell-renderer';
 export { TableCellParser } from './table/cells/table-cell-parser';
 
-// Table Filters
+// Table Controls
 export * from './table/controls/table-controls.module';
 export * from './table/controls/table-controls.component';
 
