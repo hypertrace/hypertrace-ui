@@ -143,7 +143,7 @@ export class TableWidgetRendererComponent
   }
 
   public onFilterChange(item: ToggleItem<TableWidgetFilterModel>): void {
-    if (item.value && item.value.attribute && item.value.operator && item.value.value) {
+    if (item.value && item.value.attribute && item.value.operator && item.value.value !== undefined) {
       this.toggleFilterSubject.next([
         {
           field: item.value.attribute,

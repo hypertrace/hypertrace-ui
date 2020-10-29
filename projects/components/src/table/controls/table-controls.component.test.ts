@@ -12,7 +12,7 @@ describe('Table Controls component', () => {
     declarations: [MockComponent(SearchBoxComponent), MockComponent(ToggleGroupComponent)],
     template: `
       <ht-table-controls
-        [searchAttribute]="searchAttribute"
+        [searchEnabled]="searchEnabled"
         [searchPlaceholder]="searchPlaceholder"
         [filterItems]="filterItems"
         [modeItems]="modeItems"
@@ -27,7 +27,7 @@ describe('Table Controls component', () => {
   test('should pass custom placeholder to search box', () => {
     const spectator = createHost(undefined, {
       hostProps: {
-        searchAttribute: 'test-attribute',
+        searchEnabled: true,
         searchPlaceholder: 'Custom'
       }
     });
@@ -40,7 +40,7 @@ describe('Table Controls component', () => {
 
     const spectator = createHost(undefined, {
       hostProps: {
-        searchAttribute: 'test-attribute',
+        searchEnabled: true,
         searchChange: onChangeSpy
       }
     });
