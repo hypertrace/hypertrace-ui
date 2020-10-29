@@ -3,21 +3,25 @@ import { titleCase } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
+  StatefulTableRow,
   TableColumnConfig,
   TableDataSource,
   TableFilter,
   TableMode,
   TableRow,
+  TableSelectionMode,
   TableStyle,
   ToggleItem
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
+import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -82,6 +86,8 @@ export class TableWidgetRendererComponent
     this.toggleFilterSubject,
     this.searchFilterSubject
   ]).pipe(map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters]));
+
+  private selectedRowInteractionHandler?: InteractionHandler;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
@@ -177,7 +183,26 @@ export class TableWidgetRendererComponent
     return this.model.getColumns();
   }
 
-  public onRowSelection(selections: TableRow[]): void {
-    this.api.model.selectionHandler?.execute(selections);
+  public onRowSelection(selections: StatefulTableRow[]): void {
+    if (this.api.model.selectionMode === TableSelectionMode.Single) {
+      /**
+       * Execute selection handler for single selection mode only
+       */
+      let selectedRow;
+      if (selections.length > 0) {
+        selectedRow = selections[0];
+        this.selectedRowInteractionHandler = this.getInteractionHandler(selectedRow);
+      }
+
+      this.selectedRowInteractionHandler?.execute(selectedRow);
+    }
+  }
+
+  private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
+    const matchedSelectionHandlers = this.api.model.rowSelectionHandlers
+      ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
+      .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
+
+    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers![0].handler : undefined;
   }
 }
