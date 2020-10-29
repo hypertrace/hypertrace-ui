@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { titleCase } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
@@ -16,7 +15,7 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { isEmpty } from 'lodash-es';
+import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
@@ -104,11 +103,11 @@ export class TableWidgetRendererComponent
 
   private initControls(): void {
     this.filterItems = this.api.model.filterToggles.map(filter => ({
-      label: filter.label,
+      label: capitalize(filter.label),
       value: filter
     }));
     this.modeItems = this.api.model.modeToggles.map(mode => ({
-      label: titleCase(mode),
+      label: capitalize(mode),
       value: mode
     }));
   }
