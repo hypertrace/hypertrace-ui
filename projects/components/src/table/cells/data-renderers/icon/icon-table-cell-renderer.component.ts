@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { IconSize } from '../../../../icon/icon-size';
+import { TableColumnConfig, TableRow } from '../../../table-api';
 import { IconData } from '../../data-parsers/table-cell-icon-parser';
+import {
+  TABLE_CELL_DATA,
+  TABLE_COLUMN_CONFIG,
+  TABLE_COLUMN_INDEX,
+  TABLE_DATA_PARSER, TABLE_ROW_DATA
+} from '../../table-cell-injection';
+import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
 import { TableCellRendererBase } from '../../table-cell-renderer-base';
 import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type';
@@ -29,6 +37,16 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 })
 export class IconTableCellRendererComponent extends TableCellRendererBase<CellData, Value> implements OnInit {
   public iconSize: IconSize = IconSize.Small;
+
+  public constructor(
+    @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
+    @Inject(TABLE_COLUMN_INDEX) index: number,
+    @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<CellData, Value, unknown>,
+    @Inject(TABLE_CELL_DATA) cellData: CellData,
+    @Inject(TABLE_ROW_DATA) rowData: TableRow
+  ) {
+    super(columnConfig, index, parser, cellData, rowData);
+  }
 
   public ngOnInit(): void {
     super.ngOnInit();
