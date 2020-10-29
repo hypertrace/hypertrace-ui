@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { IconSize } from '../../../../icon/icon-size';
 import { IconData } from '../../data-parsers/table-cell-icon-parser';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -23,13 +23,13 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Center,
   parser: CoreTableCellParserType.Icon
 })
-export class IconTableCellRendererComponent extends TableCellRendererBase<CellData, Value> {
+export class IconTableCellRendererComponent extends TableCellRendererBase<CellData, Value> implements OnInit {
   public iconSize: IconSize = IconSize.Small;
 
   public ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.value?.size) {
+    if (this.value && this.value.size) {
       this.iconSize = this.value?.size;
     }
   }
