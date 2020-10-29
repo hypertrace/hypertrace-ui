@@ -25,7 +25,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
         [icon]="this.value.icon"
         [size]="this.iconSize"
         [showTooltip]="true"
-        [ngClass]="this.value.color"
+        [style.color]="this.value.color"
       ></ht-icon>
     </div>
   `
