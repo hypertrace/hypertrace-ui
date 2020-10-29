@@ -6,7 +6,8 @@ import {
   TABLE_CELL_DATA,
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
-  TABLE_DATA_PARSER, TABLE_ROW_DATA
+  TABLE_DATA_PARSER,
+  TABLE_ROW_DATA
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
