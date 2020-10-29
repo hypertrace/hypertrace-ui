@@ -23,7 +23,7 @@ import { TableMode } from '../table-api';
 
         <!-- Filter Toggle -->
         <ht-toggle-group
-          *ngIf="this.filterItems.length"
+          *ngIf="this.filterItems?.length"
           class="control filter-toggle-group"
           [items]="this.filterItems"
           [activeItem]="this.activeFilterItem"
@@ -33,7 +33,7 @@ import { TableMode } from '../table-api';
 
       <!-- Mode Toggle -->
       <ht-toggle-group
-        *ngIf="this.modeItems.length"
+        *ngIf="this.modeItems?.length"
         class="control mode-toggle-group"
         [items]="this.modeItems"
         [activeItem]="this.activeModeItem"
@@ -50,22 +50,22 @@ export class TableControlsComponent implements OnChanges {
   public searchPlaceholder?: string = 'Search...';
 
   @Input()
-  public filterItems: ToggleItem[] = [];
+  public filterItems?: ToggleItem[] = [];
 
   @Input()
   public activeFilterItem?: ToggleItem;
 
   @Input()
-  public modeItems: ToggleItem[] = [];
+  public modeItems?: ToggleItem[] = [];
 
   @Input()
   public activeModeItem?: ToggleItem;
 
   @Output()
-  public readonly filterChange: EventEmitter<ToggleItem> = new EventEmitter<ToggleItem>();
+  public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output()
-  public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
+  public readonly filterChange: EventEmitter<ToggleItem> = new EventEmitter<ToggleItem>();
 
   @Output()
   public readonly modeChange: EventEmitter<TableMode> = new EventEmitter<TableMode>();
@@ -89,11 +89,15 @@ export class TableControlsComponent implements OnChanges {
   }
 
   private setActiveFilterItem(): void {
-    this.activeFilterItem = this.filterItems.find(item => item === this.activeFilterItem) ?? this.filterItems[0];
+    if (this.filterItems !== undefined) {
+      this.activeFilterItem = this.filterItems.find(item => item === this.activeFilterItem) ?? this.filterItems[0];
+    }
   }
 
   private setActiveModeItem(): void {
-    this.activeModeItem = this.modeItems.find(item => item === this.activeModeItem) ?? this.modeItems[0];
+    if (this.modeItems !== undefined) {
+      this.activeModeItem = this.modeItems.find(item => item === this.activeModeItem) ?? this.modeItems[0];
+    }
   }
 
   public onFilterChange(item: ToggleItem): void {
