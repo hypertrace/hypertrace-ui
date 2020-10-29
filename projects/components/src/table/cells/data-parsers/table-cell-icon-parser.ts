@@ -7,28 +7,30 @@ import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
   type: CoreTableCellParserType.Icon
 })
 export class TableCellIconParser extends TableCellParserBase<CellData, Value, FilterValue> {
-  public parseValue(cellData: CellData): IconData | undefined {
+  public parseValue(cellData: CellData): Value {
     switch (typeof cellData) {
       case 'string':
         return {
-          icon: cellData
+          icon: cellData,
+          filterValue: cellData
         };
       default:
         return cellData;
     }
   }
 
-  public parseFilterValue(cellData: CellData): string | undefined {
-    return this.parseValue(cellData)?.icon;
+  public parseFilterValue(cellData: CellData): FilterValue {
+    return this.parseValue(cellData)?.filterValue;
   }
 }
 
 type CellData = string | IconData | undefined;
 type Value = IconData | undefined;
-type FilterValue = string | undefined;
+type FilterValue = string | boolean | undefined;
 
 export interface IconData {
   icon: string;
   color?: string;
   size?: IconSize;
+  filterValue?: FilterValue;
 }
