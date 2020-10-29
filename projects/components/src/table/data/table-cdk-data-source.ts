@@ -2,10 +2,9 @@ import { DataSource } from '@angular/cdk/collections';
 import { forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
-import { GraphQlFilter } from '../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
-import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableRow } from '../table-api';
+import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableFilter, TableRow } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
 import { TableCdkColumnUtil } from './table-cdk-column-util';
 import {
@@ -21,7 +20,7 @@ import { TableDataRequest } from './table-data-source';
 type WatchedObservables = [
   TableColumnConfigExtended[],
   PageEvent,
-  GraphQlFilter[],
+  TableFilter[],
   TableColumnConfigExtended | undefined,
   StatefulTableRow | undefined
 ];
@@ -176,7 +175,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private detectRowStateChanges(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
-    filters: GraphQlFilter[],
+    filters: TableFilter[],
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined
   ): WatchedObservables {
@@ -203,7 +202,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private buildDataObservable(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
-    filters: GraphQlFilter[],
+    filters: TableFilter[],
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined
   ): Observable<StatefulTableRow[]> {
@@ -248,7 +247,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private fetchNewData(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
-    filters: GraphQlFilter[]
+    filters: TableFilter[]
   ): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
@@ -275,7 +274,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private buildRequest(
     columnConfigs: TableColumnConfigExtended[],
     pageConfig: PageEvent,
-    filters: GraphQlFilter[]
+    filters: TableFilter[]
   ): TableDataRequest {
     const request: TableDataRequest = {
       columns: TableCdkColumnUtil.fetchableColumnConfigs(columnConfigs),

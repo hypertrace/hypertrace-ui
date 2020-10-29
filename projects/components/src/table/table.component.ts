@@ -19,7 +19,6 @@ import { isEqualIgnoreFunctions, NavigationService, NumberCoercer, TypedSimpleCh
 import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { GraphQlFilter } from '../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
@@ -38,6 +37,7 @@ import { TableDataSource } from './data/table-data-source';
 import {
   StatefulTableRow,
   TableColumnConfig,
+  TableFilter,
   TableMode,
   TableRow,
   TableSelectionMode,
@@ -204,7 +204,7 @@ export class TableComponent
   public data?: TableDataSource<TableRow>;
 
   @Input()
-  public filters?: GraphQlFilter[];
+  public filters?: TableFilter[];
 
   @Input()
   public mode?: TableMode = TableMode.Flat;
@@ -268,7 +268,7 @@ export class TableComponent
   public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
-  private readonly filtersSubject: BehaviorSubject<GraphQlFilter[]> = new BehaviorSubject<GraphQlFilter[]>([]);
+  private readonly filtersSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly rowStateSubject: BehaviorSubject<StatefulTableRow | undefined> = new BehaviorSubject<
     StatefulTableRow | undefined
   >(undefined);
@@ -277,7 +277,7 @@ export class TableComponent
   >(undefined);
 
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
-  public readonly filters$: Observable<GraphQlFilter[]> = this.filtersSubject.asObservable();
+  public readonly filters$: Observable<TableFilter[]> = this.filtersSubject.asObservable();
   public readonly rowState$: Observable<StatefulTableRow | undefined> = this.rowStateSubject.asObservable();
   public readonly columnState$: Observable<
     TableColumnConfigExtended | undefined

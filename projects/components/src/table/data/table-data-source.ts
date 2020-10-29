@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
-import { GraphQlFilter } from '../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
-import { TableColumnConfig, TableSortDirection } from '../table-api';
+import { TableColumnConfig, TableFilter, TableSortDirection } from '../table-api';
 
 export interface TableDataSource<TResult, TCol extends TableColumnConfig = TableColumnConfig> {
   getData(request: TableDataRequest<TCol>): Observable<TableDataResponse<TResult>>;
@@ -17,7 +16,7 @@ export interface TableDataRequest<TCol extends TableColumnConfig = TableColumnCo
     column: TCol;
     direction: TableSortDirection;
   };
-  filters: GraphQlFilter[];
+  filters: TableFilter[];
 }
 
 export interface TableDataResponse<TData> {

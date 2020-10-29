@@ -1,7 +1,6 @@
+import { FilterOperator } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { GraphQlArgumentArray, GraphQlArgumentObject, GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
-import { GraphQlOperatorType } from '../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
   type: 'table-widget-filter',
@@ -31,22 +30,22 @@ export class TableWidgetFilterModel {
       key: ENUM_TYPE.type,
       values: [
         // Exclude operators for non-primitive values
-        GraphQlOperatorType.Equals,
-        GraphQlOperatorType.NotEquals,
-        GraphQlOperatorType.LessThan,
-        GraphQlOperatorType.LessThanOrEqualTo,
-        GraphQlOperatorType.GreaterThan,
-        GraphQlOperatorType.GreaterThanOrEqualTo,
-        GraphQlOperatorType.Like
+        FilterOperator.Equals,
+        FilterOperator.NotEquals,
+        FilterOperator.LessThan,
+        FilterOperator.LessThanOrEqualTo,
+        FilterOperator.GreaterThan,
+        FilterOperator.GreaterThanOrEqualTo,
+        FilterOperator.Like
       ]
     } as EnumPropertyTypeInstance
   })
-  public operator?: GraphQlOperatorType;
+  public operator?: FilterOperator;
 
   @ModelProperty({
     key: 'value',
     displayName: 'Value',
     type: UNKNOWN_PROPERTY.type
   })
-  public value?: Exclude<GraphQlArgumentValue, GraphQlArgumentObject | GraphQlArgumentArray>;
+  public value?: unknown;
 }

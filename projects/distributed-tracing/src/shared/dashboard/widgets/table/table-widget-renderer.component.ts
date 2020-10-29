@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit }
 import { titleCase } from '@hypertrace/common';
 import {
   FilterAttribute,
+  FilterOperator,
   TableColumnConfig,
   TableDataSource,
+  TableFilter,
   TableMode,
   TableRow,
   TableStyle,
@@ -15,8 +17,6 @@ import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
-import { GraphQlFieldFilter } from '../../../graphql/model/schema/filter/field/graphql-field-filter';
-import { GraphQlFilter, GraphQlOperatorType } from '../../../graphql/model/schema/filter/graphql-filter';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
@@ -75,10 +75,10 @@ export class TableWidgetRendererComponent
 
   public metadata$: Observable<FilterAttribute[]>;
 
-  private readonly toggleFilterSubject: Subject<GraphQlFilter[]> = new BehaviorSubject<GraphQlFilter[]>([]);
-  private readonly searchFilterSubject: Subject<GraphQlFilter[]> = new BehaviorSubject<GraphQlFilter[]>([]);
+  private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
-  public combinedFilters$: Observable<GraphQlFilter[]> = combineLatest([
+  public combinedFilters$: Observable<TableFilter[]> = combineLatest([
     this.toggleFilterSubject,
     this.searchFilterSubject
   ]).pipe(map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters]));
@@ -147,7 +147,11 @@ export class TableWidgetRendererComponent
   public onFilterChange(item: ToggleItem<TableWidgetFilterModel>): void {
     if (item.value && item.value.attribute && item.value.operator && item.value.value) {
       this.toggleFilterSubject.next([
-        new GraphQlFieldFilter(item.value.attribute, item.value.operator, item.value.value)
+        {
+          field: item.value.attribute,
+          operator: item.value.operator,
+          value: item.value.value
+        }
       ]);
 
       return;
@@ -157,7 +161,11 @@ export class TableWidgetRendererComponent
   }
 
   public onSearchChange(text: string): void {
-    const searchFilter = new GraphQlFieldFilter(this.api.model.searchAttribute!, GraphQlOperatorType.Like, text);
+    const searchFilter: TableFilter = {
+      field: this.api.model.searchAttribute!,
+      operator: FilterOperator.Like,
+      value: text
+    };
     this.searchFilterSubject.next([searchFilter]);
   }
 

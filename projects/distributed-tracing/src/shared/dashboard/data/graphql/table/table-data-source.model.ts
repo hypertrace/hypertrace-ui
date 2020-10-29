@@ -1,8 +1,11 @@
-import { TableDataRequest, TableDataResponse, TableDataSource, TableRow } from '@hypertrace/components';
+import { TableDataRequest, TableDataResponse, TableDataSource, TableFilter, TableRow } from '@hypertrace/components';
+import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GraphQlFilter } from '../../../../../shared/graphql/model/schema/filter/graphql-filter';
+import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
+import { toGraphQlOperator } from '../../../../services/filter-builder/graphql-filter-builder.service';
 import { SpecificationBackedTableColumnDef } from '../../../widgets/table/table-widget-column.model';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
@@ -35,4 +38,11 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     response: unknown,
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow>;
+
+  protected toGraphQlFilters(tableFilters: TableFilter[]): GraphQlFilter[] {
+    return tableFilters.map(
+      filter =>
+        new GraphQlFieldFilter(filter.field, toGraphQlOperator(filter.operator), filter.value as GraphQlArgumentValue)
+    );
+  }
 }
