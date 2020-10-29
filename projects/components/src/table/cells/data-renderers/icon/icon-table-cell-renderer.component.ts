@@ -33,9 +33,7 @@ export class IconTableCellRendererComponent extends TableCellRendererBase<CellDa
   public ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.value && this.value.size) {
-      this.iconSize = this.value?.size;
-    }
+    this.iconSize = this.value?.size ?? IconSize.Small;
   }
 }
 
