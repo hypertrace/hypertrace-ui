@@ -20,6 +20,7 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { InteractionHandler } from '../../interaction/interaction-handler';
+import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
 
 @Model({
@@ -80,13 +81,29 @@ export class TableWidgetModel {
     } as EnumPropertyTypeInstance
   })
   public selectionMode: TableSelectionMode = TableSelectionMode.Single;
-
+  /**
+   * Deprecated. Use rowSelectionHandlers instead
+   */
   @ModelProperty({
     key: 'selection-handler',
     displayName: 'Row selection Handler',
     type: ModelPropertyType.TYPE
   })
   public selectionHandler?: InteractionHandler;
+
+  @ModelProperty({
+    key: 'row-selection-handlers',
+    displayName: 'Row selection Handlers',
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ARRAY_PROPERTY.type,
+      subtype: {
+        key: ModelPropertyType.TYPE,
+        defaultModelClass: TableWidgetRowSelectionModel
+      }
+    } as ArrayPropertyTypeInstance
+  })
+  public rowSelectionHandlers?: TableWidgetRowSelectionModel[];
 
   @ModelProperty({
     key: 'style',
