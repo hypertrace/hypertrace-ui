@@ -16,7 +16,7 @@ export interface TableDataRequest<TCol extends TableColumnConfig = TableColumnCo
     column: TCol;
     direction: TableSortDirection;
   };
-  filters: TableFilter[];
+  filters?: TableFilter[];
 }
 
 export interface TableDataResponse<TData> {

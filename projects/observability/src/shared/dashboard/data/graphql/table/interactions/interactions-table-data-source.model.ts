@@ -49,7 +49,7 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
   }
 
   private assertRequestSupported(request: TableDataRequest): void {
-    if (request.filters.length > 0) {
+    if (request.filters && request.filters.length > 0) {
       throw Error('Interaction data source does not support filtering');
     }
     if (request.position.startIndex > 0) {

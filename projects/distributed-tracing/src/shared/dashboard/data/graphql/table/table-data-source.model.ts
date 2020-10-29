@@ -39,7 +39,7 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow>;
 
-  protected toGraphQlFilters(tableFilters: TableFilter[]): GraphQlFilter[] {
+  protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {
     return tableFilters.map(
       filter =>
         new GraphQlFieldFilter(filter.field, toGraphQlOperator(filter.operator), filter.value as GraphQlArgumentValue)
