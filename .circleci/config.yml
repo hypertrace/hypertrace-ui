@@ -5,12 +5,21 @@ executors:
   node:
     docker:
       - image: cimg/node:14.5
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
   publisher:
     docker:
       - image: cimg/openjdk:11.0
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
   helm:
     docker:
       - image: hypertrace/helm-gcs-packager:0.1.1
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
 commands:
   update-submodule:
     description: 'Pull Submodules'
@@ -41,6 +50,9 @@ commands:
       - attach_workspace:
           at: dist
       - setup_remote_docker
+      - run:
+          name: Dockerhub login
+          command: echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
 jobs:
   npm-install-if-needed:
     executor: node
@@ -123,19 +135,31 @@ workflows:
   version: 2
   build-and-publish:
     jobs:
-      - npm-install-if-needed
+      - npm-install-if-needed:
+          context:
+            - dockerhub-read
       - build:
+          context:
+            - dockerhub-read
           requires:
             - npm-install-if-needed
       - test:
+          context:
+            - dockerhub-read
           requires:
             - npm-install-if-needed
       - lint:
+          context:
+            - dockerhub-read
           requires:
             - npm-install-if-needed
-      - validate-charts
+      - validate-charts:
+          context:
+            - dockerhub-read
       - publish:
-          context: hypertrace-publishing
+          context:
+            - hypertrace-publishing
+            - dockerhub-read
           requires:
             - build
             - test
@@ -146,7 +170,9 @@ workflows:
               only:
                 - main
       - package-charts:
-          context: hypertrace-publishing
+          context:
+            - hypertrace-publishing
+            - dockerhub-read
           requires:
             - publish
           filters:
