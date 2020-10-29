@@ -8,6 +8,7 @@ import { TableMode } from '../table-api';
 @Component({
   selector: 'ht-table-controls',
   styleUrls: ['./table-controls.component.scss'],
+  providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="table-controls">
@@ -15,7 +16,7 @@ import { TableMode } from '../table-api';
       <div class="filter-controls">
         <!-- Search -->
         <ht-search-box
-          *ngIf="this.searchAttribute"
+          *ngIf="this.searchEnabled"
           class="control search-box"
           [placeholder]="this.searchPlaceholder"
           (valueChange)="this.onSearchChange($event)"
@@ -23,7 +24,7 @@ import { TableMode } from '../table-api';
 
         <!-- Filter Toggle -->
         <ht-toggle-group
-          *ngIf="this.filterItems?.length"
+          *ngIf="this.filterItems?.length > 1"
           class="control filter-toggle-group"
           [items]="this.filterItems"
           [activeItem]="this.activeFilterItem"
@@ -33,7 +34,7 @@ import { TableMode } from '../table-api';
 
       <!-- Mode Toggle -->
       <ht-toggle-group
-        *ngIf="this.modeItems?.length"
+        *ngIf="this.modeItems?.length > 1"
         class="control mode-toggle-group"
         [items]="this.modeItems"
         [activeItem]="this.activeModeItem"
@@ -44,7 +45,7 @@ import { TableMode } from '../table-api';
 })
 export class TableControlsComponent implements OnChanges {
   @Input()
-  public searchAttribute?: string;
+  public searchEnabled?: boolean;
 
   @Input()
   public searchPlaceholder?: string = 'Search...';

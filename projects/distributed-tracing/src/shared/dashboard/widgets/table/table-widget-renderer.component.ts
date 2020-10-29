@@ -38,7 +38,7 @@ import { TableWidgetModel } from './table-widget.model';
     >
       <ht-table-controls
         class="table-controls"
-        [searchAttribute]="this.api.model.searchAttribute"
+        [searchEnabled]="!!this.api.model.searchAttribute"
         [filterItems]="this.filterItems"
         [modeItems]="this.modeItems"
         (searchChange)="this.onSearchChange($event)"
@@ -52,7 +52,7 @@ import { TableWidgetModel } from './table-widget.model';
         [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
         [columnConfigs]="this.columnConfigs"
         [metadata]="this.metadata$ | async"
-        [mode]="this.model.mode"
+        [mode]="this.activeMode"
         [selectionMode]="this.model.selectionMode"
         [display]="this.model.style"
         [data]="this.data$ | async"
@@ -75,6 +75,7 @@ export class TableWidgetRendererComponent
   public columnConfigs: TableColumnConfig[];
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
+  public activeMode: TableMode;
 
   public metadata$: Observable<FilterAttribute[]>;
 
@@ -98,10 +99,6 @@ export class TableWidgetRendererComponent
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs = this.getColumnConfigs();
 
-    this.initControls();
-  }
-
-  private initControls(): void {
     this.filterItems = this.api.model.filterToggles.map(filter => ({
       label: capitalize(filter.label),
       value: filter
@@ -110,14 +107,10 @@ export class TableWidgetRendererComponent
       label: capitalize(mode),
       value: mode
     }));
+    this.activeMode = this.api.model.mode;
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
-
-  protected onDashboardRefresh(): void {
-    this.initControls();
-    super.onDashboardRefresh();
-  }
 
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(startWith(undefined));
@@ -175,7 +168,7 @@ export class TableWidgetRendererComponent
   }
 
   public onModeChange(mode: TableMode): void {
-    this.model.mode = mode;
+    this.activeMode = mode;
   }
 
   private getColumnConfigs(): TableColumnConfig[] {
