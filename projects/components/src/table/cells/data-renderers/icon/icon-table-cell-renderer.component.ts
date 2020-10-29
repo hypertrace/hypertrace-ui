@@ -13,7 +13,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="icon-cell" [ngClass]="{ clickable: this.clickable }" *ngIf="this.value">
-      <ht-icon [icon]="this.value.icon" [size]="this.iconSize" [showTooltip]="true" [ngClass]="this.value.color"
+      <ht-icon
+        [icon]="this.value.icon"
+        [size]="this.iconSize"
+        [showTooltip]="true"
+        [ngClass]="this.value.color"
       ></ht-icon>
     </div>
   `

@@ -12,7 +12,7 @@ export class TableCellIconParser extends TableCellParserBase<CellData, Value, Fi
       case 'string':
         return {
           icon: cellData
-        }
+        };
       default:
         return cellData;
     }
