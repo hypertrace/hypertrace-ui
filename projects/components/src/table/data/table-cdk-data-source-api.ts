@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { StatefulTableRow, TableMode, TableRow, TableSelectionMode } from '../table-api';
+import { StatefulTableRow, TableFilter, TableMode, TableRow, TableSelectionMode } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
 import { TableDataSource } from './table-data-source';
 
@@ -11,8 +11,8 @@ export interface ColumnConfigProvider {
   columnConfigs$: Observable<TableColumnConfigExtended[]>;
 }
 
-export interface FilterProvider {
-  filter$: Observable<string>;
+export interface FiltersProvider {
+  filters$: Observable<TableFilter[]>;
 }
 
 export interface ColumnStateChangeProvider {

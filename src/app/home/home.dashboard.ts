@@ -642,7 +642,6 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         type: 'table-widget',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
-        searchable: false,
         pageable: false,
         header: {
           type: 'widget-header',
@@ -719,7 +718,6 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         type: 'table-widget',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
-        searchable: false,
         pageable: false,
         header: {
           type: 'widget-header',
@@ -801,7 +799,6 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         type: 'table-widget',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
-        searchable: false,
         pageable: false,
 
         header: {

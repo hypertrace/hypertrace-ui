@@ -29,7 +29,6 @@ import { WaterfallChartService } from './waterfall-chart.service';
           [data]="this.datasource"
           mode="${TableMode.Tree}"
           display="${TableStyle.FullPage}"
-          [searchable]="false"
           [pageable]="false"
           [initialExpandAll]="true"
           [selections]="this.selectedNode ? [this.selectedNode] : []"
