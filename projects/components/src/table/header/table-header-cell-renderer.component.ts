@@ -51,8 +51,6 @@ import { TableColumnConfigExtended } from '../table.service';
                 Sort Descending
                 <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
               </div>
-              <div class="popover-item-divider"></div>
-              <div class="popover-item">Edit Columns</div>
             </div>
           </ht-popover-content>
         </ht-popover>
