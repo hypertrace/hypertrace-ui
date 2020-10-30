@@ -28,7 +28,7 @@ import { SpanTitle } from '../../span-title';
           size="${ButtonSize.Large}"
         ></ht-copy-shareable-link-to-clipboard>
 
-        <div class="divider"></div>
+        <div class="vertical-divider"></div>
 
         <ht-button
           class="close"
