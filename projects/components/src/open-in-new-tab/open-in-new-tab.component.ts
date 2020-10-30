@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
   ExternalNavigationWindowHandling,
@@ -6,7 +6,7 @@ import {
   NavigationService,
   TimeRangeService
 } from '@hypertrace/common';
-import { merge, Observable } from 'rxjs';
+import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle } from '../button/button';
 
@@ -15,8 +15,9 @@ import { ButtonSize, ButtonStyle } from '../button/button';
   styleUrls: ['./open-in-new-tab.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="shareable-link" htTooltip="Open in a new tab">
+    <div class="open-in-new-tab" htTooltip="Open in a new tab">
       <ht-button
+        class="open-in-new-tab-button"
         display="${ButtonStyle.Outlined}"
         [size]="this.size"
         icon="${IconType.OpenInNewTab}"
@@ -25,30 +26,24 @@ import { ButtonSize, ButtonStyle } from '../button/button';
     </div>
   `
 })
-export class OpenInNewTabComponent implements OnInit {
+export class OpenInNewTabComponent {
   @Input()
   public size?: ButtonSize = ButtonSize.Medium;
-
-  public url$?: Observable<string>;
 
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly timeRangeService: TimeRangeService
   ) {}
 
-  public ngOnInit(): void {
-    this.url$ = merge(this.navigationService.navigation$, this.timeRangeService.getTimeRangeAndChanges()).pipe(
-      map(() => this.timeRangeService.getShareableCurrentUrl())
-    );
-  }
-
   public openInNewTab(): void {
-    this.url$?.subscribe(url =>
-      this.navigationService.navigate({
-        navType: NavigationParamsType.External,
-        windowHandling: ExternalNavigationWindowHandling.NewWindow,
-        url: url
-      })
-    );
+    merge(this.navigationService.navigation$, this.timeRangeService.getTimeRangeAndChanges())
+      .pipe(map(() => this.timeRangeService.getShareableCurrentUrl()))
+      .subscribe(url =>
+        this.navigationService.navigate({
+          navType: NavigationParamsType.External,
+          windowHandling: ExternalNavigationWindowHandling.NewWindow,
+          url: url
+        })
+      );
   }
 }
