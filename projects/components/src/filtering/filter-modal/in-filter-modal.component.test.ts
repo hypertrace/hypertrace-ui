@@ -1,4 +1,4 @@
-import { FilterAttribute, FilterAttributeType, InFilterButtonComponent } from '@hypertrace/components';
+import { FilterAttribute, FilterAttributeType, InFilterModalComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
@@ -22,7 +22,7 @@ describe('In Filter Button service', () => {
   ];
 
   const createHost = createHostFactory({
-    component: InFilterButtonComponent,
+    component: InFilterModalComponent,
     shallow: true,
     imports: [],
     providers: [
@@ -56,7 +56,7 @@ describe('In Filter Button service', () => {
     });
 
     spectator.component.selected.add(2);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
@@ -75,14 +75,12 @@ describe('In Filter Button service', () => {
       }
     });
 
-    spectator.component.onPopoverOpen();
-
     expect(spectator.component.selected.has(5)).toBe(true);
     expect(spectator.component.selected.has(8)).toBe(true);
 
     spectator.component.onChecked(true, 2);
     spectator.component.onChecked(false, 5);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
@@ -101,14 +99,12 @@ describe('In Filter Button service', () => {
       }
     });
 
-    spectator.component.onPopoverOpen();
-
     expect(spectator.component.selected.has(5)).toBe(true);
     expect(spectator.component.selected.has(8)).toBe(true);
 
     spectator.component.selected.delete(5);
     spectator.component.selected.delete(8);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).removeUrlFilter).toHaveBeenCalled();
   });

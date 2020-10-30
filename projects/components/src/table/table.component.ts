@@ -90,7 +90,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [columnConfig]="columnDef"
               [index]="index"
               [sort]="columnDef.sort"
-              (sortChange)="this.onHeaderCellClick(columnDef)"
+              (sortChange)="this.onSortChange($event, columnDef)"
             >
             </ht-table-header-cell-renderer>
           </cdk-header-cell>
@@ -454,11 +454,11 @@ export class TableComponent
     return !!this.data && !!this.columnConfigs && (this.pageable ? !!this.paginator : true);
   }
 
-  public onHeaderCellClick(columnConfig: TableColumnConfigExtended): void {
+  public onSortChange(direction: TableSortDirection, columnConfig: TableColumnConfigExtended): void {
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
       this.updateSort({
         column: columnConfig,
-        direction: this.getNextSortDirection(columnConfig.sort)
+        direction: direction
       });
     }
 
@@ -667,18 +667,6 @@ export class TableComponent
     }
 
     this.pageChange.emit(pageEvent);
-  }
-
-  private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {
-    // Order: undefined -> Ascending -> Descending -> undefined
-    switch (sortDirection) {
-      case TableSortDirection.Ascending:
-        return TableSortDirection.Descending;
-      case TableSortDirection.Descending:
-        return undefined;
-      default:
-        return TableSortDirection.Ascending;
-    }
   }
 
   private getPageData(params: ParamMap): Partial<PageEvent> | undefined {
