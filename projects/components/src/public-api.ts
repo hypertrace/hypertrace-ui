@@ -37,6 +37,10 @@ export * from './copy-to-clipboard/copy-to-clipboard.module';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.component';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.module';
 
+// Open in new tab
+export * from './open-in-new-tab/open-in-new-tab.component';
+export * from './open-in-new-tab/open-in-new-tab.module';
+
 // Date Time picker
 export * from './datetime-picker/datetime-picker.component';
 export * from './datetime-picker/datetime-picker.module';
