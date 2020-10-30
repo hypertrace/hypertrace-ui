@@ -34,10 +34,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private readonly cachedValues: Map<string, unknown[]> = new Map<string, unknown[]>();
   private lastRowChange: StatefulTableRow | undefined;
   private readonly rowsChange$: Subject<StatefulTableRow[]> = new Subject<StatefulTableRow[]>();
-  private readonly loadingStateSubject: Subject<Observable<StatefulTableRow[]>> = new Subject<
-    Observable<StatefulTableRow[]>
-  >();
-  public loadingStateChange$: Observable<Observable<StatefulTableRow[]>> = this.loadingStateSubject.asObservable();
+  private readonly loadingStateSubject: Subject<TableLoadingState> = new Subject<TableLoadingState>();
+
+  public loadingStateChange$: Observable<TableLoadingState> = this.loadingStateSubject.asObservable();
 
   public constructor(
     private readonly tableDataSourceProvider: TableDataSourceProvider,
@@ -55,7 +54,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   public connect(): Observable<ReadonlyArray<TableRow>> {
     this.buildChangeObservable()
       .pipe(
-        tap(() => this.loadingStateSubject.next(NEVER)),
+        tap(() => this.loadingStateSubject.next({loading$: NEVER})),
         mergeMap(([columnConfigs, pageEvent, filter, changedColumn, changedRow]) =>
           this.buildDataObservable(columnConfigs, pageEvent, filter, changedColumn, changedRow)
         )
@@ -65,7 +64,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.rowsChange$.pipe(
       tap(rows => this.cacheRows(rows)),
       tap(rows => this.cacheFilterableValues(rows)),
-      tap(rows => this.loadingStateSubject.next(of(rows)))
+      tap(rows => this.loadingStateSubject.next({loading$: of(rows), hide: rows.length >  1}))
     );
   }
 
@@ -271,7 +270,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
           : rows
       ),
       catchError(error => {
-        this.loadingStateSubject.next(throwError(error));
+        this.loadingStateSubject.next({loading$: throwError(error)});
 
         return [];
       })
@@ -330,4 +329,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       this.paginationProvider.totalItems = totalItems;
     }
   }
+}
+
+
+export interface TableLoadingState {
+  loading$: Observable<StatefulTableRow[]>;
+  hide?: boolean;
 }

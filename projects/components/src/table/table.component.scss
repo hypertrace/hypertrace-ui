@@ -1,11 +1,12 @@
 @import 'mixins';
 @import 'layout';
 
-:host {
+.table {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .title-row {
@@ -18,6 +19,7 @@
 
 .table {
   width: 100%;
+  flex: 1 1 0;
   overflow: auto;
 }
 
@@ -122,7 +124,10 @@
 }
 
 .state-watcher {
-  flex: 1 1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background: transparent;
 }
 
 .pagination-controls {
