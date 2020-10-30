@@ -1,4 +1,4 @@
-export interface ToggleItem<T = unknown> {
+export interface ToggleItem<TValue = unknown> {
   label: string;
-  value?: T;
+  value?: TValue;
 }

@@ -1,18 +1,21 @@
 import { FilterAttribute } from './filter-attribute';
 import { FilterOperator, incompatibleOperators } from './filter-operators';
 
-export interface Filter<T = unknown> extends IncompleteFilter {
+export interface Filter<TValue = unknown> extends IncompleteFilter {
   operator: FilterOperator;
-  value: T;
+  value: TValue;
   urlString: string;
 }
 
-export interface IncompleteFilter {
+export interface IncompleteFilter<TValue = unknown> extends FieldFilter<TValue> {
   metadata: FilterAttribute;
+  userString: string;
+}
+
+export interface FieldFilter<TValue = unknown> {
   field: string;
   operator?: FilterOperator;
-  value?: unknown;
-  userString: string;
+  value?: TValue;
 }
 
 export const areEqualFilters = (f1: IncompleteFilter, f2: IncompleteFilter) =>
