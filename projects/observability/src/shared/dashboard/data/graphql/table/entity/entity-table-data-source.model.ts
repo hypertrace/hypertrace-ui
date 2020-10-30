@@ -2,10 +2,11 @@ import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/compo
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   GraphQlFilter,
+  Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
@@ -38,6 +39,14 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   })
   public childEntityType?: ObservabilityEntityType;
 
+  @ModelProperty({
+    key: 'additional-child-specifications',
+    displayName: 'Value',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public additionalChildSpecifications: Specification[] = [];
+
   public getScope(): string {
     return this.entityType; // TODO: How to deal with children
   }
@@ -58,7 +67,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.buildSearchFilters(request)],
+      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
     };
@@ -74,10 +83,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected getSearchFilterAttribute(): string {
-    return 'name';
-  }
-
   private buildChildEntityRequest(
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
     entity: Entity
@@ -87,7 +92,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequestType: 'children',
       tableRequest: request,
       entityType: this.childEntityType!,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.map(column => column.specification).concat(...this.additionalChildSpecifications),
       limit: 100, // Really no limit, putting one in for sanity
       sort: request.sort && {
         direction: request.sort.direction,

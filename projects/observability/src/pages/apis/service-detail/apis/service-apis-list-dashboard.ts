@@ -8,7 +8,7 @@ export const serviceApisListDashboard: DashboardDefaultConfiguration = {
   json: {
     type: 'table-widget',
     style: TableStyle.FullPage,
-    searchable: true,
+    searchAttribute: 'name',
     columns: [
       {
         type: 'table-widget-column',
