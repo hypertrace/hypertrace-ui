@@ -107,20 +107,6 @@
   }
 }
 
-.table-controls {
-  display: flex;
-  justify-content: space-between;
-
-  &.right-aligned-table-control {
-    justify-content: flex-end;
-  }
-
-  .search-box {
-    width: 280px;
-    margin-bottom: 16px;
-  }
-}
-
 .state-watcher {
   flex: 1 1;
 }

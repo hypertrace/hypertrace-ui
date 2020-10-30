@@ -94,20 +94,6 @@ describe('Table component', () => {
     expect(spectator.query(PaginatorComponent)?.pageSizeOptions).toEqual([10, 25]);
   });
 
-  test('pass custom placeholder to search box', () => {
-    const spectator = createHost(
-      `<ht-table [columnConfigs]="columnConfigs" [data]="data" searchable="true" searchPlaceholder="Custom"></ht-table>`,
-      {
-        hostProps: {
-          columnConfigs: buildColumns(),
-          data: buildData()
-        }
-      }
-    );
-
-    expect(spectator.query(SearchBoxComponent)?.placeholder).toEqual('Custom');
-  });
-
   test('does not alter the URL on paging if syncWithUrl false', () => {
     const mockPageChange = jest.fn();
     const spectator = createHost(
