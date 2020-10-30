@@ -56,6 +56,7 @@ describe('Filter Chip service', () => {
             case FilterOperator.LessThanOrEqualTo:
             case FilterOperator.GreaterThan:
             case FilterOperator.GreaterThanOrEqualTo:
+            case FilterOperator.Like:
               return new ComparisonFilterParser();
             case FilterOperator.In:
               return new InFilterParser();

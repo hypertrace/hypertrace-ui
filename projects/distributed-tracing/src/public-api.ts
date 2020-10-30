@@ -29,6 +29,7 @@ export * from './shared/dashboard/dashboard-wrapper/application-aware-dashboard.
 export * from './shared/dashboard/dashboard-wrapper/navigable-dashboard.component';
 export * from './shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 export * from './shared/dashboard/tracing-dashboard.module';
+export * from './shared/dashboard/widgets/table/table-widget.model';
 
 // Filter
 export * from './shared/services/filter-builder/graphql-filter-builder.service';

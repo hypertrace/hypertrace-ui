@@ -20,12 +20,6 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
   })
   public traceType: TraceType = TRACE_SCOPE;
 
-  @ModelProperty({
-    key: 'search-filter-attribute',
-    type: STRING_PROPERTY.type
-  })
-  public searchFilterAttribute: string = 'name';
-
   public getScope(): string {
     return this.traceType;
   }
@@ -44,7 +38,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.buildSearchFilters(request)],
+      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow()
     };
   }
@@ -54,9 +48,5 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
       data: response.results,
       totalCount: response.total
     };
-  }
-
-  protected getSearchFilterAttribute(): string {
-    return this.searchFilterAttribute;
   }
 }
