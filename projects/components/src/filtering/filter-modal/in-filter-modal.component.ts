@@ -83,6 +83,8 @@ export class InFilterModalComponent {
       };
       this.filterUrlService.removeUrlFilter(this.modalData.metadata, incompleteFilter);
     }
+
+    this.modalRef.close();
   }
 
   public onCancel(): void {
