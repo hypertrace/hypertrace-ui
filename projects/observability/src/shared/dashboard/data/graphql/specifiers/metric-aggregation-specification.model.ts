@@ -10,8 +10,7 @@ import { MetricSpecificationModel } from './metric-specification.model';
   type: 'metric-aggregation',
   displayName: 'Metric'
 })
-export class MetricAggregationSpecificationModel
-  extends MetricSpecificationModel<MetricAggregationSpecification>
+export class MetricAggregationSpecificationModel extends MetricSpecificationModel<MetricAggregationSpecification>
   implements MetricAggregationSpecification {
   protected buildInnerSpec(): MetricAggregationSpecification {
     return new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(this.metric, this.aggregation);

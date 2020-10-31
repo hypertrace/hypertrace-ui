@@ -38,8 +38,7 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
     </div>
   `
 })
-export class SpanDetailWidgetRendererComponent
-  extends WidgetRenderer<SpanDetailWidgetModel, SpanDetailData>
+export class SpanDetailWidgetRendererComponent extends WidgetRenderer<SpanDetailWidgetModel, SpanDetailData>
   implements OnInit {
   protected fetchData(): Observable<SpanDetailData> {
     return this.model.getData();
