@@ -10,7 +10,6 @@ import { ButtonSize, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-open-in-new-tab',
-  styleUrls: ['./open-in-new-tab.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="open-in-new-tab" htTooltip="Open in a new tab">
