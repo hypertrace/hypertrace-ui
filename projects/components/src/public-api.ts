@@ -285,3 +285,7 @@ export * from './modal/modal.service';
 
 export * from './confirmation/confirmation.module';
 export * from './confirmation/confirmation.service';
+
+// Snackbar
+export * from './snackbar/snackbar.service';
+export * from './snackbar/snackbar.module';

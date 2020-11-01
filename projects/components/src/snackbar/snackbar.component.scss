@@ -1,0 +1,34 @@
+@import 'color-palette';
+
+.snackbar-container {
+  display: flex;
+  background-color: $gray-9;
+  color: white;
+  align-items: center;
+  padding: 8px 12px;
+  width: fit-content;
+
+  .status-icon {
+    margin-right: 10px;
+  }
+
+  .text {
+    margin-right: 20px;
+  }
+
+  .dismiss-icon {
+    color: white;
+  }
+}
+
+.success {
+  color: $green-5;
+}
+
+.failure {
+  color: $red-3;
+}
+
+.info {
+  color: white;
+}

@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ObservabilityDashboardModule } from '@hypertrace/observability';
@@ -18,7 +19,8 @@ import { NavigationModule } from './shared/navigation/navigation.module';
     NavigationModule,
     HttpClientModule,
     ApplicationFrameModule,
-    ObservabilityDashboardModule
+    ObservabilityDashboardModule,
+    MatSnackBarModule
   ],
   declarations: [RootComponent],
   bootstrap: [RootComponent]
