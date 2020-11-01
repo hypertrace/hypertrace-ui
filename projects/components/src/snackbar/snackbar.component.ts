@@ -63,5 +63,5 @@ export enum SnackbarMode {
 export interface SnackbarData {
   mode: SnackbarMode;
   message: string;
-  closedObserver: Observer<any>;
+  closedObserver: Observer<unknown>;
 }

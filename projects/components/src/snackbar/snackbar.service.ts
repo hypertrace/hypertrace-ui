@@ -12,7 +12,7 @@ export class SnackbarService {
   };
 
   private snackbarRef?: MatSnackBarRef<unknown>;
-  private closedObserver$ = new Subject();
+  private readonly closedObserver$: Subject<unknown> = new Subject();
 
   public constructor(private readonly snackbar: MatSnackBar) {
     this.closedObserver$.subscribe(() => {
