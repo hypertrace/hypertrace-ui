@@ -18,12 +18,12 @@ import { IconSize } from '../icon/icon-size';
         size="${IconSize.Small}"
       ></ht-icon>
       <div class="text">{{ this.matData.message }}</div>
-      <ht-button
+      <ht-icon
         class="dismiss-icon"
         icon="${IconType.CloseCircleFilled}"
         size="${IconSize.Small}"
         (click)="this.close()"
-      ></ht-button>
+      ></ht-icon>
     </div>
   `
 })
