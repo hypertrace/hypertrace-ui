@@ -8,7 +8,7 @@ export class SnackbarService {
   private readonly snackBarDefaultConfig: MatSnackBarConfig = {
     horizontalPosition: 'left',
     verticalPosition: 'bottom',
-    duration: 50000 // 5 seconds in ms
+    duration: 5000 // 5 seconds in ms
   };
 
   private snackbarRef?: MatSnackBarRef<unknown>;
