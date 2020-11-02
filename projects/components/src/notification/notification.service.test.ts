@@ -1,5 +1,5 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NotificationModule, NotificationService } from '@hypertrace/components';
+import { NotificationService } from '@hypertrace/components';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator';
 import { NotificationComponent, NotificationMode } from './notification.component';
 
@@ -8,8 +8,7 @@ describe('NotificationService', () => {
 
   const createService = createServiceFactory({
     service: NotificationService,
-    imports: [NotificationModule],
-    providers: [mockProvider(MatSnackBar, { openFromComponent: jest.fn().mockReturnValue(undefined) })]
+    providers: [mockProvider(MatSnackBar, { openFromComponent: jest.fn() })]
   });
 
   test('should create success notification correctly', () => {
