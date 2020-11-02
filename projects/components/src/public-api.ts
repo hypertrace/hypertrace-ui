@@ -286,6 +286,6 @@ export * from './modal/modal.service';
 export * from './confirmation/confirmation.module';
 export * from './confirmation/confirmation.service';
 
-// Snackbar
+// Notification
 export * from './notification/notification.service';
 export * from './notification/notification.module';
