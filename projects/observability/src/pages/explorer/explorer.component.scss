@@ -16,7 +16,6 @@
 
   .visualization-panel {
     padding-top: 8px;
-
     .label {
       @include body-1-medium;
     }
@@ -31,7 +30,7 @@
 
   .results-panel {
     overflow: hidden;
-
+    flex: 1 1 auto;
     .label {
       @include body-1-medium;
     }

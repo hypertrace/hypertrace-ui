@@ -46,116 +46,130 @@ import {
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 
-// tslint:disable max-file-line-count
+// tslint:disable: template-cyclomatic-complexity component-max-inline-declarations max-file-line-count
 @Component({
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <cdk-table
-      *ngIf="this.dataSource"
-      [multiTemplateDataRows]="this.isDetailType()"
-      [dataSource]="this.dataSource"
-      [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
-      class="table"
-    >
-      <!-- Columns -->
-      <div *ngFor="let columnDef of this.columnConfigs$ | async; trackBy: this.trackItem; index as index">
-        <ng-container [cdkColumnDef]="columnDef.id">
-          <cdk-header-cell
-            *cdkHeaderCellDef
-            [style.flex-basis]="columnDef.width"
-            [style.max-width]="columnDef.width"
-            class="header-cell"
-          >
-            <div
-              *ngIf="index !== 0"
-              class="header-column-resize-handle"
-              (mousedown)="this.onResizeMouseDown($event, index)"
+    <div class="table">
+      <cdk-table
+        *ngIf="this.dataSource"
+        [multiTemplateDataRows]="this.isDetailType()"
+        [dataSource]="this.dataSource"
+        [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
+        class="table"
+      >
+        <!-- Columns -->
+        <div *ngFor="let columnDef of this.columnConfigs$ | async; trackBy: this.trackItem; index as index">
+          <ng-container [cdkColumnDef]="columnDef.id">
+            <cdk-header-cell
+              *cdkHeaderCellDef
+              [style.flex-basis]="columnDef.width"
+              [style.max-width]="columnDef.width"
+              class="header-cell"
             >
-              <div class="header-column-divider"></div>
-            </div>
-            <ht-table-header-cell-renderer
-              class="header-cell-renderer"
-              [metadata]="this.metadata"
-              [columnConfig]="columnDef"
-              [index]="index"
-              [sort]="columnDef.sort"
-              (sortChange)="this.onSortChange($event, columnDef)"
+              <div
+                *ngIf="index !== 0"
+                class="header-column-resize-handle"
+                (mousedown)="this.onResizeMouseDown($event, index)"
+              >
+                <div
+                  *ngIf="index !== 0"
+                  class="header-column-resize-handle"
+                  (mousedown)="this.onResizeMouseDown($event, index)"
+                >
+                  <div class="header-column-divider"></div>
+                </div>
+                <ht-table-header-cell-renderer
+                  class="header-cell-renderer"
+                  [metadata]="this.metadata"
+                  [columnConfig]="columnDef"
+                  [index]="index"
+                  [sort]="columnDef.sort"
+                  (sortChange)="this.onSortChange($event, columnDef)"
+                >
+                </ht-table-header-cell-renderer>
+              </div>
+            </cdk-header-cell>
+            <cdk-cell
+              *cdkCellDef="let row"
+              [style.flex-basis]="columnDef.width"
+              [style.max-width]="columnDef.width"
+              [style.margin-left]="this.indent(columnDef, row)"
+              [ngClass]="{
+                'child-row': this.isChildRow(row),
+                'expander-column': this.isExpanderColumn(columnDef),
+                'detail-expanded': this.isDetailExpanded(row)
+              }"
+              class="data-cell"
             >
-            </ht-table-header-cell-renderer>
-          </cdk-header-cell>
-          <cdk-cell
-            *cdkCellDef="let row"
-            [style.flex-basis]="columnDef.width"
-            [style.max-width]="columnDef.width"
-            [style.margin-left]="this.indent(columnDef, row)"
-            [ngClass]="{
-              'child-row': this.isChildRow(row),
-              'expander-column': this.isExpanderColumn(columnDef),
-              'detail-expanded': this.isDetailExpanded(row)
-            }"
-            class="data-cell"
-          >
-            <ht-table-data-cell-renderer
-              class="data-cell-renderer"
-              [metadata]="this.metadata"
-              [columnConfig]="columnDef"
-              [index]="this.columnIndex(columnDef, index)"
-              [rowData]="row"
-              [cellData]="row[columnDef.id]"
-              (click)="this.onDataCellClick(row)"
-            ></ht-table-data-cell-renderer>
+              <ht-table-data-cell-renderer
+                class="data-cell-renderer"
+                [metadata]="this.metadata"
+                [columnConfig]="columnDef"
+                [index]="this.columnIndex(columnDef, index)"
+                [rowData]="row"
+                [cellData]="row[columnDef.id]"
+                (click)="this.onDataCellClick(row)"
+              ></ht-table-data-cell-renderer>
+            </cdk-cell>
+          </ng-container>
+        </div>
+
+        <!-- Expandable Detail Column -->
+        <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
+          <cdk-cell *cdkCellDef="let row" [attr.colspan]="this.columnConfigsSubject.value.length" class="expanded-cell">
+            <ht-table-expanded-detail-row-cell-renderer
+              *ngIf="this.isRowExpanded(row)"
+              [row]="row"
+              [expanded]="this.isRowExpanded(row)"
+              [content]="this.detailContent"
+            ></ht-table-expanded-detail-row-cell-renderer>
           </cdk-cell>
         </ng-container>
+
+        <!-- Header Row -->
+        <ng-container *ngIf="this.isShowHeader()">
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumns()" class="header-row"></cdk-header-row>
+        </ng-container>
+
+        <!-- Data Rows -->
+        <cdk-row
+          *cdkRowDef="let row; columns: this.visibleColumns()"
+          (mouseenter)="this.onDataRowMouseEnter(row)"
+          (mouseleave)="this.onDataRowMouseLeave()"
+          [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
+          class="data-row"
+        ></cdk-row>
+
+        <!-- Expandable Detail Rows -->
+        <ng-container *ngIf="this.isDetailType()">
+          <cdk-row *cdkRowDef="let row; columns: [this.expandedDetailColumnConfig.id]" class="expandable-row"></cdk-row>
+        </ng-container>
+      </cdk-table>
+
+      <!-- State Watcher -->
+      <ng-container *ngIf="this.dataSource?.loadingStateChange$ | async as loadingState">
+        <div class="state-watcher" *ngIf="!loadingState.hide">
+          <ng-container class="state-watcher" *htLoadAsync="loadingState.loading$"></ng-container>
+        </div>
+      </ng-container>
+
+      <!-- Pagination -->
+      <div
+        class="pagination-controls"
+        *ngIf="this.pageable"
+        [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
+      >
+        <ht-paginator
+          *htLetAsync="this.urlPageData$ as pageData"
+          (pageChange)="this.onPageChange($event)"
+          [pageSizeOptions]="this.pageSizeOptions"
+          [pageSize]="pageData?.pageSize"
+          [pageIndex]="pageData?.pageIndex"
+        ></ht-paginator>
       </div>
-
-      <!-- Expandable Detail Column -->
-      <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
-        <cdk-cell *cdkCellDef="let row" [attr.colspan]="this.columnConfigsSubject.value.length" class="expanded-cell">
-          <ht-table-expanded-detail-row-cell-renderer
-            *ngIf="this.isRowExpanded(row)"
-            [row]="row"
-            [expanded]="this.isRowExpanded(row)"
-            [content]="this.detailContent"
-          ></ht-table-expanded-detail-row-cell-renderer>
-        </cdk-cell>
-      </ng-container>
-
-      <!-- Header Row -->
-      <ng-container *ngIf="this.isShowHeader()">
-        <cdk-header-row *cdkHeaderRowDef="this.visibleColumns()" class="header-row"></cdk-header-row>
-      </ng-container>
-
-      <!-- Data Rows -->
-      <cdk-row
-        *cdkRowDef="let row; columns: this.visibleColumns()"
-        (mouseenter)="this.onDataRowMouseEnter(row)"
-        (mouseleave)="this.onDataRowMouseLeave()"
-        [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
-        class="data-row"
-      ></cdk-row>
-
-      <!-- Expandable Detail Rows -->
-      <ng-container *ngIf="this.isDetailType()">
-        <cdk-row *cdkRowDef="let row; columns: [this.expandedDetailColumnConfig.id]" class="expandable-row"></cdk-row>
-      </ng-container>
-    </cdk-table>
-
-    <!-- State Watcher -->
-    <div class="state-watcher">
-      <ng-container class="state-watcher" *htLoadAsync="this.dataSource?.loadingStateChange$ | async"></ng-container>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination-controls" *ngIf="this.pageable" [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'">
-      <ht-paginator
-        *htLetAsync="this.urlPageData$ as pageData"
-        (pageChange)="this.onPageChange($event)"
-        [pageSizeOptions]="this.pageSizeOptions"
-        [pageSize]="pageData?.pageSize"
-        [pageIndex]="pageData?.pageIndex"
-      ></ht-paginator>
     </div>
   `
 })
