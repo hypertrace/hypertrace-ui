@@ -3,7 +3,7 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { IconComponent, NotificationModule } from '@hypertrace/components';
 import { mockDashboardProviders } from '@hypertrace/dashboards/testing';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator';
+import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { Subject } from 'rxjs';
 import { NotificationComponent, NotificationMode } from './notification.component';
 

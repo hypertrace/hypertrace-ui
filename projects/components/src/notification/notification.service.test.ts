@@ -1,6 +1,6 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from '@hypertrace/components';
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator';
+import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { NotificationComponent, NotificationMode } from './notification.component';
 
 describe('NotificationService', () => {
