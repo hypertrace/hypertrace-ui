@@ -74,23 +74,17 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 class="header-column-resize-handle"
                 (mousedown)="this.onResizeMouseDown($event, index)"
               >
-                <div
-                  *ngIf="index !== 0"
-                  class="header-column-resize-handle"
-                  (mousedown)="this.onResizeMouseDown($event, index)"
-                >
-                  <div class="header-column-divider"></div>
-                </div>
-                <ht-table-header-cell-renderer
-                  class="header-cell-renderer"
-                  [metadata]="this.metadata"
-                  [columnConfig]="columnDef"
-                  [index]="index"
-                  [sort]="columnDef.sort"
-                  (sortChange)="this.onHeaderCellClick(columnDef)"
-                >
-                </ht-table-header-cell-renderer>
+                <div class="header-column-divider"></div>
               </div>
+              <ht-table-header-cell-renderer
+                class="header-cell-renderer"
+                [metadata]="this.metadata"
+                [columnConfig]="columnDef"
+                [index]="index"
+                [sort]="columnDef.sort"
+                (sortChange)="this.onHeaderCellClick(columnDef)"
+              >
+              </ht-table-header-cell-renderer>
             </cdk-header-cell>
             <cdk-cell
               *cdkCellDef="let row"
