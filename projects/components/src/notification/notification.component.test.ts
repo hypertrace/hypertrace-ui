@@ -1,8 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
-import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { IconType } from '@hypertrace/assets-library';
 import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { Subject } from 'rxjs';
 import { NotificationComponent, NotificationMode } from './notification.component';
 
@@ -12,8 +13,7 @@ describe('NotificationComponent', () => {
   const createHost = createHostFactory({
     component: NotificationComponent,
     shallow: true,
-    declarations: [IconComponent],
-    imports: [IconLibraryTestingModule]
+    declarations: [MockComponent(IconComponent)]
   });
 
   test('should create success notification correctly', fakeAsync(() => {
