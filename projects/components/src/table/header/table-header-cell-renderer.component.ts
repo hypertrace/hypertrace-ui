@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { InFilterModalData, InFilterModalComponent } from '../../filtering/filter-modal/in-filter-modal.component';
+import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
 import { FilterAttribute } from '../../filtering/filter/filter-attribute';
 import { FilterOperator } from '../../filtering/filter/filter-operators';
 import { FilterParserLookupService } from '../../filtering/filter/parser/filter-parser-lookup.service';
