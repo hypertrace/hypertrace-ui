@@ -6,11 +6,11 @@ import { Observer } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
-  selector: 'ht-snackbar',
-  styleUrls: ['./snackbar.component.scss'],
+  selector: 'ht-notification',
+  styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="snackbar-container">
+    <div class="notification-container">
       <ht-icon
         [ngClass]="this.matData.mode"
         class="status-icon"
@@ -27,7 +27,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SnackbarComponent {
+export class NotificationComponent {
   public constructor(@Inject(MAT_SNACK_BAR_DATA) public readonly matData: SnackbarData) {}
 
   public getStatusIconType(): IconType | undefined {

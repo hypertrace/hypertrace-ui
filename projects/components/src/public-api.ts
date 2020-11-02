@@ -287,5 +287,5 @@ export * from './confirmation/confirmation.module';
 export * from './confirmation/confirmation.service';
 
 // Snackbar
-export * from './snackbar/snackbar.service';
-export * from './snackbar/snackbar.module';
+export * from './notification/notification.service';
+export * from './notification/notification.module';
