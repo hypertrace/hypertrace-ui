@@ -14,7 +14,7 @@ import { IconSize } from '../icon/icon-size';
       <ht-icon
         [ngClass]="this.matData.mode"
         class="status-icon"
-        [icon]="this.iconType"
+        [icon]="this.getStatusIconType()"
         size="${IconSize.Small}"
       ></ht-icon>
       <div class="text">{{ this.matData.message }}</div>
@@ -28,33 +28,27 @@ import { IconSize } from '../icon/icon-size';
   `
 })
 export class SnackbarComponent {
-  public iconType?: IconType;
-  public constructor(@Inject(MAT_SNACK_BAR_DATA) public readonly matData: SnackbarData) {
-    this.setIconType(this.matData.mode);
-  }
+  public constructor(@Inject(MAT_SNACK_BAR_DATA) public readonly matData: SnackbarData) {}
 
-  public setIconType(mode: SnackbarMode): void {
-    switch (mode) {
+  public getStatusIconType(): IconType | undefined {
+    switch (this.matData.mode) {
       case SnackbarMode.Success:
-        this.iconType = IconType.Checkmark;
-        break;
+        return IconType.Checkmark;
       case SnackbarMode.Failure:
-        this.iconType = IconType.Close;
-        break;
+        return IconType.Close;
       case SnackbarMode.Info:
-        this.iconType = IconType.Info;
-        break;
+        return IconType.Info;
       default:
-        assertUnreachable(mode);
+        assertUnreachable(this.matData.mode);
     }
   }
 
   public close(): void {
-    this.matData.closedObserver.next(undefined);
+    this.matData.closedObserver.next();
   }
 }
 
-export enum SnackbarMode {
+export const enum SnackbarMode {
   Success = 'success',
   Failure = 'failure',
   Info = 'info'
@@ -63,5 +57,5 @@ export enum SnackbarMode {
 export interface SnackbarData {
   mode: SnackbarMode;
   message: string;
-  closedObserver: Observer<unknown>;
+  closedObserver: Observer<void>;
 }
