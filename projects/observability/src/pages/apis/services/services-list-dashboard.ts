@@ -8,7 +8,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     type: 'table-widget',
     mode: TableMode.Tree,
     style: TableStyle.FullPage,
-    searchable: true,
+    searchAttribute: 'name',
     columns: [
       {
         type: 'table-widget-column',

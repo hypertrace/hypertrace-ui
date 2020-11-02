@@ -1,5 +1,7 @@
 import { Dictionary } from '@hypertrace/common';
 import { Observable } from 'rxjs';
+import { FieldFilter } from '../filtering/filter/filter';
+import { FilterOperator } from '../filtering/filter/filter-operators';
 import { TableCellAlignmentType } from './cells/types/table-cell-alignment-type';
 
 export interface TableColumnConfig {
@@ -53,6 +55,11 @@ export interface PrefetchedTableRowState extends TableRowState {
 export interface RowStateChange {
   cached: StatefulTableRow; // This is the previously cached row
   changed: StatefulTableRow | undefined; // This is populated if there is a change for this row or an ancestor
+}
+
+export interface TableFilter extends FieldFilter {
+  operator: FilterOperator;
+  value: unknown;
 }
 
 export const enum TableSortDirection {

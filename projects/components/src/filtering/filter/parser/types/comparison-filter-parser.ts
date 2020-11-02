@@ -17,7 +17,8 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
       FilterOperator.LessThan,
       FilterOperator.LessThanOrEqualTo,
       FilterOperator.GreaterThan,
-      FilterOperator.GreaterThanOrEqualTo
+      FilterOperator.GreaterThanOrEqualTo,
+      FilterOperator.Like
     ];
   }
 
