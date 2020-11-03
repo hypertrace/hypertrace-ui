@@ -82,7 +82,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [columnConfig]="columnDef"
                 [index]="index"
                 [sort]="columnDef.sort"
-                (sortChange)="this.onHeaderCellClick(columnDef)"
+                (sortChange)="this.onSortChange($event, columnDef)"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
