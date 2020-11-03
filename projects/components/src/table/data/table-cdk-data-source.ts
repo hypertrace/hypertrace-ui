@@ -252,24 +252,22 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return of([]);
     }
 
-    return this.tableDataSourceProvider.data
-      .getData(this.buildRequest(columnConfigs, pageEvent, filters))
-      .pipe(
-        tap(response => this.updatePaginationTotalCount(response.totalCount)),
-        map(response => response.data),
-        map(rows => this.paginateRows(rows, pageEvent)),
-        map(TableCdkRowUtil.buildInitialRowStates),
-        map(rows =>
-          this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
-            ? TableCdkRowUtil.expandAllRows(rows)
-            : rows
-        ),
-        catchError(error => {
-          this.loadingStateSubject.next({ loading$: throwError(error) });
+    return this.tableDataSourceProvider.data.getData(this.buildRequest(columnConfigs, pageEvent, filters)).pipe(
+      tap(response => this.updatePaginationTotalCount(response.totalCount)),
+      map(response => response.data),
+      map(rows => this.paginateRows(rows, pageEvent)),
+      map(TableCdkRowUtil.buildInitialRowStates),
+      map(rows =>
+        this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
+          ? TableCdkRowUtil.expandAllRows(rows)
+          : rows
+      ),
+      catchError(error => {
+        this.loadingStateSubject.next({ loading$: throwError(error) });
 
-          return [];
-        })
-      );
+        return [];
+      })
+    );
   }
 
   private buildRequest(
