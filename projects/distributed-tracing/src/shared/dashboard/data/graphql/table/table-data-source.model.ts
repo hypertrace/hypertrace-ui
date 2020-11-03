@@ -3,7 +3,6 @@ import {
   TableDataResponse,
   TableDataSource,
   TableFilter,
-  TableMode,
   TableRow
 } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
@@ -26,9 +25,9 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({
-      getData: (request, mode) =>
-        this.query(filters => this.buildGraphQlRequest(filters, request, mode)).pipe(
-          map(response => this.buildTableResponse(response, request, mode))
+      getData: (request) =>
+        this.query(filters => this.buildGraphQlRequest(filters, request)).pipe(
+          map(response => this.buildTableResponse(response, request))
         ),
       getScope: () => this.getScope()
     });
@@ -38,14 +37,12 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   protected abstract buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    mode?: TableMode
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): unknown;
 
   protected abstract buildTableResponse(
     response: unknown,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    mode?: TableMode
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow>;
 
   protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {

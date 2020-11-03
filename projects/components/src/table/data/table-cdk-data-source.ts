@@ -253,7 +253,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     }
 
     return this.tableDataSourceProvider.data
-      .getData(this.buildRequest(columnConfigs, pageEvent, filters), this.tableDataSourceProvider.mode!)
+      .getData(this.buildRequest(columnConfigs, pageEvent, filters))
       .pipe(
         tap(response => this.updatePaginationTotalCount(response.totalCount)),
         map(response => response.data),

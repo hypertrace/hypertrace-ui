@@ -1,7 +1,8 @@
-import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
+import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
-  GraphQlFilter, Specification,
+  GraphQlFilter,
+  Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
@@ -62,10 +63,9 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    mode: TableMode
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): EntityTableGraphQlRequest {
-    if (mode === TableMode.Flat && this.flattenedFilters.length > 0) {
+    if (this.flattenedFilters.length > 0) {
       return this.buildFlattenedEntityRequest(filters, request);
     }
 
