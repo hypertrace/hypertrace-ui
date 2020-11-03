@@ -76,7 +76,7 @@ export * from './filtering/filter-bar/filter-bar.component';
 // Filter Button
 export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
-export * from './filtering/filter-button/in-filter-button.component';
+export * from './filtering/filter-modal/in-filter-modal.component';
 
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
@@ -289,3 +289,7 @@ export * from './modal/modal.service';
 
 export * from './confirmation/confirmation.module';
 export * from './confirmation/confirmation.service';
+
+// Notification
+export * from './notification/notification.service';
+export * from './notification/notification.module';
