@@ -9,7 +9,10 @@
 
   .button {
     margin-top: 8px;
-    margin-left: 88px;
+
+    &.with-margin {
+      margin-left: 88px;
+    }
   }
 
   .card {
@@ -42,24 +45,22 @@
       display: flex;
       flex-direction: row;
       width: 100%;
-      border: 1px solid $gray-2;
+      //border: 1px solid $gray-2;
       box-sizing: border-box;
       border-radius: 6px;
-      @include card-hover;
 
       &.selected-card {
         background: $blue-1;
-        border: 1px solid $blue-2;
 
         &:hover {
           background: $blue-2;
-          border: 1px solid $blue-5;
+          cursor: pointer;
         }
       }
 
       &:hover {
         background: $gray-1;
-        border: 1px solid $gray-2;
+        cursor: pointer;
       }
     }
 
