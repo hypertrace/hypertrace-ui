@@ -8,7 +8,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
   styleUrls: ['./menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="menu-dropdown">
+    <ht-event-blocker event="click" class="menu-container" [enabled]="this.disabled">
       <ht-popover [closeOnClick]="true" class="menu-container">
         <ht-popover-trigger>
           <div class="trigger-content">
@@ -22,7 +22,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
           </div>
         </ht-popover-content>
       </ht-popover>
-    </div>
+    </ht-event-blocker>
   `
 })
 export class MenuDropdownComponent {
@@ -31,6 +31,9 @@ export class MenuDropdownComponent {
 
   @Input()
   public label?: string;
+
+  @Input()
+  public disabled: boolean | undefined;
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
