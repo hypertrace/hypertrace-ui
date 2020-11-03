@@ -1,7 +1,7 @@
 import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
-  GraphQlFilter,
+  GraphQlFilter, Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
@@ -37,6 +37,14 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     } as EnumPropertyTypeInstance
   })
   public childEntityType?: ObservabilityEntityType;
+
+  @ModelProperty({
+    key: 'additional-child-specifications',
+    displayName: 'Value',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public additionalChildSpecifications: Specification[] = [];
 
   @ModelProperty({
     key: 'flattenedFilters',
@@ -119,7 +127,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequestType: 'children',
       tableRequest: request,
       entityType: this.childEntityType!,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.map(column => column.specification).concat(...this.additionalChildSpecifications),
       limit: 100, // Really no limit, putting one in for sanity
       sort: request.sort && {
         direction: request.sort.direction,
