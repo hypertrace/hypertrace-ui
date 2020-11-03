@@ -6,7 +6,7 @@ import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
 
 describe('Menu dropdown Component', () => {
-  const hostFactory = createHostFactory<MenuDropdownComponent>({
+  const createHost = createHostFactory<MenuDropdownComponent>({
     component: MenuDropdownComponent,
     declarations: [MockComponent(LabelComponent), MockComponent(MenuItemComponent)],
     shallow: true
@@ -15,7 +15,7 @@ describe('Menu dropdown Component', () => {
   let spectator: SpectatorHost<MenuDropdownComponent>;
 
   test('should display trigger content as expected', () => {
-    spectator = hostFactory(
+    spectator = createHost(
       `
     <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
         </ht-menu-dropdown>`
@@ -27,7 +27,7 @@ describe('Menu dropdown Component', () => {
   });
 
   test('should display menu items with icons when clicked', fakeAsync(() => {
-    spectator = hostFactory(
+    spectator = createHost(
       `
     <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
           <ht-menu-item label="Do X"></ht-menu-item>
@@ -42,5 +42,26 @@ describe('Menu dropdown Component', () => {
 
     expect(optionComponents[0].label).toBe('Do X');
     expect(optionComponents[1].label).toBe('Do Y');
+  }));
+
+  test('should not bubble event from trigger element', fakeAsync(() => {
+    const onClickSpy = jest.fn();
+
+    spectator = createHost(
+      `
+    <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}" (click)="onClick()">
+          <ht-menu-item label="Do X"></ht-menu-item>
+          <ht-menu-item label="Do Y"></ht-menu-item>
+        </ht-menu-dropdown>`,
+      {
+        hostProps: {
+          onClick: onClickSpy
+        }
+      }
+    );
+
+    spectator.click('.trigger-content');
+
+    expect(onClickSpy).not.toHaveBeenCalled();
   }));
 });
