@@ -99,11 +99,11 @@ export class TableWidgetRendererComponent
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs = this.getColumnConfigs();
 
-    this.filterItems = this.api.model.filterToggles.map(filter => ({
+    this.filterItems = this.api.model.filterOptions.map(filter => ({
       label: capitalize(filter.label),
       value: filter
     }));
-    this.modeItems = this.api.model.modeToggles.map(mode => ({
+    this.modeItems = this.api.model.modeOptions.map(mode => ({
       label: capitalize(mode),
       value: mode
     }));
@@ -169,10 +169,11 @@ export class TableWidgetRendererComponent
 
   public onModeChange(mode: TableMode): void {
     this.activeMode = mode;
+    this.columnConfigs = this.getColumnConfigs();
   }
 
   private getColumnConfigs(): TableColumnConfig[] {
-    return this.model.getColumns();
+    return this.model.getColumns(this.activeMode);
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {

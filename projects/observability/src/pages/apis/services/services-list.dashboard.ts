@@ -1,5 +1,9 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { DashboardDefaultConfiguration, TracingTableCellType } from '@hypertrace/distributed-tracing';
+import {
+  DashboardDefaultConfiguration,
+  GraphQlOperatorType,
+  TracingTableCellType
+} from '@hypertrace/distributed-tracing';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 
 export const servicesListDashboard: DashboardDefaultConfiguration = {
@@ -9,6 +13,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     mode: TableMode.Tree,
     style: TableStyle.FullPage,
     searchAttribute: 'name',
+    modeOptions: [TableMode.Tree, TableMode.Flat],
     columns: [
       {
         type: 'table-widget-column',
@@ -17,6 +22,17 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
         width: '30%',
         value: {
           type: 'entity-specification'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Service Name',
+        display: CoreTableCellRendererType.Text,
+        width: '30%',
+        flattenedOnly: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'serviceName'
         }
       },
       {
@@ -84,7 +100,15 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     data: {
       type: 'entity-table-data-source',
       entity: 'SERVICE',
-      childEntity: 'API'
+      childEntity: 'API',
+      flattenedFilters: [
+        {
+          type: 'graphql-key-value-filter',
+          key: 'isExternal',
+          operator: GraphQlOperatorType.Equals,
+          value: false
+        }
+      ]
     }
   }
 };

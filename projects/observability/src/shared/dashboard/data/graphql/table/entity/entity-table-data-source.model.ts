@@ -1,8 +1,7 @@
-import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
+import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   GraphQlFilter,
-  Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
@@ -40,18 +39,32 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   public childEntityType?: ObservabilityEntityType;
 
   @ModelProperty({
-    key: 'additional-child-specifications',
-    displayName: 'Value',
-    required: false,
+    key: 'flattenedFilters',
     type: ARRAY_PROPERTY.type
   })
-  public additionalChildSpecifications: Specification[] = [];
+  public flattenedFilters: GraphQlFilter[] = [];
 
   public getScope(): string {
     return this.entityType; // TODO: How to deal with children
   }
 
+  protected getSearchFilterAttribute(): string {
+    return 'name';
+  }
+
   protected buildGraphQlRequest(
+    filters: GraphQlFilter[],
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode: TableMode
+  ): EntityTableGraphQlRequest {
+    if (mode === TableMode.Flat && this.flattenedFilters.length > 0) {
+      return this.buildFlattenedEntityRequest(filters, request);
+    }
+
+    return this.buildEntityRequest(filters, request);
+  }
+
+  private buildEntityRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): EntityTableGraphQlRequest {
@@ -60,6 +73,30 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       tableRequestType: 'root',
       tableRequest: request,
       entityType: this.entityType,
+      properties: request.columns.map(c => c.specification),
+      limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
+      offset: request.position.startIndex,
+      sort: request.sort && {
+        direction: request.sort.direction,
+        key: request.columns.includes(request.sort.column)
+          ? request.sort.column.specification
+          : request.columns[0].specification
+      },
+      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
+      timeRange: this.getTimeRangeOrThrow(),
+      includeTotal: true
+    };
+  }
+
+  private buildFlattenedEntityRequest(
+    filters: GraphQlFilter[],
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): EntityTableGraphQlRequest {
+    return {
+      requestType: ENTITIES_GQL_REQUEST,
+      tableRequestType: 'root',
+      tableRequest: request,
+      entityType: this.childEntityType!,
       properties: request.columns.map(column => column.specification),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 10, // Prefetch 10 pages
       offset: request.position.startIndex,
@@ -67,9 +104,29 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
+      filters: [...filters, ...this.toGraphQlFilters(request.filters), ...this.flattenedFilters],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
+    };
+  }
+
+  private buildChildEntityRequest(
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    entity: Entity
+  ): EntityTableGraphQlRequest {
+    return {
+      requestType: ENTITIES_GQL_REQUEST,
+      tableRequestType: 'children',
+      tableRequest: request,
+      entityType: this.childEntityType!,
+      properties: request.columns.map(column => column.specification),
+      limit: 100, // Really no limit, putting one in for sanity
+      sort: request.sort && {
+        direction: request.sort.direction,
+        key: request.sort.column.specification
+      },
+      filters: [GraphQlEntityFilter.forEntity(entity)],
+      timeRange: this.getTimeRangeOrThrow()
     };
   }
 
@@ -83,24 +140,13 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  private buildChildEntityRequest(
-    request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    entity: Entity
-  ): EntityTableGraphQlRequest {
-    return {
-      requestType: ENTITIES_GQL_REQUEST,
-      tableRequestType: 'children',
-      tableRequest: request,
-      entityType: this.childEntityType!,
-      properties: request.columns.map(column => column.specification).concat(...this.additionalChildSpecifications),
-      limit: 100, // Really no limit, putting one in for sanity
-      sort: request.sort && {
-        direction: request.sort.direction,
-        key: request.sort.column.specification
-      },
-      filters: [GraphQlEntityFilter.forEntity(entity)],
-      timeRange: this.getTimeRangeOrThrow()
-    };
+  private queryEntityChildren(
+    entity: Entity,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): Observable<TableRow[]> {
+    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
+      map(response => this.resultsAsTreeRows(response.results, request, false))
+    );
   }
 
   private resultsAsTreeRows(
@@ -113,15 +159,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       getChildren: () => (expandable ? this.queryEntityChildren(entity, request) : EMPTY),
       isExpandable: () => expandable
     }));
-  }
-
-  private queryEntityChildren(
-    entity: Entity,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): Observable<TableRow[]> {
-    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
-      map(response => this.resultsAsTreeRows(response.results, request, false))
-    );
   }
 }
 

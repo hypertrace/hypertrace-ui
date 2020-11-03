@@ -66,6 +66,13 @@ export class TableWidgetColumnModel {
   public filterable?: boolean = false;
 
   @ModelProperty({
+    key: 'flattenedOnly',
+    displayName: 'Flattened Only Column',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public flattenedOnly?: boolean = false;
+
+  @ModelProperty({
     key: 'display',
     displayName: 'Display',
     // tslint:disable-next-line: no-object-literal-type-assertion

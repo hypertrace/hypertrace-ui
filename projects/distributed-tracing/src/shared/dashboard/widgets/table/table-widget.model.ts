@@ -69,8 +69,8 @@ export class TableWidgetModel {
   public searchAttribute?: string;
 
   @ModelProperty({
-    key: 'filterToggles',
-    displayName: 'Filter Toggles',
+    key: 'filterOptions',
+    displayName: 'Filter Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
@@ -80,7 +80,7 @@ export class TableWidgetModel {
       }
     } as ArrayPropertyTypeInstance
   })
-  public filterToggles: TableWidgetFilterModel[] = [];
+  public filterOptions: TableWidgetFilterModel[] = [];
 
   @ModelProperty({
     key: 'mode',
@@ -94,8 +94,8 @@ export class TableWidgetModel {
   public mode: TableMode = TableMode.Flat;
 
   @ModelProperty({
-    key: 'modeToggles',
-    displayName: 'Modes Toggle',
+    key: 'modeOptions',
+    displayName: 'Modes Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
@@ -105,7 +105,7 @@ export class TableWidgetModel {
       }
     } as ArrayPropertyTypeInstance
   })
-  public modeToggles: TableMode[] = [];
+  public modeOptions: TableMode[] = [];
 
   @ModelProperty({
     key: 'selection-mode',
@@ -172,8 +172,14 @@ export class TableWidgetModel {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getColumns(): SpecificationBackedTableColumnDef[] {
-    return this.columns.map(column => column.asTableColumnDef());
+  public getColumns(mode?: TableMode): SpecificationBackedTableColumnDef[] {
+    return this.columns
+      .filter(column => this.filterFlattenedTreeColumns(column, mode ?? this.mode))
+      .map(column => column.asTableColumnDef());
+  }
+
+  private filterFlattenedTreeColumns(column: TableWidgetColumnModel, mode: TableMode): boolean {
+    return !column.flattenedOnly || (column.flattenedOnly && this.modeOptions.length > 0 && mode === TableMode.Flat);
   }
 
   public getChildModel(row: TableRow): object | undefined {
