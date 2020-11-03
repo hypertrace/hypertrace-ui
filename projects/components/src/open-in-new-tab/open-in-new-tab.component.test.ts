@@ -1,21 +1,21 @@
 import { fakeAsync } from '@angular/core/testing';
-import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   ExternalNavigationWindowHandling,
   NavigationParamsType,
   NavigationService,
   TimeRangeService
 } from '@hypertrace/common';
-import { OpenInNewTabComponent, OpenInNewTabModule } from '@hypertrace/components';
+import { ButtonComponent, OpenInNewTabComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 
 describe('Open in new tab component', () => {
   let spectator: Spectator<OpenInNewTabComponent>;
 
   const createHost = createHostFactory({
-    declareComponent: false,
+    shallow: true,
     component: OpenInNewTabComponent,
-    imports: [OpenInNewTabModule, IconLibraryTestingModule],
+    declarations: [MockComponent(ButtonComponent)],
     providers: [
       mockProvider(TimeRangeService, {
         getShareableCurrentUrl: () => 'url-from-timerangeservice'
