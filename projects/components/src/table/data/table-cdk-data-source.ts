@@ -54,6 +54,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     this.buildChangeObservable()
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
+        /**
+         * Below debouce is needed to handle multiple emission from buildChangeObservable.
+         */
         debounceTime(100),
         mergeMap(([columnConfigs, pageEvent, filters, changedColumn, changedRow]) =>
           this.buildDataObservable(columnConfigs, pageEvent, filters, changedColumn, changedRow)
