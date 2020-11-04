@@ -19,6 +19,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
             display="${ButtonStyle.Outlined}"
             (click)="item.showAll = true"
             class="button"
+            [ngClass]="{ 'with-margin': this.showTime }"
           ></ht-button>
 
           <ng-template #showSimilarCards>
@@ -32,7 +33,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
 
     <ng-template #timelineCard let-card="card">
       <div class="card">
-        <div class="time">
+        <div class="time" *ngIf="this.showTime">
           <div class="value">{{ card.timestamp | htDisplayDate: this.dateFormat }}</div>
           <div class="vertical-line"></div>
         </div>
@@ -48,6 +49,9 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
 export class TimelineCardListComponent implements AfterContentInit {
   @Input()
   public selectedIndex?: number;
+
+  @Input()
+  public showTime?: boolean = true;
 
   @ContentChildren(TimelineCardContainerComponent)
   public readonly cards!: QueryList<TimelineCardContainerComponent>;
