@@ -440,9 +440,9 @@ export class TableComponent
     }
 
     this.dataSource = this.buildDataSource();
-    // this.dataSource?.loadingStateChange$.subscribe(() => {
-    //   this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
-    // });
+    this.dataSource?.loadingStateChange$.subscribe(() => {
+      this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
+    });
     this.filtersSubject.next(this.filters || []);
 
     this.initializeRows();

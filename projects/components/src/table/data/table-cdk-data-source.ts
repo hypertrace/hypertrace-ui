@@ -1,7 +1,7 @@
 import { DataSource } from '@angular/cdk/collections';
 import { forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
-import { catchError, map, mergeMap, startWith, switchMap, tap, debounceTime } from 'rxjs/operators';
+import { catchError, map, mergeMap, startWith, switchMap, tap, debounceTime, filter } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
 import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableFilter, TableRow } from '../table-api';
@@ -51,13 +51,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
    ****************************/
 
   public connect(): Observable<ReadonlyArray<TableRow>> {
-    console.log('Inside connectt');
-
     this.buildChangeObservable()
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
         debounceTime(100),
-        tap(() => console.log('table change observable')),
         mergeMap(([columnConfigs, pageEvent, filters, changedColumn, changedRow]) =>
           this.buildDataObservable(columnConfigs, pageEvent, filters, changedColumn, changedRow)
         )
@@ -152,6 +149,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return combineLatest([
       this.columnConfigChange(),
       this.pageChange(),
+      this.filtersProvider.filters$,
       this.columnStateChangeProvider.columnState$,
       this.rowStateChangeProvider.rowState$
     ]).pipe(
@@ -179,10 +177,11 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private detectRowStateChanges(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
+    filters: TableFilter[],
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined
   ): WatchedObservables {
-    return [columnConfigs, pageEvent, [], changedColumn, this.buildRowStateChange(changedRow)];
+    return [columnConfigs, pageEvent, filters, changedColumn, this.buildRowStateChange(changedRow)];
   }
 
   private buildRowStateChange(changedRow: StatefulTableRow | undefined): StatefulTableRow | undefined {
