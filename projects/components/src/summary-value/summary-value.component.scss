@@ -13,6 +13,10 @@
     height: 10px;
   }
 
+  .icon {
+    color: $gray-7;
+  }
+
   .label {
     @include body-small;
     margin-left: 6px;
