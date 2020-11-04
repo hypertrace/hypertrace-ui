@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SubscriptionLifecycle } from '@hypertrace/common';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { ServiceDetailService } from '../service-detail.service';
-import { serviceApisListDashboard } from './service-apis-list-dashboard';
+import { serviceApisListDashboard } from './service-apis-list.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

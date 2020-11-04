@@ -5,7 +5,9 @@ import { FormattingModule } from '@hypertrace/common';
 import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
 import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
+import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
+import { PopoverModule } from '../../popover/popover.module';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
 import { TableCellBooleanParser } from './data-parsers/table-cell-boolean-parser';
@@ -39,7 +41,9 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     IconModule,
     TooltipModule,
     TraceCheckboxModule,
-    FilterButtonModule
+    FilterButtonModule,
+    FilterModalModule,
+    PopoverModule
   ],
   exports: [
     TableHeaderCellRendererComponent,

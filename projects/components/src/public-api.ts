@@ -37,6 +37,10 @@ export * from './copy-to-clipboard/copy-to-clipboard.module';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.component';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.module';
 
+// Open in new tab
+export * from './open-in-new-tab/open-in-new-tab.component';
+export * from './open-in-new-tab/open-in-new-tab.module';
+
 // Date Time picker
 export * from './datetime-picker/datetime-picker.component';
 export * from './datetime-picker/datetime-picker.module';
@@ -72,7 +76,7 @@ export * from './filtering/filter-bar/filter-bar.component';
 // Filter Button
 export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
-export * from './filtering/filter-button/in-filter-button.component';
+export * from './filtering/filter-modal/in-filter-modal.component';
 
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';

@@ -33,9 +33,9 @@ export class NotificationComponent {
   public getStatusIconType(): IconType {
     switch (this.data.mode) {
       case NotificationMode.Success:
-        return IconType.Checkmark;
+        return IconType.CheckCircle;
       case NotificationMode.Failure:
-        return IconType.Close;
+        return IconType.Alert;
       case NotificationMode.Info:
         return IconType.Info;
       default:
