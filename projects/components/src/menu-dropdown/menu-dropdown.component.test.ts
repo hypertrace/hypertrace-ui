@@ -1,15 +1,26 @@
-import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
-import { MenuDropdownComponent, MenuItemComponent } from '@hypertrace/components';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { NavigationService } from '@hypertrace/common';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { of } from 'rxjs';
 import { LabelComponent } from '../label/label.component';
+import { EventBlockerModule } from './../event-blocker/event-blocker.module';
+import { PopoverModule } from './../popover/popover.module';
+import { PopoverService } from './../popover/popover.service';
+import { MenuDropdownComponent } from './menu-dropdown.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 
 describe('Menu dropdown Component', () => {
   const createHost = createHostFactory<MenuDropdownComponent>({
     component: MenuDropdownComponent,
+    imports: [EventBlockerModule, PopoverModule],
     declarations: [MockComponent(LabelComponent), MockComponent(MenuItemComponent)],
-    shallow: true
+    shallow: true,
+    providers: [
+      mockProvider(NavigationService, {
+        navigation$: of(true)
+      })
+    ]
   });
 
   let spectator: SpectatorHost<MenuDropdownComponent>;
@@ -26,25 +37,45 @@ describe('Menu dropdown Component', () => {
     expect(spectator.query('.trigger-icon')).toExist();
   });
 
-  test('should display menu items with icons when clicked', fakeAsync(() => {
+  test('should display menu items with icons when clicked', () => {
     spectator = createHost(
-      `
-    <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
+      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
           <ht-menu-item label="Do X"></ht-menu-item>
           <ht-menu-item label="Do Y"></ht-menu-item>
-        </ht-menu-dropdown>`
+        </ht-menu-dropdown>`,
+      {
+        providers: [
+          mockProvider(PopoverService, {
+            drawPopover: jest.fn()
+          })
+        ]
+      }
     );
 
     spectator.click('.trigger-content');
-    const optionComponents = spectator.queryAll(MenuItemComponent);
-    expect(spectator.query('.dropdown-content')).toExist();
-    expect(optionComponents.length).toBe(2);
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
+  });
 
-    expect(optionComponents[0].label).toBe('Do X');
-    expect(optionComponents[1].label).toBe('Do Y');
-  }));
+  test('should not display menu items with icons when disabled', () => {
+    spectator = createHost(
+      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}" [disabled]="true">
+          <ht-menu-item label="Do X"></ht-menu-item>
+          <ht-menu-item label="Do Y"></ht-menu-item>
+        </ht-menu-dropdown>`,
+      {
+        providers: [
+          mockProvider(PopoverService, {
+            drawPopover: jest.fn()
+          })
+        ]
+      }
+    );
 
-  test('should not bubble event from trigger element', fakeAsync(() => {
+    spectator.click('.trigger-content');
+    expect(spectator.inject(PopoverService).drawPopover).not.toHaveBeenCalled();
+  });
+
+  test('should not bubble event from trigger element', () => {
     const onClickSpy = jest.fn();
 
     spectator = createHost(
@@ -63,5 +94,5 @@ describe('Menu dropdown Component', () => {
     spectator.click('.trigger-content');
 
     expect(onClickSpy).not.toHaveBeenCalled();
-  }));
+  });
 });

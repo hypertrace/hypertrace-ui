@@ -8,21 +8,21 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
   styleUrls: ['./menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-popover [closeOnClick]="true" class="menu-container">
-      <ht-popover-trigger>
-        <ht-event-blocker event="click" class="menu-container" [enabled]="this.disabled">
+    <ht-event-blocker event="click" [enabled]="true">
+      <ht-popover [closeOnClick]="true" [disabled]="this.disabled">
+        <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="{ disabled: this.disabled }">
             <ht-label *ngIf="this.label" class="trigger-label" [label]="this.label"> </ht-label>
             <ht-icon *ngIf="this.icon" class="trigger-icon" [icon]="this.icon" size="${IconSize.Small}"></ht-icon>
           </div>
-        </ht-event-blocker>
-      </ht-popover-trigger>
-      <ht-popover-content>
-        <div class="dropdown-content">
-          <ng-content select="ht-menu-item"></ng-content>
-        </div>
-      </ht-popover-content>
-    </ht-popover>
+        </ht-popover-trigger>
+        <ht-popover-content>
+          <div class="dropdown-content">
+            <ng-content select="ht-menu-item"></ng-content>
+          </div>
+        </ht-popover-content>
+      </ht-popover>
+    </ht-event-blocker>
   `
 })
 export class MenuDropdownComponent {
@@ -33,7 +33,7 @@ export class MenuDropdownComponent {
   public label?: string;
 
   @Input()
-  public disabled: boolean | undefined;
+  public disabled: boolean = false;
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
