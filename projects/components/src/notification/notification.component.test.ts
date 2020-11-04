@@ -32,7 +32,7 @@ describe('NotificationComponent', () => {
       ]
     });
 
-    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Checkmark);
+    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.CheckCircle);
     expect(spectator.query('.text')).toContainText('Success!');
     spectator.click('.dismiss-icon');
     spectator.tick();
@@ -56,7 +56,7 @@ describe('NotificationComponent', () => {
       ]
     });
 
-    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Close);
+    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Alert);
     expect(spectator.query('.text')).toContainText('Failure!');
     spectator.click('.dismiss-icon');
     spectator.tick();

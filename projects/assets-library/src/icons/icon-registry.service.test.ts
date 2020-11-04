@@ -30,18 +30,18 @@ describe('Icon Registry Service', () => {
   test('looks up ligature icons', () => {
     const spectator = buildService();
 
-    expect(spectator.service.getIconRenderInfo(IconType.Alert, 'test-label')).toEqual({
+    expect(spectator.service.getIconRenderInfo(IconType.Debug, 'test-label')).toEqual({
       iconRenderType: 'ligature',
-      ligatureText: IconType.Alert,
+      ligatureText: IconType.Debug,
       fontSet: 'material-icons-outlined',
       label: 'test-label'
     });
 
-    expect(spectator.service.getIconRenderInfo(IconType.Alert)).toEqual({
+    expect(spectator.service.getIconRenderInfo(IconType.Debug)).toEqual({
       iconRenderType: 'ligature',
-      ligatureText: IconType.Alert,
+      ligatureText: IconType.Debug,
       fontSet: 'material-icons-outlined',
-      label: 'notification_important'
+      label: 'bug_report'
     });
   });
 

@@ -1,6 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
 import { FilterAttribute } from '../../filtering/filter/filter-attribute';
+import { FilterOperator } from '../../filtering/filter/filter-operators';
+import { FilterParserLookupService } from '../../filtering/filter/parser/filter-parser-lookup.service';
+import { IconSize } from '../../icon/icon-size';
+import { ModalSize } from '../../modal/modal';
+import { ModalService } from '../../modal/modal.service';
 import { TableCellAlignmentType } from '../cells/types/table-cell-alignment-type';
 import { TableCdkColumnUtil } from '../data/table-cdk-column-util';
 import { TableSortDirection } from '../table-api';
@@ -18,25 +25,43 @@ import { TableColumnConfigExtended } from '../table.service';
       class="table-header-cell-renderer"
     >
       <ng-container *ngIf="this.columnConfig?.filterable && this.leftAlignFilterButton">
-        <ng-container *ngTemplateOutlet="filterButton"></ng-container>
+        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
-      <div class="title" [ngClass]="this.classes" (click)="this.sortChange.emit()">{{ this.columnConfig.title }}</div>
+      <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">{{ this.columnConfig.title }}</div>
       <ng-container *ngIf="this.columnConfig?.filterable && !this.leftAlignFilterButton">
-        <ng-container *ngTemplateOutlet="filterButton"></ng-container>
+        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
 
-      <ng-template #filterButton>
-        <ht-in-filter-button
-          class="filter-button"
-          [metadata]="this.metadata"
-          [attribute]="this.columnConfig.attribute"
-          [values]="this.columnConfig.filterValues"
-        ></ht-in-filter-button>
+      <ng-template #optionsButton>
+        <ht-popover class="options-button" [closeOnClick]="true">
+          <ht-popover-trigger>
+            <div #trigger>
+              <ht-icon icon="${IconType.MoreHorizontal}" size="${IconSize.Small}"></ht-icon>
+            </div>
+          </ht-popover-trigger>
+          <ht-popover-content>
+            <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
+              <div class="popover-item" (click)="this.onFilterValues()" *ngIf="this.isFilterable">Filter Values</div>
+              <div class="popover-item-divider" *ngIf="this.isFilterable"></div>
+              <div class="popover-item" (click)="this.onSortChange(SORT_ASC)">
+                Sort Ascending
+                <ht-icon class="popover-item-icon" icon="${IconType.ArrowUp}" size="${IconSize.Small}"></ht-icon>
+              </div>
+              <div class="popover-item" (click)="this.onSortChange(SORT_DESC)">
+                Sort Descending
+                <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
+              </div>
+            </div>
+          </ht-popover-content>
+        </ht-popover>
       </ng-template>
     </div>
   `
 })
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
+  public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
+  public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
+
   @Input()
   public metadata?: FilterAttribute[];
 
@@ -50,15 +75,26 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public sort?: TableSortDirection;
 
   @Output()
-  public readonly sortChange: EventEmitter<void> = new EventEmitter();
+  public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
   public classes: string[] = [];
 
+  public isFilterable: boolean = false;
+
+  public constructor(
+    private readonly modalService: ModalService,
+    private readonly filterParserLookupService: FilterParserLookupService
+  ) {}
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.columnConfig || changes.sort) {
       this.classes = this.buildClasses();
+    }
+
+    if (changes.columnConfig || changes.metadata) {
+      this.isFilterable = this.isAttributeFilterable();
     }
   }
 
@@ -83,5 +119,46 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       ...(this.sort !== undefined ? [this.sort.toLowerCase()] : []),
       ...(this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig) ? ['sortable'] : [])
     ];
+  }
+
+  public onSortChange(direction?: TableSortDirection): void {
+    this.sortChange.emit(direction ?? this.getNextSortDirection(this.sort));
+  }
+
+  private isAttributeFilterable(): boolean {
+    return (
+      this.metadata !== undefined &&
+      this.columnConfig !== undefined &&
+      this.columnConfig.filterable === true &&
+      this.columnConfig.attribute !== undefined &&
+      this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.columnConfig.attribute.type)
+    );
+  }
+
+  public onFilterValues(): void {
+    this.isFilterable &&
+      this.modalService.createModal<InFilterModalData>({
+        content: InFilterModalComponent,
+        size: ModalSize.Small,
+        showControls: true,
+        title: 'Filter Column',
+        data: {
+          metadata: this.metadata!,
+          attribute: this.columnConfig?.attribute!,
+          values: this.columnConfig?.filterValues ?? []
+        }
+      });
+  }
+
+  private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {
+    // Order: undefined -> Ascending -> Descending -> undefined
+    switch (sortDirection) {
+      case TableSortDirection.Ascending:
+        return TableSortDirection.Descending;
+      case TableSortDirection.Descending:
+        return undefined;
+      default:
+        return TableSortDirection.Ascending;
+    }
   }
 }
