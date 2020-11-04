@@ -440,9 +440,9 @@ export class TableComponent
     }
 
     this.dataSource = this.buildDataSource();
-    this.dataSource?.loadingStateChange$.subscribe(() => {
-      this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
-    });
+    // this.dataSource?.loadingStateChange$.subscribe(() => {
+    //   this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
+    // });
     this.filtersSubject.next(this.filters || []);
 
     this.initializeRows();
@@ -518,7 +518,7 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(): TableColumnConfigExtended[] {
-    if (!this.columnConfigs || !this.dataSource) {
+    if (!this.columnConfigs) {
       return [];
     }
 
@@ -537,6 +537,7 @@ export class TableComponent
     if (!this.canBuildDataSource()) {
       throw new Error('Undefined data, columnConfigs, or paginator');
     }
+    console.log('Inside buildDataSource');
 
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
   }
