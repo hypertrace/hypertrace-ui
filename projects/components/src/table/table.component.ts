@@ -537,7 +537,6 @@ export class TableComponent
     if (!this.canBuildDataSource()) {
       throw new Error('Undefined data, columnConfigs, or paginator');
     }
-    console.log('Inside buildDataSource');
 
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
   }
