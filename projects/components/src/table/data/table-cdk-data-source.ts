@@ -1,7 +1,7 @@
 import { DataSource } from '@angular/cdk/collections';
 import { forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
-import { catchError, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
 import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableFilter, TableRow } from '../table-api';
@@ -54,6 +54,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     this.buildChangeObservable()
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
+        /**
+         * Below debouce is needed to handle multiple emission from buildChangeObservable.
+         */
+        debounceTime(100),
         mergeMap(([columnConfigs, pageEvent, filters, changedColumn, changedRow]) =>
           this.buildDataObservable(columnConfigs, pageEvent, filters, changedColumn, changedRow)
         )

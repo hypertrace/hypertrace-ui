@@ -519,7 +519,7 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(): TableColumnConfigExtended[] {
-    if (!this.columnConfigs || !this.dataSource) {
+    if (!this.columnConfigs) {
       return [];
     }
 
