@@ -8,10 +8,10 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
   styleUrls: ['./menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="menu-dropdown">
-      <ht-popover [closeOnClick]="true" class="menu-container">
+    <ht-event-blocker event="click" [enabled]="true">
+      <ht-popover [closeOnClick]="true" [disabled]="this.disabled">
         <ht-popover-trigger>
-          <div class="trigger-content">
+          <div class="trigger-content" [ngClass]="{ disabled: this.disabled }">
             <ht-label *ngIf="this.label" class="trigger-label" [label]="this.label"> </ht-label>
             <ht-icon *ngIf="this.icon" class="trigger-icon" [icon]="this.icon" size="${IconSize.Small}"></ht-icon>
           </div>
@@ -22,7 +22,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
           </div>
         </ht-popover-content>
       </ht-popover>
-    </div>
+    </ht-event-blocker>
   `
 })
 export class MenuDropdownComponent {
@@ -31,6 +31,9 @@ export class MenuDropdownComponent {
 
   @Input()
   public label?: string;
+
+  @Input()
+  public disabled: boolean = false;
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
