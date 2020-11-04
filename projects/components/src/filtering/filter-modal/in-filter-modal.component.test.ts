@@ -1,11 +1,16 @@
-import { FilterAttribute, FilterAttributeType, InFilterButtonComponent } from '@hypertrace/components';
+import {
+  FilterAttribute,
+  FilterAttributeType,
+  InFilterModalComponent,
+  ModalRef,
+  MODAL_DATA
+} from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
 import { FilterUrlService } from '../filter/filter-url.service';
-import { FilterParserLookupService } from '../filter/parser/filter-parser-lookup.service';
 
-describe('In Filter Button service', () => {
+describe('In Filter Modal component', () => {
   const attributes: FilterAttribute[] = [
     {
       name: 'duration',
@@ -22,67 +27,60 @@ describe('In Filter Button service', () => {
   ];
 
   const createHost = createHostFactory({
-    component: InFilterButtonComponent,
+    component: InFilterModalComponent,
     shallow: true,
     imports: [],
     providers: [
+      {
+        provide: ModalRef,
+        useFactory: () => ({
+          close: jest.fn()
+        })
+      },
+      {
+        provide: MODAL_DATA,
+        useValue: {
+          metadata: attributes,
+          attribute: attributes[0],
+          values: [2, 5, 8]
+        }
+      },
       mockProvider(FilterUrlService, {
         getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }]
       }),
       mockProvider(FilterBuilderLookupService, {
         lookup: () => new NumberFilterBuilder()
-      }),
-      mockProvider(FilterParserLookupService, {
-        isParsableOperatorForType: () => true
       })
     ],
     declarations: [],
     template: `
-      <ht-in-filter-button
-        [metadata]="attributes"
-        [attribute]="attribute"
-        [values]="values"
-      ></ht-in-filter-button>
+      <ht-in-filter-modal></ht-in-filter-modal>
     `
   });
 
   test('should apply selected attributes on popover close', () => {
-    const spectator = createHost(undefined, {
-      hostProps: {
-        attributes: attributes,
-        attribute: attributes[0],
-        values: [1, 2, 3, 5, 8, 13, 21, 34]
-      }
-    });
+    const spectator = createHost();
 
     spectator.component.selected.add(2);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
-        value: [2]
+        value: [2, 5, 8]
       })
     );
   });
 
   test('should toggle attributes', () => {
-    const spectator = createHost(undefined, {
-      hostProps: {
-        attributes: attributes,
-        attribute: attributes[0],
-        values: [1, 2, 3, 5, 8, 13, 21, 34]
-      }
-    });
-
-    spectator.component.onPopoverOpen();
+    const spectator = createHost();
 
     expect(spectator.component.selected.has(5)).toBe(true);
     expect(spectator.component.selected.has(8)).toBe(true);
 
     spectator.component.onChecked(true, 2);
     spectator.component.onChecked(false, 5);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
@@ -93,22 +91,14 @@ describe('In Filter Button service', () => {
   });
 
   test('should clear unselected attributes on popover close', () => {
-    const spectator = createHost(undefined, {
-      hostProps: {
-        attributes: attributes,
-        attribute: attributes[0],
-        values: [1, 2, 3, 5, 8, 13, 21, 34]
-      }
-    });
-
-    spectator.component.onPopoverOpen();
+    const spectator = createHost();
 
     expect(spectator.component.selected.has(5)).toBe(true);
     expect(spectator.component.selected.has(8)).toBe(true);
 
     spectator.component.selected.delete(5);
     spectator.component.selected.delete(8);
-    spectator.component.onPopoverClose();
+    spectator.component.onApply();
 
     expect(spectator.inject(FilterUrlService).removeUrlFilter).toHaveBeenCalled();
   });

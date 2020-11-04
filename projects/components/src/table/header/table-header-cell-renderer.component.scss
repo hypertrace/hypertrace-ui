@@ -1,5 +1,4 @@
-@import 'color-palette';
-@import 'font';
+@import 'mixins';
 
 :host {
   width: 100%; // Sorry...
@@ -30,12 +29,18 @@
     text-align: right;
   }
 
-  .filter-button {
+  .options-button {
     display: none;
+    color: $gray-7;
+    cursor: pointer;
+
+    &:hover {
+      color: $blue-5;
+    }
   }
 
   &:hover {
-    .filter-button {
+    .options-button {
       display: inherit;
     }
   }
@@ -56,7 +61,38 @@
     &.asc:after {
       content: '▼';
       font-size: 10px;
-      transform: scale(1, -1) translateY(-1.5px); // That's right! Half pixels!
+      transform: scale(1, -1) translateY(1.5px); // That's right! Half pixels!
     }
+  }
+}
+
+.popover-content {
+  @include dropdown();
+  padding: 4px 0;
+
+  .popover-item {
+    width: 100%;
+    height: 36px;
+    padding: 0 16px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: $gray-1;
+    }
+  }
+
+  .popover-item-divider {
+    width: calc(100% - 32px);
+    height: 1px;
+    padding: 0 16px;
+    margin: 0 16px;
+    background-color: $gray-2;
+  }
+
+  .popover-item-icon {
+    padding-left: 4px;
   }
 }

@@ -34,7 +34,7 @@ export class TableService {
 
   public buildExtendedColumnConfigs(
     columnConfigs: TableColumnConfig[],
-    dataSource: TableCdkDataSource,
+    dataSource?: TableCdkDataSource,
     attributes: FilterAttribute[] = []
   ): TableColumnConfigExtended[] {
     return columnConfigs.map(columnConfig => {
@@ -52,7 +52,7 @@ export class TableService {
         attribute: attribute,
         renderer: rendererConstructor,
         parser: new parserConstructor(this.rootInjector),
-        filterValues: dataSource.getFilterValues(columnConfig.id)
+        filterValues: dataSource?.getFilterValues(columnConfig.id) ?? []
       };
     });
   }

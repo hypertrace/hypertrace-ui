@@ -260,7 +260,7 @@ describe('Table component', () => {
       }
     });
 
-    spectator.component.onHeaderCellClick(columns[0]);
+    spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).not.toHaveBeenCalled();
   });
@@ -275,7 +275,7 @@ describe('Table component', () => {
       }
     });
 
-    spectator.component.onHeaderCellClick(columns[0]);
+    spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenCalledWith({
       'sort-by': 'firstId',
