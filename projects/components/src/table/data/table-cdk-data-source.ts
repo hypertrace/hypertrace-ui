@@ -67,7 +67,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.rowsChange$.pipe(
       tap(rows => this.cacheRows(rows)),
       tap(rows => this.cacheFilterableValues(rows)),
-      tap(rows => this.loadingStateSubject.next({ loading$: of(rows), hide: rows.length > 1 }))
+      tap(rows => this.loadingStateSubject.next({ loading$: of(rows), hide: rows.length > 0 }))
     );
   }
 
