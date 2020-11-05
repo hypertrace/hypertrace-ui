@@ -282,6 +282,10 @@ export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 export * from './beta-tag/beta-tag.component';
 export * from './beta-tag/beta-tag.module';
 
+// Label tag
+export * from './label-tag/label-tag.component';
+export * from './label-tag/label-tag.module';
+
 // Modal
 export * from './modal/modal';
 export * from './modal/modal.module';
