@@ -18,8 +18,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
             role="${ButtonRole.Primary}"
             display="${ButtonStyle.Outlined}"
             (click)="item.showAll = true"
-            class="button"
-            [ngClass]="{ 'with-margin': this.showTime }"
+            class="button with-margin"
           ></ht-button>
 
           <ng-template #showSimilarCards>

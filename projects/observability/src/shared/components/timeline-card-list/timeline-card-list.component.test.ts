@@ -160,13 +160,13 @@ describe('Timeline Card List component', () => {
     // Only one card element should be visible. Other two should be gropued and hidden
     expect(spectator.queryAll('.card').length).toEqual(1);
     expect(spectator.query('.time')).toExist();
-    expect(spectator.query('.button')).toBe(spectator.query('.with-margin'));
+    expect(spectator.query('.button')).toHaveClass('button with-margin');
 
     spectator.setHostInput({
       showTime: false
     });
 
     expect(spectator.query('.time')).not.toExist();
-    expect(spectator.query('.button')).not.toBe(spectator.query('.with-margin'));
+    expect(spectator.query('.button')).toHaveClass('button with-margin');
   });
 });
