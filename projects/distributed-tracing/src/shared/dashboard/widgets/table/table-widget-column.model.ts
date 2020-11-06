@@ -96,16 +96,21 @@ export class TableWidgetColumnModel {
       id: this.value.resultAlias(),
       name: this.value.name,
       display: this.display,
-      title: this.title,
+      title: this.title ?? this.value.name,
       titleTooltip: this.titleTooltip,
       alignment: this.alignment,
       width: this.width,
       visible: this.visible,
+      editable: this.isEditable(),
       filterable: this.filterable,
       sort: this.sort,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
     };
+  }
+
+  private isEditable(): boolean {
+    return this.value.resultAlias() === this.value.name; // These don not match if composite column or aggregation
   }
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {

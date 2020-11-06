@@ -50,7 +50,7 @@ import { TableWidgetModel } from './table-widget.model';
       <ht-table
         class="table"
         [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
-        [columnConfigs]="this.columnConfigs"
+        [columnConfigs]="this.columnConfigs$ | async"
         [metadata]="this.metadata$ | async"
         [mode]="this.activeMode"
         [selectionMode]="this.model.selectionMode"
@@ -72,7 +72,7 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
-  public columnConfigs: TableColumnConfig[];
+  public columnConfigs$: Observable<TableColumnConfig[]>;
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
   public activeMode: TableMode;
@@ -97,7 +97,7 @@ export class TableWidgetRendererComponent
     super(api, changeDetector);
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs = this.getColumnConfigs();
+    this.columnConfigs$ = this.getColumnConfigs();
 
     this.filterItems = this.api.model.filterToggles.map(filter => ({
       label: capitalize(filter.label),
@@ -122,6 +122,10 @@ export class TableWidgetRendererComponent
 
   private getScope(): Observable<string | undefined> {
     return this.api.model.getData().pipe(map(data => data.getScope()));
+  }
+
+  private getColumnConfigs(): Observable<TableColumnConfig[]> {
+    return this.getScope().pipe(switchMap(scope => this.model.getColumns(scope)));
   }
 
   private getScopeAttributes(): Observable<FilterAttribute[]> {
@@ -169,10 +173,6 @@ export class TableWidgetRendererComponent
 
   public onModeChange(mode: TableMode): void {
     this.activeMode = mode;
-  }
-
-  private getColumnConfigs(): TableColumnConfig[] {
-    return this.model.getColumns();
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {

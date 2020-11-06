@@ -5,4 +5,5 @@ export interface FilterAttribute {
   displayName: string;
   units?: string;
   type: FilterAttributeType;
+  requiresAggregation?: boolean;
 }

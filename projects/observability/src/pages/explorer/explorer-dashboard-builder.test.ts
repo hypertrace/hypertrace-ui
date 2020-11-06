@@ -206,6 +206,70 @@ describe('Explorer dashboard builder', () => {
               },
               {
                 type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'apiBoundaryType'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'apiDiscoveryState'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'apiId'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'apiTraceId'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'serviceId'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'traceId'
+                }
+              },
+              {
+                type: 'table-widget-column',
+                title: 'requestUrl',
+                width: '1',
+                visible: false,
+                value: {
+                  type: 'attribute-specification',
+                  attribute: 'requestUrl'
+                }
+              },
+              {
+                type: 'table-widget-column',
                 title: 'Foo',
                 width: '1',
                 display: CoreTableCellRendererType.Number,

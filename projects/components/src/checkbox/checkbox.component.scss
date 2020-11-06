@@ -2,8 +2,20 @@
 
 :host {
   ::ng-deep .mat-checkbox-checked .mat-checkbox-background,
-  .mat-checkbox-indeterminate .mat-checkbox-background {
+  .mat-checkbox-indeterminate {
     background-color: $blue-5;
+  }
+
+  ::ng-deep .mat-checkbox-disabled {
+    .mat-checkbox-frame {
+      opacity: 0.4;
+    }
+
+    &.mat-checkbox-checked .mat-checkbox-background,
+    .mat-checkbox-indeterminate {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 
   ::ng-deep .mat-checkbox:not(.mat-checkbox-disabled) .mat-checkbox-ripple .mat-ripple-element {

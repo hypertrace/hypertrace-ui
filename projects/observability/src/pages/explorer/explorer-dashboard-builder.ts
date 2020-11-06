@@ -239,6 +239,70 @@ export class ExplorerDashboardBuilder {
             'click-handler': {
               type: 'api-trace-navigation-handler'
             }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiBoundaryType'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiDiscoveryState'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiId'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiTraceId'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'serviceId'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'traceId'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'requestUrl',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'requestUrl'
+            }
           }
         ];
       case SPAN_SCOPE:

@@ -1,4 +1,13 @@
-import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
+import {
+  CoreTableCellRendererType,
+  FilterBuilderLookupService,
+  TableCellAlignmentType,
+  TableDataSource,
+  TableMode,
+  TableRow,
+  TableSelectionMode,
+  TableStyle
+} from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   EnumPropertyTypeInstance,
@@ -18,7 +27,15 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
+  AttributeMetadata,
+  AttributeMetadataType,
+  toFilterAttributeType
+} from '../../../graphql/model/metadata/attribute-metadata';
+import { SpecificationBuilder } from '../../../graphql/request/builders/specification/specification-builder';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
@@ -117,6 +134,7 @@ export class TableWidgetModel {
     } as EnumPropertyTypeInstance
   })
   public selectionMode: TableSelectionMode = TableSelectionMode.Single;
+
   /**
    * Deprecated. Use rowSelectionHandlers instead
    */
@@ -165,15 +183,102 @@ export class TableWidgetModel {
   })
   public pageable?: boolean = true;
 
+  @ModelProperty({
+    key: 'fetchEditableColumns',
+    displayName: 'Query for additional columns not provided',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public fetchEditableColumns?: boolean = false;
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
+
+  @ModelInject(MetadataService)
+  private readonly metadataService!: MetadataService;
+
+  @ModelInject(FilterBuilderLookupService)
+  private readonly filterBuilderLookupService!: FilterBuilderLookupService;
 
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getColumns(): SpecificationBackedTableColumnDef[] {
-    return this.columns.map(column => column.asTableColumnDef());
+  public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
+    const modelColumns = this.columns.map(column => column.asTableColumnDef());
+
+    if (scope === undefined || !this.fetchEditableColumns) {
+      return of(modelColumns);
+    }
+
+    return this.metadataService.getSelectionAttributes(scope).pipe(
+      map(attributes => [
+        ...modelColumns,
+        ...attributes
+          .filter(attribute => this.filterNotModelColumnAttribute(attribute, modelColumns))
+          .filter(attribute => this.filterEditableAttribute(attribute))
+          .map(attribute => this.mapAttributeToColumnConfig(attribute))
+      ])
+    );
+  }
+
+  private filterNotModelColumnAttribute(
+    attribute: AttributeMetadata,
+    modelColumns: SpecificationBackedTableColumnDef[]
+  ): boolean {
+    return modelColumns.find(column => column.name === attribute.name) === undefined;
+  }
+
+  private filterEditableAttribute(attribute: AttributeMetadata): boolean {
+    switch (attribute.type) {
+      case AttributeMetadataType.Boolean:
+      case AttributeMetadataType.Number:
+      case AttributeMetadataType.String:
+      case AttributeMetadataType.Timestamp:
+        return false; // TODO: attribute vs metric
+      default:
+        return false;
+    }
+  }
+
+  private mapAttributeToColumnConfig(attribute: AttributeMetadata): SpecificationBackedTableColumnDef {
+    return {
+      id: attribute.name,
+      name: attribute.name,
+      display: this.lookupDisplayType(attribute.type),
+      title: attribute.displayName,
+      titleTooltip: attribute.displayName,
+      alignment: this.lookupAlignment(attribute.type),
+      width: '1',
+      visible: false,
+      editable: true,
+      filterable: this.isFilterable(attribute),
+      specification: new SpecificationBuilder().attributeSpecificationForKey(attribute.name)
+    };
+  }
+
+  private isFilterable(attribute: AttributeMetadata): boolean {
+    return this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type));
+  }
+
+  private lookupDisplayType(type: AttributeMetadataType): string {
+    switch (type) {
+      case AttributeMetadataType.Number:
+        return CoreTableCellRendererType.Number;
+      case AttributeMetadataType.Timestamp:
+        return CoreTableCellRendererType.Timestamp;
+      default:
+        return CoreTableCellRendererType.Text;
+    }
+  }
+
+  private lookupAlignment(type: AttributeMetadataType): TableCellAlignmentType {
+    switch (type) {
+      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Timestamp:
+        return TableCellAlignmentType.Right;
+      default:
+        return TableCellAlignmentType.Left;
+    }
   }
 
   public getChildModel(row: TableRow): object | undefined {

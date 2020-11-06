@@ -10,6 +10,7 @@ import { TooltipModule } from '../tooltip/tooltip.module';
 import { TableCellParserConstructor } from './cells/table-cell-parser';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
 import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './cells/table-cells.module';
+import { TableColumnsModule } from './columns/table-columns.module';
 import { TableComponent } from './table.component';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { TableComponent } from './table.component';
     IconModule,
     TooltipModule,
     TableCellsModule,
+    TableColumnsModule,
     PaginatorModule,
     TraceSearchBoxModule,
     LoadAsyncModule,
