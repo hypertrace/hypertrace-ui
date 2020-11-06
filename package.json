@@ -40,7 +40,6 @@
     "@hypertrace/hyperdash-angular": "^2.1.0",
     "@types/d3-hierarchy": "^2.0.0",
     "@types/d3-transition": "1.1.5",
-    "@types/resize-observer-browser": "^0.1.4",
     "apollo-angular": "^2.0.4",
     "core-js": "^3.5.0",
     "d3-array": "^2.8.0",
