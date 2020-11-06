@@ -5,8 +5,9 @@
   // Default color. Could be overridden by the component
   @include overline($gray-9);
 
-  width: 46px;
+  width: fit-content;
   height: 16px;
+  padding: 3px 8px;
 
   display: flex;
   align-items: center;
