@@ -11,7 +11,7 @@ import { TableColumnConfigExtended } from '../table.service';
     <div class="edit-modal">
       <div class="column-items">
         <ng-container *ngFor="let column of this.editColumns">
-          <div class="column-item" *ngIf="column.attribute.type !== '$$state'">
+          <div class="column-item">
             <ht-checkbox
               [label]="column.title"
               [htTooltip]="column.titleTooltip"

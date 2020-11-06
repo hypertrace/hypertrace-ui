@@ -110,7 +110,7 @@ export class TableWidgetColumnModel {
   }
 
   private isEditable(): boolean {
-    return this.value.resultAlias() === this.value.name; // These don not match if composite column or aggregation
+    return this.value.resultAlias() === this.value.name; // These do not match if composite column or aggregation
   }
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {
