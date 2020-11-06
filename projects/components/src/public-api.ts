@@ -253,7 +253,7 @@ export { TitledContentModule } from './titled-content/titled-content.module';
 
 // Toggle Button
 export { ToggleButtonComponent } from './toggle-button-group/button/toggle-button.component';
-export { ToggleButtonGroupComponent } from './toggle-button-group/toggle-button-group.component';
+export * from './toggle-button-group/toggle-button-group.component';
 export { ToggleButtonModule } from './toggle-button-group/toggle-button.module';
 export { ToggleViewMode } from './toggle-button-group/toggle-button';
 

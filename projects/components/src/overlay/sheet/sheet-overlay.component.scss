@@ -3,18 +3,14 @@
 
 .sheet-overlay {
   box-shadow: -3px 1px 24px rgba(0, 0, 0, 0.12), -1px -1px 8px rgba(0, 0, 0, 0.08);
-  border-radius: 16px 0px 0px 16px;
-  display: inline-block;
+  border-radius: 16px 0 0 16px;
   height: 100%;
   overflow: hidden;
 
-  height: 100%;
   padding: 24px;
   background-color: white;
   display: flex;
   flex-direction: column;
-  box-shadow: -3px 1px 24px rgba(0, 0, 0, 0.12), -1px -1px 8px rgba(0, 0, 0, 0.08);
-  border-radius: 16px 0 0 16px;
   z-index: 1;
 
   &.sheet-size-responsive-extra-large {
