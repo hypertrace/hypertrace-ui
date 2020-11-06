@@ -21,7 +21,7 @@ import { ToggleButtonState, ToggleViewMode } from './toggle-button';
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="toggle-button-group">
+    <div class="toggle-button-group" [ngStyle]="{ 'justify-content': this.justifyContent }">
       <ng-content select="ht-toggle-button"></ng-content>
     </div>
   `
@@ -38,6 +38,9 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public disableInitialSelection?: boolean;
+
+  @Input()
+  public justifyContent?: string;
 
   @Output()
   public readonly selectedLabelChange: EventEmitter<string> = new EventEmitter();
