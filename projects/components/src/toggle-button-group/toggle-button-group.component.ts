@@ -40,7 +40,7 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
   public disableInitialSelection?: boolean;
 
   @Input()
-  public justifyContent?: string;
+  public justifyContent: ToggleButtonsJustifyMode = ToggleButtonsJustifyMode.Default;
 
   @Output()
   public readonly selectedLabelChange: EventEmitter<string> = new EventEmitter();
@@ -120,4 +120,9 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
     }
     this.buttons.forEach(button => button.setState(state));
   }
+}
+
+export enum ToggleButtonsJustifyMode {
+  SpaceBetween = 'space-between',
+  Default = 'initial'
 }
