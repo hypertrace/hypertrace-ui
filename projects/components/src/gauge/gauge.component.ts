@@ -34,6 +34,7 @@ import { debounceTime, map } from 'rxjs/operators';
 export class GaugeComponent implements OnChanges {
   private static readonly GAUGE_RING_WIDTH: number = 20;
   private static readonly GAUGE_ARC_CORNER_RADIUS: number = 10;
+  private static readonly GAUGE_AXIS_PADDING: number = 30;
 
   @Input()
   public value?: number;
@@ -112,13 +113,13 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildRadius(boundingBox: ClientRect): number {
-    return Math.min(boundingBox.height, boundingBox.width) / 2;
+    return Math.min(boundingBox.height, boundingBox.width) - GaugeComponent.GAUGE_AXIS_PADDING;
   }
 
-  private buildOrigin(boundingBox: ClientRect, radius: number): Point {
+  private buildOrigin(boundingBox: ClientRect, _: number): Point {
     return {
       x: boundingBox.width / 2,
-      y: boundingBox.height / 2 + radius / 2
+      y: boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING
     };
   }
 
