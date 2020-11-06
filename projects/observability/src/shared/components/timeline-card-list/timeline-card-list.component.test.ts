@@ -167,6 +167,6 @@ describe('Timeline Card List component', () => {
     });
 
     expect(spectator.query('.time')).not.toExist();
-    expect(spectator.query('.button')).not.toBe(spectator.query('.with-margin'));
+    expect(spectator.query('.button')).toBe(spectator.query('.with-margin'));
   });
 });
