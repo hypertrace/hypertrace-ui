@@ -253,7 +253,7 @@ export { TitledContentModule } from './titled-content/titled-content.module';
 
 // Toggle Button
 export { ToggleButtonComponent } from './toggle-button-group/button/toggle-button.component';
-export { ToggleButtonGroupComponent } from './toggle-button-group/toggle-button-group.component';
+export * from './toggle-button-group/toggle-button-group.component';
 export { ToggleButtonModule } from './toggle-button-group/toggle-button.module';
 export { ToggleViewMode } from './toggle-button-group/toggle-button';
 
@@ -281,6 +281,10 @@ export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 // Beta tag
 export * from './beta-tag/beta-tag.component';
 export * from './beta-tag/beta-tag.module';
+
+// Label tag
+export * from './label-tag/label-tag.component';
+export * from './label-tag/label-tag.module';
 
 // Modal
 export * from './modal/modal';

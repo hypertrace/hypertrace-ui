@@ -8,14 +8,18 @@
   padding: 18px;
   background-color: white;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
 
   &.modal-size-small {
     height: 365px;
     width: 420px;
   }
 
-  display: flex;
-  flex-direction: column;
+  &.modal-size-medium {
+    height: 720px;
+    width: 640px;
+  }
 
   .header {
     display: flex;

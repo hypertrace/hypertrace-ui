@@ -10,7 +10,8 @@ export interface ModalConfig<TData = unknown> {
 }
 
 export const enum ModalSize {
-  Small = 'small'
+  Small = 'small',
+  Medium = 'medium'
 }
 
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
