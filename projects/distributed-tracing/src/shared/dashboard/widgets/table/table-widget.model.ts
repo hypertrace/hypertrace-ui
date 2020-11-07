@@ -21,8 +21,8 @@ import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
-import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
+import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 
 @Model({

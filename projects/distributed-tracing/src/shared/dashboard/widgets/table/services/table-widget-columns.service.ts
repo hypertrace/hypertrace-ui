@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
+import { CoreTableCellRendererType, FilterBuilderLookupService, TableCellAlignmentType } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FilterBuilderLookupService } from '../../../../../../../components/src/filtering/filter/builder/filter-builder-lookup.service';
-import { CoreTableCellRendererType } from '../../../../../../../components/src/table/cells/types/core-table-cell-renderer-type';
-import { TableCellAlignmentType } from '../../../../../../../components/src/table/cells/types/table-cell-alignment-type';
 import {
   AttributeMetadata,
   AttributeMetadataType,

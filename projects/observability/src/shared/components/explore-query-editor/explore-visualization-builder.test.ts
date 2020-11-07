@@ -19,7 +19,8 @@ describe('Explore visualization builder', () => {
         getAttribute: jest.fn((_, key) =>
           of({
             name: key,
-            requiresAggregation: false
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false
           })
         )
       }),

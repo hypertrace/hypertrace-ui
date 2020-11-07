@@ -573,7 +573,17 @@ describe('Table component', () => {
     spectator.dispatchMouseEvent('cdk-table', 'mousemove', 1, 0);
     spectator.dispatchMouseEvent('cdk-table', 'mouseup');
 
-    expect(spectator.component.columnConfigsSubject.value[0].width).toBe('101px');
-    expect(spectator.component.columnConfigsSubject.value[1].width).toBe('199px');
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.columnConfigs$).toBe('x', {
+        x: [
+          expect.objectContaining({
+            width: '101px'
+          }),
+          expect.objectContaining({
+            width: '199px'
+          })
+        ]
+      });
+    });
   }));
 });
