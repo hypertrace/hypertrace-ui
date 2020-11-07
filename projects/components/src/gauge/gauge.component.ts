@@ -76,7 +76,7 @@ export class GaugeComponent implements OnChanges {
   private buildDomResizeObservable(): Observable<ClientRect> {
     const element = this.elementRef.nativeElement as HTMLElement;
 
-    return fromDomResize(element).pipe(debounceTime(200));
+    return fromDomResize(element).pipe(debounceTime(100));
   }
 
   private buildBackgroundArc(radius: number): string {
@@ -113,13 +113,16 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildRadius(boundingBox: ClientRect): number {
-    return Math.min(boundingBox.height, boundingBox.width) - GaugeComponent.GAUGE_AXIS_PADDING;
+    return Math.min(
+      boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING,
+      boundingBox.height / 2 + Math.min(boundingBox.height, boundingBox.width) / 2
+    );
   }
 
-  private buildOrigin(boundingBox: ClientRect, _: number): Point {
+  private buildOrigin(boundingBox: ClientRect, radius: number): Point {
     return {
       x: boundingBox.width / 2,
-      y: boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING
+      y: radius
     };
   }
 

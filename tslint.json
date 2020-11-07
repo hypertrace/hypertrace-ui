@@ -24,8 +24,7 @@
         "@hypertrace/distributed-tracing",
         "@hypertrace/test-utils",
         "@hypertrace/observability",
-        "ng-mocks",
-        "resize-observer-polyfill"
+        "ng-mocks"
       ]
     ],
     "no-lifecycle-call": true,
