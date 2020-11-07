@@ -47,18 +47,22 @@
       width: 100%;
       box-sizing: border-box;
       border-radius: 6px;
+      border: 1px solid $gray-2;
 
       &.selected-card {
         background: $blue-1;
+        border: 1px solid $blue-2;
 
         &:hover {
           background: $blue-2;
+          border: 1px solid $blue-5;
           cursor: pointer;
         }
       }
 
       &:hover {
         background: $gray-1;
+        border: 1px solid $gray-2;
         cursor: pointer;
       }
     }
