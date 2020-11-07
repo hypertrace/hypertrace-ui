@@ -151,7 +151,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     this.isFilterable &&
       this.modalService.createModal<InFilterModalData>({
         content: InFilterModalComponent,
-        size: ModalSize.Small,
+        size: ModalSize.Medium,
         showControls: true,
         title: 'Filter Column',
         data: {
@@ -163,18 +163,17 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   }
 
   public onEditColumns(): void {
-    const modalRef = this.modalService.createModal<TableColumnConfigExtended[], TableColumnConfigExtended[]>({
-      content: TableEditColumnsModalComponent,
-      size: ModalSize.Small,
-      showControls: true,
-      title: 'Edit Columns',
-      data: this.availableColumns ?? []
-    });
-
-    const subscription = modalRef.closed$.subscribe(columnConfigs => {
-      this.columnsChange.emit(columnConfigs);
-      subscription.unsubscribe();
-    });
+    this.modalService
+      .createModal<TableColumnConfigExtended[], TableColumnConfigExtended[]>({
+        content: TableEditColumnsModalComponent,
+        size: ModalSize.Medium,
+        showControls: true,
+        title: 'Edit Columns',
+        data: this.availableColumns ?? []
+      })
+      .closed$.subscribe(columnConfigs => {
+        this.columnsChange.emit(columnConfigs);
+      });
   }
 
   private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {

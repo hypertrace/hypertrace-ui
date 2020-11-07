@@ -242,6 +242,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'API Boundary Type',
             width: '1',
             visible: false,
             value: {
@@ -251,6 +252,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'API Discovery State',
             width: '1',
             visible: false,
             value: {
@@ -260,6 +262,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'API ID',
             width: '1',
             visible: false,
             value: {
@@ -269,6 +272,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'API Trace ID',
             width: '1',
             visible: false,
             value: {
@@ -278,6 +282,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Service ID',
             width: '1',
             visible: false,
             value: {
@@ -287,6 +292,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Trace ID',
             width: '1',
             visible: false,
             value: {
@@ -296,7 +302,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
-            title: 'requestUrl',
+            title: 'Request URL',
             width: '1',
             visible: false,
             value: {

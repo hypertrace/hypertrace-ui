@@ -19,7 +19,8 @@ describe('Metadata Service', () => {
       type: AttributeMetadataType.String,
       scope: 'Scope1',
       allowedAggregations: [],
-      requiresAggregation: false,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false,
       groupable: true
     },
     {
@@ -29,7 +30,8 @@ describe('Metadata Service', () => {
       type: AttributeMetadataType.Number,
       scope: SPAN_SCOPE,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      requiresAggregation: false,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false,
       groupable: false
     },
     {
@@ -39,7 +41,8 @@ describe('Metadata Service', () => {
       type: AttributeMetadataType.Number,
       scope: SPAN_SCOPE,
       allowedAggregations: [],
-      requiresAggregation: false,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false,
       groupable: false
     },
     {
@@ -49,7 +52,8 @@ describe('Metadata Service', () => {
       type: 'UNKNOWN_TYPE',
       scope: SPAN_SCOPE,
       allowedAggregations: [],
-      requiresAggregation: false,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false,
       groupable: false
     }
   ];

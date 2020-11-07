@@ -7,7 +7,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'booleanAttribute',
       displayName: 'Boolean Attribute',
       units: '',
-      type: FilterAttributeType.Boolean
+      type: FilterAttributeType.Boolean,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: true
     }
   ],
   [
@@ -16,7 +18,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'numberAttribute',
       displayName: 'Number Attribute',
       units: 'mooches',
-      type: FilterAttributeType.Number
+      type: FilterAttributeType.Number,
+      onlySupportsAggregation: true,
+      onlySupportsGrouping: false
     }
   ],
   [
@@ -25,7 +29,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'stringAttribute',
       displayName: 'String Attribute',
       units: '',
-      type: FilterAttributeType.String
+      type: FilterAttributeType.String,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: true
     }
   ],
   [
@@ -34,7 +40,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'stringArrayAttribute',
       displayName: 'String Array Attribute',
       units: '',
-      type: FilterAttributeType.StringArray
+      type: FilterAttributeType.StringArray,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false
     }
   ],
   [
@@ -43,7 +51,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'stringMapAttribute',
       displayName: 'String Map Attribute',
       units: '',
-      type: FilterAttributeType.StringMap
+      type: FilterAttributeType.StringMap,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false
     }
   ],
   [
@@ -52,7 +62,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       name: 'timestampAttribute',
       displayName: 'Timestamp Attribute',
       units: '',
-      type: FilterAttributeType.Timestamp
+      type: FilterAttributeType.Timestamp,
+      onlySupportsAggregation: false,
+      onlySupportsGrouping: false
     }
   ]
 ]);

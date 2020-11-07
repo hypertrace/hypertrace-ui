@@ -72,20 +72,16 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
-  public columnConfigs$: Observable<TableColumnConfig[]>;
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
-  public activeMode: TableMode;
+  public activeMode!: TableMode;
 
-  public metadata$: Observable<FilterAttribute[]>;
+  public metadata$!: Observable<FilterAttribute[]>;
+  public columnConfigs$!: Observable<TableColumnConfig[]>;
+  public combinedFilters$!: Observable<TableFilter[]>;
 
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
-
-  public combinedFilters$: Observable<TableFilter[]> = combineLatest([
-    this.toggleFilterSubject,
-    this.searchFilterSubject
-  ]).pipe(map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters]));
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
@@ -95,19 +91,27 @@ export class TableWidgetRendererComponent
     private readonly metadataService: MetadataService
   ) {
     super(api, changeDetector);
+  }
+
+  public ngOnInit(): void {
+    super.ngOnInit();
 
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = this.getColumnConfigs();
 
-    this.filterItems = this.api.model.filterToggles.map(filter => ({
+    this.combinedFilters$ = combineLatest([this.toggleFilterSubject, this.searchFilterSubject]).pipe(
+      map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
+    );
+
+    this.filterItems = this.model.filterToggles.map(filter => ({
       label: capitalize(filter.label),
       value: filter
     }));
-    this.modeItems = this.api.model.modeToggles.map(mode => ({
+    this.modeItems = this.model.modeToggles.map(mode => ({
       label: capitalize(mode),
       value: mode
     }));
-    this.activeMode = this.api.model.mode;
+    this.activeMode = this.model.mode;
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -121,7 +125,7 @@ export class TableWidgetRendererComponent
   }
 
   private getScope(): Observable<string | undefined> {
-    return this.api.model.getData().pipe(map(data => data.getScope()));
+    return this.data$!.pipe(map(data => data?.getScope()));
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {

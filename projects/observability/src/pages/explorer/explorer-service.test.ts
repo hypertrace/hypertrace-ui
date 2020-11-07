@@ -20,7 +20,8 @@ describe('Explorer service', () => {
             units: 'ms',
             type: AttributeMetadataType.Number,
             scope: scope,
-            requiresAggregation: false,
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false,
             allowedAggregations: [],
             groupable: false
           }
@@ -30,7 +31,8 @@ describe('Explorer service', () => {
             units: '',
             type: AttributeMetadataType.String,
             scope: scope,
-            requiresAggregation: false,
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false,
             allowedAggregations: [],
             groupable: false
           }

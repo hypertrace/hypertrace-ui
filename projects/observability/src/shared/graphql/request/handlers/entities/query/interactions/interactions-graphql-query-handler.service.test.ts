@@ -35,7 +35,8 @@ describe('Interactions graphql query handler', () => {
             units: 'ms',
             type: AttributeMetadataType.Number,
             scope: scope,
-            requiresAggregation: false,
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false,
             allowedAggregations: [MetricAggregationType.Average]
           }),
         buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>

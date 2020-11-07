@@ -117,14 +117,16 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
-          <cdk-cell *cdkCellDef="let row" [attr.colspan]="this.columnConfigsSubject.value.length" class="expanded-cell">
-            <ht-table-expanded-detail-row-cell-renderer
-              *ngIf="this.isRowExpanded(row)"
-              [row]="row"
-              [expanded]="this.isRowExpanded(row)"
-              [content]="this.detailContent"
-            ></ht-table-expanded-detail-row-cell-renderer>
-          </cdk-cell>
+          <ng-container *htLetAsync="this.columnConfigs$ as columnConfig">
+            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfig.length" class="expanded-cell">
+              <ht-table-expanded-detail-row-cell-renderer
+                *ngIf="this.isRowExpanded(row)"
+                [row]="row"
+                [expanded]="this.isRowExpanded(row)"
+                [content]="this.detailContent"
+              ></ht-table-expanded-detail-row-cell-renderer>
+            </cdk-cell>
+          </ng-container>
         </ng-container>
 
         <!-- Header Row -->
@@ -280,7 +282,7 @@ export class TableComponent
   /*
    * Column Config
    */
-  public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
+  private readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();

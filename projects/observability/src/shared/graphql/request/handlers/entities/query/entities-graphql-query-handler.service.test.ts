@@ -37,7 +37,8 @@ describe('Entities graphql query handler', () => {
             units: 'My Units',
             type: AttributeMetadataType.String,
             scope: scope,
-            requiresAggregation: false,
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false,
             allowedAggregations: []
           }),
         buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
