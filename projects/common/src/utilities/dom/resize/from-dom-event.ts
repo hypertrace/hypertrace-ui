@@ -1,10 +1,11 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import { Observable } from 'rxjs';
+
 
 export const fromDomResize: (element: Element) => Observable<ClientRect> = (element: Element) =>
   new Observable(subscriber => {
+    // @ts-ignore
     const resizeObserver = new ResizeObserver(entries => {
-      entries.forEach(entry => {
+      entries.forEach((entry: { target: Element; contentRect: ClientRect }) => {
         if (entry.target === element) {
           subscriber.next(entry.contentRect);
         }
