@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
-import { Color, fromDomResize, Point } from '@hypertrace/common';
+import { Color, LayoutChangeService, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-gauge',
   template: `
-    <svg class="gauge" *ngIf="this.gaugeRendererData$ | async as rendererData">
+    <svg #chartContainer class="gauge" (htLayoutChange)="this.onLayoutChange()" *ngIf="this.gaugeRendererData$ | async as rendererData">
       <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
         <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
         <g
@@ -29,6 +29,7 @@ import { debounceTime, map } from 'rxjs/operators';
     </svg>
   `,
   styleUrls: ['./gauge.component.scss'],
+  providers: [LayoutChangeService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GaugeComponent implements OnChanges {
@@ -46,10 +47,13 @@ export class GaugeComponent implements OnChanges {
   public thresholds: GaugeThreshold[] = [];
 
   public readonly gaugeRendererData$: Observable<GaugeSvgRendererData>;
+
   private readonly inputDataSubject: Subject<GaugeInputData | undefined> = new BehaviorSubject<
     GaugeInputData | undefined
   >(undefined);
   private readonly inputData$: Observable<GaugeInputData | undefined> = this.inputDataSubject.asObservable();
+
+  private readonly redrawSubject: Subject<true> = new BehaviorSubject(true);
 
   public constructor(public readonly elementRef: ElementRef) {
     this.gaugeRendererData$ = this.buildGaugeRendererDataObservable();
@@ -59,9 +63,14 @@ export class GaugeComponent implements OnChanges {
     this.emitInputData();
   }
 
+  public onLayoutChange(): void {
+    this.redrawSubject.next(true);
+  }
+
   private buildGaugeRendererDataObservable(): Observable<GaugeSvgRendererData> {
-    return combineLatest([this.buildDomResizeObservable(), this.inputData$]).pipe(
-      map(([boundingBox, inputData]) => {
+    return combineLatest([this.inputData$, this.redrawSubject ]).pipe(
+      map(([inputData]) => {
+        const boundingBox = this.elementRef.nativeElement.getBoundingClientRect();
         const radius = this.buildRadius(boundingBox);
 
         return {
@@ -71,12 +80,6 @@ export class GaugeComponent implements OnChanges {
         };
       })
     );
-  }
-
-  private buildDomResizeObservable(): Observable<ClientRect> {
-    const element = this.elementRef.nativeElement as HTMLElement;
-
-    return fromDomResize(element).pipe(debounceTime(100));
   }
 
   private buildBackgroundArc(radius: number): string {
