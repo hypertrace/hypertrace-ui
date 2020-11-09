@@ -46,18 +46,14 @@ export class GaugeComponent implements OnChanges {
   public thresholds: GaugeThreshold[] = [];
 
   public rendererData?: GaugeSvgRendererData;
-  public hasLayoutChangeReceived: boolean = false;
 
   public constructor(public readonly elementRef: ElementRef) {}
 
   public ngOnChanges(): void {
-    if (this.hasLayoutChangeReceived) {
-      this.rendererData = this.buildRendererData();
-    }
+    this.rendererData = this.buildRendererData();
   }
 
   public onLayoutChange(): void {
-    this.hasLayoutChangeReceived = true;
     this.rendererData = this.buildRendererData();
   }
 
