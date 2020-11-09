@@ -101,16 +101,12 @@ export class TableWidgetColumnModel {
       alignment: this.alignment,
       width: this.width,
       visible: this.visible,
-      editable: this.isEditable(),
+      editable: true,
       filterable: this.filterable,
       sort: this.sort,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
     };
-  }
-
-  private isEditable(): boolean {
-    return this.value.resultAlias() === this.value.name; // These do not match if composite column or aggregation
   }
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {
