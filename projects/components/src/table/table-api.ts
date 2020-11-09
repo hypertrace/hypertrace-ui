@@ -11,9 +11,10 @@ export interface TableColumnConfig {
   title?: string;
   titleTooltip?: string;
   sort?: TableSortDirection;
-  visible?: boolean;
-  sortable?: boolean;
-  filterable?: boolean;
+  visible?: boolean; // Is the column shown
+  editable?: boolean; // Can the column be added/removed
+  sortable?: boolean; // Can the column be sorted
+  filterable?: boolean; // Can the column be filtered
   alignment?: TableCellAlignmentType;
   width?: number | string;
   onClick?(row: TableRow, column: TableColumnConfig): void;

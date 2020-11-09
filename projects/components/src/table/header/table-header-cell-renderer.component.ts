@@ -9,6 +9,7 @@ import { IconSize } from '../../icon/icon-size';
 import { ModalSize } from '../../modal/modal';
 import { ModalService } from '../../modal/modal.service';
 import { TableCellAlignmentType } from '../cells/types/table-cell-alignment-type';
+import { TableEditColumnsModalComponent } from '../columns/table-edit-columns-modal.component';
 import { TableCdkColumnUtil } from '../data/table-cdk-column-util';
 import { TableSortDirection } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
@@ -24,11 +25,11 @@ import { TableColumnConfigExtended } from '../table.service';
       [htTooltip]="this.columnConfig.titleTooltip || this.columnConfig.title"
       class="table-header-cell-renderer"
     >
-      <ng-container *ngIf="this.columnConfig?.filterable && this.leftAlignFilterButton">
+      <ng-container *ngIf="this.leftAlignFilterButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
       <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">{{ this.columnConfig.title }}</div>
-      <ng-container *ngIf="this.columnConfig?.filterable && !this.leftAlignFilterButton">
+      <ng-container *ngIf="!this.leftAlignFilterButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
 
@@ -51,6 +52,8 @@ import { TableColumnConfigExtended } from '../table.service';
                 Sort Descending
                 <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
               </div>
+              <div class="popover-item-divider" *ngIf="this.editable"></div>
+              <div class="popover-item" (click)="this.onEditColumns()" *ngIf="this.editable">Edit Columns</div>
             </div>
           </ht-popover-content>
         </ht-popover>
@@ -63,7 +66,13 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
 
   @Input()
+  public editable?: boolean = false;
+
+  @Input()
   public metadata?: FilterAttribute[];
+
+  @Input()
+  public availableColumns?: TableColumnConfigExtended[] = [];
 
   @Input()
   public columnConfig?: TableColumnConfigExtended;
@@ -76,6 +85,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   @Output()
   public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
+
+  @Output()
+  public readonly columnsChange: EventEmitter<TableColumnConfigExtended[]> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
@@ -139,14 +151,28 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     this.isFilterable &&
       this.modalService.createModal<InFilterModalData>({
         content: InFilterModalComponent,
-        size: ModalSize.Small,
+        size: ModalSize.Medium,
         showControls: true,
         title: 'Filter Column',
         data: {
-          metadata: this.metadata!,
+          metadata: this.metadata || [],
           attribute: this.columnConfig?.attribute!,
           values: this.columnConfig?.filterValues ?? []
         }
+      });
+  }
+
+  public onEditColumns(): void {
+    this.modalService
+      .createModal<TableColumnConfigExtended[], TableColumnConfigExtended[]>({
+        content: TableEditColumnsModalComponent,
+        size: ModalSize.Medium,
+        showControls: true,
+        title: 'Edit Columns',
+        data: this.availableColumns ?? []
+      })
+      .closed$.subscribe(columnConfigs => {
+        this.columnsChange.emit(columnConfigs);
       });
   }
 

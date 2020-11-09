@@ -56,7 +56,8 @@ describe('TraceDetailService', () => {
             units: 'ms',
             type: AttributeMetadataType.Number,
             scope: scope,
-            requiresAggregation: false,
+            onlySupportsAggregation: false,
+            onlySupportsGrouping: false,
             allowedAggregations: []
           })
       })

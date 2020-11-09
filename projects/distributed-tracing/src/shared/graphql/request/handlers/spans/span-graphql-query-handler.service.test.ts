@@ -31,7 +31,8 @@ describe('SpanGraphQlQueryHandlerService', () => {
                 units: 'ms',
                 type: AttributeMetadataType.Number,
                 scope: scope,
-                requiresAggregation: false,
+                onlySupportsAggregation: false,
+                onlySupportsGrouping: false,
                 allowedAggregations: [MetricAggregationType.Average]
               });
             default:
@@ -41,7 +42,8 @@ describe('SpanGraphQlQueryHandlerService', () => {
                 units: '',
                 type: AttributeMetadataType.Number,
                 scope: scope,
-                requiresAggregation: false,
+                onlySupportsAggregation: false,
+                onlySupportsGrouping: false,
                 allowedAggregations: [MetricAggregationType.Average]
               });
           }

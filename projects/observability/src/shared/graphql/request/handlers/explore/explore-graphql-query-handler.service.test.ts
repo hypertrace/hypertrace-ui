@@ -36,7 +36,8 @@ describe('Explore graphql query handler', () => {
               units: 'ms',
               type: AttributeMetadataType.Number,
               scope: 'API_TRACE',
-              requiresAggregation: false,
+              onlySupportsAggregation: false,
+              onlySupportsGrouping: false,
               allowedAggregations: [MetricAggregationType.Average]
             }
           ])

@@ -61,9 +61,10 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         class="table"
       >
         <!-- Columns -->
-        <div *ngFor="let columnDef of this.columnConfigs$ | async; trackBy: this.trackItem; index as index">
+        <div *ngFor="let columnDef of this.visibleColumnConfigs$ | async; trackBy: this.trackItem; index as index">
           <ng-container [cdkColumnDef]="columnDef.id">
             <cdk-header-cell
+              [attr.data-column-index]="index"
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
@@ -78,11 +79,14 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               </div>
               <ht-table-header-cell-renderer
                 class="header-cell-renderer"
+                [editable]="!this.isTreeType()"
                 [metadata]="this.metadata"
                 [columnConfig]="columnDef"
+                [availableColumns]="this.columnConfigs$ | async"
                 [index]="index"
                 [sort]="columnDef.sort"
                 (sortChange)="this.onSortChange($event, columnDef)"
+                (columnsChange)="this.onColumnsEdit($event)"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
@@ -113,24 +117,26 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
-          <cdk-cell *cdkCellDef="let row" [attr.colspan]="this.columnConfigsSubject.value.length" class="expanded-cell">
-            <ht-table-expanded-detail-row-cell-renderer
-              *ngIf="this.isRowExpanded(row)"
-              [row]="row"
-              [expanded]="this.isRowExpanded(row)"
-              [content]="this.detailContent"
-            ></ht-table-expanded-detail-row-cell-renderer>
-          </cdk-cell>
+          <ng-container *htLetAsync="this.columnConfigs$ as columnConfig">
+            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfig.length" class="expanded-cell">
+              <ht-table-expanded-detail-row-cell-renderer
+                *ngIf="this.isRowExpanded(row)"
+                [row]="row"
+                [expanded]="this.isRowExpanded(row)"
+                [content]="this.detailContent"
+              ></ht-table-expanded-detail-row-cell-renderer>
+            </cdk-cell>
+          </ng-container>
         </ng-container>
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row *cdkHeaderRowDef="this.visibleColumns()" class="header-row"></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row"></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.visibleColumns()"
+          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
@@ -273,23 +279,47 @@ export class TableComponent
   @ViewChild(CdkHeaderRow, { read: ElementRef })
   public headerRowElement!: ElementRef;
 
-  public readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
+  /*
+   * Column Config
+   */
+  private readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
-  private readonly filtersSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
-  private readonly rowStateSubject: BehaviorSubject<StatefulTableRow | undefined> = new BehaviorSubject<
-    StatefulTableRow | undefined
-  >(undefined);
+  public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
+  public readonly visibleColumnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigs$.pipe(
+    map(columns => columns.filter(column => column.visible))
+  );
+  public readonly visibleColumnIds$: Observable<string[]> = this.visibleColumnConfigs$.pipe(
+    map(columns => columns.map(column => column.id))
+  );
+
+  /*
+   * Column State
+   */
   private readonly columnStateSubject: BehaviorSubject<TableColumnConfigExtended | undefined> = new BehaviorSubject<
     TableColumnConfigExtended | undefined
   >(undefined);
-
-  public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
-  public readonly filters$: Observable<TableFilter[]> = this.filtersSubject.asObservable();
-  public readonly rowState$: Observable<StatefulTableRow | undefined> = this.rowStateSubject.asObservable();
   public readonly columnState$: Observable<
     TableColumnConfigExtended | undefined
   > = this.columnStateSubject.asObservable();
+
+  /*
+   * Row State
+   */
+  private readonly rowStateSubject: BehaviorSubject<StatefulTableRow | undefined> = new BehaviorSubject<
+    StatefulTableRow | undefined
+  >(undefined);
+  public readonly rowState$: Observable<StatefulTableRow | undefined> = this.rowStateSubject.asObservable();
+
+  /*
+   * Filters
+   */
+  private readonly filtersSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  public readonly filters$: Observable<TableFilter[]> = this.filtersSubject.asObservable();
+
+  /*
+   * Pagination
+   */
   public readonly urlPageData$: Observable<Partial<PageEvent> | undefined> = this.activatedRoute.queryParamMap.pipe(
     map(params => this.getPageData(params))
   );
@@ -360,7 +390,7 @@ export class TableComponent
   }
 
   public queryHeaderCellElement(index: number): HTMLElement {
-    return this.elementRef.nativeElement.querySelectorAll('cdk-header-cell').item(index);
+    return this.elementRef.nativeElement.querySelector(`cdk-header-cell[data-column-index="${index}"`);
   }
 
   private getVisibleColumnConfig(index: number): TableColumnConfigExtended {
@@ -429,8 +459,8 @@ export class TableComponent
     return isResizeLeft ? Math.max(minX, event.clientX) - startX : Math.min(maxX, event.clientX) - startX;
   }
 
-  private initializeColumns(): void {
-    this.columnConfigsSubject.next(this.buildColumnConfigExtendeds());
+  private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
+    this.columnConfigsSubject.next(this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []));
   }
 
   private initializeData(): void {
@@ -474,14 +504,12 @@ export class TableComponent
     }
   }
 
+  public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
+    this.initializeColumns(columnConfigs);
+  }
+
   public onDataCellClick(row: StatefulTableRow): void {
     // NOTE: Cell Renderers generally handle their own clicks. We should only perform table actions here.
-
-    /*
-     * TODO: The reason we have this here is so that when the expander column is clicked it doesn't cause a
-     *  row selection as well. The disadvantage is now the row selection only happens when clicking within the
-     *  bounds of a cell, which is a smaller hit box due to row padding. Need to revisit.
-     */
     // Propagate the cell click to the row
     this.onDataRowClick(row);
   }
@@ -518,20 +546,18 @@ export class TableComponent
     return this.hasExpandableRows() ? index - 1 : index;
   }
 
-  private buildColumnConfigExtendeds(): TableColumnConfigExtended[] {
-    if (!this.columnConfigs) {
-      return [];
-    }
+  private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
+    const stateColumns = this.hasExpandableRows()
+      ? [this.expandableToggleColumnConfig]
+      : this.hasMultiSelect()
+      ? [this.multiSelectRowColumnConfig]
+      : [];
 
-    let colConfigs = this.columnConfigs;
-
-    if (this.hasExpandableRows()) {
-      colConfigs = [this.expandableToggleColumnConfig, ...this.columnConfigs];
-    } else if (this.hasMultiSelect()) {
-      colConfigs = [this.multiSelectRowColumnConfig, ...this.columnConfigs];
-    }
-
-    return this.tableService.buildExtendedColumnConfigs(colConfigs, this.dataSource, this.metadata || []);
+    return this.tableService.buildExtendedColumnConfigs(
+      [...stateColumns, ...columnConfigs],
+      this.dataSource,
+      this.metadata || []
+    );
   }
 
   private buildDataSource(): TableCdkDataSource {
@@ -540,12 +566,6 @@ export class TableComponent
     }
 
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
-  }
-
-  public visibleColumns(): string[] {
-    return this.columnConfigsSubject.value
-      .filter(columnConfig => columnConfig.visible)
-      .map(columnConfig => columnConfig.id);
   }
 
   private updateSort(sort: SortedColumn): void {

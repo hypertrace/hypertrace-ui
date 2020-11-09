@@ -28,7 +28,8 @@ export class MetadataGraphQlQueryHandlerService
         { path: 'type' },
         { path: 'scope' },
         { path: 'units' },
-        { path: 'onlyAggregationsAllowed' },
+        { path: 'onlySupportsAggregation' },
+        { path: 'onlySupportsGrouping' },
         { path: 'supportedAggregations' },
         { path: 'groupable' }
       ]
@@ -42,7 +43,8 @@ export class MetadataGraphQlQueryHandlerService
       type: result.type,
       scope: result.scope,
       units: result.units,
-      requiresAggregation: result.onlyAggregationsAllowed,
+      onlySupportsAggregation: result.onlySupportsAggregation,
+      onlySupportsGrouping: result.onlySupportsGrouping,
       allowedAggregations: result.supportedAggregations.flatMap(convertFromGraphQlMetricAggregationType),
       groupable: result.groupable
     }));
@@ -61,7 +63,8 @@ interface AttributeMetadataServerResult {
   type: AttributeMetadataType;
   scope: string;
   units: string;
-  onlyAggregationsAllowed: boolean;
+  onlySupportsAggregation: boolean;
+  onlySupportsGrouping: boolean;
   supportedAggregations: GraphQlMetricAggregationType[];
   groupable: boolean;
 }

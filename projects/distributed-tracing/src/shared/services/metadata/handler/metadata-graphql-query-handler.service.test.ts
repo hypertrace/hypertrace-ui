@@ -45,7 +45,10 @@ describe('Metadata graphql query handler service', () => {
           path: 'units'
         },
         {
-          path: 'onlyAggregationsAllowed'
+          path: 'onlySupportsAggregation'
+        },
+        {
+          path: 'onlySupportsGrouping'
         },
         {
           path: 'supportedAggregations'
@@ -66,7 +69,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'First',
         units: 'ms',
         type: AttributeMetadataType.Number,
-        onlyAggregationsAllowed: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         supportedAggregations: [
           GraphQlMetricAggregationType.Average,
           GraphQlMetricAggregationType.Min,
@@ -84,7 +88,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'Second',
         units: 'ms',
         type: AttributeMetadataType.String,
-        onlyAggregationsAllowed: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         supportedAggregations: [],
         groupable: true
       },
@@ -94,7 +99,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'Third',
         units: 'ms',
         type: AttributeMetadataType.StringMap,
-        onlyAggregationsAllowed: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         supportedAggregations: [],
         groupable: false
       }
@@ -107,7 +113,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'First',
         units: 'ms',
         type: AttributeMetadataType.Number,
-        requiresAggregation: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         allowedAggregations: [
           MetricAggregationType.Average,
           MetricAggregationType.Min,
@@ -129,7 +136,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'Second',
         units: 'ms',
         type: AttributeMetadataType.String,
-        requiresAggregation: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         allowedAggregations: [],
         groupable: true
       },
@@ -139,7 +147,8 @@ describe('Metadata graphql query handler service', () => {
         displayName: 'Third',
         units: 'ms',
         type: AttributeMetadataType.StringMap,
-        requiresAggregation: false,
+        onlySupportsAggregation: false,
+        onlySupportsGrouping: false,
         allowedAggregations: [],
         groupable: false
       }

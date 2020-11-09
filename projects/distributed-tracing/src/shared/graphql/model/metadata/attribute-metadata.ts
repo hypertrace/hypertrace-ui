@@ -7,7 +7,8 @@ export interface AttributeMetadata {
   units: string;
   type: AttributeMetadataType;
   scope: string;
-  requiresAggregation: boolean;
+  onlySupportsAggregation: boolean;
+  onlySupportsGrouping: boolean;
   allowedAggregations: MetricAggregationType[];
   groupable: boolean;
 }

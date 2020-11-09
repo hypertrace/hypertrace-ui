@@ -165,7 +165,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       defaultIfEmpty<AttributeMetadata[]>([]),
       map(attributes =>
         attributes
-          .filter(attribute => !attribute.requiresAggregation)
+          .filter(attribute => !attribute.onlySupportsAggregation)
           .map(attribute => this.specBuilder.attributeSpecificationForKey(attribute.name))
       ),
       map(specsFromRequest => uniqBy(specsFromRequest, spec => spec.name))

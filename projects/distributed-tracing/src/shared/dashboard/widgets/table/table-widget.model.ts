@@ -18,9 +18,10 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetColumnsService } from './services/table-widget-columns.service';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 
@@ -117,6 +118,7 @@ export class TableWidgetModel {
     } as EnumPropertyTypeInstance
   })
   public selectionMode: TableSelectionMode = TableSelectionMode.Single;
+
   /**
    * Deprecated. Use rowSelectionHandlers instead
    */
@@ -165,15 +167,31 @@ export class TableWidgetModel {
   })
   public pageable?: boolean = true;
 
+  @ModelProperty({
+    key: 'fetchEditableColumns',
+    displayName: 'Query for additional columns not provided',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public fetchEditableColumns?: boolean = false;
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
+
+  @ModelInject(TableWidgetColumnsService)
+  private readonly tableWidgetColumnsService!: TableWidgetColumnsService;
 
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getColumns(): SpecificationBackedTableColumnDef[] {
-    return this.columns.map(column => column.asTableColumnDef());
+  public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
+    const modelColumns = this.columns.map(column => column.asTableColumnDef());
+
+    if (scope === undefined || !this.fetchEditableColumns) {
+      return of(modelColumns);
+    }
+
+    return this.tableWidgetColumnsService.fetchColumn(scope, modelColumns);
   }
 
   public getChildModel(row: TableRow): object | undefined {

@@ -45,7 +45,8 @@ describe('Explore cartesian data source model', () => {
               units: 'ms',
               type: AttributeMetadataType.Number,
               scope: context,
-              requiresAggregation: false,
+              onlySupportsAggregation: false,
+              onlySupportsGrouping: false,
               allowedAggregations: [MetricAggregationType.Average]
             }
           ])
