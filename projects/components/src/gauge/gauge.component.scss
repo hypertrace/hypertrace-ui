@@ -1,6 +1,11 @@
 @import 'font';
 @import 'color-palette';
 
+.gauge-container {
+  width: 100%;
+  height: 100%;
+}
+
 .gauge {
   width: 100%;
   height: 100%;

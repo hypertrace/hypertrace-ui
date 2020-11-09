@@ -5,26 +5,28 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
 @Component({
   selector: 'ht-gauge',
   template: `
-    <svg #chartContainer class="gauge" (htLayoutChange)="this.onLayoutChange()" *ngIf="this.rendererData">
-      <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
-        <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
-        <g
-          class="input-data"
-          *ngIf="rendererData.data"
-          htTooltip="{{ rendererData.data.value }} of {{ rendererData.data.maxValue }}"
-        >
-          <path
-            class="value-ring"
-            [attr.d]="rendererData.data.valueArc"
-            [attr.fill]="rendererData.data.threshold.color"
-          />
-          <text x="0" y="0" class="value-display" [attr.fill]="rendererData.data.threshold.color">
-            {{ rendererData.data.value }}
-          </text>
-          <text x="0" y="24" class="label-display">{{ rendererData.data.threshold.label }}</text>
+    <div class="gauge-container" (htLayoutChange)="this.onLayoutChange()">
+      <svg class="gauge" *ngIf="this.rendererData">
+        <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
+          <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
+          <g
+            class="input-data"
+            *ngIf="rendererData.data"
+            htTooltip="{{ rendererData.data.value }} of {{ rendererData.data.maxValue }}"
+          >
+            <path
+              class="value-ring"
+              [attr.d]="rendererData.data.valueArc"
+              [attr.fill]="rendererData.data.threshold.color"
+            />
+            <text x="0" y="0" class="value-display" [attr.fill]="rendererData.data.threshold.color">
+              {{ rendererData.data.value }}
+            </text>
+            <text x="0" y="24" class="label-display">{{ rendererData.data.threshold.label }}</text>
+          </g>
         </g>
-      </g>
-    </svg>
+      </svg>
+    </div>
   `,
   styleUrls: ['./gauge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -44,14 +46,18 @@ export class GaugeComponent implements OnChanges {
   public thresholds: GaugeThreshold[] = [];
 
   public rendererData?: GaugeSvgRendererData;
+  public hasLayoutChangeReceived: boolean = false;
 
   public constructor(public readonly elementRef: ElementRef) {}
 
   public ngOnChanges(): void {
-    this.rendererData = this.buildRendererData();
+    if (this.hasLayoutChangeReceived) {
+      this.rendererData = this.buildRendererData();
+    }
   }
 
   public onLayoutChange(): void {
+    this.hasLayoutChangeReceived = true;
     this.rendererData = this.buildRendererData();
   }
 
@@ -107,7 +113,7 @@ export class GaugeComponent implements OnChanges {
   private buildRadius(boundingBox: ClientRect): number {
     return Math.min(
       boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING,
-      boundingBox.width / 2 - GaugeComponent.GAUGE_AXIS_PADDING / 2
+      boundingBox.height / 2 + Math.min(boundingBox.height, boundingBox.width) / 2
     );
   }
 
