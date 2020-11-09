@@ -1,5 +1,5 @@
 import { Directive, Input, OnChanges } from '@angular/core';
-import { LayoutChangeService, TypedSimpleChanges } from '@hypertrace/common';
+import { LayoutChangeService } from '@hypertrace/common';
 
 @Directive({
   selector: '[htLayoutChangeTrigger]'
@@ -10,9 +10,7 @@ export class LayoutChangeTriggerDirective implements OnChanges {
   @Input('htLayoutChangeTrigger')
   public changeTrigger?: unknown;
 
-  public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
-    if (changeObject.changeTrigger && !changeObject.changeTrigger.isFirstChange()) {
-      setTimeout(() => this.layoutChange.publishLayoutChange());
-    }
+  public ngOnChanges(): void {
+    setTimeout(() => this.layoutChange.publishLayoutChange());
   }
 }
