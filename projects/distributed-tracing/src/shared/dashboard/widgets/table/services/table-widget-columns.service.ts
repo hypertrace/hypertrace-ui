@@ -28,7 +28,7 @@ export class TableWidgetColumnsService {
         ...attributes
           .filter(attribute => !this.isExplicitlyDeclaredAttribute(attribute, existingColumns))
           .filter(attribute => !this.isAggregationOnlyAttribute(attribute))
-          .flatMap(attribute => this.mapAttributeToColumnConfig(attribute))
+          .map(attribute => this.mapAttributeToColumnConfig(attribute))
       ])
     );
   }
