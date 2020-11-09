@@ -12,7 +12,7 @@ describe('Gauge component', () => {
   const createHost = createHostFactory({
     component: GaugeComponent,
     declareComponent: false,
-    declarations:[MockDirective(LayoutChangeDirective)],
+    declarations: [MockDirective(LayoutChangeDirective)],
     imports: [GaugeModule]
   });
 
@@ -40,12 +40,12 @@ describe('Gauge component', () => {
     spectator.component.onLayoutChange();
 
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.gaugeRendererData$).toBe('200ms (x)', {
+      expectObservable(spectator.component.gaugeRendererData$).toBe('100ms (x)', {
         x: {
           backgroundArc: 'M0,0Z',
           origin: {
             x: 0,
-            y: 0
+            y: -30
           },
           data: {
             value: 80,

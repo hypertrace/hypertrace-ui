@@ -2,12 +2,17 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from
 import { Color, LayoutChangeService, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-gauge',
   template: `
-    <svg #chartContainer class="gauge" (htLayoutChange)="this.onLayoutChange()" *ngIf="this.gaugeRendererData$ | async as rendererData">
+    <svg
+      #chartContainer
+      class="gauge"
+      (htLayoutChange)="this.onLayoutChange()"
+      *ngIf="this.gaugeRendererData$ | async as rendererData"
+    >
       <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
         <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
         <g
@@ -54,6 +59,7 @@ export class GaugeComponent implements OnChanges {
   private readonly inputData$: Observable<GaugeInputData | undefined> = this.inputDataSubject.asObservable();
 
   private readonly redrawSubject: Subject<true> = new BehaviorSubject(true);
+  private readonly redraw$: Observable<true> = this.redrawSubject.pipe(debounceTime(100));
 
   public constructor(public readonly elementRef: ElementRef) {
     this.gaugeRendererData$ = this.buildGaugeRendererDataObservable();
@@ -68,7 +74,7 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildGaugeRendererDataObservable(): Observable<GaugeSvgRendererData> {
-    return combineLatest([this.inputData$, this.redrawSubject ]).pipe(
+    return combineLatest([this.inputData$, this.redraw$]).pipe(
       map(([inputData]) => {
         const boundingBox = this.elementRef.nativeElement.getBoundingClientRect();
         const radius = this.buildRadius(boundingBox);
