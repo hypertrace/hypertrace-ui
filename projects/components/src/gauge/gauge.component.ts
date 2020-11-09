@@ -1,18 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
 import { Color, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-gauge',
   template: `
-    <svg
-      #chartContainer
-      class="gauge"
-      (htLayoutChange)="this.onLayoutChange()"
-      *ngIf="this.gaugeRendererData$ | async as rendererData"
-    >
+    <svg #chartContainer class="gauge" (htLayoutChange)="this.onLayoutChange()" *ngIf="this.rendererData">
       <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
         <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
         <g
@@ -50,41 +43,32 @@ export class GaugeComponent implements OnChanges {
   @Input()
   public thresholds: GaugeThreshold[] = [];
 
-  public readonly gaugeRendererData$: Observable<GaugeSvgRendererData>;
+  public rendererData?: GaugeSvgRendererData;
 
-  private readonly inputDataSubject: Subject<GaugeInputData | undefined> = new BehaviorSubject<
-    GaugeInputData | undefined
-  >(undefined);
-  private readonly inputData$: Observable<GaugeInputData | undefined> = this.inputDataSubject.asObservable();
-
-  private readonly redrawSubject: Subject<true> = new BehaviorSubject(true);
-  private readonly redraw$: Observable<true> = this.redrawSubject.pipe(debounceTime(100));
-
-  public constructor(public readonly elementRef: ElementRef) {
-    this.gaugeRendererData$ = this.buildGaugeRendererDataObservable();
-  }
+  public constructor(public readonly elementRef: ElementRef) {}
 
   public ngOnChanges(): void {
-    this.emitInputData();
+    this.rendererData = this.buildRendererData();
   }
 
   public onLayoutChange(): void {
-    this.redrawSubject.next(true);
+    this.rendererData = this.buildRendererData();
   }
 
-  private buildGaugeRendererDataObservable(): Observable<GaugeSvgRendererData> {
-    return combineLatest([this.inputData$, this.redraw$]).pipe(
-      map(([inputData]) => {
-        const boundingBox = this.elementRef.nativeElement.getBoundingClientRect();
-        const radius = this.buildRadius(boundingBox);
+  private buildRendererData(): GaugeSvgRendererData | undefined {
+    const inputData = this.calculateInputData();
+    if (!inputData) {
+      return undefined;
+    }
 
-        return {
-          origin: this.buildOrigin(boundingBox, radius),
-          backgroundArc: this.buildBackgroundArc(radius),
-          data: this.buildGaugeData(radius, inputData)
-        };
-      })
-    );
+    const boundingBox = this.elementRef.nativeElement.getBoundingClientRect();
+    const radius = this.buildRadius(boundingBox);
+
+    return {
+      origin: this.buildOrigin(boundingBox, radius),
+      backgroundArc: this.buildBackgroundArc(radius),
+      data: this.buildGaugeData(radius, inputData)
+    };
   }
 
   private buildBackgroundArc(radius: number): string {
@@ -123,7 +107,7 @@ export class GaugeComponent implements OnChanges {
   private buildRadius(boundingBox: ClientRect): number {
     return Math.min(
       boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING,
-      boundingBox.height / 2 + Math.min(boundingBox.height, boundingBox.width) / 2
+      boundingBox.width / 2 - GaugeComponent.GAUGE_AXIS_PADDING / 2
     );
   }
 
@@ -134,22 +118,20 @@ export class GaugeComponent implements OnChanges {
     };
   }
 
-  private emitInputData(): void {
-    let inputData;
+  private calculateInputData(): GaugeInputData | undefined {
     if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0 && this.thresholds.length > 0) {
       const currentThreshold = this.thresholds.find(
         threshold => this.value! >= threshold.start && this.value! < threshold.end
       );
 
       if (currentThreshold) {
-        inputData = {
+        return {
           value: this.value,
           maxValue: this.maxValue,
           threshold: currentThreshold
         };
       }
     }
-    this.inputDataSubject.next(inputData);
   }
 }
 
