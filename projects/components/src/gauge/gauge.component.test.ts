@@ -1,6 +1,8 @@
 import { Color } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
+import { LayoutChangeDirective } from '../layout/layout-change.directive';
 import { GaugeComponent } from './gauge.component';
 import { GaugeModule } from './gauge.module';
 
@@ -10,6 +12,7 @@ describe('Gauge component', () => {
   const createHost = createHostFactory({
     component: GaugeComponent,
     declareComponent: false,
+    declarations:[MockDirective(LayoutChangeDirective)],
     imports: [GaugeModule]
   });
 
@@ -34,6 +37,7 @@ describe('Gauge component', () => {
         ]
       }
     });
+    spectator.component.onLayoutChange();
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.gaugeRendererData$).toBe('200ms (x)', {

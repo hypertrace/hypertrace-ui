@@ -30,7 +30,6 @@ export * from './custom-error/custom-error';
 // DOM
 export { DomElementMeasurerService } from './utilities/dom/dom-element-measurer.service';
 export * from './utilities/dom/dom-utilities';
-export { fromDomResize } from './utilities/dom/resize/from-dom-event';
 
 // External
 export * from './external/external-url-navigator';
