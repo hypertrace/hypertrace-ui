@@ -47,15 +47,9 @@ export class TableEditColumnsModalComponent {
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
     @Inject(MODAL_DATA) public readonly modalData: TableColumnConfigExtended[]
   ) {
-    const checked = this.modalData
+    this.editColumns = this.modalData
       .filter(column => (column.attribute?.type as string) !== '$$state')
-      .filter(column => column.visible);
-
-    const unchecked = this.modalData
-      .filter(column => (column.attribute?.type as string) !== '$$state')
-      .filter(column => !column.visible);
-
-    this.editColumns = [...checked, ...unchecked];
+      .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
   }
 
   public onApply(): void {
