@@ -71,11 +71,11 @@
   }
 
   .first {
-    border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0 0 4px;
   }
 
   .last {
-    border-radius: 0px 4px 4px 0px;
+    border-radius: 0 4px 4px 0;
     border-right: 1px solid $color-border;
   }
 }
@@ -85,8 +85,8 @@
 
   .button {
     @include body-1-medium;
-    border-radius: 4px;
-    padding: 0px 20px;
+    border-radius: 6px;
+    padding: 0 20px;
 
     &:not(.selected) {
       border: 1px solid $color-border;
