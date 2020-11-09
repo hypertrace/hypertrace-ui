@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
-import { Color, LayoutChangeService, Point } from '@hypertrace/common';
+import { Color, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -34,7 +34,6 @@ import { debounceTime, map } from 'rxjs/operators';
     </svg>
   `,
   styleUrls: ['./gauge.component.scss'],
-  providers: [LayoutChangeService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GaugeComponent implements OnChanges {
