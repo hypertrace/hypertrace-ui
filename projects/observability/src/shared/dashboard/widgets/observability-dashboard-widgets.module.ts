@@ -7,6 +7,7 @@ import { MetricDisplayWidgetModule } from './metric-display/metric-display-widge
 import { RadarWidgetModule } from './radar/radar-widget.module';
 import { TopNWidgetModule } from './top-n/top-n-widget.module';
 import { TopologyWidgetModule } from './topology/topology-widget.module';
+import { GaugeWidgetModule } from './gauge/gauge-widget.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { TopologyWidgetModule } from './topology/topology-widget.module';
     ObservabilityTableCellRendererModule,
     DonutWidgetModule,
     CartesianWidgetModule,
-    CardListWidgetModule
+    CardListWidgetModule,
+    GaugeWidgetModule
   ]
 })
 export class ObservabilityDashboardWidgetsModule {}

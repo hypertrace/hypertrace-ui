@@ -81,10 +81,6 @@ export * from './filtering/filter-modal/in-filter-modal.component';
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
 
-// Gauge
-export * from './gauge/gauge.component';
-export * from './gauge/gauge.module';
-
 // Header
 export * from './header/application/application-header.component';
 export * from './header/application/application-header.module';

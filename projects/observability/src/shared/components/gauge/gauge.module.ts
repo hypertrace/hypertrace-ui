@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
-import { LayoutChangeModule } from '../layout/layout-change.module';
-import { TooltipModule } from './../tooltip/tooltip.module';
+import { LayoutChangeModule,TooltipModule } from '@hypertrace/components';
 import { GaugeComponent } from './gauge.component';
 
 @NgModule({
