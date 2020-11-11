@@ -1,7 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { Renderer } from '@hypertrace/hyperdash';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { WidgetRenderer } from '../widget-renderer';
+import { ConditionalContainerWidgetModel } from './conditional-container-widget.model';
 import { ContainerWidgetModel } from './container-widget.model';
 
 @Renderer({ modelClass: ContainerWidgetModel })
@@ -18,15 +20,17 @@ import { ContainerWidgetModel } from './container-widget.model';
     </div>
   `
 })
-export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWidgetModel> implements AfterViewInit {
+export class ContainerWidgetRendererComponent
+  extends WidgetRenderer<ContainerWidgetModel | ConditionalContainerWidgetModel>
+  implements AfterViewInit {
   @ViewChild('containerContent', { read: ViewContainerRef, static: true })
   public container!: ViewContainerRef;
 
   public ngAfterViewInit(): void {
-    this.model.layout.draw(this.container, this.model.children);
+    this.fetchData().subscribe(children => this.model.layout.draw(this.container, children));
   }
 
   protected fetchData(): Observable<object[]> {
-    return of(this.model.children);
+    return this.model.getChildren().pipe(takeUntil(this.destroyed$));
   }
 }

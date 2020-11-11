@@ -6,6 +6,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { Observable, of } from 'rxjs';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
 import { ContainerLayout } from './layout/container-layout';
 
@@ -35,4 +36,8 @@ export class ContainerWidgetModel {
     key: 'layout'
   })
   public layout!: ContainerLayout;
+
+  public getChildren(): Observable<object[]> {
+    return of(this.children);
+  }
 }

@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormattingModule } from '@hypertrace/common';
 import { LabelModule, TitledContentModule } from '@hypertrace/components';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
+import { ConditionalContainerWidgetModel } from './conditional-container-widget.model';
 import { ContainerWidgetRendererComponent } from './container-widget-renderer.component';
 import { ContainerWidgetModel } from './container-widget.model';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
@@ -18,6 +19,7 @@ import { DimensionModel } from './layout/custom/dimension/dimension.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [
+        ConditionalContainerWidgetModel,
         ContainerWidgetModel,
         AutoContainerLayoutModel,
         CustomContainerLayoutModel,
