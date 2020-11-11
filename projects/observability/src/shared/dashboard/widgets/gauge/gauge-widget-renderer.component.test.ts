@@ -1,18 +1,17 @@
-import { FormattingModule } from '@hypertrace/common';
+import { Color, FormattingModule } from '@hypertrace/common';
 import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
 import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { DonutComponent } from '../../../components/donut/donut.component';
-import { LegendPosition } from '../../../components/legend/legend.component';
-import { DonutWidgetRendererComponent } from './gauge-widget-renderer.component';
-import { DonutWidgetModel } from './gauge-widget.model';
+import { GaugeComponent } from './../../../components/gauge/gauge.component';
+import { GaugeWidgetRendererComponent } from './gauge-widget-renderer.component';
+import { GaugeWidgetModel } from './gauge-widget.model';
 
-describe('Donut widget renderer component', () => {
-  let mockModel: Partial<DonutWidgetModel> = {};
+describe('Gauge widget renderer component', () => {
+  let mockModel: Partial<GaugeWidgetModel> = {};
   const componentFactory = createComponentFactory({
-    component: DonutWidgetRendererComponent,
+    component: GaugeWidgetRendererComponent,
     shallow: true,
     imports: [FormattingModule, LoadAsyncModule],
     providers: [
@@ -27,53 +26,42 @@ describe('Donut widget renderer component', () => {
         })
       }
     ],
-    declarations: [MockComponent(DonutComponent), MockComponent(TitledContentComponent)]
+    declarations: [MockComponent(GaugeComponent), MockComponent(TitledContentComponent)]
   });
-  test('should render provided data with title and legend', () => {
+
+  test('should render provided data with title', () => {
     mockModel = {
-      header: {
-        title: 'Test title'
-      },
-      legendPosition: LegendPosition.Right,
+      title: 'Test title',
       getData: jest.fn(() =>
         of({
-          series: [
+          value: 5,
+          maxValue: 10,
+          thresholds: [
             {
-              name: 'first',
-              value: 3
-            },
-            {
-              name: 'second',
-              value: 5
+              start: 0,
+              end: 6,
+              label: 'Medium',
+              color: Color.Brown1
             }
-          ],
-          center: {
-            title: 'total',
-            value: 2
-          }
+          ]
         })
-      ),
-      displayLegendCounts: false
+      )
     };
 
     const spectator = componentFactory();
     expect(spectator.query(TitledContentComponent)!.title).toBe('TEST TITLE');
 
-    expect(spectator.query(DonutComponent)!.series).toEqual([
+    const gaugeComponent = spectator.query(GaugeComponent);
+    expect(gaugeComponent).toExist();
+    expect(gaugeComponent!.value).toEqual(5);
+    expect(gaugeComponent!.maxValue).toEqual(10);
+    expect(gaugeComponent!.thresholds).toEqual([
       {
-        name: 'first',
-        value: 3
-      },
-      {
-        name: 'second',
-        value: 5
+        start: 0,
+        end: 6,
+        label: 'Medium',
+        color: Color.Brown1
       }
     ]);
-    expect(spectator.query(DonutComponent)!.center).toEqual({
-      title: 'total',
-      value: 2
-    });
-    expect(spectator.query(DonutComponent)!.legendPosition).toEqual(LegendPosition.Right);
-    expect(spectator.query(DonutComponent)!.displayLegendCounts).toEqual(false);
   });
 });

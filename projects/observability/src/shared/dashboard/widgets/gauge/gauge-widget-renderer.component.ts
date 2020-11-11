@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { GaugeWidgetModel } from './gauge-widget.model';
 import { GaugeWidgetData } from './gauge-widget';
+import { GaugeWidgetModel } from './gauge-widget.model';
 
 @Renderer({ modelClass: GaugeWidgetModel })
 @Component({

@@ -57,10 +57,6 @@ export {
 export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 
-// Gauge
-export * from './shared/components/gauge/gauge.component';
-export * from './shared/components/gauge/gauge.module';
-
 // Legend
 export { LegendPosition } from './shared/components/legend/legend.component';
 
@@ -215,8 +211,7 @@ export * from './shared/dashboard/data/graphql/specifiers/entity-specification.m
 // Explorer service
 export * from './pages/explorer/explorer-service';
 
-
 // Gauge
 export * from './shared/components/gauge/gauge.component';
 export * from './shared/components/gauge/gauge.module';
-export * from './shared/dashboard/widgets/gauge/gauge-widget'
+export * from './shared/dashboard/widgets/gauge/gauge-widget';
