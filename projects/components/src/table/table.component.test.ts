@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { NavigationService } from '@hypertrace/common';
+import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
   LetAsyncModule,
@@ -64,6 +64,16 @@ describe('Table component', () => {
       mockProvider(ActivatedRoute),
       mockProvider(ActivatedRoute, {
         queryParamMap: EMPTY
+      }),
+      mockProvider(DomElementMeasurerService, {
+        measureHtmlElement: (): ClientRect => ({
+          top: 0,
+          left: 0,
+          bottom: 20,
+          right: 200,
+          height: 20,
+          width: 200
+        })
       }),
       mockProvider(TableService, {
         buildExtendedColumnConfigs: (columnConfigs: TableColumnConfig[]) => columnConfigs as TableColumnConfigExtended[]
