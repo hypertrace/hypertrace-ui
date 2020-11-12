@@ -12,7 +12,7 @@ import { map, tap } from 'rxjs/operators';
 import { StaticDataSource } from '../../data/static/static-data-source.model';
 import { AutoContainerLayoutModel } from '../container/layout/auto/auto-container-layout.model';
 import { ContainerLayout } from '../container/layout/container-layout';
-import { ModelTemplatePropertyType } from './property-types/model-template-type';
+import { ModelTemplatePropertyType } from '../../properties/property-types/model-template-type';
 
 @Model({
   type: 'repeat'

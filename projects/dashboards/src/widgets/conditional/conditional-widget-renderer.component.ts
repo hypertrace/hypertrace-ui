@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewContainerRef } from '@angular/core';
-import { ModelJson, Renderer } from '@hypertrace/hyperdash';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { WidgetRenderer } from '../widget-renderer';
@@ -8,23 +8,15 @@ import { ConditionalModel } from './conditional.model';
 @Renderer({ modelClass: ConditionalModel })
 @Component({
   selector: 'ht-conditional-widget',
-  styleUrls: ['./conditional-widget-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="conditional-widget">
-      <ng-container [hdaDashboardModel]="this.getModel() | async"> </ng-container>
-    </div>
-  `
+  template: ` <ng-container [hdaDashboardModel]="this.getChildModel() | async"> </ng-container> `
 })
 export class ConditionalWidgetRendererComponent extends WidgetRenderer<ConditionalModel> {
-  @ViewChild('containerContent', { read: ViewContainerRef, static: true })
-  public container!: ViewContainerRef;
-
-  public getModel(): Observable<ModelJson> {
-    return this.model.getModel().pipe(takeUntil(this.destroyed$));
+  public getChildModel(): Observable<object> {
+    return this.model.getChildModel().pipe(takeUntil(this.destroyed$));
   }
 
-  protected fetchData(): Observable<ModelJson> {
-    return this.getModel();
+  protected fetchData(): Observable<object> {
+    return this.getChildModel();
   }
 }
