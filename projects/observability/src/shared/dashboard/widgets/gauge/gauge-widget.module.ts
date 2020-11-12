@@ -6,12 +6,13 @@ import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { GaugeModule } from '../../../components/gauge/gauge.module';
 import { GaugeWidgetRendererComponent } from './gauge-widget-renderer.component';
 import { GaugeWidgetModel } from './gauge-widget.model';
+import { GaugeThresholdModel } from './thresholds/gauge-threshold.model';
 
 @NgModule({
   declarations: [GaugeWidgetRendererComponent],
   imports: [
     DashboardCoreModule.with({
-      models: [GaugeWidgetModel],
+      models: [GaugeWidgetModel, GaugeThresholdModel],
       renderers: [GaugeWidgetRendererComponent]
     }),
     GaugeModule,
