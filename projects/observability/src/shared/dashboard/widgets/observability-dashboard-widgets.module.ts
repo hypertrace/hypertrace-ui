@@ -3,6 +3,7 @@ import { ObservabilityTableCellRendererModule } from '../../components/table/obs
 import { CardListWidgetModule } from './card-list/card-list-widget.module';
 import { CartesianWidgetModule } from './charts/cartesian-widget/cartesian-widget.module';
 import { DonutWidgetModule } from './donut/donut-widget.module';
+import { GaugeWidgetModule } from './gauge/gauge-widget.module';
 import { MetricDisplayWidgetModule } from './metric-display/metric-display-widget.module';
 import { RadarWidgetModule } from './radar/radar-widget.module';
 import { TopNWidgetModule } from './top-n/top-n-widget.module';
@@ -17,7 +18,8 @@ import { TopologyWidgetModule } from './topology/topology-widget.module';
     ObservabilityTableCellRendererModule,
     DonutWidgetModule,
     CartesianWidgetModule,
-    CardListWidgetModule
+    CardListWidgetModule,
+    GaugeWidgetModule
   ]
 })
 export class ObservabilityDashboardWidgetsModule {}
