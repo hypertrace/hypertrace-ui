@@ -11,6 +11,6 @@ export class LayoutChangeTriggerDirective implements OnChanges {
   public changeTrigger?: unknown;
 
   public ngOnChanges(): void {
-    setTimeout(() => this.layoutChange.publishLayoutChange());
+    setTimeout(() => this.layoutChange.publishLayoutChange(), 0);
   }
 }

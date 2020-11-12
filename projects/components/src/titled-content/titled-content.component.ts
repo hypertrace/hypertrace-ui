@@ -10,7 +10,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="titled-content-container">
-      <div class="header">
+      <div class="header" [htLayoutChangeTrigger]="this.shouldShowHeader">
         <ht-label *ngIf="this.shouldShowTitleInHeader" [label]="this.title" class="title"></ht-label>
         <ht-link [paramsOrUrl]="this.link" class="link" *ngIf="this.link">
           <ht-button
@@ -50,6 +50,10 @@ export class TitledContentComponent {
 
   @Input()
   public linkLabel?: string;
+
+  public get shouldShowHeader(): boolean {
+    return this.shouldShowTitleInHeader || this.headerControl !== undefined;
+  }
 
   private get shouldShowTitle(): boolean {
     return !isEmpty(this.title) && !this.hideTitle;

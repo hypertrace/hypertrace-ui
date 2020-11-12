@@ -1,6 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import {
   ColorService,
+  LayoutChangeService,
   NavigationService,
   RelativeTimeRange,
   TimeDuration,
@@ -32,6 +33,9 @@ export const isValidModelJson = (
 export const mockDashboardProviders = [
   mockProvider(GraphQlRequestService),
   mockProvider(ColorService),
+  mockProvider(LayoutChangeService, {
+    layout$: of()
+  }),
   mockProvider(TimeRangeService, {
     getTimeRangeAndChanges: () => EMPTY,
     getCurrentTimeRange: jest.fn().mockReturnValue(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute)))
