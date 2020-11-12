@@ -437,19 +437,16 @@ export class TableComponent
 
   private buildColumnInfo(index: number): ColumnInfo {
     const element = this.queryHeaderCellElement(index);
+    const boundingBox = element.getBoundingClientRect();
 
     return {
       config: this.getVisibleColumnConfig(index),
       element: element,
-      bounds: this.calcBounds(element)
-    };
-  }
-
-  private calcBounds(element: HTMLElement): ColumnBounds {
-    // We add additional padding so a portion of the column remains visible to resize (asymmetry due to resize-handle)
-    return {
-      left: element.offsetLeft + 12,
-      right: element.offsetLeft + element.offsetWidth - 8
+      bounds: {
+        // We add additional padding so a portion of the column remains visible to resize (asymmetry due to resize-handle)
+        left: boundingBox.x + 12,
+        right: boundingBox.x + boundingBox.width - 8
+      }
     };
   }
 
