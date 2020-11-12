@@ -120,7 +120,7 @@ export class GaugeComponent implements OnChanges {
   private calculateInputData(): GaugeInputData | undefined {
     if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0 && this.thresholds.length > 0) {
       const currentThreshold = this.thresholds.find(
-        threshold => this.value! >= threshold.start && this.value! < threshold.end
+        threshold => this.value! >= threshold.start && this.value! <= threshold.end
       );
 
       if (currentThreshold) {
@@ -138,7 +138,7 @@ export interface GaugeThreshold {
   label: string;
   start: number;
   end: number;
-  color: Color;
+  color: Color | string;
 }
 
 interface GaugeSvgRendererData {
