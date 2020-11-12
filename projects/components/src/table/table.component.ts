@@ -15,7 +15,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { isEqualIgnoreFunctions, NavigationService, NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
+import {
+  DomElementMeasurerService,
+  isEqualIgnoreFunctions,
+  NavigationService,
+  NumberCoercer,
+  TypedSimpleChanges
+} from '@hypertrace/common';
 import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -336,6 +342,7 @@ export class TableComponent
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
@@ -437,15 +444,15 @@ export class TableComponent
 
   private buildColumnInfo(index: number): ColumnInfo {
     const element = this.queryHeaderCellElement(index);
-    const boundingBox = element.getBoundingClientRect();
+    const boundingBox = this.domElementMeasurerService.measureHtmlElement(element);
 
     return {
       config: this.getVisibleColumnConfig(index),
       element: element,
       bounds: {
         // We add additional padding so a portion of the column remains visible to resize (asymmetry due to resize-handle)
-        left: boundingBox.x + 12,
-        right: boundingBox.x + boundingBox.width - 8
+        left: boundingBox.left + 12,
+        right: boundingBox.left + boundingBox.width - 8
       }
     };
   }
