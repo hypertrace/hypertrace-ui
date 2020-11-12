@@ -67,7 +67,7 @@ export class GaugeComponent implements OnChanges {
     const radius = this.buildRadius(boundingBox);
 
     return {
-      origin: this.buildOrigin(boundingBox, radius),
+      origin: this.buildOrigin(boundingBox),
       backgroundArc: this.buildBackgroundArc(radius),
       data: this.buildGaugeData(radius, inputData)
     };
@@ -107,23 +107,20 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildRadius(boundingBox: ClientRect): number {
-    return Math.min(
-      boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING,
-      boundingBox.height / 2 + Math.min(boundingBox.height, boundingBox.width) / 2
-    );
+    return Math.min(boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING, boundingBox.width / 2);
   }
 
-  private buildOrigin(boundingBox: ClientRect, radius: number): Point {
+  private buildOrigin(boundingBox: ClientRect): Point {
     return {
       x: boundingBox.width / 2,
-      y: radius
+      y: boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING
     };
   }
 
   private calculateInputData(): GaugeInputData | undefined {
     if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0 && this.thresholds.length > 0) {
       const currentThreshold = this.thresholds.find(
-        threshold => this.value! >= threshold.start && this.value! < threshold.end
+        threshold => this.value! >= threshold.start && this.value! <= threshold.end
       );
 
       if (currentThreshold) {
@@ -141,7 +138,7 @@ export interface GaugeThreshold {
   label: string;
   start: number;
   end: number;
-  color: Color;
+  color: Color | string;
 }
 
 interface GaugeSvgRendererData {
