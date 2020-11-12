@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ConditionalWidgetModule } from './conditional/conditional-widget.module';
 import { ContainerWidgetModule } from './container/container-widget.module';
 import { DividerWidgetModule } from './divider/divider-widget.module';
 import { GreetingLabelWidgetModule } from './greeting-label/greeting-label-widget.module';
@@ -18,7 +19,8 @@ import { TextWidgetModule } from './text/text-widget.module';
     JsonWidgetModule,
     RepeatModule,
     TextWidgetModule,
-    GreetingLabelWidgetModule
+    GreetingLabelWidgetModule,
+    ConditionalWidgetModule
   ]
 })
 export class DashboardWidgetsModule {}
