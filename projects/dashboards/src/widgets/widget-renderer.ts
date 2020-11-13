@@ -30,6 +30,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
   public ngOnInit(): void {
     this.fetchAndRunChangeDetection();
     this.api.dataRefresh$.subscribe(() => this.onDashboardRefresh());
+    this.api.change$.subscribe(() => this.onModelChange());
     this.api.timeRangeChanged$.subscribe(timeRange => this.onTimeRangeChange(timeRange));
   }
 
@@ -39,6 +40,10 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
   }
 
   protected abstract fetchData(): Observable<TData>;
+
+  protected onModelChange(): void {
+    // This can get overriden by child widgets
+  }
 
   protected onTimeRangeChange(timeRange: DashboardTimeRange): void {
     this.timeRange = this.convertFromDashboardTimeRange(timeRange);
