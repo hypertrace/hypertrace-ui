@@ -30,6 +30,7 @@ type FilterValue = string | boolean | undefined;
 
 export interface IconData {
   icon: string;
+  label?: string;
   color?: string;
   size?: IconSize;
   filterValue?: FilterValue;
