@@ -88,7 +88,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [editable]="!this.isTreeType()"
                 [metadata]="this.metadata"
                 [columnConfig]="columnDef"
-                [availableColumns]="this.columnConfigs$ | async"
+                [availableColumns]="this.visibleColumnConfigs$ | async"
                 [index]="index"
                 [sort]="columnDef.sort"
                 (sortChange)="this.onSortChange($event, columnDef)"
