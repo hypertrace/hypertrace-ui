@@ -19,7 +19,10 @@ describe('Icon table cell renderer component', () => {
         },
         new TableCellIconParser(undefined!),
         0,
-        IconType.AddCircleOutline
+        {
+          icon: IconType.AddCircleOutline,
+          label: 'I am Label'
+        }
       )
     ],
     shallow: true
@@ -31,7 +34,7 @@ describe('Icon table cell renderer component', () => {
     const element = spectator.query('.ht-icon');
 
     expect(element).toHaveExactText(IconType.AddCircleOutline);
-    expect(element).toHaveAttribute('aria-label', 'add_circle_outline');
+    expect(element).toHaveAttribute('aria-label', 'I am Label');
   });
 
   test('should not add clickable class for clickable columns', () => {

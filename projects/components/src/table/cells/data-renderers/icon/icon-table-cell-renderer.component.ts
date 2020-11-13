@@ -24,6 +24,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div class="icon-cell" [ngClass]="{ clickable: this.clickable }" *ngIf="this.value">
       <ht-icon
         [icon]="this.value.icon"
+        [label]="this.value.label"
         [size]="this.iconSize"
         [showTooltip]="true"
         [style.color]="this.value.color"
