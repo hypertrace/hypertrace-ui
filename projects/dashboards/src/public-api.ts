@@ -7,7 +7,7 @@ export * from './properties/primitives/string-property-editor.component';
 export * from './properties/dashboard-properties.module';
 
 // Repeat
-export { ModelTemplatePropertyType } from './widgets/repeat/property-types/model-template-type';
+export { ModelTemplatePropertyType } from './properties/property-types/model-template-type';
 
 export * from './persistence/dashboard-persistence.service';
 export * from './widgets/widget-renderer';
