@@ -19,6 +19,7 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
+import { mergeMap, startWith } from 'rxjs/operators';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
@@ -185,13 +186,18 @@ export class TableWidgetModel {
   }
 
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
-    const modelColumns = this.columns.map(column => column.asTableColumnDef());
+    return this.api.change$.pipe(
+      startWith(true),
+      mergeMap(() => {
+        const modelColumns = this.columns.map(column => column.asTableColumnDef());
 
-    if (scope === undefined || !this.fetchEditableColumns) {
-      return of(modelColumns);
-    }
+        if (scope === undefined || !this.fetchEditableColumns) {
+          return of(modelColumns);
+        }
 
-    return this.tableWidgetColumnsService.fetchColumn(scope, modelColumns);
+        return this.tableWidgetColumnsService.fetchColumn(scope, modelColumns);
+      })
+    );
   }
 
   public getChildModel(row: TableRow): object | undefined {
