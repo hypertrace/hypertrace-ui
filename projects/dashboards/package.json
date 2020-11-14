@@ -19,7 +19,7 @@
     "@hypertrace/common": "^0.0.0",
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/graphql-client": "^0.0.0",
-    "@hypertrace/hyperdash-angular": "^2.1.0",
+    "@hypertrace/hyperdash-angular": "^2.2.0",
     "@hypertrace/hyperdash": "^1.1.2",
     "uuid": "^8.2.0",
     "rxjs": "~6.6.0",

@@ -22,6 +22,7 @@ describe('Cartesian widget renderer component', () => {
   const rendererApiFactory = (model: RecursivePartial<CartesianWidgetModel<[number, number]>> = {}) => ({
     getTimeRange: jest.fn(),
     model: model,
+    change$: EMPTY,
     dataRefresh$: EMPTY,
     timeRangeChanged$: EMPTY
   });
