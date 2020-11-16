@@ -17,7 +17,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -137,7 +137,10 @@ export class TableWidgetRendererComponent
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
-    return this.getScope().pipe(switchMap(scope => this.model.getColumns(scope)));
+    return this.getScope().pipe(
+      switchMap(scope => this.model.getColumns(scope)),
+      tap(columns => console.debug('columns', columns))
+    );
   }
 
   private getScopeAttributes(): Observable<FilterAttribute[]> {

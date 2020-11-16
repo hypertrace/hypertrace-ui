@@ -22,7 +22,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { without } from 'lodash-es';
+import { isEqual, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -126,7 +126,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           <ng-container *htLetAsync="this.columnConfigs$ as columnConfig">
             <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfig.length" class="expanded-cell">
               <ht-table-expanded-detail-row-cell-renderer
-                *ngIf="this.isRowExpanded(row)"
                 [row]="row"
                 [expanded]="this.isRowExpanded(row)"
                 [content]="this.detailContent"
@@ -354,12 +353,15 @@ export class TableComponent
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    console.info('ngOnChanges', changes);
     if (changes.display) {
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
+    if (changes.mode || changes.detailContent || changes.metadata) {
       this.initializeColumns();
+    } else if (changes.columnConfigs) {
+      !isEqualIgnoreFunctions(changes.columnConfigs.previousValue, changes.columnConfigs.currentValue) && this.initializeColumns();
     }
 
     if (
@@ -601,7 +603,7 @@ export class TableComponent
   public toggleRowExpanded(row: StatefulTableRow): void {
     row.$$state.expanded = !row.$$state.expanded;
     this.rowStateSubject.next(row);
-    this.toggleRowChange.emit(row);
+    // this.toggleRowChange.emit(row);
     this.changeDetector.markForCheck();
   }
 
