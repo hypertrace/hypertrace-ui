@@ -353,7 +353,6 @@ export class TableComponent
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    console.info('ngOnChanges', changes);
     if (changes.display) {
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
@@ -361,7 +360,8 @@ export class TableComponent
     if (changes.mode || changes.detailContent || changes.metadata) {
       this.initializeColumns();
     } else if (changes.columnConfigs) {
-      !isEqualIgnoreFunctions(changes.columnConfigs.previousValue, changes.columnConfigs.currentValue) && this.initializeColumns();
+      !isEqualIgnoreFunctions(changes.columnConfigs.previousValue, changes.columnConfigs.currentValue) &&
+        this.initializeColumns();
     }
 
     if (
@@ -603,7 +603,7 @@ export class TableComponent
   public toggleRowExpanded(row: StatefulTableRow): void {
     row.$$state.expanded = !row.$$state.expanded;
     this.rowStateSubject.next(row);
-    // this.toggleRowChange.emit(row);
+    this.toggleRowChange.emit(row);
     this.changeDetector.markForCheck();
   }
 
