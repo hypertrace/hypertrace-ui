@@ -22,7 +22,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isEqual, without } from 'lodash-es';
+import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
