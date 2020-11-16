@@ -98,10 +98,12 @@ export class TableWidgetColumnModel {
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  public asTableColumnDef(scope?: string): Observable<SpecificationBackedTableColumnDef>{
-    return scope ? this.metadataService.getAttributeKeyDisplayName(scope, this.value.name).pipe(
-      map(displayName => this.toSpecificationBackedColumnDef(displayName))
-    ) : of(this.toSpecificationBackedColumnDef())
+  public asTableColumnDef(scope?: string): Observable<SpecificationBackedTableColumnDef> {
+    return scope !== undefined
+      ? this.metadataService
+          .getAttributeKeyDisplayName(scope, this.value.name)
+          .pipe(map(displayName => this.toSpecificationBackedColumnDef(displayName)))
+      : of(this.toSpecificationBackedColumnDef());
   }
 
   private toSpecificationBackedColumnDef(displayName?: string): SpecificationBackedTableColumnDef {
@@ -119,7 +121,7 @@ export class TableWidgetColumnModel {
       sort: this.sort,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
-    }
+    };
   }
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {

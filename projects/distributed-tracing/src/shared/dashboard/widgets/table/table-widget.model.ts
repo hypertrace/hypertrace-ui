@@ -195,9 +195,7 @@ export class TableWidgetModel {
       return modelColumns;
     }
 
-    return modelColumns.pipe(
-      switchMap(modelColumns => this.tableWidgetColumnsService.fetchColumn(scope, modelColumns))
-    )
+    return modelColumns.pipe(switchMap(columns => this.tableWidgetColumnsService.fetchColumn(scope, columns)));
   }
 
   public getChildModel(row: TableRow): object | undefined {
