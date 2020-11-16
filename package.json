@@ -62,7 +62,7 @@
     "lodash-es": "^4.17.15",
     "rxjs": "~6.6.2",
     "tslib": "^2.0.1",
-    "uuid": "^8.2.0",
+    "uuid": "^8.3.1",
     "zone.js": "^0.10.3"
   },
   "devDependencies": {
