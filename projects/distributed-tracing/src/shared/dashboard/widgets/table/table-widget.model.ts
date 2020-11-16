@@ -1,3 +1,4 @@
+import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
@@ -18,7 +19,8 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
@@ -185,13 +187,15 @@ export class TableWidgetModel {
   }
 
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
-    const modelColumns = this.columns.map(column => column.asTableColumnDef());
+    const modelColumns: Observable<SpecificationBackedTableColumnDef[]> = forkJoinSafeEmpty(
+      this.columns.map(column => column.asTableColumnDef(scope))
+    );
 
     if (scope === undefined || !this.fetchEditableColumns) {
-      return of(modelColumns);
+      return modelColumns;
     }
 
-    return this.tableWidgetColumnsService.fetchColumn(scope, modelColumns);
+    return modelColumns.pipe(switchMap(columns => this.tableWidgetColumnsService.fetchColumn(scope, columns)));
   }
 
   public getChildModel(row: TableRow): object | undefined {
