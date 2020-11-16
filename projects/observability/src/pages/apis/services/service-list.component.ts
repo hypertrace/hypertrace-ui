@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { servicesListDashboard } from './services-list-dashboard';
+import { servicesListDashboard } from './services-list.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

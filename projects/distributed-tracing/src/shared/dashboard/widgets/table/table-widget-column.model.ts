@@ -7,7 +7,11 @@ import {
 } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Specification } from '../../../graphql/model/schema/specifier/specification';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 
 @Model({
@@ -91,12 +95,21 @@ export class TableWidgetColumnModel {
   })
   public sort?: TableSortDirection;
 
-  public asTableColumnDef(): SpecificationBackedTableColumnDef {
+  @ModelInject(MetadataService)
+  private readonly metadataService!: MetadataService;
+
+  public asTableColumnDef(scope?: string): Observable<SpecificationBackedTableColumnDef>{
+    return scope ? this.metadataService.getAttributeKeyDisplayName(scope, this.value.name).pipe(
+      map(displayName => this.toSpecificationBackedColumnDef(displayName))
+    ) : of(this.toSpecificationBackedColumnDef())
+  }
+
+  private toSpecificationBackedColumnDef(displayName?: string): SpecificationBackedTableColumnDef {
     return {
       id: this.value.resultAlias(),
       name: this.value.name,
       display: this.display,
-      title: this.title ?? this.value.name,
+      title: this.title ?? displayName ?? this.value.name,
       titleTooltip: this.titleTooltip,
       alignment: this.alignment,
       width: this.width,
@@ -106,7 +119,7 @@ export class TableWidgetColumnModel {
       sort: this.sort,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
-    };
+    }
   }
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {
