@@ -3,7 +3,7 @@ import { NgModule, Type } from '@angular/core';
 import { ModelPropertyTypeRegistrationInformation } from '@hypertrace/hyperdash';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { StaticDataSourceModule } from '../../data/static/static-data-source.module';
-import { ModelTemplatePropertyType } from './property-types/model-template-type';
+import { ModelTemplatePropertyType } from '../../properties/property-types/model-template-type';
 import { RepeatRendererComponent } from './repeat-renderer.component';
 import { RepeatModel } from './repeat.model';
 

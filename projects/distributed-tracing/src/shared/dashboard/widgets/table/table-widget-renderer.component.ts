@@ -97,7 +97,7 @@ export class TableWidgetRendererComponent
     super.ngOnInit();
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs$ = this.getColumnConfigs();
+    this.buildColumns();
 
     this.combinedFilters$ = combineLatest([this.toggleFilterSubject, this.searchFilterSubject]).pipe(
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
@@ -114,6 +114,10 @@ export class TableWidgetRendererComponent
     this.activeMode = this.model.mode;
   }
 
+  protected onModelChange(): void {
+    this.buildColumns();
+  }
+
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
 
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
@@ -122,6 +126,10 @@ export class TableWidgetRendererComponent
 
   public get syncWithUrl(): boolean {
     return this.model.style === TableStyle.FullPage;
+  }
+
+  private buildColumns(): void {
+    this.columnConfigs$ = this.getColumnConfigs();
   }
 
   private getScope(): Observable<string | undefined> {
