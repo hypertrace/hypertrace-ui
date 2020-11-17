@@ -1,6 +1,5 @@
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { mockDashboardWidgetProviders } from '../../test/dashboard-verification';
 import { DividerWidgetRendererComponent } from './divider-widget-renderer.component';
 
 describe('Divider Widget Renderer Component', () => {
@@ -8,18 +7,7 @@ describe('Divider Widget Renderer Component', () => {
 
   const createComponent = createComponentFactory<DividerWidgetRendererComponent>({
     component: DividerWidgetRendererComponent,
-    providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: () => ({
-          model: {},
-          getTimeRange: jest.fn(),
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
-    ],
+    providers: [...mockDashboardWidgetProviders({})],
     shallow: true
   });
 

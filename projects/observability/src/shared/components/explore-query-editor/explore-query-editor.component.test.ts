@@ -12,7 +12,7 @@ import {
 import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryEditorModule } from './explore-query-editor.module';
@@ -86,7 +86,9 @@ describe('Explore query editor', () => {
         getAutoDurationFromTimeDurations: () => new TimeDuration(15, TimeUnit.Second),
         getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
       }),
-      mockProvider(NavigationService)
+      mockProvider(NavigationService, {
+        navigation$: EMPTY
+      })
     ],
     declareComponent: false
   });

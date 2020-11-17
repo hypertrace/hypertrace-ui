@@ -8,31 +8,20 @@ import {
   TimeUnit
 } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
 import { MetricSeriesDataFetcher, SeriesModel } from '../series.model';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
 
 describe('Cartesian widget renderer component', () => {
-  const rendererApiFactory = (model: RecursivePartial<CartesianWidgetModel<[number, number]>> = {}) => ({
-    getTimeRange: jest.fn(),
-    model: model,
-    dataRefresh$: EMPTY,
-    timeRangeChanged$: EMPTY
-  });
-
   const buildComponent = createComponentFactory({
     component: CartesianWidgetRendererComponent,
     providers: [
-      {
-        provide: RENDERER_API,
-        useValue: rendererApiFactory()
-      },
       mockProvider(IntervalDurationService, {
         getAvailableIntervalsForTimeRange: () => [
           new TimeDuration(1, TimeUnit.Minute),
@@ -80,38 +69,32 @@ describe('Cartesian widget renderer component', () => {
     Object.assign(new CartesianWidgetModel<[number, number]>(), cartesianPartial);
 
   test('builds series with data', () => {
-    const spectator = buildComponent({
-      providers: [
-        {
-          provide: RENDERER_API,
-          useValue: rendererApiFactory(
-            cartesianModelFactory({
-              series: [
-                seriesFactory(
-                  {
-                    name: 'Series 1',
-                    color: 'blue'
-                  },
-                  fetcherFactory([
-                    [1, 2],
-                    [2, 4]
-                  ])
-                ),
-                seriesFactory(
-                  {
-                    name: 'Series 2',
-                    color: 'red'
-                  },
-                  fetcherFactory([
-                    [3, 5],
-                    [4, 6]
-                  ])
-                )
-              ]
-            })
-          )
-        }
+    const mockModel = cartesianModelFactory({
+      series: [
+        seriesFactory(
+          {
+            name: 'Series 1',
+            color: 'blue'
+          },
+          fetcherFactory([
+            [1, 2],
+            [2, 4]
+          ])
+        ),
+        seriesFactory(
+          {
+            name: 'Series 2',
+            color: 'red'
+          },
+          fetcherFactory([
+            [3, 5],
+            [4, 6]
+          ])
+        )
       ]
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -147,36 +130,24 @@ describe('Cartesian widget renderer component', () => {
   });
 
   test('calculates correct interval to use', () => {
-    const spectator = buildComponent({
-      providers: [
-        {
-          provide: RENDERER_API,
-          useValue: rendererApiFactory(
-            cartesianModelFactory({
-              series: [
-                seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute))),
-                seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute)))
-              ]
-            })
-          )
-        }
+    const mockModel = cartesianModelFactory({
+      series: [
+        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute))),
+        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute)))
       ]
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
     });
     expect(spectator.component.selectedInterval).toEqual(new TimeDuration(3, TimeUnit.Minute));
   });
 
   test('provides expected interval options', () => {
+    const mockModel = cartesianModelFactory({
+      series: [seriesFactory({}, fetcherFactory([]))]
+    });
     const spectator = buildComponent({
-      providers: [
-        {
-          provide: RENDERER_API,
-          useValue: rendererApiFactory(
-            cartesianModelFactory({
-              series: [seriesFactory({}, fetcherFactory([]))]
-            })
-          )
-        }
-      ]
+      providers: [...mockDashboardWidgetProviders(mockModel)]
     });
     expect(spectator.component.intervalOptions).toEqual([
       'AUTO',
@@ -188,18 +159,12 @@ describe('Cartesian widget renderer component', () => {
   test('updates data on interval change', () => {
     const fetcher = fetcherFactory([]);
     const series = seriesFactory({}, fetcher);
+    const mockModel = cartesianModelFactory({
+      series: [series],
+      maxSeriesDataPoints: 20
+    });
     const spectator = buildComponent({
-      providers: [
-        {
-          provide: RENDERER_API,
-          useValue: rendererApiFactory(
-            cartesianModelFactory({
-              series: [series],
-              maxSeriesDataPoints: 20
-            })
-          )
-        }
-      ]
+      providers: [...mockDashboardWidgetProviders(mockModel)]
     });
     const originalDataObservable = spectator.component.data$;
     spectator.component.onIntervalChange(new TimeDuration(3, TimeUnit.Minute));
