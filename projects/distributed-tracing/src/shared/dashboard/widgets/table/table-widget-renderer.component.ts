@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
@@ -17,7 +18,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -64,6 +65,7 @@ import { TableWidgetModel } from './table-widget.model';
       >
       </ht-table>
     </ht-titled-content>
+
     <ng-template #childDetail let-row="row">
       <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
     </ng-template>
@@ -83,6 +85,7 @@ export class TableWidgetRendererComponent
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
+  private previousColumnConfigs: TableColumnConfig[] = [];
   private selectedRowInteractionHandler?: InteractionHandler;
 
   public constructor(
@@ -115,7 +118,13 @@ export class TableWidgetRendererComponent
   }
 
   protected onModelChange(): void {
-    this.buildColumns();
+    this.isColumnsChange().pipe(tap(isChange => isChange && this.buildColumns()));
+  }
+
+  private isColumnsChange(): Observable<boolean> {
+    return this.getColumnConfigs().pipe(
+      map(columnConfigs => !isEqualIgnoreFunctions(this.previousColumnConfigs, columnConfigs))
+    );
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -129,7 +138,9 @@ export class TableWidgetRendererComponent
   }
 
   private buildColumns(): void {
-    this.columnConfigs$ = this.getColumnConfigs();
+    this.columnConfigs$ = this.getColumnConfigs().pipe(
+      tap(columnConfigs => (this.previousColumnConfigs = columnConfigs))
+    );
   }
 
   private getScope(): Observable<string | undefined> {

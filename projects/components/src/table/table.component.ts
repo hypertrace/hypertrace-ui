@@ -123,8 +123,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
-          <ng-container *htLetAsync="this.columnConfigs$ as columnConfig">
-            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfig.length" class="expanded-cell">
+          <ng-container *htLetAsync="this.columnConfigs$ as columnConfigs">
+            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfigs.length" class="expanded-cell">
               <ht-table-expanded-detail-row-cell-renderer
                 [row]="row"
                 [expanded]="this.isRowExpanded(row)"
@@ -357,11 +357,8 @@ export class TableComponent
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.mode || changes.detailContent || changes.metadata) {
+    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
       this.initializeColumns();
-    } else if (changes.columnConfigs) {
-      !isEqualIgnoreFunctions(changes.columnConfigs.previousValue, changes.columnConfigs.currentValue) &&
-        this.initializeColumns();
     }
 
     if (
