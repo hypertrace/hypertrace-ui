@@ -5,7 +5,7 @@ import { LoggerService, NavigationService } from '@hypertrace/common';
 import { SelectModule } from '@hypertrace/components';
 import { AttributeMetadata, MetadataService, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { CartesianSeriesVisualizationType } from '../../cartesian/chart';
@@ -34,7 +34,9 @@ describe('Explore Query Series Group Editor component', () => {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
         getSelectionAttributes: () => of(attributeMetadata)
       }),
-      mockProvider(NavigationService)
+      mockProvider(NavigationService, {
+        navigation$: EMPTY
+      })
     ],
     shallow: true
   });

@@ -1,7 +1,6 @@
 import { GreetingLabelComponent } from '@hypertrace/components';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { mockDashboardWidgetProviders } from '../../test/dashboard-verification';
 import { GreetingLabelWidgetRendererComponent } from './greeting-label-widget-renderer.component';
 import { GreetingLabelWidgetModel } from './greeting-label-widget.model';
 
@@ -11,19 +10,7 @@ describe('Greeting label widget renderer component', () => {
   const createComponent = createComponentFactory<GreetingLabelWidgetRendererComponent>({
     component: GreetingLabelWidgetRendererComponent,
     entryComponents: [GreetingLabelComponent],
-    providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: () => ({
-          model: mockModel,
-          getDataFromModelDataSource: EMPTY,
-          getTimeRange: jest.fn(),
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
-    ]
+    providers: [...mockDashboardWidgetProviders(mockModel)]
   });
 
   beforeEach(() => {

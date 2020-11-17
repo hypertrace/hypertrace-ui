@@ -1,6 +1,8 @@
 import { fakeAsync } from '@angular/core/testing';
-import { NavigationService } from '@hypertrace/common';
+import { LayoutChangeService, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
+import { LayoutChangeTriggerDirective } from '../layout/layout-change-trigger.directive';
 import { TitledContentComponent } from './titled-content.component';
 import { TitledContentModule } from './titled-content.module';
 
@@ -11,6 +13,8 @@ describe('Titled content component', () => {
     declareComponent: false,
     component: TitledContentComponent,
     imports: [TitledContentModule],
+    declarations: [MockDirective(LayoutChangeTriggerDirective)],
+    componentProviders: [LayoutChangeService],
     providers: [mockProvider(NavigationService)]
   });
 

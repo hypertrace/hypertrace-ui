@@ -5,7 +5,7 @@ import { NavigationService } from '@hypertrace/common';
 import { SelectComponent, SelectModule } from '@hypertrace/components';
 import { AttributeMetadata, MetadataService } from '@hypertrace/distributed-tracing';
 import { byText, createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
 import { ExploreQueryGroupByEditorComponent } from './explore-query-group-by-editor.component';
 
@@ -20,7 +20,9 @@ describe('Explore Query Group by Editor component', () => {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
         getGroupableAttributes: () => of(attributeMetadata)
       }),
-      mockProvider(NavigationService)
+      mockProvider(NavigationService, {
+        navigation$: EMPTY
+      })
     ],
     shallow: true
   });
