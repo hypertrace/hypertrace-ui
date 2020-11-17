@@ -2,11 +2,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { DomElementMeasurerService, NavigationService, TimeUnit } from '@hypertrace/common';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
+import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { EntitiesGraphqlQueryBuilderService } from '../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import { RadarWidgetDataFetcher } from './data/radar-data-source.model';
 import { RadarWidgetRendererComponent } from './radar-widget-renderer.component';
@@ -103,32 +102,20 @@ describe('Radar Widget renderer', () => {
     }
   };
 
-  const rendererApiFactory = () => ({
-    getTimeRange: jest.fn(),
-    model: {
-      getData: jest.fn(() => of(mockResponse)),
-      title: title,
-      comparisonDurations: comparisonDurations,
-      currentSeries: {
-        name: 'latency',
-        color: 'blue'
-      }
-    },
-    change$: EMPTY,
-    dataRefresh$: EMPTY,
-    timeRangeChanged$: EMPTY
-  });
+  const model = {
+    getData: jest.fn(() => of(mockResponse)),
+    title: title,
+    comparisonDurations: comparisonDurations,
+    currentSeries: {
+      name: 'latency',
+      color: 'blue'
+    }
+  };
 
   const createComponent = createComponentFactory<RadarWidgetRendererComponent>({
     component: RadarWidgetRendererComponent,
     providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: rendererApiFactory
-      },
-      mockProvider(GraphQlRequestService, {
-        query: jest.fn(() => EMPTY)
-      }),
+      ...mockDashboardWidgetProviders(model),
       mockProvider(EntitiesGraphqlQueryBuilderService),
       mockProvider(DomElementMeasurerService, {
         measureSvgElement: () => ({
@@ -138,11 +125,11 @@ describe('Radar Widget renderer', () => {
           height: 0
         }),
         getComputedTextLength: () => 0
-      }),
-      ...getMockFlexLayoutProviders()
+      })
     ],
     mocks: [NavigationService],
     declareComponent: false,
+    shallow: true,
     imports: [RadarWidgetModule, HttpClientTestingModule, IconLibraryTestingModule]
   });
 

@@ -10,7 +10,7 @@ import {
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
 import { byText, createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { CartesianSeriesVisualizationType } from '../../cartesian/chart';
@@ -28,7 +28,9 @@ describe('Explore Query Series Editor component', () => {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
         getSelectionAttributes: jest.fn(() => of(attributeMetadata()))
       }),
-      mockProvider(NavigationService)
+      mockProvider(NavigationService, {
+        navigation$: EMPTY
+      })
     ],
     shallow: true
   });

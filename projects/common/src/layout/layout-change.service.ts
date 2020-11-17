@@ -20,13 +20,15 @@ export class LayoutChangeService implements OnDestroy {
     @SkipSelf() @Optional() private readonly parentLayoutChange?: LayoutChangeService
   ) {
     this.boundingElement = hostElementRef.nativeElement;
-    // Get layout changes from our parent LayoutChangeService, or if it's root, collect from window
-    const parentChange$ = this.parentLayoutChange
-      ? this.parentLayoutChange.layoutChangeSubject
-      : this.getWindowResizeEvents();
 
     // Filter out layout changes from our parent if we didn't change size
-    parentChange$.pipe(filter(event => this.hasLayoutChanged(event))).subscribe(this.layoutChangeSubject);
+    (this.parentLayoutChange?.getLayoutChangeEventObservable() ?? this.getWindowResizeEvents())
+      .pipe(filter(event => this.hasLayoutChanged(event)))
+      .subscribe(this.layoutChangeSubject);
+  }
+
+  public getLayoutChangeEventObservable(): Observable<LayoutChangeEvent> {
+    return this.layoutChangeSubject;
   }
 
   public publishLayoutChange(): void {
