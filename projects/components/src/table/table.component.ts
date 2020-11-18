@@ -123,10 +123,9 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
-          <ng-container *htLetAsync="this.columnConfigs$ as columnConfig">
-            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfig.length" class="expanded-cell">
+          <ng-container *htLetAsync="this.columnConfigs$ as columnConfigs">
+            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfigs.length" class="expanded-cell">
               <ht-table-expanded-detail-row-cell-renderer
-                *ngIf="this.isRowExpanded(row)"
                 [row]="row"
                 [expanded]="this.isRowExpanded(row)"
                 [content]="this.detailContent"
