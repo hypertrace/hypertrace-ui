@@ -163,6 +163,7 @@ export * from './panel/panel.module';
 export * from './popover/popover';
 export * from './popover/popover-ref';
 export * from './popover/popover.module';
+export * from './popover/popover.component';
 export * from './popover/popover.service';
 
 // Radio

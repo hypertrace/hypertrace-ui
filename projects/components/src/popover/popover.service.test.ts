@@ -66,6 +66,22 @@ describe('Popover service', () => {
     expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
   }));
 
+  test('can open a basic popover, left aligned over the trigger element', fakeAsync(() => {
+    service.drawPopover({
+      position: {
+        type: PopoverPositionType.Relative,
+        origin: spectator.debugElement,
+        locationPreferences: [PopoverRelativePositionLocation.OverLeftAligned]
+      },
+      componentOrTemplate: testContent
+    });
+    tick(); // CDK overlay is async
+    spectator.detectChanges();
+    expect(popoverContent()).toExist();
+    expect(popoverBackdrop(PopoverBackdrop.Opaque)).not.toExist();
+    expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
+  }));
+
   test('can open a basic popover with transparent backdrop', fakeAsync(() => {
     service.drawPopover({
       position: {
