@@ -46,7 +46,8 @@ export const mockDashboardProviders = [
     getAllValuesForQueryParameter: () => []
   }),
   mockProvider(MetadataService, {
-    getFilterAttributes: () => of([])
+    getFilterAttributes: () => of([]),
+    getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
   }),
   mockProvider(LoggerService, {
     warn: jest.fn().mockImplementation(fail),
