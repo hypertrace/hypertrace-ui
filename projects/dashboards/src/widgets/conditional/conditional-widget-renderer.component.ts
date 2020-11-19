@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { WidgetRenderer } from '../widget-renderer';
 import { ConditionalModel } from './conditional.model';
 
@@ -9,14 +8,10 @@ import { ConditionalModel } from './conditional.model';
 @Component({
   selector: 'ht-conditional-widget',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ng-container [hdaDashboardModel]="this.getChildModel() | async"> </ng-container> `
+  template: ` <ng-container [hdaDashboardModel]="this.data$ | async"> </ng-container> `
 })
 export class ConditionalWidgetRendererComponent extends WidgetRenderer<ConditionalModel> {
-  public getChildModel(): Observable<object> {
-    return this.model.getChildModel().pipe(takeUntil(this.destroyed$));
-  }
-
   protected fetchData(): Observable<object> {
-    return this.getChildModel();
+    return this.model.getChildModel();
   }
 }

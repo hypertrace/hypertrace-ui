@@ -1,6 +1,5 @@
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { mockDashboardWidgetProviders } from '../../test/dashboard-verification';
 import { LinkWidgetRendererComponent } from './link-widget-renderer.component';
 import { LinkWidgetModel } from './link-widget.model';
 
@@ -9,18 +8,6 @@ describe('Link widget renderer component', () => {
   let mockModel: Partial<LinkWidgetModel> = {};
   const createComponent = createComponentFactory<LinkWidgetRendererComponent>({
     component: LinkWidgetRendererComponent,
-    providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: () => ({
-          model: mockModel,
-          getTimeRange: jest.fn(),
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
-    ],
     shallow: true
   });
 
@@ -31,7 +18,9 @@ describe('Link widget renderer component', () => {
   test('Link should be displayed as expected if url and displayText are defined', () => {
     mockModel.url = '#';
     mockModel.displayText = 'Test';
-    spectator = createComponent();
+    spectator = createComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
 
     expect(spectator.query('ht-link')).toExist();
     expect(spectator.component.getDisplayText()).toEqual('Test');
@@ -39,7 +28,9 @@ describe('Link widget renderer component', () => {
 
   test('Link should use url as displayText if displayText is undefined', () => {
     mockModel.url = '#';
-    spectator = createComponent();
+    spectator = createComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
 
     expect(spectator.query('ht-link')).toExist();
     expect(spectator.component.getDisplayText()).toEqual(mockModel.url);

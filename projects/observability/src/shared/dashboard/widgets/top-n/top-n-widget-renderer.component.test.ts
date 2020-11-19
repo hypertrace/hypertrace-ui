@@ -1,13 +1,12 @@
 import { FormattingModule, NavigationService } from '@hypertrace/common';
 import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { ExploreSpecificationBuilder } from '@hypertrace/observability';
-import { getMockFlexLayoutProviders, runFakeRxjs } from '@hypertrace/test-utils';
+import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';
 import { TopNWidgetDataFetcher } from './data/top-n-data-source.model';
@@ -17,35 +16,13 @@ import { TopNWidgetRendererComponent } from './top-n-widget-renderer.component';
 describe('Top N Widget renderer', () => {
   let mockResponse: TopNWidgetDataFetcher;
   let optionMetricSpecifications: TopNExploreSelectionSpecificationModel[] = [];
-  let title = '';
-
-  const rendererApiFactory = () => ({
-    getTimeRange: jest.fn(),
-    model: {
-      getData: jest.fn(() => of(mockResponse)),
-      header: {
-        title: title
-      }
-    },
-    change$: EMPTY,
-    dataRefresh$: EMPTY,
-    timeRangeChanged$: EMPTY
-  });
 
   const createComponent = createComponentFactory<TopNWidgetRendererComponent>({
     component: TopNWidgetRendererComponent,
     providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: rendererApiFactory
-      },
-      mockProvider(GraphQlRequestService, {
-        query: () => EMPTY
-      }),
       mockProvider(EntityNavigationService, {
         navigateToEntity: jest.fn()
-      }),
-      ...getMockFlexLayoutProviders()
+      })
     ],
     mocks: [NavigationService],
     imports: [FormattingModule, LoadAsyncModule],
@@ -98,9 +75,17 @@ describe('Top N Widget renderer', () => {
       getOptions: () => optionMetricSpecifications
     };
 
-    title = 'Top Apis';
+    const mockModel = {
+      getData: jest.fn(() => of(mockResponse)),
+      header: {
+        title: 'Top Apis'
+      }
+    };
 
-    const spectator = createComponent();
+    const spectator = createComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
+
     expect(spectator.query(TitledContentComponent)!.title).toEqual('TOP APIS');
 
     runFakeRxjs(({ expectObservable }) => {
@@ -164,7 +149,16 @@ describe('Top N Widget renderer', () => {
       getOptions: () => optionMetricSpecifications
     };
 
-    const spectator = createComponent();
+    const mockModel = {
+      getData: jest.fn(() => of(mockResponse)),
+      header: {
+        title: ''
+      }
+    };
+
+    const spectator = createComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
     spectator.component.data$?.subscribe();
     spectator.component.onItemClicked(data[0]);
 

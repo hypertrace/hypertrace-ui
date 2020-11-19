@@ -5,11 +5,11 @@ import {
   SummaryCardComponent,
   TitledContentComponent
 } from '@hypertrace/components';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '@hypertrace/observability';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { Card, CardType } from './card';
 import { CardListWidgetModel } from './card-list-widget-model';
 import { CardListWidgetRendererComponent } from './card-list-widget-renderer.component';
@@ -20,18 +20,6 @@ describe('Card List Widget Renderer', () => {
   const componentFactory = createComponentFactory({
     component: CardListWidgetRendererComponent,
     imports: [FormattingModule, LoadAsyncModule],
-    providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: () => ({
-          getTimeRange: jest.fn(),
-          model: mockModel,
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
-    ],
     declarations: [MockComponent(TitledContentComponent), MockComponent(SummaryCardComponent)],
     shallow: true
   });
@@ -70,7 +58,9 @@ describe('Card List Widget Renderer', () => {
       }
     };
 
-    const spectator = componentFactory();
+    const spectator = componentFactory({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
 
     expect(spectator.query(TitledContentComponent)!.title).toEqual('I AM TITLE');
 

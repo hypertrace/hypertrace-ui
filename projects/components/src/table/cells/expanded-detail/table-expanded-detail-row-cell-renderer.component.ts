@@ -14,7 +14,7 @@ import { StatefulTableRow } from '../../table-api';
     ])
   ],
   template: `
-    <div *ngIf="!!this.content" [class.expanded]="this.expanded" class="table-expanded-cell-renderer">
+    <div *ngIf="!!this.content && this.expanded" [class.expanded]="this.expanded" class="table-expanded-cell-renderer">
       <div [@rowExpand]="this.expanded ? 'expanded' : 'collapsed'" class="expandable-column-row">
         <ng-container *ngTemplateOutlet="this.content; context: { row: this.row }"></ng-container>
       </div>

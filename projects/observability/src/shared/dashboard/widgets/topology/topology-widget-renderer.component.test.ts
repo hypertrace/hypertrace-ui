@@ -3,14 +3,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Renderer2 } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconRegistryService } from '@hypertrace/assets-library';
-import { DomElementMeasurerService, NavigationService, selector } from '@hypertrace/common';
+import { DomElementMeasurerService, selector } from '@hypertrace/common';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { MetricAggregationType, MetricHealth } from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { addWidthAndHeightToSvgElForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { uniq } from 'lodash-es';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { TopologyNodeRendererService } from '../../../components/topology/renderers/node/topology-node-renderer.service';
 import { D3UtilService } from '../../../components/utils/d3/d3-util.service';
 import { EntityMetadata, ENTITY_METADATA } from '../../../constants/entity-metadata';
@@ -76,28 +75,21 @@ describe('Topology Widget renderer', () => {
     return node!;
   };
 
+  const mockModel = {
+    getData: jest.fn(() =>
+      of({
+        nodes: mockResponse,
+        nodeSpecification: nodeSpec,
+        edgeSpecification: edgeSpec,
+        nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey]))
+      })
+    )
+  };
+
   const createComponent = createComponentFactory<TopologyWidgetRendererComponent>({
     component: TopologyWidgetRendererComponent,
     providers: [
-      {
-        provide: RENDERER_API,
-        useValue: {
-          getTimeRange: jest.fn(),
-          model: {
-            getData: jest.fn(() =>
-              of({
-                nodes: mockResponse,
-                nodeSpecification: nodeSpec,
-                edgeSpecification: edgeSpec,
-                nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey]))
-              })
-            )
-          },
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        }
-      },
+      ...mockDashboardWidgetProviders(mockModel),
       mockProvider(DomElementMeasurerService, {
         measureSvgElement: () => ({
           x: 0,
@@ -107,10 +99,6 @@ describe('Topology Widget renderer', () => {
         }),
         getComputedTextLength: () => 0
       }),
-      mockProvider(GraphQlRequestService, {
-        query: () => EMPTY
-      }),
-      mockProvider(NavigationService),
       {
         provide: ENTITY_METADATA,
         useValue: new Map<string, EntityMetadata>([

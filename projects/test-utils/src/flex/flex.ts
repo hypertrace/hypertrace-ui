@@ -1,6 +1,7 @@
+import { StaticProvider } from '@angular/core';
 import { StyleUtils, ɵMockMatchMediaProvider } from '@angular/flex-layout';
 
-export const getMockFlexLayoutProviders = () => [
+export const getMockFlexLayoutProviders = (): StaticProvider[] => [
   {
     provide: StyleUtils,
     useValue: {

@@ -1,9 +1,9 @@
 import { Color, FormattingModule } from '@hypertrace/common';
 import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
-import { RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { GaugeComponent } from './../../../components/gauge/gauge.component';
 import { GaugeWidgetRendererComponent } from './gauge-widget-renderer.component';
 import { GaugeWidgetModel } from './gauge-widget.model';
@@ -14,18 +14,6 @@ describe('Gauge widget renderer component', () => {
     component: GaugeWidgetRendererComponent,
     shallow: true,
     imports: [FormattingModule, LoadAsyncModule],
-    providers: [
-      {
-        provide: RENDERER_API,
-        useFactory: () => ({
-          getTimeRange: jest.fn(),
-          model: mockModel,
-          change$: EMPTY,
-          dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
-    ],
     declarations: [MockComponent(GaugeComponent), MockComponent(TitledContentComponent)]
   });
 
@@ -48,7 +36,9 @@ describe('Gauge widget renderer component', () => {
       )
     };
 
-    const spectator = componentFactory();
+    const spectator = componentFactory({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
     expect(spectator.query(TitledContentComponent)!.title).toBe('TEST TITLE');
 
     const gaugeComponent = spectator.query(GaugeComponent);

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
 import { LabelModule } from '../label/label.module';
+import { LayoutChangeModule } from '../layout/layout-change.module';
 import { LinkModule } from '../link/link.module';
 import { TitledHeaderControlDirective } from './header-controls/titled-header-control.directive';
 import { TitledContentComponent } from './titled-content.component';
@@ -9,6 +10,6 @@ import { TitledContentComponent } from './titled-content.component';
 @NgModule({
   declarations: [TitledContentComponent, TitledHeaderControlDirective],
   exports: [TitledContentComponent, TitledHeaderControlDirective],
-  imports: [LabelModule, CommonModule, LinkModule, ButtonModule]
+  imports: [LabelModule, CommonModule, LinkModule, ButtonModule, LayoutChangeModule]
 })
 export class TitledContentModule {}

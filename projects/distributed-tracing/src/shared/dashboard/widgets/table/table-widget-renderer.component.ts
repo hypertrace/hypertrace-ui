@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
@@ -17,7 +18,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, pairwise, share, startWith, switchMap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -64,6 +65,7 @@ import { TableWidgetModel } from './table-widget.model';
       >
       </ht-table>
     </ht-titled-content>
+
     <ng-template #childDetail let-row="row">
       <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
     </ng-template>
@@ -97,25 +99,21 @@ export class TableWidgetRendererComponent
     super.ngOnInit();
 
     this.metadata$ = this.getScopeAttributes();
-    this.buildColumns();
+    this.columnConfigs$ = this.getColumnConfigs();
 
     this.combinedFilters$ = combineLatest([this.toggleFilterSubject, this.searchFilterSubject]).pipe(
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
     );
 
-    this.filterItems = this.model.filterToggles.map(filter => ({
-      label: capitalize(filter.label),
-      value: filter
+    this.filterItems = this.model.filterToggles.map(fiterItem => ({
+      label: capitalize(fiterItem.label),
+      value: fiterItem
     }));
     this.modeItems = this.model.modeToggles.map(mode => ({
       label: capitalize(mode),
       value: mode
     }));
     this.activeMode = this.model.mode;
-  }
-
-  protected onModelChange(): void {
-    this.buildColumns();
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -128,16 +126,25 @@ export class TableWidgetRendererComponent
     return this.model.style === TableStyle.FullPage;
   }
 
-  private buildColumns(): void {
-    this.columnConfigs$ = this.getColumnConfigs();
-  }
-
   private getScope(): Observable<string | undefined> {
     return this.data$!.pipe(map(data => data?.getScope()));
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
-    return this.getScope().pipe(switchMap(scope => this.model.getColumns(scope)));
+    return combineLatest([
+      this.getScope(),
+      this.api.change$.pipe(
+        map(() => true),
+        startWith(true)
+      )
+    ]).pipe(
+      switchMap(([scope]) => this.model.getColumns(scope)),
+      startWith([]),
+      pairwise(),
+      filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
+      map(([_, current]) => current),
+      share()
+    );
   }
 
   private getScopeAttributes(): Observable<FilterAttribute[]> {
