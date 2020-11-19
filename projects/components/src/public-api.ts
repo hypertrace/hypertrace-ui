@@ -268,6 +268,7 @@ export * from './toggle-switch/toggle-switch.module';
 
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
+export { TooltipDirective } from './tooltip/tooltip.directive';
 
 // Greeting label
 export { GreetingLabelModule } from './greeting-label/greeting-label.module';

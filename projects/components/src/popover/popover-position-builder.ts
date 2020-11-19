@@ -79,6 +79,9 @@ export class PopoverPositionBuilder {
           { originX: 'start', originY: 'center' },
           { overlayX: 'end', overlayY: 'center' }
         );
+
+      case PopoverRelativePositionLocation.OverLeftAligned:
+        return new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' });
       case PopoverRelativePositionLocation.RightCentered:
         return new ConnectionPositionPair(
           { originX: 'end', originY: 'center' },
