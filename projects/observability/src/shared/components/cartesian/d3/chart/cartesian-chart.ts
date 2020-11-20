@@ -10,6 +10,7 @@ import {
   AxisType,
   CartesianChart,
   CartesianSeriesVisualizationType,
+  Range,
   RenderingStrategy,
   Series,
   Summary
@@ -17,15 +18,18 @@ import {
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
+import { CartesianData } from '../data/cartesian-data';
+import { CartesianRange } from '../data/range/cartesian-range';
+import { CartesianArea } from '../data/series/cartesian-area';
+import { CartesianColumn } from '../data/series/cartesian-column';
+import { CartesianDashed } from '../data/series/cartesian-dashed';
+import { CartesianLine } from '../data/series/cartesian-line';
+import { CartesianPoints } from '../data/series/cartesian-points';
+import { CartesianSeries } from '../data/series/cartesian-series';
 import { CartesianIntervalData } from '../legend/cartesian-interval-control.component';
 import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
-import { CartesianArea } from '../series/cartesian-area';
-import { CartesianColumn } from '../series/cartesian-column';
-import { CartesianLine } from '../series/cartesian-line';
-import { CartesianPoints } from '../series/cartesian-points';
-import { CartesianSeries } from '../series/cartesian-series';
 
 // TODO should support dynamic update and redraw
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
@@ -42,7 +46,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected mouseEventContainer?: SVGSVGElement;
   protected legend?: CartesianLegend;
   protected tooltip?: ChartTooltipRef<TData>;
-  protected allVisualizations: CartesianSeries<TData>[] = [];
+  protected allCartesianData: CartesianData<TData, Series<TData> | Range<TData>>[] = [];
   protected renderedAxes: CartesianAxis<TData>[] = [];
   protected scaleBuilder: CartesianScaleBuilder<TData> = CartesianScaleBuilder.newBuilder();
 
@@ -51,8 +55,10 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected timeRange?: TimeRange;
   protected readonly requestedAxes: Axis[] = [];
   protected intervalData?: CartesianIntervalData;
-  protected summaries: Summary[] = [];
-  protected readonly allSeries: Series<TData>[] = [];
+  protected readonly series: Series<TData>[] = [];
+  protected readonly seriesSummaries: Summary[] = [];
+  protected readonly ranges: Range<TData>[] = [];
+  protected readonly rangesSummaries: Summary[] = [];
   protected readonly eventListeners: {
     event: ChartEvent;
     onEvent: ChartEventListener<TData>;
@@ -92,15 +98,25 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     return this;
   }
 
-  public withSeries(...allSeries: Series<TData>[]): this {
-    this.allSeries.length = 0;
-    this.allVisualizations.length = 0;
-    this.allSeries.push(...allSeries);
-    this.scaleBuilder = this.scaleBuilder.withSeries(allSeries);
+  public withSeries(...series: Series<TData>[]): this {
+    this.series.length = 0;
+    this.series.push(...series);
 
-    this.summaries = allSeries
-      .map(series => series.summary)
-      .filter((summary): summary is Summary => summary !== undefined);
+    this.seriesSummaries.length = 0;
+    this.seriesSummaries.push(
+      ...series.map(s => s.summary).filter((summary): summary is Summary => summary !== undefined)
+    );
+
+    this.scaleBuilder = this.scaleBuilder.withSeries(series);
+
+    return this;
+  }
+
+  public withRanges(...ranges: Range<TData>[]): this {
+    this.ranges.length = 0;
+    this.ranges.push(...ranges);
+
+    this.scaleBuilder = this.scaleBuilder.withRanges(ranges);
 
     return this;
   }
@@ -162,7 +178,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     const seriesElements = select(this.dataElement)
       .selectAll(`.${DefaultCartesianChart.DATA_SERIES_CLASS}`)
-      .data(this.allVisualizations);
+      .data(this.allCartesianData);
 
     seriesElements
       .enter()
@@ -174,7 +190,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   protected drawDataCanvas(context: CanvasRenderingContext2D): void {
-    this.allVisualizations.forEach(visualization => visualization.drawCanvas(context));
+    this.allCartesianData.forEach(visualization => visualization.drawCanvas(context));
   }
 
   protected getChartBox(): Pick<ClientRect, 'top' | 'left' | 'width' | 'height'> {
@@ -319,19 +335,19 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       return;
     }
 
-    new CartesianNoDataMessage(this.chartBackgroundSvgElement, this.allSeries).updateMessage();
+    new CartesianNoDataMessage(this.chartBackgroundSvgElement, this.series).updateMessage();
   }
 
   private drawLegend(): void {
     if (this.chartContainerElement) {
       if (this.legendPosition !== undefined && this.legendPosition !== LegendPosition.None) {
-        this.legend = new CartesianLegend(this.allSeries, this.injector, this.intervalData, this.summaries).draw(
+        this.legend = new CartesianLegend(this.series, this.injector, this.intervalData, this.seriesSummaries).draw(
           this.chartContainerElement,
           this.legendPosition
         );
       } else {
         // The legend also contains the interval selector, so even without a legend we need to create an element for that
-        this.legend = new CartesianLegend([], this.injector, this.intervalData, this.summaries).draw(
+        this.legend = new CartesianLegend([], this.injector, this.intervalData, this.seriesSummaries).draw(
           this.chartContainerElement,
           LegendPosition.None
         );
@@ -387,13 +403,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.mouseEventContainer = select(this.chartBackgroundSvgElement).clone().raise().node()!;
   }
 
-  private getMouseDataForCurrentEvent(): MouseLocationData<TData, Series<TData>>[] {
+  private getMouseDataForCurrentEvent(): MouseLocationData<TData, Series<TData> | Range<TData>>[] {
     if (!this.dataElement) {
       return [];
     }
     const location = mouse(this.dataElement);
 
-    return this.allVisualizations.flatMap(viz => viz.dataForLocation({ x: location[0], y: location[1] }));
+    return this.allCartesianData.flatMap(viz => viz.dataForLocation({ x: location[0], y: location[1] }));
   }
 
   private getNativeEventName(chartEvent: ChartEvent): string {
@@ -410,9 +426,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private buildVisualizations(): void {
-    this.allVisualizations.length = 0;
-    const visualizations = this.allSeries.map(series => this.getChartSeriesVisualization(series));
-    this.allVisualizations.push(...visualizations);
+    this.allCartesianData.length = 0;
+    this.allCartesianData.push(
+      ...this.series.map(series => this.getChartSeriesVisualization(series)),
+      ...this.ranges.map(range => new CartesianRange(range, this.scaleBuilder, this.getTooltipTrackingStrategy()))
+    );
   }
 
   private getChartSeriesVisualization(series: Series<TData>): CartesianSeries<TData> {
@@ -423,6 +441,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return new CartesianPoints(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Column:
         return new CartesianColumn(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
+      case CartesianSeriesVisualizationType.Dashed:
+        return new CartesianDashed(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Line:
       default:
         return new CartesianLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());

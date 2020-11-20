@@ -3,7 +3,7 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { SeriesVisualizationType } from './cartesian-widget/series-visualization/series-visualization-type';
+import { SeriesVisualizationType } from './series-visualization/series-visualization-type';
 
 @Model({
   type: 'series' // Todo : Add supported data types -> EntityMetricTimeseriesDataSourceModel
@@ -49,6 +49,7 @@ export class SeriesModel<TData> {
       values: [
         SeriesVisualizationType.Area,
         SeriesVisualizationType.Line,
+        SeriesVisualizationType.Dashed,
         SeriesVisualizationType.Scatter,
         SeriesVisualizationType.Column
       ]

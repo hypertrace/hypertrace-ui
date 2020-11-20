@@ -9,6 +9,7 @@ export interface CartesianChart<TData> {
   draw(): this;
   isDrawn(): boolean;
   withSeries(...series: Series<TData>[]): this;
+  withRanges(...ranges: Range<TData>[]): this;
   withLegend(legendPosition: LegendPosition): this;
   withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this;
   withAxis(axis: Axis): this;
@@ -26,6 +27,15 @@ export interface Series<TData> {
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
+  hide?: boolean;
+}
+
+export interface Range<TData> {
+  upper: Series<TData>;
+  lower: Series<TData>;
+  color: string;
+  opacity: number;
+  name: string;
   hide?: boolean;
 }
 
@@ -50,6 +60,7 @@ export const enum RenderingStrategy {
 export const enum CartesianSeriesVisualizationType {
   Column,
   Line,
+  Dashed,
   Scatter,
   Area
 }

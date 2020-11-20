@@ -152,7 +152,7 @@ export * from './shared/components/cartesian/cartesian-chart.component';
 export * from './shared/components/cartesian/cartesian-chart.module';
 export * from './shared/components/cartesian/chart';
 export * from './shared/components/cartesian/chart-interactivty';
-export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/series.model';
+export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
 export { MetricSeriesFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
 export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 

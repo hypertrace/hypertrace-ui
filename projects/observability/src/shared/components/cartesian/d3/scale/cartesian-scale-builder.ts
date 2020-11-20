@@ -1,5 +1,5 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { Axis, AxisType, ScaleType, Series } from '../../chart';
+import { Axis, AxisType, Range, ScaleType, Series } from '../../chart';
 import { CartesianBandScale } from './band/cartesian-band-scale';
 import { ScaleBounds, ScaleInitializationData } from './cartesian-scale';
 import { defaultXDataAccessor, defaultYDataAccessor, getDefaultScaleType } from './default-data-accessors';
@@ -47,6 +47,10 @@ export class CartesianScaleBuilder<TData> {
 
   public withSeries(series: Series<TData>[]): this {
     return this.cloneWith({ series: series });
+  }
+
+  public withRanges(ranges: Range<TData>[]): this {
+    return this.cloneWith({ ranges: ranges });
   }
 
   public withBounds(bounds: ScaleBounds): this {
@@ -186,19 +190,25 @@ export class CartesianScaleBuilder<TData> {
   }
 
   private get allSeries(): Series<TData>[] {
-    if (this.scaleState.series) {
-      return this.scaleState.series.filter(series => !series.hide);
-    }
+    const series = this.scaleState.series !== undefined ? this.scaleState.series.filter(s => !s.hide) : [];
+    const ranges =
+      this.scaleState.ranges !== undefined
+        ? this.scaleState.ranges.filter(r => !r.hide).flatMap(r => [r.upper, r.lower])
+        : [];
 
-    return [];
+    return [...series, ...ranges];
   }
 
   private get data(): TData[] {
-    if (this.scaleState.series) {
-      return this.scaleState.series.flatMap(series => series.data);
-    }
+    const series = this.scaleState.series !== undefined ? this.scaleState.series.flatMap(s => s.data) : [];
+    const ranges =
+      this.scaleState.ranges !== undefined
+        ? this.scaleState.ranges.flatMap(r =>
+            [r.upper.data.flatMap(d => d), r.lower.data.flatMap(d => d)].flatMap(d => d)
+          )
+        : [];
 
-    return [];
+    return [...series, ...ranges];
   }
 
   private cloneWith(stateChange: Partial<ScaleState<TData, unknown>>): this {
@@ -231,6 +241,7 @@ type ScaleState<TData, TDomain> = Readonly<{
   defaultXMinMax?: MinMax;
   defaultYMinMax?: MinMax;
   series?: Series<TData>[];
+  ranges?: Range<TData>[];
   xDataAccessor?(data: TData): TDomain;
   yDataAccessor?(data: TData): TDomain;
 }>;

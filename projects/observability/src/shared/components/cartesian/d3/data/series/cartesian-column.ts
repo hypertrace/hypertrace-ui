@@ -1,8 +1,8 @@
 import { path, Path } from 'd3-path';
 import { BaseType, select, Selection } from 'd3-selection';
-import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
-import { Series } from '../../chart';
-import { SingleAxisDataLookupStrategy } from '../interactivity/data-strategy/single-axis-data-lookup-strategy';
+import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
+import { Series } from '../../../chart';
+import { SingleAxisDataLookupStrategy } from '../../interactivity/data-strategy/single-axis-data-lookup-strategy';
 import { CartesianSeries } from './cartesian-series';
 export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly CSS_CLASS: string = 'columns-data-series';

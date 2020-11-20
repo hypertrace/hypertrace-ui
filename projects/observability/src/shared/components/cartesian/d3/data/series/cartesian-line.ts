@@ -1,13 +1,13 @@
 import { BaseType, select, Selection } from 'd3-selection';
 import { curveMonotoneX, line, Line } from 'd3-shape';
-import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
-import { Series } from '../../chart';
-import { QuadtreeDataLookupStrategy } from '../interactivity/data-strategy/quadtree-data-lookup-strategy';
+import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
+import { Series } from '../../../chart';
+import { QuadtreeDataLookupStrategy } from '../../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { CartesianPoints } from './cartesian-points';
 import { CartesianSeries } from './cartesian-series';
 
 export class CartesianLine<TData> extends CartesianSeries<TData> {
-  private static readonly CSS_CLASS: string = 'line-data-series';
+  private static readonly CSS_LINE_CLASS: string = 'line-data-series';
   private static readonly LINE_WIDTH: number = 2;
 
   public drawSvg(element: BaseType): void {
@@ -17,7 +17,7 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
 
     const seriesGroup = select(element)
       .append('g')
-      .classed(CartesianLine.CSS_CLASS, true)
+      .classed(CartesianLine.CSS_LINE_CLASS, true)
       .attr('fill', 'none')
       .attr('stroke-width', CartesianLine.LINE_WIDTH)
       .attr('stroke', this.series.color);
@@ -35,7 +35,7 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
     return new QuadtreeDataLookupStrategy(this.series, this.series.data, this.xScale, this.yScale, 10);
   }
 
-  private drawSvgLine(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
+  protected drawSvgLine(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     seriesGroupSelection.append('path').attr('d', this.buildLine()(this.series.data)!);
   }
 
@@ -54,7 +54,7 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
       .curve(curveMonotoneX);
   }
 
-  private drawSvgPointsIfRequested(seriesGroup: SVGGElement): void {
+  protected drawSvgPointsIfRequested(seriesGroup: SVGGElement): void {
     if (this.series.symbol === undefined) {
       return;
     }

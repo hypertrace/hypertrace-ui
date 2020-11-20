@@ -1,5 +1,5 @@
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
-import { AxisType, Series } from './chart';
+import { AxisType, Range, Series } from './chart';
 
 export const enum ChartEvent {
   Click,
@@ -7,7 +7,7 @@ export const enum ChartEvent {
   RightClick
 }
 
-export type ChartEventListener<TData> = (data: MouseLocationData<TData, Series<TData>>[]) => void;
+export type ChartEventListener<TData> = (data: MouseLocationData<TData, Series<TData> | Range<TData>>[]) => void;
 
 export interface ChartTooltipTrackingOptions {
   followSingleAxis?: AxisType;
