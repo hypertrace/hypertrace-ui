@@ -54,18 +54,22 @@ export class PopoverPositionBuilder {
           { originX: 'center', originY: 'top' },
           { overlayX: 'center', overlayY: 'bottom' }
         );
+
       case PopoverRelativePositionLocation.AboveLeftAligned:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'top' },
           { overlayX: 'start', overlayY: 'bottom' }
         );
+
       case PopoverRelativePositionLocation.AboveRightAligned:
         return new ConnectionPositionPair({ originX: 'end', originY: 'top' }, { overlayX: 'end', overlayY: 'bottom' });
+
       case PopoverRelativePositionLocation.BelowCentered:
         return new ConnectionPositionPair(
           { originX: 'center', originY: 'bottom' },
           { overlayX: 'center', overlayY: 'top' }
         );
+
       case PopoverRelativePositionLocation.BelowLeftAligned:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'bottom' },
@@ -74,18 +78,25 @@ export class PopoverPositionBuilder {
 
       case PopoverRelativePositionLocation.BelowRightAligned:
         return new ConnectionPositionPair({ originX: 'end', originY: 'bottom' }, { overlayX: 'end', overlayY: 'top' });
+
       case PopoverRelativePositionLocation.LeftCentered:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'center' },
           { overlayX: 'end', overlayY: 'center' }
         );
+
+      case PopoverRelativePositionLocation.OverLeftAligned:
+        return new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' });
+
       case PopoverRelativePositionLocation.RightCentered:
         return new ConnectionPositionPair(
           { originX: 'end', originY: 'center' },
           { overlayX: 'start', overlayY: 'center' }
         );
+
       case PopoverRelativePositionLocation.InsideTopLeft:
         return new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' });
+
       default:
         return assertUnreachable(location);
     }

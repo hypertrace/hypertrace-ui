@@ -215,3 +215,7 @@ export * from './pages/explorer/explorer-service';
 export * from './shared/components/gauge/gauge.component';
 export * from './shared/components/gauge/gauge.module';
 export * from './shared/dashboard/widgets/gauge/gauge-widget';
+
+// Label Detail
+export * from './shared/components/label-detail/label-detail.component';
+export * from './shared/components/label-detail/label-detail.module';

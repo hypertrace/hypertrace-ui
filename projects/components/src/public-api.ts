@@ -163,6 +163,7 @@ export * from './panel/panel.module';
 export * from './popover/popover';
 export * from './popover/popover-ref';
 export * from './popover/popover.module';
+export * from './popover/popover.component';
 export * from './popover/popover.service';
 
 // Radio
@@ -268,6 +269,7 @@ export * from './toggle-switch/toggle-switch.module';
 
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
+export { TooltipDirective } from './tooltip/tooltip.directive';
 
 // Greeting label
 export { GreetingLabelModule } from './greeting-label/greeting-label.module';
