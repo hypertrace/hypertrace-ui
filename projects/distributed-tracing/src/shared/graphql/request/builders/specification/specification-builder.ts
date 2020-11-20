@@ -48,4 +48,22 @@ export class SpecificationBuilder {
       })
     };
   }
+
+  public fieldSpecificationForKey(field: string): Specification {
+    return {
+      resultAlias: () => field,
+      name: field,
+      asGraphQlSelections: () => ({
+        path: field
+      }),
+      extractFromServerData: serverData => {
+        const serverValue = serverData[field];
+
+        return serverValue === 'null' ? undefined : serverValue;
+      },
+      asGraphQlOrderByFragment: () => ({
+        key: field
+      })
+    };
+  }
 }
