@@ -3,12 +3,30 @@
 
 :host {
   ::ng-deep {
+    .mat-checked {
+      .mat-slide-toggle-thumb-container {
+        margin-left: 1px;
+      }
+
+      .mat-slide-toggle-thumb {
+        background-color: $blue-4;
+      }
+
+      .mat-slide-toggle-bar {
+        background-color: $blue-2;
+      }
+    }
+
+    .mat-slide-toggle-thumb-container {
+      margin-left: -1px;
+    }
+
     .mat-slide-toggle-thumb {
-      background-color: $blue-4;
+      background-color: $gray-2;
     }
 
     .mat-slide-toggle-bar {
-      background-color: $blue-2;
+      background-color: $gray-5;
     }
   }
 }

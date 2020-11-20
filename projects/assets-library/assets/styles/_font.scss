@@ -265,6 +265,7 @@ $font-family: 'Work Sans', sans-serif;
   line-height: 18px;
   letter-spacing: -0.02em;
 }
+
 @mixin footnote($color: $gray-9) {
   @extend %footnote;
   @extend %regular;
