@@ -1,3 +1,4 @@
+import { OrdinalPipe } from './ordinal/ordinal.pipe';
 import { NgModule } from '@angular/core';
 import { DisplayDatePipe } from './date/display-date.pipe';
 import { DisplayDurationPipe } from './duration/display-duration.pipe';
@@ -13,8 +14,17 @@ import { HighlightPipe } from './string/highlight.pipe';
     DisplayDurationPipe,
     DisplayStringPipe,
     HighlightPipe,
-    DisplayTitlePipe
+    DisplayTitlePipe,
+    OrdinalPipe
   ],
-  exports: [DisplayNumberPipe, DisplayDatePipe, DisplayDurationPipe, DisplayStringPipe, HighlightPipe, DisplayTitlePipe]
+  exports: [
+    DisplayNumberPipe,
+    DisplayDatePipe,
+    DisplayDurationPipe,
+    DisplayStringPipe,
+    HighlightPipe,
+    DisplayTitlePipe,
+    OrdinalPipe
+  ]
 })
 export class FormattingModule {}
