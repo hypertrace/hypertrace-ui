@@ -8,7 +8,11 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
     <div class="gauge-container" (htLayoutChange)="this.onLayoutChange()">
       <svg class="gauge" *ngIf="this.rendererData">
         <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
-          <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" />
+          <path
+            class="gauge-ring"
+            [attr.d]="rendererData.backgroundArc"
+            *ngIf="rendererData.radius > 80"
+          />
           <g
             class="input-data"
             *ngIf="rendererData.data"
@@ -16,6 +20,7 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
           >
             <path
               class="value-ring"
+              *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
               [attr.d]="rendererData.data.valueArc"
               [attr.fill]="rendererData.data.threshold.color"
             />
@@ -35,6 +40,7 @@ export class GaugeComponent implements OnChanges {
   private static readonly GAUGE_RING_WIDTH: number = 20;
   private static readonly GAUGE_ARC_CORNER_RADIUS: number = 10;
   private static readonly GAUGE_AXIS_PADDING: number = 30;
+  private static readonly GAUGE_MIN_RADIUS_TO_SHOW_PATH: number = 80;
 
   @Input()
   public value?: number;
@@ -68,6 +74,7 @@ export class GaugeComponent implements OnChanges {
 
     return {
       origin: this.buildOrigin(boundingBox),
+      radius: radius,
       backgroundArc: this.buildBackgroundArc(radius),
       data: this.buildGaugeData(radius, inputData)
     };
@@ -143,6 +150,7 @@ export interface GaugeThreshold {
 
 interface GaugeSvgRendererData {
   origin: Point;
+  radius: number;
   backgroundArc: string;
   data?: GaugeData;
 }
