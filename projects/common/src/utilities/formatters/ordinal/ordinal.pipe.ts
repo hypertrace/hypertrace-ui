@@ -5,7 +5,7 @@ import { OrdinalFormatter } from './ordinal-formatter';
   name: 'htOrdinal'
 })
 export class OrdinalPipe implements PipeTransform {
-  transform(value: number) {
+  public transform(value: number): string {
     return new OrdinalFormatter().format(value);
   }
 }
