@@ -43,6 +43,8 @@ export { FeatureState } from './feature/state/feature.state';
 export * from './utilities/formatters/date/date-formatter';
 export * from './utilities/formatters/date/display-date.pipe';
 export * from './utilities/formatters/duration/duration-formatter';
+export * from './utilities/formatters/ordinal/ordinal.pipe';
+export * from './utilities/formatters/ordinal/ordinal-formatter';
 export * from './utilities/formatters/formatting.module';
 export * from './utilities/formatters/numeric/display-number.pipe';
 export * from './utilities/formatters/numeric/numeric-formatter';
