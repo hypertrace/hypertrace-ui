@@ -8,7 +8,11 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
     <div class="gauge-container" (htLayoutChange)="this.onLayoutChange()">
       <svg class="gauge" *ngIf="this.rendererData">
         <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
-          <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" *ngIf="rendererData.radius > 80" />
+          <path
+            class="gauge-ring"
+            [attr.d]="rendererData.backgroundArc"
+            *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
+          />
           <g
             class="input-data"
             *ngIf="rendererData.data"
