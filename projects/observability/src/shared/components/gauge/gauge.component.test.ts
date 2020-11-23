@@ -38,6 +38,7 @@ describe('Gauge component', () => {
         x: 0,
         y: -30
       },
+      radius: -30,
       data: {
         value: 80,
         maxValue: 100,
