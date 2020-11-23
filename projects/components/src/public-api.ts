@@ -59,6 +59,8 @@ export * from './expander/expander-toggle.module';
 
 // Feature Check
 export * from './feature-check/feature-config-check.module';
+export * from './feature-check/feature.pipe';
+export * from './feature-check/if-feature.directive';
 
 // Filter
 export * from './filtering/filter/filter';
