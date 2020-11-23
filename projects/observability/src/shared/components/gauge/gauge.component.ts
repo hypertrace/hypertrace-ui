@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
-import { Color, Point } from '@hypertrace/common';
+import { Color, DomElementMeasurerService, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
 
 @Component({
@@ -49,7 +49,10 @@ export class GaugeComponent implements OnChanges {
 
   public rendererData?: GaugeSvgRendererData;
 
-  public constructor(public readonly elementRef: ElementRef) {}
+  public constructor(
+    public readonly elementRef: ElementRef,
+    private readonly domElementMeasurerService: DomElementMeasurerService
+  ) {}
 
   public ngOnChanges(): void {
     this.rendererData = this.buildRendererData();
@@ -65,7 +68,7 @@ export class GaugeComponent implements OnChanges {
       return undefined;
     }
 
-    const boundingBox = this.elementRef.nativeElement.getBoundingClientRect();
+    const boundingBox = this.domElementMeasurerService.measureHtmlElement(this.elementRef.nativeElement);
     const radius = this.buildRadius(boundingBox);
 
     return {
