@@ -2,11 +2,13 @@
 @import 'font';
 
 .ht-entity-renderer {
+  @include body-1-regular();
   display: flex;
   flex-direction: row;
   align-items: center;
   font-weight: inherit;
-  @include body-1-regular();
+  font-size: inherit;
+  line-height: inherit;
 
   .icon {
     padding-right: 12px;
