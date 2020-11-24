@@ -23,6 +23,7 @@ import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
+import { TableWidgetBaseModel } from './table-widget-base.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -56,11 +57,11 @@ import { TableWidgetModel } from './table-widget.model';
         [columnConfigs]="this.columnConfigs$ | async"
         [metadata]="this.metadata$ | async"
         [mode]="this.activeMode"
-        [selectionMode]="this.model.selectionMode"
+        [selectionMode]="this.model.getSelectionMode()"
         [display]="this.model.style"
         [data]="this.data$ | async"
         [filters]="this.combinedFilters$ | async"
-        [pageable]="this.api.model.pageable"
+        [pageable]="this.api.model.isPageable()"
         [detailContent]="childDetail"
         [syncWithUrl]="this.syncWithUrl"
         (selectionsChange)="this.onRowSelection($event)"
@@ -74,7 +75,7 @@ import { TableWidgetModel } from './table-widget.model';
   `
 })
 export class TableWidgetRendererComponent
-  extends WidgetRenderer<TableWidgetModel, TableDataSource<TableRow> | undefined>
+  extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
@@ -201,7 +202,7 @@ export class TableWidgetRendererComponent
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {
-    if (this.api.model.selectionMode === TableSelectionMode.Single) {
+    if (this.api.model.getSelectionMode() === TableSelectionMode.Single) {
       /**
        * Execute selection handler for single selection mode only
        */
@@ -216,7 +217,8 @@ export class TableWidgetRendererComponent
   }
 
   private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
-    const matchedSelectionHandlers = this.api.model.rowSelectionHandlers
+    const matchedSelectionHandlers = this.api.model
+      .getRowSelectionHandlers(selectedRow)
       ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 

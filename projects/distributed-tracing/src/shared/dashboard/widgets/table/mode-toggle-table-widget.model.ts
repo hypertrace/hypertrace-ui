@@ -1,7 +1,9 @@
 import { TableDataSource, TableMode, TableRow } from '@hypertrace/components';
 import { ArrayPropertyTypeInstance, ENUM_TYPE, ModelTemplatePropertyType } from '@hypertrace/dashboards';
-import { ARRAY_PROPERTY, Model, ModelJson, ModelProperty } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelApi, ModelJson, ModelProperty } from '@hypertrace/hyperdash';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
+import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -9,7 +11,7 @@ import { TableWidgetModel } from './table-widget.model';
   type: 'mode-toggle-table-widget',
   displayName: 'Mode Toggle Table Widget'
 })
-export class ModeToggleTableWidgetModel extends TableWidgetModel {
+export class ModeToggleTableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'modeOptions',
     displayName: 'Modes Toggle Options',
@@ -41,6 +43,9 @@ export class ModeToggleTableWidgetModel extends TableWidgetModel {
     type: ModelTemplatePropertyType.TYPE
   })
   public detail!: ModelJson;
+
+  @ModelInject(MODEL_API)
+  protected readonly api!: ModelApi;
 
   private delegateModel?: TableWidgetModel;
 
