@@ -222,6 +222,6 @@ export class TableWidgetRendererComponent
       ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 
-    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers![0].handler : undefined;
+    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
   }
 }
