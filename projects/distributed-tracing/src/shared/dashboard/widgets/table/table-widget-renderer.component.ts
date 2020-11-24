@@ -18,14 +18,16 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
+import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
+@Renderer({ modelClass: ModeToggleTableWidgetModel })
 @Component({
   selector: 'ht-table-widget-renderer',
   styleUrls: ['./table-widget-renderer.component.scss'],
@@ -98,6 +100,8 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
+    this.onModeChange(this.model.mode);
+
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = this.getColumnConfigs();
 
@@ -105,15 +109,14 @@ export class TableWidgetRendererComponent
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
     );
 
-    this.filterItems = this.model.filterOptions.map(fiterItem => ({
-      label: capitalize(fiterItem.label),
-      value: fiterItem
+    this.filterItems = this.model.filterOptions.map(filter => ({
+      label: capitalize(filter.label),
+      value: filter
     }));
-    this.modeItems = this.model.modeOptions.map(mode => ({
+    this.modeItems = this.model.getModeOptions().map(mode => ({
       label: capitalize(mode),
       value: mode
     }));
-    this.activeMode = this.model.mode;
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -127,7 +130,7 @@ export class TableWidgetRendererComponent
   }
 
   private getScope(): Observable<string | undefined> {
-    return this.data$!.pipe(map(data => data?.getScope(this.activeMode)));
+    return this.data$!.pipe(map(data => data?.getScope()));
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
@@ -138,12 +141,13 @@ export class TableWidgetRendererComponent
         startWith(true)
       )
     ]).pipe(
-      switchMap(([scope]) => this.model.getColumns(scope, this.activeMode)),
+      switchMap(([scope]) => this.model.getColumns(scope)),
       startWith([]),
       pairwise(),
       filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
       map(([_, current]) => current),
-      share()
+      share(),
+      tap(() => this.onDashboardRefresh())
     );
   }
 
@@ -192,6 +196,7 @@ export class TableWidgetRendererComponent
 
   public onModeChange(mode: TableMode): void {
     this.activeMode = mode;
+    this.model.setMode(mode);
     this.columnConfigs$ = this.getColumnConfigs();
   }
 
