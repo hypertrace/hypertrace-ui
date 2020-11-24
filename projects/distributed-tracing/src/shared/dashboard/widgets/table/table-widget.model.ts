@@ -72,8 +72,8 @@ export class TableWidgetModel {
   public searchAttribute?: string;
 
   @ModelProperty({
-    key: 'filterToggles',
-    displayName: 'Filter Toggles',
+    key: 'filterOptions',
+    displayName: 'Filter Toggle Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
@@ -83,7 +83,7 @@ export class TableWidgetModel {
       }
     } as ArrayPropertyTypeInstance
   })
-  public filterToggles: TableWidgetFilterModel[] = [];
+  public filterOptions: TableWidgetFilterModel[] = [];
 
   @ModelProperty({
     key: 'mode',
@@ -97,8 +97,8 @@ export class TableWidgetModel {
   public mode: TableMode = TableMode.Flat;
 
   @ModelProperty({
-    key: 'modeToggles',
-    displayName: 'Modes Toggle',
+    key: 'modeOptions',
+    displayName: 'Modes Toggle Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
@@ -108,7 +108,7 @@ export class TableWidgetModel {
       }
     } as ArrayPropertyTypeInstance
   })
-  public modeToggles: TableMode[] = [];
+  public modeOptions: TableMode[] = [];
 
   @ModelProperty({
     key: 'selection-mode',
@@ -186,9 +186,11 @@ export class TableWidgetModel {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
+  public getColumns(scope?: string, mode?: TableMode): Observable<SpecificationBackedTableColumnDef[]> {
     const modelColumns: Observable<SpecificationBackedTableColumnDef[]> = forkJoinSafeEmpty(
-      this.columns.map(column => column.asTableColumnDef(scope))
+      this.columns
+        .filter(column => column.onlyMode === undefined || column.onlyMode === mode)
+        .map(column => column.asTableColumnDef(scope))
     );
 
     if (scope === undefined || !this.fetchEditableColumns) {

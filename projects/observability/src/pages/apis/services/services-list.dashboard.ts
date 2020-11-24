@@ -9,6 +9,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     mode: TableMode.Tree,
     style: TableStyle.FullPage,
     searchAttribute: 'name',
+    modeOptions: [TableMode.Tree, TableMode.Flat],
     columns: [
       {
         type: 'table-widget-column',
@@ -17,6 +18,16 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
         width: '30%',
         value: {
           type: 'entity-specification'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Service Name',
+        width: '30%',
+        onlyMode: TableMode.Flat,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'serviceName'
         }
       },
       {
@@ -82,9 +93,16 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
       }
     ],
     data: {
-      type: 'entity-table-data-source',
-      entity: 'SERVICE',
-      childEntity: 'API'
+      type: 'mode-entity-table-data-source',
+      flat: {
+        type: 'entity-table-data-source',
+        entity: 'API'
+      },
+      tree: {
+        type: 'entity-table-data-source',
+        entity: 'SERVICE',
+        childEntity: 'API'
+      }
     }
   }
 };

@@ -2,6 +2,7 @@ import {
   CoreTableCellRendererType,
   TableCellAlignmentType,
   TableColumnConfig,
+  TableMode,
   TableRow,
   TableSortDirection
 } from '@hypertrace/components';
@@ -94,6 +95,16 @@ export class TableWidgetColumnModel {
     } as EnumPropertyTypeInstance
   })
   public sort?: TableSortDirection;
+
+  @ModelProperty({
+    key: 'onlyMode',
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ENUM_TYPE.type,
+      values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
+    } as EnumPropertyTypeInstance
+  })
+  public onlyMode?: TableMode; // All modes if undefined
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;

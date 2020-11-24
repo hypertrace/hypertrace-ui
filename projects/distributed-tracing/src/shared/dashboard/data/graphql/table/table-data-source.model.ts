@@ -1,4 +1,11 @@
-import { TableDataRequest, TableDataResponse, TableDataSource, TableFilter, TableRow } from '@hypertrace/components';
+import {
+  TableDataRequest,
+  TableDataResponse,
+  TableDataSource,
+  TableFilter,
+  TableMode,
+  TableRow
+} from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of as observableOf } from 'rxjs';
@@ -19,24 +26,26 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({
-      getData: request =>
-        this.query(filters => this.buildGraphQlRequest(filters, request)).pipe(
-          map(response => this.buildTableResponse(response, request))
+      getData: (request: TableDataRequest<SpecificationBackedTableColumnDef>, mode?: TableMode) =>
+        this.query(filters => this.buildGraphQlRequest(filters, request, mode)).pipe(
+          map(response => this.buildTableResponse(response, request, mode))
         ),
-      getScope: () => this.getScope()
+      getScope: (mode?: TableMode) => this.getScope(mode)
     });
   }
 
-  public abstract getScope(): string | undefined;
+  public abstract getScope(mode?: TableMode): string | undefined;
 
-  protected abstract buildGraphQlRequest(
+  public abstract buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode?: TableMode
   ): unknown;
 
-  protected abstract buildTableResponse(
+  public abstract buildTableResponse(
     response: unknown,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
+    mode?: TableMode
   ): TableDataResponse<TableRow>;
 
   protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {

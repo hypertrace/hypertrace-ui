@@ -21,6 +21,7 @@ import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseri
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
 import { PercentileLatencyAggregationSpecificationModel } from './specifiers/percentile-latency-metric-aggregation.model';
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
+import { ModeEntityTableDataSourceModel } from './table/entity/mode-entity-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
@@ -45,6 +46,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntityMetricAggregationDataSourceModel,
         TopologyDataSourceModel,
         EntityTableDataSourceModel,
+        ModeEntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,
         EntitySpecificationModel,

@@ -23,7 +23,7 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
     return;
   }
 
-  protected buildGraphQlRequest(
+  public buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): GraphQlInteractionsRequest {
@@ -41,7 +41,7 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(response: InteractionsResponse): TableDataResponse<TableRow> {
+  public buildTableResponse(response: InteractionsResponse): TableDataResponse<TableRow> {
     return {
       data: response.results,
       totalCount: response.results.length

@@ -105,11 +105,11 @@ export class TableWidgetRendererComponent
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
     );
 
-    this.filterItems = this.model.filterToggles.map(fiterItem => ({
+    this.filterItems = this.model.filterOptions.map(fiterItem => ({
       label: capitalize(fiterItem.label),
       value: fiterItem
     }));
-    this.modeItems = this.model.modeToggles.map(mode => ({
+    this.modeItems = this.model.modeOptions.map(mode => ({
       label: capitalize(mode),
       value: mode
     }));
@@ -127,7 +127,7 @@ export class TableWidgetRendererComponent
   }
 
   private getScope(): Observable<string | undefined> {
-    return this.data$!.pipe(map(data => data?.getScope()));
+    return this.data$!.pipe(map(data => data?.getScope(this.activeMode)));
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
@@ -138,7 +138,7 @@ export class TableWidgetRendererComponent
         startWith(true)
       )
     ]).pipe(
-      switchMap(([scope]) => this.model.getColumns(scope)),
+      switchMap(([scope]) => this.model.getColumns(scope, this.activeMode)),
       startWith([]),
       pairwise(),
       filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
@@ -192,6 +192,7 @@ export class TableWidgetRendererComponent
 
   public onModeChange(mode: TableMode): void {
     this.activeMode = mode;
+    this.columnConfigs$ = this.getColumnConfigs();
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {

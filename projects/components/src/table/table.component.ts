@@ -100,7 +100,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               *cdkCellDef="let row"
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
-              [style.margin-left]="this.indent(columnDef, row)"
+              [style.margin-left]="index === 0 ? this.calcIndentMargin(row) : 0"
+              [style.margin-right]="index === 1 ? this.calcIndentMargin(row, true) : 0"
               [ngClass]="{
                 'child-row': this.isChildRow(row),
                 'expander-column': this.isExpanderColumn(columnDef),
@@ -226,7 +227,7 @@ export class TableComponent
   public filters?: TableFilter[];
 
   @Input()
-  public mode?: TableMode = TableMode.Flat;
+  public mode: TableMode = TableMode.Flat;
 
   @Input()
   public display?: TableStyle = TableStyle.Embedded;
@@ -533,12 +534,8 @@ export class TableComponent
     this.hoveredChange.emit(this.hovered);
   }
 
-  public indent(columnConfig: TableColumnConfig, row: StatefulTableRow): string {
-    if (this.isExpanderColumn(columnConfig)) {
-      return `${row.$$state.depth * 12}px`;
-    }
-
-    return '0';
+  public calcIndentMargin(row: StatefulTableRow, negative: boolean = false): string {
+    return `${negative ? '-' : ''}${row.$$state.depth * 12}px`;
   }
 
   public columnIndex(columnConfig: TableColumnConfig, index: number): number {
