@@ -109,13 +109,13 @@ export class TableWidgetRendererComponent
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
     );
 
-    this.filterItems = this.model.filterOptions.map(filter => ({
-      label: capitalize(filter.label),
-      value: filter
+    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
+      label: capitalize(filterOption.label),
+      value: filterOption
     }));
-    this.modeItems = this.model.getModeOptions().map(mode => ({
-      label: capitalize(mode),
-      value: mode
+    this.modeItems = this.model.getModeOptions().map(modeOption => ({
+      label: capitalize(modeOption),
+      value: modeOption
     }));
   }
 

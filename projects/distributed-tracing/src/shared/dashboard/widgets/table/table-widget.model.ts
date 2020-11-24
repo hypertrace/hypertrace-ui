@@ -182,6 +182,10 @@ export class TableWidgetModel {
     return [];
   }
 
+  public getFilterOptions(): TableWidgetFilterModel[] {
+    return this.filterOptions;
+  }
+
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
     const modelColumns: Observable<SpecificationBackedTableColumnDef[]> = forkJoinSafeEmpty(
       this.columns.map(column => column.asTableColumnDef(scope))
