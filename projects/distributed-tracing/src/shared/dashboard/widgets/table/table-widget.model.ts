@@ -102,6 +102,10 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     return this.filterOptions;
   }
 
+  public getRowSelectionHandlers(): TableWidgetRowSelectionModel[] {
+    return this.rowSelectionHandlers ?? [];
+  }
+
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
     const modelColumns: Observable<SpecificationBackedTableColumnDef[]> = forkJoinSafeEmpty(
       this.columns.map(column => column.asTableColumnDef(scope))
