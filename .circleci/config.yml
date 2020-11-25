@@ -92,7 +92,7 @@ jobs:
     executor: publisher
     steps:
       - setup_for_publishing
-    - run: ./gradlew dockerPushImages
+      - run: ./gradlew dockerPushImages
   release-publish:
     executor: publisher
     steps:
