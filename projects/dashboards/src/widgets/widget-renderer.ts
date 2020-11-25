@@ -42,7 +42,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
   protected abstract fetchData(): Observable<TData>;
 
   protected onModelChange(): void {
-    // This can get overriden by child widgets
+    // This can get overridden by child widgets
   }
 
   protected onTimeRangeChange(timeRange: DashboardTimeRange): void {
@@ -50,7 +50,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
     this.fetchAndRunChangeDetection();
   }
 
-  private onDashboardRefresh(): void {
+  protected onDashboardRefresh(): void {
     this.fetchAndRunChangeDetection();
   }
 

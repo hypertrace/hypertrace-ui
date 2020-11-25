@@ -1,29 +1,26 @@
 import { forkJoinSafeEmpty } from '@hypertrace/common';
-import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
+import { TableDataSource, TableMode, TableRow, TableSelectionMode } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
-  ModelTemplatePropertyType,
-  WidgetHeaderModel
+  ModelTemplatePropertyType
 } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   Model,
-  ModelApi,
   ModelJson,
-  ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType,
-  STRING_PROPERTY
+  ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
+import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 
@@ -31,25 +28,7 @@ import { TableWidgetFilterModel } from './table-widget-filter-model';
   type: 'table-widget',
   displayName: 'Table Widget'
 })
-export class TableWidgetModel {
-  @ModelProperty({
-    key: 'title',
-    displayName: 'Title',
-    type: STRING_PROPERTY.type
-  })
-  // @deprecated
-  public title?: string;
-
-  @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ModelPropertyType.TYPE,
-      defaultModelClass: WidgetHeaderModel
-    } as ModelModelPropertyTypeInstance,
-    key: 'header'
-  })
-  public header!: WidgetHeaderModel;
-
+export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'columns',
     displayName: 'Columns',
@@ -63,52 +42,6 @@ export class TableWidgetModel {
     } as ArrayPropertyTypeInstance
   })
   public columns: TableWidgetColumnModel[] = [];
-
-  @ModelProperty({
-    key: 'searchAttribute',
-    displayName: 'Search Attribute',
-    type: STRING_PROPERTY.type
-  })
-  public searchAttribute?: string;
-
-  @ModelProperty({
-    key: 'filterToggles',
-    displayName: 'Filter Toggles',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ARRAY_PROPERTY.type,
-      subtype: {
-        key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetFilterModel
-      }
-    } as ArrayPropertyTypeInstance
-  })
-  public filterToggles: TableWidgetFilterModel[] = [];
-
-  @ModelProperty({
-    key: 'mode',
-    displayName: 'Table Mode',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ENUM_TYPE.type,
-      values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
-    } as EnumPropertyTypeInstance
-  })
-  public mode: TableMode = TableMode.Flat;
-
-  @ModelProperty({
-    key: 'modeToggles',
-    displayName: 'Modes Toggle',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ARRAY_PROPERTY.type,
-      subtype: {
-        key: ENUM_TYPE.type,
-        values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
-      }
-    } as ArrayPropertyTypeInstance
-  })
-  public modeToggles: TableMode[] = [];
 
   @ModelProperty({
     key: 'selection-mode',
@@ -146,17 +79,6 @@ export class TableWidgetModel {
   public rowSelectionHandlers?: TableWidgetRowSelectionModel[];
 
   @ModelProperty({
-    key: 'style',
-    displayName: 'Table Style',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ENUM_TYPE.type,
-      values: [TableStyle.FullPage, TableStyle.Embedded, TableStyle.List]
-    } as EnumPropertyTypeInstance
-  })
-  public style: TableStyle = TableStyle.Embedded;
-
-  @ModelProperty({
     key: 'child-template',
     type: ModelTemplatePropertyType.TYPE
   })
@@ -167,23 +89,24 @@ export class TableWidgetModel {
     displayName: 'Pageable',
     type: BOOLEAN_PROPERTY.type
   })
-  public pageable?: boolean = true;
+  public pageable: boolean = true;
 
   @ModelProperty({
     key: 'fetchEditableColumns',
     displayName: 'Query for additional columns not provided',
     type: BOOLEAN_PROPERTY.type
   })
-  public fetchEditableColumns?: boolean = false;
-
-  @ModelInject(MODEL_API)
-  private readonly api!: ModelApi;
+  public fetchEditableColumns: boolean = false;
 
   @ModelInject(TableWidgetColumnsService)
   private readonly tableWidgetColumnsService!: TableWidgetColumnsService;
 
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.api.getData<TableDataSource<TableRow>>();
+  }
+
+  public getFilterOptions(): TableWidgetFilterModel[] {
+    return this.filterOptions;
   }
 
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
@@ -207,5 +130,9 @@ export class TableWidgetModel {
     }
 
     return undefined;
+  }
+
+  public isPageable(): boolean {
+    return this.pageable;
   }
 }
