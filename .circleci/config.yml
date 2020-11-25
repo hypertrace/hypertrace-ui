@@ -92,14 +92,12 @@ jobs:
     executor: publisher
     steps:
       - setup_for_publishing
-      - gradle:
-          args: dockerPushImages
+    - run: ./gradlew dockerPushImages
   release-publish:
     executor: publisher
     steps:
       - setup_for_publishing
-      - gradle:
-          args: publish dockerPushImages
+      - run: ./gradlew publish dockerPushImages
   validate-charts:
     executor: helm
     steps:
