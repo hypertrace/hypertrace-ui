@@ -66,10 +66,7 @@ export class EntityRendererComponent implements OnChanges {
   }
 
   private setIconType(): void {
-    if (this.icon !== undefined) {
-      this.entityIconType = this.icon;
-    } else {
-      this.entityIconType = this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined;
-    }
+    this.entityIconType =
+      this.icon ?? (this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined);
   }
 }
