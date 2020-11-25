@@ -57,7 +57,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     return this.entityType; // TODO: How to deal with children
   }
 
-  public buildGraphQlRequest(
+  protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): EntityTableGraphQlRequest {
@@ -79,7 +79,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  public buildTableResponse(
+  protected buildTableResponse(
     response: EntitiesResponse,
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow> {

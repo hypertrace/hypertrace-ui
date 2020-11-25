@@ -10,12 +10,11 @@ import {
   ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   Model,
-  ModelApi,
   ModelJson,
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -98,9 +97,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     type: BOOLEAN_PROPERTY.type
   })
   public fetchEditableColumns: boolean = false;
-
-  @ModelInject(MODEL_API)
-  protected readonly api!: ModelApi;
 
   @ModelInject(TableWidgetColumnsService)
   private readonly tableWidgetColumnsService!: TableWidgetColumnsService;

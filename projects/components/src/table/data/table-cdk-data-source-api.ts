@@ -5,7 +5,6 @@ import { TableDataSource } from './table-data-source';
 
 export interface TableDataSourceProvider {
   data?: TableDataSource<TableRow>;
-  mode: TableMode;
 }
 
 export interface ColumnConfigProvider {

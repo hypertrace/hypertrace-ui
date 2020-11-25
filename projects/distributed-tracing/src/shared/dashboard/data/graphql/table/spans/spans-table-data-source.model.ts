@@ -19,7 +19,7 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
     return SPAN_SCOPE;
   }
 
-  public buildGraphQlRequest(
+  protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): GraphQlSpansRequest {
@@ -37,7 +37,7 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  public buildTableResponse(response: SpansResponse): TableDataResponse<TableRow> {
+  protected buildTableResponse(response: SpansResponse): TableDataResponse<TableRow> {
     return {
       data: response.results,
       totalCount: response.total

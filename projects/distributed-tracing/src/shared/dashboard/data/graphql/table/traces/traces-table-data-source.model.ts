@@ -24,7 +24,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
     return this.traceType;
   }
 
-  public buildGraphQlRequest(
+  protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): GraphQlTracesRequest {
@@ -43,7 +43,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  public buildTableResponse(response: TracesResponse): TableDataResponse<TableRow> {
+  protected buildTableResponse(response: TracesResponse): TableDataResponse<TableRow> {
     return {
       data: response.results,
       totalCount: response.total
