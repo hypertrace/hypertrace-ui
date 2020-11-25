@@ -47,12 +47,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   })
   public additionalChildSpecifications: Specification[] = [];
 
-  @ModelProperty({
-    key: 'filters',
-    type: ARRAY_PROPERTY.type
-  })
-  public filters: GraphQlFilter[] = [];
-
   public getScope(): string {
     return this.entityType; // TODO: How to deal with children
   }
@@ -73,7 +67,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.toGraphQlFilters(request.filters), ...this.filters],
+      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
     };

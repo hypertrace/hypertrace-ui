@@ -227,7 +227,7 @@ export class TableComponent
   public filters?: TableFilter[];
 
   @Input()
-  public mode: TableMode = TableMode.Flat;
+  public mode?: TableMode = TableMode.Flat;
 
   @Input()
   public display?: TableStyle = TableStyle.Embedded;
