@@ -11,15 +11,23 @@ import {
 import { WidgetHeaderModel } from '@hypertrace/dashboards';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TracingTableCellRendererModule } from '../../../components/table/tracing-table-cell-renderer.module';
+import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
 import { TableWidgetModel } from './table-widget.model';
+
 @NgModule({
   declarations: [TableWidgetRendererComponent],
   imports: [
     DashboardCoreModule.with({
-      models: [TableWidgetModel, TableWidgetColumnModel, TableWidgetRowSelectionModel, WidgetHeaderModel],
+      models: [
+        TableWidgetModel,
+        TableWidgetColumnModel,
+        TableWidgetRowSelectionModel,
+        WidgetHeaderModel,
+        ModeToggleTableWidgetModel
+      ],
       renderers: [TableWidgetRendererComponent],
       propertyTypes: []
     }),
