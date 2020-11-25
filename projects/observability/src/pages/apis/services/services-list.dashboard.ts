@@ -182,6 +182,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
   json: {
     type: 'mode-toggle-table-widget',
     searchAttribute: 'name',
+    style: TableStyle.FullPage,
     mode: TableMode.Tree,
     modeOptions: [TableMode.Tree, TableMode.Flat],
     flat: flatTableWidget,

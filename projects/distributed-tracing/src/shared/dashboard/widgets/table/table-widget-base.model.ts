@@ -7,6 +7,7 @@ import {
 } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
+  BOOLEAN_PROPERTY,
   ModelApi,
   ModelModelPropertyTypeInstance,
   ModelProperty,
@@ -81,6 +82,13 @@ export abstract class TableWidgetBaseModel {
   })
   public style: TableStyle = TableStyle.Embedded;
 
+  @ModelProperty({
+    key: 'pageable',
+    displayName: 'Pageable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public pageable: boolean = true;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
@@ -116,6 +124,6 @@ export abstract class TableWidgetBaseModel {
   }
 
   public isPageable(): boolean {
-    return false;
+    return this.pageable;
   }
 }
