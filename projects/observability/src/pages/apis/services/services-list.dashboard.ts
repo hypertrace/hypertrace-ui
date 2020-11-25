@@ -1,9 +1,5 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import {
-  DashboardDefaultConfiguration,
-  GraphQlOperatorType,
-  TracingTableCellType
-} from '@hypertrace/distributed-tracing';
+import { DashboardDefaultConfiguration, TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 
@@ -177,14 +173,7 @@ const flatTableWidget: ModelJson = {
   ],
   data: {
     type: 'entity-table-data-source',
-    entity: 'API',
-    filters: [{
-      // Need to query for only APIs NOT belonging to DOMAIN
-      type: 'graphql-key-value-filter',
-      key: 'isExternal',
-      operator: GraphQlOperatorType.Equals,
-      value: false
-    }]
+    entity: 'API'
   }
 };
 
