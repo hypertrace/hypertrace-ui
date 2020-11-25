@@ -85,13 +85,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   public childTemplate?: ModelJson;
 
   @ModelProperty({
-    key: 'pageable',
-    displayName: 'Pageable',
-    type: BOOLEAN_PROPERTY.type
-  })
-  public pageable: boolean = true;
-
-  @ModelProperty({
     key: 'fetchEditableColumns',
     displayName: 'Query for additional columns not provided',
     type: BOOLEAN_PROPERTY.type
@@ -130,9 +123,5 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     }
 
     return undefined;
-  }
-
-  public isPageable(): boolean {
-    return this.pageable;
   }
 }
