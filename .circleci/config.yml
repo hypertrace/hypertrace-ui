@@ -31,9 +31,6 @@ commands:
   setup_for_publishing:
     description: 'Checks out code, sets up credentials, docker and attaches workspace'
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - '2c:f1:1d:8b:a2:b4:6a:28:46:1d:5b:7c:b1:92:d4:ba'
       - checkout
       - attach_workspace:
           at: dist
@@ -97,7 +94,7 @@ jobs:
     executor: publisher
     steps:
       - setup_for_publishing
-      - run: ./gradlew publish dockerPushImages
+      - run: ./gradlew dockerPushImages
   validate-charts:
     executor: helm
     steps:
@@ -105,7 +102,6 @@ jobs:
       - run:
           name: Helm Charts Lint and Template Render
           command: |
-            helm dependency update ./helm/
             helm lint --strict ./helm/
             helm template ./helm/
   release-charts:
@@ -136,7 +132,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             # This ssh key gives write permission needed for the following step.
-            - 'e3:b6:18:f1:68:bd:71:fe:9a:8b:08:aa:94:f5:1a:31'
+            - '2c:f1:1d:8b:a2:b4:6a:28:46:1d:5b:7c:b1:92:d4:ba'
       - run:
           name: Update remote tags
           command: git push origin refs/tags/$(git describe --abbrev=0) :refs/tags/release-$(git describe --abbrev=0)
