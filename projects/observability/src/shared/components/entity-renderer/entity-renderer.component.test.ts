@@ -1,3 +1,4 @@
+import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
@@ -104,5 +105,27 @@ describe('Entity Renderer Component', () => {
 
     expect(spectator.query('.name')).toHaveText('test api');
     expect(spectator.query(IconComponent)).toBeNull();
+  });
+
+  test('renders an entity with user provided icon', () => {
+    const entity = {
+      [entityIdKey]: 'test-id',
+      [entityTypeKey]: ObservabilityEntityType.Api,
+      name: 'test api'
+    };
+
+    spectator = createHost(
+      `<ht-entity-renderer [entity]="entity" [icon]="icon">
+      </ht-entity-renderer>`,
+      {
+        hostProps: {
+          entity: entity,
+          icon: IconType.Add
+        }
+      }
+    );
+
+    expect(spectator.query('.name')).toHaveText('test api');
+    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Add);
   });
 });

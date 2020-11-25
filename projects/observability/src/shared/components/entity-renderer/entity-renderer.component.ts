@@ -34,6 +34,9 @@ export class EntityRendererComponent implements OnChanges {
   public navigable: boolean = true;
 
   @Input()
+  public icon?: string;
+
+  @Input()
   public showIcon: boolean = false;
 
   public name?: string;
@@ -49,6 +52,10 @@ export class EntityRendererComponent implements OnChanges {
       this.setName();
       this.setIconType();
     }
+
+    if (changes.icon) {
+      this.setIconType();
+    }
   }
   public onClickNavigate(): void {
     this.navigable && this.entity && this.entityNavService.navigateToEntity(this.entity);
@@ -59,6 +66,10 @@ export class EntityRendererComponent implements OnChanges {
   }
 
   private setIconType(): void {
-    this.entityIconType = this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined;
+    if (this.icon !== undefined) {
+      this.entityIconType = this.icon;
+    } else {
+      this.entityIconType = this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined;
+    }
   }
 }
