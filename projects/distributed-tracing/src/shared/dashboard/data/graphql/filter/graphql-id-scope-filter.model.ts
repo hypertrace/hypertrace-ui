@@ -49,13 +49,13 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
   public value!: GraphQlArgumentValue;
 
   public asArgumentObjects(): GraphQlArgumentObject[] {
-    return [{
-      type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-      idType: new GraphQlEnumArgument(this.scope),
-      operator: new GraphQlEnumArgument(this.operator),
-      value: this.value,
-    }];
+    return [
+      {
+        type: new GraphQlEnumArgument(GraphQlFilterType.Id),
+        idType: new GraphQlEnumArgument(this.scope),
+        operator: new GraphQlEnumArgument(this.operator),
+        value: this.value
+      }
+    ];
   }
 }
-
-
