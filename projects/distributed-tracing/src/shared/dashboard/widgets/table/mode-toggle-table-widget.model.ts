@@ -87,7 +87,8 @@ export class ModeToggleTableWidgetModel extends TableWidgetBaseModel {
   }
 
   public getRowSelectionHandlers(row: TableRow): TableWidgetRowSelectionModel[] {
-    return (this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0) ?
-      this.delegateModel?.getRowSelectionHandlers(row) : [];
+    return this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0
+      ? this.delegateModel?.getRowSelectionHandlers(row)
+      : [];
   }
 }
