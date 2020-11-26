@@ -16,40 +16,26 @@ executors:
           password: $DOCKERHUB_PASSWORD
   helm:
     docker:
-      - image: hypertrace/helm-gcs-packager:0.1.1
+      - image: hypertrace/helm-gcs-packager:0.3.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
 commands:
-  update-submodule:
-    description: 'Pull Submodules'
-    steps:
-      - run:
-          name: Pull Submodules
-          command: git submodule update --init
-      - run:
-          name: Ensure submodules point to commit from main branch
-          command: git submodule foreach "git merge-base --is-ancestor HEAD origin/main"
-
   setup_for_building:
     description: 'Checks out code and restores node modules'
     steps:
       - checkout
-      - update-submodule
       - restore_cache:
           keys:
             - node_modules-3-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
   setup_for_publishing:
     description: 'Checks out code, sets up credentials, docker and attaches workspace'
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - '2c:f1:1d:8b:a2:b4:6a:28:46:1d:5b:7c:b1:92:d4:ba'
       - checkout
-      - update-submodule
       - attach_workspace:
           at: dist
-      - setup_remote_docker
+      - setup_remote_docker: &latest_remote_docker
+          version: 19.03.12
       - run:
           name: Dockerhub login
           command: echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
@@ -99,6 +85,16 @@ jobs:
       - store_artifacts:
           path: test-results/hypertrace-ui
           destination: test-results
+  merge-publish:
+    executor: publisher
+    steps:
+      - setup_for_publishing
+      - run: ./gradlew dockerPushImages
+  release-publish:
+    executor: publisher
+    steps:
+      - setup_for_publishing
+      - run: ./gradlew dockerPushImages
   validate-charts:
     executor: helm
     steps:
@@ -108,29 +104,38 @@ jobs:
           command: |
             helm lint --strict ./helm/
             helm template ./helm/
-  publish:
-    executor: publisher
-    steps:
-      - setup_for_publishing
-      - run: ./gradlew :tag -Prelease
-      - run:
-          name: Push git tag
-          command: git push origin $(./gradlew -q :printVersion)
-      - run: ./gradlew dockerPushImages
-  package-charts:
+  release-charts:
     executor: helm
     steps:
       - checkout
       - run:
+          name: Add release tag
+          command: |
+            git config --global user.email "${CIRCLE_USERNAME}@hypertrace.org"
+            git config --global user.name "$CIRCLE_USERNAME"
+            git tag -am "Released by $CIRCLE_USERNAME" $(git describe --abbrev=0 --tags | sed 's/^release-//')
+      - run:
+          name: Remove trigger tag
+          command: git tag -d release-$(git describe --abbrev=0)
+      - run:
           name: Package and Publish Helm Charts
+          # Read the "name:" from Chart.yaml. The chart version is <chart-name>-<semver git tag>
           command: |
             CHART_VERSION=$(git describe --abbrev=0)
             CHART_NAME=$(awk '/^name:/ {print $2}' ./helm/Chart.yaml)
             export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/helm-gcs-key.json
             echo ${HELM_GCS_CREDENTIALS} > ${GOOGLE_APPLICATION_CREDENTIALS}
+            helm dependency update ./helm/
             helm repo add helm-gcs ${HELM_GCS_REPOSITORY}
             helm package --version ${CHART_VERSION} --app-version ${CHART_VERSION} ./helm/
             helm gcs push ${CHART_NAME}-${CHART_VERSION}.tgz helm-gcs --public --retry
+      - add_ssh_keys:
+          fingerprints:
+            # This ssh key gives write permission needed for the following step.
+            - '2c:f1:1d:8b:a2:b4:6a:28:46:1d:5b:7c:b1:92:d4:ba'
+      - run:
+          name: Update remote tags
+          command: git push origin refs/tags/$(git describe --abbrev=0) :refs/tags/release-$(git describe --abbrev=0)
 workflows:
   version: 2
   build-and-publish:
@@ -156,7 +161,7 @@ workflows:
       - validate-charts:
           context:
             - dockerhub-read
-      - publish:
+      - merge-publish:
           context:
             - hypertrace-publishing
             - dockerhub-read
@@ -169,13 +174,23 @@ workflows:
             branches:
               only:
                 - main
-      - package-charts:
+      - release-publish:
+          context:
+            - hypertrace-publishing
+            - dockerhub-read
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
+      - release-charts:
           context:
             - hypertrace-publishing
             - dockerhub-read
           requires:
-            - publish
+            - release-publish
           filters:
             branches:
-              only:
-                - main
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
