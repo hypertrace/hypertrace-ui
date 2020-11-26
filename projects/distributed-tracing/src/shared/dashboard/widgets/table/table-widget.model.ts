@@ -102,7 +102,7 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     return this.filterOptions;
   }
 
-  public getRowSelectionHandlers(): TableWidgetRowSelectionModel[] {
+  public getRowSelectionHandlers(_row:TableRow): TableWidgetRowSelectionModel[] {
     return this.rowSelectionHandlers ?? [];
   }
 
