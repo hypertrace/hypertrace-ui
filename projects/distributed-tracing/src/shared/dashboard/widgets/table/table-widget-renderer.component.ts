@@ -18,14 +18,17 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
+import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
+import { TableWidgetBaseModel } from './table-widget-base.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
+@Renderer({ modelClass: ModeToggleTableWidgetModel })
 @Component({
   selector: 'ht-table-widget-renderer',
   styleUrls: ['./table-widget-renderer.component.scss'],
@@ -54,11 +57,11 @@ import { TableWidgetModel } from './table-widget.model';
         [columnConfigs]="this.columnConfigs$ | async"
         [metadata]="this.metadata$ | async"
         [mode]="this.activeMode"
-        [selectionMode]="this.model.selectionMode"
+        [selectionMode]="this.model.getSelectionMode()"
         [display]="this.model.style"
         [data]="this.data$ | async"
         [filters]="this.combinedFilters$ | async"
-        [pageable]="this.api.model.pageable"
+        [pageable]="this.api.model.isPageable()"
         [detailContent]="childDetail"
         [syncWithUrl]="this.syncWithUrl"
         (selectionsChange)="this.onRowSelection($event)"
@@ -72,7 +75,7 @@ import { TableWidgetModel } from './table-widget.model';
   `
 })
 export class TableWidgetRendererComponent
-  extends WidgetRenderer<TableWidgetModel, TableDataSource<TableRow> | undefined>
+  extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
@@ -98,6 +101,8 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
+    this.onModeChange(this.model.mode);
+
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = this.getColumnConfigs();
 
@@ -105,15 +110,14 @@ export class TableWidgetRendererComponent
       map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
     );
 
-    this.filterItems = this.model.filterToggles.map(fiterItem => ({
-      label: capitalize(fiterItem.label),
-      value: fiterItem
+    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
+      label: capitalize(filterOption.label),
+      value: filterOption
     }));
-    this.modeItems = this.model.modeToggles.map(mode => ({
-      label: capitalize(mode),
-      value: mode
+    this.modeItems = this.model.getModeOptions().map(modeOption => ({
+      label: capitalize(modeOption),
+      value: modeOption
     }));
-    this.activeMode = this.model.mode;
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -143,7 +147,8 @@ export class TableWidgetRendererComponent
       pairwise(),
       filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
       map(([_, current]) => current),
-      share()
+      share(),
+      tap(() => this.onDashboardRefresh())
     );
   }
 
@@ -192,10 +197,12 @@ export class TableWidgetRendererComponent
 
   public onModeChange(mode: TableMode): void {
     this.activeMode = mode;
+    this.model.setMode(mode);
+    this.columnConfigs$ = this.getColumnConfigs();
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {
-    if (this.api.model.selectionMode === TableSelectionMode.Single) {
+    if (this.api.model.getSelectionMode() === TableSelectionMode.Single) {
       /**
        * Execute selection handler for single selection mode only
        */
@@ -210,10 +217,11 @@ export class TableWidgetRendererComponent
   }
 
   private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
-    const matchedSelectionHandlers = this.api.model.rowSelectionHandlers
+    const matchedSelectionHandlers = this.api.model
+      .getRowSelectionHandlers(selectedRow)
       ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 
-    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers![0].handler : undefined;
+    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
   }
 }
