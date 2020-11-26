@@ -3,6 +3,7 @@ import { ArrayPropertyTypeInstance, ENUM_TYPE, ModelTemplatePropertyType } from 
 import { ARRAY_PROPERTY, Model, ModelApi, ModelJson, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
+import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetModel } from './table-widget.model';
@@ -83,5 +84,11 @@ export class ModeToggleTableWidgetModel extends TableWidgetBaseModel {
 
   public getChildModel(row: TableRow): object | undefined {
     return this.delegateModel && this.delegateModel?.getChildModel(row);
+  }
+
+  public getRowSelectionHandlers(row: TableRow): TableWidgetRowSelectionModel[] {
+    return this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0
+      ? this.delegateModel?.getRowSelectionHandlers(row)
+      : [];
   }
 }
