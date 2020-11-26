@@ -13,7 +13,10 @@ export const enum Color {
   Purple3 = '#E295E9',
   Purple4 = '#CB41D8',
   Purple5 = '#94209f',
+  Red1 = '#fff3f1',
+  Red2 = '#fecac2',
   Red3 = '#FEA395',
   Red5 = '#FD5138',
+  Red6 = '#F72202',
   Brown1 = '#9e4c41'
 }
