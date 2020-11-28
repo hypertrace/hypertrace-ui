@@ -37,7 +37,7 @@
     "@angular/router": "^11.0.2",
     "@apollo/client": "^3.2.5",
     "@hypertrace/hyperdash": "^1.1.2",
-    "@hypertrace/hyperdash-angular": "^2.2.0",
+    "@hypertrace/hyperdash-angular": "^2.3.1",
     "@types/d3-hierarchy": "^2.0.0",
     "@types/d3-transition": "1.1.5",
     "apollo-angular": "^2.1.0",
@@ -68,7 +68,6 @@
   "devDependencies": {
     "@angular-builders/jest": "^10.0.0-beta.0",
     "@angular-devkit/build-angular": "~0.1100.2",
-    "@angular-devkit/build-ng-packagr": "~0.1002.0",
     "@angular/cli": "11.0.2",
     "@angular/compiler-cli": "~11.0.2",
     "@angular/language-service": "~11.0.2",

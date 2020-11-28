@@ -14,7 +14,7 @@
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/dashboards": "^0.0.0",
     "@hypertrace/distributed-tracing": "^0.0.0",
-    "@hypertrace/hyperdash-angular": "^2.2.0",
+    "@hypertrace/hyperdash-angular": "^2.3.1",
     "@hypertrace/hyperdash": "^1.1.2",
     "d3-array": "^2.2.0",
     "d3-color": "^1.4.0",
