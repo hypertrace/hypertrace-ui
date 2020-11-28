@@ -1,8 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FilterParserLookupService, ModalService, TableSortDirection } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
+import { FilterParserLookupService } from '../../filtering/filter/parser/filter-parser-lookup.service';
+import { ModalService } from '../../modal/modal.service';
 import { TableCellStringParser } from '../cells/data-parsers/table-cell-string-parser';
 import { TextTableCellRendererComponent } from '../cells/data-renderers/text/text-table-cell-renderer.component';
+import { TableSortDirection } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
 import { TableHeaderCellRendererComponent } from './table-header-cell-renderer.component';
 

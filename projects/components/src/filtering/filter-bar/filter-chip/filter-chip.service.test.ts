@@ -1,5 +1,4 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterAttribute, FilterAttributeType } from '@hypertrace/components';
 import { getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { FilterBuilderLookupService } from '../../filter/builder/filter-builder-lookup.service';
@@ -7,6 +6,8 @@ import { BooleanFilterBuilder } from '../../filter/builder/types/boolean-filter-
 import { NumberFilterBuilder } from '../../filter/builder/types/number-filter-builder';
 import { StringFilterBuilder } from '../../filter/builder/types/string-filter-builder';
 import { StringMapFilterBuilder } from '../../filter/builder/types/string-map-filter-builder';
+import { FilterAttribute } from '../../filter/filter-attribute';
+import { FilterAttributeType } from '../../filter/filter-attribute-type';
 import { FilterOperator } from '../../filter/filter-operators';
 import { FilterParserLookupService } from '../../filter/parser/filter-parser-lookup.service';
 import { ComparisonFilterParser } from '../../filter/parser/types/comparison-filter-parser';

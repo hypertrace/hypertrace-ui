@@ -1,7 +1,7 @@
 import { FormattingModule } from '@hypertrace/common';
-import { tableCellDataProvider, tableCellProviders } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { TableCellTimestampParser } from '../../data-parsers/table-cell-timestamp-parser';
+import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { TimestampTableCellRendererComponent } from './timestamp-table-cell-renderer.component';
 
 describe('Timestamp table cell renderer component', () => {

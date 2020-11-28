@@ -93,6 +93,6 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
       return '';
     }
 
-    return color.hex().substr(1);
+    return color.formatHex().substr(1);
   }
 }

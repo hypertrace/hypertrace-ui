@@ -1,10 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 import { FixedTimeRange } from '@hypertrace/common';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
 import { traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../model/schema/trace';
 import { SpecificationBuilder } from '../../builders/specification/specification-builder';

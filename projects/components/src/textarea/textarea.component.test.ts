@@ -1,4 +1,3 @@
-import { async } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { TextareaComponent } from './textarea.component';
@@ -14,9 +13,9 @@ describe('Textarea Component', () => {
     declareComponent: false
   });
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     logSpy = spyOn(console, 'warn');
-  }));
+  });
 
   test('should warn when placeholder is not provided', () => {
     spectator = createHost(`<ht-textarea></ht-textarea>`);

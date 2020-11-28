@@ -1,10 +1,12 @@
-import { Filter, FilterAttributeType, FilterOperator } from '@hypertrace/components';
 import { getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { BooleanFilterBuilder } from '../filter/builder/types/boolean-filter-builder';
 import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
 import { StringFilterBuilder } from '../filter/builder/types/string-filter-builder';
 import { StringMapFilterBuilder } from '../filter/builder/types/string-map-filter-builder';
+import { Filter } from '../filter/filter';
+import { FilterAttributeType } from '../filter/filter-attribute-type';
+import { FilterOperator } from '../filter/filter-operators';
 import { FilterBarService } from './filter-bar.service';
 
 describe('Filter Bar service', () => {

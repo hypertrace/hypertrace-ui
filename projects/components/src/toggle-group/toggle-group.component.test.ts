@@ -1,7 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
-import { LabelComponent, ToggleGroupComponent, ToggleItem } from '@hypertrace/components';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { LabelComponent } from '../label/label.component';
+import { ToggleGroupComponent } from './toggle-group.component';
+import { ToggleItem } from './toggle-item';
 import { ToggleItemComponent } from './toggle-item.component';
 
 describe('Toggle Group Component', () => {

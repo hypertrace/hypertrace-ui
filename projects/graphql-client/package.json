@@ -3,17 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "peerDependencies": {
-    "@angular/core": "^10.0.4",
-    "core-js": "^3.5.0",
-    "rxjs": "~6.6.0",
+    "@angular/core": "^11.0.2",
+    "core-js": "^3.7.0",
+    "rxjs": "~6.6.3",
     "lodash-es": "^4.17.15",
-    "@apollo/client": "^3.2.0",
-    "apollo-angular": "^2.0.4"
+    "@apollo/client": "^3.2.5",
+    "apollo-angular": "^2.1.0"
   },
   "devDependencies": {
     "@hypertrace/test-utils": "^0.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.3"
   }
 }
