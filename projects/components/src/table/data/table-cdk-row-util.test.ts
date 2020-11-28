@@ -234,61 +234,57 @@ describe('Table row util', () => {
       childStatefulPrefetchedTreeTableRow
     )[0] as StatefulPrefetchedTreeTableRow;
 
-    /*
-     * All of the circular references are causing mayhem, so testing fields individually
-     */
-
     expect(parent.$$state.parent).toBeUndefined();
     expect(parent.$$state.children.length).toEqual(1);
-    delete parent.$$state.children;
-
-    expect(parent.$$state).toEqual({
-      parent: undefined,
-      expanded: false,
-      selected: false,
-      root: true,
-      leaf: false,
-      depth: 0
-    });
+    expect(parent.$$state).toEqual(
+      expect.objectContaining({
+        parent: undefined,
+        expanded: false,
+        selected: false,
+        root: true,
+        leaf: false,
+        depth: 0
+      })
+    );
 
     expect(child.$$state.parent).not.toBeUndefined();
     expect(child.$$state.children.length).toEqual(2);
-    delete child.$$state.parent;
-    delete child.$$state.children;
 
-    expect(child.$$state).toEqual({
-      expanded: false,
-      selected: false,
-      root: false,
-      leaf: false,
-      depth: 1
-    });
+    expect(child.$$state).toEqual(
+      expect.objectContaining({
+        expanded: false,
+        selected: false,
+        root: false,
+        leaf: false,
+        depth: 1
+      })
+    );
 
     expect(grandchild1.$$state.parent).not.toBeUndefined();
     expect(grandchild1.$$state.children.length).toEqual(0);
-    delete grandchild1.$$state.parent;
-    delete grandchild1.$$state.children;
 
-    expect(grandchild1.$$state).toEqual({
-      expanded: false,
-      selected: false,
-      root: false,
-      leaf: true,
-      depth: 2
-    });
+    expect(grandchild1.$$state).toEqual(
+      expect.objectContaining({
+        expanded: false,
+        selected: false,
+        root: false,
+        leaf: true,
+        depth: 2
+      })
+    );
 
     expect(grandchild2.$$state.parent).not.toBeUndefined();
     expect(grandchild2.$$state.children.length).toEqual(0);
-    delete grandchild2.$$state.parent;
-    delete grandchild2.$$state.children;
 
-    expect(grandchild2.$$state).toEqual({
-      expanded: false,
-      selected: false,
-      root: false,
-      leaf: true,
-      depth: 2
-    });
+    expect(grandchild2.$$state).toEqual(
+      expect.objectContaining({
+        expanded: false,
+        selected: false,
+        root: false,
+        leaf: true,
+        depth: 2
+      })
+    );
   });
 
   /****************************

@@ -1,10 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { IconType } from '@hypertrace/assets-library';
-import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { Subject } from 'rxjs';
+import { IconComponent } from '../icon/icon.component';
 import { NotificationComponent, NotificationMode } from './notification.component';
 
 describe('NotificationComponent', () => {

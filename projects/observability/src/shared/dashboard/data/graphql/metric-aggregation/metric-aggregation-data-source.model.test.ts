@@ -7,14 +7,14 @@ import {
   ObservedGraphQlRequest
 } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { runFakeRxjs } from '@hypertrace/test-utils';
+import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   ExploreGraphQlQueryHandlerService,
-  ExploreSelectionSpecificationModel,
-  ExploreSpecificationBuilder,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '@hypertrace/observability';
-import { runFakeRxjs } from '@hypertrace/test-utils';
+} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { ExploreSelectionSpecificationModel } from '../specifiers/explore-selection-specification.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation-data-source.model';
 
 describe('Metric aggregation data source model', () => {

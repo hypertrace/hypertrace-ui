@@ -1,7 +1,7 @@
 import { FormattingModule } from '@hypertrace/common';
-import { tableCellColumnProvider, tableCellDataProvider, tableCellProviders } from '@hypertrace/components';
 import { byText, createComponentFactory } from '@ngneat/spectator/jest';
 import { TableCellStringParser } from '../../data-parsers/table-cell-string-parser';
+import { tableCellColumnProvider, tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { TextTableCellRendererComponent } from './text-table-cell-renderer.component';
 
 describe('Text table cell renderer component', () => {

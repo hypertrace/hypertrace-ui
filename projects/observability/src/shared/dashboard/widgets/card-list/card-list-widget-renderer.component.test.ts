@@ -6,10 +6,10 @@ import {
   TitledContentComponent
 } from '@hypertrace/components';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '@hypertrace/observability';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
+import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { Card, CardType } from './card';
 import { CardListWidgetModel } from './card-list-widget-model';
 import { CardListWidgetRendererComponent } from './card-list-widget-renderer.component';
