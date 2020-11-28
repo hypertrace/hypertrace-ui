@@ -51,9 +51,8 @@ describe('String property editor component', () => {
   });
 
   test('to initialize to provided value', () => {
-    const input = testFixture.debugElement.query(By.directive(InputComponent)).componentInstance as InputComponent<
-      string
-    >;
+    const input = testFixture.debugElement.query(By.directive(InputComponent))
+      .componentInstance as InputComponent<string>;
 
     expect(input.value).toBe('initial');
   });
