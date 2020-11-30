@@ -1,8 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { SearchBoxComponent, TableControlsComponent, ToggleGroupComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { SearchBoxComponent } from '../../search-box/search-box.component';
+import { ToggleGroupComponent } from '../../toggle-group/toggle-group.component';
+import { TableControlsComponent } from './table-controls.component';
 
 describe('Table Controls component', () => {
   const createHost = createHostFactory({

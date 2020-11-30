@@ -1,6 +1,7 @@
-import { FilterAttributeType, FilterOperator } from '@hypertrace/components';
 import { getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import { FilterAttributeType } from '../filter-attribute-type';
+import { FilterOperator } from '../filter-operators';
 import { FilterParserLookupService } from './filter-parser-lookup.service';
 import { ComparisonFilterParser } from './types/comparison-filter-parser';
 import { ContainsFilterParser } from './types/contains-filter-parser';

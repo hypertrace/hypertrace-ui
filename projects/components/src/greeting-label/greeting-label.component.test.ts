@@ -1,5 +1,5 @@
-import { GreetingLabelComponent } from '@hypertrace/components';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { GreetingLabelComponent } from './greeting-label.component';
 
 describe('Greeting Label component', () => {
   let spectator: Spectator<GreetingLabelComponent>;

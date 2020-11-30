@@ -1,7 +1,7 @@
-import { FilterOperator } from '@hypertrace/components';
 import { getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { FilterAttributeType } from '../filter-attribute-type';
+import { FilterOperator } from '../filter-operators';
 import { FilterBuilderLookupService } from './filter-builder-lookup.service';
 import { BooleanFilterBuilder } from './types/boolean-filter-builder';
 import { NumberFilterBuilder } from './types/number-filter-builder';

@@ -15,7 +15,7 @@ export class CartesianTimeScale<TData> extends CartesianNumericScale<TData> {
   });
 
   public transformDomain(value: Numeric): number {
-    return this.d3Implementation(value);
+    return this.d3Implementation(value)!;
   }
 
   public getTickFormatter(): (value: Numeric) => string {

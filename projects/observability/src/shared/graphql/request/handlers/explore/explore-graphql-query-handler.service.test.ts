@@ -10,9 +10,9 @@ import {
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import { ObservabilityEntityType } from '@hypertrace/observability';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilityTraceType } from '../../../model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';

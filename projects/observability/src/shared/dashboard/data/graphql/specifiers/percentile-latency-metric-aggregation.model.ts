@@ -12,9 +12,7 @@ import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/b
   type: 'percentile-latency-metric-aggregation',
   displayName: 'Latency'
 })
-export class PercentileLatencyAggregationSpecificationModel extends SpecificationModel<
-  PercentileLatencyMetricAggregationSpecification
-> {
+export class PercentileLatencyAggregationSpecificationModel extends SpecificationModel<PercentileLatencyMetricAggregationSpecification> {
   public readonly aggregation: MetricAggregationType = MetricAggregationType.P99;
 
   protected buildInnerSpec(): PercentileLatencyMetricAggregationSpecification {

@@ -12,9 +12,7 @@ import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/b
   type: 'error-percentage-metric-aggregation',
   displayName: 'Error Percentage'
 })
-export class ErrorPercentageMetricAggregationSpecificationModel extends SpecificationModel<
-  ErrorPercentageMetricAggregationSpecification
-> {
+export class ErrorPercentageMetricAggregationSpecificationModel extends SpecificationModel<ErrorPercentageMetricAggregationSpecification> {
   @ModelProperty({
     key: 'aggregation',
     displayName: 'Aggregation',

@@ -5,9 +5,10 @@ import {
   NavigationService,
   TimeRangeService
 } from '@hypertrace/common';
-import { ButtonComponent, OpenInNewTabComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { ButtonComponent } from '../button/button.component';
+import { OpenInNewTabComponent } from './open-in-new-tab.component';
 
 describe('Open in new tab component', () => {
   let spectator: Spectator<OpenInNewTabComponent>;
