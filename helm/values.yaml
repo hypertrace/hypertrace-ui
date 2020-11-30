@@ -8,6 +8,7 @@ maxUnavailable: 0
 image:
   repository: hypertrace/hypertrace-ui
   pullPolicy: IfNotPresent
+  tagOverride: ""
 
 imagePullSecrets: []
 
