@@ -31,7 +31,7 @@ import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 @Injectable()
 export class ExploreVisualizationBuilder implements OnDestroy {
   private static readonly DEFAULT_GROUP_LIMIT: number = 5;
-  private static readonly DEFAULT_UNGROUPED_LIMIT: number = 10000;
+  private static readonly DEFAULT_UNGROUPED_LIMIT: number = 500;
 
   public readonly visualizationRequest$: Observable<ExploreVisualizationRequest>;
   private readonly destroyed$: Subject<void> = new Subject();
@@ -193,7 +193,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       requestType: TRACES_GQL_REQUEST,
       traceType: traceType,
       properties: specifications,
-      limit: 1000,
+      limit: 100,
       filters: filters && this.graphQlFilterBuilderService.buildGraphQlFilters(filters)
     };
   }
@@ -205,7 +205,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return {
       requestType: SPANS_GQL_REQUEST,
       properties: specifications,
-      limit: 1000,
+      limit: 100,
       filters: filters && this.graphQlFilterBuilderService.buildGraphQlFilters(filters)
     };
   }

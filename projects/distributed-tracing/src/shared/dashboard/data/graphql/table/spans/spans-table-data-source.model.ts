@@ -26,7 +26,7 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
     return {
       requestType: SPANS_GQL_REQUEST,
       properties: request.columns.map(column => column.specification),
-      limit: request.position.limit * 10, // Prefetch 10 pages
+      limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,

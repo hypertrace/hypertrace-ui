@@ -33,7 +33,7 @@ export class TracesDataSourceModel extends GraphQlDataSourceModel<TracesResponse
       traceType: this.traceType,
       timeRange: this.getTimeRangeOrThrow(),
       properties: this.attributeSpecifications,
-      limit: 1000
+      limit: 100
     });
   }
 }
