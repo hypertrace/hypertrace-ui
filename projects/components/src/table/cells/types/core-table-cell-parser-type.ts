@@ -4,5 +4,6 @@ export const enum CoreTableCellParserType {
   Number = 'number',
   String = 'string',
   Timestamp = 'timestamp',
-  Icon = 'icon'
+  Icon = 'icon',
+  NoOp = 'noop'
 }

@@ -12,6 +12,7 @@ import { TooltipModule } from '../../tooltip/tooltip.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
 import { TableCellBooleanParser } from './data-parsers/table-cell-boolean-parser';
 import { TableCellIconParser } from './data-parsers/table-cell-icon-parser';
+import { TableCellNoOpParser } from './data-parsers/table-cell-no-op-parser';
 import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
@@ -82,7 +83,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCellIconParser,
         TableCellNumberParser,
         TableCellStringParser,
-        TableCellTimestampParser
+        TableCellTimestampParser,
+        TableCellNoOpParser
       ],
       multi: true
     }
