@@ -1,3 +1,4 @@
+import { Dictionary } from '@hypertrace/common';
 import { TableCellParser } from '../table-cell-parser';
 import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
@@ -5,17 +6,16 @@ import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 @TableCellParser({
   type: CoreTableCellParserType.Object
 })
-export class TableCellObjectParser extends TableCellParserBase<ObjectCellData, ObjectCellData, string | undefined> {
-  public parseValue(cellData: ObjectCellData): ObjectCellData {
+export class TableCellObjectParser extends TableCellParserBase<unknown, unknown, string | undefined> {
+  public parseValue(cellData: unknown): unknown {
     return cellData;
   }
 
-  public parseFilterValue(cellData: ObjectCellData): string | undefined {
-    return this.parseValue(cellData).filterValue;
-  }
-}
+  public parseFilterValue(cellData: unknown): string | undefined {
+    if (typeof cellData === 'object' && cellData !== null && 'filterValue' in cellData) {
+      return (cellData as Dictionary<unknown>).filterValue as string;
+    }
 
-// Since object is very generic, using an explicit key fr default filter value
-interface ObjectCellData extends Object {
-  filterValue?: string;
+    return String(cellData);
+  }
 }
