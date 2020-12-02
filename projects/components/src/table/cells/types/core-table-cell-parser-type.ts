@@ -5,5 +5,5 @@ export const enum CoreTableCellParserType {
   String = 'string',
   Timestamp = 'timestamp',
   Icon = 'icon',
-  NoOp = 'noOp'
+  NoOp = 'noop'
 }
