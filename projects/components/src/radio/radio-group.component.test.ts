@@ -1,4 +1,4 @@
-import { async, fakeAsync } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { RadioGroupComponent } from './radio-group.component';
@@ -15,9 +15,9 @@ describe('Radio component', () => {
     declareComponent: false
   });
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     logSpy = spyOn(console, 'warn');
-  }));
+  });
 
   test('should warn when title is not provided', () => {
     spectator = createHost(`<ht-radio-group></ht-radio-group>`);

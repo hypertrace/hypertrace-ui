@@ -10,7 +10,7 @@ export class CartesianContinuousScale<TData> extends CartesianNumericScale<TData
   private readonly numberFormatter: NumericFormatter = new NumericFormatter();
 
   public transformDomain(value: number): number {
-    return this.d3Implementation(value);
+    return this.d3Implementation(value)!;
   }
 
   public getTickFormatter(): (value: Numeric) => string {
@@ -21,7 +21,7 @@ export class CartesianContinuousScale<TData> extends CartesianNumericScale<TData
     const ticks = this.d3Implementation.ticks();
     const length = ticks.length;
 
-    return this.d3Implementation(ticks[length - 1]) - this.d3Implementation(ticks[length - 2]);
+    return this.d3Implementation(ticks[length - 1])! - this.d3Implementation(ticks[length - 2])!;
   }
 
   public transformDataOrigin(datum: TData): number {

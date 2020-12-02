@@ -1,6 +1,7 @@
-import { BreadcrumbsService, PageHeaderComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
+import { PageHeaderComponent } from './page-header.component';
 
 describe('Page Header Component', () => {
   let spectator: Spectator<PageHeaderComponent>;

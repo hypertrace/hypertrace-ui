@@ -1,6 +1,7 @@
+import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { IconComponent } from '@hypertrace/components';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../graphql/model/schema/entity';
 import { ObservabilityIconType } from '../../icons/observability-icon-type';
@@ -9,7 +10,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
 import { EntityRendererComponent } from './entity-renderer.component';
 
 describe('Entity Renderer Component', () => {
-  let spectator: Spectator<EntityRendererComponent>;
+  let spectator: SpectatorHost<EntityRendererComponent>;
 
   const createHost = createHostFactory({
     component: EntityRendererComponent,
@@ -103,6 +104,34 @@ describe('Entity Renderer Component', () => {
     );
 
     expect(spectator.query('.name')).toHaveText('test api');
-    expect(spectator.query(IconComponent)).toBeNull();
+    expect(spectator.query(IconComponent)).not.toExist();
+  });
+
+  test('renders an entity with user provided icon', () => {
+    const entity = {
+      [entityIdKey]: 'test-id',
+      [entityTypeKey]: ObservabilityEntityType.Api,
+      name: 'test api'
+    };
+
+    spectator = createHost(
+      `<ht-entity-renderer [entity]="entity" [icon]="icon" [showIcon]="showIcon">
+      </ht-entity-renderer>`,
+      {
+        hostProps: {
+          entity: entity,
+          icon: IconType.Add,
+          showIcon: false
+        }
+      }
+    );
+
+    expect(spectator.query('.name')).toHaveText('test api');
+    expect(spectator.query(IconComponent)).not.toExist();
+
+    spectator.setHostInput({
+      showIcon: true
+    });
+    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Add);
   });
 });

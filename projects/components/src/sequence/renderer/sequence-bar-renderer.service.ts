@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SequenceLayoutStyleClass, SequenceOptions, SequenceSegment, SequenceSVGSelection } from '../sequence';
-
 import { ScaleLinear } from 'd3-scale';
 import { BaseType, select, Selection } from 'd3-selection';
 import { SequenceChartAxisService } from '../axis/sequence-chart-axis.service';
+import { SequenceLayoutStyleClass, SequenceOptions, SequenceSegment, SequenceSVGSelection } from '../sequence';
 import { SequenceObject } from '../sequence-object';
 
 @Injectable()
@@ -101,7 +100,7 @@ export class SequenceBarRendererService {
         'transform',
         dataRow => `translate(${xScale(dataRow.start)},${(options.rowHeight - options.barHeight) / 2})`
       )
-      .attr('width', dataRow => Math.max(xScale(dataRow.end) - xScale(dataRow.start), 3))
+      .attr('width', dataRow => Math.max(xScale(dataRow.end)! - xScale(dataRow.start)!, 3))
       .attr('height', options.barHeight)
       .style('fill', dataRow => dataRow.color)
       .attr('rx', '3')
@@ -119,7 +118,7 @@ export class SequenceBarRendererService {
       .classed('bar-value-text', true)
       .attr(
         'transform',
-        dataRow => `translate(${xScale(dataRow.end) + 10}, ${(options.rowHeight - options.barHeight) / 2})`
+        dataRow => `translate(${xScale(dataRow.end)! + 10}, ${(options.rowHeight - options.barHeight) / 2})`
       )
       .attr('dy', '.82em')
       .style('font-size', '14px')

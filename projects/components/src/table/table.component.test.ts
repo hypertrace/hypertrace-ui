@@ -1,25 +1,19 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
-import {
-  CoreTableCellRendererType,
-  LetAsyncModule,
-  SearchBoxComponent,
-  StatefulTableRow,
-  TableColumnConfig,
-  TableMode,
-  TableSelectionMode,
-  TableSortDirection
-} from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { LetAsyncModule } from '../let-async/let-async.module';
 import { PaginatorComponent } from '../paginator/paginator.component';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 import { TableCellStringParser } from './cells/data-parsers/table-cell-string-parser';
 import { TextTableCellRendererComponent } from './cells/data-renderers/text/text-table-cell-renderer.component';
+import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
 import { TableCdkRowUtil } from './data/table-cdk-row-util';
+import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, TableSortDirection } from './table-api';
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
 

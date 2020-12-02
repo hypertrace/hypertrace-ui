@@ -6,13 +6,13 @@ import {
   LoadAsyncModule
 } from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
+import { MetadataService } from '../../services/metadata/metadata.service';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
 import { ApplicationAwareDashboardComponent } from './application-aware-dashboard.component';
 import { NavigableDashboardComponent } from './navigable-dashboard.component';

@@ -1,11 +1,9 @@
-import {
-  GraphQlArgumentBuilder,
-  GraphQlFieldFilter,
-  GraphQlOperatorType,
-  GraphQlTimeRange,
-  SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { GraphQlFieldFilter } from '../../../model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../../model/schema/filter/graphql-filter';
+import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
+import { SpecificationBuilder } from '../specification/specification-builder';
+import { GraphQlArgumentBuilder } from './graphql-argument-builder';
 
 describe('Graphql Argument Builder', () => {
   const argBuilder = new GraphQlArgumentBuilder();

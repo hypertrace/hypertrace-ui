@@ -1,0 +1,76 @@
+@import 'mixins';
+
+.label-detail-trigger {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  cursor: pointer;
+
+  .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .label-icon {
+    background: $blue-1;
+    color: $blue-4;
+  }
+
+  .expand {
+    background: $gray-1;
+  }
+
+  .label {
+    margin-left: 8px;
+    @include body-1-medium($gray-7);
+  }
+}
+
+.popover-content {
+  padding: 16px 16px 16px 4px;
+  min-width: 300px;
+
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 0px 2px 4px rgba(63, 71, 74, 0.14), 0px 4px 5px rgba(63, 71, 74, 0.12), 0px 1px 8px rgba(63, 71, 74, 0.16);
+  border-radius: 6px;
+
+  .label-display {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+
+    .label {
+      @include body-1-medium($gray-7);
+    }
+  }
+
+  .description {
+    @include body-small($gray-5);
+    margin-top: 4px;
+    margin-left: 40px;
+  }
+
+  .details {
+    @include body-small($gray-7);
+    margin-top: 4px;
+    padding-inline-start: 16px;
+    display: grid;
+    grid-template-columns: 8px auto;
+    grid-gap: 6px;
+    align-items: center;
+
+    .symbol {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: $gray-7;
+    }
+  }
+}

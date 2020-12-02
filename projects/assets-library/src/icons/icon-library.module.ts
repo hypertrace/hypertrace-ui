@@ -41,7 +41,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Device, url: `${iconsRootPath}/device.svg` },
         { key: IconType.Edge, url: `${iconsRootPath}/edge.svg` },
         { key: IconType.ExpandAll, url: `${iconsRootPath}/expand-all.svg` },
-        { key: IconType.Expanded, url: `${iconsRootPath}/minus-square.svg` },
+        { key: IconType.Expanded, url: `${iconsRootPath}/minus-circle.svg` },
         { key: IconType.FileCode, url: `${iconsRootPath}/file-code.svg` },
         { key: IconType.Filter, url: `${iconsRootPath}/filter.svg` },
         { key: IconType.Helm, url: `${iconsRootPath}/helm.svg` },

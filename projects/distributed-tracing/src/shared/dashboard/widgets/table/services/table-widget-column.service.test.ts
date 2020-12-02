@@ -1,13 +1,11 @@
 import { fakeAsync } from '@angular/core/testing';
 import { FilterBuilderLookupService } from '@hypertrace/components';
-import {
-  MetadataService,
-  SpecificationBackedTableColumnDef,
-  SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
 import { getAllTestFilterAttributes, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { SpecificationBackedTableColumnDef } from '../table-widget-column.model';
 import { TableWidgetColumnsService } from './table-widget-columns.service';
 
 describe('Table Widget Column service', () => {

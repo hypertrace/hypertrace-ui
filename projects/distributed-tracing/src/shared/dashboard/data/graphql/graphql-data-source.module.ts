@@ -5,6 +5,7 @@ import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TableWidgetColumnModel } from '../../widgets/table/table-widget-column.model';
 import { TableWidgetFilterModel } from '../../widgets/table/table-widget-filter-model';
 import { GraphQlFilterDataSourceModel } from './filter/graphql-filter-data-source.model';
+import { GraphqlIdScopeFilterModel } from './filter/graphql-id-scope-filter.model';
 import { GraphQlKeyValueFilterModel } from './filter/graphql-key-value-filter.model';
 import { GRAPHQL_DATA_SOURCE_HANDLER_PROVIDERS } from './graphql-handler-configuration';
 import { SpanDataSourceModel } from './span/span-data-source.model';
@@ -28,6 +29,7 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         TraceWaterfallDataSourceModel,
         GraphQlFilterDataSourceModel,
         GraphQlKeyValueFilterModel,
+        GraphqlIdScopeFilterModel,
         SpansTableDataSourceModel,
         TracesTableDataSourceModel,
         SpanDataSourceModel,

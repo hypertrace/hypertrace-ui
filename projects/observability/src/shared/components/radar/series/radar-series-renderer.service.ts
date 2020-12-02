@@ -71,7 +71,7 @@ export class RadarSeriesRendererService {
       .radius(datum => {
         const axisData = axisDataMap.get(datum.axis)!;
 
-        return axisData.scale(datum.value);
+        return axisData.scale(datum.value)!;
       })
       .angle(datum => {
         const axisData = axisDataMap.get(datum.axis)!;
@@ -81,7 +81,7 @@ export class RadarSeriesRendererService {
   }
 
   private getPointCoordinates(axisData: RadarAxisData, radarPoint: RadarPoint): Point {
-    const distance = axisData.scale(radarPoint.value);
+    const distance = axisData.scale(radarPoint.value)!;
     const angle = axisData.axisRadian;
 
     return getCoordinateAtAngle(distance, angle);

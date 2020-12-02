@@ -125,9 +125,9 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
 
     bubbleGroupsSelection
       .select(selector(BubbleChartBuilderService.DATA_BUBBLE_CLASS))
-      .attr('r', data => rScale(data.r))
-      .attr('cx', data => xScale(data.x))
-      .attr('cy', data => yScale(data.y));
+      .attr('r', data => rScale(data.r)!)
+      .attr('cx', data => xScale(data.x)!)
+      .attr('cy', data => yScale(data.y)!);
 
     this.maybeAddTooltipTracking(
       visualizationContainer.node()!,
@@ -298,16 +298,16 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
         'transform',
         data =>
           `translate(
-            -${this.getCheckmarkIconSize(rScale(data.r)) / 2},
-            -${this.getCheckmarkIconSize(rScale(data.r)) / 2}
+            -${this.getCheckmarkIconSize(rScale(data.r)!) / 2},
+            -${this.getCheckmarkIconSize(rScale(data.r)!) / 2}
           )`
       )
       .select(selector(BubbleChartBuilderService.CHECKMARK_SVG_CONTAINER_CLASS))
-      .attr('x', data => xScale(data.x))
-      .attr('y', data => yScale(data.y))
-      .attr('width', data => this.getCheckmarkIconSize(rScale(data.r)))
-      .attr('height', data => this.getCheckmarkIconSize(rScale(data.r)))
-      .style('font-size', data => `${this.getCheckmarkIconSize(rScale(data.r))}px`);
+      .attr('x', data => xScale(data.x)!)
+      .attr('y', data => yScale(data.y)!)
+      .attr('width', data => this.getCheckmarkIconSize(rScale(data.r)!))
+      .attr('height', data => this.getCheckmarkIconSize(rScale(data.r)!))
+      .style('font-size', data => `${this.getCheckmarkIconSize(rScale(data.r)!)}px`);
   }
 
   private getCheckmarkIconSize(radius: number): number {

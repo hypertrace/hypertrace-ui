@@ -34,6 +34,7 @@ export * from './shared/services/navigation/entity/entity-navigation.service';
 
 // Entity Renderer
 export * from './shared/components/entity-renderer/entity-renderer.module';
+export * from './shared/components/entity-renderer/entity-renderer.component';
 
 // Entity table cell renderer util
 export * from './shared/components/table/data-cell/entity/entity-table-cell-renderer-util';
@@ -215,3 +216,7 @@ export * from './pages/explorer/explorer-service';
 export * from './shared/components/gauge/gauge.component';
 export * from './shared/components/gauge/gauge.module';
 export * from './shared/dashboard/widgets/gauge/gauge-widget';
+
+// Label Detail
+export * from './shared/components/label-detail/label-detail.component';
+export * from './shared/components/label-detail/label-detail.module';

@@ -1,9 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, NavigationService } from '@hypertrace/common';
-import { IconComponent, MenuItemComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { IconComponent } from '../../icon/icon.component';
+import { MenuItemComponent } from './menu-item.component';
 
 describe('Menu Item Component', () => {
   const createHost = createHostFactory<MenuItemComponent>({
