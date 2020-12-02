@@ -1,12 +1,19 @@
 export const durationFormatter = (duration?: number): string => {
+  const dayInMs: number = 1000 * 60 * 60 * 24;
   if (duration === undefined) {
     return '-';
   }
+  const days = Math.abs(Math.trunc(duration / dayInMs));
 
-  const hours = new Date(duration).getUTCHours();
-  const minutes = new Date(duration).getUTCMinutes();
-  const seconds = new Date(duration).getUTCSeconds();
-  const milliseconds = new Date(duration).getUTCMilliseconds();
+  const date = new Date(duration);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
+  const milliseconds = date.getUTCMilliseconds();
+
+  if (days !== 0) {
+    return hours === 0 && minutes === 0 ? `${days}d` : `${days}d ${hours}h ${doubleDigit(minutes)}m`;
+  }
 
   if (hours !== 0) {
     return `${hours}h ${doubleDigit(minutes)}m`;
