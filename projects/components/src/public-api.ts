@@ -226,6 +226,7 @@ export * from './table/table-api';
 export * from './table/cells/test/cell-providers';
 export * from './table/cells/types/table-cell-alignment-type';
 export * from './table/cells/types/core-table-cell-renderer-type';
+export * from './table/cells/types/core-table-cell-parser-type';
 export * from './table/cells/table-cell-injection';
 export * from './table/cells/table-cell-renderer-base';
 export * from './table/cells/table-cell-parser-base';
