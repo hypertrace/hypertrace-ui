@@ -61,7 +61,7 @@ export abstract class TableWidgetBaseModel {
   public filterOptions: TableWidgetFilterModel[] = [];
 
   @ModelProperty({
-    key: 'checkboxFilterOption',
+    key: 'checkbox-filter-option',
     displayName: 'Checkbox Filter Option',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {

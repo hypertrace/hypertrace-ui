@@ -1,3 +1,4 @@
+import { TableFilter } from './../../../../../../components/src/table/table-api';
 import { FilterOperator } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
@@ -52,4 +53,12 @@ export class TableWidgetFilterModel {
     required: true
   })
   public value!: unknown;
+
+  public getTableFilter(): TableFilter {
+    return {
+      field: this.attribute,
+      operator: this.operator,
+      value: this.value
+    };
+  }
 }

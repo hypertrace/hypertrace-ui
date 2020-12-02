@@ -45,7 +45,7 @@ import { TableWidgetModel } from './table-widget.model';
         [searchEnabled]="!!this.api.model.searchAttribute"
         [filterItems]="this.filterItems"
         [modeItems]="this.modeItems"
-        [showCheckbox]="!!this.api.model.checkboxFilterOption?.attribute"
+        [showCheckbox]="!!this.api.model.checkboxFilterOption?.checkedFilter"
         [checkboxLabel]="this.model.checkboxFilterOption?.label"
         [checkboxChecked]="this.model.checkboxFilterOption?.checked"
         (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
@@ -197,7 +197,7 @@ export class TableWidgetRendererComponent
   }
 
   public onCheckboxCheckedChange(checked: boolean): void {
-    const tableFilter = checked ? this.model.checkboxFilterOption?.getTableFilter() : undefined;
+    const tableFilter = this.model.checkboxFilterOption?.getTableFilter(checked);
     this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
   }
 
