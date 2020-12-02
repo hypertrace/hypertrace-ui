@@ -1,5 +1,4 @@
-import { TableFilter } from './../../../../../../components/src/table/table-api';
-import { FilterOperator } from '@hypertrace/components';
+import { FilterOperator, TableFilter } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 
