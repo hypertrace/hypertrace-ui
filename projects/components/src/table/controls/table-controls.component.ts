@@ -33,7 +33,7 @@ import { TableMode } from '../table-api';
 
         <!-- Checkbox Filter -->
         <ht-checkbox
-          *ngIf="this.showCheckbox"
+          *ngIf="this.checkboxLabel"
           class="control filter-checkbox"
           [label]="this.checkboxLabel"
           [checked]="this.checkboxChecked"
@@ -72,9 +72,6 @@ export class TableControlsComponent implements OnChanges {
   public activeModeItem?: ToggleItem;
 
   // Checkbox filter
-  @Input()
-  public showCheckbox?: boolean;
-
   @Input()
   public checkboxLabel?: string;
 

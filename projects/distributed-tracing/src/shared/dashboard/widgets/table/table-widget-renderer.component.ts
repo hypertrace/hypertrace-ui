@@ -45,7 +45,6 @@ import { TableWidgetModel } from './table-widget.model';
         [searchEnabled]="!!this.api.model.searchAttribute"
         [filterItems]="this.filterItems"
         [modeItems]="this.modeItems"
-        [showCheckbox]="!!this.api.model.checkboxFilterOption?.checkedFilter"
         [checkboxLabel]="this.model.checkboxFilterOption?.label"
         [checkboxChecked]="this.model.checkboxFilterOption?.checked"
         (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
@@ -128,6 +127,8 @@ export class TableWidgetRendererComponent
       label: capitalize(modeOption),
       value: modeOption
     }));
+
+    this.maybeEmitInitialCheckboxFilterChange();
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -228,6 +229,12 @@ export class TableWidgetRendererComponent
       }
 
       this.selectedRowInteractionHandler?.execute(selectedRow);
+    }
+  }
+
+  private maybeEmitInitialCheckboxFilterChange(): void {
+    if (this.model.checkboxFilterOption?.checked !== undefined) {
+      this.onCheckboxCheckedChange(this.model.checkboxFilterOption.checked);
     }
   }
 
