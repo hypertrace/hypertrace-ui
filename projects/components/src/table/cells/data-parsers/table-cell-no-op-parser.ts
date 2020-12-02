@@ -4,9 +4,9 @@ import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 
 @TableCellParser({
-  type: CoreTableCellParserType.Object
+  type: CoreTableCellParserType.NoOp
 })
-export class TableCellGenericParser extends TableCellParserBase<unknown, unknown, string | undefined> {
+export class TableCellNoOpParser extends TableCellParserBase<unknown, unknown, string | undefined> {
   public parseValue(cellData: unknown): unknown {
     return cellData;
   }
