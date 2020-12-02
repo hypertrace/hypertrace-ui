@@ -18,9 +18,10 @@ export class TableWidgetFilterModel {
   @ModelProperty({
     key: 'attribute',
     displayName: 'Attribute',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
+    required: true
   })
-  public attribute?: string;
+  public attribute!: string;
 
   @ModelProperty({
     key: 'operator',
@@ -36,16 +37,19 @@ export class TableWidgetFilterModel {
         FilterOperator.LessThanOrEqualTo,
         FilterOperator.GreaterThan,
         FilterOperator.GreaterThanOrEqualTo,
+        FilterOperator.In,
         FilterOperator.Like
       ]
-    } as EnumPropertyTypeInstance
+    } as EnumPropertyTypeInstance,
+    required: true
   })
-  public operator?: FilterOperator;
+  public operator!: FilterOperator;
 
   @ModelProperty({
     key: 'value',
     displayName: 'Value',
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
+    required: true
   })
-  public value?: unknown;
+  public value!: unknown;
 }
