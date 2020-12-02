@@ -19,5 +19,3 @@ export class TableCellObjectParser extends TableCellParserBase<ObjectCellData, O
 interface ObjectCellData extends Object {
   filterValue?: string;
 }
-
-
