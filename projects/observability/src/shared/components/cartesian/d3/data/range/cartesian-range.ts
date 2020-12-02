@@ -45,6 +45,10 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
   }
 
   private getPairedData(range: Range<TData>): [TData, TData][] {
+    if (range.upper.data.length !== range.lower.data.length) {
+      return [];
+    }
+
     return range.upper.data.map((upperData: TData, index: number) => [upperData, range.lower.data[index]]);
   }
 

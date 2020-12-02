@@ -22,7 +22,7 @@ import { CartesianData } from '../data/cartesian-data';
 import { CartesianRange } from '../data/range/cartesian-range';
 import { CartesianArea } from '../data/series/cartesian-area';
 import { CartesianColumn } from '../data/series/cartesian-column';
-import { CartesianDashed } from '../data/series/cartesian-dashed';
+import { CartesianDashedLine } from '../data/series/cartesian-dashed-line';
 import { CartesianLine } from '../data/series/cartesian-line';
 import { CartesianPoints } from '../data/series/cartesian-points';
 import { CartesianSeries } from '../data/series/cartesian-series';
@@ -58,7 +58,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected readonly series: Series<TData>[] = [];
   protected readonly seriesSummaries: Summary[] = [];
   protected readonly ranges: Range<TData>[] = [];
-  protected readonly rangesSummaries: Summary[] = [];
   protected readonly eventListeners: {
     event: ChartEvent;
     onEvent: ChartEventListener<TData>;
@@ -441,8 +440,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return new CartesianPoints(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Column:
         return new CartesianColumn(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
-      case CartesianSeriesVisualizationType.Dashed:
-        return new CartesianDashed(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
+      case CartesianSeriesVisualizationType.DashedLine:
+        return new CartesianDashedLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Line:
       default:
         return new CartesianLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());

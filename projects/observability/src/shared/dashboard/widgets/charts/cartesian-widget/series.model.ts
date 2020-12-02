@@ -49,7 +49,6 @@ export class SeriesModel<TData> {
       values: [
         SeriesVisualizationType.Area,
         SeriesVisualizationType.Line,
-        SeriesVisualizationType.Dashed,
         SeriesVisualizationType.Scatter,
         SeriesVisualizationType.Column
       ]

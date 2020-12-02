@@ -27,7 +27,9 @@ export class CartesianBandScale<TData> extends CartesianScale<TData, string> {
 
   protected setDomain(): void {
     this.d3Implementation.domain(
-      uniq(this.initData.allSeries.flatMap(series => series.data).map(datum => this.getValueFromData(datum)))
+      uniq(
+        this.initData.allSeriesAndRangeSeries.flatMap(series => series.data).map(datum => this.getValueFromData(datum))
+      )
     );
   }
 

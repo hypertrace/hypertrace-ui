@@ -28,10 +28,10 @@ import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-d
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
-  public series?: Series<TData>[] | undefined = [];
+  public series?: Series<TData>[] = [];
 
   @Input()
-  public range?: Range<TData>;
+  public ranges?: Range<TData>[] = [];
 
   @Input()
   public xAxisOption?: Axis;
@@ -93,8 +93,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       );
 
-    if (this.range) {
-      this.chart.withRanges(this.range);
+    if (this.ranges !== undefined) {
+      this.chart.withRanges(...this.ranges);
     }
 
     if (this.showXAxis) {

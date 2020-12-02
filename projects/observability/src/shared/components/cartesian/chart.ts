@@ -60,7 +60,7 @@ export const enum RenderingStrategy {
 export const enum CartesianSeriesVisualizationType {
   Column,
   Line,
-  Dashed,
+  DashedLine,
   Scatter,
   Area
 }

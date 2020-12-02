@@ -11,13 +11,11 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { intersectionBy } from 'lodash-es';
-import { merge, Observable, of } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map, toArray } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
-import { RANGE_MODEL_TYPE } from './range-model-type';
-import { RangeModel } from './range.model';
 import { SERIES_ARRAY_TYPE } from './series-array/series-array-type';
 import { SeriesVisualizationType } from './series-visualization/series-visualization-type';
 import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from './series.model';
@@ -41,12 +39,6 @@ export class CartesianWidgetModel<TData> {
     type: SERIES_ARRAY_TYPE.type
   })
   public series: SeriesModel<TData>[] = [];
-
-  @ModelProperty({
-    key: 'range',
-    type: RANGE_MODEL_TYPE.type
-  })
-  public range?: RangeModel<TData>;
 
   @ModelProperty({
     key: 'color-palette',
@@ -140,25 +132,13 @@ export class CartesianWidgetModel<TData> {
       return this.api.getData<MetricSeriesFetcher<TData>>();
     }
 
-    return merge(...this.series.map(series => this.getDecoratedSeriesDataFetcher(series))).pipe(
+    return merge(...this.series.map(series => this.getDecoratedDataFetcher(series))).pipe(
       toArray(),
-      map(dataFetchers => this.combineMetricDataFetchers(dataFetchers))
+      map(dataFetchers => this.combineDataFetchers(dataFetchers))
     );
   }
 
-  public getRangeFetcher(): Observable<MetricSeriesFetcher<TData> | undefined> {
-    return this.range !== undefined
-      ? forkJoinSafeEmpty({
-          upperSeries: this.getDecoratedSeriesDataFetcher(this.range.upperSeries),
-          lowerSeries: this.getDecoratedSeriesDataFetcher(this.range.lowerSeries)
-        }).pipe(
-          map(seriesObj => [seriesObj.upperSeries, seriesObj.lowerSeries]),
-          map(dataFetchers => this.combineMetricDataFetchers(dataFetchers))
-        )
-      : of(undefined);
-  }
-
-  private combineMetricDataFetchers(dataFetchers: DecoratedSeriesDataFetcher<TData>[]): MetricSeriesFetcher<TData> {
+  private combineDataFetchers(dataFetchers: DecoratedDataFetcher<TData>[]): MetricSeriesFetcher<TData> {
     return {
       getRequestedInterval: this.supportsInterval(dataFetchers)
         ? () => this.combineCurrentInterval(dataFetchers)
@@ -167,9 +147,7 @@ export class CartesianWidgetModel<TData> {
     };
   }
 
-  private combineCurrentInterval(
-    dataFetchers: Required<DecoratedSeriesDataFetcher<TData>>[]
-  ): TimeDuration | undefined {
+  private combineCurrentInterval(dataFetchers: Required<DecoratedDataFetcher<TData>>[]): TimeDuration | undefined {
     // If same interval from each, use it
     return intersectionBy(
       dataFetchers.map(fetcher => fetcher.getRequestedInterval()),
@@ -178,33 +156,29 @@ export class CartesianWidgetModel<TData> {
   }
 
   private supportsInterval(
-    dataFetchers: DecoratedSeriesDataFetcher<TData>[]
-  ): dataFetchers is Required<DecoratedSeriesDataFetcher<TData>>[] {
+    dataFetchers: DecoratedDataFetcher<TData>[]
+  ): dataFetchers is Required<DecoratedDataFetcher<TData>>[] {
     return dataFetchers.every(fetcher => fetcher.getRequestedInterval !== undefined);
   }
 
   private combineSeries(
-    dataFetchers: DecoratedSeriesDataFetcher<TData>[],
+    dataFetchers: DecoratedDataFetcher<TData>[],
     interval: TimeDuration
   ): Observable<Series<TData>[]> {
     return forkJoinSafeEmpty(dataFetchers.map((dataFetcher, index) => this.fetchSeries(dataFetcher, index, interval)));
   }
 
   private fetchSeries(
-    dataFetcher: DecoratedSeriesDataFetcher<TData>,
+    dataFetcher: DecoratedDataFetcher<TData>,
     index: number,
     interval: TimeDuration
   ): Observable<Series<TData>> {
     return dataFetcher
       .getData(interval)
-      .pipe(map(metricSeries => this.convertMetricSeriesToSeries(metricSeries, dataFetcher.series, index)));
+      .pipe(map(metricSeries => this.convertToSeries(metricSeries, dataFetcher.series, index)));
   }
 
-  private convertMetricSeriesToSeries(
-    metricSeries: MetricSeries<TData>,
-    model: SeriesModel<TData>,
-    index?: number
-  ): Series<TData> {
+  private convertToSeries(metricSeries: MetricSeries<TData>, model: SeriesModel<TData>, index: number): Series<TData> {
     return {
       data: metricSeries.intervals,
       units: metricSeries.units,
@@ -213,9 +187,7 @@ export class CartesianWidgetModel<TData> {
         model.color !== SeriesModel.DEFAULT_COLOR
           ? model.color // Use series color if user specified
           : this.colorPaletteKey !== undefined // Else check if the user provided the widget a color palette
-          ? index !== undefined
-            ? this.colorService.getColorPalette(this.colorPaletteKey).forNColors(this.series.length)[index]
-            : model.color
+          ? this.colorService.getColorPalette(this.colorPaletteKey).forNColors(this.series.length)[index]
           : model.color, // No, specified series color and no widget palette so use default series color
       name: model.name,
       type: this.getVizTypeFromModel(model),
@@ -232,15 +204,13 @@ export class CartesianWidgetModel<TData> {
         return CartesianSeriesVisualizationType.Scatter;
       case SeriesVisualizationType.Column:
         return CartesianSeriesVisualizationType.Column;
-      case SeriesVisualizationType.Dashed:
-        return CartesianSeriesVisualizationType.Dashed;
       case SeriesVisualizationType.Line:
       default:
         return CartesianSeriesVisualizationType.Line;
     }
   }
 
-  private getDecoratedSeriesDataFetcher(series: SeriesModel<TData>): Observable<DecoratedSeriesDataFetcher<TData>> {
+  private getDecoratedDataFetcher(series: SeriesModel<TData>): Observable<DecoratedDataFetcher<TData>> {
     return series.getDataFetcher().pipe(
       map(fetcher => ({
         ...fetcher,
@@ -250,7 +220,7 @@ export class CartesianWidgetModel<TData> {
   }
 }
 
-interface DecoratedSeriesDataFetcher<TData> extends MetricSeriesDataFetcher<TData> {
+interface DecoratedDataFetcher<TData> extends MetricSeriesDataFetcher<TData> {
   series: SeriesModel<TData>;
 }
 

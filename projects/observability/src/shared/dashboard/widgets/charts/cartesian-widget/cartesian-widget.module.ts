@@ -5,13 +5,12 @@ import { ButtonModule, LabelModule, LoadAsyncModule, TitledContentModule } from 
 import { DashboardPropertyEditorsModule } from '@hypertrace/dashboards';
 import { DashboardCoreModule, DashboardEditorModule } from '@hypertrace/hyperdash-angular';
 import { CartesianChartModule } from '../../../../components/cartesian/cartesian-chart.module';
+import { SeriesModel } from '../series.model';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
-import { RangeModel } from './range.model';
 import { SeriesArrayEditorComponent } from './series-array/series-array-editor.component';
 import { SERIES_ARRAY_TYPE } from './series-array/series-array-type';
-import { SeriesModel } from './series.model';
 
 @NgModule({
   declarations: [CartesianWidgetRendererComponent, SeriesArrayEditorComponent],
@@ -23,7 +22,7 @@ import { SeriesModel } from './series.model';
     DashboardEditorModule,
     ButtonModule,
     DashboardCoreModule.with({
-      models: [CartesianWidgetModel, SeriesModel, RangeModel, CartesianAxisModel],
+      models: [CartesianWidgetModel, SeriesModel, CartesianAxisModel],
       renderers: [CartesianWidgetRendererComponent],
       editors: [SeriesArrayEditorComponent],
       propertyTypes: [SERIES_ARRAY_TYPE]

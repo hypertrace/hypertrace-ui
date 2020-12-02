@@ -40,13 +40,17 @@ export abstract class CartesianNumericScale<TData> extends CartesianScale<TData,
   }
 
   private getDataValues(): Numeric[] {
-    return uniq(this.initData.allSeries.flatMap(series => series.data).map(datum => this.getValueFromData(datum)));
+    return uniq(
+      this.initData.allSeriesAndRangeSeries.flatMap(series => series.data).map(datum => this.getValueFromData(datum))
+    );
   }
 
   private getClosestDistance(): number {
     return Math.min(
       ...compact(
-        uniq(this.initData.allSeries.flatMap(series => series.data).map(datum => this.transformData(datum)))
+        uniq(
+          this.initData.allSeriesAndRangeSeries.flatMap(series => series.data).map(datum => this.transformData(datum))
+        )
           .sort((xValue1, xValue2) => xValue1 - xValue2)
           .map((xValue, index, arr) => (index !== 0 ? xValue - arr[index - 1] : undefined))
       )

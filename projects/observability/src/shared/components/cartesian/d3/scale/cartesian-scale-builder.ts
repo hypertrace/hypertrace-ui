@@ -80,7 +80,7 @@ export class CartesianScaleBuilder<TData> {
       ...this.resolveMinMax(axisType),
       bounds: this.bounds,
       dataAccesor: this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain,
-      allSeries: this.allSeries,
+      allSeriesAndRangeSeries: this.allSeriesAndRangeSeries,
       seriesState: seriesState
     };
   }
@@ -131,7 +131,7 @@ export class CartesianScaleBuilder<TData> {
   }
 
   private buildStackingState(): CartesianStackingState<TData> | undefined {
-    const stackingSeriesList = this.allSeries.filter(series => series.stacking);
+    const stackingSeriesList = this.allSeriesAndRangeSeries.filter(series => series.stacking);
 
     if (stackingSeriesList.length > 0) {
       const xDataAccessor = this.getXDataAccessor() as (data: TData) => number;
@@ -189,7 +189,7 @@ export class CartesianScaleBuilder<TData> {
     };
   }
 
-  private get allSeries(): Series<TData>[] {
+  private get allSeriesAndRangeSeries(): Series<TData>[] {
     const series = this.scaleState.series !== undefined ? this.scaleState.series.filter(s => !s.hide) : [];
     const ranges =
       this.scaleState.ranges !== undefined
@@ -200,15 +200,13 @@ export class CartesianScaleBuilder<TData> {
   }
 
   private get data(): TData[] {
-    const series = this.scaleState.series !== undefined ? this.scaleState.series.flatMap(s => s.data) : [];
-    const ranges =
+    const seriesData = this.scaleState.series !== undefined ? this.scaleState.series.flatMap(s => s.data) : [];
+    const rangeData =
       this.scaleState.ranges !== undefined
-        ? this.scaleState.ranges.flatMap(r =>
-            [r.upper.data.flatMap(d => d), r.lower.data.flatMap(d => d)].flatMap(d => d)
-          )
+        ? this.scaleState.ranges.flatMap(r => [r.lower.data, r.upper.data].flat())
         : [];
 
-    return [...series, ...ranges];
+    return [...seriesData, ...rangeData];
   }
 
   private cloneWith(stateChange: Partial<ScaleState<TData, unknown>>): this {
