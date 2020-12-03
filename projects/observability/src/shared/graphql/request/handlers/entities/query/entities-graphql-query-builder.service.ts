@@ -17,8 +17,16 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityMetadataMap, ENTITY_METADATA } from '../../../../../constants/entity-metadata';
-import { Entity, entityIdKey, EntityType, entityTypeKey } from '../../../../model/schema/entity';
+import {
+  Entity,
+  entityIdKey,
+  EntityType,
+  entityTypeKey,
+  ObservabilityEntityType
+} from '../../../../model/schema/entity';
+import { GraphQlEntityFilter } from '../../../../model/schema/filter/entity/graphql-entity-filter';
 import { GraphQlObservabilityArgumentBuilder } from '../../../builders/argument/graphql-observability-argument-builder';
+import { getApiDiscoveryStateFilter } from '../../util/handler-util';
 
 @Injectable({ providedIn: 'root' })
 export class EntitiesGraphqlQueryBuilderService {
@@ -41,8 +49,25 @@ export class EntitiesGraphqlQueryBuilderService {
     ];
   }
 
-  protected buildFilters(request: GraphQlEntitiesRequest): GraphQlArgument[] {
-    return this.argBuilder.forFilters(request.filters);
+  private buildFilters(request: GraphQlEntitiesRequest): GraphQlArgument[] {
+    if (request.entityType !== ObservabilityEntityType.Api) {
+      return this.argBuilder.forFilters(request.filters);
+    }
+
+    // For API Entity
+    const filters = request.filters !== undefined ? [...request.filters] : [];
+
+    // Check if ID filter is applied.
+    const hasApiEntityFilter = filters.some(
+      filter => filter instanceof GraphQlEntityFilter && filter.id && filter.type === ObservabilityEntityType.Api
+    );
+
+    if (!hasApiEntityFilter) {
+      // Apply a filter on discovery state
+      filters.push(getApiDiscoveryStateFilter());
+    }
+
+    return this.argBuilder.forFilters(filters);
   }
 
   public buildRequestSpecifications(request: GraphQlEntitiesRequest): GraphQlSelection[] {
