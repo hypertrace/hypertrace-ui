@@ -43,7 +43,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     } as ModelModelPropertyTypeInstance,
     required: false
   })
-  public readonly childEntityDataSource?: EntityTableDataSourceModel;
+  public childEntityDataSource?: EntityTableDataSourceModel;
 
   @ModelProperty({
     key: 'additional-specifications',
@@ -125,7 +125,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       columns: parentRequest.columns,
       position: {
         startIndex: 0,
-        limit: 40
+        limit: 20
       },
       sort: parentRequest.sort
     };
