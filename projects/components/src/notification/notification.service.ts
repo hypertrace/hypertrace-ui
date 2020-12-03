@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
+import { EMPTY, Observable, Subject } from 'rxjs';
 import { NotificationComponent, NotificationMode } from './notification.component';
 import { NotificationModule } from './notification.module';
 
@@ -32,12 +32,14 @@ export class NotificationService {
     });
   }
 
-  public createFailureToast(message: string): void {
+  public createFailureToast(message: string): Observable<never> {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
       duration: 0, // Keep the notification open indefinitely in case of error
       data: { message: message, mode: NotificationMode.Failure, closedObserver: this.closedObserver$ }
     });
+
+    return EMPTY;
   }
 
   public createInfoToast(message: string): void {
