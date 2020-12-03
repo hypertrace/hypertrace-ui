@@ -1,19 +1,24 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
-import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   GraphQlFilter,
   Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
 } from '@hypertrace/distributed-tracing';
-import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import {
+  ARRAY_PROPERTY,
+  Model,
+  ModelModelPropertyTypeInstance,
+  ModelProperty,
+  ModelPropertyType,
+  STRING_PROPERTY
+} from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Entity, EntityType, ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
+import { map, mergeMap } from 'rxjs/operators';
+import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
-  EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
@@ -30,44 +35,47 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   public entityType!: EntityType;
 
   @ModelProperty({
-    key: 'childEntity',
+    key: 'child-data-source',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
-      key: ENUM_TYPE.type,
-      values: [ObservabilityEntityType.Api]
-    } as EnumPropertyTypeInstance
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: EntityTableDataSourceModel
+    } as ModelModelPropertyTypeInstance,
+    required: false
   })
-  public childEntityType?: ObservabilityEntityType;
+  public readonly childEntityDataSource?: EntityTableDataSourceModel;
 
   @ModelProperty({
-    key: 'additional-child-specifications',
-    displayName: 'Value',
+    key: 'additional-specifications',
+    displayName: 'Additional Specifications',
     required: false,
     type: ARRAY_PROPERTY.type
   })
-  public additionalChildSpecifications: Specification[] = [];
+  public additionalSpecifications: Specification[] = [];
 
   public getScope(): string {
-    return this.entityType; // TODO: How to deal with children
+    return this.entityType;
   }
+
+  protected parentEntityFilter?: GraphQlEntityFilter;
 
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
-  ): EntityTableGraphQlRequest {
+  ): GraphQlEntitiesQueryRequest {
+    const inheritedFilters = [...filters, ...this.toGraphQlFilters(request.filters)];
+
     return {
       requestType: ENTITIES_GQL_REQUEST,
-      tableRequestType: 'root',
-      tableRequest: request,
       entityType: this.entityType,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.map(column => column.specification).concat(...this.additionalSpecifications),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
+      filters: this.parentEntityFilter ? [...inheritedFilters, this.parentEntityFilter] : inheritedFilters,
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
     };
@@ -78,28 +86,8 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): TableDataResponse<TableRow> {
     return {
-      data: this.resultsAsTreeRows(response.results, request, this.childEntityType !== undefined),
+      data: this.resultsAsTreeRows(response.results, request, this.childEntityDataSource !== undefined),
       totalCount: response.total!
-    };
-  }
-
-  private buildChildEntityRequest(
-    request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    entity: Entity
-  ): EntityTableGraphQlRequest {
-    return {
-      requestType: ENTITIES_GQL_REQUEST,
-      tableRequestType: 'children',
-      tableRequest: request,
-      entityType: this.childEntityType!,
-      properties: request.columns.map(column => column.specification).concat(...this.additionalChildSpecifications),
-      limit: 40, // Really no limit, putting one in for sanity
-      sort: request.sort && {
-        direction: request.sort.direction,
-        key: request.sort.column.specification
-      },
-      filters: [GraphQlEntityFilter.forEntity(entity)],
-      timeRange: this.getTimeRangeOrThrow()
     };
   }
 
@@ -117,15 +105,26 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   private queryEntityChildren(
     entity: Entity,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>
   ): Observable<TableRow[]> {
-    return this.query<EntitiesGraphQlQueryHandlerService>(this.buildChildEntityRequest(request, entity)).pipe(
-      map(response => this.resultsAsTreeRows(response.results, request, false))
+    this.childEntityDataSource!.parentEntityFilter = GraphQlEntityFilter.forEntity(entity);
+
+    return this.childEntityDataSource!.getData().pipe(
+      mergeMap(child => child.getData(this.buildChildTableRequest(parentRequest))),
+      map(response => this.resultsAsTreeRows(response.data as Entity[], parentRequest, false))
     );
   }
-}
 
-interface EntityTableGraphQlRequest extends GraphQlEntitiesQueryRequest {
-  tableRequestType: 'root' | 'children';
-  tableRequest: TableDataRequest;
+  private buildChildTableRequest(
+    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): TableDataRequest<SpecificationBackedTableColumnDef> {
+    return {
+      columns: parentRequest.columns,
+      position: {
+        startIndex: 0,
+        limit: 1000
+      },
+      sort: parentRequest.sort
+    };
+  }
 }

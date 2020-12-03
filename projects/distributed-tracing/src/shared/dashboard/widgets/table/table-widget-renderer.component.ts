@@ -45,8 +45,8 @@ import { TableWidgetModel } from './table-widget.model';
         [searchEnabled]="!!this.api.model.searchAttribute"
         [filterItems]="this.filterItems"
         [modeItems]="this.modeItems"
-        [checkboxLabel]="this.model.checkboxFilterOption?.label"
-        [checkboxChecked]="this.model.checkboxFilterOption?.checked"
+        [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
+        [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
         (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
         (searchChange)="this.onSearchChange($event)"
         (filterChange)="this.onFilterChange($event)"
@@ -198,7 +198,7 @@ export class TableWidgetRendererComponent
   }
 
   public onCheckboxCheckedChange(checked: boolean): void {
-    const tableFilter = this.model.checkboxFilterOption?.getTableFilter(checked);
+    const tableFilter = this.model.getCheckboxFilterOption()?.getTableFilter(checked);
     this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
   }
 
@@ -233,8 +233,9 @@ export class TableWidgetRendererComponent
   }
 
   private maybeEmitInitialCheckboxFilterChange(): void {
-    if (this.model.checkboxFilterOption?.checked !== undefined) {
-      this.onCheckboxCheckedChange(this.model.checkboxFilterOption.checked);
+    const checkboxFilterModel = this.model.getCheckboxFilterOption();
+    if (checkboxFilterModel?.checked !== undefined) {
+      this.onCheckboxCheckedChange(checkboxFilterModel.checked);
     }
   }
 
