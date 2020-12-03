@@ -82,7 +82,10 @@ const treeTableWidget: ModelJson = {
   data: {
     type: 'entity-table-data-source',
     entity: 'SERVICE',
-    childEntity: 'API'
+    'child-data-source': {
+      type: 'entity-table-data-source',
+      entity: 'API'
+    }
   }
 };
 

@@ -5,6 +5,7 @@ import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
+import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -90,5 +91,9 @@ export class ModeToggleTableWidgetModel extends TableWidgetBaseModel {
     return this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0
       ? this.delegateModel?.getRowSelectionHandlers(row)
       : [];
+  }
+
+  public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
+    return this.delegateModel?.getCheckboxFilterOption() ?? this.checkboxFilterOption;
   }
 }
