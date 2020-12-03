@@ -45,6 +45,9 @@ import { TableWidgetModel } from './table-widget.model';
         [searchEnabled]="!!this.api.model.searchAttribute"
         [filterItems]="this.filterItems"
         [modeItems]="this.modeItems"
+        [checkboxLabel]="this.model.checkboxFilterOption?.label"
+        [checkboxChecked]="this.model.checkboxFilterOption?.checked"
+        (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
         (searchChange)="this.onSearchChange($event)"
         (filterChange)="this.onFilterChange($event)"
         (modeChange)="this.onModeChange($event)"
@@ -87,6 +90,7 @@ export class TableWidgetRendererComponent
 
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  private readonly checkboxFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
@@ -106,18 +110,25 @@ export class TableWidgetRendererComponent
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = this.getColumnConfigs();
 
-    this.combinedFilters$ = combineLatest([this.toggleFilterSubject, this.searchFilterSubject]).pipe(
-      map(([toggleFilters, searchFilters]) => [...toggleFilters, ...searchFilters])
+    this.combinedFilters$ = combineLatest([
+      this.toggleFilterSubject,
+      this.searchFilterSubject,
+      this.checkboxFilterSubject
+    ]).pipe(
+      map(([toggleFilters, searchFilters, checkboxFilter]) => [...toggleFilters, ...searchFilters, ...checkboxFilter])
     );
 
     this.filterItems = this.model.getFilterOptions().map(filterOption => ({
       label: capitalize(filterOption.label),
       value: filterOption
     }));
+
     this.modeItems = this.model.getModeOptions().map(modeOption => ({
       label: capitalize(modeOption),
       value: modeOption
     }));
+
+    this.maybeEmitInitialCheckboxFilterChange();
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -186,6 +197,11 @@ export class TableWidgetRendererComponent
     this.toggleFilterSubject.next([]);
   }
 
+  public onCheckboxCheckedChange(checked: boolean): void {
+    const tableFilter = this.model.checkboxFilterOption?.getTableFilter(checked);
+    this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
+  }
+
   public onSearchChange(text: string): void {
     const searchFilter: TableFilter = {
       field: this.api.model.searchAttribute!,
@@ -213,6 +229,12 @@ export class TableWidgetRendererComponent
       }
 
       this.selectedRowInteractionHandler?.execute(selectedRow);
+    }
+  }
+
+  private maybeEmitInitialCheckboxFilterChange(): void {
+    if (this.model.checkboxFilterOption?.checked !== undefined) {
+      this.onCheckboxCheckedChange(this.model.checkboxFilterOption.checked);
     }
   }
 

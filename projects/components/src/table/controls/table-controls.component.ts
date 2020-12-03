@@ -30,6 +30,15 @@ import { TableMode } from '../table-api';
           [activeItem]="this.activeFilterItem"
           (activeItemChange)="this.onFilterChange($event)"
         ></ht-toggle-group>
+
+        <!-- Checkbox Filter -->
+        <ht-checkbox
+          *ngIf="this.checkboxLabel"
+          class="control filter-checkbox"
+          [label]="this.checkboxLabel"
+          [checked]="this.checkboxChecked"
+          (checkedChange)="this.checkboxCheckedChange.emit($event)"
+        ></ht-checkbox>
       </div>
 
       <!-- Mode Toggle -->
@@ -61,6 +70,16 @@ export class TableControlsComponent implements OnChanges {
 
   @Input()
   public activeModeItem?: ToggleItem;
+
+  // Checkbox filter
+  @Input()
+  public checkboxLabel?: string;
+
+  @Input()
+  public checkboxChecked?: boolean;
+
+  @Output()
+  public readonly checkboxCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Output()
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
