@@ -2,6 +2,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { Dictionary, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import {
   AttributeMetadataType,
+  GraphQlFieldFilter,
+  GraphQlOperatorType,
   GraphQlTimeRange,
   MetadataService,
   MetricAggregationType,
@@ -128,6 +130,11 @@ describe('Entities graphql query handler', () => {
   test('adds filter on discovery state for API Entities', () => {
     const spectator = createService();
     const graphqlSelection = buildRequestGraphqlSelection(ObservabilityEntityType.Api);
+    graphqlSelection.arguments!.push({
+      name: 'filterBy',
+      value: new GraphQlFieldFilter('apiDiscoveryState', GraphQlOperatorType.Equals, 'DISCOVERED').asArgumentObjects()
+    });
+
     expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api))).toEqual(graphqlSelection);
   });
   test('converts response to entities array', fakeAsync(() => {
