@@ -14,7 +14,7 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
@@ -57,14 +57,10 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     return this.entityType;
   }
 
-  protected parentEntityFilter?: GraphQlEntityFilter;
-
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): GraphQlEntitiesQueryRequest {
-    const inheritedFilters = [...filters, ...this.toGraphQlFilters(request.filters)];
-
     return {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: this.entityType,
@@ -75,7 +71,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: this.parentEntityFilter ? [...inheritedFilters, this.parentEntityFilter] : inheritedFilters,
+      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true
     };
@@ -107,11 +103,18 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     entity: Entity,
     parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>
   ): Observable<TableRow[]> {
-    this.childEntityDataSource!.parentEntityFilter = GraphQlEntityFilter.forEntity(entity);
+    return this.childEntityDataSource!.getDataForParentEntity(entity, this.buildChildTableRequest(parentRequest));
+  }
 
-    return this.childEntityDataSource!.getData().pipe(
-      mergeMap(child => child.getData(this.buildChildTableRequest(parentRequest))),
-      map(response => this.resultsAsTreeRows(response.data as Entity[], parentRequest, false))
+  private getDataForParentEntity(
+    entity: Entity,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): Observable<TableRow[]> {
+    return this.query(filters =>
+      this.buildGraphQlRequest([...filters, GraphQlEntityFilter.forEntity(entity)], request)
+    ).pipe(
+      map(response => this.buildTableResponse(response as EntitiesResponse, request)),
+      map(response => this.resultsAsTreeRows(response.data as Entity[], request, false))
     );
   }
 
@@ -122,7 +125,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       columns: parentRequest.columns,
       position: {
         startIndex: 0,
-        limit: 1000
+        limit: 40
       },
       sort: parentRequest.sort
     };
