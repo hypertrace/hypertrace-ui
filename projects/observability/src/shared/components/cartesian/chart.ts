@@ -9,7 +9,7 @@ export interface CartesianChart<TData> {
   draw(): this;
   isDrawn(): boolean;
   withSeries(...series: Series<TData>[]): this;
-  withRanges(...ranges: Range<TData>[]): this;
+  withBands(...bands: Band<TData>[]): this;
   withLegend(legendPosition: LegendPosition): this;
   withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this;
   withAxis(axis: Axis): this;
@@ -30,7 +30,7 @@ export interface Series<TData> {
   hide?: boolean;
 }
 
-export interface Range<TData> {
+export interface Band<TData> {
   upper: Series<TData>;
   lower: Series<TData>;
   color: string;

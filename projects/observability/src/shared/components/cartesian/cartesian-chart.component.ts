@@ -16,7 +16,7 @@ import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
 import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/default-chart-tooltip.component';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
-import { Axis, AxisLocation, AxisType, CartesianChart, Range, RenderingStrategy, Series } from './chart';
+import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
@@ -31,7 +31,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public series?: Series<TData>[] = [];
 
   @Input()
-  public ranges?: Range<TData>[] = [];
+  public bands?: Band<TData>[] = [];
 
   @Input()
   public xAxisOption?: Axis;
@@ -93,8 +93,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       );
 
-    if (this.ranges) {
-      this.chart.withRanges(...this.ranges);
+    if (this.bands) {
+      this.chart.withBands(...this.bands);
     }
 
     if (this.showXAxis) {

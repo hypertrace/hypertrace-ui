@@ -1,16 +1,17 @@
-import { Injector } from '@angular/core';
+import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
 import { ContainerElement, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
+import { D3UtilService } from '../../../utils/d3/d3-util.service';
 import { MouseLocationData } from '../../../utils/mouse-tracking/mouse-tracking';
 import { SvgUtilService } from '../../../utils/svg/svg-util.service';
 import {
   Axis,
   AxisType,
+  Band,
   CartesianChart,
   CartesianSeriesVisualizationType,
-  Range,
   RenderingStrategy,
   Series,
   Summary
@@ -18,8 +19,8 @@ import {
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
+import { CartesianBand } from '../data/band/cartesian-band';
 import { CartesianData } from '../data/cartesian-data';
-import { CartesianRange } from '../data/range/cartesian-range';
 import { CartesianArea } from '../data/series/cartesian-area';
 import { CartesianColumn } from '../data/series/cartesian-column';
 import { CartesianDashedLine } from '../data/series/cartesian-dashed-line';
@@ -46,7 +47,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected mouseEventContainer?: SVGSVGElement;
   protected legend?: CartesianLegend;
   protected tooltip?: ChartTooltipRef<TData>;
-  protected allCartesianData: CartesianData<TData, Series<TData> | Range<TData>>[] = [];
+  protected allCartesianData: CartesianData<TData, Series<TData> | Band<TData>>[] = [];
   protected renderedAxes: CartesianAxis<TData>[] = [];
   protected scaleBuilder: CartesianScaleBuilder<TData> = CartesianScaleBuilder.newBuilder();
 
@@ -57,7 +58,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected intervalData?: CartesianIntervalData;
   protected readonly series: Series<TData>[] = [];
   protected readonly seriesSummaries: Summary[] = [];
-  protected readonly ranges: Range<TData>[] = [];
+  protected readonly ranges: Band<TData>[] = [];
   protected readonly eventListeners: {
     event: ChartEvent;
     onEvent: ChartEventListener<TData>;
@@ -67,7 +68,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly hostElement: Element,
     protected readonly injector: Injector,
     protected readonly renderingStrategy: RenderingStrategy,
-    protected readonly svgUtilService: SvgUtilService
+    protected readonly svgUtilService: SvgUtilService,
+    protected readonly d3Utils: D3UtilService,
+    protected readonly domRenderer: Renderer2
   ) {}
 
   public destroy(): this {
@@ -111,11 +114,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     return this;
   }
 
-  public withRanges(...ranges: Range<TData>[]): this {
+  public withBands(...ranges: Band<TData>[]): this {
     this.ranges.length = 0;
     this.ranges.push(...ranges);
 
-    this.scaleBuilder = this.scaleBuilder.withRanges(ranges);
+    this.scaleBuilder = this.scaleBuilder.withBands(ranges);
 
     return this;
   }
@@ -402,7 +405,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.mouseEventContainer = select(this.chartBackgroundSvgElement).clone().raise().node()!;
   }
 
-  private getMouseDataForCurrentEvent(): MouseLocationData<TData, Series<TData> | Range<TData>>[] {
+  private getMouseDataForCurrentEvent(): MouseLocationData<TData, Series<TData> | Band<TData>>[] {
     if (!this.dataElement) {
       return [];
     }
@@ -428,7 +431,10 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.allCartesianData.length = 0;
     this.allCartesianData.push(
       ...this.series.map(series => this.getChartSeriesVisualization(series)),
-      ...this.ranges.map(range => new CartesianRange(range, this.scaleBuilder, this.getTooltipTrackingStrategy()))
+      ...this.ranges.map(
+        range =>
+          new CartesianBand(this.d3Utils, this.domRenderer, range, this.scaleBuilder, this.getTooltipTrackingStrategy())
+      )
     );
   }
 

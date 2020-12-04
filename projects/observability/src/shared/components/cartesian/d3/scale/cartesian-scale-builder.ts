@@ -1,5 +1,5 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { Axis, AxisType, Range, ScaleType, Series } from '../../chart';
+import { Axis, AxisType, Band, ScaleType, Series } from '../../chart';
 import { CartesianBandScale } from './band/cartesian-band-scale';
 import { ScaleBounds, ScaleInitializationData } from './cartesian-scale';
 import { defaultXDataAccessor, defaultYDataAccessor, getDefaultScaleType } from './default-data-accessors';
@@ -49,8 +49,8 @@ export class CartesianScaleBuilder<TData> {
     return this.cloneWith({ series: series });
   }
 
-  public withRanges(ranges: Range<TData>[]): this {
-    return this.cloneWith({ ranges: ranges });
+  public withBands(bands: Band<TData>[]): this {
+    return this.cloneWith({ bands: bands });
   }
 
   public withBounds(bounds: ScaleBounds): this {
@@ -192,8 +192,8 @@ export class CartesianScaleBuilder<TData> {
   private get allSeriesAndRangeSeries(): Series<TData>[] {
     const series = this.scaleState.series !== undefined ? this.scaleState.series.filter(s => !s.hide) : [];
     const ranges =
-      this.scaleState.ranges !== undefined
-        ? this.scaleState.ranges.filter(r => !r.hide).flatMap(r => [r.upper, r.lower])
+      this.scaleState.bands !== undefined
+        ? this.scaleState.bands.filter(r => !r.hide).flatMap(r => [r.upper, r.lower])
         : [];
 
     return [...series, ...ranges];
@@ -201,12 +201,12 @@ export class CartesianScaleBuilder<TData> {
 
   private get data(): TData[] {
     const seriesData = this.scaleState.series !== undefined ? this.scaleState.series.flatMap(s => s.data) : [];
-    const rangeData =
-      this.scaleState.ranges !== undefined
-        ? this.scaleState.ranges.flatMap(r => [r.lower.data, r.upper.data].flat())
+    const bandData =
+      this.scaleState.bands !== undefined
+        ? this.scaleState.bands.flatMap(b => [b.lower.data, b.upper.data].flat())
         : [];
 
-    return [...seriesData, ...rangeData];
+    return [...seriesData, ...bandData];
   }
 
   private cloneWith(stateChange: Partial<ScaleState<TData, unknown>>): this {
@@ -239,7 +239,7 @@ type ScaleState<TData, TDomain> = Readonly<{
   defaultXMinMax?: MinMax;
   defaultYMinMax?: MinMax;
   series?: Series<TData>[];
-  ranges?: Range<TData>[];
+  bands?: Band<TData>[];
   xDataAccessor?(data: TData): TDomain;
   yDataAccessor?(data: TData): TDomain;
 }>;

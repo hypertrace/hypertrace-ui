@@ -1,7 +1,9 @@
-import { BaseType, select, Selection } from 'd3-selection';
+import { Renderer2 } from '@angular/core';
+import { Selection } from 'd3-selection';
 import { Area, area, curveMonotoneX, line, Line } from 'd3-shape';
+import { D3UtilService } from '../../../../utils/d3/d3-util.service';
 import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
-import { Range, Series } from '../../../chart';
+import { Band, Series } from '../../../chart';
 import { ChartTooltipTrackingOptions as ChartTooltipTrackingStrategy } from '../../../chart-interactivty';
 import { QuadtreeDataLookupStrategy } from '../../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { SingleAxisDataLookupStrategy } from '../../interactivity/data-strategy/single-axis-data-lookup-strategy';
@@ -9,13 +11,15 @@ import { CartesianScaleBuilder } from '../../scale/cartesian-scale-builder';
 import { CartesianData } from '../cartesian-data';
 import { CartesianPoints } from '../series/cartesian-points';
 
-export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
+export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
   private static readonly CSS_RANGE_CLASS: string = 'range-group';
   private static readonly CSS_SERIES_CLASS: string = 'range-data-series';
   private static readonly LINE_WIDTH: number = 2;
 
   public constructor(
-    protected readonly range: Range<TData>,
+    protected readonly d3Utils: D3UtilService,
+    protected readonly domRenderer: Renderer2,
+    protected readonly range: Band<TData>,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
     tooltipTrackingStrategy?: ChartTooltipTrackingStrategy
   ) {
@@ -23,9 +27,9 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
   }
 
   protected buildDataLookupStrategy(
-    visualization: Range<TData>,
+    visualization: Band<TData>,
     strategy: ChartTooltipTrackingStrategy
-  ): MouseDataLookupStrategy<TData, Range<TData>> {
+  ): MouseDataLookupStrategy<TData, Band<TData>> {
     if (strategy.followSingleAxis !== undefined) {
       return new SingleAxisDataLookupStrategy(
         visualization,
@@ -40,11 +44,11 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
     return this.buildMultiAxisDataLookupStrategy();
   }
 
-  private getCombinedData(range: Range<TData>): TData[] {
+  private getCombinedData(range: Band<TData>): TData[] {
     return [range.upper.data, range.lower.data].flatMap(d => d);
   }
 
-  private getPairedData(range: Range<TData>): [TData, TData][] {
+  private getPairedData(range: Band<TData>): [TData, TData][] {
     if (range.upper.data.length !== range.lower.data.length) {
       return [];
     }
@@ -56,18 +60,21 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
    * SVG
    */
 
-  public drawSvg(element: BaseType): void {
+  public drawSvg(element: Element): void {
     if (this.range.hide) {
       return;
     }
 
-    const group = select(element).append('g').classed(CartesianRange.CSS_RANGE_CLASS, true);
+    const group = this.d3Utils
+      .select(element, this.domRenderer)
+      .append('g')
+      .classed(CartesianBand.CSS_RANGE_CLASS, true);
 
     const upperSeriesGroup = group
       .append('g')
-      .classed(CartesianRange.CSS_SERIES_CLASS, true)
+      .classed(CartesianBand.CSS_SERIES_CLASS, true)
       .attr('fill', 'none')
-      .attr('stroke-width', CartesianRange.LINE_WIDTH)
+      .attr('stroke-width', CartesianBand.LINE_WIDTH)
       .attr('stroke', this.range.upper.color)
       .attr('stroke-dasharray', '3, 3');
 
@@ -76,9 +83,9 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
 
     const lowerSeriesGroup = group
       .append('g')
-      .classed(CartesianRange.CSS_SERIES_CLASS, true)
+      .classed(CartesianBand.CSS_SERIES_CLASS, true)
       .attr('fill', 'none')
-      .attr('stroke-width', CartesianRange.LINE_WIDTH)
+      .attr('stroke-width', CartesianBand.LINE_WIDTH)
       .attr('stroke', this.range.lower.color)
       .attr('stroke-dasharray', '3, 3');
 
@@ -123,7 +130,7 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
     this.drawCanvasArea(context);
   }
 
-  protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Range<TData>> {
+  protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Band<TData>> {
     return new QuadtreeDataLookupStrategy(this.range, this.getCombinedData(this.range), this.xScale, this.yScale, 10);
   }
 
@@ -131,7 +138,7 @@ export class CartesianRange<TData> extends CartesianData<TData, Range<TData>> {
     context.beginPath();
     this.buildLine().context(context)(series.data);
     context.strokeStyle = series.color;
-    context.lineWidth = CartesianRange.LINE_WIDTH;
+    context.lineWidth = CartesianBand.LINE_WIDTH;
     context.stroke();
   }
 
