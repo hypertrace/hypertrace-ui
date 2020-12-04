@@ -17,9 +17,9 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
-
 export abstract class TableWidgetBaseModel {
   @ModelProperty({
     key: 'title',
@@ -59,6 +59,18 @@ export abstract class TableWidgetBaseModel {
     } as ArrayPropertyTypeInstance
   })
   public filterOptions: TableWidgetFilterModel[] = [];
+
+  @ModelProperty({
+    key: 'checkbox-filter-option',
+    displayName: 'Checkbox Filter Option',
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: TableWidgetCheckboxFilterModel
+    } as ModelModelPropertyTypeInstance,
+    required: false
+  })
+  public checkboxFilterOption?: TableWidgetCheckboxFilterModel;
 
   @ModelProperty({
     key: 'mode',
@@ -121,6 +133,10 @@ export abstract class TableWidgetBaseModel {
 
   public getFilterOptions(): TableWidgetFilterModel[] {
     return this.filterOptions;
+  }
+
+  public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
+    return this.checkboxFilterOption;
   }
 
   public isPageable(): boolean {

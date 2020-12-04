@@ -1,4 +1,4 @@
-import { FilterOperator } from '@hypertrace/components';
+import { FilterOperator, TableFilter } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 
@@ -18,9 +18,10 @@ export class TableWidgetFilterModel {
   @ModelProperty({
     key: 'attribute',
     displayName: 'Attribute',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
+    required: true
   })
-  public attribute?: string;
+  public attribute!: string;
 
   @ModelProperty({
     key: 'operator',
@@ -36,16 +37,27 @@ export class TableWidgetFilterModel {
         FilterOperator.LessThanOrEqualTo,
         FilterOperator.GreaterThan,
         FilterOperator.GreaterThanOrEqualTo,
+        FilterOperator.In,
         FilterOperator.Like
       ]
-    } as EnumPropertyTypeInstance
+    } as EnumPropertyTypeInstance,
+    required: true
   })
-  public operator?: FilterOperator;
+  public operator!: FilterOperator;
 
   @ModelProperty({
     key: 'value',
     displayName: 'Value',
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
+    required: true
   })
-  public value?: unknown;
+  public value!: unknown;
+
+  public getTableFilter(): TableFilter {
+    return {
+      field: this.attribute,
+      operator: this.operator,
+      value: this.value
+    };
+  }
 }
