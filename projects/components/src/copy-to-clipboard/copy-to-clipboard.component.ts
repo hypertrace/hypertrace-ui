@@ -16,7 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { Observable, of, Subject } from 'rxjs';
 import { delay, finalize, switchMap } from 'rxjs/operators';
-import { ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
@@ -26,9 +26,19 @@ import { PopoverService } from '../popover/popover.service';
   styleUrls: ['./copy-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-copy-to-clipboard" (click)="this.onCopyToClipboard()">
-      <ht-button class="icon" [icon]="this.icon" [display]="this.display" [size]="this.size"></ht-button>
-      <span *ngIf="this.label" class="label">{{ this.label }}</span>
+    <div
+      class="ht-copy-to-clipboard"
+      [htTooltip]='this.tooltip'
+      (click)="this.onCopyToClipboard()"
+    >
+      <ht-button
+        class="icon"
+        [role]='this.role'
+        [icon]="this.icon"
+        [display]="this.display"
+        [size]="this.size"
+        [label]='this.label'
+      ></ht-button>
     </div>
     <ng-template #notification>
       <div class="notification"><span class="label">Copied!</span></div>
@@ -37,7 +47,10 @@ import { PopoverService } from '../popover/popover.service';
 })
 export class CopyToClipboardComponent implements OnInit, OnDestroy {
   @Input()
-  public display: ButtonStyle = ButtonStyle.Outlined;
+  public role: ButtonRole = ButtonRole.Primary;
+
+  @Input()
+  public display: ButtonStyle = ButtonStyle.Text;
 
   @Input()
   public size?: ButtonSize = ButtonSize.Medium;
@@ -50,6 +63,9 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
 
   @Input()
   public text?: string;
+
+  @Input()
+  public tooltip?: string;
 
   @Output()
   public readonly copiedChanges: EventEmitter<boolean> = new EventEmitter();

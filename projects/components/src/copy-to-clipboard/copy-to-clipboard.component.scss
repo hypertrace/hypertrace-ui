@@ -4,11 +4,6 @@
   display: flex;
   cursor: pointer;
   padding: 2px 0;
-
-  .label {
-    @include body-small($blue-5);
-    margin-left: 4px;
-  }
 }
 
 .notification {
