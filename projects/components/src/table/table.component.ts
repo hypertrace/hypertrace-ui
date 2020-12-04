@@ -100,7 +100,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               *cdkCellDef="let row"
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
-              [style.margin-left]="index === 0 ? this.calcIndentMargin(row) : 0"
+              [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
+              [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
               [ngClass]="{
                 'detail-expanded': this.isDetailExpanded(row)
               }"
@@ -531,8 +532,17 @@ export class TableComponent
     this.hoveredChange.emit(this.hovered);
   }
 
-  public calcIndentMargin(row: StatefulTableRow): string {
+  public calcLeftMarginIndent(row: StatefulTableRow): string {
     return `${row.$$state.depth * 12}px`;
+  }
+
+  public calcRightMarginIndent(row: StatefulTableRow, column: TableColumnConfigExtended): string {
+    // A static width should be shifted over to account for left margin, a dynamic (flex) width does it intrinsically
+    if (column.width !== undefined && typeof column.width === 'string') {
+      return `-${row.$$state.depth * 12}px`;
+    }
+
+    return '0';
   }
 
   public columnIndex(columnConfig: TableColumnConfig, index: number): number {
