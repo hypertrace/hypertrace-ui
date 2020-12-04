@@ -101,10 +101,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
               [style.margin-left]="index === 0 ? this.calcIndentMargin(row) : 0"
-              [style.margin-right]="index === 1 ? this.calcIndentMargin(row, true) : 0"
               [ngClass]="{
-                'child-row': this.isChildRow(row),
-                'expander-column': this.isExpanderColumn(columnDef),
                 'detail-expanded': this.isDetailExpanded(row)
               }"
               class="data-cell"
@@ -534,8 +531,8 @@ export class TableComponent
     this.hoveredChange.emit(this.hovered);
   }
 
-  public calcIndentMargin(row: StatefulTableRow, negative: boolean = false): string {
-    return `${negative ? '-' : ''}${row.$$state.depth * 12}px`;
+  public calcIndentMargin(row: StatefulTableRow): string {
+    return `${row.$$state.depth * 12}px`;
   }
 
   public columnIndex(columnConfig: TableColumnConfig, index: number): number {
@@ -631,10 +628,6 @@ export class TableComponent
 
   public isHoveredRow(row: StatefulTableRow): boolean {
     return this.hovered !== undefined && TableCdkRowUtil.isEqualExceptState(row, this.hovered);
-  }
-
-  public isChildRow(row: StatefulTableRow): boolean {
-    return !!row.$$state.parent;
   }
 
   public isDetailType(): boolean {
