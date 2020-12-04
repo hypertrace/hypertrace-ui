@@ -26,18 +26,14 @@ import { PopoverService } from '../popover/popover.service';
   styleUrls: ['./copy-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      class="ht-copy-to-clipboard"
-      [htTooltip]='this.tooltip'
-      (click)="this.onCopyToClipboard()"
-    >
+    <div class="ht-copy-to-clipboard" [htTooltip]="this.tooltip" (click)="this.onCopyToClipboard()">
       <ht-button
         class="icon"
-        [role]='this.role'
+        [role]="this.role"
         [icon]="this.icon"
         [display]="this.display"
         [size]="this.size"
-        [label]='this.label'
+        [label]="this.label"
       ></ht-button>
     </div>
     <ng-template #notification>

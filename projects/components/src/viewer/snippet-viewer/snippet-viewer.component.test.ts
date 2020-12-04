@@ -1,3 +1,5 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { SnippetViewerComponent } from './snippet-viewer.component';
 import { SnippetViewerModule } from './snippet-viewer.module';
@@ -7,7 +9,7 @@ describe('Snippet Viewer Component', () => {
   const createHost = createHostFactory({
     declareComponent: false,
     component: SnippetViewerComponent,
-    imports: [SnippetViewerModule]
+    imports: [SnippetViewerModule, RouterTestingModule, HttpClientTestingModule]
   });
 
   test('should display snippet in multi lines with line numbers', () => {

@@ -8,11 +8,11 @@ import { TypedSimpleChanges } from '@hypertrace/common';
   template: `
     <div class="snippet-viewer">
       <ht-copy-to-clipboard
-        *ngIf='this.enableCopy'
-        class='copy-to-clipboard'
-        [label]='this.copyLabel'
-        [tooltip]='this.copyTooltip'
-        [text]='this.snippet'
+        *ngIf="this.enableCopy"
+        class="copy-to-clipboard"
+        [label]="this.copyLabel"
+        [tooltip]="this.copyTooltip"
+        [text]="this.snippet"
       ></ht-copy-to-clipboard>
       <ng-container *ngFor="let line of this.lines; let lineNumber = index">
         <div class="line-number">
