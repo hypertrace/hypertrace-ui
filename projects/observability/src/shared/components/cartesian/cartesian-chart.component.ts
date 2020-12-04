@@ -93,7 +93,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       );
 
-    if (this.ranges !== undefined) {
+    if (this.ranges) {
       this.chart.withRanges(...this.ranges);
     }
 
