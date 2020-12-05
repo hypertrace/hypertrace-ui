@@ -8,9 +8,9 @@ import {
   symbolTriangle,
   SymbolType
 } from 'd3-shape';
-import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
-import { Series, SeriesSymbol } from '../../chart';
-import { QuadtreeDataLookupStrategy } from '../interactivity/data-strategy/quadtree-data-lookup-strategy';
+import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
+import { Series, SeriesSymbol } from '../../../chart';
+import { QuadtreeDataLookupStrategy } from '../../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { CartesianSeries } from './cartesian-series';
 
 export class CartesianPoints<TData> extends CartesianSeries<TData> {

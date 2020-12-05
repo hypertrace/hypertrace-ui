@@ -15,10 +15,10 @@ import { merge, Observable } from 'rxjs';
 import { map, toArray } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
-import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from '../series.model';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { SERIES_ARRAY_TYPE } from './series-array/series-array-type';
 import { SeriesVisualizationType } from './series-visualization/series-visualization-type';
+import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from './series.model';
 
 @Model({
   type: 'cartesian-widget',

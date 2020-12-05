@@ -1,9 +1,9 @@
 import { rgb, RGBColor } from 'd3-color';
 import { BaseType, select, Selection } from 'd3-selection';
 import { area, curveMonotoneX, Line } from 'd3-shape';
-import { MouseDataLookupStrategy } from '../../../utils/mouse-tracking/mouse-tracking';
-import { Series } from '../../chart';
-import { QuadtreeDataLookupStrategy } from '../interactivity/data-strategy/quadtree-data-lookup-strategy';
+import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
+import { Series } from '../../../chart';
+import { QuadtreeDataLookupStrategy } from '../../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { CartesianLine } from './cartesian-line';
 import { CartesianSeries } from './cartesian-series';
 
