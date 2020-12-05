@@ -12,18 +12,18 @@ import { CartesianData } from '../cartesian-data';
 import { CartesianPoints } from '../series/cartesian-points';
 
 export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
-  private static readonly CSS_RANGE_CLASS: string = 'range-group';
-  private static readonly CSS_SERIES_CLASS: string = 'range-data-series';
+  private static readonly CSS_BAND_CLASS: string = 'band-group';
+  private static readonly CSS_SERIES_CLASS: string = 'band-data-series';
   private static readonly LINE_WIDTH: number = 2;
 
   public constructor(
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
-    protected readonly range: Band<TData>,
+    protected readonly band: Band<TData>,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
     tooltipTrackingStrategy?: ChartTooltipTrackingStrategy
   ) {
-    super(range, scaleBuilder, tooltipTrackingStrategy);
+    super(band, scaleBuilder, tooltipTrackingStrategy);
   }
 
   protected buildDataLookupStrategy(
@@ -44,16 +44,16 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
     return this.buildMultiAxisDataLookupStrategy();
   }
 
-  private getCombinedData(range: Band<TData>): TData[] {
-    return [range.upper.data, range.lower.data].flatMap(d => d);
+  private getCombinedData(band: Band<TData>): TData[] {
+    return [band.upper.data, band.lower.data].flatMap(d => d);
   }
 
-  private getPairedData(range: Band<TData>): [TData, TData][] {
-    if (range.upper.data.length !== range.lower.data.length) {
+  private getPairedData(band: Band<TData>): [TData, TData][] {
+    if (band.upper.data.length !== band.lower.data.length) {
       return [];
     }
 
-    return range.upper.data.map((upperData: TData, index: number) => [upperData, range.lower.data[index]]);
+    return band.upper.data.map((upperData: TData, index: number) => [upperData, band.lower.data[index]]);
   }
 
   /*
@@ -61,36 +61,36 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
    */
 
   public drawSvg(element: Element): void {
-    if (this.range.hide) {
+    if (this.band.hide) {
       return;
     }
 
     const group = this.d3Utils
       .select(element, this.domRenderer)
       .append('g')
-      .classed(CartesianBand.CSS_RANGE_CLASS, true);
+      .classed(CartesianBand.CSS_BAND_CLASS, true);
 
     const upperSeriesGroup = group
       .append('g')
       .classed(CartesianBand.CSS_SERIES_CLASS, true)
       .attr('fill', 'none')
       .attr('stroke-width', CartesianBand.LINE_WIDTH)
-      .attr('stroke', this.range.upper.color)
+      .attr('stroke', this.band.upper.color)
       .attr('stroke-dasharray', '3, 3');
 
-    this.drawSvgLine(this.range.upper, upperSeriesGroup);
-    this.drawSvgPointsIfRequested(this.range.upper, upperSeriesGroup.node()!);
+    this.drawSvgLine(this.band.upper, upperSeriesGroup);
+    this.drawSvgPointsIfRequested(this.band.upper, upperSeriesGroup.node()!);
 
     const lowerSeriesGroup = group
       .append('g')
       .classed(CartesianBand.CSS_SERIES_CLASS, true)
       .attr('fill', 'none')
       .attr('stroke-width', CartesianBand.LINE_WIDTH)
-      .attr('stroke', this.range.lower.color)
+      .attr('stroke', this.band.lower.color)
       .attr('stroke-dasharray', '3, 3');
 
-    this.drawSvgLine(this.range.lower, lowerSeriesGroup);
-    this.drawSvgPointsIfRequested(this.range.lower, lowerSeriesGroup.node()!);
+    this.drawSvgLine(this.band.lower, lowerSeriesGroup);
+    this.drawSvgPointsIfRequested(this.band.lower, lowerSeriesGroup.node()!);
 
     this.drawSvgArea(group);
   }
@@ -105,9 +105,9 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
   private drawSvgArea(groupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     groupSelection
       .append('path')
-      .attr('d', this.buildArea()(this.getPairedData(this.range))!)
-      .style('fill', this.range.color)
-      .style('opacity', this.range.opacity);
+      .attr('d', this.buildArea()(this.getPairedData(this.band))!)
+      .style('fill', this.band.color)
+      .style('opacity', this.band.opacity);
   }
 
   private drawSvgPointsIfRequested(series: Series<TData>, seriesGroup: SVGGElement): void {
@@ -123,15 +123,15 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
    */
 
   public drawCanvas(context: CanvasRenderingContext2D): void {
-    this.drawCanvasLine(this.range.upper, context);
-    this.drawCanvasLine(this.range.lower, context);
-    this.drawCanvasPointsIfRequested(this.range.upper, context);
-    this.drawCanvasPointsIfRequested(this.range.lower, context);
+    this.drawCanvasLine(this.band.upper, context);
+    this.drawCanvasLine(this.band.lower, context);
+    this.drawCanvasPointsIfRequested(this.band.upper, context);
+    this.drawCanvasPointsIfRequested(this.band.lower, context);
     this.drawCanvasArea(context);
   }
 
   protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Band<TData>> {
-    return new QuadtreeDataLookupStrategy(this.range, this.getCombinedData(this.range), this.xScale, this.yScale, 10);
+    return new QuadtreeDataLookupStrategy(this.band, this.getCombinedData(this.band), this.xScale, this.yScale, 10);
   }
 
   private drawCanvasLine(series: Series<TData>, context: CanvasRenderingContext2D): void {
@@ -145,9 +145,9 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
   private drawCanvasArea(context: CanvasRenderingContext2D): void {
     context.save();
     context.beginPath();
-    this.buildArea().context(context)(this.getPairedData(this.range));
-    context.strokeStyle = this.range.color;
-    context.fillStyle = this.range.color;
+    this.buildArea().context(context)(this.getPairedData(this.band));
+    context.strokeStyle = this.band.color;
+    context.fillStyle = this.band.color;
     context.globalAlpha = 0.4;
     context.fill();
     context.restore();

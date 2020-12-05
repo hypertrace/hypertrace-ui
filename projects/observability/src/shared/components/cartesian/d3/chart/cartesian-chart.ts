@@ -58,7 +58,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected intervalData?: CartesianIntervalData;
   protected readonly series: Series<TData>[] = [];
   protected readonly seriesSummaries: Summary[] = [];
-  protected readonly ranges: Band<TData>[] = [];
+  protected readonly bands: Band<TData>[] = [];
   protected readonly eventListeners: {
     event: ChartEvent;
     onEvent: ChartEventListener<TData>;
@@ -114,11 +114,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     return this;
   }
 
-  public withBands(...ranges: Band<TData>[]): this {
-    this.ranges.length = 0;
-    this.ranges.push(...ranges);
+  public withBands(...bands: Band<TData>[]): this {
+    this.bands.length = 0;
+    this.bands.push(...bands);
 
-    this.scaleBuilder = this.scaleBuilder.withBands(ranges);
+    this.scaleBuilder = this.scaleBuilder.withBands(bands);
 
     return this;
   }
@@ -431,9 +431,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.allCartesianData.length = 0;
     this.allCartesianData.push(
       ...this.series.map(series => this.getChartSeriesVisualization(series)),
-      ...this.ranges.map(
-        range =>
-          new CartesianBand(this.d3Utils, this.domRenderer, range, this.scaleBuilder, this.getTooltipTrackingStrategy())
+      ...this.bands.map(
+        band =>
+          new CartesianBand(this.d3Utils, this.domRenderer, band, this.scaleBuilder, this.getTooltipTrackingStrategy())
       )
     );
   }
