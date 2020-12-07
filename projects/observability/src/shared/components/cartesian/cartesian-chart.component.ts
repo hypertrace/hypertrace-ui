@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  Renderer2,
   ViewChild
 } from '@angular/core';
 import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
@@ -16,19 +17,22 @@ import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
 import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/default-chart-tooltip.component';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
-import { Axis, AxisLocation, AxisType, CartesianChart, RenderingStrategy, Series } from './chart';
+import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
   selector: 'ht-cartesian-chart',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./cartesian-chart.component.scss'],
-  template: ` <div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
-  public series: Series<TData>[] | undefined = [];
+  public series?: Series<TData>[] = [];
+
+  @Input()
+  public bands?: Band<TData>[] = [];
 
   @Input()
   public xAxisOption?: Axis;
@@ -69,7 +73,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
-    private readonly chartTooltipBuilderService: ChartTooltipBuilderService
+    private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
+    private readonly renderer: Renderer2
   ) {}
 
   public ngOnChanges(): void {
@@ -82,13 +87,17 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
       );
+
+    if (this.bands) {
+      this.chart.withBands(...this.bands);
+    }
 
     if (this.showXAxis) {
       this.chart.withAxis(this.getXAxis());

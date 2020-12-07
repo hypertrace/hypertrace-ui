@@ -11,7 +11,7 @@ import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResult
 } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/series.model';
+import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-selection-specification.model';
 import { TraceSeriesValuesDataSourceModel } from '../trace-series-values-data-source.model';
 

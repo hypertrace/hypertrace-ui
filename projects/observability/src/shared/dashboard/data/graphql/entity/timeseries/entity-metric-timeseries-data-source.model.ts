@@ -5,7 +5,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
-import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/series.model';
+import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { MetricTimeseriesSpecificationModel } from '../../specifiers/metric-timeseries-specification.model';
 import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 

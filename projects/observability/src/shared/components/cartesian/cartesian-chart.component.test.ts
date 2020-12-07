@@ -1,3 +1,4 @@
+import { Renderer2 } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DomElementMeasurerService, selector } from '@hypertrace/common';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -27,7 +28,8 @@ describe('Cartesian Chart component', () => {
           height: 0
         }),
         getComputedTextLength: () => 0
-      })
+      }),
+      mockProvider(Renderer2)
     ]
   });
 
