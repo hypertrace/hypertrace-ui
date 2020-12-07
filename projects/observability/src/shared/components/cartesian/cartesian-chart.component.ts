@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  Renderer2,
   ViewChild
 } from '@angular/core';
 import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
@@ -72,7 +73,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
-    private readonly chartTooltipBuilderService: ChartTooltipBuilderService
+    private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
+    private readonly renderer: Renderer2
   ) {}
 
   public ngOnChanges(): void {
@@ -85,7 +87,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
