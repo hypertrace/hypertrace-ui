@@ -178,6 +178,7 @@ export * from './shared/components/card-list/card-list.component';
 export * from './shared/components/card-list/container/card-container.component';
 export * from './shared/components/card-list/card-list.module';
 export { Card, CardType } from './shared/dashboard/widgets/card-list/card';
+export * from './shared/dashboard/widgets/card-list/card-list-widget-model';
 
 // Card List - Timeline
 export * from './shared/components/timeline-card-list/timeline-card-list.component';
