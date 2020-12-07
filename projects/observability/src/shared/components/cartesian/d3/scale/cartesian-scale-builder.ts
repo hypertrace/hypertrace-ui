@@ -1,5 +1,5 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { Axis, AxisType, ScaleType, Series } from '../../chart';
+import { Axis, AxisType, Band, ScaleType, Series } from '../../chart';
 import { CartesianBandScale } from './band/cartesian-band-scale';
 import { ScaleBounds, ScaleInitializationData } from './cartesian-scale';
 import { defaultXDataAccessor, defaultYDataAccessor, getDefaultScaleType } from './default-data-accessors';
@@ -49,6 +49,10 @@ export class CartesianScaleBuilder<TData> {
     return this.cloneWith({ series: series });
   }
 
+  public withBands(bands: Band<TData>[]): this {
+    return this.cloneWith({ bands: bands });
+  }
+
   public withBounds(bounds: ScaleBounds): this {
     return this.cloneWith({ bounds: bounds });
   }
@@ -76,7 +80,7 @@ export class CartesianScaleBuilder<TData> {
       ...this.resolveMinMax(axisType),
       bounds: this.bounds,
       dataAccesor: this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain,
-      allSeries: this.allSeries,
+      allSeriesAndBandSeries: this.allSeriesAndBandSeries,
       seriesState: seriesState
     };
   }
@@ -127,7 +131,7 @@ export class CartesianScaleBuilder<TData> {
   }
 
   private buildStackingState(): CartesianStackingState<TData> | undefined {
-    const stackingSeriesList = this.allSeries.filter(series => series.stacking);
+    const stackingSeriesList = this.allSeriesAndBandSeries.filter(series => series.stacking);
 
     if (stackingSeriesList.length > 0) {
       const xDataAccessor = this.getXDataAccessor() as (data: TData) => number;
@@ -185,20 +189,24 @@ export class CartesianScaleBuilder<TData> {
     };
   }
 
-  private get allSeries(): Series<TData>[] {
-    if (this.scaleState.series) {
-      return this.scaleState.series.filter(series => !series.hide);
-    }
+  private get allSeriesAndBandSeries(): Series<TData>[] {
+    const series = this.scaleState.series !== undefined ? this.scaleState.series.filter(s => !s.hide) : [];
+    const bands =
+      this.scaleState.bands !== undefined
+        ? this.scaleState.bands.filter(r => !r.hide).flatMap(r => [r.upper, r.lower])
+        : [];
 
-    return [];
+    return [...series, ...bands];
   }
 
   private get data(): TData[] {
-    if (this.scaleState.series) {
-      return this.scaleState.series.flatMap(series => series.data);
-    }
+    const seriesData = this.scaleState.series !== undefined ? this.scaleState.series.flatMap(s => s.data) : [];
+    const bandData =
+      this.scaleState.bands !== undefined
+        ? this.scaleState.bands.flatMap(b => [b.lower.data, b.upper.data].flat())
+        : [];
 
-    return [];
+    return [...seriesData, ...bandData];
   }
 
   private cloneWith(stateChange: Partial<ScaleState<TData, unknown>>): this {
@@ -231,6 +239,7 @@ type ScaleState<TData, TDomain> = Readonly<{
   defaultXMinMax?: MinMax;
   defaultYMinMax?: MinMax;
   series?: Series<TData>[];
+  bands?: Band<TData>[];
   xDataAccessor?(data: TData): TDomain;
   yDataAccessor?(data: TData): TDomain;
 }>;

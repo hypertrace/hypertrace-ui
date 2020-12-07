@@ -14,9 +14,9 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
-import { MetricSeriesDataFetcher, SeriesModel } from '../series.model';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
+import { MetricSeriesDataFetcher, SeriesModel } from './series.model';
 
 describe('Cartesian widget renderer component', () => {
   const buildComponent = createComponentFactory({

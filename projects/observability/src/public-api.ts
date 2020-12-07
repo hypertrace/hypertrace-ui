@@ -153,7 +153,7 @@ export * from './shared/components/cartesian/cartesian-chart.component';
 export * from './shared/components/cartesian/cartesian-chart.module';
 export * from './shared/components/cartesian/chart';
 export * from './shared/components/cartesian/chart-interactivty';
-export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/series.model';
+export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
 export { MetricSeriesFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
 export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 
@@ -178,6 +178,7 @@ export * from './shared/components/card-list/card-list.component';
 export * from './shared/components/card-list/container/card-container.component';
 export * from './shared/components/card-list/card-list.module';
 export { Card, CardType } from './shared/dashboard/widgets/card-list/card';
+export * from './shared/dashboard/widgets/card-list/card-list-widget-model';
 
 // Card List - Timeline
 export * from './shared/components/timeline-card-list/timeline-card-list.component';

@@ -22,7 +22,7 @@ import {
   ENTITY_GQL_REQUEST,
   GraphQlEntityRequest
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
-import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/series.model';
+import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 
 @Model({
   type: 'entity-error-percentage-timeseries-data-source'
