@@ -56,7 +56,7 @@ export abstract class CartesianScale<TData, TDomain> {
       return 0;
     }
 
-    const siblingSeries = this.initData.allSeries.filter(series => series.type === currentSeries.type);
+    const siblingSeries = this.initData.allSeriesAndBandSeries.filter(series => series.type === currentSeries.type);
     const hasStacking = siblingSeries.some(series => series.stacking);
     const currentSeriesIndex = siblingSeries
       .filter(series => !series.stacking)
@@ -66,7 +66,7 @@ export abstract class CartesianScale<TData, TDomain> {
   }
 
   public getGroupedColumnSeriesLength(currentSeries: Series<TData>): number {
-    const siblingSeries = this.initData.allSeries.filter(series => series.type === currentSeries.type);
+    const siblingSeries = this.initData.allSeriesAndBandSeries.filter(series => series.type === currentSeries.type);
     const hasStacking = siblingSeries.some(series => series.stacking);
 
     return hasStacking ? siblingSeries.filter(series => !series.stacking).length + 1 : siblingSeries.length;
@@ -74,7 +74,7 @@ export abstract class CartesianScale<TData, TDomain> {
 
   public isShowColumnRounding(currentSeries: Series<TData>): boolean {
     if (currentSeries.stacking) {
-      const siblingSeries = this.initData.allSeries.filter(series => series.type === currentSeries.type);
+      const siblingSeries = this.initData.allSeriesAndBandSeries.filter(series => series.type === currentSeries.type);
 
       return currentSeries === last(siblingSeries.filter(series => series.stacking));
     }
@@ -112,7 +112,7 @@ export interface ScaleInitializationData<TData> {
   bounds: ScaleBounds;
   min?: number;
   max?: number;
-  allSeries: Series<TData>[];
+  allSeriesAndBandSeries: Series<TData>[];
   seriesState?: SeriesState<TData>;
   dataAccesor<TDomain>(data: TData): TDomain;
 }
