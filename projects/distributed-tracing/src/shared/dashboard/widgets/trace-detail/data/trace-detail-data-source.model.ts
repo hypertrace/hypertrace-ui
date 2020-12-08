@@ -55,8 +55,6 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   }
 
   protected constructTraceDetailData(trace: Trace): TraceDetailData {
-    console.debug('trace', trace);
-
     return {
       id: trace[traceIdKey],
       traceId: trace.traceId as string, // traceId is real Trace ID. NOT Symbol('traceId').
