@@ -3,10 +3,10 @@ import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
 
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+import { Dashboard } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { TraceDetails, TraceDetailService } from './trace-detail.service';
-
+import { traceDetailDashboard } from './trace-detail.dashboard';
 @Component({
   styleUrls: ['./trace-detail.page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,12 +41,11 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
       </div>
 
       <div class="scrollable-container">
-        <ht-application-aware-dashboard
-          [json]="this.defaultJson"
-          [padding]="0"
+        <<ht-navigable-dashboard
+          navLocation="${traceDetailDashboard.location}"
           (dashboardReady)="this.onDashboardReady($event)"
         >
-        </ht-application-aware-dashboard>
+        </ht-navigable-dashboard>
       </div>
     </div>
   `
@@ -54,27 +53,6 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
 export class TraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
   public readonly traceDetails$: Observable<TraceDetails>;
-
-  public readonly defaultJson: ModelJson = {
-    type: 'container-widget',
-    layout: {
-      type: 'auto-container-layout',
-      'enable-style': false
-    },
-    children: [
-      {
-        type: 'waterfall-widget',
-        title: 'Sequence Diagram',
-        data: {
-          type: 'trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'entry-span-id': '${spanId}'
-        }
-      }
-    ]
-  };
 
   public constructor(
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
