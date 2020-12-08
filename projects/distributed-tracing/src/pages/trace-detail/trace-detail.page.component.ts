@@ -32,7 +32,12 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
           ></ht-summary-value>
-          <ht-summary-value class="summary-value" icon="${IconType.Id}" [value]="traceDetails.id"></ht-summary-value>
+          <ht-summary-value
+            class="summary-value"
+            icon="${IconType.TraceId}"
+            label='Trace ID'
+            [value]="traceDetails.id"
+          ></ht-summary-value>
 
           <div class="separation"></div>
 

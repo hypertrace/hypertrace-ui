@@ -34,7 +34,8 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
           ></ht-summary-value>
           <ht-summary-value
             class="summary-value"
-            icon="${IconType.Id}"
+            icon="${IconType.TraceId}"
+            label='Trace ID'
             [value]="traceDetails.traceId"
           ></ht-summary-value>
 

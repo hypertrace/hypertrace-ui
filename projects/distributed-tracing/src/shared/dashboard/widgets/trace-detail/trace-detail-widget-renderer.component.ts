@@ -17,9 +17,15 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
             class="summary-value"
+            icon="${IconType.SpanId}"
+            label="Entry Span ID"
+            [value]="data.entrySpanId"
+          ></ht-summary-value>
+          <ht-summary-value
+            class="summary-value"
             icon="${IconType.TraceId}"
             label="Trace ID"
-            [value]="data.id"
+            [value]="data.traceId"
           ></ht-summary-value>
           <ht-summary-value
             class="summary-value"

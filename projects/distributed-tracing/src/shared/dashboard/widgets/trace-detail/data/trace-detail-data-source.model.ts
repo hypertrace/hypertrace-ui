@@ -55,8 +55,12 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   }
 
   protected constructTraceDetailData(trace: Trace): TraceDetailData {
+    console.debug('trace', trace);
+
     return {
       id: trace[traceIdKey],
+      traceId: trace.traceId as string, // traceId is real Trace ID. NOT Symbol('traceId').
+      entrySpanId: trace.apiTraceId as string, // Symbol('traceId') same as apiTraceId which is actually Entry Span ID
       statusCode: trace.statusCode as string,
       tags: trace.tags as Dictionary<unknown>,
       requestUrl: trace.requestUrl as string
@@ -66,6 +70,8 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 
 export interface TraceDetailData {
   id: string;
+  traceId: string;
+  entrySpanId: string;
   statusCode: string;
   tags: Dictionary<unknown>;
   requestUrl: string;
