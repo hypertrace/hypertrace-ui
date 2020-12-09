@@ -35,7 +35,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
           <ht-summary-value
             class="summary-value"
             icon="${IconType.TraceId}"
-            label='Trace ID'
+            label="Trace ID"
             [value]="traceDetails.id"
           ></ht-summary-value>
 
