@@ -16,6 +16,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
       <div class="content" *htLoadAsync="this.data$ as data">
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
+            *ngIf='data.entrySpanId'
             class="summary-value"
             icon="${IconType.SpanId}"
             label="Entry Span ID"
