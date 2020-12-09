@@ -9,18 +9,10 @@ export class ChartBuilderService {
   public constructor(
     private readonly injector: Injector,
     private readonly svgUtilService: SvgUtilService,
-    protected readonly d3Utils: D3UtilService,
-    protected readonly domRenderer: Renderer2
+    protected readonly d3Utils: D3UtilService
   ) {}
 
-  public build<TData>(strategy: RenderingStrategy, element: Element): CartesianChart<TData> {
-    return new DefaultCartesianChart(
-      element,
-      this.injector,
-      strategy,
-      this.svgUtilService,
-      this.d3Utils,
-      this.domRenderer
-    );
+  public build<TData>(strategy: RenderingStrategy, element: Element, renderer: Renderer2): CartesianChart<TData> {
+    return new DefaultCartesianChart(element, this.injector, strategy, this.svgUtilService, this.d3Utils, renderer);
   }
 }

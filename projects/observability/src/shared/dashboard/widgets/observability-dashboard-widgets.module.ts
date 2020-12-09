@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { ObservabilityTableCellRendererModule } from '../../components/table/observability-table-cell-renderer.module';
-import { CardListWidgetModule } from './card-list/card-list-widget.module';
 import { CartesianWidgetModule } from './charts/cartesian-widget/cartesian-widget.module';
 import { DonutWidgetModule } from './donut/donut-widget.module';
 import { GaugeWidgetModule } from './gauge/gauge-widget.module';
@@ -18,7 +17,6 @@ import { TopologyWidgetModule } from './topology/topology-widget.module';
     ObservabilityTableCellRendererModule,
     DonutWidgetModule,
     CartesianWidgetModule,
-    CardListWidgetModule,
     GaugeWidgetModule
   ]
 })
