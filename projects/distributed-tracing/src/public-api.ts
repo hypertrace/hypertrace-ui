@@ -91,6 +91,9 @@ export * from './shared/components/table/tracing-table-cell-type';
 
 // Waterfall
 export { WaterfallData } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
+export { TraceWaterfallDataSourceModel } from './shared/dashboard/data/graphql/waterfall/trace-waterfall-data-source.model';
+export { traceDetailDashboard } from './pages/trace-detail/trace-detail.dashboard';
+export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page.component';
 
 // Datasources
 export * from './shared/dashboard/widgets/span-detail/data/span-detail-data-source.model';

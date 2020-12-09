@@ -37,9 +37,9 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  protected readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
-  private readonly spanSpecifications: Specification[] = [
+  protected readonly spanSpecifications: Specification[] = [
     this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
     this.specificationBuilder.attributeSpecificationForKey('duration'),
     this.specificationBuilder.attributeSpecificationForKey('endTime'),
@@ -72,7 +72,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
     return this.metadataService.getAttribute(SPAN_SCOPE, 'duration');
   }
 
-  private mapResponseObject(trace: Trace | undefined, duration: AttributeMetadata): WaterfallData[] {
+  protected mapResponseObject(trace: Trace | undefined, duration: AttributeMetadata): WaterfallData[] {
     if (trace === undefined || trace.spans === undefined || trace.spans.length === 0) {
       return [];
     }
