@@ -9,10 +9,10 @@ import {
   LoadAsyncModule,
   SummaryValueModule
 } from '@hypertrace/components';
-import { TracingDashboardModule } from '../../shared/dashboard/tracing-dashboard.module';
-import { TraceDetailPageComponent } from './trace-detail.page.component';
-import { traceDetailDashboard } from './trace-detail.dashboard';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { TracingDashboardModule } from '../../shared/dashboard/tracing-dashboard.module';
+import { traceDetailDashboard } from './trace-detail.dashboard';
+import { TraceDetailPageComponent } from './trace-detail.page.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
   {
@@ -34,7 +34,6 @@ const ROUTE_CONFIG: TraceRoute[] = [
     FormattingModule,
     CopyShareableLinkToClipboardModule,
     NavigableDashboardModule.withDefaultDashboards(traceDetailDashboard)
-
   ]
 })
 export class TraceDetailPageModule {}

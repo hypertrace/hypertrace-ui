@@ -5,8 +5,8 @@ import { IconSize } from '@hypertrace/components';
 
 import { Dashboard } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { TraceDetails, TraceDetailService } from './trace-detail.service';
 import { traceDetailDashboard } from './trace-detail.dashboard';
+import { TraceDetails, TraceDetailService } from './trace-detail.service';
 @Component({
   styleUrls: ['./trace-detail.page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,13 +40,12 @@ import { traceDetailDashboard } from './trace-detail.dashboard';
         </div>
       </div>
 
-      <div class="scrollable-container">
-        <<ht-navigable-dashboard
-          navLocation="${traceDetailDashboard.location}"
-          (dashboardReady)="this.onDashboardReady($event)"
-        >
-        </ht-navigable-dashboard>
-      </div>
+      <ht-navigable-dashboard
+        class="scrollable-container"
+        navLocation="${traceDetailDashboard.location}"
+        (dashboardReady)="this.onDashboardReady($event)"
+      >
+      </ht-navigable-dashboard>
     </div>
   `
 })
