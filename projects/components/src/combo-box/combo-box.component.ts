@@ -296,9 +296,11 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
     // Calling setTimeout required to get proper measurement after DOM updates
     setTimeout(() => {
-      // Add some pixels for input border, padding, etc
+      // Add 6 pixels for input border, padding, etc
       this.width =
-        this.text !== undefined ? `${(this.invisibleText.nativeElement.offsetWidth as number) + 6}px` : '100%';
+        this.text !== undefined && this.text !== ''
+          ? `${(this.invisibleText.nativeElement.offsetWidth as number) + 6}px`
+          : '100%';
       this.changeDetectorRef.markForCheck(); // Yes, required
     });
   }
