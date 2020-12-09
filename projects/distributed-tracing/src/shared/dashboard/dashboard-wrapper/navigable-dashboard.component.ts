@@ -28,6 +28,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
       <ht-application-aware-dashboard
         class="dashboard"
         [json]="dashboardJson"
+        [padding]="this.padding"
         (dashboardReady)="this.onDashboardReady($event)"
       >
       </ht-application-aware-dashboard>
@@ -43,6 +44,9 @@ export class NavigableDashboardComponent implements OnChanges {
 
   @Input()
   public filterConfig?: NavigableDashboardFilterConfig;
+
+  @Input()
+  public padding?: number;
 
   @Output()
   public readonly dashboardReady: EventEmitter<Dashboard> = new EventEmitter();
