@@ -28,6 +28,7 @@ const iconsRootPath = 'assets/icons';
       { key: ObservabilityIconType.MicrosoftSqlServer, url: `${iconsRootPath}/microsoft-sql-server.svg` },
       { key: ObservabilityIconType.Mongo, url: `${iconsRootPath}/mongo.svg` },
       { key: ObservabilityIconType.Mysql, url: `${iconsRootPath}/mysql.svg` },
+      { key: ObservabilityIconType.Nginx, url: `${iconsRootPath}/nginx.svg` },
       { key: ObservabilityIconType.Node, url: `${iconsRootPath}/node.svg` },
       { key: ObservabilityIconType.Oracle, url: `${iconsRootPath}/oracle.svg` },
       { key: ObservabilityIconType.PostgreSQL, url: `${iconsRootPath}/postgre-sql.svg` },

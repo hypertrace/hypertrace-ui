@@ -7,6 +7,13 @@ import { TypedSimpleChanges } from '@hypertrace/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="snippet-viewer">
+      <ht-copy-to-clipboard
+        *ngIf="this.enableCopy"
+        class="copy-to-clipboard"
+        [label]="this.copyLabel"
+        [tooltip]="this.copyTooltip"
+        [text]="this.snippet"
+      ></ht-copy-to-clipboard>
       <ng-container *ngFor="let line of this.lines; let lineNumber = index">
         <div class="line-number">
           <span>{{ lineNumber + 1 }}</span>
@@ -18,12 +25,18 @@ import { TypedSimpleChanges } from '@hypertrace/common';
     </div>
   `
 })
-/**
- * For more addition, consider using @CodeMirror
- */
 export class SnippetViewerComponent implements OnChanges {
   @Input()
   public snippet?: string;
+
+  @Input()
+  public enableCopy?: boolean = true;
+
+  @Input()
+  public copyLabel?: string = 'Copy to Clipboard';
+
+  @Input()
+  public copyTooltip?: string = 'Copy to Clipboard';
 
   public lines: string[] = [];
 

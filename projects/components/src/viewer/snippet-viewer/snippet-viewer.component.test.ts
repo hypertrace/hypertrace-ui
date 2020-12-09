@@ -1,13 +1,12 @@
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { SnippetViewerComponent } from './snippet-viewer.component';
-import { SnippetViewerModule } from './snippet-viewer.module';
 
 describe('Snippet Viewer Component', () => {
   let spectator: Spectator<SnippetViewerComponent>;
   const createHost = createHostFactory({
-    declareComponent: false,
     component: SnippetViewerComponent,
-    imports: [SnippetViewerModule]
+    shallow: true,
+    imports: []
   });
 
   test('should display snippet in multi lines with line numbers', () => {
