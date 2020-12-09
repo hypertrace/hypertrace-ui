@@ -42,6 +42,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
 
       <ht-navigable-dashboard
         class="scrollable-container"
+        [padding]="0"
         navLocation="${traceDetailDashboard.location}"
         (dashboardReady)="this.onDashboardReady($event)"
       >
