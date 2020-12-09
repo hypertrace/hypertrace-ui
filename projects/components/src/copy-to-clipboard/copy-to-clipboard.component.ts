@@ -55,13 +55,13 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   public icon?: IconType = IconType.CopyToClipboard;
 
   @Input()
-  public label?: string;
+  public label?: string = 'Copy to Clipboard';
+
+  @Input()
+  public tooltip?: string = 'Copy to Clipboard';
 
   @Input()
   public text?: string;
-
-  @Input()
-  public tooltip?: string;
 
   @Output()
   public readonly copiedChanges: EventEmitter<boolean> = new EventEmitter();
