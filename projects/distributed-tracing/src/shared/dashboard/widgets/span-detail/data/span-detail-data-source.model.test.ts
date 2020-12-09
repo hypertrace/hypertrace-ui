@@ -55,7 +55,7 @@ describe('Span Detail data source model', () => {
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
-          attributeSpecBuilder.attributeSpecificationForKey('traceId'),
+          attributeSpecBuilder.attributeSpecificationForKey('traceId')
         ]
       })
     ).toBe(true);
