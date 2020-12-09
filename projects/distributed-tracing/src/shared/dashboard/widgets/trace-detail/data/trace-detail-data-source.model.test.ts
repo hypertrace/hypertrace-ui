@@ -78,6 +78,8 @@ describe('Trace detail data source model', () => {
         timeRange: expect.objectContaining({ from: testTimeRange.startTime, to: testTimeRange.endTime }),
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
+          expect.objectContaining({ name: 'traceId' }),
+          expect.objectContaining({ name: 'apiTraceId' }),
           expect.objectContaining({ name: 'statusCode' })
         ])
       })
