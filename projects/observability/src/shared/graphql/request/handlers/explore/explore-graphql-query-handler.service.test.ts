@@ -208,12 +208,6 @@ describe('Explore graphql query handler', () => {
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
-            },
-            {
-              key: 'apiDiscoveryState',
-              operator: new GraphQlEnumArgument(GraphQlOperatorType.Equals),
-              value: 'DISCOVERED',
-              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
             }
           ]
         },
