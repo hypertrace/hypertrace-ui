@@ -1,11 +1,12 @@
 import { Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { ApiTraceDetailDataSourceModel, TraceDetailData } from './data/api-trace-detail-data-source.model';
+import { ApiTraceDetailData, ApiTraceDetailDataSourceModel } from './data/api-trace-detail-data-source.model';
+import { TraceDetailData, TraceDetailDataSourceModel } from './data/trace-detail-data-source.model';
 
 @Model({
   type: 'trace-detail-widget',
-  supportedDataSourceTypes: [ApiTraceDetailDataSourceModel]
+  supportedDataSourceTypes: [TraceDetailDataSourceModel, ApiTraceDetailDataSourceModel]
 })
 export class TraceDetailWidgetModel {
   @ModelProperty({
@@ -17,7 +18,7 @@ export class TraceDetailWidgetModel {
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 
-  public getData(): Observable<TraceDetailData> {
-    return this.api.getData<TraceDetailData>();
+  public getData(): Observable<TraceDetailData | ApiTraceDetailData> {
+    return this.api.getData<TraceDetailData | ApiTraceDetailData>();
   }
 }

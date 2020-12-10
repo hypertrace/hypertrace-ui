@@ -4,6 +4,7 @@ import { LoadAsyncModule, SummaryValueModule, TitledContentModule } from '@hyper
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { SpanDetailModule } from '../../../components/span-detail/span-detail.module';
 import { ApiTraceDetailDataSourceModel } from './data/api-trace-detail-data-source.model';
+import { TraceDetailDataSourceModel } from './data/trace-detail-data-source.model';
 import { TraceDetailWidgetRendererComponent } from './trace-detail-widget-renderer.component';
 import { TraceDetailWidgetModel } from './trace-detail-widget.model';
 
@@ -11,7 +12,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
   declarations: [TraceDetailWidgetRendererComponent],
   imports: [
     DashboardCoreModule.with({
-      models: [TraceDetailWidgetModel, ApiTraceDetailDataSourceModel],
+      models: [TraceDetailWidgetModel, TraceDetailDataSourceModel, ApiTraceDetailDataSourceModel],
       renderers: [TraceDetailWidgetRendererComponent]
     }),
     CommonModule,
