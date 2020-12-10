@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { TraceDetailData } from './data/api-trace-detail-data-source.model';
+import { TraceDetailData } from './data/trace-detail-data-source.model';
 import { TraceDetailWidgetModel } from './trace-detail-widget.model';
 
 @Renderer({ modelClass: TraceDetailWidgetModel })
