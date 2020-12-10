@@ -17,9 +17,15 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
             class="summary-value"
-            icon="${IconType.TraceId}"
+            icon="${IconType.SpanId}"
             label="Span ID"
             [value]="data.id"
+          ></ht-summary-value>
+          <ht-summary-value
+            class="summary-value"
+            icon="${IconType.TraceId}"
+            label="Trace ID"
+            [value]="data.traceId"
           ></ht-summary-value>
           <ht-summary-value
             class="summary-value"

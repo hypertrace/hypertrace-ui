@@ -11,9 +11,9 @@ import {
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 
 @Model({
-  type: 'trace-detail-data-source'
+  type: 'api-trace-detail-data-source'
 })
-export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDetailData> {
+export class ApiTraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDetailData> {
   @ModelProperty({
     key: 'trace',
     required: true,
@@ -43,7 +43,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   }
 
   protected getTraceAttributes(): string[] {
-    return ['tags', 'statusCode', ...this.attributes];
+    return ['tags', 'statusCode', 'traceId', 'apiTraceId', ...this.attributes];
   }
 
   private mapResponseObject(trace: Trace | undefined): Observable<TraceDetailData> {
@@ -56,7 +56,8 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 
   protected constructTraceDetailData(trace: Trace): TraceDetailData {
     return {
-      id: trace[traceIdKey],
+      traceId: trace.traceId as string, // The traceId is real Trace ID. NOT Symbol('traceId').
+      entrySpanId: trace.apiTraceId as string, // Symbol('traceId') same as apiTraceId which is actually Entry Span ID
       statusCode: trace.statusCode as string,
       tags: trace.tags as Dictionary<unknown>,
       requestUrl: trace.requestUrl as string
@@ -65,7 +66,8 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 }
 
 export interface TraceDetailData {
-  id: string;
+  traceId: string;
+  entrySpanId: string;
   statusCode: string;
   tags: Dictionary<unknown>;
   requestUrl: string;

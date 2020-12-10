@@ -63,7 +63,11 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
           layout="${SpanDetailLayoutStyle.Vertical}"
           (closed)="this.closeSheet()"
         >
-          <ht-summary-value icon="${IconType.Id}" label="Span ID" [value]="this.selectedData!.id"></ht-summary-value>
+          <ht-summary-value
+            icon="${IconType.SpanId}"
+            label="Span ID"
+            [value]="this.selectedData!.id"
+          ></ht-summary-value>
         </ht-span-detail>
       </div>
     </ng-template>

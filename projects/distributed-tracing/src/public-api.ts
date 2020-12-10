@@ -97,7 +97,7 @@ export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page
 
 // Datasources
 export * from './shared/dashboard/widgets/span-detail/data/span-detail-data-source.model';
-export * from './shared/dashboard/widgets/trace-detail/data/trace-detail-data-source.model';
+export * from './shared/dashboard/widgets/trace-detail/data/api-trace-detail-data-source.model';
 
 // Detail Sheet
 export * from './shared/dashboard/interaction/detail-sheet/detail-sheet-interaction.module';

@@ -24,7 +24,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
   private readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
 
   protected getSpanAttributes(): string[] {
-    return ['statusCode', 'spanTags'];
+    return ['statusCode', 'spanTags', 'traceId'];
   }
 
   public getData(): Observable<SpanDetailData> {
@@ -49,6 +49,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
   protected constructSpanDetail(span: Span): SpanDetailData {
     return {
       id: span[spanIdKey],
+      traceId: span.traceId as string,
       statusCode: span.statusCode as string,
       tags: span.spanTags as Dictionary<unknown>
     };
@@ -57,6 +58,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
 
 export interface SpanDetailData {
   id: string;
+  traceId: string;
   statusCode: string;
   tags: Dictionary<unknown>;
 }

@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { TraceDetailData } from './data/trace-detail-data-source.model';
+import { TraceDetailData } from './data/api-trace-detail-data-source.model';
 import { TraceDetailWidgetModel } from './trace-detail-widget.model';
 
 @Renderer({ modelClass: TraceDetailWidgetModel })
@@ -16,10 +16,17 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
       <div class="content" *htLoadAsync="this.data$ as data">
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
+            *ngIf="data.entrySpanId"
+            class="summary-value"
+            icon="${IconType.SpanId}"
+            label="Entry Span ID"
+            [value]="data.entrySpanId"
+          ></ht-summary-value>
+          <ht-summary-value
             class="summary-value"
             icon="${IconType.TraceId}"
             label="Trace ID"
-            [value]="data.id"
+            [value]="data.traceId"
           ></ht-summary-value>
           <ht-summary-value
             class="summary-value"
