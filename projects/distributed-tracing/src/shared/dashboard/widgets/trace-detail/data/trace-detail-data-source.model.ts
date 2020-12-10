@@ -43,7 +43,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   }
 
   protected getTraceAttributes(): string[] {
-    return ['tags', 'statusCode', 'traceId', ...this.attributes];
+    return ['tags', 'statusCode', ...this.attributes];
   }
 
   private mapResponseObject(trace: Trace | undefined): Observable<TraceDetailData> {
@@ -56,7 +56,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 
   protected constructTraceDetailData(trace: Trace): TraceDetailData {
     return {
-      traceId: trace.traceId as string, // The traceId is real Trace ID. NOT Symbol('traceId').
+      traceId: trace[traceIdKey],
       statusCode: trace.statusCode as string,
       tags: trace.tags as Dictionary<unknown>,
       requestUrl: trace.requestUrl as string
