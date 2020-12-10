@@ -14,7 +14,7 @@ export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
   protected constructTraceDetailData(trace: Trace): ApiTraceDetailData {
     return {
       ...super.constructTraceDetailData(trace),
-      traceId: trace.traceId as string,  // For API Trace traceId is real Trace ID. NOT Symbol('traceId').
+      traceId: trace.traceId as string, // For API Trace traceId is real Trace ID. NOT Symbol('traceId').
       entrySpanId: trace[traceIdKey] // API Trace Symbol('traceId') same as apiTraceId which is actually Entry Span ID
     };
   }

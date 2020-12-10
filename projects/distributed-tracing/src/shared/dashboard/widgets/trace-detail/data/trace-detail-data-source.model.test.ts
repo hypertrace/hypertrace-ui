@@ -79,7 +79,7 @@ describe('API Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'statusCode' }),
-          expect.not.objectContaining({ name: 'traceId' }),
+          expect.not.objectContaining({ name: 'traceId' })
         ])
       })
     );
