@@ -11,9 +11,9 @@ import {
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 
 @Model({
-  type: 'trace-detail-data-source'
+  type: 'api-trace-detail-data-source'
 })
-export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDetailData> {
+export class ApiTraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDetailData> {
   @ModelProperty({
     key: 'trace',
     required: true,

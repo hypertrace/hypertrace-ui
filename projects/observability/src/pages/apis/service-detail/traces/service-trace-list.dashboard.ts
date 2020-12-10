@@ -93,7 +93,7 @@ export const serviceTraceListDashboard = {
     'child-template': {
       type: 'trace-detail-widget',
       data: {
-        type: 'trace-detail-data-source',
+        type: 'api-trace-detail-data-source',
         // tslint:disable-next-line: no-invalid-template-strings
         trace: '${row}',
         attributes: ['requestUrl']

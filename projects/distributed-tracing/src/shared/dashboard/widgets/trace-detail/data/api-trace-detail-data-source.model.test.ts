@@ -6,18 +6,18 @@ import {
   TRACE_GQL_REQUEST
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { ObservedGraphQlRequest } from '../../../data/graphql/graphql-query-event.service';
-import { TraceDetailDataSourceModel } from './trace-detail-data-source.model';
+import { ApiTraceDetailDataSourceModel } from './api-trace-detail-data-source.model';
 
 describe('Trace detail data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
-  let model!: TraceDetailDataSourceModel;
+  let model!: ApiTraceDetailDataSourceModel;
   let emittedQueries: unknown;
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
       getTimeRange: jest.fn(() => testTimeRange)
     };
-    model = new TraceDetailDataSourceModel();
+    model = new ApiTraceDetailDataSourceModel();
     model.trace = {
       [traceIdKey]: 'test',
       [traceTypeKey]: TRACE_SCOPE
