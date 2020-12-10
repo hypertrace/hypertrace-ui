@@ -28,8 +28,8 @@ $font-family: 'Work Sans', sans-serif;
   @include ellipsis-overflow;
 }
 
-@mixin font-title {
-  color: $gray-9;
+@mixin font-title($color: $gray-9) {
+  color: $color;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: -0.02em;
@@ -84,9 +84,10 @@ $font-family: 'Work Sans', sans-serif;
   color: $color;
 }
 
-@mixin font-label {
-  color: $color-text-label;
+@mixin font-label($color: $color-text-label) {
+  color: $color;
   font-size: 12px;
+  line-height: 16px;
 }
 
 @mixin ellipsis-overflow {

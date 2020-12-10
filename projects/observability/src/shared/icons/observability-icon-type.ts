@@ -20,6 +20,7 @@ export const enum ObservabilityIconType {
   MicrosoftSqlServer = 'svg:microsoft-sql-server',
   Mongo = 'svg:mongo',
   Mysql = 'svg:mysql',
+  Nginx = 'svg:nginx',
   Node = 'svg:node',
   Oracle = 'svg:oracle',
   PostgreSQL = 'svg:postgre-sql',

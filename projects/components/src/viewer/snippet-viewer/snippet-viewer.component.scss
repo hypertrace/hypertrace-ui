@@ -3,18 +3,34 @@
 
 .snippet-viewer {
   @include code($gray-5);
+  position: relative;
   background: $gray-1;
-  border-radius: 3px;
+  border-radius: 12px;
   padding: 12px;
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr);
   grid-column-gap: 16px;
   grid-row-gap: 2px;
 
+  &:hover {
+    .copy-to-clipboard {
+      display: inherit;
+    }
+  }
+
+  .copy-to-clipboard {
+    position: absolute;
+    right: 0;
+    top: 0;
+    user-select: none;
+    display: none;
+  }
+
   .line-number {
     display: flex;
     justify-content: center;
     border-right: 1px solid white;
+    user-select: none;
   }
 
   .content {
