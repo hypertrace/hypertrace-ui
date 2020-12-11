@@ -435,7 +435,7 @@ export class ExplorerDashboardBuilder {
   protected getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
     switch (context) {
       case ObservabilityTraceType.Api:
-        return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime']);
+        return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime', 'calls']);
       case SPAN_SCOPE:
         return new Set(['protocolName', 'displaySpanName', 'statusCode', 'duration', 'startTime']);
       default:
