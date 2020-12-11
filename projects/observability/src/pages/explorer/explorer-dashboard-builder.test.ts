@@ -1,10 +1,4 @@
-import {
-  CoreTableCellRendererType,
-  FilterBuilderLookupService,
-  TableMode,
-  TableSortDirection,
-  TableStyle
-} from '@hypertrace/components';
+import { FilterBuilderLookupService, TableMode, TableStyle } from '@hypertrace/components';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -12,8 +6,7 @@ import {
   GraphQlOperatorType,
   MetadataService,
   MetricAggregationType,
-  TRACES_GQL_REQUEST,
-  TracingTableCellType
+  TRACES_GQL_REQUEST
 } from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
@@ -123,170 +116,20 @@ describe('Explorer dashboard builder', () => {
               }
             },
             columns: [
-              {
-                type: 'table-widget-column',
-                title: 'Type',
-                width: '80px',
-                display: CoreTableCellRendererType.Text,
-                filterable: true,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'protocol'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Service',
-                width: '2',
-                filterable: true,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'serviceName'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Endpoint',
-                width: '2',
-                filterable: true,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'apiName'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Status',
-                width: '184px',
-                display: TracingTableCellType.TraceStatus,
-                filterable: true,
-                value: {
-                  type: 'trace-status-specification'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Duration',
-                width: '100px',
-                display: TracingTableCellType.Metric,
-                filterable: true,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'duration'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Start Time',
-                width: '220px',
-                display: CoreTableCellRendererType.Timestamp,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'startTime'
-                },
-                sort: TableSortDirection.Descending,
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'API Boundary Type',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'apiBoundaryType'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'API Discovery State',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'apiDiscoveryState'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'API ID',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'apiId'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'API Trace ID',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'apiTraceId'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Service ID',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'serviceId'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Trace ID',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'traceId'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Request URL',
-                width: '1',
-                visible: false,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'requestUrl'
-                }
-              },
-              {
-                type: 'table-widget-column',
-                title: 'Foo',
-                width: '1',
-                display: CoreTableCellRendererType.Number,
-                value: {
-                  type: 'attribute-specification',
-                  attribute: 'foo'
-                },
-                'click-handler': {
-                  type: 'api-trace-navigation-handler'
-                }
-              }
+              expect.objectContaining({ title: 'Type' }),
+              expect.objectContaining({ title: 'Service' }),
+              expect.objectContaining({ title: 'Endpoint' }),
+              expect.objectContaining({ title: 'Status' }),
+              expect.objectContaining({ title: 'Duration' }),
+              expect.objectContaining({ title: 'Start Time' }),
+              expect.objectContaining({ title: 'API Boundary Type' }),
+              expect.objectContaining({ title: 'API Discovery State' }),
+              expect.objectContaining({ title: 'API ID' }),
+              expect.objectContaining({ title: 'Entry Span ID' }),
+              expect.objectContaining({ title: 'Service ID' }),
+              expect.objectContaining({ title: 'Trace ID' }),
+              expect.objectContaining({ title: 'Request URL' }),
+              expect.objectContaining({ title: 'Foo' })
             ]
           },
           onReady: expect.any(Function)
