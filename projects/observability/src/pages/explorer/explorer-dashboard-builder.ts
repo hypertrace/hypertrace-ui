@@ -248,6 +248,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'apiBoundaryType'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
@@ -258,6 +261,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'apiDiscoveryState'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
@@ -268,16 +274,22 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'apiId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
             type: 'table-widget-column',
-            title: 'API Trace ID',
+            title: 'Entry Span ID',
             width: '1',
             visible: false,
             value: {
               type: 'attribute-specification',
               attribute: 'apiTraceId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
@@ -288,6 +300,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'serviceId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
@@ -298,6 +313,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {
@@ -308,6 +326,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'requestUrl'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           }
         ];
@@ -336,7 +357,7 @@ export class ExplorerDashboardBuilder {
               attribute: 'serviceName'
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
+              type: 'span-trace-navigation-handler'
             }
           },
           {
@@ -376,7 +397,7 @@ export class ExplorerDashboardBuilder {
               attribute: 'duration'
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
+              type: 'span-trace-navigation-handler'
             }
           },
           {
@@ -399,6 +420,9 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
+            },
+            'click-handler': {
+              type: 'span-trace-navigation-handler'
             }
           }
         ];
@@ -411,7 +435,7 @@ export class ExplorerDashboardBuilder {
   protected getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
     switch (context) {
       case ObservabilityTraceType.Api:
-        return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime']);
+        return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime', 'calls']);
       case SPAN_SCOPE:
         return new Set(['protocolName', 'displaySpanName', 'statusCode', 'duration', 'startTime']);
       default:
