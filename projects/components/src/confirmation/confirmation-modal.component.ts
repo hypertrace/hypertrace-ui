@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { TextHighlightConfig } from '@hypertrace/common';
 import { ButtonRole } from '../button/button';
 import { ModalRef, MODAL_DATA } from '../modal/modal';
 
@@ -8,9 +9,7 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="confirmation-modal">
-      <div class="description">
-        {{ this.descriptionText }}
-      </div>
+      <div class="description" [innerHTML]="this.descriptionText | htHighlight: this.highlightParts"></div>
       <div class="controls">
         <ht-button [label]="this.cancelButtonLabel" role="${ButtonRole.Tertiary}" (click)="this.onCancel()"></ht-button>
         <ht-button
@@ -30,12 +29,14 @@ export class ConfirmationModalComponent {
   public readonly cancelButtonLabel: string;
   public readonly confirmButtonRole: ButtonRole;
   public readonly descriptionText: string;
+  public readonly highlightParts: TextHighlightConfig[];
 
   public constructor(private readonly modalRef: ModalRef<boolean>, @Inject(MODAL_DATA) config: ConfirmationModalData) {
     this.confirmButtonLabel = config.confirmButtonLabel ?? ConfirmationModalComponent.DEFAULT_CONFIRM_LABEL;
     this.confirmButtonRole = config.confirmButtonRole ?? ConfirmationModalComponent.DEFAULT_CONFIRM_ROLE;
     this.cancelButtonLabel = config.cancelButtonLabel ?? ConfirmationModalComponent.DEFAULT_CANCEL_LABEL;
     this.descriptionText = config.descriptionText;
+    this.highlightParts = config.highlightParts ?? [];
   }
 
   public onConfirmation(): void {
@@ -52,4 +53,5 @@ export interface ConfirmationModalData {
   confirmButtonLabel?: string;
   confirmButtonRole?: ButtonRole;
   descriptionText: string;
+  highlightParts?: TextHighlightConfig[];
 }
