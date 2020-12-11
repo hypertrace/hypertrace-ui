@@ -24,4 +24,13 @@ describe('Highlight pipe', () => {
       'full text to test <i>highlight</i> on'
     );
   });
+
+  test('highlights with an array of highlightConfig correctly', () => {
+    expect(
+      pipe.transform('full text to test highlight on', [
+        { text: 'text', highlightType: 'bold' },
+        { text: 'test', highlightType: 'italic' }
+      ])
+    ).toBe('full <b>text</b> to <i>test</i> highlight on');
+  });
 });

@@ -12,8 +12,11 @@ export class HighlightPipe implements PipeTransform {
     if (isArray(highlightedText)) {
       let textWithHighlight = fullText;
       highlightedText.forEach(highlightConfig => {
-        const htmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
-        textWithHighlight = fullText.replace(highlightConfig.text, `<${htmlTag}>$&</${htmlTag}>`);
+        const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
+        textWithHighlight = textWithHighlight.replace(
+          highlightConfig.text,
+          `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`
+        );
       });
 
       return textWithHighlight;
