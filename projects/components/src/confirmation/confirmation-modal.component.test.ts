@@ -1,4 +1,5 @@
 import { StaticProvider } from '@angular/core';
+import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { ButtonRole } from '../button/button';
@@ -10,6 +11,7 @@ describe('Confirmation modal', () => {
   const createComponent = createComponentFactory({
     component: ConfirmationModalComponent,
     shallow: true,
+    imports: [FormattingModule],
     declarations: [MockComponent(ButtonComponent)],
     providers: [
       {
@@ -41,6 +43,20 @@ describe('Confirmation modal', () => {
     expect(buttons[0].label).toEqual('Cancel');
     expect(buttons[1].role).toEqual(ButtonRole.Additive);
     expect(buttons[1].label).toEqual('Confirm');
+  });
+
+  test('applies highlight correctly on description', () => {
+    const spectator = createComponent(
+      buildProviders({
+        descriptionText: 'confirmation description with highlight',
+        highlightParts: [
+          { text: 'description', highlightType: 'bold' },
+          { text: 'highlight', highlightType: 'italic' }
+        ]
+      })
+    );
+
+    expect(spectator.query('.description')?.innerHTML).toBe('confirmation <b>description</b> with <i>highlight</i>');
   });
 
   test('displays provided labels and text', () => {
