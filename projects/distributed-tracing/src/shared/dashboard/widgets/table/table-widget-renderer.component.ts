@@ -38,38 +38,39 @@ import { TableWidgetModel } from './table-widget.model';
       [title]="this.model.header?.title | htDisplayTitle"
       [link]="this.model.header?.link?.url"
       [linkLabel]="this.model.header?.link?.displayText"
-      class="table-widget-container"
     >
-      <ht-table-controls
-        class="table-controls"
-        [searchEnabled]="!!this.api.model.searchAttribute"
-        [filterItems]="this.filterItems"
-        [modeItems]="this.modeItems"
-        [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
-        [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
-        (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
-        (searchChange)="this.onSearchChange($event)"
-        (filterChange)="this.onFilterChange($event)"
-        (modeChange)="this.onModeChange($event)"
-      >
-      </ht-table-controls>
+      <div class="table-content-container">
+        <ht-table-controls
+          class="table-controls"
+          [searchEnabled]="!!this.api.model.searchAttribute"
+          [filterItems]="this.filterItems"
+          [modeItems]="this.modeItems"
+          [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
+          [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
+          (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
+          (searchChange)="this.onSearchChange($event)"
+          (filterChange)="this.onFilterChange($event)"
+          (modeChange)="this.onModeChange($event)"
+        >
+        </ht-table-controls>
 
-      <ht-table
-        class="table"
-        [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
-        [columnConfigs]="this.columnConfigs$ | async"
-        [metadata]="this.metadata$ | async"
-        [mode]="this.activeMode"
-        [selectionMode]="this.model.getSelectionMode()"
-        [display]="this.model.style"
-        [data]="this.data$ | async"
-        [filters]="this.combinedFilters$ | async"
-        [pageable]="this.api.model.isPageable()"
-        [detailContent]="childDetail"
-        [syncWithUrl]="this.syncWithUrl"
-        (selectionsChange)="this.onRowSelection($event)"
-      >
-      </ht-table>
+        <ht-table
+          class="table"
+          [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
+          [columnConfigs]="this.columnConfigs$ | async"
+          [metadata]="this.metadata$ | async"
+          [mode]="this.activeMode"
+          [selectionMode]="this.model.getSelectionMode()"
+          [display]="this.model.style"
+          [data]="this.data$ | async"
+          [filters]="this.combinedFilters$ | async"
+          [pageable]="this.api.model.isPageable()"
+          [detailContent]="childDetail"
+          [syncWithUrl]="this.syncWithUrl"
+          (selectionsChange)="this.onRowSelection($event)"
+        >
+        </ht-table>
+      </div>
     </ht-titled-content>
 
     <ng-template #childDetail let-row="row">

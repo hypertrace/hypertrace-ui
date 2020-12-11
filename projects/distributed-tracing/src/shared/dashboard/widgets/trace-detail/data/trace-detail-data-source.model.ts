@@ -56,7 +56,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 
   protected constructTraceDetailData(trace: Trace): TraceDetailData {
     return {
-      id: trace[traceIdKey],
+      traceId: trace[traceIdKey],
       statusCode: trace.statusCode as string,
       tags: trace.tags as Dictionary<unknown>,
       requestUrl: trace.requestUrl as string
@@ -65,7 +65,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
 }
 
 export interface TraceDetailData {
-  id: string;
+  traceId: string;
   statusCode: string;
   tags: Dictionary<unknown>;
   requestUrl: string;

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { isEmpty } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ToggleItem } from '../../toggle-group/toggle-item';
@@ -11,7 +12,7 @@ import { TableMode } from '../table-api';
   providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table-controls">
+    <div class="table-controls" *ngIf="this.anyControlsEnabled">
       <!-- Filters -->
       <div class="filter-controls">
         <!-- Search -->
@@ -24,7 +25,7 @@ import { TableMode } from '../table-api';
 
         <!-- Filter Toggle -->
         <ht-toggle-group
-          *ngIf="this.filterItems?.length > 1"
+          *ngIf="this.filterItemsEnabled"
           class="control filter-toggle-group"
           [items]="this.filterItems"
           [activeItem]="this.activeFilterItem"
@@ -33,7 +34,7 @@ import { TableMode } from '../table-api';
 
         <!-- Checkbox Filter -->
         <ht-checkbox
-          *ngIf="this.checkboxLabel"
+          *ngIf="this.checkboxEnabled"
           class="control filter-checkbox"
           [label]="this.checkboxLabel"
           [checked]="this.checkboxChecked"
@@ -43,7 +44,7 @@ import { TableMode } from '../table-api';
 
       <!-- Mode Toggle -->
       <ht-toggle-group
-        *ngIf="this.modeItems?.length > 1"
+        *ngIf="this.modeToggleEnabled"
         class="control mode-toggle-group"
         [items]="this.modeItems"
         [activeItem]="this.activeModeItem"
@@ -89,6 +90,22 @@ export class TableControlsComponent implements OnChanges {
 
   @Output()
   public readonly modeChange: EventEmitter<TableMode> = new EventEmitter<TableMode>();
+
+  public get modeToggleEnabled(): boolean {
+    return !!this.modeItems && this.modeItems.length > 0;
+  }
+
+  public get checkboxEnabled(): boolean {
+    return !isEmpty(this.checkboxLabel);
+  }
+
+  public get filterItemsEnabled(): boolean {
+    return !!this.filterItems && this.filterItems.length > 0;
+  }
+
+  public get anyControlsEnabled(): boolean {
+    return this.modeToggleEnabled || this.checkboxEnabled || this.filterItemsEnabled || !!this.searchEnabled;
+  }
 
   private readonly searchDebounceSubject: Subject<string> = new Subject<string>();
 
