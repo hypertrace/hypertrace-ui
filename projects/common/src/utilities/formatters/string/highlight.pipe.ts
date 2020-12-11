@@ -6,12 +6,12 @@ import { assertUnreachable } from '../../lang/lang-utils';
 export class HighlightPipe implements PipeTransform {
   public transform(
     fullText: string,
-    highlightedText: string | undefined | TextHighlightConfig[],
+    highlightSnippets: string | undefined | TextHighlightConfig[],
     highlightType: HighlightType = 'mark'
   ): string {
-    if (isArray(highlightedText)) {
+    if (isArray(highlightSnippets)) {
       let textWithHighlight = fullText;
-      highlightedText.forEach(highlightConfig => {
+      highlightSnippets.forEach(highlightConfig => {
         const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
         textWithHighlight = textWithHighlight.replace(
           highlightConfig.text,
@@ -24,7 +24,9 @@ export class HighlightPipe implements PipeTransform {
 
     const htmlTag = getHtmlTagForHighlightType(highlightType);
 
-    return highlightedText === undefined ? fullText : fullText.replace(highlightedText, `<${htmlTag}>$&</${htmlTag}>`);
+    return highlightSnippets === undefined
+      ? fullText
+      : fullText.replace(highlightSnippets, `<${htmlTag}>$&</${htmlTag}>`);
   }
 }
 
