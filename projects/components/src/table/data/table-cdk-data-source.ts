@@ -67,7 +67,12 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.rowsChange$.pipe(
       tap(rows => this.cacheRows(rows)),
       tap(rows => this.cacheFilterableValues(rows)),
-      tap(rows => this.loadingStateSubject.next({ loading$: of(rows), hide: rows.length > 0 }))
+      tap(rows => this.loadingStateSubject.next({ loading$: of(rows), hide: rows.length > 0 })),
+      catchError(error => {
+        this.loadingStateSubject.next({ loading$: throwError(error) });
+
+        return of([]);
+      })
     );
   }
 
@@ -265,12 +270,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
         this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
           ? TableCdkRowUtil.expandAllRows(rows)
           : rows
-      ),
-      catchError(error => {
-        this.loadingStateSubject.next({ loading$: throwError(error) });
-
-        return [];
-      })
+      )
     );
   }
 

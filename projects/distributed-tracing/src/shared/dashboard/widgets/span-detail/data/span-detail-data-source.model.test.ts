@@ -23,6 +23,7 @@ describe('Span Detail data source model', () => {
         query: jest.fn().mockReturnValue(
           of({
             [spanIdKey]: 'test-id',
+            traceId: 'test-trace-id',
             statusCode: '200',
             spanTags: { param1: 'email' }
           })
@@ -53,7 +54,8 @@ describe('Span Detail data source model', () => {
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
-          attributeSpecBuilder.attributeSpecificationForKey('spanTags')
+          attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
+          attributeSpecBuilder.attributeSpecificationForKey('traceId')
         ]
       })
     ).toBe(true);
@@ -64,6 +66,7 @@ describe('Span Detail data source model', () => {
       expectObservable(spectator.model.getData()).toBe('(x|)', {
         x: expect.objectContaining({
           [spanIdKey]: 'test-id',
+          traceId: 'test-trace-id',
           statusCode: '200',
           tags: { param1: 'email' }
         })
