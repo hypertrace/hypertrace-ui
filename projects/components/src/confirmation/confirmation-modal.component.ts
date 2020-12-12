@@ -11,7 +11,7 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
       <div class="description">
         <div *ngIf="this.descriptionText; else templateRenderer" class="text">{{ this.descriptionText }}</div>
         <ng-template #templateRenderer>
-          <ng-container *ngTemplateOutlet="this.renderer; context: this.rendererContext"></ng-container>
+          <ng-container *ngTemplateOutlet="this.renderer"></ng-container>
         </ng-template>
       </div>
       <div class="controls">
@@ -34,7 +34,6 @@ export class ConfirmationModalComponent {
   public readonly confirmButtonRole: ButtonRole;
   public readonly descriptionText: string;
   public readonly renderer?: TemplateRef<unknown>;
-  public rendererContext: unknown;
 
   public constructor(private readonly modalRef: ModalRef<boolean>, @Inject(MODAL_DATA) config: ConfirmationModalData) {
     this.confirmButtonLabel = config.confirmButtonLabel ?? ConfirmationModalComponent.DEFAULT_CONFIRM_LABEL;
@@ -42,7 +41,6 @@ export class ConfirmationModalComponent {
     this.cancelButtonLabel = config.cancelButtonLabel ?? ConfirmationModalComponent.DEFAULT_CANCEL_LABEL;
     this.descriptionText = config.descriptionText ?? '';
     this.renderer = config.content;
-    this.rendererContext = MODAL_DATA;
   }
 
   public onConfirmation(): void {
