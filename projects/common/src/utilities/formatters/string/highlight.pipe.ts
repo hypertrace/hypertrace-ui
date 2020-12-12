@@ -6,7 +6,7 @@ import { assertUnreachable } from '../../lang/lang-utils';
 export class HighlightPipe implements PipeTransform {
   public transform(
     fullText: string,
-    highlightSnippets: TextHighlightConfig | undefined | TextHighlightConfig[],
+    highlightSnippets?: TextHighlightConfig | TextHighlightConfig[],
     highlightType: HighlightType = 'mark'
   ): string {
     const htmlTag = getHtmlTagForHighlightType(highlightType);

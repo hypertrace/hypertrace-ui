@@ -11,6 +11,8 @@ describe('Highlight pipe', () => {
     expect(pipe.transform('full text to test highlight on', undefined)).toBe(
       '<mark>full text to test highlight on</mark>'
     );
+
+    expect(pipe.transform('full text to test highlight on')).toBe('<mark>full text to test highlight on</mark>');
   });
 
   test('highlights part with mark correctly', () => {
