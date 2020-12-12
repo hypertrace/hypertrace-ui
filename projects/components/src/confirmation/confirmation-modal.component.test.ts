@@ -45,20 +45,6 @@ describe('Confirmation modal', () => {
     expect(buttons[1].label).toEqual('Confirm');
   });
 
-  test('applies highlight correctly on description', () => {
-    const spectator = createComponent(
-      buildProviders({
-        descriptionText: 'confirmation description with highlight',
-        highlightParts: [
-          { text: 'description', highlightType: 'bold' },
-          { text: 'highlight', highlightType: 'italic' }
-        ]
-      })
-    );
-
-    expect(spectator.query('.description')?.innerHTML).toBe('confirmation <b>description</b> with <i>highlight</i>');
-  });
-
   test('displays provided labels and text', () => {
     const spectator = createComponent(
       buildProviders({
