@@ -34,3 +34,6 @@ const ignoreFunctions = (first: unknown, second: unknown) => {
 
 export const isEmptyString = (str: string | undefined | null): boolean =>
   str === undefined || str === null || str === '';
+
+export const isNonEmptyString = (str: string | undefined | null): str is string =>
+  str !== undefined && str !== null && str !== '';
