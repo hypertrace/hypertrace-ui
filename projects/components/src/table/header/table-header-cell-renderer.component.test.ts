@@ -76,4 +76,22 @@ describe('Table Header Cell Renderer', () => {
     spectator.click(spectator.query('.title')!);
     expect(sortChange).toHaveBeenCalledWith(TableSortDirection.Ascending);
   }));
+
+  test('should show sort hover menu options only if the column is sortable', () => {
+    const columnConfig: TableColumnConfigExtended = {
+      id: 'test-column',
+      renderer: TextTableCellRendererComponent,
+      parser: new TableCellStringParser(undefined!),
+      filterValues: [],
+      sortable: false
+    };
+
+    const spectator = createHost(undefined, {
+      hostProps: {
+        columnConfig: columnConfig
+      }
+    });
+
+    expect(spectator.query('.table-header-cell-renderer')).not.toHaveClass('sortable');
+  });
 });
