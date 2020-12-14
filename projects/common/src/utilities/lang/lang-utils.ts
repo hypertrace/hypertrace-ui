@@ -31,3 +31,7 @@ const ignoreFunctions = (first: unknown, second: unknown) => {
     return first.toString() === second.toString();
   }
 };
+
+// tslint:disable-next-line: no-null-undefined-union
+export const isNonEmptyString = (str: string | undefined | null): str is string =>
+  str !== undefined && str !== null && str !== '';
