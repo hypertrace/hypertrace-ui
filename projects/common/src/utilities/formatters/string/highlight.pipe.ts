@@ -1,20 +1,28 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { isArray } from 'lodash-es';
 import { assertUnreachable } from '../../lang/lang-utils';
 
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
-  public transform(
-    fullText: string,
-    highlightedText: string | undefined,
-    highlightType: HighlightType = 'mark'
-  ): string {
-    const htmlTag = getHtmlTagForHighlightType(highlightType);
+  public transform(fullText: string, highlightSnippets: TextHighlightConfig | TextHighlightConfig[]): string {
+    const snippetsToHighlight: TextHighlightConfig[] = isArray(highlightSnippets)
+      ? highlightSnippets
+      : [highlightSnippets];
 
-    return highlightedText === undefined ? fullText : fullText.replace(highlightedText, `<${htmlTag}>$&</${htmlTag}>`);
+    return snippetsToHighlight.reduce((highlightedText, highlightConfig) => {
+      const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
+
+      return highlightedText.replace(highlightConfig.text, `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`);
+    }, fullText);
   }
 }
 
-type HighlightType = 'mark' | 'bold' | 'italic';
+export type HighlightType = 'mark' | 'bold' | 'italic';
+
+export interface TextHighlightConfig {
+  text: string;
+  highlightType: HighlightType;
+}
 
 const getHtmlTagForHighlightType = (type: HighlightType): string | undefined => {
   switch (type) {

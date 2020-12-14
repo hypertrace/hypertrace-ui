@@ -88,7 +88,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
             [htTooltip]="option.tooltip"
             class="popover-item"
           >
-            <div [innerHtml]="option.text | htHighlight: this.text"></div>
+            <div [innerHtml]="option.text | htHighlight: { text: this.text!, highlightType: 'mark' }"></div>
           </div>
         </div>
       </ht-popover-content>

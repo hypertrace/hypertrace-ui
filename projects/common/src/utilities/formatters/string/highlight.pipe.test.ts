@@ -7,21 +7,30 @@ describe('Highlight pipe', () => {
     pipe = new HighlightPipe();
   });
 
-  test('highlights with default type correctly when highlight type is not explicitly supplied', () => {
-    expect(pipe.transform('full text to test highlight on', 'highlight')).toBe(
+  test('highlights part with mark correctly', () => {
+    expect(pipe.transform('full text to test highlight on', { text: 'highlight', highlightType: 'mark' })).toBe(
       'full text to test <mark>highlight</mark> on'
     );
   });
 
-  test('highlights with bold correctly', () => {
-    expect(pipe.transform('full text to test highlight on', 'highlight', 'bold')).toBe(
+  test('highlights part with bold correctly', () => {
+    expect(pipe.transform('full text to test highlight on', { text: 'highlight', highlightType: 'bold' })).toBe(
       'full text to test <b>highlight</b> on'
     );
   });
 
-  test('highlights with italic correctly', () => {
-    expect(pipe.transform('full text to test highlight on', 'highlight', 'italic')).toBe(
+  test('highlights part with italic correctly', () => {
+    expect(pipe.transform('full text to test highlight on', { text: 'highlight', highlightType: 'italic' })).toBe(
       'full text to test <i>highlight</i> on'
     );
+  });
+
+  test('highlights with an array of highlightConfig correctly', () => {
+    expect(
+      pipe.transform('full text to test highlight on', [
+        { text: 'text', highlightType: 'bold' },
+        { text: 'test', highlightType: 'italic' }
+      ])
+    ).toBe('full <b>text</b> to <i>test</i> highlight on');
   });
 });
