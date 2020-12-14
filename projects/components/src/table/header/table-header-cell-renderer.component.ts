@@ -44,7 +44,7 @@ import { TableColumnConfigExtended } from '../table.service';
             <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
               <ng-container *ngIf="this.isFilterable">
                 <div class="popover-item" (click)="this.onFilterValues()" *ngIf="this.isFilterable">Filter Values</div>
-                <div class="popover-item-divider"></div>
+                <div class="popover-item-divider" *ngIf="this.columnConfig.sortable !== false || this.editable"></div>
               </ng-container>
               <ng-container *ngIf="this.columnConfig.sortable !== false">
                 <div class="popover-item sort-ascending" (click)="this.onSortChange(SORT_ASC)">
@@ -55,7 +55,7 @@ import { TableColumnConfigExtended } from '../table.service';
                   Sort Descending
                   <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
                 </div>
-                <div class="popover-item-divider"></div>
+                <div class="popover-item-divider" *ngIf="this.editable"></div>
               </ng-container>
 
               <ng-container *ngIf="this.editable">
