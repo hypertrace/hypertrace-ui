@@ -12,12 +12,9 @@
   padding: 0 22px 6px 22px;
 
   .description {
-    .text {
-      @include body-1-regular($gray-7);
-      flex: 1 1 auto;
-      display: flex;
-      justify-content: center;
-    }
+    @include body-1-regular($gray-7);
+    text-align: center;
+    word-break: break-all;
   }
 
   .controls {
