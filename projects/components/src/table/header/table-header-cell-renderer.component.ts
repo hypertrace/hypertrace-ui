@@ -42,26 +42,25 @@ import { TableColumnConfigExtended } from '../table.service';
           </ht-popover-trigger>
           <ht-popover-content>
             <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
-              <div class="popover-item" (click)="this.onFilterValues()" *ngIf="this.isFilterable">Filter Values</div>
-              <div class="popover-item-divider" *ngIf="this.isFilterable"></div>
-              <div
-                class="popover-item sort-ascending"
-                (click)="this.onSortChange(SORT_ASC)"
-                *ngIf="this.columnConfig.sortable"
-              >
-                Sort Ascending
-                <ht-icon class="popover-item-icon" icon="${IconType.ArrowUp}" size="${IconSize.Small}"></ht-icon>
-              </div>
-              <div
-                class="popover-item sort-descending"
-                (click)="this.onSortChange(SORT_DESC)"
-                *ngIf="this.columnConfig.sortable"
-              >
-                Sort Descending
-                <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
-              </div>
-              <div class="popover-item-divider" *ngIf="this.editable"></div>
-              <div class="popover-item" (click)="this.onEditColumns()" *ngIf="this.editable">Edit Columns</div>
+              <ng-container *ngIf="this.isFilterable">
+                <div class="popover-item" (click)="this.onFilterValues()" *ngIf="this.isFilterable">Filter Values</div>
+                <div class="popover-item-divider"></div>
+              </ng-container>
+              <ng-container *ngIf="this.columnConfig.sortable !== false">
+                <div class="popover-item sort-ascending" (click)="this.onSortChange(SORT_ASC)">
+                  Sort Ascending
+                  <ht-icon class="popover-item-icon" icon="${IconType.ArrowUp}" size="${IconSize.Small}"></ht-icon>
+                </div>
+                <div class="popover-item sort-descending" (click)="this.onSortChange(SORT_DESC)">
+                  Sort Descending
+                  <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
+                </div>
+                <div class="popover-item-divider"></div>
+              </ng-container>
+
+              <ng-container *ngIf="this.editable">
+                <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
+              </ng-container>
             </div>
           </ht-popover-content>
         </ht-popover>
