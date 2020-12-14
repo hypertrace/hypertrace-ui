@@ -4,16 +4,7 @@ import { assertUnreachable } from '../../lang/lang-utils';
 
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
-  public transform(
-    fullText: string,
-    highlightSnippets?: TextHighlightConfig | TextHighlightConfig[],
-    highlightType: HighlightType = 'mark'
-  ): string {
-    const htmlTag = getHtmlTagForHighlightType(highlightType);
-    if (highlightSnippets === undefined) {
-      return `<${htmlTag}>${fullText}</${htmlTag}>`;
-    }
-
+  public transform(fullText: string, highlightSnippets: TextHighlightConfig | TextHighlightConfig[]): string {
     const snippetsToHighlight: TextHighlightConfig[] = isArray(highlightSnippets)
       ? highlightSnippets
       : [highlightSnippets];

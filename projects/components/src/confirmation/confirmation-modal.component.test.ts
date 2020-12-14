@@ -1,5 +1,4 @@
 import { StaticProvider } from '@angular/core';
-import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { ButtonRole } from '../button/button';
@@ -11,7 +10,6 @@ describe('Confirmation modal', () => {
   const createComponent = createComponentFactory({
     component: ConfirmationModalComponent,
     shallow: true,
-    imports: [FormattingModule],
     declarations: [MockComponent(ButtonComponent)],
     providers: [
       {
