@@ -41,9 +41,11 @@ export class ConfirmationModalComponent {
     this.confirmButtonRole = config.confirmButtonRole ?? ConfirmationModalComponent.DEFAULT_CONFIRM_ROLE;
     this.cancelButtonLabel = config.cancelButtonLabel ?? ConfirmationModalComponent.DEFAULT_CANCEL_LABEL;
     this.isContentString = isString(config.content);
-    this.isContentString
-      ? (this.descriptionText = config.content as string)
-      : (this.content = config.content as TemplateRef<unknown>);
+    if (isString(config.content)) {
+      this.descriptionText = config.content as string;
+    } else {
+      this.content = config.content as TemplateRef<unknown>;
+    }
   }
 
   public onConfirmation(): void {
