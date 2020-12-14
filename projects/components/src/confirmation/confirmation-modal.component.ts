@@ -42,9 +42,9 @@ export class ConfirmationModalComponent {
     this.cancelButtonLabel = config.cancelButtonLabel ?? ConfirmationModalComponent.DEFAULT_CANCEL_LABEL;
     this.isContentString = isString(config.content);
     if (isString(config.content)) {
-      this.descriptionText = config.content as string;
+      this.descriptionText = config.content;
     } else {
-      this.content = config.content as TemplateRef<unknown>;
+      this.content = config.content;
     }
   }
 
