@@ -31,3 +31,6 @@ const ignoreFunctions = (first: unknown, second: unknown) => {
     return first.toString() === second.toString();
   }
 };
+
+export const isEmptyString = (str: string | undefined | null): boolean =>
+  str === undefined || str === null || str === '';
