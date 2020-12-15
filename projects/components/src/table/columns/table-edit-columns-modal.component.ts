@@ -14,9 +14,9 @@ import { TableColumnConfigExtended } from '../table.service';
           <div class="column-item">
             <ht-checkbox
               [label]="column.title"
-              [htTooltip]="column.titleTooltip"
+              [htTooltip]="this.isLastColumn(column) ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
-              [disabled]="!column.editable"
+              [disabled]="!column.editable || this.isLastColumn(column)"
               (checkedChange)="column.visible = $event"
             ></ht-checkbox>
           </div>
@@ -42,6 +42,7 @@ import { TableColumnConfigExtended } from '../table.service';
 })
 export class TableEditColumnsModalComponent {
   public readonly editColumns: TableColumnConfigExtended[];
+  public disabledTooltip: string = 'At least one column must be enabled';
 
   public constructor(
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
@@ -50,6 +51,15 @@ export class TableEditColumnsModalComponent {
     this.editColumns = this.modalData
       .filter(column => (column.attribute?.type as string) !== '$$state')
       .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+  }
+
+  public isLastColumn(column: TableColumnConfigExtended): boolean {
+    let visibleCount: number = 0;
+    this.editColumns.forEach(column => {
+      column.visible && visibleCount++;
+    })
+
+    return visibleCount === 1 && !!column.visible;
   }
 
   public onApply(): void {
