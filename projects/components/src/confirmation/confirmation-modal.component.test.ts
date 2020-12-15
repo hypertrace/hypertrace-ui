@@ -31,7 +31,7 @@ describe('Confirmation modal', () => {
   });
 
   test('defaults correctly', () => {
-    const spectator = createComponent(buildProviders({ descriptionText: 'confirmation description' }));
+    const spectator = createComponent(buildProviders({ content: 'confirmation description' }));
 
     expect(spectator.query('.description')).toHaveText('confirmation description');
 
@@ -46,7 +46,7 @@ describe('Confirmation modal', () => {
   test('displays provided labels and text', () => {
     const spectator = createComponent(
       buildProviders({
-        descriptionText: 'confirmation description',
+        content: 'confirmation description',
         cancelButtonLabel: 'boom',
         confirmButtonLabel: 'good',
         confirmButtonRole: ButtonRole.Destructive
@@ -64,7 +64,7 @@ describe('Confirmation modal', () => {
   test('closes with true on confirm', () => {
     const spectator = createComponent(
       buildProviders({
-        descriptionText: 'confirmation description'
+        content: 'confirmation description'
       })
     );
 
@@ -78,7 +78,7 @@ describe('Confirmation modal', () => {
   test('closes with false on cancel', () => {
     const spectator = createComponent(
       buildProviders({
-        descriptionText: 'confirmation description'
+        content: 'confirmation description'
       })
     );
 

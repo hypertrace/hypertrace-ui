@@ -13,9 +13,8 @@
 
   .description {
     @include body-1-regular($gray-7);
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
+    text-align: center;
+    word-break: break-all;
   }
 
   .controls {
