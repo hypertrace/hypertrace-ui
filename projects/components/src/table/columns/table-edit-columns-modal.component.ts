@@ -42,7 +42,7 @@ import { TableColumnConfigExtended } from '../table.service';
 })
 export class TableEditColumnsModalComponent {
   public readonly editColumns: TableColumnConfigExtended[];
-  public disabledTooltip: string = 'At least one column must be enabled';
+  public readonly disabledTooltip: string = 'At least one column must be enabled';
 
   public constructor(
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
