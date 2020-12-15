@@ -1,11 +1,6 @@
 import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../../../../properties/enums/enum-property-type';
-import { CellDimension } from './dimension.model';
-
-export enum DimensionUnit {
-  Px = 'PX',
-  Fr = 'FR'
-}
+import { CellDimension, DimensionUnit } from './dimension.model';
 
 @Model({
   type: 'auto-dimension-model'
