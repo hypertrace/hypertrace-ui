@@ -76,4 +76,44 @@ describe('Table Header Cell Renderer', () => {
     spectator.click(spectator.query('.title')!);
     expect(sortChange).toHaveBeenCalledWith(TableSortDirection.Ascending);
   }));
+
+  test('should show sort hover menu options if the column is sortable', () => {
+    const columnConfig: TableColumnConfigExtended = {
+      id: 'test-column',
+      renderer: TextTableCellRendererComponent,
+      parser: new TableCellStringParser(undefined!),
+      filterValues: [],
+      sortable: true
+    };
+
+    const spectator = createHost(undefined, {
+      hostProps: {
+        columnConfig: columnConfig
+      }
+    });
+
+    spectator.click('.options-button');
+    expect(spectator.query('.sort-ascending', { root: true })).toExist();
+    expect(spectator.query('.sort-descending', { root: true })).toExist();
+  });
+
+  test('should not show sort hover menu options if the column is not sortable', () => {
+    const columnConfig: TableColumnConfigExtended = {
+      id: 'test-column',
+      renderer: TextTableCellRendererComponent,
+      parser: new TableCellStringParser(undefined!),
+      filterValues: [],
+      sortable: false
+    };
+
+    const spectator = createHost(undefined, {
+      hostProps: {
+        columnConfig: columnConfig
+      }
+    });
+
+    spectator.click('.options-button');
+    expect(spectator.query('.sort-ascending', { root: true })).not.toExist();
+    expect(spectator.query('.sort-descending', { root: true })).not.toExist();
+  });
 });
