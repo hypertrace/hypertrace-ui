@@ -1,7 +1,7 @@
 import { ARRAY_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ContainerLayout, ContainerLayoutChildData, ContainerLayoutData } from '../container-layout';
 import { CellSpanModel } from './cell-span/cell-span.model';
-import { DimensionModel } from './dimension/dimension.model';
+import { CellDimension } from './dimension/dimension.model';
 
 @Model({
   type: 'custom-container-layout'
@@ -12,14 +12,14 @@ export class CustomContainerLayoutModel extends ContainerLayout {
     type: ARRAY_PROPERTY.type,
     required: true
   })
-  public readonly columnDimensions!: DimensionModel[];
+  public readonly columnDimensions!: CellDimension[];
 
   @ModelProperty({
     key: 'row-dimensions',
     type: ARRAY_PROPERTY.type,
     required: true
   })
-  public readonly rowDimensions!: DimensionModel[];
+  public readonly rowDimensions!: CellDimension[];
 
   @ModelProperty({
     key: 'cell-spans',
@@ -39,11 +39,11 @@ export class CustomContainerLayoutModel extends ContainerLayout {
   }
 
   private getColumnStyles(): string {
-    return this.columnDimensions.map(colDimension => colDimension.toString()).join(' ');
+    return this.columnDimensions.map(colDimension => colDimension.getDimensionAsGridStyle()).join(' ');
   }
 
   private getRowStyles(): string {
-    return this.rowDimensions.map(rowDimension => rowDimension.toString()).join(' ');
+    return this.rowDimensions.map(rowDimension => rowDimension.getDimensionAsGridStyle()).join(' ');
   }
 
   private getChildLayoutData(children: object[]): ContainerLayoutChildData[] {
