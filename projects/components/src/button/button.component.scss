@@ -24,6 +24,7 @@
 .button-container {
   display: flex;
   height: inherit;
+  align-items: center;
 }
 
 .button {
@@ -34,6 +35,7 @@
   padding: 0;
   border: none;
   cursor: pointer;
+  height: 100%;
 
   .icon {
     color: inherit;

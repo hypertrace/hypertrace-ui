@@ -34,6 +34,7 @@
 .popover-content {
   padding: 16px 16px 16px 4px;
   min-width: 300px;
+  max-width: 600px;
 
   display: flex;
   flex-direction: column;
@@ -64,9 +65,9 @@
     display: grid;
     grid-template-columns: 8px auto;
     grid-gap: 6px;
-    align-items: center;
 
     .symbol {
+      margin-top: 4px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
