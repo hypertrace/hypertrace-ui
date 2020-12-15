@@ -54,10 +54,11 @@ export class TableEditColumnsModalComponent {
   }
 
   public isLastColumn(column: TableColumnConfigExtended): boolean {
-    let visibleCount: number = 0;
-    this.editColumns.forEach(column => {
-      column.visible && visibleCount++;
-    })
+    let visibleCount = 0;
+
+    this.editColumns.forEach(editColumn => {
+      editColumn.visible && visibleCount++;
+    });
 
     return visibleCount === 1 && !!column.visible;
   }

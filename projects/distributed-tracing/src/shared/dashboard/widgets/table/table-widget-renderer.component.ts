@@ -112,10 +112,9 @@ export class TableWidgetRendererComponent
     this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs$ = (
-      isNonEmptyString(this.model.persistId)
-        ? this.preferenceService.get<string>(this.model.persistId, JSON.stringify([]))
-        : of(JSON.stringify([]))
+    this.columnConfigs$ = (isNonEmptyString(this.model.persistId)
+      ? this.preferenceService.get<string>(this.model.persistId, JSON.stringify([]))
+      : of(JSON.stringify([]))
     ).pipe(
       map(persistedColumnsString => JSON.parse(persistedColumnsString)),
       switchMap(persistedColumns => this.getColumnConfigs(persistedColumns))
@@ -186,10 +185,10 @@ export class TableWidgetRendererComponent
 
       return {
         ...column, // Apply default column config
-        ...(found ? found : {}),  // Override with any saved properties
-        specification: column.specification,  // Spec not user configurable and has nested methods, so apply those
+        ...(found ? found : {}), // Override with any saved properties
+        specification: column.specification, // Spec not user configurable and has nested methods, so apply those
         onClick: column.onClick // Click handler not user configurable, so apply that
-      }
+      };
     });
   }
 

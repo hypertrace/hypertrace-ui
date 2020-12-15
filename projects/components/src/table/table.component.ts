@@ -705,9 +705,9 @@ export class TableComponent
           pageIndex: new NumberCoercer().coerce(params.get(TableComponent.PAGE_INDEX_URL_PARAM))
         }
       : {
-        pageSize: this.pageSize,
-        pageIndex: 0
-      };
+          pageSize: this.pageSize,
+          pageIndex: 0
+        };
   }
 
   private sortDataFromUrl(params: ParamMap, columns: TableColumnConfigExtended[]): Required<SortedColumn> | undefined {
