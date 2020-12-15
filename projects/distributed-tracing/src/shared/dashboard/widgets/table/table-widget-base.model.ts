@@ -101,6 +101,13 @@ export abstract class TableWidgetBaseModel {
   })
   public pageable: boolean = true;
 
+  @ModelProperty({
+    key: 'persistId',
+    displayName: 'ID used to enable and identify persisted table preferences',
+    type: STRING_PROPERTY.type
+  })
+  public persistId?: string; // Format: <page>.<table-name> (e.g. "explorer.spans-table")
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 

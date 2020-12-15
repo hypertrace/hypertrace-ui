@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { isEqualIgnoreFunctions } from '@hypertrace/common';
+import { isEqualIgnoreFunctions, isNonEmptyString, PreferenceService } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
@@ -24,6 +24,7 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
+import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -68,6 +69,7 @@ import { TableWidgetModel } from './table-widget.model';
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
           (selectionsChange)="this.onRowSelection($event)"
+          (columnConfigsChange)="this.onColumnsChange($event)"
         >
         </ht-table>
       </div>
@@ -98,7 +100,8 @@ export class TableWidgetRendererComponent
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
     changeDetector: ChangeDetectorRef,
-    private readonly metadataService: MetadataService
+    private readonly metadataService: MetadataService,
+    private readonly preferenceService: PreferenceService
   ) {
     super(api, changeDetector);
   }
@@ -109,7 +112,14 @@ export class TableWidgetRendererComponent
     this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs$ = this.getColumnConfigs();
+    this.columnConfigs$ = (
+      isNonEmptyString(this.model.persistId)
+        ? this.preferenceService.get<string>(this.model.persistId, JSON.stringify([]))
+        : of(JSON.stringify([]))
+    ).pipe(
+      map(persistedColumnsString => JSON.parse(persistedColumnsString)),
+      switchMap(persistedColumns => this.getColumnConfigs(persistedColumns))
+    );
 
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
@@ -146,7 +156,7 @@ export class TableWidgetRendererComponent
     return this.data$!.pipe(map(data => data?.getScope()));
   }
 
-  private getColumnConfigs(): Observable<TableColumnConfig[]> {
+  private getColumnConfigs(persistedColumns: TableColumnConfig[] = []): Observable<TableColumnConfig[]> {
     return combineLatest([
       this.getScope(),
       this.api.change$.pipe(
@@ -156,12 +166,31 @@ export class TableWidgetRendererComponent
     ]).pipe(
       switchMap(([scope]) => this.model.getColumns(scope)),
       startWith([]),
+      map((columns: SpecificationBackedTableColumnDef[]) =>
+        this.applySavedColumnPreferences(columns, persistedColumns)
+      ),
       pairwise(),
       filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
       map(([_, current]) => current),
       share(),
       tap(() => this.onDashboardRefresh())
     );
+  }
+
+  private applySavedColumnPreferences(
+    columns: SpecificationBackedTableColumnDef[],
+    persistedColumns: TableColumnConfig[]
+  ): SpecificationBackedTableColumnDef[] {
+    return columns.map(column => {
+      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
+
+      return {
+        ...column, // Apply default column config
+        ...(found ? found : {}),  // Override with any saved properties
+        specification: column.specification,  // Spec not user configurable and has nested methods, so apply those
+        onClick: column.onClick // Click handler not user configurable, so apply that
+      }
+    });
   }
 
   private getScopeAttributes(): Observable<FilterAttribute[]> {
@@ -216,6 +245,13 @@ export class TableWidgetRendererComponent
     this.activeMode = mode;
     this.model.setMode(mode);
     this.columnConfigs$ = this.getColumnConfigs();
+  }
+
+  public onColumnsChange(columns: TableColumnConfig[]): void {
+    if (isNonEmptyString(this.model.persistId)) {
+      // Note: The table columns have nested methods, so those are lost here when using stringify
+      this.preferenceService.set(this.model.persistId, JSON.stringify(columns));
+    }
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {

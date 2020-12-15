@@ -18,6 +18,7 @@ export class BackendListComponent {
   public readonly location: string = 'BACKEND_LIST';
   public readonly defaultJson: ModelJson = {
     type: 'table-widget',
+    persistId: 'backends-list.table',
     style: TableStyle.FullPage,
     searchAttribute: 'name',
     columns: [

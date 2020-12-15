@@ -640,6 +640,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'table-widget',
+        persistId: 'home.endpoints-table',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         pageable: false,
@@ -716,6 +717,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'table-widget',
+        persistId: 'home.services-table',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         pageable: false,
@@ -797,6 +799,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'table-widget',
+        persistId: 'home.backends-table',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         pageable: false,

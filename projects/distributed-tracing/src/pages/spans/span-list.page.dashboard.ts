@@ -6,6 +6,7 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
   location: 'SPANS',
   json: {
     type: 'table-widget',
+    persistId: 'span-list.table',
     style: TableStyle.FullPage,
     columns: [
       {
