@@ -25,7 +25,7 @@ import { ButtonSize, ButtonStyle } from '../button/button';
 })
 export class OpenInNewTabComponent {
   @Input()
-  public size?: ButtonSize = ButtonSize.Medium;
+  public size?: ButtonSize = ButtonSize.Small;
 
   @Input()
   public url?: string;
