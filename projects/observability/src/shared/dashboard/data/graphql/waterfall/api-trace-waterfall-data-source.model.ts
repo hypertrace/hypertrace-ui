@@ -1,7 +1,8 @@
-import { Dictionary } from '@hypertrace/common';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   AttributeMetadata,
   GraphQlDataSourceModel,
+  GraphQlTimeRange,
   MetadataService,
   Span,
   spanIdKey,
@@ -14,7 +15,7 @@ import {
   TRACE_GQL_REQUEST,
   WaterfallData
 } from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -31,10 +32,18 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   })
   public traceId!: string;
 
+  @ModelProperty({
+    key: 'start-time',
+    required: true, // Todo
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public getData(): Observable<WaterfallData[]> {
     return combineLatest([this.getTraceData(), this.getDurationAttribute()]).pipe(
@@ -62,11 +71,12 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       traceType: ObservabilityTraceType.Api,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTimeRangeOrThrow(),
+      timeRange: this.getTraceTimeRangeOrThrow(),
       traceProperties: [],
       spanProperties: this.getSpanAttributes().map(attribute =>
         this.specificationBuilder.attributeSpecificationForKey(attribute)
-      )
+      ),
+      spansTimeRange: this.getTimeRangeOrThrow()
     });
   }
 
@@ -100,5 +110,13 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>
     };
+  }
+
+  protected getTraceTimeRangeOrThrow(): GraphQlTimeRange {
+    const startTimeAsDate = this.dateCoercer.coerce(this.startTime);
+
+    return startTimeAsDate !== undefined
+      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
+      : this.getTimeRangeOrThrow();
   }
 }

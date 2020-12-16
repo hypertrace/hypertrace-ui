@@ -65,6 +65,65 @@ describe('Trace Waterfall data source model', () => {
           traceId: 'test-id',
           spanLimit: 1000,
           timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          traceProperties: [],
+          spanProperties: [
+            expect.objectContaining({
+              name: 'displaySpanName'
+            }),
+            expect.objectContaining({
+              name: 'duration'
+            }),
+            expect.objectContaining({
+              name: 'endTime'
+            }),
+            expect.objectContaining({
+              name: 'parentSpanId'
+            }),
+            expect.objectContaining({
+              name: 'serviceName'
+            }),
+            expect.objectContaining({
+              name: 'spanTags'
+            }),
+            expect.objectContaining({
+              name: 'startTime'
+            }),
+            expect.objectContaining({
+              name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'traceId'
+            })
+          ]
+        }
+      });
+    });
+  });
+  test('should build expected query with startTime', () => {
+    const spectator = modelFactory(TraceWaterfallDataSourceModel, {
+      properties: {
+        traceId: 'test-id',
+        entrySpanId: 'span-id',
+        startTime: 1576364117792
+      },
+      api: {
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
+      }
+    });
+
+    const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
+
+    spectator.model.getData();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(receivedQueries).toBe('x', {
+        x: {
+          requestType: TRACE_GQL_REQUEST,
+          traceId: 'test-id',
+          spanLimit: 1000,
+          timeRange: new GraphQlTimeRange(1576364117791, 1576364117793),
+          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

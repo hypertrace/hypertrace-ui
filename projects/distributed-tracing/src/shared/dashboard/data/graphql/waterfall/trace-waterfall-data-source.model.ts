@@ -1,5 +1,5 @@
-import { Dictionary } from '@hypertrace/common';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import {
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
+import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
   type: 'trace-waterfall-data-source'
@@ -34,10 +35,18 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
   })
   public entrySpanId?: string;
 
+  @ModelProperty({
+    key: 'start-time',
+    required: true, // Todo
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
   protected readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   protected readonly spanSpecifications: Specification[] = [
     this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
@@ -62,9 +71,10 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       requestType: TRACE_GQL_REQUEST,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTimeRangeOrThrow(),
+      timeRange: this.getTraceTimeRangeOrThrow(),
       traceProperties: [],
-      spanProperties: this.spanSpecifications
+      spanProperties: this.spanSpecifications,
+      spansTimeRange: this.getTimeRangeOrThrow()
     });
   }
 
@@ -94,5 +104,13 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>
     }));
+  }
+
+  protected getTraceTimeRangeOrThrow(): GraphQlTimeRange {
+    const startTimeAsDate = this.dateCoercer.coerce(this.startTime);
+
+    return startTimeAsDate !== undefined
+      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
+      : this.getTimeRangeOrThrow();
   }
 }

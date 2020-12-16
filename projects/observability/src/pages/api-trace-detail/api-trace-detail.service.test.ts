@@ -34,6 +34,7 @@ describe('Api TraceDetailService', () => {
           of({
             [traceTypeKey]: ObservabilityTraceType.Api,
             [traceIdKey]: 'test-id',
+            traceId: 'trace-id',
             serviceName: 'test service',
             protocol: 'test protocol',
             apiName: 'test api name',
@@ -67,6 +68,8 @@ describe('Api TraceDetailService', () => {
       expectObservable(spectator.service.fetchTraceDetails()).toBe('(x|)', {
         x: {
           id: 'test-id',
+          startTime: 1576364117792,
+          traceId: 'trace-id',
           timeString: `${new DisplayDatePipe().transform(1576364117792, {
             mode: DateFormatMode.DateAndTimeWithSeconds
           })} for 20 ms`,

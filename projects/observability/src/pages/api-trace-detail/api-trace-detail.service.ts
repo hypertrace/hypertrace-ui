@@ -1,6 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateFormatMode, DateFormatter, ReplayObservable, TimeRange, TimeRangeService } from '@hypertrace/common';
+import {
+  DateCoercer,
+  DateFormatMode,
+  DateFormatter,
+  ReplayObservable,
+  TimeRange,
+  TimeRangeService
+} from '@hypertrace/common';
 import {
   AttributeMetadata,
   GraphQlTimeRange,
@@ -21,10 +28,13 @@ import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observ
 @Injectable()
 export class ApiTraceDetailService implements OnDestroy {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
+  public static readonly START_TIME_PARAM_NAME: string = 'startTime';
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
-  private readonly traceId$: ReplayObservable<string>;
+  private readonly routeIds$: ReplayObservable<ApiTraceDetailRouteIdParams>;
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
+
   private readonly destroyed$: Subject<void> = new Subject();
 
   public constructor(
@@ -33,8 +43,11 @@ export class ApiTraceDetailService implements OnDestroy {
     private readonly metadataService: MetadataService,
     private readonly graphQlQueryService: GraphQlRequestService
   ) {
-    this.traceId$ = route.paramMap.pipe(
-      map(paramMap => paramMap.get(ApiTraceDetailService.TRACE_ID_PARAM_NAME)!),
+    this.routeIds$ = route.paramMap.pipe(
+      map(paramMap => ({
+        traceId: paramMap.get(ApiTraceDetailService.TRACE_ID_PARAM_NAME)!,
+        startTime: paramMap.get(ApiTraceDetailService.START_TIME_PARAM_NAME) as string | undefined
+      })),
       takeUntil(this.destroyed$),
       shareReplay(1)
     );
@@ -50,8 +63,8 @@ export class ApiTraceDetailService implements OnDestroy {
   }
 
   public fetchTraceDetails(): Observable<ApiTraceDetails> {
-    return combineLatest([this.timeRangeService.getTimeRangeAndChanges(), this.traceId$]).pipe(
-      switchMap(([timeRange, traceId]) => this.getGqlResponse(traceId, timeRange)),
+    return combineLatest([this.timeRangeService.getTimeRangeAndChanges(), this.routeIds$]).pipe(
+      switchMap(([timeRange, routeIds]) => this.getGqlResponse(routeIds.traceId, timeRange, routeIds.startTime)),
       switchMap(trace =>
         this.metadataService
           .getAttribute(trace[traceTypeKey], 'duration')
@@ -66,18 +79,19 @@ export class ApiTraceDetailService implements OnDestroy {
     return {
       id: trace[traceIdKey],
       traceId: trace.traceId as string,
+      startTime: trace.startTime as string,
       type: ObservabilityTraceType.Api,
       timeString: this.buildTimeString(trace, durationAttribute.units),
       titleString: this.buildTitleString(trace)
     };
   }
 
-  protected getGqlResponse(traceId: string, timeRange: TimeRange): Observable<Trace> {
+  protected getGqlResponse(traceId: string, timeRange: TimeRange, startTime?: unknown): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceType: ObservabilityTraceType.Api,
       traceId: traceId,
-      timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime),
+      timeRange: this.buildGraphqlTimeRange(timeRange, startTime),
       traceProperties: this.getAttributes().map(key => this.specificationBuilder.attributeSpecificationForKey(key)),
       spanProperties: [],
       spanLimit: 1
@@ -95,6 +109,19 @@ export class ApiTraceDetailService implements OnDestroy {
   protected buildTitleString(trace: Trace): string {
     return `${trace.serviceName as string} ${trace.protocol as string} ${trace.apiName as string}`;
   }
+
+  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: unknown): GraphQlTimeRange {
+    const startTimeAsDate = this.dateCoercer.coerce(startTime);
+
+    return startTimeAsDate !== undefined
+      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
+      : new GraphQlTimeRange(timeRange.startTime, timeRange.endTime);
+  }
+}
+
+interface ApiTraceDetailRouteIdParams {
+  traceId: string;
+  startTime?: string;
 }
 
 export interface ApiTraceDetails {
@@ -103,4 +130,5 @@ export interface ApiTraceDetails {
   type: TraceType;
   timeString: string;
   titleString: string;
+  startTime?: unknown;
 }

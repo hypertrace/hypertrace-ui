@@ -71,6 +71,66 @@ describe('Api Trace Waterfall data source model', () => {
           traceId: 'test-id',
           spanLimit: 1000,
           timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          traceProperties: [],
+          spanProperties: [
+            expect.objectContaining({
+              name: 'displayEntityName'
+            }),
+            expect.objectContaining({
+              name: 'displaySpanName'
+            }),
+            expect.objectContaining({
+              name: 'duration'
+            }),
+            expect.objectContaining({
+              name: 'endTime'
+            }),
+            expect.objectContaining({
+              name: 'parentSpanId'
+            }),
+            expect.objectContaining({
+              name: 'protocolName'
+            }),
+            expect.objectContaining({
+              name: 'spanTags'
+            }),
+            expect.objectContaining({
+              name: 'startTime'
+            }),
+            expect.objectContaining({
+              name: 'type'
+            })
+          ]
+        }
+      });
+    });
+  });
+
+  test('should build expected query', () => {
+    const spectator = modelFactory(ApiTraceWaterfallDataSourceModel, {
+      properties: {
+        traceId: 'test-id',
+        startTime: 1576364117792
+      },
+      api: {
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
+      }
+    });
+
+    const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
+
+    spectator.model.getData();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(receivedQueries).toBe('x', {
+        x: {
+          requestType: TRACE_GQL_REQUEST,
+          traceType: ObservabilityTraceType.Api,
+          traceId: 'test-id',
+          spanLimit: 1000,
+          timeRange: new GraphQlTimeRange(1576364117791, 1576364117793),
+          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

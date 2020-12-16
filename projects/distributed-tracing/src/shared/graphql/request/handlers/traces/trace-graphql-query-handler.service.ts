@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
-import { isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { GraphQlFieldFilter } from '../../../model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlIdFilter } from '../../../model/schema/filter/id/graphql-id-filter';
@@ -50,18 +50,18 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
     requestMap.set(this.tracesKey, traces);
 
-    if (request.spanProperties) {
+    if (!isEmpty(request.spanProperties)) {
       const spans = {
         path: 'spans',
         arguments: [
           this.argBuilder.forLimit(request.spanLimit),
-          this.argBuilder.forTimeRange(request.timeRange),
+          this.argBuilder.forTimeRange(request.spansTimeRange ?? request.timeRange),
           ...this.argBuilder.forFilters([...this.buildSpansFilter(request)])
         ],
         children: [
           {
             path: 'results',
-            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties)]
+            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties!)]
           }
         ]
       };
@@ -143,11 +143,12 @@ export interface GraphQlTraceRequest {
   requestType: typeof TRACE_GQL_REQUEST;
   traceType?: TraceType;
   traceId: string;
+  timeRange: GraphQlTimeRange;
   traceProperties: Specification[];
   spanLimit: number;
   spanId?: string;
   spanProperties?: Specification[];
-  timeRange: GraphQlTimeRange;
+  spansTimeRange?: GraphQlTimeRange;
 }
 
 interface TraceServerResponse {
