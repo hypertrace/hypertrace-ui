@@ -32,7 +32,7 @@ import {
                 *ngIf="this.showdetailButton"
                 class="expand icon detail-button"
                 icon="${IconType.Collapsed}"
-                size="${ButtonSize.Small}"
+                size="${ButtonSize.ExtraSmall}"
                 role="${ButtonRole.Tertiary}"
                 display="${ButtonStyle.Text}"
               ></ht-button>
@@ -52,7 +52,7 @@ import {
                 <ht-button
                   class="expanded close"
                   icon="${IconType.Expanded}"
-                  size="${ButtonSize.Small}"
+                  size="${ButtonSize.ExtraSmall}"
                   role="${ButtonRole.Secondary}"
                   display="${ButtonStyle.Text}"
                   (click)="this.onClickClose()"

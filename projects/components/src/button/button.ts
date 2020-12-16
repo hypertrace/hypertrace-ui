@@ -12,7 +12,8 @@ export const enum ButtonSize {
   Large = 'large',
   Medium = 'medium',
   Small = 'small',
-  ExtraSmall = 'extra-small'
+  ExtraSmall = 'extra-small',
+  Tiny = 'tiny'
 }
 
 export const enum ButtonStyle {
