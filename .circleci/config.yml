@@ -178,6 +178,11 @@ workflows:
           context:
             - hypertrace-publishing
             - dockerhub-read
+          requires:
+            - build
+            - test
+            - lint
+            - validate-charts
           filters:
             branches:
               ignore: /.*/
