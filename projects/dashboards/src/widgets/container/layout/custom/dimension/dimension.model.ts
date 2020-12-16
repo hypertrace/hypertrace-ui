@@ -9,7 +9,7 @@ export enum DimensionUnit {
 @Model({
   type: 'dimension-model'
 })
-export class DimensionModel {
+export class DimensionModel implements CellDimension {
   @ModelProperty({
     key: 'dimension',
     type: NUMBER_PROPERTY.type,
@@ -46,11 +46,15 @@ export class DimensionModel {
   })
   public minDimensionUnit: DimensionUnit = DimensionUnit.Px;
 
-  public toString(): string {
+  public getDimensionAsGridStyle(): string {
     if (this.unit === DimensionUnit.Fr) {
       return `minmax(${this.minDimension}px, ${this.dimension}fr)`;
     }
 
     return `${this.dimension}px`;
   }
+}
+
+export interface CellDimension {
+  getDimensionAsGridStyle(): string;
 }
