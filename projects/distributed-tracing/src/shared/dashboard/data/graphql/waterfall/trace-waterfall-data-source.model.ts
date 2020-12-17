@@ -37,7 +37,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
 
   @ModelProperty({
     key: 'start-time',
-    required: true, // Todo
+    required: false,
     type: UNKNOWN_PROPERTY.type
   })
   public startTime?: unknown;

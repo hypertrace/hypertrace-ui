@@ -110,7 +110,7 @@ export class ApiTraceDetailService implements OnDestroy {
     return `${trace.serviceName as string} ${trace.protocol as string} ${trace.apiName as string}`;
   }
 
-  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: unknown): GraphQlTimeRange {
+  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: string | number): GraphQlTimeRange {
     const startTimeAsDate = this.dateCoercer.coerce(startTime);
 
     return startTimeAsDate !== undefined
@@ -130,5 +130,5 @@ export interface ApiTraceDetails {
   type: TraceType;
   timeString: string;
   titleString: string;
-  startTime?: unknown;
+  startTime?: string | number;
 }

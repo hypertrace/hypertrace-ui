@@ -91,7 +91,7 @@ export class TraceDetailService implements OnDestroy {
     );
   }
 
-  private fetchTrace(timeRange: TimeRange, traceId: string, spanId?: string, startTime?: unknown): Observable<Trace> {
+  private fetchTrace(timeRange: TimeRange, traceId: string, spanId?: string, startTime?: string | number): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceId: traceId,
@@ -126,7 +126,7 @@ export class TraceDetailService implements OnDestroy {
     return '';
   }
 
-  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: unknown): GraphQlTimeRange {
+  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: string | number): GraphQlTimeRange {
     const startTimeAsDate = this.dateCoercer.coerce(startTime);
 
     return startTimeAsDate !== undefined
@@ -138,7 +138,7 @@ export class TraceDetailService implements OnDestroy {
 interface TraceDetailRouteIdParams {
   traceId: string;
   spanId?: string;
-  startTime?: unknown;
+  startTime?: string | number;
 }
 
 export interface TraceDetails {
