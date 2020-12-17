@@ -49,7 +49,7 @@ export class ButtonComponent {
   public role: ButtonRole = ButtonRole.Secondary;
 
   @Input()
-  public size: ButtonSize = ButtonSize.Medium;
+  public size: ButtonSize = ButtonSize.Small;
 
   @Input()
   public display: ButtonStyle = ButtonStyle.Solid;

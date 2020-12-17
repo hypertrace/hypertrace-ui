@@ -26,6 +26,11 @@
     width: 640px;
   }
 
+  &.modal-size-medium-wide {
+    height: 600px;
+    width: 840px;
+  }
+
   .header {
     display: flex;
     flex-direction: column;

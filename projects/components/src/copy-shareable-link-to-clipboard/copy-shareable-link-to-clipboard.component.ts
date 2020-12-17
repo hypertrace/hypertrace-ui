@@ -21,7 +21,7 @@ import { ButtonSize } from '../button/button';
 })
 export class CopyShareableLinkToClipboardComponent implements OnInit {
   @Input()
-  public size?: ButtonSize = ButtonSize.Medium;
+  public size?: ButtonSize = ButtonSize.Small;
 
   public shareableUrl$?: Observable<string>;
 

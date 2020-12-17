@@ -49,7 +49,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   public display: ButtonStyle = ButtonStyle.Text;
 
   @Input()
-  public size?: ButtonSize = ButtonSize.Medium;
+  public size?: ButtonSize = ButtonSize.Small;
 
   @Input()
   public icon?: IconType = IconType.CopyToClipboard;

@@ -23,7 +23,7 @@ describe('Button Component', () => {
       }
     });
 
-    expect(spectator.query('.button')).toHaveClass('button secondary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
   });
 
   test('should have correct style class for selected role', () => {
@@ -37,25 +37,25 @@ describe('Button Component', () => {
     spectator.setInput({
       role: ButtonRole.Primary
     });
-    expect(spectator.query('.button')).toHaveClass('button primary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button primary small solid');
 
     // Secondary
     spectator.setInput({
       role: ButtonRole.Secondary
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
 
     // Tertiary
     spectator.setInput({
       role: ButtonRole.Tertiary
     });
-    expect(spectator.query('.button')).toHaveClass('button tertiary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
 
     // Destructive
     spectator.setInput({
       role: ButtonRole.Destructive
     });
-    expect(spectator.query('.button')).toHaveClass('button destructive medium solid');
+    expect(spectator.query('.button')).toHaveClass('button destructive small solid');
   });
 
   test('should have correct style class for selected size', () => {
@@ -66,7 +66,14 @@ describe('Button Component', () => {
     });
 
     // Default
-    expect(spectator.query('.button')).toHaveClass('button secondary medium');
+    expect(spectator.query('.button')).toHaveClass('button secondary small');
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+
+    // Extra Small
+    spectator.setInput({
+      size: ButtonSize.ExtraSmall
+    });
+    expect(spectator.query('.button')).toHaveClass('button secondary extra-small');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
 
     // Large
@@ -88,6 +95,13 @@ describe('Button Component', () => {
       size: ButtonSize.Medium
     });
     expect(spectator.query('.button')).toHaveClass('button secondary medium');
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+
+    // Tiny
+    spectator.setInput({
+      size: ButtonSize.Tiny
+    });
+    expect(spectator.query('.button')).toHaveClass('button secondary tiny');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
   });
 
@@ -112,31 +126,31 @@ describe('Button Component', () => {
     spectator = createHost(`<ht-button></ht-button>`);
 
     // Default
-    expect(spectator.query('.button')).toHaveClass('button secondary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
 
     // Outline
     spectator.setInput({
       display: ButtonStyle.Bordered
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium bordered');
+    expect(spectator.query('.button')).toHaveClass('button secondary small bordered');
 
     // Outlined Text
     spectator.setInput({
       display: ButtonStyle.Outlined
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium outlined');
+    expect(spectator.query('.button')).toHaveClass('button secondary small outlined');
 
     // Text
     spectator.setInput({
       display: ButtonStyle.Text
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium text');
+    expect(spectator.query('.button')).toHaveClass('button secondary small text');
 
     // Solid
     spectator.setInput({
       display: ButtonStyle.Solid
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium solid');
+    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
   });
 
   test('should render Icon and label correctly', () => {
