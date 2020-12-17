@@ -79,6 +79,7 @@ export const enum IconType {
   Previous = 'navigate_before',
   Refresh = 'refresh',
   Remove = 'remove',
+  RemoveCircle = 'remove_circle',
   Search = 'svg:search',
   Settings = 'settings',
   Share = 'share',
