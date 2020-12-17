@@ -219,3 +219,7 @@ export * from './shared/dashboard/widgets/gauge/gauge-widget';
 // Label Detail
 export * from './shared/components/label-detail/label-detail.component';
 export * from './shared/components/label-detail/label-detail.module';
+
+// Bar Gauge
+export * from './shared/components/bar-gauge/bar-gauge.component';
+export * from './shared/components/bar-gauge/bar-gauge.module';

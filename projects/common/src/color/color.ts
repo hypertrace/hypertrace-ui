@@ -1,6 +1,7 @@
 export const enum Color {
   Blue3 = '#70a7ff',
   Blue5 = '#0053d7',
+  Blue7 = '#003385',
   BlueGray4 = '#4b5f77',
   Gray1 = '#f4f5f5',
   Gray2 = '#e1e4e5',

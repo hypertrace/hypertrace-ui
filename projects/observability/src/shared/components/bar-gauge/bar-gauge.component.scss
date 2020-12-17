@@ -1,0 +1,45 @@
+@import "mixins";
+
+.bar-gauge {
+
+  .title {
+    @include overline($gray-7);
+    padding-bottom: 24px;
+  }
+
+  .count {
+    @include subtitle-1($gray-9);
+    padding-bottom: 8px;
+
+    .units {
+      @include body-small($gray-5);
+    }
+  }
+
+  .bar {
+    position: relative;
+    height: 16px;
+    width: 100%;
+
+    .max-value-bar {
+      position: absolute;
+      left: 0;
+      height: 16px;
+      width: 100%;
+      background: $gray-2;
+      border-radius: 4px;
+    }
+
+    .current-value-bar {
+      position: absolute;
+      left: 0;
+      height: 16px;
+      width: 0;
+      background: $blue-7;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      border-right: solid 1px white;
+      transition: width ease 1s;
+    }
+  }
+}
