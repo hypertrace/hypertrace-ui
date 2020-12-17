@@ -43,7 +43,7 @@ export class TraceDetailService implements OnDestroy {
       map(paramMap => ({
         traceId: paramMap.get(this.getTraceIdParamName())!,
         spanId: paramMap.get(this.getSpanIdParamName()) as string | undefined,
-        startTime: paramMap.get(this.getStartTimeParamName())
+        startTime: paramMap.get(this.getStartTimeParamName()) as string | undefined
       })),
       takeUntil(this.destroyed$),
       shareReplay(1)
@@ -91,7 +91,12 @@ export class TraceDetailService implements OnDestroy {
     );
   }
 
-  private fetchTrace(timeRange: TimeRange, traceId: string, spanId?: string, startTime?: string | number): Observable<Trace> {
+  private fetchTrace(
+    timeRange: TimeRange,
+    traceId: string,
+    spanId?: string,
+    startTime?: string | number
+  ): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceId: traceId,
@@ -138,7 +143,7 @@ export class TraceDetailService implements OnDestroy {
 interface TraceDetailRouteIdParams {
   traceId: string;
   spanId?: string;
-  startTime?: string | number;
+  startTime?: string;
 }
 
 export interface TraceDetails {

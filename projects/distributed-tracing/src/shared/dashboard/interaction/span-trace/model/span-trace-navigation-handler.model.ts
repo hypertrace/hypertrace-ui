@@ -15,7 +15,11 @@ export class SpanTraceNavigationHandlerModel implements InteractionHandler {
 
   public execute(span: Span): Observable<void> {
     if (!isNil(span.traceId)) {
-      this.tracingNavigationService.navigateToTraceDetail(span.traceId as string, span[spanIdKey], span.startTime);
+      this.tracingNavigationService.navigateToTraceDetail(
+        span.traceId as string,
+        span[spanIdKey],
+        span.startTime as string | undefined
+      );
     }
 
     return of();

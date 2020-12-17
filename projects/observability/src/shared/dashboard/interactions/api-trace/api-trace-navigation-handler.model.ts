@@ -19,7 +19,10 @@ export class ApiTraceNavigationHandlerModel implements InteractionHandler {
 
   public execute(trace: Trace): Observable<void> {
     if (trace[traceTypeKey] === ObservabilityTraceType.Api) {
-      this.tracingNavigationService.navigateToApiTraceDetail(trace[traceIdKey], trace.startTime);
+      this.tracingNavigationService.navigateToApiTraceDetail(
+        trace[traceIdKey],
+        trace.startTime as string | number | undefined
+      );
     }
 
     return of();
