@@ -222,6 +222,15 @@ $font-family: 'Work Sans', sans-serif;
   letter-spacing: -0.01em;
 }
 
+@mixin subtitle-3($color: $gray-5) {
+  @extend %regular;
+  @extend %fontfamily;
+  color: $color;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+}
+
 @mixin body-1-regular($color: $gray-9) {
   @extend %body-1;
   @extend %regular;
