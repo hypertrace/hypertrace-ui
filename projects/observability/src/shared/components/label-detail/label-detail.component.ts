@@ -35,6 +35,7 @@ import {
                 size="${ButtonSize.ExtraSmall}"
                 role="${ButtonRole.Tertiary}"
                 display="${ButtonStyle.Text}"
+                htTooltip="Show Details for {{ this.label }}"
               ></ht-button>
               <ht-icon
                 *ngIf="this.icon && !this.showdetailButton"
@@ -42,7 +43,11 @@ import {
                 [icon]="this.icon"
                 size="${IconSize.Small}"
               ></ht-icon>
-              <ht-label [label]="this.label" class="label"></ht-label>
+              <ht-label
+                [label]="this.label"
+                class="label"
+                *ngIf="this.view === '${LabelDetailView.WithLabel}'"
+              ></ht-label>
             </div>
           </ht-popover-trigger>
 
@@ -81,6 +86,9 @@ export class LabelDetailComponent {
   public label?: string;
 
   @Input()
+  public view?: LabelDetailView = LabelDetailView.WithLabel;
+
+  @Input()
   public description?: string;
 
   @Input()
@@ -99,4 +107,9 @@ export class LabelDetailComponent {
     this.popoverRef?.close();
     this.popoverRef = undefined;
   }
+}
+
+export const enum LabelDetailView {
+  IconOnly = 'icon-only',
+  WithLabel = 'with-label'
 }
