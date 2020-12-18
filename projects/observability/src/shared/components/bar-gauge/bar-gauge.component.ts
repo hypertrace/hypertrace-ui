@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
-import { getPercentage, TypedSimpleChanges } from '@hypertrace/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
+import { DomElementMeasurerService, getPercentage, TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-bar-gauge',
@@ -14,8 +23,9 @@ import { getPercentage, TypedSimpleChanges } from '@hypertrace/common';
       </div>
       <div class="bar">
         <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
-          <div #segmentBars class="segment-bars">
+          <div class="segment-bars">
             <div
+              #segmentBars
               *ngFor="let segment of this.barSegments"
               class="segment-bar"
               [ngClass]="{ 'hide-divider': this.nearMaxValue }"
@@ -34,8 +44,8 @@ export class BarGaugeComponent implements OnChanges {
   @ViewChild('maxValueBar', { read: ElementRef })
   public maxValueBar!: ElementRef;
 
-  @ViewChild('segmentBars', { read: ElementRef })
-  public segmentBars!: ElementRef;
+  @ViewChildren('segmentBars', { read: ElementRef })
+  public segmentBars!: QueryList<ElementRef>;
 
   @Input()
   public title?: string;
@@ -54,6 +64,8 @@ export class BarGaugeComponent implements OnChanges {
   public overMaxValue: boolean = false;
   public nearMaxValue: boolean = false;
 
+  public constructor(private readonly domElementMeasurerService: DomElementMeasurerService) {}
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.segments || changes.maxValue) {
       this.totalValue = this.calcTotalValueFromSegments(this.segments ?? []);
@@ -67,11 +79,20 @@ export class BarGaugeComponent implements OnChanges {
 
   private checkNearMaxValue(): void {
     setTimeout(() => {
+      const maxValueBarWidth = this.domElementMeasurerService.measureHtmlElement(this.maxValueBar.nativeElement).width;
+      const segmentBarsTotalWidth = this.segmentBars.reduce(
+        (prevValue, curValue) =>
+          prevValue + this.domElementMeasurerService.measureHtmlElement(curValue.nativeElement).width,
+        0
+      );
+
       /*
-       * We want to remove the white divider if we fill up the bar. Compare segments to
-       * max bar width minus 2px for the divider width.
+       * On the far right of each segment is a small 2px white vertical bar used to indicate the end of the segment.
+       * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the
+       * divider against a white background. We do this by adding a class to display:none if we are within 2px of the
+       * max width.
        */
-      this.nearMaxValue = this.segmentBars.nativeElement.offsetWidth >= this.maxValueBar.nativeElement.offsetWidth - 2;
+      this.nearMaxValue = segmentBarsTotalWidth >= maxValueBarWidth - 2;
     });
   }
 
