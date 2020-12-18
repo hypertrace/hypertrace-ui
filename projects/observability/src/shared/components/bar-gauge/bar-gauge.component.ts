@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
 import { getPercentage, TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
@@ -9,43 +9,96 @@ import { getPercentage, TypedSimpleChanges } from '@hypertrace/common';
     <div class="bar-gauge">
       <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
       <div class="count">
-        {{ this.value?.toLocaleString() }} / {{ this.maxValue?.toLocaleString() }}
+        {{ this.totalValue | number }} / {{ this.maxValue | number }}
         <span class="units" *ngIf="this.units">{{ this.units }}</span>
       </div>
       <div class="bar">
-        <div class="max-value-bar"></div>
-        <div
-          class="current-value-bar"
-          [ngClass]="{ 'almost-max-value': this.almostMaxValue, 'over-max-value': this.overMaxValue }"
-          [style.width.%]="this.valuePercentage"
-        ></div>
+        <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
+          <div #segmentBars class="segment-bars">
+            <div
+              *ngFor="let segment of this.barSegments"
+              class="segment-bar"
+              [ngClass]="{ 'hide-divider': this.nearMaxValue }"
+              [style.background]="segment.color"
+              [style.width.%]="segment.percentage"
+            >
+              <div class="divider"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `
 })
 export class BarGaugeComponent implements OnChanges {
+  @ViewChild('maxValueBar', { read: ElementRef })
+  public maxValueBar!: ElementRef;
+
+  @ViewChild('segmentBars', { read: ElementRef })
+  public segmentBars!: ElementRef;
+
   @Input()
   public title?: string;
 
   @Input()
-  public value?: number;
+  public units?: string;
 
   @Input()
   public maxValue?: number;
 
   @Input()
-  public units?: string;
+  public segments?: Segment[] = [];
 
-  public valuePercentage: number = 0;
-  public almostMaxValue: boolean = false; // We use this to add radius to the bar when it gets close to end
+  public barSegments: BarSegment[] = [];
+  public totalValue: number = 0;
   public overMaxValue: boolean = false;
+  public nearMaxValue: boolean = false;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.value || changes.maxValue) {
-      const percentage = getPercentage(this.value, this.maxValue);
-      this.almostMaxValue = percentage >= 96; // Not exact since depends on width, but close enough
-      this.overMaxValue = percentage > 100;
-      this.valuePercentage = Math.min(getPercentage(this.value, this.maxValue), 100);
+    if (changes.segments || changes.maxValue) {
+      this.totalValue = this.calcTotalValueFromSegments(this.segments ?? []);
+      this.barSegments = this.toBarSegments(this.segments ?? [], this.maxValue ?? 0);
+
+      this.overMaxValue = this.maxValue !== undefined && this.totalValue > this.maxValue;
+
+      this.checkNearMaxValue();
     }
   }
+
+  private checkNearMaxValue(): void {
+    setTimeout(() => {
+      /*
+       * We want to remove the white divider if we fill up the bar. Compare segments to
+       * max bar width minus 2px for the divider width.
+       */
+      this.nearMaxValue = this.segmentBars.nativeElement.offsetWidth >= this.maxValueBar.nativeElement.offsetWidth - 2;
+    });
+  }
+
+  private toBarSegments(segments: Segment[], maxValue: number): BarSegment[] {
+    return segments.map(segment => this.toBarSegment(segment, getPercentage(segment.value, maxValue ?? 0)));
+  }
+
+  private toBarSegment(segment: Segment, percentage: number): BarSegment {
+    return {
+      ...segment,
+      percentage: percentage
+    };
+  }
+
+  private calcTotalValueFromSegments(segments: Segment[]): number {
+    return segments.reduce((previousValue, currentValue) => {
+      return previousValue + currentValue.value;
+    }, 0);
+  }
+}
+
+export interface Segment {
+  value: number;
+  color?: string;
+  label?: string; // Currently unused, but will be used for legend when added
+}
+
+interface BarSegment extends Segment {
+  percentage: number;
 }
