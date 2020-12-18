@@ -87,9 +87,7 @@ export class BarGaugeComponent implements OnChanges {
   }
 
   private calcTotalValueFromSegments(segments: Segment[]): number {
-    return segments.reduce((previousValue, currentValue) => {
-      return previousValue + currentValue.value;
-    }, 0);
+    return segments.reduce((previousValue, currentValue) => previousValue + currentValue.value, 0);
   }
 }
 
