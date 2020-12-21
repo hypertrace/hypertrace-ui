@@ -1,12 +1,37 @@
 import { fakeAsync } from '@angular/core/testing';
-import { DomElementMeasurerService, FormattingModule } from '@hypertrace/common';
+import { ColorService, DomElementMeasurerService, FormattingModule } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
 import { BarGaugeComponent } from '@hypertrace/observability';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockProvider } from 'ng-mocks';
 
 describe('Bar Gauge component', () => {
   let spectator: Spectator<BarGaugeComponent>;
+
+  const setMeasureHtmlElement = (right: number = 33): (element: HTMLElement) => ClientRect =>
+    (element: HTMLElement) => {
+      switch (element.getAttribute('class')) {
+        case 'segment-bar':
+          return {
+            bottom: 1,
+            height: 1,
+            left: 0,
+            right: right,
+            top: 0,
+            width: 33
+          };
+        case 'max-value-bar':
+        default:
+          return {
+            bottom: 1,
+            height: 1,
+            left: 0,
+            right: 100,
+            top: 0,
+            width: 100
+          };
+      }
+    };
 
   const createHost = createHostFactory({
     component: BarGaugeComponent,
@@ -14,29 +39,12 @@ describe('Bar Gauge component', () => {
     imports: [FormattingModule, LoadAsyncModule],
     providers: [
       MockProvider(DomElementMeasurerService, {
-        measureHtmlElement: (element: HTMLElement) => {
-          switch (element.getAttribute('class')) {
-            case 'segment-bar':
-              return {
-                bottom: 1,
-                height: 1,
-                left: 0,
-                right: 33,
-                top: 0,
-                width: 33
-              };
-            case 'max-value-bar':
-            default:
-              return {
-                bottom: 1,
-                height: 1,
-                left: 0,
-                right: 100,
-                top: 0,
-                width: 100
-              };
-          }
-        }
+        measureHtmlElement: setMeasureHtmlElement(33)
+      }),
+      mockProvider(ColorService, {
+        getColorPalette: () => ({
+          forNColors: () => ['first-color', 'second-color', 'third-color']
+        })
       })
     ],
     template: `
@@ -89,6 +97,11 @@ describe('Bar Gauge component', () => {
 
   test('assigns correct values when near full', fakeAsync(() => {
     spectator = createHost(undefined, {
+      providers: [
+        MockProvider(DomElementMeasurerService, {
+          measureHtmlElement: setMeasureHtmlElement(99)
+        })
+      ],
       hostProps: {
         segments: [
           {
@@ -139,6 +152,11 @@ describe('Bar Gauge component', () => {
 
   test('assigns correct values when over full', fakeAsync(() => {
     spectator = createHost(undefined, {
+      providers: [
+        MockProvider(DomElementMeasurerService, {
+          measureHtmlElement: setMeasureHtmlElement(100)
+        })
+      ],
       hostProps: {
         segments: [
           {

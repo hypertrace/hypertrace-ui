@@ -44,7 +44,7 @@
       transition: width ease 1s;
       display: inline-block;
 
-      &.hide-divider:last-child {
+      &.hide-last-divider:last-child {
         .divider {
           display: none;
         }
@@ -55,8 +55,44 @@
       position: absolute;
       right: 0;
       height: 100%;
-      width: 2px;
+      width: 1px;
       background: white;
+    }
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 12px;
+
+    .legend-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      max-width: 100%;
+
+      &:not(:last-child) {
+        margin-right: 24px;
+      }
+    }
+
+    .legend-symbol {
+      min-width: 8px;
+      min-height: 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    .legend-value {
+      @include body-small($gray-7);
+      margin-right: 8px;
+    }
+
+    .legend-label {
+      @include body-small($gray-5);
+      @include ellipsis-overflow();
+      flex: 1;
+      min-width: 24px;
     }
   }
 }

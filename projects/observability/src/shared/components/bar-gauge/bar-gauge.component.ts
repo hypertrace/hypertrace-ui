@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -8,7 +9,14 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { DomElementMeasurerService, getPercentage, TypedSimpleChanges } from '@hypertrace/common';
+import {
+  Color,
+  ColorPaletteKey,
+  ColorService,
+  DomElementMeasurerService,
+  getPercentage,
+  TypedSimpleChanges
+} from '@hypertrace/common';
 
 @Component({
   selector: 'ht-bar-gauge',
@@ -26,9 +34,9 @@ import { DomElementMeasurerService, getPercentage, TypedSimpleChanges } from '@h
           <div class="segment-bars">
             <div
               #segmentBars
-              *ngFor="let segment of this.barSegments"
+              *ngFor="let segment of this.barSegments; let index = index"
               class="segment-bar"
-              [ngClass]="{ 'hide-divider': this.nearMaxValue }"
+              [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
             >
@@ -37,10 +45,19 @@ import { DomElementMeasurerService, getPercentage, TypedSimpleChanges } from '@h
           </div>
         </div>
       </div>
+      <div class="legend">
+        <div class="legend-item" *ngFor="let segment of this.barSegments">
+          <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
+          <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
+          <span class="legend-label">{{ segment.label }}</span>
+        </div>
+      </div>
     </div>
   `
 })
-export class BarGaugeComponent implements OnChanges {
+export class BarGaugeComponent implements OnChanges, AfterViewInit {
+  private static readonly BAR_GAUGE_COLORS: symbol = Symbol('Bar Gauge Colors');
+
   @ViewChild('maxValueBar', { read: ElementRef })
   public maxValueBar!: ElementRef;
 
@@ -54,6 +71,9 @@ export class BarGaugeComponent implements OnChanges {
   public units?: string;
 
   @Input()
+  public colorPaletteKey?: ColorPaletteKey;
+
+  @Input()
   public maxValue?: number;
 
   @Input()
@@ -64,7 +84,12 @@ export class BarGaugeComponent implements OnChanges {
   public overMaxValue: boolean = false;
   public nearMaxValue: boolean = false;
 
-  public constructor(private readonly domElementMeasurerService: DomElementMeasurerService) {}
+  public constructor(
+    private readonly domElementMeasurerService: DomElementMeasurerService,
+    private readonly colorService: ColorService
+  ) {
+    this.colorService.registerColorPalette(BarGaugeComponent.BAR_GAUGE_COLORS, [Color.Blue7, Color.Blue4, Color.Blue2]);
+  }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.segments || changes.maxValue) {
@@ -72,37 +97,39 @@ export class BarGaugeComponent implements OnChanges {
       this.barSegments = this.toBarSegments(this.segments ?? [], this.maxValue ?? 0);
 
       this.overMaxValue = this.maxValue !== undefined && this.totalValue > this.maxValue;
-
-      this.checkNearMaxValue();
     }
   }
 
-  public checkNearMaxValue(): void {
-    setTimeout(() => {
-      const maxValueBarWidth = this.domElementMeasurerService.measureHtmlElement(this.maxValueBar.nativeElement).width;
-      const segmentBarsTotalWidth = this.segmentBars.reduce(
-        (prevValue, curValue) =>
-          prevValue + this.domElementMeasurerService.measureHtmlElement(curValue.nativeElement).width,
-        0
-      );
+  public ngAfterViewInit(): void {
+    this.checkNearMaxValue();
+  }
 
-      /*
-       * On the far right of each segment is a small 2px white vertical bar used to indicate the end of the segment.
-       * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the
-       * divider against a white background. We do this by adding a class to display:none if we are within 2px of the
-       * max width.
-       */
-      this.nearMaxValue = segmentBarsTotalWidth >= maxValueBarWidth - 2;
-    });
+  public checkNearMaxValue(): void {
+    /*
+     * On the far right of each segment is a small 1px white vertical bar used to indicate the end of the segment.
+     * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the
+     * divider against a white background. We do this by adding a class to display:none if we are within 1px of the
+     * max width.
+     */
+    const lastSegment = this.domElementMeasurerService.measureHtmlElement(this.segmentBars.last.nativeElement);
+    const maxValueBar = this.domElementMeasurerService.measureHtmlElement(this.maxValueBar.nativeElement);
+    this.nearMaxValue = lastSegment.right >= maxValueBar.right - 1;
   }
 
   private toBarSegments(segments: Segment[], maxValue: number): BarSegment[] {
-    return segments.map(segment => this.toBarSegment(segment, getPercentage(segment.value, maxValue ?? 0)));
+    const colors = this.colorService
+      .getColorPalette(this.colorPaletteKey ?? BarGaugeComponent.BAR_GAUGE_COLORS)
+      .forNColors(segments.length);
+
+    return segments.map((segment: Segment, index: number) =>
+      this.toBarSegment(segment, colors[index], getPercentage(segment.value, maxValue ?? 0))
+    );
   }
 
-  private toBarSegment(segment: Segment, percentage: number): BarSegment {
+  private toBarSegment(segment: Segment, color: string, percentage: number): BarSegment {
     return {
       ...segment,
+      color: segment.color ?? color,
       percentage: percentage
     };
   }
@@ -113,9 +140,9 @@ export class BarGaugeComponent implements OnChanges {
 }
 
 export interface Segment {
+  label: string;
   value: number;
   color?: string;
-  label?: string; // Currently unused, but will be used for legend when added
 }
 
 interface BarSegment extends Segment {
