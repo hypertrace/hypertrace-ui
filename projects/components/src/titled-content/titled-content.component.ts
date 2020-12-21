@@ -17,7 +17,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
             [label]="this.linkLabel"
             role="${ButtonRole.Primary}"
             display="${ButtonStyle.Text}"
-            size="${ButtonSize.Small}"
+            size="${ButtonSize.ExtraSmall}"
             icon="${IconType.ChevronRight}"
             [trailingIcon]="true"
           ></ht-button>

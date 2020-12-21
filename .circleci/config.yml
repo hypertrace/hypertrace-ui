@@ -143,24 +143,49 @@ workflows:
       - npm-install-if-needed:
           context:
             - dockerhub-read
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /^release-.*/
       - build:
           context:
             - dockerhub-read
           requires:
             - npm-install-if-needed
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /^release-.*/
       - test:
           context:
             - dockerhub-read
           requires:
             - npm-install-if-needed
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /^release-.*/
       - lint:
           context:
             - dockerhub-read
           requires:
             - npm-install-if-needed
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /^release-.*/
       - validate-charts:
           context:
             - dockerhub-read
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /^release-.*/
       - merge-publish:
           context:
             - hypertrace-publishing
@@ -178,6 +203,11 @@ workflows:
           context:
             - hypertrace-publishing
             - dockerhub-read
+          requires:
+            - build
+            - test
+            - lint
+            - validate-charts
           filters:
             branches:
               ignore: /.*/

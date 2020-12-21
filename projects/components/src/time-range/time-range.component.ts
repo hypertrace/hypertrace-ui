@@ -58,7 +58,7 @@ import { PopoverRef } from '../popover/popover-ref';
         class="refresh"
         [label]="refreshButton.text$ | async"
         icon="${IconType.Refresh}"
-        size="${ButtonSize.Medium}"
+        size="${ButtonSize.Small}"
         [role]="refreshButton.role"
         (click)="refreshButton.onClick()"
       >

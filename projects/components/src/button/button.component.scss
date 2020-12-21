@@ -23,7 +23,7 @@
 
 .button-container {
   display: flex;
-  height: inherit;
+  align-items: center;
 }
 
 .button {
@@ -34,6 +34,7 @@
   padding: 0;
   border: none;
   cursor: pointer;
+  height: 100%;
 
   .icon {
     color: inherit;
@@ -147,7 +148,7 @@
 
 .large {
   height: 40px;
-  border-radius: 6px;
+  border-radius: 8px;
 
   &:not(.icon-only) {
     padding: 0 20px;
@@ -160,7 +161,7 @@
 }
 
 .medium {
-  height: 32px;
+  height: 36px;
   border-radius: 6px;
 
   &:not(.icon-only) {
@@ -174,6 +175,20 @@
 }
 
 .small {
+  height: 32px;
+  border-radius: 6px;
+
+  &:not(.icon-only) {
+    padding: 0 16px;
+  }
+
+  .label {
+    @include body-1-medium();
+    color: inherit;
+  }
+}
+
+.extra-small {
   height: 24px;
   border-radius: 4px;
 
@@ -187,7 +202,7 @@
   }
 }
 
-.extra-small {
+.tiny {
   height: 18px;
   border-radius: 4px;
 

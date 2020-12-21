@@ -18,7 +18,7 @@ import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
           class="close-button"
           icon="${IconType.Close}"
           display="${ButtonStyle.Outlined}"
-          size="${ButtonSize.ExtraSmall}"
+          size="${ButtonSize.Tiny}"
           htTooltip="Close modal"
           (click)="this.close()"
         >
