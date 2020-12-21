@@ -36,7 +36,7 @@
     "@angular/platform-browser-dynamic": "^11.0.2",
     "@angular/router": "^11.0.2",
     "@apollo/client": "^3.3.1",
-    "@hypertrace/hyperdash": "^1.1.2",
+    "@hypertrace/hyperdash": "^1.2.0",
     "@hypertrace/hyperdash-angular": "^2.3.1",
     "@types/d3-hierarchy": "^2.0.0",
     "@types/d3-transition": "1.1.5",
