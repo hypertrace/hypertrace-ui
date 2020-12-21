@@ -1,0 +1,97 @@
+@import 'mixins';
+
+.bar-gauge {
+  .title {
+    @include overline($gray-7);
+    padding-bottom: 24px;
+  }
+
+  .count {
+    @include subtitle-1($gray-9);
+    padding-bottom: 8px;
+
+    .units {
+      @include body-small($gray-5);
+    }
+  }
+
+  .bar {
+    position: relative;
+    height: 16px;
+    width: 100%;
+
+    .max-value-bar {
+      height: 100%;
+      width: 100%;
+      background: $gray-2;
+      border-radius: 4px;
+      overflow: hidden;
+
+      &.over-max-value {
+        border-right: solid 4px $red-5;
+      }
+    }
+
+    .segment-bars {
+      display: flex;
+    }
+
+    .segment-bar {
+      position: relative;
+      height: 16px;
+      width: 0;
+      background: $blue-7;
+      transition: width ease 1s;
+
+      &.hide-last-divider:last-child {
+        .divider {
+          display: none;
+        }
+      }
+    }
+
+    .divider {
+      position: absolute;
+      right: 0;
+      height: 100%;
+      width: 1px;
+      background: white;
+    }
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 12px;
+
+    .legend-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      max-width: 100%;
+
+      &:not(:last-child) {
+        margin-right: 24px;
+      }
+    }
+
+    .legend-symbol {
+      min-width: 8px;
+      min-height: 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    .legend-value {
+      @include body-small($gray-7);
+      margin-right: 8px;
+    }
+
+    .legend-label {
+      @include body-small($gray-5);
+      @include ellipsis-overflow();
+      flex: 1;
+      min-width: 24px;
+    }
+  }
+}
