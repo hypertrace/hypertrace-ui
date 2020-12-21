@@ -34,7 +34,7 @@ import {
           <div class="segment-bars">
             <div
               #segmentBars
-              *ngFor="let segment of this.barSegments; let index = index"
+              *ngFor="let segment of this.barSegments"
               class="segment-bar"
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
