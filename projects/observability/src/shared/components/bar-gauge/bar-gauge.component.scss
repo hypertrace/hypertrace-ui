@@ -33,7 +33,7 @@
     }
 
     .segment-bars {
-      display: inline;
+      display: flex;
     }
 
     .segment-bar {
@@ -42,7 +42,6 @@
       width: 0;
       background: $blue-7;
       transition: width ease 1s;
-      display: inline-block;
 
       &.hide-last-divider:last-child {
         .divider {
