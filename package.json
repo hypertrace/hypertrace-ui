@@ -77,7 +77,7 @@
     "@ngneat/spectator": "^5.13.3",
     "@types/d3-array": "^2.8.0",
     "@types/d3-axis": "^2.0.0",
-    "@types/d3-brush": "^1.1.1",
+    "@types/d3-brush": "^2.1.0",
     "@types/d3-drag": "^1.2.3",
     "@types/d3-force": "^2.1.0",
     "@types/d3-path": "^2.0.0",
