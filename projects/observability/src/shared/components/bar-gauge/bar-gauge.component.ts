@@ -15,7 +15,7 @@ import { DomElementMeasurerService, getPercentage, TypedSimpleChanges } from '@h
   styleUrls: ['./bar-gauge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="bar-gauge">
+    <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
       <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
       <div class="count">
         {{ this.totalValue | number }} / {{ this.maxValue | number }}
@@ -77,7 +77,7 @@ export class BarGaugeComponent implements OnChanges {
     }
   }
 
-  private checkNearMaxValue(): void {
+  public checkNearMaxValue(): void {
     setTimeout(() => {
       const maxValueBarWidth = this.domElementMeasurerService.measureHtmlElement(this.maxValueBar.nativeElement).width;
       const segmentBarsTotalWidth = this.segmentBars.reduce(
