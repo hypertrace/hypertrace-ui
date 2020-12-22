@@ -1,9 +1,9 @@
 import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
+  BaseModel,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
-  BaseModel,
   WidgetHeaderModel
 } from '@hypertrace/dashboards';
 import {
