@@ -3,7 +3,7 @@ import {
   ArrayPropertyTypeInstance,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
-  WidgetBaseModel,
+  BaseModel,
   WidgetHeaderModel
 } from '@hypertrace/dashboards';
 import {
@@ -22,7 +22,7 @@ import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-m
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 
-export abstract class TableWidgetBaseModel extends WidgetBaseModel {
+export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',

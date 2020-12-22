@@ -9,7 +9,7 @@ export * from './properties/dashboard-properties.module';
 // Repeat
 export { ModelTemplatePropertyType } from './properties/property-types/model-template-type';
 
-export * from './widgets/widget-base.model';
+export * from './widgets/base.model';
 export * from './persistence/dashboard-persistence.service';
 export * from './widgets/widget-renderer';
 export * from './widgets/interactive-data-widget-renderer';

@@ -1,6 +1,6 @@
 import { ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 
-export abstract class WidgetBaseModel {
+export abstract class BaseModel {
   /*
    * ID must be globally unique.
    *
