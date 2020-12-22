@@ -14,9 +14,9 @@ import { TableColumnConfigExtended } from '../table.service';
           <div class="column-item">
             <ht-checkbox
               [label]="column.title"
-              [htTooltip]="this.isLastColumn(column) ? this.disabledTooltip : column.titleTooltip"
+              [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
-              [disabled]="!column.editable || this.isLastColumn(column)"
+              [disabled]="!column.editable || this.isLastRemainingColumn(column)"
               (checkedChange)="column.visible = $event"
             ></ht-checkbox>
           </div>
@@ -53,7 +53,7 @@ export class TableEditColumnsModalComponent {
       .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
   }
 
-  public isLastColumn(column: TableColumnConfigExtended): boolean {
+  public isLastRemainingColumn(column: TableColumnConfigExtended): boolean {
     const visibleCount: number = this.editColumns.filter(editColumn => editColumn.visible).length;
 
     return visibleCount === 1 && !!column.visible;

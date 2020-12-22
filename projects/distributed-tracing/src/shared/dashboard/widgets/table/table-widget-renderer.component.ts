@@ -250,14 +250,6 @@ export class TableWidgetRendererComponent
     }
   }
 
-  private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
-    /*
-     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
-     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
-     */
-    return pick(column, ['id', 'visible']);
-  }
-
   public onRowSelection(selections: StatefulTableRow[]): void {
     if (this.api.model.getSelectionMode() === TableSelectionMode.Single) {
       /**
@@ -287,5 +279,13 @@ export class TableWidgetRendererComponent
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 
     return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
+  }
+
+  private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
+    /*
+     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
+     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
+     */
+    return pick(column, ['id', 'visible']);
   }
 }
