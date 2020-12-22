@@ -12,7 +12,7 @@ describe('Preference Service', () => {
   test('allows setting and retrieving preferences of primitive types', () => {
     const service = serviceFactory().service;
 
-    //tslint:disable:no-null-keyword
+    // tslint:disable:no-null-keyword
     runFakeRxjs(({ expectObservable, cold }) => {
       cold('-s-b-n-o-a|', {
         s: () => service.set('foo', 'a'),
@@ -46,7 +46,7 @@ describe('Preference Service', () => {
         a: ['first', 2, null, false, { test: 'test' }, null, 'null', 'undefined'] // Note the undefined -> null
       });
     });
-    //tslint:enable:no-null-keyword
+    // tslint:enable:no-null-keyword
   });
 
   test('throws if default value is not provided', () => {
