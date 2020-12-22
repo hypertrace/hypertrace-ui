@@ -6,7 +6,7 @@ export const backendTraceListDashboard = {
   location: 'BACKEND_TRACES',
   json: {
     type: 'table-widget',
-    persistId: 'backend-trace-list.table',
+    id: 'backend-trace-list.table',
     style: TableStyle.FullPage,
     columns: [
       {

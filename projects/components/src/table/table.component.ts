@@ -696,7 +696,7 @@ export class TableComponent
     this.pageChange.emit(pageEvent);
   }
 
-  private getPagination(params: ParamMap): Partial<PageEvent> | undefined {
+  private getPagination(params: ParamMap): Partial<PageEvent> {
     return this.syncWithUrl
       ? {
           pageSize: new NumberCoercer({ defaultValue: this.pageSize }).coerce(

@@ -6,7 +6,7 @@ export const apiTraceListDashboard = {
   location: 'API_TRACES',
   json: {
     type: 'table-widget',
-    persistId: 'api-trace-list.table',
+    id: 'api-trace-list.table',
     style: TableStyle.FullPage,
     columns: [
       {

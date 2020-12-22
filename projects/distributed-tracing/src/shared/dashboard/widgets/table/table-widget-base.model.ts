@@ -3,6 +3,7 @@ import {
   ArrayPropertyTypeInstance,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
+  WidgetBaseModel,
   WidgetHeaderModel
 } from '@hypertrace/dashboards';
 import {
@@ -20,7 +21,8 @@ import { TableWidgetRowSelectionModel } from './selections/table-widget-row-sele
 import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
-export abstract class TableWidgetBaseModel {
+
+export abstract class TableWidgetBaseModel extends WidgetBaseModel {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',
@@ -100,13 +102,6 @@ export abstract class TableWidgetBaseModel {
     type: BOOLEAN_PROPERTY.type
   })
   public pageable: boolean = true;
-
-  @ModelProperty({
-    key: 'persistId',
-    displayName: 'ID used to enable and identify persisted table preferences',
-    type: STRING_PROPERTY.type
-  })
-  public persistId?: string; // Format: <page>.<table-name> (e.g. "explorer.spans-table")
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;

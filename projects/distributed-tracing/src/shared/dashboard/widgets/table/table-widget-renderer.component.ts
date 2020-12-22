@@ -16,7 +16,7 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty } from 'lodash-es';
+import { capitalize, isEmpty, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
@@ -112,11 +112,10 @@ export class TableWidgetRendererComponent
     this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs$ = (isNonEmptyString(this.model.persistId)
-      ? this.preferenceService.get<string>(this.model.persistId, JSON.stringify([]))
-      : of(JSON.stringify([]))
+    this.columnConfigs$ = (isNonEmptyString(this.model.id)
+      ? this.preferenceService.get<TableColumnConfig[]>(this.model.id, [])
+      : of([])
     ).pipe(
-      map(persistedColumnsString => JSON.parse(persistedColumnsString)),
       switchMap(persistedColumns => this.getColumnConfigs(persistedColumns))
     );
 
@@ -186,8 +185,6 @@ export class TableWidgetRendererComponent
       return {
         ...column, // Apply default column config
         ...(found ? found : {}), // Override with any saved properties
-        specification: column.specification, // Spec not user configurable and has nested methods, so apply those
-        onClick: column.onClick // Click handler not user configurable, so apply that
       };
     });
   }
@@ -247,10 +244,17 @@ export class TableWidgetRendererComponent
   }
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
-    if (isNonEmptyString(this.model.persistId)) {
-      // Note: The table columns have nested methods, so those are lost here when using stringify
-      this.preferenceService.set(this.model.persistId, JSON.stringify(columns));
+    if (isNonEmptyString(this.model.id)) {
+      this.preferenceService.set(this.model.id, columns.map(column => this.pickPersistColumnProperties(column)));
     }
+  }
+
+  private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
+    /*
+     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
+     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
+     */
+    return pick(column, ['id' , 'visible']);
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {

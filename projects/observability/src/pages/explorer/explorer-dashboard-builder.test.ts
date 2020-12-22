@@ -100,7 +100,7 @@ describe('Explorer dashboard builder', () => {
         x: {
           json: {
             type: 'table-widget',
-            persistId: 'explorer.traces-table',
+            id: 'explorer.traces-table',
             mode: TableMode.Detail,
             style: TableStyle.Embedded,
             data: {

@@ -6,7 +6,7 @@ export const serviceTraceListDashboard = {
   location: 'SERVICE_TRACES',
   json: {
     type: 'table-widget',
-    persistId: 'service-trace-list.table',
+    id: 'service-trace-list.table',
     style: TableStyle.FullPage,
     columns: [
       {

@@ -105,7 +105,7 @@ export class ExplorerDashboardBuilder {
     if (context === SPAN_SCOPE) {
       return {
         type: 'table-widget',
-        persistId: 'explorer.spans-table',
+        id: 'explorer.spans-table',
         mode: TableMode.Detail,
         style: TableStyle.FullPage,
         columns: columns,
@@ -126,7 +126,7 @@ export class ExplorerDashboardBuilder {
 
     return {
       type: 'table-widget',
-      persistId: 'explorer.traces-table',
+      id: 'explorer.traces-table',
       mode: TableMode.Detail,
       style: TableStyle.Embedded,
       columns: columns,

@@ -7,7 +7,7 @@ export const serviceApisListDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_APIS_LIST',
   json: {
     type: 'table-widget',
-    persistId: 'service-apis-list.table',
+    id: 'service-apis-list.table',
     style: TableStyle.FullPage,
     searchAttribute: 'name',
     columns: [
