@@ -17,15 +17,16 @@ describe('Preference Service', () => {
         s: () => service.set('foo', 'a'),
         b: () => service.set('foo', false),
         n: () => service.set('foo', 42.3),
-        o: () => service.set('foo', {
-          first: 'first',
-          second: ['first', 'second', 3, true],
-          third: 1,
-          fifth: true,
-          sixth: undefined,
-          seventh: null
-        }),
-        a: () => service.set('foo', ['first', 2, null, false, {test: 'test'}, undefined, 'null', 'undefined'])
+        o: () =>
+          service.set('foo', {
+            first: 'first',
+            second: ['first', 'second', 3, true],
+            third: 1,
+            fifth: true,
+            sixth: undefined,
+            seventh: null
+          }),
+        a: () => service.set('foo', ['first', 2, null, false, { test: 'test' }, undefined, 'null', 'undefined'])
       }).subscribe(update => update());
 
       expectObservable(service.get('foo', 'default')).toBe('ds-b-n-o-a', {
@@ -41,7 +42,7 @@ describe('Preference Service', () => {
           // Note that 'sixth: undefined' not included
           seventh: null
         },
-        a: ['first', 2, null, false, {test: 'test'}, null, 'null', 'undefined'] // Note the undefined -> null
+        a: ['first', 2, null, false, { test: 'test' }, null, 'null', 'undefined'] // Note the undefined -> null
       });
     });
   });

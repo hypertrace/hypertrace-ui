@@ -115,9 +115,7 @@ export class TableWidgetRendererComponent
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
       ? this.preferenceService.get<TableColumnConfig[]>(this.model.id, [])
       : of([])
-    ).pipe(
-      switchMap(persistedColumns => this.getColumnConfigs(persistedColumns))
-    );
+    ).pipe(switchMap(persistedColumns => this.getColumnConfigs(persistedColumns)));
 
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
@@ -184,7 +182,7 @@ export class TableWidgetRendererComponent
 
       return {
         ...column, // Apply default column config
-        ...(found ? found : {}), // Override with any saved properties
+        ...(found ? found : {}) // Override with any saved properties
       };
     });
   }
@@ -245,7 +243,10 @@ export class TableWidgetRendererComponent
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
     if (isNonEmptyString(this.model.id)) {
-      this.preferenceService.set(this.model.id, columns.map(column => this.pickPersistColumnProperties(column)));
+      this.preferenceService.set(
+        this.model.id,
+        columns.map(column => this.pickPersistColumnProperties(column))
+      );
     }
   }
 
@@ -254,7 +255,7 @@ export class TableWidgetRendererComponent
      * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
      * to convert and store. We want to just pluck the relevant properties that are required to be saved.
      */
-    return pick(column, ['id' , 'visible']);
+    return pick(column, ['id', 'visible']);
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {
