@@ -167,11 +167,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
       >
         <ht-paginator
-          *htLetAsync="this.urlPageData$ as pageData"
+          *htLetAsync="this.pagination$ as pagination"
           (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
-          [pageSize]="pageData?.pageSize"
-          [pageIndex]="pageData?.pageIndex"
+          [pageSize]="pagination?.pageSize"
+          [pageIndex]="pagination?.pageIndex"
         ></ht-paginator>
       </div>
     </div>
@@ -258,7 +258,7 @@ export class TableComponent
   public pageSizeOptions: number[] = [25, 50, 100];
 
   @Input()
-  public pageSize?: number;
+  public pageSize?: number = 50;
 
   @Output()
   public readonly selectionsChange: EventEmitter<StatefulTableRow[]> = new EventEmitter<StatefulTableRow[]>();
@@ -276,6 +276,9 @@ export class TableComponent
 
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
+
+  @Output()
+  public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
@@ -324,8 +327,8 @@ export class TableComponent
   /*
    * Pagination
    */
-  public readonly urlPageData$: Observable<Partial<PageEvent> | undefined> = this.activatedRoute.queryParamMap.pipe(
-    map(params => this.getPageData(params))
+  public readonly pagination$: Observable<Partial<PageEvent> | undefined> = this.activatedRoute.queryParamMap.pipe(
+    map(params => this.getPagination(params))
   );
 
   public dataSource?: TableCdkDataSource;
@@ -508,6 +511,7 @@ export class TableComponent
 
   public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
     this.initializeColumns(columnConfigs);
+    this.columnConfigsChange.emit(columnConfigs);
   }
 
   public onDataCellClick(row: StatefulTableRow): void {
@@ -692,7 +696,7 @@ export class TableComponent
     this.pageChange.emit(pageEvent);
   }
 
-  private getPageData(params: ParamMap): Partial<PageEvent> | undefined {
+  private getPagination(params: ParamMap): Partial<PageEvent> {
     return this.syncWithUrl
       ? {
           pageSize: new NumberCoercer({ defaultValue: this.pageSize }).coerce(
@@ -700,7 +704,10 @@ export class TableComponent
           ),
           pageIndex: new NumberCoercer().coerce(params.get(TableComponent.PAGE_INDEX_URL_PARAM))
         }
-      : undefined;
+      : {
+          pageSize: this.pageSize,
+          pageIndex: 0
+        };
   }
 
   private sortDataFromUrl(params: ParamMap, columns: TableColumnConfigExtended[]): Required<SortedColumn> | undefined {
