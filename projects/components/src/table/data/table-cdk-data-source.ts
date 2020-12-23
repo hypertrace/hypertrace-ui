@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
-import { combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
@@ -33,7 +33,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private readonly cachedValues: Map<string, unknown[]> = new Map<string, unknown[]>();
   private lastRowChange: StatefulTableRow | undefined;
   private readonly rowsChange$: Subject<StatefulTableRow[]> = new Subject<StatefulTableRow[]>();
-  private readonly loadingStateSubject: Subject<TableLoadingState> = new Subject<TableLoadingState>();
+  private readonly loadingStateSubject: Subject<TableLoadingState> = new BehaviorSubject<TableLoadingState>({
+    loading$: NEVER
+  });
 
   public loadingStateChange$: Observable<TableLoadingState> = this.loadingStateSubject.asObservable();
 
