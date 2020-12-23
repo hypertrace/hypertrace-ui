@@ -1,6 +1,7 @@
 import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
+  BaseModel,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
   WidgetHeaderModel
@@ -20,7 +21,8 @@ import { TableWidgetRowSelectionModel } from './selections/table-widget-row-sele
 import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
-export abstract class TableWidgetBaseModel {
+
+export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',

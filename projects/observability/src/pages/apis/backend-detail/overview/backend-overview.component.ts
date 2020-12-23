@@ -448,6 +448,7 @@ export class BackendOverviewComponent {
       },
       {
         type: 'table-widget',
+        id: 'backend-overview.table',
         style: TableStyle.Embedded,
         header: {
           type: 'widget-header',
