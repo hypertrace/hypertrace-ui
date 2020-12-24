@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
 import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
@@ -40,15 +40,18 @@ export class ServiceDetailBreadcrumbResolver implements Resolve<Observable<Bread
   protected fetchEntity(id: string): Observable<ServiceEntity> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
-        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ServiceEntity>({
-          requestType: ENTITY_GQL_REQUEST,
-          entityType: ObservabilityEntityType.Service,
-          id: id,
-          properties: this.getAttributeKeys().map(attributeKey =>
-            this.specificationBuilder.attributeSpecificationForKey(attributeKey)
-          ),
-          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
-        })
+        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ServiceEntity>(
+          {
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Service,
+            id: id,
+            properties: this.getAttributeKeys().map(attributeKey =>
+              this.specificationBuilder.attributeSpecificationForKey(attributeKey)
+            ),
+            timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
+          },
+          { cacheability: GraphQlRequestCacheability.NotCacheable }
+        )
       )
     );
   }
