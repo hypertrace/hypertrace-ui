@@ -2,7 +2,7 @@ import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NavigationService } from '@hypertrace/common';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
@@ -68,7 +68,8 @@ describe('Service detail breadcrumb resolver', () => {
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Service,
         id: 'test-id'
-      })
+      }),
+      { cacheability: GraphQlRequestCacheability.NotCacheable }
     );
   }));
 });

@@ -2,7 +2,7 @@ import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NavigationService } from '@hypertrace/common';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
@@ -107,7 +107,8 @@ describe('Api detail breadcrumb resolver', () => {
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
-      })
+      }),
+      { cacheability: GraphQlRequestCacheability.NotCacheable }
     );
   }));
 
@@ -135,7 +136,8 @@ describe('Api detail breadcrumb resolver', () => {
         requestType: ENTITY_GQL_REQUEST,
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
-      })
+      }),
+      { cacheability: GraphQlRequestCacheability.NotCacheable }
     );
   }));
 });
