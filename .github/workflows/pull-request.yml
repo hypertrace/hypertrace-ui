@@ -16,5 +16,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
             ${{ runner.os }}-node-
+      - name: NPM Install
+        run: npm ci
       - name: Build
         run: npm run build:ci
