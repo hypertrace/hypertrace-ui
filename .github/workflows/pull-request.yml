@@ -3,7 +3,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
@@ -20,3 +20,50 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build:ci
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
+            ${{ runner.os }}-node-
+      - name: NPM Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Prettier Check
+        run: npm run prettier:check
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
+            ${{ runner.os }}-node-
+      - name: NPM Install
+        run: npm ci
+      - name: Test
+        run: npm run tet:ci
+  validate-helm-charts:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.3.0
+      - name: validate charts
+        uses: hypertrace/actions/validate-charts@main
