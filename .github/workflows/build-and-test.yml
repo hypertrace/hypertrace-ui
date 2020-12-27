@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -18,10 +19,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
             ${{ runner.os }}-node-
+
       - name: NPM Install
         run: npm ci
+
       - name: Build
         run: npm run build:ci
+
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -32,6 +36,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -42,8 +47,10 @@ jobs:
             ${{ runner.os }}-node-
       - name: NPM Install
         run: npm ci
+
       - name: Lint
         run: npm run lint
+
       - name: Prettier Check
         run: npm run prettier:check
   test:
@@ -54,6 +61,7 @@ jobs:
         # Used by CCI uploader to detect base commit
         with:
           fetch-depth: 0
+
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -62,14 +70,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
             ${{ runner.os }}-node-
+
       - name: NPM Install
         run: npm ci
+
       - name: Test
         run: npm run test:ci
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
+
       - name: Publish Unit Test Results
         uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
         if: always()
@@ -87,7 +99,8 @@ jobs:
           version: v3.3.0
       - name: validate charts
         uses: hypertrace/actions/validate-charts@main
-  merge-publish: # TODO: only on push
+  merge-publish:
+    if: github.event_name == 'push'
     runs-on: ubuntu-20.04
     needs: [build, lint, test, validate-helm-charts]
     steps:
@@ -113,9 +126,6 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: dist
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -124,7 +134,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
 
       - name: Push docker image
-        run: ./gradlew dockerBuildImages # TODO: convert to push, add creds
-        # env:
-        #   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
-        #   DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
+        run: ./gradlew dockerPushImages
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
