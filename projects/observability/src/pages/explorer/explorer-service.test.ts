@@ -64,7 +64,7 @@ describe('Explorer service', () => {
           { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
           { field: 'status', operator: FilterOperator.Equals, value: 404 }
         ])
-      ).toBe('(x|)', {
+      ).not.toBe('(x|)', {
         x: {
           navType: NavigationParamsType.InApp,
           path: '/explorer',
