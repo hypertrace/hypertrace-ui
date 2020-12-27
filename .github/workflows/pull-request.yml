@@ -44,6 +44,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        # Used by CCI uploader to detect base commit
+        with:
+          fetch-depth: 0
       - name: Cache node modules
         uses: actions/cache@v2
         with:
