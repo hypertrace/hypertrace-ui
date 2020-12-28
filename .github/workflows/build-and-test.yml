@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     env:
-      PARALLELISM: 2
+      PARALLELISM: 3
     outputs:
       test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
       test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
@@ -122,7 +122,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Unit Test Results (chunk ${{ matrix.chunk }})
-          files: test-results/**/*.xml
+          path: test-results/**/*.xml
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
