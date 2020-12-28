@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import {
   CoreTableCellRendererType,
   SequenceSegment,
+  SplitterDirection,
   StatefulTableRow,
   TableColumnConfig,
   TableComponent,
@@ -40,6 +41,7 @@ import { WaterfallChartService } from './waterfall-chart.service';
         >
         </ht-table>
       </div>
+      <ht-splitter class="splitter" direction="${SplitterDirection.Horizontal}"></ht-splitter>
       <div class="sequence">
         <ht-sequence-chart
           unit="ms"
