@@ -5,8 +5,25 @@ on:
     branches:
       - main
 jobs:
+  npm-install-if-needed:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - id: cache
+        name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: NPM Install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
   build:
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -14,14 +31,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Build
         run: npm run build:ci
@@ -33,20 +44,16 @@ jobs:
           path: dist
   lint:
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Cache node modules
+      - name: Restore node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Lint
         run: npm run lint
@@ -55,6 +62,7 @@ jobs:
         run: npm run prettier:check
   setup-test-batches:
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
     env:
       PARALLELISM: 2
     outputs:
@@ -67,14 +75,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - id: set-test-chunks
         name: Set Chunks
@@ -88,7 +90,7 @@ jobs:
   test:
     name: test (chunk ${{ matrix.chunk }})
     runs-on: ubuntu-20.04
-    needs: setup-test-batches
+    needs: [npm-install-if-needed, setup-test-batches]
     strategy:
       matrix:
         chunk: ${{ fromJson(needs['setup-test-batches'].outputs['test-chunk-ids']) }}
@@ -102,18 +104,14 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
-      - name: NPM Install
-        run: npm ci
       - name: Test
         run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
@@ -139,7 +137,7 @@ jobs:
   merge-publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
-    needs: [build, lint, test, validate-helm-charts]
+    needs: [npm-install-if-needed, build, lint, test, validate-helm-charts]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
