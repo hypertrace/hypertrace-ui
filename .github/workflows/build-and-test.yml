@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     env:
-      PARALLELISM: 3
+      PARALLELISM: 4
     outputs:
       test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
       test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
@@ -80,7 +80,7 @@ jobs:
 
       - id: set-test-chunks
         name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM "[_nwise(length / $PARALLELISM | floor)]")"
+        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM "[_nwise(length / $PARALLELISM | ceil)]")"
 
       - id: set-test-chunk-ids
         name: Set Chunk IDs
@@ -92,6 +92,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed, setup-test-batches]
     strategy:
+      fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs['setup-test-batches'].outputs['test-chunk-ids']) }}
     steps:
