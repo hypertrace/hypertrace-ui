@@ -111,7 +111,7 @@ jobs:
       - name: NPM Install
         run: npm ci
       - name: Test
-        run: npm run test:ci -- $(echo $CHUNKS | jq '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
+        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
       - name: Upload coverage to Codecov
