@@ -117,23 +117,42 @@ jobs:
         with:
           fail_ci_if_error: true
 
-      - name: Publish Unit Test Results
-        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+      - name: Upload Unit Test Results
         if: always()
+        uses: actions/upload-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          name: Unit Test Results (chunk ${{ matrix.chunk }})
           files: test-results/**/*.xml
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.3.0
+
       - name: validate charts
         uses: hypertrace/actions/validate-charts@main
+  publish-test-results:
+    name: "Publish Unit Tests Results"
+    needs: test
+    runs-on: ubuntu-20.04
+    # Only run if prereq jobs completed - successfully or not
+    if: success() || failure()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Unit Test Results
+        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/**/*.xml
   merge-publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
