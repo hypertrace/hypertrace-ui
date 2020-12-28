@@ -5,8 +5,25 @@ on:
     branches:
       - main
 jobs:
+  npm-install-if-needed:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - id: cache
+        name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: NPM Install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
   build:
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -14,14 +31,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Build
         run: npm run build:ci
@@ -33,6 +44,30 @@ jobs:
           path: dist
   lint:
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Restore node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Prettier Check
+        run: npm run prettier:check
+  setup-test-batches:
+    runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed]
+    env:
+      PARALLELISM: 4
+    outputs:
+      test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
+      test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -40,21 +75,26 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
-      - name: Lint
-        run: npm run lint
+      - id: set-test-chunks
+        name: Set Chunks
+        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM "[_nwise(length / $PARALLELISM | ceil)]")"
 
-      - name: Prettier Check
-        run: npm run prettier:check
+      - id: set-test-chunk-ids
+        name: Set Chunk IDs
+        run: echo "::set-output name=test-chunk-ids::$(echo $CHUNKS | jq -cM 'to_entries | map(.key)')"
+        env:
+          CHUNKS: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
   test:
+    name: test (chunk ${{ matrix.chunk }})
     runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed, setup-test-batches]
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: ${{ fromJson(needs['setup-test-batches'].outputs['test-chunk-ids']) }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -65,44 +105,59 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
-
-      - name: NPM Install
-        run: npm ci
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:ci
+        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
+        env:
+          CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
 
-      - name: Publish Unit Test Results
-        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+      - name: Upload Unit Test Results
         if: always()
+        uses: actions/upload-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: test-results/**/*.xml
+          name: Unit Test Results (chunk ${{ matrix.chunk }})
+          path: test-results/**/*.xml
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.3.0
+
       - name: validate charts
         uses: hypertrace/actions/validate-charts@main
+  publish-test-results:
+    name: "Publish Unit Tests Results"
+    needs: test
+    runs-on: ubuntu-20.04
+    # Only run if prereq jobs completed - successfully or not
+    if: success() || failure()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Unit Test Results
+        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/**/*.xml
   merge-publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
-    needs: [build, lint, test, validate-helm-charts]
+    needs: [npm-install-if-needed, build, lint, test, validate-helm-charts]
     steps:
       - name: Check out code
         uses: actions/checkout@v2

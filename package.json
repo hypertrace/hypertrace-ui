@@ -19,7 +19,7 @@
     "lint": "ng lint hypertrace-ui",
     "lint:fix": "ng lint --fix hypertrace-ui",
     "prettier:check": "prettier --check '**'",
-    "test:ci": "ng test hypertrace-ui -i --ci --coverage",
+    "test:ci": "ng test hypertrace-ui --maxWorkers=2 --ci --coverage",
     "docs": "compodoc -p tsconfig.json"
   },
   "private": true,
