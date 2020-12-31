@@ -29,4 +29,9 @@
     min-width: 0;
     @include ellipsis-overflow();
   }
+
+  .link {
+    @include link-hover();
+  }
 }
+
