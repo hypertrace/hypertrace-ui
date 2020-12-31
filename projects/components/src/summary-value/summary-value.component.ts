@@ -29,7 +29,7 @@ export class SummaryValueComponent implements OnChanges {
   public tooltip?: string;
 
   @Input()
-  public summaryValueDisplayStyle?: SummaryValueDisplayStyle = SummaryValueDisplayStyle.Text;
+  public summaryValueDisplayStyle: SummaryValueDisplayStyle = SummaryValueDisplayStyle.Text;
 
   public tooltipText?: string;
 
