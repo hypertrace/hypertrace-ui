@@ -3,7 +3,7 @@ import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { TooltipDirective } from '../tooltip/tooltip.directive';
-import { SummaryValueComponent } from './summary-value.component';
+import { SummaryValueComponent, SummaryValueDisplayStyle } from './summary-value.component';
 import { SummaryValueModule } from './summary-value.module';
 
 describe('Summary Value Component', () => {
@@ -48,6 +48,8 @@ describe('Summary Value Component', () => {
     expect(spectator.query('.icon')).not.toExist();
     expect(spectator.query('.label')).not.toExist();
     expect(spectator.query('.value')).toHaveText('98.23.456.23');
+    expect(spectator.query('.value')?.classList.contains('text')).toBe(true);
+    expect(spectator.query('.value')?.classList.contains('link')).toBe(false);
   });
 
   test('should display both label and value', () => {
@@ -126,5 +128,22 @@ describe('Summary Value Component', () => {
 
     spectator.setHostInput({ tooltip: undefined });
     expect(spectator.query(TooltipDirective)!.content).toBe('IP Address 98.23.456.23');
+  });
+
+  test('should make value clickable when isClickable is true', () => {
+    spectator = createHost(
+      `<ht-summary-value [value]="value" [icon]="icon" [summaryValueDisplayStyle]="valueStyle">
+      </ht-summary-value>`,
+      {
+        hostProps: {
+          value: '98.23.456.23',
+          icon: IconType.IpAddress,
+          valueStyle: SummaryValueDisplayStyle.Link
+        }
+      }
+    );
+
+    expect(spectator.query('.value')?.classList.contains('link')).toBe(true);
+    expect(spectator.query('.value')?.classList.contains('text')).toBe(false);
   });
 });
