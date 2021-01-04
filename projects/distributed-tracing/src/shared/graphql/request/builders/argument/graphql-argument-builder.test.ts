@@ -15,7 +15,9 @@ describe('Graphql Argument Builder', () => {
   });
 
   test('construct arguments for attribute key correctly', () => {
-    expect(argBuilder.forAttributeKey('test-key')).toEqual(expect.objectContaining({ name: 'key', value: 'test-key' }));
+    expect(argBuilder.forAttributeKey('test-key')).toEqual(
+      expect.objectContaining({ name: 'keyWRONG', value: 'test-key' })
+    );
   });
 
   test('construct arguments for limit correctly', () => {

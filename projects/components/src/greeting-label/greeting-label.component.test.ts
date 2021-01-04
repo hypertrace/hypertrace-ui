@@ -17,7 +17,7 @@ describe('Greeting Label component', () => {
       }
     });
 
-    expect(spectator.query('.greeting-label')).toContainText("Good Morning, here's your report");
+    expect(spectator.query('.greeting-label')).toContainText("Good Morning, here's your fake report");
   });
 
   test('should render interpolated string correctly for afternoon', () => {
