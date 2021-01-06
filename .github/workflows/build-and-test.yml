@@ -130,13 +130,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.3.0
-
       - name: validate charts
-        uses: hypertrace/actions/validate-charts@main
+        uses: hypertrace/github-actions/validate-charts@main
   publish-test-results:
     name: "Publish Unit Tests Results"
     needs: test
@@ -166,7 +161,7 @@ jobs:
           fetch-depth: 0
 
       - name: Create checksum file
-        uses: hypertrace/actions/checksum@main
+        uses: hypertrace/github-actions/checksum@main
 
       - name: Cache gradle
         uses: actions/cache@v2
