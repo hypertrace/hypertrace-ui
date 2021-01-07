@@ -32,7 +32,7 @@ jobs:
         run: npm run build:ci
 
       - name: Create checksum file
-        uses: hypertrace/actions/checksum@main
+        uses: hypertrace/github-actions/checksum@main
 
       - name: Cache gradle
         uses: actions/cache@v2
@@ -57,17 +57,12 @@ jobs:
   publish-charts:
     needs: publish-docker
     runs-on: ubuntu-20.04
-    container:
-      image: hypertrace/helm-gcs-packager:0.3.1
-      credentials:
-        username: ${{ secrets.DOCKERHUB_READ_USER }}
-        password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2.3.4
 
       - name: Package and release charts
-        env:
-          HELM_GCS_CREDENTIALS: ${{ secrets.HELM_GCS_CREDENTIALS }}
-          HELM_GCS_REPOSITORY: ${{ secrets.HELM_GCS_REPOSITORY }}
-        uses: hypertrace/actions/helm-gcs-publish@main
+        uses: hypertrace/github-actions/helm-gcs-publish@main
+        with:
+          helm-gcs-repository: ${{ secrets.HELM_GCS_REPOSITORY }}
+          helm-gcs-credentials: ${{ secrets.HELM_GCS_CREDENTIALS }}
