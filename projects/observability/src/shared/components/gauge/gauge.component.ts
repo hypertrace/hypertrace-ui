@@ -24,10 +24,10 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
               [attr.d]="rendererData.data.valueArc"
               [attr.fill]="rendererData.data.threshold.color"
             />
-            <text x="0" y="0" class="value-display" [attr.fill]="rendererData.data.threshold.color">
+            <text x="0" y="-4" class="value-display" [attr.fill]="rendererData.data.threshold.color">
               {{ rendererData.data.value }}
             </text>
-            <text x="0" y="24" class="label-display">{{ rendererData.data.threshold.label }}</text>
+            <text x="0" y="20" class="label-display">{{ rendererData.data.threshold.label }}</text>
           </g>
         </g>
       </svg>
@@ -37,10 +37,11 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GaugeComponent implements OnChanges {
-  private static readonly GAUGE_RING_WIDTH: number = 20;
+  private static readonly GAUGE_RING_WIDTH: number = 15;
   private static readonly GAUGE_ARC_CORNER_RADIUS: number = 10;
-  private static readonly GAUGE_AXIS_PADDING: number = 30;
+  private static readonly GAUGE_AXIS_PADDING: number = 40;
   private static readonly GAUGE_MIN_RADIUS_TO_SHOW_PATH: number = 80;
+  private static readonly EXTRA_ARC_ANGLE: number = Math.PI / 12;
 
   @Input()
   public value?: number;
@@ -76,7 +77,7 @@ export class GaugeComponent implements OnChanges {
     const radius = this.buildRadius(boundingBox);
 
     return {
-      origin: this.buildOrigin(boundingBox),
+      origin: this.buildOrigin(boundingBox.width, radius),
       radius: radius,
       backgroundArc: this.buildBackgroundArc(radius),
       data: this.buildGaugeData(radius, inputData)
@@ -87,8 +88,8 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: -Math.PI / 2,
-      endAngle: Math.PI / 2
+      startAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      endAngle: Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE
     })!;
   }
 
@@ -107,8 +108,8 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: -Math.PI / 2,
-      endAngle: -Math.PI / 2 + (inputData.value / inputData.maxValue) * Math.PI
+      startAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      endAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE + (inputData.value / inputData.maxValue) * Math.PI
     })!;
   }
 
@@ -120,11 +121,11 @@ export class GaugeComponent implements OnChanges {
     return Math.min(boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING, boundingBox.width / 2);
   }
 
-  private buildOrigin(boundingBox: ClientRect): Point {
+  private buildOrigin(width: number, radius: number): Point {
     return {
-      x: boundingBox.width / 2,
-      y: boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING
-    };
+      x: width / 2,
+      y: radius
+    }
   }
 
   private calculateInputData(): GaugeInputData | undefined {
