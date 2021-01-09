@@ -87,7 +87,7 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      startAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
       endAngle: Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE
     })!;
   }
@@ -107,8 +107,8 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
-      endAngle: - Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE + (inputData.value / inputData.maxValue) * Math.PI
+      startAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      endAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE + (inputData.value / inputData.maxValue) * Math.PI
     })!;
   }
 
@@ -143,7 +143,7 @@ export class GaugeComponent implements OnChanges {
     return {
       x: width / 2,
       y: radius
-    }
+    };
   }
 
   private calculateInputData(): GaugeInputData | undefined {
