@@ -24,10 +24,10 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
               [attr.d]="rendererData.data.valueArc"
               [attr.fill]="rendererData.data.threshold.color"
             />
-            <text x="0" y="0" class="value-display" [attr.fill]="rendererData.data.threshold.color">
+            <text x="0" y="-4" class="value-display" [attr.fill]="rendererData.data.threshold.color">
               {{ rendererData.data.value }}
             </text>
-            <text x="0" y="24" class="label-display">{{ rendererData.data.threshold.label }}</text>
+            <text x="0" y="20" class="label-display">{{ rendererData.data.threshold.label }}</text>
           </g>
         </g>
       </svg>
@@ -37,10 +37,10 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GaugeComponent implements OnChanges {
-  private static readonly GAUGE_RING_WIDTH: number = 20;
+  private static readonly GAUGE_RING_WIDTH: number = 15;
   private static readonly GAUGE_ARC_CORNER_RADIUS: number = 10;
-  private static readonly GAUGE_AXIS_PADDING: number = 30;
   private static readonly GAUGE_MIN_RADIUS_TO_SHOW_PATH: number = 80;
+  private static readonly EXTRA_ARC_ANGLE: number = Math.PI / 12;
 
   @Input()
   public value?: number;
@@ -76,7 +76,7 @@ export class GaugeComponent implements OnChanges {
     const radius = this.buildRadius(boundingBox);
 
     return {
-      origin: this.buildOrigin(boundingBox),
+      origin: this.buildOrigin(boundingBox.width, radius),
       radius: radius,
       backgroundArc: this.buildBackgroundArc(radius),
       data: this.buildGaugeData(radius, inputData)
@@ -87,8 +87,8 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: -Math.PI / 2,
-      endAngle: Math.PI / 2
+      startAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      endAngle: Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE
     })!;
   }
 
@@ -107,8 +107,8 @@ export class GaugeComponent implements OnChanges {
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
-      startAngle: -Math.PI / 2,
-      endAngle: -Math.PI / 2 + (inputData.value / inputData.maxValue) * Math.PI
+      startAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
+      endAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE + (inputData.value / inputData.maxValue) * Math.PI
     })!;
   }
 
@@ -117,13 +117,32 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildRadius(boundingBox: ClientRect): number {
-    return Math.min(boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING, boundingBox.width / 2);
+    const width = boundingBox.width;
+    const height = boundingBox.height;
+
+    if (height > width / 2) {
+      /**
+       * Since height > width > 2, radius can be treated as (width / 2), but only for semi-circles
+       *
+       * If there is an extra angle added to the semicircle,
+       * radius + extra arc length can over shoots the height
+       *
+       * If radius + extra arc length over shoots the height, then radius
+       * needs to be calculated using the provided height, instead of width / 2
+       */
+      const radius = width / 2;
+      const extraArcHeight = this.calculateExtraArcLength(radius);
+
+      return extraArcHeight + radius <= height ? radius : this.calculateRadius(height);
+    }
+
+    return this.calculateRadius(height);
   }
 
-  private buildOrigin(boundingBox: ClientRect): Point {
+  private buildOrigin(width: number, radius: number): Point {
     return {
-      x: boundingBox.width / 2,
-      y: boundingBox.height - GaugeComponent.GAUGE_AXIS_PADDING
+      x: width / 2,
+      y: radius
     };
   }
 
@@ -141,6 +160,24 @@ export class GaugeComponent implements OnChanges {
         };
       }
     }
+  }
+
+  private calculateExtraArcLength(radius: number): number {
+    return radius * GaugeComponent.EXTRA_ARC_ANGLE;
+  }
+
+  /**
+   * We want to fit gauge within a specified height
+   * Approximating arc length, as the extra height required
+   * to render the EXTRA_ARC_ANGLE in the gauge
+   *
+   * height = radius + arc length
+   * height = radius + radius * EXTRA_ARC_ANGLE
+   * radius = height / (1 + EXTRA_ARC_ANGLE)
+   */
+
+  private calculateRadius(height: number): number {
+    return height / (1 + GaugeComponent.EXTRA_ARC_ANGLE);
   }
 }
 
