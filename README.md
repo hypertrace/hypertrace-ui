@@ -1,6 +1,6 @@
 # Hypertrace UI
 
-[![CircleCI](https://circleci.com/gh/hypertrace/hypertrace-ui.svg?style=shield)](https://circleci.com/gh/hypertrace/hypertrace-ui)
+![build-and-test](https://github.com/hypertrace/hypertrace-ui/workflows/build-and-test/badge.svg)
 [![codecov](https://codecov.io/gh/hypertrace/hypertrace-ui/branch/main/graph/badge.svg)](https://codecov.io/gh/hypertrace/hypertrace-ui)
 
 ## Prerequisites
@@ -12,10 +12,6 @@ Install Node + NPM
 - Install Dependencies
 
   `npm install`
-
-- Initialize Submodule (https://github.com/hypertrace/)
-
-  `git submodule update --init`
 
 ## Development server
 
@@ -36,22 +32,12 @@ Run `npm run test` to execute the unit tests via Jest
 ## UI Architecture
 
 | <img src="https://hypertrace-docs.s3.amazonaws.com/ui-architecture.png" width="400" height="400"/> |
-| :------------------------------------------------------------------------------------------------: |
-|                                    _Hypertrace UI Architecture_                                    |
-
-## Submodules
-
-Pull all changes in the repository including changes in the submodules
-
-    git pull --recurse-submodules
-
-Pull all changes for the submodules
-
-    git submodule update --remote
+| :------------------------------------------------------------------------------------------------: | --- |
+|                                    _Hypertrace UI Architecture_                                    | d   |
 
 ## Building Image locally
 
-Hypertrace UI uses gradlew to build docker image. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
+Hypertrace UI uses gradle to build a docker image. Gradle wrapper is already part of the source code. To build Hypertrace UI image, run:
 
 ```
 ./gradlew dockerBuildImages

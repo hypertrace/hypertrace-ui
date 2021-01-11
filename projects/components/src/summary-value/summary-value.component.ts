@@ -11,7 +11,7 @@ import { IconSize } from '../icon/icon-size';
       <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
       <div class="dot" *ngIf="!this.icon"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>
-      <div class="value">{{ this.value }}</div>
+      <div class="value" [ngClass]="this.summaryValueDisplayStyle">{{ this.value }}</div>
     </div>
   `
 })
@@ -28,6 +28,9 @@ export class SummaryValueComponent implements OnChanges {
   @Input()
   public tooltip?: string;
 
+  @Input()
+  public summaryValueDisplayStyle: SummaryValueDisplayStyle = SummaryValueDisplayStyle.Text;
+
   public tooltipText?: string;
 
   public ngOnChanges(): void {
@@ -41,4 +44,9 @@ export class SummaryValueComponent implements OnChanges {
       this.tooltipText = undefined;
     }
   }
+}
+
+export const enum SummaryValueDisplayStyle {
+  Text = 'text',
+  Link = 'link'
 }
