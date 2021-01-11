@@ -1,7 +1,8 @@
 import { OverlayConfig } from './../overlay';
 
-export interface SheetOverlayConfig extends OverlayConfig {
+export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   size: SheetSize;
+  data?: TData;
 }
 
 export const enum SheetSize {
