@@ -187,6 +187,7 @@ export * from './select/select.component';
 export * from './select/select.module';
 
 // Splitter
+export * from './splitter/splitter';
 export * from './splitter/splitter.component';
 export * from './splitter/splitter.module';
 
