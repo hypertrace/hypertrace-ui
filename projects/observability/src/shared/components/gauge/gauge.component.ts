@@ -110,7 +110,7 @@ export class GaugeComponent implements OnChanges {
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
       startAngle: -completeAngle,
-      endAngle: -completeAngle + 2 * Math.max(0.05, inputData.value / inputData.maxValue) * completeAngle
+      endAngle: -completeAngle + 2 * Math.max(0.02, inputData.value / inputData.maxValue) * completeAngle
     })!;
   }
 
