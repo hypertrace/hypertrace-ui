@@ -1,5 +1,5 @@
 import { TableDataRequest, TableDataResponse, TableDataSource, TableFilter, TableRow } from '@hypertrace/components';
-import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
+import { GraphQlArgumentValue, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,11 +20,15 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({
       getData: request =>
-        this.query(filters => this.buildGraphQlRequest(filters, request)).pipe(
+        this.query(filters => this.buildGraphQlRequest(filters, request), this.buildGraphqlRequestOptions()).pipe(
           map(response => this.buildTableResponse(response, request))
         ),
       getScope: () => this.getScope()
     });
+  }
+
+  public buildGraphqlRequestOptions(): GraphQlRequestOptions {
+    return {};
   }
 
   public abstract getScope(): string | undefined;
