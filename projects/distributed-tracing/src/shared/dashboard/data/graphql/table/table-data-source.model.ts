@@ -27,7 +27,7 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     });
   }
 
-  public buildGraphqlRequestOptions(): GraphQlRequestOptions {
+  protected buildGraphqlRequestOptions(): GraphQlRequestOptions {
     return {};
   }
 
