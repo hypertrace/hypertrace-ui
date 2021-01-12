@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import { OverlayConfig } from './../overlay';
 
 export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
@@ -12,3 +13,5 @@ export const enum SheetSize {
   ExtraLarge = 'extra-large',
   ResponsiveExtraLarge = 'responsive-extra-large'
 }
+
+export const SHEET_DATA = new InjectionToken<unknown>('SHEET_DATA');
