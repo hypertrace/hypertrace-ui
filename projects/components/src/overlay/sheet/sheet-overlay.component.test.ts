@@ -1,9 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
+import { POPOVER_DATA } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { ButtonModule } from '../../button/button.module';
-import { POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
 import { SheetSize } from './sheet';
 import { SheetOverlayComponent } from './sheet-overlay.component';
@@ -49,10 +49,12 @@ describe('Sheet Overlay component', () => {
           {
             provide: POPOVER_DATA,
             useValue: {
-              showHeader: true,
-              title: 'test title',
-              content: TestComponent,
-              size: SheetSize.Small
+              config: {
+                showHeader: true,
+                title: 'test title',
+                content: TestComponent,
+                size: SheetSize.Small
+              }
             }
           }
         ]
@@ -73,10 +75,12 @@ describe('Sheet Overlay component', () => {
           {
             provide: POPOVER_DATA,
             useValue: {
-              showHeader: true,
-              title: 'test title',
-              content: TestComponent,
-              size: SheetSize.Large
+              config: {
+                showHeader: true,
+                title: 'test title',
+                content: TestComponent,
+                size: SheetSize.Large
+              }
             }
           }
         ]
@@ -97,10 +101,12 @@ describe('Sheet Overlay component', () => {
           {
             provide: POPOVER_DATA,
             useValue: {
-              showHeader: true,
-              title: 'test title',
-              content: TestComponent,
-              size: SheetSize.Small
+              config: {
+                showHeader: true,
+                title: 'test title',
+                content: TestComponent,
+                size: SheetSize.Small
+              }
             }
           }
         ]
@@ -122,10 +128,12 @@ describe('Sheet Overlay component', () => {
           {
             provide: POPOVER_DATA,
             useValue: {
-              showHeader: true,
-              title: 'test title',
-              content: TestComponent,
-              size: SheetSize.Small
+              config: {
+                showHeader: true,
+                title: 'test title',
+                content: TestComponent,
+                size: SheetSize.Small
+              }
             }
           }
         ]
