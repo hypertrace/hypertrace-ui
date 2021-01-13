@@ -16,12 +16,14 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
       <div class="content" *htLoadAsync="this.data$ as data">
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
+            data-sensitive-pii
             class="summary-value"
             icon="${IconType.SpanId}"
             label="Span ID"
             [value]="data.id"
           ></ht-summary-value>
           <ht-summary-value
+            data-sensitive-pii
             class="summary-value"
             icon="${IconType.TraceId}"
             label="Trace ID"
@@ -34,6 +36,7 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
             [value]="data.statusCode"
           ></ht-summary-value>
           <ht-summary-value
+            data-sensitive-pii
             class="summary-value"
             icon="${IconType.LinkUrl}"
             label="URI"
