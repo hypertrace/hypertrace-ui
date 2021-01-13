@@ -64,6 +64,7 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
           (closed)="this.closeSheet()"
         >
           <ht-summary-value
+            data-sensitive-pii
             icon="${IconType.SpanId}"
             label="Span ID"
             [value]="this.selectedData!.id"

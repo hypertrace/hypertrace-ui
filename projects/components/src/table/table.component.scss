@@ -2,11 +2,7 @@
 @import 'layout';
 
 .table {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  width: 100%;
-  position: relative;
 }
 
 .title-row {
@@ -19,7 +15,7 @@
 
 .table {
   width: 100%;
-  flex: 1 1 0;
+  flex: 1 1;
   overflow: auto;
 }
 
@@ -65,7 +61,7 @@
 
 .header-cell {
   display: flex;
-  flex: 1 1 0;
+  flex: 1 1;
   overflow: hidden;
 
   .header-cell-renderer {
@@ -95,7 +91,7 @@
 }
 
 .data-cell {
-  flex: 1 1 0;
+  flex: 1 1;
   overflow: hidden;
   border-bottom: 1px solid $gray-1;
 

@@ -1,0 +1,68 @@
+name: Publish artifacts
+on:
+  # Will only run when release is published.
+  release:
+    types:
+      - created
+  workflow_dispatch:
+
+jobs:
+  publish-docker:
+    runs-on: ubuntu-20.04
+    steps:
+      # Set fetch-depth: 0 to fetch commit history and tags for use in version calculation
+      - name: Check out code
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
+            ${{ runner.os }}-node-
+
+      - name: NPM Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build:ci
+
+      - name: Create checksum file
+        uses: hypertrace/github-actions/checksum@main
+
+      - name: Cache gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/checksum.txt') }}
+          restore-keys: |
+            gradle-${{ runner.os }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_READ_USER }}
+          password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
+
+      - name: Publish docker image
+        run: ./gradlew dockerPushImages
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
+
+  publish-charts:
+    needs: publish-docker
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.4
+
+      - name: Package and release charts
+        uses: hypertrace/github-actions/helm-gcs-publish@main
+        with:
+          helm-gcs-repository: ${{ secrets.HELM_GCS_REPOSITORY }}
+          helm-gcs-credentials: ${{ secrets.HELM_GCS_CREDENTIALS }}

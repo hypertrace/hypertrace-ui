@@ -35,7 +35,8 @@ export class PreferenceService {
   }
 
   public set(key: PreferenceKey, value: PreferenceValue): void {
-    this.preferenceStorage.set(this.asStorageKey(key), this.asStorageValue(value));
+    const val = this.asStorageValue(value);
+    this.preferenceStorage.set(this.asStorageKey(key), val);
   }
 
   private asStorageKey(key: PreferenceKey): PreferenceStorageKey {
@@ -43,7 +44,10 @@ export class PreferenceService {
   }
 
   private asStorageValue(value: PreferenceValue): PreferenceStorageValue {
-    return `${typeof value}${PreferenceService.SEPARATOR_CHAR}${String(value)}`;
+    const valueType = typeof value;
+    const storageValue = valueType === 'object' ? JSON.stringify(value) : String(value);
+
+    return `${valueType}${PreferenceService.SEPARATOR_CHAR}${storageValue}`;
   }
 
   private fromStorageValue<T extends PreferenceValue>(value?: PreferenceStorageValue): T | undefined {
@@ -60,6 +64,8 @@ export class PreferenceService {
         return this.numberCoercer.coerce(valueAsString) as T;
       case 'boolean':
         return this.booleanCoercer.coerce(valueAsString) as T;
+      case 'object':
+        return JSON.parse(valueAsString) as T;
       default:
         return undefined;
     }
@@ -69,4 +75,4 @@ export class PreferenceService {
 type PreferenceStorageKey = string;
 type PreferenceStorageValue = string;
 export type PreferenceKey = string;
-export type PreferenceValue = string | number | boolean;
+export type PreferenceValue = string | number | boolean | object;

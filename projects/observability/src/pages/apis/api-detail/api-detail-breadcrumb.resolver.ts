@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, NavigationService, TimeRangeService } from '@hypertrace/common';
 import { BreadcrumbsService } from '@hypertrace/components';
 import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
@@ -74,15 +74,18 @@ export class ApiDetailBreadcrumbResolver implements Resolve<Observable<Breadcrum
   private fetchEntity(id: string, parentEntityMetadata?: EntityMetadata): Observable<ApiBreadcrumbDetails> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
-        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>({
-          requestType: ENTITY_GQL_REQUEST,
-          entityType: ObservabilityEntityType.Api,
-          id: id,
-          properties: this.getAttributeKeys(parentEntityMetadata).map(attributeKey =>
-            this.specificationBuilder.attributeSpecificationForKey(attributeKey)
-          ),
-          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
-        })
+        this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, ApiBreadcrumbDetails>(
+          {
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Api,
+            id: id,
+            properties: this.getAttributeKeys(parentEntityMetadata).map(attributeKey =>
+              this.specificationBuilder.attributeSpecificationForKey(attributeKey)
+            ),
+            timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
+          },
+          { cacheability: GraphQlRequestCacheability.NotCacheable }
+        )
       ),
       map(apiEntity => ({
         ...apiEntity,

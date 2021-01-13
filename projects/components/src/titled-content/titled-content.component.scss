@@ -26,12 +26,14 @@
     }
 
     .title {
-      @include widget-title($gray-5);
+      @include widget-title($gray-9);
       margin-top: 16px;
     }
   }
 
   .content {
+    height: 100%;
+    width: 100%;
     flex: 1 1 auto;
     overflow: hidden;
   }

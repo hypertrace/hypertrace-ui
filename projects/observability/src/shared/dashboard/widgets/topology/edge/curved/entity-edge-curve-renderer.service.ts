@@ -62,6 +62,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     this.d3Utils
       .select(element, domRenderer)
       .classed(this.edgeClass, true)
+      .attr('data-sensitive-pii', true)
       .call(selection => this.drawLine(selection))
       .call(selection => this.drawMetricBubble(selection))
       .call(selection => this.drawMetricText(selection));

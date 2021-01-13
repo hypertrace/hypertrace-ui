@@ -100,6 +100,7 @@ $font-family: 'Work Sans', sans-serif;
 @mixin link {
   color: $blue-5;
   cursor: pointer;
+  text-decoration-line: none;
 }
 
 @mixin link-hover($isSvg: false) {

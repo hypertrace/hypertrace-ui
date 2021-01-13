@@ -1,13 +1,31 @@
 @import 'font';
 
-.explorer-container {
+.explorer {
   display: flex;
   flex-direction: column;
-  padding: 24px 24px 0;
-  height: calc(100% - 40px);
+  overflow: hidden;
+  height: 100%;
 
-  .filter-bar {
-    margin-top: 16px;
+  .explorer-header {
+    flex: 0;
+  }
+
+  .explorer-content {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 24px 0;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .explorer-data-toggle {
+    flex: 0;
+    padding-bottom: 16px;
+  }
+
+  .explorer-filter-bar {
+    flex: 0;
+    padding-bottom: 8px;
   }
 
   .panel-title {
@@ -15,7 +33,8 @@
   }
 
   .visualization-panel {
-    padding-top: 8px;
+    flex: 0;
+
     .label {
       @include body-1-medium;
     }
@@ -29,14 +48,15 @@
   }
 
   .results-panel {
+    flex: 1;
     overflow: hidden;
-    flex: 1 1 auto;
+
     .label {
       @include body-1-medium;
     }
 
     .results-panel-content {
-      margin-top: 12px;
+      padding-top: 12px;
     }
   }
 }

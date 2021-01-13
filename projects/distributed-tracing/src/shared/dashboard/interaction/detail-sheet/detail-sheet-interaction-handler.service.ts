@@ -1,15 +1,12 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { OverlayService, PopoverRef, SheetSize } from '@hypertrace/components';
-import {
-  DetailSheetInteractionContainerComponent,
-  DETAIL_SHEET_INTERACTION_MODEL
-} from './container/detail-sheet-interaction-container.component';
+import { DetailSheetInteractionContainerComponent } from './container/detail-sheet-interaction-container.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DetailSheetInteractionHandlerService {
-  public constructor(private readonly injector: Injector, private readonly overlayService: OverlayService) {}
+  public constructor(private readonly overlayService: OverlayService) {}
 
   public showSheet(
     detailModel: object,
@@ -17,26 +14,12 @@ export class DetailSheetInteractionHandlerService {
     title?: string,
     showHeader: boolean = true
   ): PopoverRef {
-    return this.overlayService.createSheet(
-      {
-        content: DetailSheetInteractionContainerComponent,
-        size: sheetSize,
-        showHeader: showHeader,
-        title: title
-      },
-      this.buildDetailOverlayInjector(detailModel)
-    );
-  }
-
-  private buildDetailOverlayInjector(detailModel: object): Injector {
-    return Injector.create({
-      providers: [
-        {
-          provide: DETAIL_SHEET_INTERACTION_MODEL,
-          useValue: detailModel
-        }
-      ],
-      parent: this.injector
+    return this.overlayService.createSheet({
+      content: DetailSheetInteractionContainerComponent,
+      size: sheetSize,
+      showHeader: showHeader,
+      title: title,
+      data: detailModel
     });
   }
 }

@@ -10,7 +10,7 @@ import {
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { NEVER } from 'rxjs';
-import { LabelDetailComponent } from './label-detail.component';
+import { LabelDetailComponent, LabelDetailView } from './label-detail.component';
 
 describe('Label Detail Component', () => {
   let spectator: Spectator<LabelDetailComponent>;
@@ -27,7 +27,7 @@ describe('Label Detail Component', () => {
     ]
   });
 
-  test('should render all trigger contents', () => {
+  test('should render all trigger contents for default/with-label view mode', () => {
     spectator = createHost(
       `<ht-label-detail [icon]="icon" [label]="label" [description]="description" [additionalDetails]="additionalDetails"></ht-label-detail>`,
       {
@@ -56,6 +56,46 @@ describe('Label Detail Component', () => {
     spectator.detectChanges();
     expect(spectator.query('.detail-button')).not.toExist();
     expect(spectator.query('.label-icon')).toExist();
+
+    // Check if correct options are passed to Popover component
+    const popoverComponent = spectator.query(PopoverComponent);
+    expect(popoverComponent?.closeOnClick).toEqual(false);
+    expect(popoverComponent?.closeOnNavigate).toEqual(true);
+    expect(popoverComponent?.locationPreferences).toEqual(spectator.component.locationPreferences);
+  });
+
+  test('should render all trigger contents for Icon only mode', () => {
+    spectator = createHost(
+      `<ht-label-detail [icon]="icon" [label]="label" [description]="description" [additionalDetails]="additionalDetails" [view]="view"></ht-label-detail>`,
+      {
+        hostProps: {
+          icon: IconType.Add,
+          label: 'Impact',
+          description: 'This is a test description',
+          additionalDetails: ['Additional Detail 1', 'Additional Detail 2'],
+          view: LabelDetailView.IconOnly
+        }
+      }
+    );
+
+    expect(spectator.query('.label-detail-trigger')).toExist();
+    expect(spectator.query('.detail-button')).not.toExist();
+    expect(spectator.query('.label-icon')).toExist();
+    expect(spectator.query(LabelComponent)).not.toExist();
+
+    // On mouse enter, show detail button
+    spectator.dispatchMouseEvent('.label-detail-trigger', 'mouseenter');
+    spectator.detectChanges();
+    expect(spectator.query('.detail-button')).toExist();
+    expect(spectator.query('.label-icon')).not.toExist();
+    expect(spectator.query(LabelComponent)).not.toExist();
+
+    // On mouse leave, hide detail button
+    spectator.dispatchMouseEvent('.label-detail-trigger', 'mouseleave');
+    spectator.detectChanges();
+    expect(spectator.query('.detail-button')).not.toExist();
+    expect(spectator.query('.label-icon')).toExist();
+    expect(spectator.query(LabelComponent)).not.toExist();
 
     // Check if correct options are passed to Popover component
     const popoverComponent = spectator.query(PopoverComponent);

@@ -16,6 +16,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
       <div class="content" *htLoadAsync="this.data$ as data">
         <ht-span-detail [spanData]="data" [showTitleHeader]="false">
           <ht-summary-value
+            data-sensitive-pii
             *ngIf="data.entrySpanId"
             class="summary-value"
             icon="${IconType.SpanId}"
@@ -23,6 +24,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
             [value]="data.entrySpanId"
           ></ht-summary-value>
           <ht-summary-value
+            data-sensitive-pii
             class="summary-value"
             icon="${IconType.TraceId}"
             label="Trace ID"
@@ -35,6 +37,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
             [value]="data.statusCode"
           ></ht-summary-value>
           <ht-summary-value
+            data-sensitive-pii
             class="summary-value"
             icon="${IconType.LinkUrl}"
             label="URI"
