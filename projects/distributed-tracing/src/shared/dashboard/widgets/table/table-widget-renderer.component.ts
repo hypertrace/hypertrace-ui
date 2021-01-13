@@ -168,7 +168,7 @@ export class TableWidgetRendererComponent
 
   private fetchSelectFilterValues(): void {
     this.model.getSelectFilterOptions().forEach(option => {
-      forkJoinSafeEmpty(
+      forkJoinSafeEmpty([
         option.getData().pipe(
           first(),
           map((resultOptions: unknown[]) => {
@@ -193,7 +193,7 @@ export class TableWidgetRendererComponent
             };
           })
         )
-      ).subscribe((selects: AttributeSelectFilter[]) => {
+      ]).subscribe((selects: AttributeSelectFilter[]) => {
         const m: Map<string, SelectFilter> = new Map();
         selects.forEach(select => m.set(select.attribute, select.selectFilter));
         this.selectMap = m;
