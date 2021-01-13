@@ -9,6 +9,7 @@ import { EntityTopologyGraphQlQueryHandlerService } from '../../../graphql/reque
 import { ExploreGraphQlQueryHandlerService } from '../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count/api-calls-count-data-source-model';
 import { EntityMetricAggregationDataSourceModel } from './entity/aggregation/entity-metric-aggregation-data-source.model';
+import { EntitiesAttributeDataSourceModel } from './entity/attribute/entities-attribute-data-source-model';
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
@@ -20,6 +21,7 @@ import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
 import { PercentileLatencyAggregationSpecificationModel } from './specifiers/percentile-latency-metric-aggregation.model';
+import { SecondaryEntitySpecificationModel } from './specifiers/secondary-entity-specification.model';
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
@@ -47,7 +49,9 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,
+        EntitiesAttributeDataSourceModel,
         EntitySpecificationModel,
+        SecondaryEntitySpecificationModel,
         NeighborEntitySpecificationModel,
         ExploreCartesianDataSourceModel,
         ApiCallsCountDataSourceModel,

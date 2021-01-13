@@ -1,8 +1,10 @@
+import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { SelectOption } from '../../select/select-option';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { TableMode } from '../table-api';
 
@@ -22,6 +24,20 @@ import { TableMode } from '../table-api';
           [placeholder]="this.searchPlaceholder"
           (valueChange)="this.onSearchChange($event)"
         ></ht-search-box>
+
+        <!-- Selects -->
+        <ht-select
+          *ngFor="let selectFilter of this.selectMap | keyvalue"
+          [placeholder]="selectFilter.value.placeholder"
+          class="control select"
+          (selectedChange)="this.onSelectChange(selectFilter.key, $event)"
+        >
+          <ht-select-option
+            *ngFor="let option of selectFilter.value.options"
+            [label]="option.label"
+            [value]="option.value"
+          ></ht-select-option>
+        </ht-select>
 
         <!-- Filter Toggle -->
         <ht-toggle-group
@@ -61,6 +77,9 @@ export class TableControlsComponent implements OnChanges {
   public searchPlaceholder?: string = 'Search...';
 
   @Input()
+  public selectMap?: Map<string, SelectFilter>;
+
+  @Input()
   public filterItems?: ToggleItem[] = [];
 
   @Input()
@@ -78,6 +97,9 @@ export class TableControlsComponent implements OnChanges {
 
   @Input()
   public checkboxChecked?: boolean;
+
+  @Output()
+  public readonly selectChange: EventEmitter<KeyValue<string, unknown>> = new EventEmitter<KeyValue<string, unknown>>();
 
   @Output()
   public readonly checkboxCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -137,6 +159,10 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
+  public onSelectChange(key: string, value: unknown): void {
+    this.selectChange.emit({ key: key, value: value });
+  }
+
   public onFilterChange(item: ToggleItem): void {
     this.filterChange.emit(item);
   }
@@ -148,4 +174,9 @@ export class TableControlsComponent implements OnChanges {
   public onModeChange(item: ToggleItem<TableMode>): void {
     this.modeChange.emit(item.value);
   }
+}
+
+export interface SelectFilter {
+  placeholder?: string;
+  options: SelectOption<unknown>[];
 }

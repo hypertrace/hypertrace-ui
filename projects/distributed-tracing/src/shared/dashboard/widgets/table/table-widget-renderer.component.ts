@@ -1,8 +1,11 @@
+import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { isEqualIgnoreFunctions, isNonEmptyString, PreferenceService } from '@hypertrace/common';
+import { forkJoinSafeEmpty, isEqualIgnoreFunctions, isNonEmptyString, PreferenceService } from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
+  SelectFilter,
+  SelectOption,
   StatefulTableRow,
   TableColumnConfig,
   TableDataSource,
@@ -18,7 +21,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -44,11 +47,13 @@ import { TableWidgetModel } from './table-widget.model';
         <ht-table-controls
           class="table-controls"
           [searchEnabled]="!!this.api.model.searchAttribute"
+          [selectMap]="this.selectMap"
           [filterItems]="this.filterItems"
           [modeItems]="this.modeItems"
           [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
           [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
           (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
+          (selectChange)="this.onSelectChange($event)"
           (searchChange)="this.onSearchChange($event)"
           (filterChange)="this.onFilterChange($event)"
           (modeChange)="this.onModeChange($event)"
@@ -86,6 +91,7 @@ export class TableWidgetRendererComponent
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
   public activeMode!: TableMode;
+  public selectMap?: Map<string, SelectFilter>;
 
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
@@ -94,6 +100,7 @@ export class TableWidgetRendererComponent
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly checkboxFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  private readonly selectFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
@@ -120,9 +127,15 @@ export class TableWidgetRendererComponent
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
       this.searchFilterSubject,
-      this.checkboxFilterSubject
+      this.checkboxFilterSubject,
+      this.selectFilterSubject
     ]).pipe(
-      map(([toggleFilters, searchFilters, checkboxFilter]) => [...toggleFilters, ...searchFilters, ...checkboxFilter])
+      map(([toggleFilters, searchFilters, checkboxFilter, selectFilters]) => [
+        ...toggleFilters,
+        ...searchFilters,
+        ...checkboxFilter,
+        ...selectFilters
+      ])
     );
 
     this.filterItems = this.model.getFilterOptions().map(filterOption => ({
@@ -135,6 +148,7 @@ export class TableWidgetRendererComponent
       value: modeOption
     }));
 
+    this.fetchSelectFilterValues();
     this.maybeEmitInitialCheckboxFilterChange();
   }
 
@@ -150,6 +164,41 @@ export class TableWidgetRendererComponent
 
   private getScope(): Observable<string | undefined> {
     return this.data$!.pipe(map(data => data?.getScope()));
+  }
+
+  private fetchSelectFilterValues(): void {
+    this.model.getSelectFilterOptions().forEach(option => {
+      forkJoinSafeEmpty(
+        option.getData().pipe(
+          first(),
+          map((resultOptions: unknown[]) => {
+            const options: SelectOption<unknown>[] = resultOptions.map(value => ({
+              label: String(value),
+              value: value
+            }));
+
+            if (option.placeholder !== undefined) {
+              options.unshift({
+                label: option.placeholder,
+                value: undefined
+              });
+            }
+
+            return {
+              attribute: option.attribute,
+              selectFilter: {
+                placeholder: option.placeholder,
+                options: options
+              }
+            };
+          })
+        )
+      ).subscribe((selects: AttributeSelectFilter[]) => {
+        const m: Map<string, SelectFilter> = new Map();
+        selects.forEach(select => m.set(select.attribute, select.selectFilter));
+        this.selectMap = m;
+      });
+    });
   }
 
   private getColumnConfigs(persistedColumns: TableColumnConfig[] = []): Observable<TableColumnConfig[]> {
@@ -226,6 +275,22 @@ export class TableWidgetRendererComponent
     this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
   }
 
+  public onSelectChange(select: KeyValue<string, unknown>): void {
+    const selectFilterModel = this.model.getSelectFilterOptions().find(option => option.attribute === select.key);
+
+    if (selectFilterModel === undefined) {
+      return; // This shouldn't happen
+    }
+
+    this.selectFilterSubject.pipe(first()).subscribe(filters => {
+      this.selectFilterSubject.next(
+        [...filters.filter(f => f.field !== select.key), selectFilterModel.getTableFilter(select.value)].filter(
+          f => f.value !== undefined
+        ) // Remove filters that are unset
+      );
+    });
+  }
+
   public onSearchChange(text: string): void {
     const searchFilter: TableFilter = {
       field: this.api.model.searchAttribute!,
@@ -288,4 +353,9 @@ export class TableWidgetRendererComponent
      */
     return pick(column, ['id', 'visible']);
   }
+}
+
+interface AttributeSelectFilter {
+  attribute: string;
+  selectFilter: SelectFilter;
 }
