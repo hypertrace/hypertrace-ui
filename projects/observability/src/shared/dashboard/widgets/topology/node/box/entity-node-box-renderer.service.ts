@@ -56,6 +56,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     const nodeSelection = this.d3Utils
       .select(nodeElement, domElementRenderer)
       .classed('entity-node', true)
+      .attr('data-sensitive-pii', true)
       .classed(this.getNodeClasses(node).join(' '), true);
 
     this.nodeSelectionMap.set(node, nodeSelection);
