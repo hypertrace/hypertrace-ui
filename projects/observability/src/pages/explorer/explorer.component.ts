@@ -19,17 +19,18 @@ import {
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="vertical-flex-layout">
-      <ht-page-header></ht-page-header>
-      <div class="fill-container explorer-container">
+    <div class="explorer">
+      <ht-page-header class="explorer-header"></ht-page-header>
+      <div class="explorer-content">
         <ht-toggle-group
+          class="explorer-data-toggle"
           [items]="this.contextItems"
           [activeItem]="this.activeContextItem$ | async"
           (activeItemChange)="this.onContextUpdated($event.value)"
         ></ht-toggle-group>
 
         <ht-filter-bar
-          class="filter-bar"
+          class="explorer-filter-bar"
           [attributes]="this.attributes$ | async"
           [syncWithUrl]="true"
           (filtersChange)="this.onFiltersUpdated($event)"

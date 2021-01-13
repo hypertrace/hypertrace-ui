@@ -22,7 +22,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
         *ngIf="this.showIcon && this.entityIconType"
         size="${IconSize.Large}"
       ></ht-icon>
-      <div class="name" *ngIf="this.name">{{ this.name }}</div>
+      <div class="name" *ngIf="this.name" data-sensitive-pii>{{ this.name }}</div>
     </div>
   `
 })

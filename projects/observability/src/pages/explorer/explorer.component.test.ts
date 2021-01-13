@@ -141,7 +141,7 @@ describe('Explorer component', () => {
         limit: 500,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      undefined
+      expect.objectContaining({})
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -151,7 +151,7 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      undefined
+      expect.objectContaining({})
     );
   }));
 
@@ -189,7 +189,7 @@ describe('Explorer component', () => {
         limit: 500,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      undefined
+      expect.objectContaining({})
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -199,7 +199,7 @@ describe('Explorer component', () => {
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
         limit: 100
       }),
-      undefined
+      expect.objectContaining({})
     );
   }));
 
@@ -225,7 +225,7 @@ describe('Explorer component', () => {
         limit: 500,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      undefined
+      expect.objectContaining({})
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -235,7 +235,7 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      undefined
+      expect.objectContaining({})
     );
   }));
 
@@ -278,7 +278,7 @@ describe('Explorer component', () => {
         interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
       }),
-      undefined
+      expect.objectContaining({})
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -288,7 +288,7 @@ describe('Explorer component', () => {
         limit: 100,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
       }),
-      undefined
+      expect.objectContaining({})
     );
   }));
 

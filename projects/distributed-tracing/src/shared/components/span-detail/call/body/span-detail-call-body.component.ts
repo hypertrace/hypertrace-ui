@@ -18,7 +18,7 @@ import { ToggleViewMode } from '@hypertrace/components';
           </ht-toggle-button-group>
         </div>
 
-        <div class="body-viewer" [ngSwitch]="this.selectedTab">
+        <div class="body-viewer" [ngSwitch]="this.selectedTab" data-sensitive-pii>
           <section *ngSwitchCase="this.parsedLabel">
             <ht-json-viewer *ngIf="this.isParsable()" [json]="this.parsedBody"> </ht-json-viewer>
             <ht-message-display
