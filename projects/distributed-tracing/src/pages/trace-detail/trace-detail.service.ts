@@ -34,7 +34,7 @@ export class TraceDetailService implements OnDestroy {
       map(paramMap => ({
         traceId: paramMap.get(this.getTraceIdParamName())!,
         spanId: paramMap.get(this.getSpanIdParamName()) as string | undefined,
-        startTime: paramMap.get(this.getStartTimeParamName()) as string | undefined
+        startTime: paramMap.get(this.getStartTimeParamName()) ?? undefined
       })),
       takeUntil(this.destroyed$),
       shareReplay(1)
