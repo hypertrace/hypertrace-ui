@@ -31,6 +31,6 @@
   }
 
   .link {
-    @include link-hover();
+    @include body-small($gray-5);
   }
 }

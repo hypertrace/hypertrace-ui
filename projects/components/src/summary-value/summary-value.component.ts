@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { NavigationParams } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 
@@ -11,7 +12,15 @@ import { IconSize } from '../icon/icon-size';
       <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
       <div class="dot" *ngIf="!this.icon"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>
-      <div class="value" [ngClass]="this.summaryValueDisplayStyle">{{ this.value }}</div>
+      <ht-link
+        *ngIf="this.summaryValueDisplayStyle === '${SummaryValueDisplayStyle.Link}'; else textValue"
+        class="link"
+        [paramsOrUrl]="this.paramsOrUrl"
+        >{{ this.value }}</ht-link
+      >
+      <ng-template #textValue>
+        <div class="value">{{ this.value }}</div>
+      </ng-template>
     </div>
   `
 })
@@ -30,6 +39,9 @@ export class SummaryValueComponent implements OnChanges {
 
   @Input()
   public summaryValueDisplayStyle: SummaryValueDisplayStyle = SummaryValueDisplayStyle.Text;
+
+  @Input()
+  public paramsOrUrl?: NavigationParams | string;
 
   public tooltipText?: string;
 

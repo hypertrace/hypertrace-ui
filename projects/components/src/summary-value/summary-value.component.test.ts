@@ -1,10 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
+import { SummaryValueModule } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { TooltipDirective } from '../tooltip/tooltip.directive';
 import { SummaryValueComponent, SummaryValueDisplayStyle } from './summary-value.component';
-import { SummaryValueModule } from './summary-value.module';
 
 describe('Summary Value Component', () => {
   let spectator: SpectatorHost<SummaryValueComponent>;
@@ -12,8 +13,8 @@ describe('Summary Value Component', () => {
   const createHost = createHostFactory({
     declareComponent: false,
     component: SummaryValueComponent,
-    imports: [SummaryValueModule, HttpClientTestingModule, IconLibraryTestingModule],
-    providers: [mockProvider(NavigationService)]
+    imports: [SummaryValueModule, HttpClientTestingModule, IconLibraryTestingModule, RouterTestingModule],
+    providers: [mockProvider(NavigationService, { buildNavigationParams: jest.fn().mockReturnValue({ path: '#' }) })]
   });
 
   test('should not display anything if value is not present', () => {
@@ -48,8 +49,7 @@ describe('Summary Value Component', () => {
     expect(spectator.query('.icon')).not.toExist();
     expect(spectator.query('.label')).not.toExist();
     expect(spectator.query('.value')).toHaveText('98.23.456.23');
-    expect(spectator.query('.value')?.classList.contains('text')).toBe(true);
-    expect(spectator.query('.value')?.classList.contains('link')).toBe(false);
+    expect(spectator.query('.link')).not.toExist();
   });
 
   test('should display both label and value', () => {
@@ -130,20 +130,22 @@ describe('Summary Value Component', () => {
     expect(spectator.query(TooltipDirective)!.content).toBe('IP Address 98.23.456.23');
   });
 
-  test('should make value clickable when isClickable is true', () => {
+  test('should show value as a link when applicable', () => {
     spectator = createHost(
-      `<ht-summary-value [value]="value" [icon]="icon" [summaryValueDisplayStyle]="valueStyle">
+      `<ht-summary-value [value]="value" [icon]="icon" [summaryValueDisplayStyle]="valueStyle" [paramsOrUrl]="paramsOrUrl">
       </ht-summary-value>`,
       {
         hostProps: {
           value: '98.23.456.23',
           icon: IconType.IpAddress,
-          valueStyle: SummaryValueDisplayStyle.Link
+          valueStyle: SummaryValueDisplayStyle.Link,
+          paramsOrUrl: '#'
         }
       }
     );
 
-    expect(spectator.query('.value')?.classList.contains('link')).toBe(true);
-    expect(spectator.query('.value')?.classList.contains('text')).toBe(false);
+    expect(spectator.query('.link')).toExist();
+    expect(spectator.query('.value')).not.toExist();
+    expect(spectator.query('.link')).toContainText('98.23.456.23');
   });
 });

@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 import { IconModule } from '../icon/icon.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { SummaryValueComponent } from './summary-value.component';
+import { LinkModule } from '../link/link.module';
 
 @NgModule({
-  imports: [CommonModule, IconModule, TooltipModule],
+  imports: [CommonModule, IconModule, TooltipModule, LinkModule],
   declarations: [SummaryValueComponent],
   exports: [SummaryValueComponent]
 })
