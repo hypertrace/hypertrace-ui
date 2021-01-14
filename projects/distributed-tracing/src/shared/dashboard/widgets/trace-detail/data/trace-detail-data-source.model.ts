@@ -9,7 +9,6 @@ import {
   TRACE_GQL_REQUEST
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
-import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
   type: 'trace-detail-data-source'
@@ -44,7 +43,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       traceType: this.trace[traceTypeKey],
       traceId: this.trace[traceIdKey],
       spanLimit: 0,
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime ?? this.trace.startTime),
       traceProperties: this.getTraceAttributes().map(attribute =>
         this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
       )
@@ -70,14 +69,6 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       tags: trace.tags as Dictionary<unknown>,
       requestUrl: trace.requestUrl as string
     };
-  }
-
-  protected getTimeRangeOrThrow(): GraphQlTimeRange {
-    const startTimeAsDate = this.dateCoercer.coerce(this.startTime ?? this.trace.startTime);
-
-    return startTimeAsDate !== undefined
-      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
-      : super.getTimeRangeOrThrow();
   }
 }
 

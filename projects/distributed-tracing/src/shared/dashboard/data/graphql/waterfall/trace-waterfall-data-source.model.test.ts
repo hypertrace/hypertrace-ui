@@ -3,7 +3,6 @@ import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { Trace, traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
@@ -64,8 +63,7 @@ describe('Trace Waterfall data source model', () => {
           requestType: TRACE_GQL_REQUEST,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
-          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: undefined,
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({
@@ -122,8 +120,7 @@ describe('Trace Waterfall data source model', () => {
           requestType: TRACE_GQL_REQUEST,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: new GraphQlTimeRange(1576364117791, 1576364117793),
-          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: new Date(1576364117792),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

@@ -2,7 +2,6 @@ import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   AttributeMetadata,
   GraphQlDataSourceModel,
-  GraphQlTimeRange,
   MetadataService,
   Span,
   spanIdKey,
@@ -34,7 +33,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
 
   @ModelProperty({
     key: 'start-time',
-    required: true, // Todo
+    required: true,
     type: UNKNOWN_PROPERTY.type
   })
   public startTime?: unknown;
@@ -71,12 +70,11 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       traceType: ObservabilityTraceType.Api,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTraceTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.getSpanAttributes().map(attribute =>
         this.specificationBuilder.attributeSpecificationForKey(attribute)
-      ),
-      spansTimeRange: this.getTimeRangeOrThrow()
+      )
     });
   }
 
@@ -110,13 +108,5 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>
     };
-  }
-
-  protected getTraceTimeRangeOrThrow(): GraphQlTimeRange {
-    const startTimeAsDate = this.dateCoercer.coerce(this.startTime);
-
-    return startTimeAsDate !== undefined
-      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
-      : this.getTimeRangeOrThrow();
   }
 }

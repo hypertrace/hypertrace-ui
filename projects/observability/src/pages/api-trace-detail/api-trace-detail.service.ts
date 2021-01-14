@@ -1,16 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  DateCoercer,
-  DateFormatMode,
-  DateFormatter,
-  ReplayObservable,
-  TimeRange,
-  TimeRangeService
-} from '@hypertrace/common';
+import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
 import {
   AttributeMetadata,
-  GraphQlTimeRange,
   MetadataService,
   SpecificationBuilder,
   Trace,
@@ -21,7 +13,7 @@ import {
   TRACE_GQL_REQUEST
 } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
@@ -39,7 +31,6 @@ export class ApiTraceDetailService implements OnDestroy {
 
   public constructor(
     route: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService,
     private readonly metadataService: MetadataService,
     private readonly graphQlQueryService: GraphQlRequestService
   ) {
@@ -63,8 +54,8 @@ export class ApiTraceDetailService implements OnDestroy {
   }
 
   public fetchTraceDetails(): Observable<ApiTraceDetails> {
-    return combineLatest([this.timeRangeService.getTimeRangeAndChanges(), this.routeIds$]).pipe(
-      switchMap(([timeRange, routeIds]) => this.getGqlResponse(routeIds.traceId, timeRange, routeIds.startTime)),
+    return this.routeIds$.pipe(
+      switchMap(routeIds => this.getGqlResponse(routeIds.traceId, routeIds.startTime)),
       switchMap(trace =>
         this.metadataService
           .getAttribute(trace[traceTypeKey], 'duration')
@@ -86,12 +77,12 @@ export class ApiTraceDetailService implements OnDestroy {
     };
   }
 
-  protected getGqlResponse(traceId: string, timeRange: TimeRange, startTime?: string): Observable<Trace> {
+  protected getGqlResponse(traceId: string, startTime?: string): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceType: ObservabilityTraceType.Api,
       traceId: traceId,
-      timeRange: this.buildGraphqlTimeRange(timeRange, startTime),
+      timestamp: this.dateCoercer.coerce(startTime),
       traceProperties: this.getAttributes().map(key => this.specificationBuilder.attributeSpecificationForKey(key)),
       spanProperties: [],
       spanLimit: 1
@@ -108,14 +99,6 @@ export class ApiTraceDetailService implements OnDestroy {
 
   protected buildTitleString(trace: Trace): string {
     return `${trace.serviceName as string} ${trace.protocol as string} ${trace.apiName as string}`;
-  }
-
-  protected buildGraphqlTimeRange(timeRange: TimeRange, startTime?: string | number): GraphQlTimeRange {
-    const startTimeAsDate = this.dateCoercer.coerce(startTime);
-
-    return startTimeAsDate !== undefined
-      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
-      : new GraphQlTimeRange(timeRange.startTime, timeRange.endTime);
   }
 }
 

@@ -1,7 +1,6 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import {
   GraphQlQueryEventService,
-  GraphQlTimeRange,
   MetadataService,
   spanIdKey,
   SpanType,
@@ -70,8 +69,7 @@ describe('Api Trace Waterfall data source model', () => {
           traceType: ObservabilityTraceType.Api,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
-          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: undefined,
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({
@@ -107,7 +105,7 @@ describe('Api Trace Waterfall data source model', () => {
     });
   });
 
-  test('should build expected query', () => {
+  test('should build expected query with start time', () => {
     const spectator = modelFactory(ApiTraceWaterfallDataSourceModel, {
       properties: {
         traceId: 'test-id',
@@ -129,8 +127,7 @@ describe('Api Trace Waterfall data source model', () => {
           traceType: ObservabilityTraceType.Api,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: new GraphQlTimeRange(1576364117791, 1576364117793),
-          spansTimeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: new Date(1576364117792),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

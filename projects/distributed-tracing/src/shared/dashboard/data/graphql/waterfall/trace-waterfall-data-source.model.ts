@@ -15,7 +15,6 @@ import {
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
-import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
   type: 'trace-waterfall-data-source'
@@ -71,10 +70,9 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       requestType: TRACE_GQL_REQUEST,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTraceTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
-      spanProperties: this.spanSpecifications,
-      spansTimeRange: this.getTimeRangeOrThrow()
+      spanProperties: this.spanSpecifications
     });
   }
 
@@ -104,13 +102,5 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>
     }));
-  }
-
-  protected getTraceTimeRangeOrThrow(): GraphQlTimeRange {
-    const startTimeAsDate = this.dateCoercer.coerce(this.startTime);
-
-    return startTimeAsDate !== undefined
-      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
-      : this.getTimeRangeOrThrow();
   }
 }
