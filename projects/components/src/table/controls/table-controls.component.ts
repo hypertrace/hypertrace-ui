@@ -27,13 +27,13 @@ import { TableMode } from '../table-api';
 
         <!-- Selects -->
         <ht-select
-          *ngFor="let selectFilter of this.selectMap | keyvalue"
-          [placeholder]="selectFilter.value.placeholder"
+          *ngFor="let selectFilterItem of this.selectFilterItems"
+          [placeholder]="selectFilterItem.placeholder"
           class="control select"
-          (selectedChange)="this.onSelectChange(selectFilter.key, $event)"
+          (selectedChange)="this.onSelectChange($event)"
         >
           <ht-select-option
-            *ngFor="let option of selectFilter.value.options"
+            *ngFor="let option of selectFilterItem.options"
             [label]="option.label"
             [value]="option.value"
           ></ht-select-option>
@@ -77,7 +77,7 @@ export class TableControlsComponent implements OnChanges {
   public searchPlaceholder?: string = 'Search...';
 
   @Input()
-  public selectMap?: Map<string, SelectFilter>;
+  public selectFilterItems?: SelectFilter[] = [];
 
   @Input()
   public filterItems?: ToggleItem[] = [];
@@ -159,8 +159,8 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
-  public onSelectChange(key: string, value: unknown): void {
-    this.selectChange.emit({ key: key, value: value });
+  public onSelectChange(keyValue: KeyValue<string, unknown>): void {
+    this.selectChange.emit(keyValue);
   }
 
   public onFilterChange(item: ToggleItem): void {
@@ -178,5 +178,5 @@ export class TableControlsComponent implements OnChanges {
 
 export interface SelectFilter {
   placeholder?: string;
-  options: SelectOption<unknown>[];
+  options: SelectOption<KeyValue<string, unknown>>[];
 }

@@ -26,10 +26,10 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-select-filter',
             attribute: 'serviceName',
-            placeholder: 'All Services',
+            unsetOption: 'All Services',
             data: {
               type: 'entities-attribute-data-source',
-              entity: 'API',
+              entity: ObservabilityEntityType.Api,
               attribute: {
                 type: 'attribute-specification',
                 attribute: 'serviceName'

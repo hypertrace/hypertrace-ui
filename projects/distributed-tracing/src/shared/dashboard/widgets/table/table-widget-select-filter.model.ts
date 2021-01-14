@@ -18,10 +18,10 @@ export class TableWidgetSelectFilterModel {
   public attribute!: string;
 
   @ModelProperty({
-    key: 'placeholder',
+    key: 'unsetOption',
     type: STRING_PROPERTY.type
   })
-  public placeholder?: string;
+  public unsetOption?: string;
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;

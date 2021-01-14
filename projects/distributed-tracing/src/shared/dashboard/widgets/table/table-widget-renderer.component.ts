@@ -1,6 +1,12 @@
 import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { forkJoinSafeEmpty, isEqualIgnoreFunctions, isNonEmptyString, PreferenceService } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  isEqualIgnoreFunctions,
+  isNonEmptyString,
+  PreferenceService,
+  PrimitiveValue
+} from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
@@ -47,7 +53,7 @@ import { TableWidgetModel } from './table-widget.model';
         <ht-table-controls
           class="table-controls"
           [searchEnabled]="!!this.api.model.searchAttribute"
-          [selectMap]="this.selectMap"
+          [selectFilterItems]="this.selectFilterItems$ | async"
           [filterItems]="this.filterItems"
           [modeItems]="this.modeItems"
           [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
@@ -91,7 +97,8 @@ export class TableWidgetRendererComponent
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public modeItems: ToggleItem<TableMode>[] = [];
   public activeMode!: TableMode;
-  public selectMap?: Map<string, SelectFilter>;
+
+  public selectFilterItems$!: Observable<SelectFilter[]>;
 
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
@@ -148,7 +155,51 @@ export class TableWidgetRendererComponent
       value: modeOption
     }));
 
-    this.fetchSelectFilterValues();
+    this.selectFilterItems$ = forkJoinSafeEmpty(
+      this.model.getSelectFilterOptions().map(selectFilterModel =>
+        // Fetch the values for the selectFilter dropdown
+        selectFilterModel.getData().pipe(
+          first(),
+          map((values: PrimitiveValue[]) => {
+            /*
+             * Map the values to SelectOptions, but also include the attribute since there may be multiple select
+             * dropdowns and we need to be able to associate the selected values to the attribute so we can filter
+             * on them.
+             *
+             * The KeyValue typing requires the union with undefined only for the unsetOption below.
+             */
+            const options: SelectOption<KeyValue<string, PrimitiveValue | undefined>>[] = values.map(value => ({
+              label: String(value),
+              value: {
+                // The value is the only thing Outputted from select component, so we need both the attribute and value
+                key: selectFilterModel.attribute,
+                value: value
+              }
+            }));
+
+            /*
+             * If there is an unsetOption, we want to add that as the first option as a way to set this select
+             * filter to undefined and remove it from our query.
+             */
+            if (selectFilterModel.unsetOption !== undefined) {
+              options.unshift({
+                label: selectFilterModel.unsetOption,
+                value: {
+                  key: selectFilterModel.attribute,
+                  value: undefined
+                }
+              });
+            }
+
+            return {
+              placeholder: selectFilterModel.unsetOption,
+              options: options
+            };
+          })
+        )
+      )
+    );
+
     this.maybeEmitInitialCheckboxFilterChange();
   }
 
@@ -164,41 +215,6 @@ export class TableWidgetRendererComponent
 
   private getScope(): Observable<string | undefined> {
     return this.data$!.pipe(map(data => data?.getScope()));
-  }
-
-  private fetchSelectFilterValues(): void {
-    this.model.getSelectFilterOptions().forEach(option => {
-      forkJoinSafeEmpty([
-        option.getData().pipe(
-          first(),
-          map((resultOptions: unknown[]) => {
-            const options: SelectOption<unknown>[] = resultOptions.map(value => ({
-              label: String(value),
-              value: value
-            }));
-
-            if (option.placeholder !== undefined) {
-              options.unshift({
-                label: option.placeholder,
-                value: undefined
-              });
-            }
-
-            return {
-              attribute: option.attribute,
-              selectFilter: {
-                placeholder: option.placeholder,
-                options: options
-              }
-            };
-          })
-        )
-      ]).subscribe((selects: AttributeSelectFilter[]) => {
-        const m: Map<string, SelectFilter> = new Map();
-        selects.forEach(select => m.set(select.attribute, select.selectFilter));
-        this.selectMap = m;
-      });
-    });
   }
 
   private getColumnConfigs(persistedColumns: TableColumnConfig[] = []): Observable<TableColumnConfig[]> {
@@ -353,9 +369,4 @@ export class TableWidgetRendererComponent
      */
     return pick(column, ['id', 'visible']);
   }
-}
-
-interface AttributeSelectFilter {
-  attribute: string;
-  selectFilter: SelectFilter;
 }
