@@ -91,7 +91,7 @@ export class CartesianAxis<TData = {}> {
   private getMaxTickTextLength(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): number {
     const ticksSelection = axisSvgSelection.selectAll('text');
 
-    const allElementLength: Array<number> = [];
+    const allElementLength: number[] = [];
 
     ticksSelection.each((_datum, index, nodes) =>
       allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
@@ -113,25 +113,26 @@ export class CartesianAxis<TData = {}> {
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
     maxTextTickTextLength: number,
     isLabelRotated: boolean
-  ) {
+  ): void {
     axisSvgSelection.selectAll('.tick').each((_d, i, n) => {
-      const tick = select(n[i]);
+      const currentTick = select(n[i]);
 
-      const getTickPosistion = (tick: Selection<BaseType, unknown, null, undefined>): number => {
-        const translate = tick
+      const getTickTranslateXValue = (tick: Selection<BaseType, unknown, null, undefined>): number => {
+        const translateXValue = tick
           .attr('transform')
           .replace(/.*\(|\).*/g, '')
           .split(',')[0];
-        return parseInt(translate);
+
+        return parseInt(translateXValue);
       };
 
-      const currentTickPosition = getTickPosistion(tick);
+      const currentTickPosition = getTickTranslateXValue(currentTick);
 
       if (
         currentTickPosition < maxTextTickTextLength / 2 ||
         this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0
       ) {
-        tick.remove();
+        currentTick.remove();
       }
     });
   }
