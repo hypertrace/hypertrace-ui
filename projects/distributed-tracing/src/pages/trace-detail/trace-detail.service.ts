@@ -126,7 +126,7 @@ interface TraceDetailRouteIdParams {
 export interface TraceDetails {
   id: string;
   entrySpanId?: string;
-  startTime: unknown;
+  startTime?: string;
   type: TraceType;
   timeString: string;
   titleString: string;
