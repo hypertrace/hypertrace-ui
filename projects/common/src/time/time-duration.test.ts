@@ -19,7 +19,7 @@ describe('Time duration', () => {
         false,
         UnitStringType.Long
       )
-    ).toBe('4 hours 3minutes');
+    ).toBe('4 hours 3 minutes');
     expect(
       new TimeDuration(4 * 60 * 60 * 1000 + 5 * 1000 + 689, TimeUnit.Millisecond).toMultiUnitString(TimeUnit.Second)
     ).toBe('4h5s');
