@@ -48,7 +48,6 @@ export class CartesianAxis<TData = {}> {
       .attr('transform', this.getAxisTransform())
       .node()!;
 
-    this.maybeTruncateAxisTicks(axisSvgSelection);
     this.addGridLinesIfNeeded();
 
     return this;
@@ -79,6 +78,26 @@ export class CartesianAxis<TData = {}> {
     if (!this.configuration.tickLabels) {
       selection.selectAll('.tick text').remove();
     }
+
+    if (this.configuration.location === AxisLocation.Bottom) {
+      const maxTextTickTextLength = this.getMaxTickTextLength(selection);
+      const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
+      this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+    } else {
+      this.maybeTruncateAxisTicks(selection);
+    }
+  }
+
+  private getMaxTickTextLength(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): number {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const allElementLength: Array<number> = [];
+
+    ticksSelection.each((_datum, index, nodes) =>
+      allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
+    );
+
+    return Math.max(...allElementLength);
   }
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
@@ -88,6 +107,55 @@ export class CartesianAxis<TData = {}> {
     ticksSelection.each((_datum, index, nodes) =>
       this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
     );
+  }
+
+  private removeOverflowedTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextTickTextLength: number,
+    isLabelRotated: boolean
+  ) {
+    axisSvgSelection.selectAll('.tick').each((_d, i, n) => {
+      const tick = select(n[i]);
+
+      const getTickPosistion = (tick: Selection<BaseType, unknown, null, undefined>): number => {
+        const translate = tick
+          .attr('transform')
+          .replace(/.*\(|\).*/g, '')
+          .split(',')[0];
+        return parseInt(translate);
+      };
+
+      const currentTickPosition = getTickPosistion(tick);
+
+      if (
+        currentTickPosition < maxTextTickTextLength / 2 ||
+        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0
+      ) {
+        tick.remove();
+      }
+    });
+  }
+
+  private rotateAxisTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextLenght: number
+  ): boolean {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+
+    const isLabelRotate = maxTextLenght > tickBandwidth;
+
+    if (isLabelRotate) {
+      axisSvgSelection
+        .selectAll('.tick text')
+        .style('text-anchor', 'end')
+        .style('font-size', '100%')
+        .attr('y', '3')
+        .attr('transform', `rotate(-35)`);
+    }
+
+    return isLabelRotate;
   }
 
   private getAxisTransform(): string {
