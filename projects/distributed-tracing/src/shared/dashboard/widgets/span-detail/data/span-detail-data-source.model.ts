@@ -9,7 +9,6 @@ import {
   SPAN_GQL_REQUEST
 } from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
-import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
   type: 'span-detail-data-source'
@@ -40,7 +39,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
     return this.query<SpanGraphQlQueryHandlerService>({
       requestType: SPAN_GQL_REQUEST,
       id: this.span[spanIdKey],
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime ?? this.span.startTime),
       properties: this.getSpanAttributes().map(attribute =>
         this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
       )
@@ -62,14 +61,6 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
       statusCode: span.statusCode as string,
       tags: span.spanTags as Dictionary<unknown>
     };
-  }
-
-  protected getTimeRangeOrThrow(): GraphQlTimeRange {
-    const startTimeAsDate = this.dateCoercer.coerce(this.startTime ?? this.span.startTime);
-
-    return startTimeAsDate !== undefined
-      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
-      : super.getTimeRangeOrThrow();
   }
 }
 

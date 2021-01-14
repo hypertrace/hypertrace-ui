@@ -1,4 +1,5 @@
-import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { DateCoercer } from '@hypertrace/common';
+import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Span } from '../../../../../shared/graphql/model/schema/span';
@@ -20,17 +21,26 @@ export class SpanDataSourceModel extends GraphQlDataSourceModel<Span> {
   public spanId!: string;
 
   @ModelProperty({
+    key: 'start-time',
+    required: false,
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime: unknown;
+
+  @ModelProperty({
     key: 'attributes',
     type: ARRAY_PROPERTY.type,
     required: false
   })
   public specifications: Specification[] = [];
 
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
+
   public getData(): Observable<Span> {
     return this.query<SpanGraphQlQueryHandlerService>({
       requestType: SPAN_GQL_REQUEST,
       id: this.spanId,
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime),
       properties: this.specifications
     }).pipe(mergeMap(span => this.mapResponseObject(span)));
   }
