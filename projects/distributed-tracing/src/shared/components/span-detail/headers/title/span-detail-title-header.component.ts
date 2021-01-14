@@ -12,13 +12,13 @@ import { SpanTitle } from '../../span-title';
       <!-- Left Side Title -->
       <div class="title" [htTooltip]="this.tooltip">
         <div class="service-name">
-          <span class="text">{{ this.serviceName }}</span>
+          <span class="text" data-sensitive-pii>{{ this.serviceName }}</span>
         </div>
         <div class="protocol-name">
-          <span class="text">{{ this.protocolName }}</span>
+          <span class="text" data-sensitive-pii>{{ this.protocolName }}</span>
         </div>
         <div class="api-name">
-          <span class="text">{{ this.apiName }}</span>
+          <span class="text" data-sensitive-pii>{{ this.apiName }}</span>
         </div>
       </div>
       <!-- Right Side Button Controls -->
