@@ -53,10 +53,10 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '20%',
             value: {
-              type: 'secondary-entity-specification',
-              idAttribute: 'serviceId',
-              nameAttribute: 'serviceName',
-              entityType: ObservabilityEntityType.Service
+              type: 'entity-specification',
+              'id-attribute': 'serviceId',
+              'name-attribute': 'serviceName',
+              'entity-type': ObservabilityEntityType.Service
             }
           },
           {
