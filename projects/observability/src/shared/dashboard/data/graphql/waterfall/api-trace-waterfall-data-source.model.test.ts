@@ -1,7 +1,6 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import {
   GraphQlQueryEventService,
-  GraphQlTimeRange,
   MetadataService,
   spanIdKey,
   SpanType,
@@ -70,7 +69,65 @@ describe('Api Trace Waterfall data source model', () => {
           traceType: ObservabilityTraceType.Api,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: undefined,
+          traceProperties: [],
+          spanProperties: [
+            expect.objectContaining({
+              name: 'displayEntityName'
+            }),
+            expect.objectContaining({
+              name: 'displaySpanName'
+            }),
+            expect.objectContaining({
+              name: 'duration'
+            }),
+            expect.objectContaining({
+              name: 'endTime'
+            }),
+            expect.objectContaining({
+              name: 'parentSpanId'
+            }),
+            expect.objectContaining({
+              name: 'protocolName'
+            }),
+            expect.objectContaining({
+              name: 'spanTags'
+            }),
+            expect.objectContaining({
+              name: 'startTime'
+            }),
+            expect.objectContaining({
+              name: 'type'
+            })
+          ]
+        }
+      });
+    });
+  });
+
+  test('should build expected query with start time', () => {
+    const spectator = modelFactory(ApiTraceWaterfallDataSourceModel, {
+      properties: {
+        traceId: 'test-id',
+        startTime: 1576364117792
+      },
+      api: {
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
+      }
+    });
+
+    const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
+
+    spectator.model.getData();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(receivedQueries).toBe('x', {
+        x: {
+          requestType: TRACE_GQL_REQUEST,
+          traceType: ObservabilityTraceType.Api,
+          traceId: 'test-id',
+          spanLimit: 1000,
+          timestamp: new Date(1576364117792),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

@@ -1,5 +1,5 @@
-import { Dictionary } from '@hypertrace/common';
-import { Model, ModelProperty, PLAIN_OBJECT_PROPERTY } from '@hypertrace/hyperdash';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
+import { Model, ModelProperty, PLAIN_OBJECT_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Span, spanIdKey } from '../../../../graphql/model/schema/span';
@@ -9,6 +9,7 @@ import {
   SPAN_GQL_REQUEST
 } from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
+import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
   type: 'span-detail-data-source'
@@ -21,7 +22,15 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
   })
   public span!: Span;
 
+  @ModelProperty({
+    key: 'start-time',
+    required: false,
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
   private readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   protected getSpanAttributes(): string[] {
     return ['statusCode', 'spanTags', 'traceId'];
@@ -53,6 +62,14 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
       statusCode: span.statusCode as string,
       tags: span.spanTags as Dictionary<unknown>
     };
+  }
+
+  protected getTimeRangeOrThrow(): GraphQlTimeRange {
+    const startTimeAsDate = this.dateCoercer.coerce(this.startTime ?? this.span.startTime);
+
+    return startTimeAsDate !== undefined
+      ? new GraphQlTimeRange(startTimeAsDate.getTime() - 1, startTimeAsDate.getTime() + 1)
+      : super.getTimeRangeOrThrow();
   }
 }
 

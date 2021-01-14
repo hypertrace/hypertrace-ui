@@ -75,7 +75,27 @@ describe('API Trace detail data source model', () => {
         requestType: TRACE_GQL_REQUEST,
         traceId: 'test',
         spanLimit: 0,
-        timeRange: expect.objectContaining({ from: testTimeRange.startTime, to: testTimeRange.endTime }),
+        timestamp: undefined,
+        traceProperties: expect.arrayContaining([
+          expect.objectContaining({ name: 'tags' }),
+          expect.objectContaining({ name: 'statusCode' }),
+          expect.not.objectContaining({ name: 'traceId' })
+        ])
+      })
+    );
+  });
+
+  test('builds expected request with start time', () => {
+    model.startTime = 1576364117792;
+    const data$ = model.getData();
+    data$.subscribe();
+
+    expect(emittedQueries).toEqual(
+      expect.objectContaining({
+        requestType: TRACE_GQL_REQUEST,
+        traceId: 'test',
+        spanLimit: 0,
+        timestamp: new Date(1576364117792),
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'statusCode' }),

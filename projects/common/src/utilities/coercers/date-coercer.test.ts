@@ -12,6 +12,10 @@ describe('Date coercer', () => {
     expect(basicCoercer.coerce(dateInMillis)).toEqual(dataAsDate);
   });
 
+  test('coerces number in string', () => {
+    expect(basicCoercer.coerce(`${dateInMillis}`)).toEqual(dataAsDate);
+  });
+
   test('coerces string', () => {
     expect(basicCoercer.coerce(dateAsIsoString)).toEqual(dataAsDate);
     expect(basicCoercer.coerce('Thu Apr 11 2019 09:33:47 GMT-0700 (Pacific Daylight Time)')).toEqual(

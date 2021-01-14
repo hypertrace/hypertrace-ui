@@ -23,7 +23,7 @@ export class DateCoercer extends Coercer<Date, DateCoercerOptions> {
       return undefined;
     }
 
-    const valueAsDate = new Date(value);
+    const valueAsDate = typeof value === 'string' && !isNaN(Number(value)) ? new Date(+value) : new Date(value);
 
     if (isNaN(valueAsDate.getTime()) || !this.isDateInAllowableRange(valueAsDate)) {
       return undefined;
