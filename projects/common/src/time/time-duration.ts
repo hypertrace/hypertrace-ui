@@ -16,20 +16,35 @@ export class TimeDuration {
     return this.toMillis() / this.unitInMillis(unit);
   }
 
-  public toMultiUnitString(smallestUnit: ConvertibleTimeUnit = TimeUnit.Second, displayZero: boolean = true): string {
+  public toMultiUnitString(
+    smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
+    displayZero: boolean = true,
+    unitStringType: UnitStringType = UnitStringType.Short
+  ): string {
     const mostSignificantPortion = this.getMostSignificantUnitOnly();
     const remainingMillis = this.millis - mostSignificantPortion.toMillis();
     if (mostSignificantPortion.getAmountForUnit(smallestUnit) < 1) {
-      return displayZero ? new TimeDuration(0, smallestUnit).toString() : '';
+      return displayZero
+        ? unitStringType === UnitStringType.Long
+          ? new TimeDuration(0, smallestUnit).toLongString()
+          : new TimeDuration(0, smallestUnit).toString()
+        : '';
     }
     if (mostSignificantPortion.unit === smallestUnit || remainingMillis === 0) {
-      return mostSignificantPortion.toString();
+      return unitStringType === UnitStringType.Long
+        ? mostSignificantPortion.toLongString()
+        : mostSignificantPortion.toString();
     }
 
-    return `${mostSignificantPortion.toString()}${new TimeDuration(
-      remainingMillis,
-      TimeUnit.Millisecond
-    ).toMultiUnitString(smallestUnit, false)}`;
+    return unitStringType === UnitStringType.Long
+      ? `${mostSignificantPortion.toLongString()} ${new TimeDuration(
+          remainingMillis,
+          TimeUnit.Millisecond
+        ).toMultiUnitString(smallestUnit, false, unitStringType)}`
+      : `${mostSignificantPortion.toString()}${new TimeDuration(
+          remainingMillis,
+          TimeUnit.Millisecond
+        ).toMultiUnitString(smallestUnit, false)}`;
   }
 
   public getMostSignificantUnitOnly(): TimeDuration {
@@ -141,3 +156,8 @@ type ConvertibleTimeUnit =
   | TimeUnit.Minute
   | TimeUnit.Second
   | TimeUnit.Millisecond;
+
+export enum UnitStringType {
+  Long = 'long',
+  Short = 'short'
+}
