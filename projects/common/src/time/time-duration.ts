@@ -152,7 +152,7 @@ type ConvertibleTimeUnit =
   | TimeUnit.Second
   | TimeUnit.Millisecond;
 
-export enum UnitStringType {
+export const enum UnitStringType {
   Long = 'long',
   Short = 'short'
 }
