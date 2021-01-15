@@ -40,7 +40,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
     return this.query<SpanGraphQlQueryHandlerService>({
       requestType: SPAN_GQL_REQUEST,
       id: this.span[spanIdKey],
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime ?? this.span.startTime),
       properties: this.getSpanAttributes().map(attribute =>
         this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
       )
