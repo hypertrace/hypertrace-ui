@@ -1,6 +1,5 @@
 import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import { SPAN_GQL_REQUEST } from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { SpanDataSourceModel } from './span-data-source.model';
@@ -28,7 +27,21 @@ describe('Span data source model', () => {
       isEqualIgnoreFunctions(lastEmittedQuery, {
         requestType: SPAN_GQL_REQUEST,
         id: 'test-id',
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+        timestamp: undefined,
+        properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')]
+      })
+    ).toBe(true);
+  });
+
+  test('builds expected request with start time', () => {
+    model.spanId = 'test-id';
+    model.startTime = 1568907645141;
+    model.getData();
+    expect(
+      isEqualIgnoreFunctions(lastEmittedQuery, {
+        requestType: SPAN_GQL_REQUEST,
+        id: 'test-id',
+        timestamp: new Date(1568907645141),
         properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')]
       })
     ).toBe(true);

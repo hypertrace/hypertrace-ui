@@ -1,5 +1,5 @@
-import { Dictionary } from '@hypertrace/common';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -34,10 +34,18 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
   })
   public entrySpanId?: string;
 
+  @ModelProperty({
+    key: 'start-time',
+    required: false,
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
   protected readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   protected readonly spanSpecifications: Specification[] = [
     this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
@@ -62,7 +70,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       requestType: TRACE_GQL_REQUEST,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.spanSpecifications
     });

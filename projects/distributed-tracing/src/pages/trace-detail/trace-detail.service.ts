@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateFormatMode, DateFormatter, ReplayObservable, TimeRange, TimeRangeService } from '@hypertrace/common';
+import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
 
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { GraphQlTimeRange } from '../../shared/graphql/model/schema/timerange/graphql-time-range';
 import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
@@ -18,22 +17,24 @@ import { MetadataService } from '../../shared/services/metadata/metadata.service
 export class TraceDetailService implements OnDestroy {
   private static readonly TRACE_ID_PARAM_NAME: string = 'id';
   private static readonly SPAN_ID_PARAM_NAME: string = 'spanId';
+  private static readonly START_TIME_PARAM_NAME: string = 'startTime';
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   private readonly routeIds$: ReplayObservable<TraceDetailRouteIdParams>;
   private readonly destroyed$: Subject<void> = new Subject();
 
   public constructor(
     route: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService,
     private readonly metadataService: MetadataService,
     private readonly graphQlQueryService: GraphQlRequestService
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
         traceId: paramMap.get(this.getTraceIdParamName())!,
-        spanId: paramMap.get(this.getSpanIdParamName()) as string | undefined
+        spanId: paramMap.get(this.getSpanIdParamName()) as string | undefined,
+        startTime: paramMap.get(this.getStartTimeParamName()) ?? undefined
       })),
       takeUntil(this.destroyed$),
       shareReplay(1)
@@ -53,10 +54,14 @@ export class TraceDetailService implements OnDestroy {
     return TraceDetailService.SPAN_ID_PARAM_NAME;
   }
 
+  protected getStartTimeParamName(): string {
+    return TraceDetailService.START_TIME_PARAM_NAME;
+  }
+
   public fetchTraceDetails(): Observable<TraceDetails> {
-    return combineLatest([this.timeRangeService.getTimeRangeAndChanges(), this.routeIds$]).pipe(
-      switchMap(([timeRange, routeIds]) =>
-        this.fetchTrace(timeRange, routeIds.traceId, routeIds.spanId).pipe(
+    return this.routeIds$.pipe(
+      switchMap(routeIds =>
+        this.fetchTrace(routeIds.traceId, routeIds.spanId, routeIds.startTime).pipe(
           map(trace => [trace, routeIds] as [Trace, TraceDetailRouteIdParams])
         )
       ),
@@ -65,6 +70,7 @@ export class TraceDetailService implements OnDestroy {
           map(durationAttribute => ({
             id: trace[traceIdKey],
             entrySpanId: routeIds.spanId,
+            startTime: routeIds.startTime,
             type: trace[traceTypeKey],
             timeString: this.buildTimeString(trace, durationAttribute.units),
             titleString: this.buildTitleString(trace)
@@ -76,11 +82,11 @@ export class TraceDetailService implements OnDestroy {
     );
   }
 
-  private fetchTrace(timeRange: TimeRange, traceId: string, spanId?: string): Observable<Trace> {
+  private fetchTrace(traceId: string, spanId?: string, startTime?: string | number): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
       traceId: traceId,
-      timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime),
+      timestamp: this.dateCoercer.coerce(startTime),
       traceProperties: [
         this.specificationBuilder.attributeSpecificationForKey('startTime'),
         this.specificationBuilder.attributeSpecificationForKey('duration')
@@ -114,10 +120,13 @@ export class TraceDetailService implements OnDestroy {
 interface TraceDetailRouteIdParams {
   traceId: string;
   spanId?: string;
+  startTime?: string;
 }
+
 export interface TraceDetails {
   id: string;
   entrySpanId?: string;
+  startTime?: string;
   type: TraceType;
   timeString: string;
   titleString: string;
