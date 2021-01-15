@@ -1,6 +1,6 @@
-import { FixedTimeRange } from '@hypertrace/common';
+import { FixedTimeRange, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import { createServiceFactory } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { GraphQlFilterType } from '../../../model/schema/filter/graphql-filter';
 import { spanIdKey } from '../../../model/schema/span';
 import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
@@ -14,17 +14,24 @@ import {
 
 describe('TraceGraphQlQueryHandlerService', () => {
   const createService = createServiceFactory({
-    service: TraceGraphQlQueryHandlerService
+    service: TraceGraphQlQueryHandlerService,
+    providers: [
+      mockProvider(TimeRangeService, {
+        getCurrentTimeRange: jest
+          .fn()
+          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)))
+      })
+    ]
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
     new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
   );
   const specBuilder = new SpecificationBuilder();
-  const buildRequest = (): GraphQlTraceRequest => ({
+  const buildRequest = (timestamp?: Date): GraphQlTraceRequest => ({
     requestType: TRACE_GQL_REQUEST,
     traceId: 'test-id',
-    timeRange: testTimeRange,
+    timestamp: timestamp,
     traceProperties: [specBuilder.attributeSpecificationForKey('name')],
     spanLimit: 10,
     spanProperties: [specBuilder.attributeSpecificationForKey('name')]
@@ -89,6 +96,83 @@ describe('TraceGraphQlQueryHandlerService', () => {
           value: {
             startTime: new Date(testTimeRange.from),
             endTime: new Date(testTimeRange.to)
+          }
+        },
+        {
+          name: 'filterBy',
+          value: [
+            {
+              operator: new GraphQlEnumArgument('EQUALS'),
+              value: 'test-id',
+              type: new GraphQlEnumArgument(GraphQlFilterType.Id),
+              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+            }
+          ]
+        }
+      ],
+      children: [
+        {
+          path: 'results',
+          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+        }
+      ]
+    });
+  });
+
+  test('produces expected graphql with timestamp', () => {
+    const spectator = createService();
+    const traceTimestamp = new Date(new TimeDuration(30, TimeUnit.Minute).toMillis());
+    const requestMap = spectator.service.convertRequest(buildRequest(traceTimestamp));
+    expect(requestMap.get('traces')).toEqual({
+      path: 'traces',
+      arguments: [
+        {
+          name: 'type',
+          value: new GraphQlEnumArgument(TRACE_SCOPE)
+        },
+        {
+          name: 'limit',
+          value: 1
+        },
+        {
+          name: 'between',
+          value: {
+            startTime: new Date(0),
+            endTime: new Date(traceTimestamp.getTime() * 2)
+          }
+        },
+        {
+          name: 'filterBy',
+          value: [
+            {
+              operator: new GraphQlEnumArgument('EQUALS'),
+              value: 'test-id',
+              type: new GraphQlEnumArgument(GraphQlFilterType.Id),
+              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+            }
+          ]
+        }
+      ],
+      children: [
+        {
+          path: 'results',
+          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+        }
+      ]
+    });
+
+    expect(requestMap.get('spans')).toEqual({
+      path: 'spans',
+      arguments: [
+        {
+          name: 'limit',
+          value: 10
+        },
+        {
+          name: 'between',
+          value: {
+            startTime: new Date(0),
+            endTime: new Date(traceTimestamp.getTime() * 2)
           }
         },
         {

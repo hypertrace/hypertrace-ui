@@ -7,7 +7,13 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { AttributeMetadataType, MetadataService, traceIdKey, traceTypeKey } from '@hypertrace/distributed-tracing';
+import {
+  AttributeMetadataType,
+  MetadataService,
+  traceIdKey,
+  traceTypeKey,
+  TRACE_GQL_REQUEST
+} from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -23,7 +29,7 @@ describe('Api TraceDetailService', () => {
     providers: [
       mockProvider(ActivatedRoute, {
         paramMap: of({
-          get: () => 'test-id'
+          get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792')
         })
       }),
       mockProvider(TimeRangeService, {
@@ -34,6 +40,7 @@ describe('Api TraceDetailService', () => {
           of({
             [traceTypeKey]: ObservabilityTraceType.Api,
             [traceIdKey]: 'test-id',
+            traceId: 'trace-id',
             serviceName: 'test service',
             protocol: 'test protocol',
             apiName: 'test api name',
@@ -67,6 +74,8 @@ describe('Api TraceDetailService', () => {
       expectObservable(spectator.service.fetchTraceDetails()).toBe('(x|)', {
         x: {
           id: 'test-id',
+          startTime: 1576364117792,
+          traceId: 'trace-id',
           timeString: `${new DisplayDatePipe().transform(1576364117792, {
             mode: DateFormatMode.DateAndTimeWithSeconds
           })} for 20 ms`,
@@ -74,6 +83,42 @@ describe('Api TraceDetailService', () => {
           type: ObservabilityTraceType.Api
         }
       });
+    });
+  });
+
+  test('should build correct query request with timestamp', () => {
+    const graphqlService = spectator.inject(GraphQlRequestService);
+    graphqlService.query.mockClear();
+
+    spectator.service.fetchTraceDetails().subscribe();
+
+    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith({
+      requestType: TRACE_GQL_REQUEST,
+      traceType: ObservabilityTraceType.Api,
+      traceId: 'test-id',
+      timestamp: new Date(1576364117792),
+      traceProperties: [
+        expect.objectContaining({
+          name: 'serviceName'
+        }),
+        expect.objectContaining({
+          name: 'protocol'
+        }),
+        expect.objectContaining({
+          name: 'apiName'
+        }),
+        expect.objectContaining({
+          name: 'startTime'
+        }),
+        expect.objectContaining({
+          name: 'duration'
+        }),
+        expect.objectContaining({
+          name: 'traceId'
+        })
+      ],
+      spanProperties: [],
+      spanLimit: 1
     });
   });
 });
