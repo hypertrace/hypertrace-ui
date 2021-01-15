@@ -25,7 +25,7 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, pick } from 'lodash-es';
+import { capitalize, isEmpty, pick, uniq } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
@@ -155,11 +155,25 @@ export class TableWidgetRendererComponent
       value: modeOption
     }));
 
+    this.maybeEmitInitialCheckboxFilterChange();
+  }
+
+  public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
+
+  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
+    return this.model.getData().pipe(
+      startWith(undefined),
+      tap(() => this.fetchFilterValues())
+    );
+  }
+
+  protected fetchFilterValues(): void {
     this.selectFilterItems$ = forkJoinSafeEmpty(
       this.model.getSelectFilterOptions().map(selectFilterModel =>
         // Fetch the values for the selectFilter dropdown
         selectFilterModel.getData().pipe(
           first(),
+          map(uniq),
           map((values: PrimitiveValue[]) => {
             /*
              * Map the values to SelectOptions, but also include the attribute since there may be multiple select
@@ -199,14 +213,6 @@ export class TableWidgetRendererComponent
         )
       )
     );
-
-    this.maybeEmitInitialCheckboxFilterChange();
-  }
-
-  public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
-
-  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
-    return this.model.getData().pipe(startWith(undefined));
   }
 
   public get syncWithUrl(): boolean {

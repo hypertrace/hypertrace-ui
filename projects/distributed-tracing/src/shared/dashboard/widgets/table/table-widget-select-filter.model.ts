@@ -1,9 +1,8 @@
-import { Dictionary, PrimitiveValue } from '@hypertrace/common';
+import { PrimitiveValue } from '@hypertrace/common';
 import { FilterOperator, TableFilter } from '@hypertrace/components';
 import { Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Model({
   type: 'table-widget-select-filter',
@@ -18,7 +17,7 @@ export class TableWidgetSelectFilterModel {
   public attribute!: string;
 
   @ModelProperty({
-    key: 'unsetOption',
+    key: 'unset-option',
     type: STRING_PROPERTY.type
   })
   public unsetOption?: string;
@@ -27,9 +26,7 @@ export class TableWidgetSelectFilterModel {
   protected readonly api!: ModelApi;
 
   public getData(): Observable<PrimitiveValue[]> {
-    return this.api
-      .getData<Dictionary<PrimitiveValue>[]>()
-      .pipe(map(results => results.map(result => result[this.attribute])));
+    return this.api.getData<PrimitiveValue[]>();
   }
 
   public getTableFilter(value: unknown): TableFilter {

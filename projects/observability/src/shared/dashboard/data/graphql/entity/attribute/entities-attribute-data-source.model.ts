@@ -7,7 +7,7 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
+import { EntityType } from '../../../../../graphql/model/schema/entity';
 import { EntitiesValuesDataSourceModel } from '../entities-values-data-source.model';
 
 @Model({
@@ -32,7 +32,7 @@ export class EntitiesAttributeDataSourceModel extends EntitiesValuesDataSourceMo
   })
   public entityType!: EntityType;
 
-  public getData(): Observable<Entity[]> {
+  public getData(): Observable<unknown[]> {
     return this.fetchSpecificationData();
   }
 }

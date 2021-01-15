@@ -1,7 +1,7 @@
 import { GraphQlDataSourceModel, GraphQlFilter, Specification } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Entity, EntityType } from '../../../../graphql/model/schema/entity';
+import { EntityType } from '../../../../graphql/model/schema/entity';
 import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
   EntitiesGraphQlQueryHandlerService,
@@ -9,14 +9,17 @@ import {
   GraphQlEntitiesQueryRequest
 } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 
-export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceModel<Entity[]> {
+export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceModel<unknown[]> {
   protected abstract specification: Specification;
   protected abstract entityType: EntityType;
 
-  protected fetchSpecificationData(): Observable<Entity[]> {
+  protected fetchSpecificationData(): Observable<unknown[]> {
     return this.query<EntitiesGraphQlQueryHandlerService, EntitiesResponse>(filters =>
       this.buildRequest(this.specification, filters)
-    ).pipe(map(response => response.results));
+    ).pipe(
+      map(response => response.results),
+      map(results => results.map(result => result[this.specification.resultAlias()]))
+    );
   }
 
   private buildRequest(specification: Specification, inheritedFilters: GraphQlFilter[]): GraphQlEntitiesQueryRequest {

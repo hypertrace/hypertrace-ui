@@ -26,7 +26,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-select-filter',
             attribute: 'serviceName',
-            unsetOption: 'All Services',
+            'unset-option': 'All Services',
             data: {
               type: 'entities-attribute-data-source',
               entity: ObservabilityEntityType.Api,
