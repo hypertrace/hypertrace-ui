@@ -3,7 +3,6 @@ import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { Trace, traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
@@ -64,7 +63,64 @@ describe('Trace Waterfall data source model', () => {
           requestType: TRACE_GQL_REQUEST,
           traceId: 'test-id',
           spanLimit: 1000,
-          timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
+          timestamp: undefined,
+          traceProperties: [],
+          spanProperties: [
+            expect.objectContaining({
+              name: 'displaySpanName'
+            }),
+            expect.objectContaining({
+              name: 'duration'
+            }),
+            expect.objectContaining({
+              name: 'endTime'
+            }),
+            expect.objectContaining({
+              name: 'parentSpanId'
+            }),
+            expect.objectContaining({
+              name: 'serviceName'
+            }),
+            expect.objectContaining({
+              name: 'spanTags'
+            }),
+            expect.objectContaining({
+              name: 'startTime'
+            }),
+            expect.objectContaining({
+              name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'traceId'
+            })
+          ]
+        }
+      });
+    });
+  });
+  test('should build expected query with startTime', () => {
+    const spectator = modelFactory(TraceWaterfallDataSourceModel, {
+      properties: {
+        traceId: 'test-id',
+        entrySpanId: 'span-id',
+        startTime: 1576364117792
+      },
+      api: {
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
+      }
+    });
+
+    const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
+
+    spectator.model.getData();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(receivedQueries).toBe('x', {
+        x: {
+          requestType: TRACE_GQL_REQUEST,
+          traceId: 'test-id',
+          spanLimit: 1000,
+          timestamp: new Date(1576364117792),
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({

@@ -1,4 +1,4 @@
-import { Dictionary } from '@hypertrace/common';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   AttributeMetadata,
   GraphQlDataSourceModel,
@@ -14,7 +14,7 @@ import {
   TRACE_GQL_REQUEST,
   WaterfallData
 } from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -31,10 +31,18 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   })
   public traceId!: string;
 
+  @ModelProperty({
+    key: 'start-time',
+    required: true,
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public getData(): Observable<WaterfallData[]> {
     return combineLatest([this.getTraceData(), this.getDurationAttribute()]).pipe(
@@ -62,7 +70,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       traceType: ObservabilityTraceType.Api,
       traceId: this.traceId,
       spanLimit: 1000,
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.getSpanAttributes().map(attribute =>
         this.specificationBuilder.attributeSpecificationForKey(attribute)

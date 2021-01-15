@@ -66,6 +66,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
 })
 export class ApiTraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
+
   public readonly traceDetails$: Observable<ApiTraceDetails>;
 
   public readonly defaultJson: ModelJson = {
@@ -81,7 +82,9 @@ export class ApiTraceDetailPageComponent {
         data: {
           type: 'api-trace-waterfall-data-source',
           // tslint:disable-next-line: no-invalid-template-strings
-          'trace-id': '${traceId}'
+          'trace-id': '${traceId}',
+          // tslint:disable-next-line: no-invalid-template-strings
+          'start-time': '${startTime}'
         }
       }
     ]
@@ -100,6 +103,7 @@ export class ApiTraceDetailPageComponent {
       this.traceDetails$.subscribe(traceDetails => {
         dashboard.setVariable('traceId', traceDetails.id);
         dashboard.setVariable('traceType', traceDetails.type);
+        dashboard.setVariable('startTime', traceDetails.startTime);
         dashboard.refresh();
       })
     );

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Dictionary } from '@hypertrace/common';
+import { Dictionary, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
-import { isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { GraphQlFieldFilter } from '../../../model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlIdFilter } from '../../../model/schema/filter/id/graphql-id-filter';
@@ -21,6 +21,8 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
   private readonly argBuilder: GraphQlArgumentBuilder = new GraphQlArgumentBuilder();
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
 
+  public constructor(private readonly timeRangeService: TimeRangeService) {}
+
   public matchesRequest(request: unknown): request is GraphQlTraceRequest {
     return (
       typeof request === 'object' &&
@@ -31,13 +33,13 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
   public convertRequest(request: GraphQlTraceRequest): Map<string, GraphQlSelection> {
     const requestMap: Map<string, GraphQlSelection> = new Map();
-
+    const timeRange = this.buildTimeRange(request.timestamp);
     const traces = {
       path: 'traces',
       arguments: [
         this.argBuilder.forTraceType(resolveTraceType(request.traceType)),
         this.argBuilder.forLimit(1),
-        this.argBuilder.forTimeRange(request.timeRange),
+        this.argBuilder.forTimeRange(timeRange),
         ...this.argBuilder.forFilters([this.buildTraceIdFilter(request)])
       ],
       children: [
@@ -50,18 +52,18 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
     requestMap.set(this.tracesKey, traces);
 
-    if (request.spanProperties) {
+    if (!isEmpty(request.spanProperties)) {
       const spans = {
         path: 'spans',
         arguments: [
           this.argBuilder.forLimit(request.spanLimit),
-          this.argBuilder.forTimeRange(request.timeRange),
+          this.argBuilder.forTimeRange(timeRange),
           ...this.argBuilder.forFilters([...this.buildSpansFilter(request)])
         ],
         children: [
           {
             path: 'results',
-            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties)]
+            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties!)]
           }
         ]
       };
@@ -135,6 +137,21 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
     return filters;
   }
+
+  protected buildTimeRange(timestamp?: Date): GraphQlTimeRange {
+    let timeRange;
+    if (timestamp) {
+      const duration = new TimeDuration(30, TimeUnit.Minute);
+      timeRange = {
+        startTime: timestamp.getTime() - duration.toMillis(),
+        endTime: timestamp.getTime() + duration.toMillis()
+      };
+    } else {
+      timeRange = this.timeRangeService.getCurrentTimeRange();
+    }
+
+    return new GraphQlTimeRange(timeRange.startTime, timeRange.endTime);
+  }
 }
 
 export const TRACE_GQL_REQUEST = Symbol('GraphQL Trace Request');
@@ -143,11 +160,11 @@ export interface GraphQlTraceRequest {
   requestType: typeof TRACE_GQL_REQUEST;
   traceType?: TraceType;
   traceId: string;
+  timestamp?: Date;
   traceProperties: Specification[];
   spanLimit: number;
   spanId?: string;
   spanProperties?: Specification[];
-  timeRange: GraphQlTimeRange;
 }
 
 interface TraceServerResponse {
