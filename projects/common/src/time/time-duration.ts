@@ -24,27 +24,22 @@ export class TimeDuration {
     const mostSignificantPortion = this.getMostSignificantUnitOnly();
     const remainingMillis = this.millis - mostSignificantPortion.toMillis();
     if (mostSignificantPortion.getAmountForUnit(smallestUnit) < 1) {
-      return displayZero
-        ? unitStringType === UnitStringType.Long
-          ? new TimeDuration(0, smallestUnit).toLongString()
-          : new TimeDuration(0, smallestUnit).toString()
-        : '';
+      return displayZero ? this.toFormattedString(new TimeDuration(0, smallestUnit), unitStringType) : '';
     }
     if (mostSignificantPortion.unit === smallestUnit || remainingMillis === 0) {
-      return unitStringType === UnitStringType.Long
-        ? mostSignificantPortion.toLongString()
-        : mostSignificantPortion.toString();
+      return this.toFormattedString(mostSignificantPortion, unitStringType);
     }
 
-    return unitStringType === UnitStringType.Long
-      ? `${mostSignificantPortion.toLongString()} ${new TimeDuration(
-          remainingMillis,
-          TimeUnit.Millisecond
-        ).toMultiUnitString(smallestUnit, false, unitStringType)}`
-      : `${mostSignificantPortion.toString()}${new TimeDuration(
-          remainingMillis,
-          TimeUnit.Millisecond
-        ).toMultiUnitString(smallestUnit, false)}`;
+    const joiningStr = unitStringType === UnitStringType.Long ? ' ' : '';
+
+    return [
+      this.toFormattedString(mostSignificantPortion, unitStringType),
+      new TimeDuration(remainingMillis, TimeUnit.Millisecond).toMultiUnitString(smallestUnit, false, unitStringType)
+    ].join(joiningStr);
+  }
+
+  private toFormattedString(duration: TimeDuration, unitStringType: UnitStringType = UnitStringType.Short): string {
+    return unitStringType === UnitStringType.Short ? duration.toString() : duration.toLongString();
   }
 
   public getMostSignificantUnitOnly(): TimeDuration {
