@@ -24,22 +24,22 @@ export class TimeDuration {
     const mostSignificantPortion = this.getMostSignificantUnitOnly();
     const remainingMillis = this.millis - mostSignificantPortion.toMillis();
     if (mostSignificantPortion.getAmountForUnit(smallestUnit) < 1) {
-      return displayZero ? this.toFormattedString(new TimeDuration(0, smallestUnit), unitStringType) : '';
+      return displayZero ? new TimeDuration(0, smallestUnit).toFormattedString(unitStringType) : '';
     }
     if (mostSignificantPortion.unit === smallestUnit || remainingMillis === 0) {
-      return this.toFormattedString(mostSignificantPortion, unitStringType);
+      return mostSignificantPortion.toFormattedString(unitStringType);
     }
 
     const joiningStr = unitStringType === UnitStringType.Long ? ' ' : '';
 
     return [
-      this.toFormattedString(mostSignificantPortion, unitStringType),
+      mostSignificantPortion.toFormattedString(unitStringType),
       new TimeDuration(remainingMillis, TimeUnit.Millisecond).toMultiUnitString(smallestUnit, false, unitStringType)
     ].join(joiningStr);
   }
 
-  private toFormattedString(duration: TimeDuration, unitStringType: UnitStringType = UnitStringType.Short): string {
-    return unitStringType === UnitStringType.Short ? duration.toString() : duration.toLongString();
+  private toFormattedString(unitStringType: UnitStringType = UnitStringType.Short): string {
+    return unitStringType === UnitStringType.Short ? this.toString() : this.toLongString();
   }
 
   public getMostSignificantUnitOnly(): TimeDuration {
@@ -152,7 +152,7 @@ type ConvertibleTimeUnit =
   | TimeUnit.Second
   | TimeUnit.Millisecond;
 
-export const enum UnitStringType {
+export enum UnitStringType {
   Long = 'long',
   Short = 'short'
 }
