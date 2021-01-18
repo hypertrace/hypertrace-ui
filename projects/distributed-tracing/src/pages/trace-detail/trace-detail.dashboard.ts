@@ -17,7 +17,9 @@ export const traceDetailDashboard: DashboardDefaultConfiguration = {
           // tslint:disable-next-line: no-invalid-template-strings
           'trace-id': '${traceId}',
           // tslint:disable-next-line: no-invalid-template-strings
-          'entry-span-id': '${spanId}'
+          'entry-span-id': '${spanId}',
+          // tslint:disable-next-line: no-invalid-template-strings
+          'start-time': '${startTime}'
         }
       }
     ]

@@ -102,7 +102,7 @@ export class CartesianAxis<TData = {}> {
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
-    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+    const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
     ticksSelection.each((_datum, index, nodes) =>
       this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
