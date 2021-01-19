@@ -32,8 +32,6 @@ import { IconSize } from '../icon/icon-size';
   `
 })
 export class SearchBoxComponent implements OnInit {
-  private static SEARCH_TIME_DELAY_MS: number = 200;
-
   @Input()
   public placeholder: string = 'Search';
 
@@ -51,12 +49,10 @@ export class SearchBoxComponent implements OnInit {
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
   public isFocused: boolean = false;
-  public readonly debouncedValueSubject: Subject<string> = new Subject();
+  private readonly debouncedValueSubject: Subject<string> = new Subject();
 
   public ngOnInit(): void {
-    this.debouncedValueSubject
-      .pipe(debounceTime(this.debounceTime))
-      .subscribe(value => this.valueChange.emit(value));
+    this.debouncedValueSubject.pipe(debounceTime(this.debounceTime)).subscribe(value => this.valueChange.emit(value));
   }
 
   public onSubmit(): void {
