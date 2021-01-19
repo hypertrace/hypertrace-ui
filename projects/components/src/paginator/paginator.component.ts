@@ -10,7 +10,7 @@ import {
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { ButtonStyle, ButtonSize } from '../button/button';
+import { ButtonSize, ButtonStyle } from '../button/button';
 import { SelectType } from '../select/select-type';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';

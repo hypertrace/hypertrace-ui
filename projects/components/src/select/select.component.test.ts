@@ -5,9 +5,9 @@ import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { SelectJustify } from './select-justify';
+import { SelectType } from './select-type';
 import { SelectComponent } from './select.component';
 import { SelectModule } from './select.module';
-import { SelectType } from './select-type';
 
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
