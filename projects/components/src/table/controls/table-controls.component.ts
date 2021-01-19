@@ -4,9 +4,9 @@ import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { SelectOption } from '../../select/select-option';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { TableMode } from '../table-api';
+import { SelectChange, SelectFilter } from './table-controls-api';
 
 @Component({
   selector: 'ht-table-controls',
@@ -30,7 +30,7 @@ import { TableMode } from '../table-api';
           *ngFor="let selectFilterItem of this.selectFilterItems"
           [placeholder]="selectFilterItem.placeholder"
           class="control select"
-          (selectedChange)="this.onSelectChange($event)"
+          (selectedChange)="this.onSelectChange(selectFilterItem, $event)"
         >
           <ht-select-option
             *ngFor="let option of selectFilterItem.options"
@@ -99,7 +99,7 @@ export class TableControlsComponent implements OnChanges {
   public checkboxChecked?: boolean;
 
   @Output()
-  public readonly selectChange: EventEmitter<KeyValue<string, unknown>> = new EventEmitter<KeyValue<string, unknown>>();
+  public readonly selectChange: EventEmitter<SelectChange> = new EventEmitter<SelectChange>();
 
   @Output()
   public readonly checkboxCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -159,8 +159,11 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
-  public onSelectChange(keyValue: KeyValue<string, unknown>): void {
-    this.selectChange.emit(keyValue);
+  public onSelectChange(select: SelectFilter, keyValue: KeyValue<string, unknown>): void {
+    this.selectChange.emit({
+      select: select,
+      value: keyValue
+    });
   }
 
   public onFilterChange(item: ToggleItem): void {
@@ -174,9 +177,4 @@ export class TableControlsComponent implements OnChanges {
   public onModeChange(item: ToggleItem<TableMode>): void {
     this.modeChange.emit(item.value);
   }
-}
-
-export interface SelectFilter {
-  placeholder?: string;
-  options: SelectOption<KeyValue<string, unknown>>[];
 }

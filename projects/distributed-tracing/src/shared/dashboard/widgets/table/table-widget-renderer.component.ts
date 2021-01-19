@@ -10,6 +10,7 @@ import {
 import {
   FilterAttribute,
   FilterOperator,
+  SelectChange,
   SelectFilter,
   SelectOption,
   StatefulTableRow,
@@ -107,7 +108,7 @@ export class TableWidgetRendererComponent
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly checkboxFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
-  private readonly selectFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
@@ -297,20 +298,25 @@ export class TableWidgetRendererComponent
     this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
   }
 
-  public onSelectChange(select: KeyValue<string, unknown>): void {
-    const selectFilterModel = this.model.getSelectFilterOptions().find(option => option.attribute === select.key);
+  public onSelectChange(changed: SelectChange): void {
+    const selectFilterModel = this.model
+      .getSelectFilterOptions()
+      .find(option => option.attribute === changed.value.key);
 
     if (selectFilterModel === undefined) {
       return; // This shouldn't happen
     }
 
-    this.selectFilterSubject.pipe(first()).subscribe(filters => {
-      this.selectFilterSubject.next(
-        [...filters.filter(f => f.field !== select.key), selectFilterModel.getTableFilter(select.value)].filter(
-          f => f.value !== undefined
-        ) // Remove filters that are unset
-      );
-    });
+    const existingSelectFiltersWithChangedRemoved = this.selectFilterSubject
+      .getValue()
+      .filter(f => f.field !== changed.value.key);
+    const changedSelectFilter = selectFilterModel.getTableFilter(changed.value.value);
+
+    const selectFilters = [...existingSelectFiltersWithChangedRemoved, changedSelectFilter].filter(
+      f => f.value !== undefined
+    ); // Remove filters that are unset
+
+    this.selectFilterSubject.next(selectFilters);
   }
 
   public onSearchChange(text: string): void {

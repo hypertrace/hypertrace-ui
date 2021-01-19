@@ -29,10 +29,10 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
             'unset-option': 'All Services',
             data: {
               type: 'entities-attribute-data-source',
-              entity: ObservabilityEntityType.Api,
+              entity: ObservabilityEntityType.Service,
               attribute: {
                 type: 'attribute-specification',
-                attribute: 'serviceName'
+                attribute: 'name'
               }
             }
           }
@@ -57,24 +57,6 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
               'id-attribute': 'serviceId',
               'name-attribute': 'serviceName',
               'entity-type': ObservabilityEntityType.Service
-            }
-          },
-          {
-            type: 'table-widget-column',
-            title: 'Service ID',
-            visible: false, // The secondary-entity-specification requires the primary entity to fetch the attributes
-            value: {
-              type: 'attribute-specification',
-              attribute: 'serviceId'
-            }
-          },
-          {
-            type: 'table-widget-column',
-            title: 'Service Name',
-            visible: false, // The secondary-entity-specification requires the primary entity to fetch the attributes
-            value: {
-              type: 'attribute-specification',
-              attribute: 'serviceName'
             }
           },
           {
