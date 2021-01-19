@@ -7,6 +7,7 @@ import { EMPTY } from 'rxjs';
 import { SelectJustify } from './select-justify';
 import { SelectComponent } from './select.component';
 import { SelectModule } from './select.module';
+import { SelectType } from './select-type';
 
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
@@ -156,5 +157,30 @@ describe('Select Component', () => {
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
+  }));
+
+  test('should set correct select type', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [showBorder]="showBorder">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          showBorder: true
+        }
+      }
+    );
+    spectator.tick();
+
+    spectator.setInput({
+      type: SelectType.Paginator
+    });
+
+    expect(spectator.element).toHaveText(selectionOptions[1].label);
+    expect(spectator.query('.select-content')).toBe(spectator.query('.paginator'));
   }));
 });

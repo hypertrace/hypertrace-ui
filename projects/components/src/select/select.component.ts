@@ -20,6 +20,7 @@ import { SelectJustify } from './select-justify';
 import { SelectOption } from './select-option';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectSize } from './select-size';
+import { SelectType } from './select-type';
 
 @Component({
   selector: 'ht-select',
@@ -48,7 +49,7 @@ import { SelectSize } from './select-size';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="select-content">
+          <div class="select-content" [ngClass]="this.type">
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="select-option">
               <span class="label">{{ item.label }}</span>
               <ht-icon
@@ -89,6 +90,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public highlightSelected: boolean = true;
+
+  @Input()
+  public type?: SelectType;
 
   @Output()
   public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();

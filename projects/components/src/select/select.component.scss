@@ -109,3 +109,9 @@
     }
   }
 }
+
+.paginator {
+  min-width: $paginator-select-width;
+  margin: 4px 0;
+  left: 0;
+}
