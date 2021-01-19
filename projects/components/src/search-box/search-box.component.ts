@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -29,12 +31,17 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SearchBoxComponent {
+export class SearchBoxComponent implements OnInit {
+  private static SEARCH_TIME_DELAY_MS: number = 200;
+
   @Input()
   public placeholder: string = 'Search';
 
   @Input()
   public value: string = '';
+
+  @Input()
+  public debounceTime: number = 0;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -44,13 +51,20 @@ export class SearchBoxComponent {
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
   public isFocused: boolean = false;
+  public readonly debouncedValueSubject: Subject<string> = new Subject();
+
+  public ngOnInit(): void {
+    this.debouncedValueSubject
+      .pipe(debounceTime(this.debounceTime))
+      .subscribe(value => this.valueChange.emit(value));
+  }
 
   public onSubmit(): void {
     this.submit.emit(this.value);
   }
 
   public onValueChange(): void {
-    this.valueChange.emit(this.value);
+    this.debouncedValueSubject.next(this.value);
   }
 
   public clearValue(): void {
