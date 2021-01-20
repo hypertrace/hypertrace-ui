@@ -40,6 +40,13 @@ import { SelectSize } from '../select/select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="multi-select-content">
+            <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
+              <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
+              <span class="label">All</span>
+            </div>
+
+            <ht-divider></ht-divider>
+
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="multi-select-option">
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
               <ht-icon
@@ -113,6 +120,33 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     this.setTriggerLabel();
   }
 
+  public onAllSelectionChange(): void {
+    this.selected = this.areAllOptionsSelected() ? [] : this.items!.map(item => item.value); // Select All or none
+    this.setSelection();
+  }
+
+  public areAllOptionsSelected(): boolean {
+    return this.selected !== undefined && this.items !== undefined && this.selected.length === this.items.length;
+  }
+
+  public onSelectionChange(item: SelectOptionComponent<V>): void {
+    this.selected = this.isSelectedItem(item)
+      ? this.selected?.filter(value => value !== item.value)
+      : (this.selected ?? []).concat(item.value);
+
+    this.setSelection();
+  }
+
+  public isSelectedItem(item: SelectOptionComponent<V>): boolean {
+    return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
+  }
+
+  private setSelection(): void {
+    this.setTriggerLabel();
+    this.selected$ = this.buildObservableOfSelected();
+    this.selectedChange.emit(this.selected);
+  }
+
   private setTriggerLabel(): void {
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
       this.triggerLabel = this.placeholder;
@@ -130,10 +164,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     }
   }
 
-  public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
-  }
-
   private buildObservableOfSelected(): Observable<SelectOption<V>[] | undefined> {
     if (!this.items) {
       return EMPTY;
@@ -143,16 +173,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
       switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
       map(() => this.findItems(this.selected))
     );
-  }
-
-  public onSelectionChange(item: SelectOptionComponent<V>): void {
-    this.selected = this.isSelectedItem(item)
-      ? this.selected?.filter(value => value !== item.value)
-      : (this.selected ?? []).concat(item.value);
-
-    this.setTriggerLabel();
-    this.selected$ = this.buildObservableOfSelected();
-    this.selectedChange.emit(this.selected);
   }
 
   // Find the select option object for a value

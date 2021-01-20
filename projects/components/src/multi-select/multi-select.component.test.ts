@@ -2,6 +2,7 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { SelectJustify } from '../select/select-justify';
@@ -13,7 +14,7 @@ describe('Multi Select Component', () => {
     component: MultiSelectComponent,
     imports: [LetAsyncModule],
     entryComponents: [SelectOptionComponent],
-    declarations: [MockComponent(LabelComponent)],
+    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent)],
     shallow: true
   });
 
@@ -75,7 +76,7 @@ describe('Multi Select Component', () => {
     spectator.tick();
 
     spectator.click('.trigger-content');
-    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    const optionElements = spectator.queryAll('.multi-select-option:not(.all-options)', { root: true });
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
     expect(optionElements.length).toBe(3);
 
@@ -109,12 +110,52 @@ describe('Multi Select Component', () => {
     spectator.tick();
     spectator.click('.trigger-content');
 
-    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    const optionElements = spectator.queryAll('.multi-select-option:not(.all-options)', { root: true });
     spectator.click(optionElements[2]);
+    spectator.tick();
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query(LabelComponent)?.label).toEqual('second and 1 more');
+    flush();
+  }));
+
+  test('should notify and update selection when all checkbox is selected', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          placeholder: 'Select options',
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const allOptionElement = spectator.query('.all-options', { root: true });
+    expect(allOptionElement).toExist();
+    spectator.click(allOptionElement!);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
+    expect(spectator.query(LabelComponent)?.label).toEqual('first and 2 more');
+
+    // De select all
+    spectator.click(allOptionElement!);
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
+
     flush();
   }));
 
@@ -141,7 +182,7 @@ describe('Multi Select Component', () => {
     expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
     spectator.click('.trigger-content');
 
-    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    const optionElements = spectator.queryAll('.multi-select-option:not(.all-options)', { root: true });
     spectator.click(optionElements[2]);
 
     expect(onChange).toHaveBeenCalledTimes(1);
