@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { TypedSimpleChanges } from '@hypertrace/hyperdash-angular/util/angular-change-object';
+import { SubscriptionLifecycle } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -8,6 +10,7 @@ import { IconSize } from '../icon/icon-size';
   selector: 'ht-search-box',
   styleUrls: ['./search-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="ht-search-box" [class.focused]="this.isFocused">
       <ht-icon icon="${IconType.Search}" size="${IconSize.Medium}" class="icon" (click)="onSubmit()"></ht-icon>
@@ -31,7 +34,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SearchBoxComponent implements OnInit {
+export class SearchBoxComponent implements OnChanges {
   @Input()
   public placeholder: string = 'Search';
 
@@ -48,11 +51,20 @@ export class SearchBoxComponent implements OnInit {
   // tslint:disable-next-line:no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
+  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+
   public isFocused: boolean = false;
   private readonly debouncedValueSubject: Subject<string> = new Subject();
 
-  public ngOnInit(): void {
-    this.debouncedValueSubject.pipe(debounceTime(this.debounceTime)).subscribe(value => this.valueChange.emit(value));
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.debounceTime) {
+      this.subscriptionLifecycle.unsubscribe();
+      this.subscriptionLifecycle.add(
+        this.debouncedValueSubject
+          .pipe(debounceTime(this.debounceTime))
+          .subscribe(value => this.valueChange.emit(value))
+      );
+    }
   }
 
   public onSubmit(): void {
