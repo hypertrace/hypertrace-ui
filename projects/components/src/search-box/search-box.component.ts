@@ -1,7 +1,6 @@
-import { TypedSimpleChanges } from '@hypertrace/hyperdash-angular/util/angular-change-object';
-import { SubscriptionLifecycle } from '@hypertrace/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
