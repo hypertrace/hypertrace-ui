@@ -46,8 +46,8 @@ export class NavigationComponent {
     },
     {
       type: NavItemType.Link,
-      label: 'Services',
-      icon: ObservabilityIconType.Service,
+      label: 'API Endpoints',
+      icon: ObservabilityIconType.Api,
       matchPaths: ['services']
     },
     {

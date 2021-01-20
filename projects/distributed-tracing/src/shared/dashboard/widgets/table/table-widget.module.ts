@@ -16,6 +16,7 @@ import { TableWidgetRowSelectionModel } from './selections/table-widget-row-sele
 import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
+import { TableWidgetSelectFilterModel } from './table-widget-select-filter.model';
 import { TableWidgetModel } from './table-widget.model';
 
 @NgModule({
@@ -27,6 +28,7 @@ import { TableWidgetModel } from './table-widget.model';
         TableWidgetColumnModel,
         TableWidgetRowSelectionModel,
         TableWidgetCheckboxFilterModel,
+        TableWidgetSelectFilterModel,
         WidgetHeaderModel,
         ModeToggleTableWidgetModel
       ],

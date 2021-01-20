@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
@@ -5,6 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { TableMode } from '../table-api';
+import { SelectChange, SelectFilter } from './table-controls-api';
 
 @Component({
   selector: 'ht-table-controls',
@@ -22,6 +24,20 @@ import { TableMode } from '../table-api';
           [placeholder]="this.searchPlaceholder"
           (valueChange)="this.onSearchChange($event)"
         ></ht-search-box>
+
+        <!-- Selects -->
+        <ht-select
+          *ngFor="let selectFilterItem of this.selectFilterItems"
+          [placeholder]="selectFilterItem.placeholder"
+          class="control select"
+          (selectedChange)="this.onSelectChange(selectFilterItem, $event)"
+        >
+          <ht-select-option
+            *ngFor="let option of selectFilterItem.options"
+            [label]="option.label"
+            [value]="option.value"
+          ></ht-select-option>
+        </ht-select>
 
         <!-- Filter Toggle -->
         <ht-toggle-group
@@ -61,6 +77,9 @@ export class TableControlsComponent implements OnChanges {
   public searchPlaceholder?: string = 'Search...';
 
   @Input()
+  public selectFilterItems?: SelectFilter[] = [];
+
+  @Input()
   public filterItems?: ToggleItem[] = [];
 
   @Input()
@@ -78,6 +97,9 @@ export class TableControlsComponent implements OnChanges {
 
   @Input()
   public checkboxChecked?: boolean;
+
+  @Output()
+  public readonly selectChange: EventEmitter<SelectChange> = new EventEmitter<SelectChange>();
 
   @Output()
   public readonly checkboxCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -135,6 +157,13 @@ export class TableControlsComponent implements OnChanges {
     if (this.modeItems !== undefined) {
       this.activeModeItem = this.modeItems.find(item => item === this.activeModeItem) ?? this.modeItems[0];
     }
+  }
+
+  public onSelectChange(select: SelectFilter, keyValue: KeyValue<string, unknown>): void {
+    this.selectChange.emit({
+      select: select,
+      value: keyValue
+    });
   }
 
   public onFilterChange(item: ToggleItem): void {
