@@ -66,3 +66,16 @@ jobs:
         with:
           helm-gcs-repository: ${{ secrets.HELM_GCS_REPOSITORY }}
           helm-gcs-credentials: ${{ secrets.HELM_GCS_CREDENTIALS }}
+
+  publish-release-notes:
+    needs: [ publish-artifacts, publish-helm-charts ]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - uses: lakto/gren-action@v2.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          options: '-c .grenrc.js --override'
