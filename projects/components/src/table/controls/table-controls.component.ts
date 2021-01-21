@@ -141,8 +141,8 @@ export class TableControlsComponent implements OnChanges {
       this.setActiveFilterItem();
     }
 
-    if (changes.modeItems) {
-      this.setActiveModeItem();
+    if (changes.viewItems) {
+      this.setActiveViewItem();
     }
   }
 
@@ -152,7 +152,7 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
-  private setActiveModeItem(): void {
+  private setActiveViewItem(): void {
     if (this.viewItems !== undefined) {
       this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
     }

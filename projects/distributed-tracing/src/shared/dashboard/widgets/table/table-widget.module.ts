@@ -11,13 +11,13 @@ import {
 import { WidgetHeaderModel } from '@hypertrace/dashboards';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TracingTableCellRendererModule } from '../../../components/table/tracing-table-cell-renderer.module';
-import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
-import { TableWidgetViewModel } from './table-widget-view.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
 import { TableWidgetSelectFilterModel } from './table-widget-select-filter.model';
+import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
+import { TableWidgetViewModel } from './table-widget-view.model';
 import { TableWidgetModel } from './table-widget.model';
 
 @NgModule({
