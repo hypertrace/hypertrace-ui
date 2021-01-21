@@ -83,8 +83,7 @@
 }
 
 .select-content {
-  @include dropdown();
-  min-width: 120px;
+  @include dropdown(4px, 0, 1px 0 4px 0);
   max-height: 204px;
 
   .select-option {
@@ -108,10 +107,4 @@
       background: $gray-1;
     }
   }
-}
-
-.paginator {
-  min-width: $paginator-select-width;
-  margin: 4px 0;
-  left: 0;
 }
