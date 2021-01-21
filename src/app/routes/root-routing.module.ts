@@ -126,8 +126,7 @@ const ROUTE_CONFIG: TraceRoute[] = [
   imports: [
     NotFoundModule,
     RouterModule.forRoot(ROUTE_CONFIG, {
-      preloadingStrategy: PreloadAllModules,
-      enableTracing: true
+      preloadingStrategy: PreloadAllModules
     })
   ],
   exports: [RouterModule]
