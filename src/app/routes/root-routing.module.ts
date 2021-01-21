@@ -54,11 +54,11 @@ const ROUTE_CONFIG: TraceRoute[] = [
               import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
           },
           {
-            path: 'services',
+            path: 'apis',
             data: {
               breadcrumb: {
-                icon: ObservabilityIconType.Service,
-                label: 'Services'
+                icon: ObservabilityIconType.Api,
+                label: 'API Endpoints'
               }
             },
             loadChildren: () =>

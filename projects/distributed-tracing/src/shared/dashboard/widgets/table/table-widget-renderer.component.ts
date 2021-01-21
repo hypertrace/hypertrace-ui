@@ -17,7 +17,6 @@ import {
   TableColumnConfig,
   TableDataSource,
   TableFilter,
-  TableMode,
   TableRow,
   TableSelectionMode,
   TableStyle,
@@ -32,14 +31,14 @@ import { filter, first, map, pairwise, share, startWith, switchMap, tap } from '
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
-import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
+import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
-@Renderer({ modelClass: ModeToggleTableWidgetModel })
+@Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({
   selector: 'ht-table-widget-renderer',
   styleUrls: ['./table-widget-renderer.component.scss'],
@@ -53,17 +52,17 @@ import { TableWidgetModel } from './table-widget.model';
       <div class="table-content-container">
         <ht-table-controls
           class="table-controls"
-          [searchEnabled]="!!this.api.model.searchAttribute"
+          [searchEnabled]="!!this.api.model.getSearchAttribute()"
           [selectFilterItems]="this.selectFilterItems$ | async"
           [filterItems]="this.filterItems"
-          [modeItems]="this.modeItems"
+          [viewItems]="this.viewItems"
           [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
           [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
           (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
           (selectChange)="this.onSelectChange($event)"
           (searchChange)="this.onSearchChange($event)"
           (filterChange)="this.onFilterChange($event)"
-          (modeChange)="this.onModeChange($event)"
+          (viewChange)="this.onViewChange($event)"
         >
         </ht-table-controls>
 
@@ -96,8 +95,8 @@ export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
-  public modeItems: ToggleItem<TableMode>[] = [];
-  public activeMode!: TableMode;
+  public viewItems: ToggleItem<string>[] = [];
+  public activeMode!: string;
 
   public selectFilterItems$!: Observable<SelectFilter[]>;
 
@@ -124,7 +123,7 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.onModeChange(this.model.mode);
+    // this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
@@ -151,9 +150,9 @@ export class TableWidgetRendererComponent
       value: filterOption
     }));
 
-    this.modeItems = this.model.getModeOptions().map(modeOption => ({
-      label: capitalize(modeOption),
-      value: modeOption
+    this.viewItems = this.model.getViewOptions().map(viewOption => ({
+      label: capitalize(viewOption),
+      value: viewOption
     }));
 
     this.maybeEmitInitialCheckboxFilterChange();
@@ -321,16 +320,16 @@ export class TableWidgetRendererComponent
 
   public onSearchChange(text: string): void {
     const searchFilter: TableFilter = {
-      field: this.api.model.searchAttribute!,
+      field: this.api.model.getSearchAttribute()!,
       operator: FilterOperator.Like,
       value: text
     };
     this.searchFilterSubject.next([searchFilter]);
   }
 
-  public onModeChange(mode: TableMode): void {
-    this.activeMode = mode;
-    this.model.setMode(mode);
+  public onViewChange(view: string): void {
+    this.activeMode = view;
+    this.model.setView(view);
     this.columnConfigs$ = this.getColumnConfigs();
   }
 
