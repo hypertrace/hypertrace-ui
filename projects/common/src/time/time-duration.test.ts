@@ -1,4 +1,4 @@
-import { TimeDuration } from './time-duration';
+import { TimeDuration, UnitStringType } from './time-duration';
 import { TimeUnit } from './time-unit.type';
 
 describe('Time duration', () => {
@@ -13,6 +13,13 @@ describe('Time duration', () => {
         TimeUnit.Minute
       )
     ).toBe('4h3m');
+    expect(
+      new TimeDuration(4 * 60 * 60 * 1000 + 3 * 60 * 1000 + 5 * 1000 + 689, TimeUnit.Millisecond).toMultiUnitString(
+        TimeUnit.Minute,
+        false,
+        UnitStringType.Long
+      )
+    ).toBe('4 hours 3 minutes');
     expect(
       new TimeDuration(4 * 60 * 60 * 1000 + 5 * 1000 + 689, TimeUnit.Millisecond).toMultiUnitString(TimeUnit.Second)
     ).toBe('4h5s');

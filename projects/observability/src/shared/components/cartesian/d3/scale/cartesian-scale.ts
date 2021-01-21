@@ -9,7 +9,7 @@ export abstract class CartesianScale<TData, TDomain> {
   private readonly dataAccessor: (data: TData) => TDomain;
 
   public constructor(public readonly axisType: AxisType, public readonly initData: ScaleInitializationData<TData>) {
-    this.dataAccessor = initData.dataAccesor;
+    this.dataAccessor = initData.dataAccessor;
     this.buildScale();
   }
 
@@ -114,7 +114,7 @@ export interface ScaleInitializationData<TData> {
   max?: number;
   allSeriesAndBandSeries: Series<TData>[];
   seriesState?: SeriesState<TData>;
-  dataAccesor<TDomain>(data: TData): TDomain;
+  dataAccessor<TDomain>(data: TData): TDomain;
 }
 
 export interface ScaleBounds {

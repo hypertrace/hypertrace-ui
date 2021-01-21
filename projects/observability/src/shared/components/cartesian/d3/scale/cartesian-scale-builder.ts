@@ -79,7 +79,7 @@ export class CartesianScaleBuilder<TData> {
     return {
       ...this.resolveMinMax(axisType),
       bounds: this.bounds,
-      dataAccesor: this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain,
+      dataAccessor: this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain,
       allSeriesAndBandSeries: this.allSeriesAndBandSeries,
       seriesState: seriesState
     };
