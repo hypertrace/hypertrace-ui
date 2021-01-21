@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { LayoutChangeService, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { LayoutChangeService, SubscriptionLifecycle } from '@hypertrace/common';
 import { Observable, throwError } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
@@ -20,6 +20,9 @@ export class SplitterComponent implements OnChanges {
   @Input()
   public readonly direction?: SplitterDirection;
 
+  @Input()
+  public readonly debounceTime: number = 20;
+
   @Output()
   public readonly layoutChange: EventEmitter<boolean> = new EventEmitter();
 
@@ -30,10 +33,8 @@ export class SplitterComponent implements OnChanges {
     private readonly layoutChangeService: LayoutChangeService
   ) {}
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.direction && this.direction !== undefined) {
-      this.setupMouseActionSubscription();
-    }
+  public ngOnChanges(): void {
+    this.setupMouseActionSubscription();
   }
 
   private setupMouseActionSubscription(): void {
@@ -42,7 +43,7 @@ export class SplitterComponent implements OnChanges {
     this.subscriptionLifecycle.add(
       this.buildSplitterLayoutChangeObservable()
         .pipe(
-          debounceTime(20),
+          debounceTime(this.debounceTime),
           tap(layoutChange => this.layoutChange.emit(layoutChange)),
           tap(layoutChange => layoutChange && this.layoutChangeService.publishLayoutChange())
         )
@@ -56,6 +57,10 @@ export class SplitterComponent implements OnChanges {
 
     if (!parentOfHostElement) {
       return throwError('Parent container element not present');
+    }
+
+    if (!this.direction) {
+      return throwError('Direction must be defined');
     }
 
     return this.splitterService.buildSplitterLayoutChangeObservable(hostElement, parentOfHostElement, this.direction!);

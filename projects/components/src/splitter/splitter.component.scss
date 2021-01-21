@@ -3,13 +3,9 @@
 .splitter {
   display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   /* Prevent the browser's built-in drag from interfering */
   user-select: none;
-
-  &:hover {
-    cursor: col-resize;
-  }
 
   &.horizontal {
     width: 4px;
@@ -18,6 +14,10 @@
     .cursor {
       width: 100%;
       height: 50px;
+    }
+
+    &:hover {
+      cursor: col-resize;
     }
   }
 
@@ -28,6 +28,10 @@
     .cursor {
       width: 50px;
       height: 100%;
+    }
+
+    &:hover {
+      cursor: row-resize;
     }
   }
 
