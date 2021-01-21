@@ -4,11 +4,11 @@ import {
   MetricAggregationType,
   TracingTableCellType
 } from '@hypertrace/distributed-tracing';
-import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
-import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
+import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
+import { ObservabilityEntityType } from '../../shared/graphql/model/schema/entity';
 
-export const servicesListDashboard: DashboardDefaultConfiguration = {
-  location: 'SERVICE_LIST',
+export const endpointsListDashboard: DashboardDefaultConfiguration = {
+  location: 'ENDPOINTS_LIST',
   json: {
     type: 'container-widget',
     layout: {

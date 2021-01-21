@@ -123,8 +123,6 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
-    // This.onModeChange(this.model.mode);
-
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
       ? this.preferenceService.get<TableColumnConfig[]>(this.model.id, [])

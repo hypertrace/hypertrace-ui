@@ -6,14 +6,18 @@ import {
   ApiDetailService,
   ServiceDetailBreadcrumbResolver,
   ServiceDetailService,
-  ServiceListComponent,
-  ServiceListModule
+  EndpointsListComponent,
+  EndpointsListModule
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: TraceRoute[] = [
   {
+    /*
+     * The UI shouldn't link to /services directly from anywhere. Instead we use /endpoints. However, lets keep this
+     * route active and instead show the user the EndpointsList (which also provides the only full list of services).
+     */
     path: '',
-    component: ServiceListComponent
+    component: EndpointsListComponent
   },
   {
     path: `service/:${ServiceDetailService.SERVICE_ID_PARAM_NAME}`,
@@ -33,6 +37,6 @@ const ROUTE_CONFIG: TraceRoute[] = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), ServiceListModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), EndpointsListModule]
 })
 export class ServicesRoutingModule {}

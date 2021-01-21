@@ -11,8 +11,8 @@ export class TableWidgetViewModel {
   public view!: string;
 
   @ModelProperty({
-    key: 'json',
+    key: 'template',
     type: ModelTemplatePropertyType.TYPE
   })
-  public json!: ModelJson;
+  public template!: ModelJson;
 }

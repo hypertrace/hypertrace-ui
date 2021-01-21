@@ -54,7 +54,18 @@ const ROUTE_CONFIG: TraceRoute[] = [
               import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
           },
           {
-            path: 'apis',
+            path: 'services',
+            data: {
+              breadcrumb: {
+                icon: ObservabilityIconType.Service,
+                label: 'Service'
+              }
+            },
+            loadChildren: () =>
+              import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
+          },
+          {
+            path: 'endpoints',
             data: {
               breadcrumb: {
                 icon: ObservabilityIconType.Api,
@@ -115,7 +126,8 @@ const ROUTE_CONFIG: TraceRoute[] = [
   imports: [
     NotFoundModule,
     RouterModule.forRoot(ROUTE_CONFIG, {
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
+      enableTracing: true
     })
   ],
   exports: [RouterModule]

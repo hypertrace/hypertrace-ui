@@ -47,7 +47,7 @@ export class TableWidgetViewToggleModel extends TableWidgetBaseModel {
   private createDelegate(view: string): TableWidgetModel | undefined {
     const found = this.views.find(v => v.view.toLowerCase() === view.toLowerCase());
 
-    return found ? this.api.createChild<TableWidgetModel>(found.json) : undefined;
+    return found ? this.api.createChild<TableWidgetModel>(found.template) : undefined;
   }
 
   public getData(): Observable<TableDataSource<TableRow>> {
