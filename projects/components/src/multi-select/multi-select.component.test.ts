@@ -120,12 +120,35 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
+  test('should show all checkbox only when enabled by input property', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select>
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const allOptionElement = spectator.query('.all-options', { root: true });
+    expect(allOptionElement).not.toExist();
+
+    flush();
+  }));
+
   test('should notify and update selection when all checkbox is selected', fakeAsync(() => {
     const onChange = jest.fn();
 
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder">
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [showAllOptionControl]="showAllOptionControl">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -134,6 +157,7 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           placeholder: 'Select options',
+          showAllOptionControl: true,
           onChange: onChange
         }
       }

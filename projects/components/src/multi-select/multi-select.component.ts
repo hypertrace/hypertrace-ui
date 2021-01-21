@@ -40,12 +40,14 @@ import { SelectSize } from '../select/select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="multi-select-content">
-            <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
-              <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
-              <span class="label">All</span>
-            </div>
+            <ng-container *ngIf="this.showAllOptionControl">
+              <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
+                <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
+                <span class="label">All</span>
+              </div>
 
-            <ht-divider></ht-divider>
+              <ht-divider></ht-divider>
+            </ng-container>
 
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="multi-select-option">
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
@@ -85,6 +87,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public justify?: SelectJustify;
+
+  @Input()
+  public showAllOptionControl?: boolean = false;
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
