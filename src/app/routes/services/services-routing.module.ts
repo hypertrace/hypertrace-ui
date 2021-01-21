@@ -4,10 +4,10 @@ import { TraceRoute } from '@hypertrace/common';
 import {
   ApiDetailBreadcrumbResolver,
   ApiDetailService,
-  ServiceDetailBreadcrumbResolver,
-  ServiceDetailService,
   EndpointsListComponent,
-  EndpointsListModule
+  EndpointsListModule,
+  ServiceDetailBreadcrumbResolver,
+  ServiceDetailService
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: TraceRoute[] = [
