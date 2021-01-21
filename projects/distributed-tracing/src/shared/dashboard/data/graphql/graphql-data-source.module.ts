@@ -13,7 +13,7 @@ import { AttributeSpecificationModel } from './specifiers/attribute-specificatio
 import { CompositeSpecificationModel } from './specifiers/composite-specification.model';
 import { EnrichedAttributeSpecificationModel } from './specifiers/enriched-attribute-specification.model';
 import { FieldSpecificationModel } from './specifiers/field-specification.model';
-import { MappedAttributeSpecificationModel } from './specifiers/mapped-attribute-specification-model';
+import { MappedAttributeSpecificationModel } from './specifiers/mapped-attribute-specification.model';
 import { TraceStatusSpecificationModel } from './specifiers/trace-status-specification.model';
 import { SpansTableDataSourceModel } from './table/spans/spans-table-data-source.model';
 import { TracesTableDataSourceModel } from './table/traces/traces-table-data-source.model';

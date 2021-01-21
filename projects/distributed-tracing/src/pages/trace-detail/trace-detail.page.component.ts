@@ -5,6 +5,7 @@ import { IconSize } from '@hypertrace/components';
 
 import { Dashboard } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
+
 import { traceDetailDashboard } from './trace-detail.dashboard';
 import { TraceDetails, TraceDetailService } from './trace-detail.service';
 @Component({
@@ -57,6 +58,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
 })
 export class TraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
+
   public readonly traceDetails$: Observable<TraceDetails>;
 
   public constructor(
@@ -72,6 +74,7 @@ export class TraceDetailPageComponent {
       this.traceDetails$.subscribe(traceDetails => {
         dashboard.setVariable('traceId', traceDetails.id);
         dashboard.setVariable('spanId', traceDetails.entrySpanId);
+        dashboard.setVariable('startTime', traceDetails.startTime);
         dashboard.refresh();
       })
     );

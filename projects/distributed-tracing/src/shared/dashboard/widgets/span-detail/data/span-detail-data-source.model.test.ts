@@ -6,7 +6,6 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { spanIdKey } from '../../../../graphql/model/schema/span';
-import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import { SPAN_GQL_REQUEST } from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { SpanDetailDataSourceModel } from './span-detail-data-source.model';
@@ -51,7 +50,60 @@ describe('Span Detail data source model', () => {
       isEqualIgnoreFunctions(lastEmittedQuery, {
         requestType: SPAN_GQL_REQUEST,
         id: 'test-id',
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+        timestamp: undefined,
+        properties: [
+          attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
+          attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
+          attributeSpecBuilder.attributeSpecificationForKey('traceId')
+        ]
+      })
+    ).toBe(true);
+  });
+
+  test('builds expected request with start time', () => {
+    spectator.model.startTime = 1568907645141;
+    spectator.model.getData();
+    expect(
+      isEqualIgnoreFunctions(lastEmittedQuery, {
+        requestType: SPAN_GQL_REQUEST,
+        id: 'test-id',
+        timestamp: new Date(1568907645141),
+        properties: [
+          attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
+          attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
+          attributeSpecBuilder.attributeSpecificationForKey('traceId')
+        ]
+      })
+    ).toBe(true);
+  });
+
+  test('builds expected request with start time from input span object', () => {
+    spectator.model.span.startTime = 1568907645142;
+    spectator.model.startTime = undefined;
+    spectator.model.getData();
+    expect(
+      isEqualIgnoreFunctions(lastEmittedQuery, {
+        requestType: SPAN_GQL_REQUEST,
+        id: 'test-id',
+        timestamp: new Date(1568907645142),
+        properties: [
+          attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
+          attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
+          attributeSpecBuilder.attributeSpecificationForKey('traceId')
+        ]
+      })
+    ).toBe(true);
+  });
+
+  test('builds expected request when both start time property and from input span object is present', () => {
+    spectator.model.span.startTime = 1568907645142;
+    spectator.model.startTime = undefined;
+    spectator.model.getData();
+    expect(
+      isEqualIgnoreFunctions(lastEmittedQuery, {
+        requestType: SPAN_GQL_REQUEST,
+        id: 'test-id',
+        timestamp: new Date(1568907645142),
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),

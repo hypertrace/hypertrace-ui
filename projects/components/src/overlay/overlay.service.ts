@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
-import { SheetOverlayConfig } from './sheet/sheet';
+import { SheetOverlayConfig, SHEET_DATA } from './sheet/sheet';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
@@ -19,6 +19,7 @@ export class OverlayService {
   public createSheet(config: SheetOverlayConfig, injector: Injector = this.defaultInjector): PopoverRef {
     this.activeSheetPopover?.close();
 
+    const metadata = this.buildMetadata(config, injector);
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: SheetOverlayComponent,
       parentInjector: injector,
@@ -26,7 +27,7 @@ export class OverlayService {
         type: PopoverPositionType.Fixed,
         location: PopoverFixedPositionLocation.RightUnderHeader
       },
-      data: config
+      data: metadata
     });
 
     popover.closeOnNavigation();
@@ -34,6 +35,21 @@ export class OverlayService {
     this.setActiveSheetPopover(popover);
 
     return popover;
+  }
+
+  private buildMetadata(config: SheetOverlayConfig, parentInjector: Injector): SheetConstructionData {
+    return {
+      config: config,
+      injector: Injector.create({
+        providers: [
+          {
+            provide: SHEET_DATA,
+            useValue: config.data
+          }
+        ],
+        parent: parentInjector
+      })
+    };
   }
 
   private setActiveSheetPopover(popover: PopoverRef): void {
@@ -46,4 +62,9 @@ export class OverlayService {
       () => (this.activeSheetPopover = undefined)
     );
   }
+}
+
+export interface SheetConstructionData {
+  config: SheetOverlayConfig;
+  injector: Injector;
 }

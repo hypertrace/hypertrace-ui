@@ -16,20 +16,30 @@ export class TimeDuration {
     return this.toMillis() / this.unitInMillis(unit);
   }
 
-  public toMultiUnitString(smallestUnit: ConvertibleTimeUnit = TimeUnit.Second, displayZero: boolean = true): string {
+  public toMultiUnitString(
+    smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
+    displayZero: boolean = true,
+    unitStringType: UnitStringType = UnitStringType.Short
+  ): string {
     const mostSignificantPortion = this.getMostSignificantUnitOnly();
     const remainingMillis = this.millis - mostSignificantPortion.toMillis();
     if (mostSignificantPortion.getAmountForUnit(smallestUnit) < 1) {
-      return displayZero ? new TimeDuration(0, smallestUnit).toString() : '';
+      return displayZero ? new TimeDuration(0, smallestUnit).toFormattedString(unitStringType) : '';
     }
     if (mostSignificantPortion.unit === smallestUnit || remainingMillis === 0) {
-      return mostSignificantPortion.toString();
+      return mostSignificantPortion.toFormattedString(unitStringType);
     }
 
-    return `${mostSignificantPortion.toString()}${new TimeDuration(
-      remainingMillis,
-      TimeUnit.Millisecond
-    ).toMultiUnitString(smallestUnit, false)}`;
+    const joiningStr = unitStringType === UnitStringType.Long ? ' ' : '';
+
+    return [
+      mostSignificantPortion.toFormattedString(unitStringType),
+      new TimeDuration(remainingMillis, TimeUnit.Millisecond).toMultiUnitString(smallestUnit, false, unitStringType)
+    ].join(joiningStr);
+  }
+
+  private toFormattedString(unitStringType: UnitStringType = UnitStringType.Short): string {
+    return unitStringType === UnitStringType.Short ? this.toString() : this.toLongString();
   }
 
   public getMostSignificantUnitOnly(): TimeDuration {
@@ -141,3 +151,8 @@ type ConvertibleTimeUnit =
   | TimeUnit.Minute
   | TimeUnit.Second
   | TimeUnit.Millisecond;
+
+export enum UnitStringType {
+  Long = 'long',
+  Short = 'short'
+}

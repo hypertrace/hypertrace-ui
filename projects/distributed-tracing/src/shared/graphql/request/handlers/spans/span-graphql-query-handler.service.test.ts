@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FixedTimeRange } from '@hypertrace/common';
+import { FixedTimeRange, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -48,6 +48,11 @@ describe('SpanGraphQlQueryHandlerService', () => {
               });
           }
         }
+      }),
+      mockProvider(TimeRangeService, {
+        getCurrentTimeRange: jest
+          .fn()
+          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)))
       })
     ]
   });
@@ -56,10 +61,11 @@ describe('SpanGraphQlQueryHandlerService', () => {
     new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
   );
   const specBuilder = new SpecificationBuilder();
-  const buildRequest = (): GraphQlSpanRequest => ({
+
+  const buildRequest = (timestamp?: Date): GraphQlSpanRequest => ({
     requestType: SPAN_GQL_REQUEST,
     id: 'test-id',
-    timeRange: testTimeRange,
+    timestamp: timestamp,
     properties: [
       specBuilder.attributeSpecificationForKey('apiName'),
       specBuilder.attributeSpecificationForKey('duration')
@@ -86,6 +92,50 @@ describe('SpanGraphQlQueryHandlerService', () => {
           value: {
             startTime: new Date(testTimeRange.from),
             endTime: new Date(testTimeRange.to)
+          }
+        },
+        {
+          name: 'filterBy',
+          value: [
+            {
+              operator: new GraphQlEnumArgument('EQUALS'),
+              value: 'test-id',
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
+              key: 'id'
+            }
+          ]
+        }
+      ],
+      children: [
+        {
+          path: 'results',
+          children: [
+            { path: 'id' },
+            { path: 'attribute', alias: 'apiName', arguments: [{ name: 'key', value: 'apiName' }] },
+            { path: 'attribute', alias: 'duration', arguments: [{ name: 'key', value: 'duration' }] }
+          ]
+        },
+        { path: 'total' }
+      ]
+    });
+  });
+
+  test('produces expected graphql with timestamp', () => {
+    const timestamp = new Date(new TimeDuration(30, TimeUnit.Second).toMillis());
+
+    const spectator = createService();
+    expect(spectator.service.convertRequest(buildRequest(timestamp))).toEqual({
+      path: 'spans',
+      arguments: [
+        {
+          name: 'limit',
+          value: 1
+        },
+        {
+          name: 'between',
+          value: {
+            startTime: new Date(0),
+            endTime: new Date(timestamp.getTime() * 2)
           }
         },
         {
