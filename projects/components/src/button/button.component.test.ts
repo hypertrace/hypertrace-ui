@@ -90,13 +90,6 @@ describe('Button Component', () => {
     expect(spectator.query('.button')).toHaveClass('button secondary small');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
 
-    // SmallSquare
-    spectator.setInput({
-      size: ButtonSize.SmallSquare
-    });
-    expect(spectator.query('.button')).toHaveClass('button secondary small-square');
-    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
-
     // Medium
     spectator.setInput({
       size: ButtonSize.Medium
