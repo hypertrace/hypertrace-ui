@@ -1,7 +1,7 @@
-import { SplitterDirection } from './splitter';
 import { Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
+import { SplitterDirection } from './splitter';
 
 @Injectable()
 export class SplitterService {
@@ -50,7 +50,7 @@ export class SplitterService {
   }
 
   private maybeUpdateLayoutOfSiblings(data: UpdatedDimensionData[], direction: SplitterDirection): boolean {
-    let layoutChanged: boolean = false;
+    let layoutChanged = false;
     data.forEach(datum => {
       if (direction === SplitterDirection.Horizontal) {
         this.updateWidth(datum.element, datum.dimension);
@@ -64,7 +64,7 @@ export class SplitterService {
   }
 
   private getHTMLElement(element: Element | null): HTMLElement | undefined {
-    return element instanceof HTMLElement ? (element as HTMLElement) : undefined;
+    return element instanceof HTMLElement ? element : undefined;
   }
 
   private calculateUpdatedDimensionForPreviousElement(
@@ -90,13 +90,11 @@ export class SplitterService {
   }
 
   private updateWidth(element: HTMLElement, width: number): void {
-    element.style.width = width + 'px';
-    element.style.flex = 'none';
+    element.style.width = `${width}px`;
   }
 
   private updateHeight(element: HTMLElement, height: number): void {
-    element.style.height = height + 'px';
-    element.style.flex = 'none';
+    element.style.height = `${height}px`;
   }
 }
 

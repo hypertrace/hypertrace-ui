@@ -1,8 +1,7 @@
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { LayoutChangeService, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { Observable, throwError } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Output, Input, OnChanges } from '@angular/core';
-import { throwError } from 'rxjs';
-import { LayoutChangeService, TypedSimpleChanges, SubscriptionLifecycle } from '@hypertrace/common';
 import { SplitterDirection } from './splitter';
 import { SplitterService } from './splitter.service';
 
@@ -52,7 +51,7 @@ export class SplitterComponent implements OnChanges {
   }
 
   private buildSplitterLayoutChangeObservable(): Observable<boolean> {
-    const hostElement = this.element.nativeElement as HTMLElement;
+    const hostElement = this.element.nativeElement;
     const parentOfHostElement = hostElement.parentElement;
 
     if (!parentOfHostElement) {
