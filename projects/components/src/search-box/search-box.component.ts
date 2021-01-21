@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Subject } from 'rxjs';
@@ -33,7 +33,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SearchBoxComponent implements OnChanges {
+export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
   public placeholder: string = 'Search';
 
@@ -41,7 +41,7 @@ export class SearchBoxComponent implements OnChanges {
   public value: string = '';
 
   @Input()
-  public debounceTime: number = 0;
+  public debounceTime?: number;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -55,14 +55,13 @@ export class SearchBoxComponent implements OnChanges {
   public isFocused: boolean = false;
   private readonly debouncedValueSubject: Subject<string> = new Subject();
 
+  public ngOnInit(): void {
+    this.setDebouncedSubscription();
+  }
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.debounceTime) {
-      this.subscriptionLifecycle.unsubscribe();
-      this.subscriptionLifecycle.add(
-        this.debouncedValueSubject
-          .pipe(debounceTime(this.debounceTime))
-          .subscribe(value => this.valueChange.emit(value))
-      );
+      this.setDebouncedSubscription();
     }
   }
 
@@ -81,5 +80,14 @@ export class SearchBoxComponent implements OnChanges {
 
     this.value = '';
     this.onValueChange();
+  }
+
+  private setDebouncedSubscription(): void {
+    this.subscriptionLifecycle.unsubscribe();
+    this.subscriptionLifecycle.add(
+      this.debouncedValueSubject
+        .pipe(debounceTime(this.debounceTime ?? 0))
+        .subscribe(value => this.valueChange.emit(value))
+    );
   }
 }
