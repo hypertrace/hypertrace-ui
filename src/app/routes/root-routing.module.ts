@@ -3,7 +3,13 @@ import { PreloadAllModules, RouterModule } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { ExternalUrlNavigator, TraceRoute } from '@hypertrace/common';
 import { NotFoundComponent, NotFoundModule } from '@hypertrace/components';
-import { ApiDetailBreadcrumbResolver, ApiDetailService, ObservabilityIconType } from '@hypertrace/observability';
+import {
+  ApiDetailBreadcrumbResolver,
+  ApiDetailService,
+  ObservabilityIconType,
+  ServiceDetailBreadcrumbResolver,
+  ServiceDetailService
+} from '@hypertrace/observability';
 import { ApplicationFrameComponent } from '../application-frame/application-frame.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
@@ -54,17 +60,6 @@ const ROUTE_CONFIG: TraceRoute[] = [
               import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
           },
           {
-            path: 'services',
-            data: {
-              breadcrumb: {
-                icon: ObservabilityIconType.Service,
-                label: 'Service'
-              }
-            },
-            loadChildren: () =>
-              import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
-          },
-          {
             path: 'endpoints',
             data: {
               breadcrumb: {
@@ -73,7 +68,15 @@ const ROUTE_CONFIG: TraceRoute[] = [
               }
             },
             loadChildren: () =>
-              import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
+              import('./endpoints/endpoints-routing.module').then(module => module.EndpointsRoutingModule)
+          },
+          {
+            path: `service/:${ServiceDetailService.SERVICE_ID_PARAM_NAME}`,
+            resolve: {
+              breadcrumb: ServiceDetailBreadcrumbResolver
+            },
+            loadChildren: () =>
+              import('./service-detail/service-detail-routing.module').then(module => module.ServiceDetailRoutingModule)
           },
           {
             path: `endpoint/:${ApiDetailService.API_ID_PARAM_NAME}`,

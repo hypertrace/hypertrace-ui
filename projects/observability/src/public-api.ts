@@ -67,6 +67,7 @@ export * from './shared/components/donut/donut';
 // Pages
 export * from './pages/apis/backends/backend-list.module';
 export * from './pages/apis/backends/backend-list.component';
+export * from './pages/apis/endpoints-list.module';
 export * from './pages/apis/endpoints-list.component';
 export * from './pages/apis/endpoints-list.dashboard';
 export * from './pages/apis/topology/application-flow.component';
@@ -82,7 +83,6 @@ export * from './pages/apis/api-detail/traces/api-trace-list.component';
 export * from './pages/apis/api-detail/traces/api-trace-list.dashboard';
 export * from './pages/api-trace-detail/api-trace-detail.page.component';
 
-export * from './pages/apis/endpoints-list.module';
 export * from './pages/apis/service-detail/service-detail.module';
 export * from './pages/apis/service-detail/service-detail.component';
 export * from './pages/apis/service-detail/service-detail.service';
