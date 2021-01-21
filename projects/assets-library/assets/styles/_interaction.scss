@@ -23,7 +23,7 @@
   box-shadow: 0 1px 4px rgba($gray-7, 0.16), 0 3px 4px rgba($gray-7, 0.08), 0 2px 5px rgba($gray-7, 0.16);
 }
 
-@mixin dropdown($radius: 4px) {
+@mixin dropdown($radius: 4px, $left: 1px, $margin: 1px 0) {
   @include dropdown-box-shadow();
   width: inherit;
   border-radius: $radius;
@@ -31,8 +31,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  left: 1px; // To visually center while accounting for margin
-  margin: 1px 0; // Keeps the dropdown from covering the trigger border
+  left: $left; // To visually center while accounting for margin
+  margin: $margin; // Keeps the dropdown from covering the trigger border
 }
 
 @mixin popover-menu-content {
