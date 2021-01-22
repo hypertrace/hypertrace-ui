@@ -1,11 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
   selector: 'ht-search-box',
   styleUrls: ['./search-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="ht-search-box" [class.focused]="this.isFocused">
       <ht-icon icon="${IconType.Search}" size="${IconSize.Medium}" class="icon" (click)="onSubmit()"></ht-icon>
@@ -29,12 +33,15 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SearchBoxComponent {
+export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
   public placeholder: string = 'Search';
 
   @Input()
   public value: string = '';
+
+  @Input()
+  public debounceTime?: number;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -43,14 +50,27 @@ export class SearchBoxComponent {
   // tslint:disable-next-line:no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
+  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+
   public isFocused: boolean = false;
+  private readonly debouncedValueSubject: Subject<string> = new Subject();
+
+  public ngOnInit(): void {
+    this.setDebouncedSubscription();
+  }
+
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.debounceTime) {
+      this.setDebouncedSubscription();
+    }
+  }
 
   public onSubmit(): void {
     this.submit.emit(this.value);
   }
 
   public onValueChange(): void {
-    this.valueChange.emit(this.value);
+    this.debouncedValueSubject.next(this.value);
   }
 
   public clearValue(): void {
@@ -60,5 +80,14 @@ export class SearchBoxComponent {
 
     this.value = '';
     this.onValueChange();
+  }
+
+  private setDebouncedSubscription(): void {
+    this.subscriptionLifecycle.unsubscribe();
+    this.subscriptionLifecycle.add(
+      this.debouncedValueSubject
+        .pipe(debounceTime(this.debounceTime ?? 0))
+        .subscribe(value => this.valueChange.emit(value))
+    );
   }
 }

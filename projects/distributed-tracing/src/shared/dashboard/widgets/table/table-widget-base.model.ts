@@ -21,6 +21,7 @@ import { TableWidgetRowSelectionModel } from './selections/table-widget-row-sele
 import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
+import { TableWidgetSelectFilterModel } from './table-widget-select-filter.model';
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
@@ -61,6 +62,20 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     } as ArrayPropertyTypeInstance
   })
   public filterOptions: TableWidgetFilterModel[] = [];
+
+  @ModelProperty({
+    key: 'selectFilterOptions',
+    displayName: 'Filter Select Options',
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ARRAY_PROPERTY.type,
+      subtype: {
+        key: ModelPropertyType.TYPE,
+        defaultModelClass: TableWidgetSelectFilterModel
+      }
+    } as ArrayPropertyTypeInstance
+  })
+  public selectFilterOptions: TableWidgetSelectFilterModel[] = [];
 
   @ModelProperty({
     key: 'checkbox-filter-option',
@@ -139,6 +154,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
     return this.checkboxFilterOption;
+  }
+
+  public getSelectFilterOptions(): TableWidgetSelectFilterModel[] {
+    return this.selectFilterOptions;
   }
 
   public isPageable(): boolean {
