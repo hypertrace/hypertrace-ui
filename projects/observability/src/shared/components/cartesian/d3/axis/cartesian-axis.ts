@@ -93,7 +93,7 @@ export class CartesianAxis<TData = {}> {
 
     const allElementLength: number[] = [];
 
-    ticksSelection.each((_datum, index, nodes) =>
+    ticksSelection.each((_, index, nodes) =>
       allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
     );
 
@@ -104,7 +104,7 @@ export class CartesianAxis<TData = {}> {
     const ticksSelection = axisSvgSelection.selectAll('text');
     const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
-    ticksSelection.each((_datum, index, nodes) =>
+    ticksSelection.each((_, index, nodes) =>
       this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
     );
   }
@@ -114,7 +114,7 @@ export class CartesianAxis<TData = {}> {
     maxTextTickTextLength: number,
     isLabelRotated: boolean
   ): void {
-    axisSvgSelection.selectAll('.tick').each((_d, i, n) => {
+    axisSvgSelection.selectAll('.tick').each((_, i, n) => {
       const currentTick = select(n[i]);
 
       const getTickTranslateXValue = (tick: Selection<BaseType, unknown, null, undefined>): number => {
