@@ -8,12 +8,12 @@ import {
   Output
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { IconSize } from '../icon/icon-size';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { ButtonSize, ButtonStyle } from '../button/button';
-import { SelectType } from '../select/select-type';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
+import { ToggleViewMode } from '../toggle-button-group/toggle-button';
 
 @Component({
   selector: 'ht-paginator',
@@ -26,41 +26,31 @@ import { PaginationProvider } from './paginator-api';
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
       >
       </ht-label>
-
       <div class="pagination-buttons">
-        <!-- TODO: Change 
-         to be more generic ButtonGroupComponent to accommodate this use case -->
-        <ht-button
-          class="button previous-button"
-          htTooltip="Go to previous page"
-          display="${ButtonStyle.Bordered}"
-          size="${ButtonSize.SmallSquare}"
-          icon="${IconType.ArrowLeft}"
-          [disabled]="!this.hasPrevPage()"
-          (click)="this.gotoPreviousPage()"
-        >
-        </ht-button>
-        <ht-button
-          class="button next-button"
-          htTooltip="Go to next page"
-          display="${ButtonStyle.Bordered}"
-          size="${ButtonSize.SmallSquare}"
-          icon="${IconType.ArrowRight}"
-          [disabled]="!this.hasNextPage()"
-          (click)="this.gotoNextPage()"
-        >
-        </ht-button>
+        <ht-toggle-button-group viewMode="${ToggleViewMode.ButtonGroup}">
+          <ht-toggle-button
+            icon="${IconType.ArrowLeft}"
+            [disabled]="!this.hasPrevPage()"
+            [showLabel]="false"
+            (click)="this.gotoPreviousPage()"
+            iconSize="${IconSize.Small}"
+            htTooltip="Go to previous page"
+            class="previous-button"
+          ></ht-toggle-button>
+          <ht-toggle-button
+            icon="${IconType.ArrowRight}"
+            [disabled]="!this.hasNextPage()"
+            [showLabel]="false"
+            (click)="this.gotoNextPage()"
+            iconSize="${IconSize.Small}"
+            htTooltip="Go to next page"
+            class="next-button"
+          ></ht-toggle-button>
+        </ht-toggle-button-group>
       </div>
-
       <ht-label class="label" label="Rows per Page:"></ht-label>
-
       <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
-        <ht-select
-          [selected]="this.pageSize"
-          type="${SelectType.Paginator}"
-          (selectedChange)="this.onPageSizeChange($event)"
-          showBorder="true"
-        >
+        <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
           <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
           </ht-select-option>
         </ht-select>

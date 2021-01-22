@@ -5,7 +5,6 @@ import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { SelectJustify } from './select-justify';
-import { SelectType } from './select-type';
 import { SelectComponent } from './select.component';
 import { SelectModule } from './select.module';
 
@@ -159,7 +158,7 @@ describe('Select Component', () => {
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
   }));
 
-  test('should set correct select type', fakeAsync(() => {
+  test('should set popover width correct', fakeAsync(() => {
     spectator = hostFactory(
       `
     <ht-select [selected]="selected" [showBorder]="showBorder">
@@ -174,13 +173,10 @@ describe('Select Component', () => {
         }
       }
     );
+
     spectator.tick();
 
-    spectator.setInput({
-      type: SelectType.Paginator
-    });
-
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.select-content')).toBe(spectator.query('.paginator'));
+    expect(spectator.component.selectContainerWidth).toBeTruthy();
+    expect(spectator.query('.select-content')).toHaveStyle({ minWidth: spectator.component.selectContainerWidth });
   }));
 });
