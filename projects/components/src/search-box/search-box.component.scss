@@ -36,7 +36,7 @@
   }
 
   .input {
-    @include font-title;
+    @include body-1-regular($gray-9);
     height: 34px;
     line-height: 34px;
     width: 420px;
@@ -47,7 +47,7 @@
     border-radius: 4px;
 
     &::placeholder {
-      @include font-title;
+      @include body-1-regular($gray-5);
       line-height: 30px;
     }
 
