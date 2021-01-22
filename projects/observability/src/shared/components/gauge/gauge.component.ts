@@ -104,13 +104,13 @@ export class GaugeComponent implements OnChanges {
   }
 
   private buildValueArc(radius: number, inputData: GaugeInputData): string {
-    const startAngle = - (Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE);
+    const startAngle = -(Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE);
 
     return this.buildArcGenerator()({
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
       startAngle: startAngle,
-      endAngle: startAngle + 2 * (inputData.value / inputData.maxValue) * (- startAngle)
+      endAngle: startAngle + 2 * (inputData.value / inputData.maxValue) * -startAngle
     })!;
   }
 
