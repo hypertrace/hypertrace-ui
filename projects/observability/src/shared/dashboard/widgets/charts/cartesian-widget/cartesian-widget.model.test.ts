@@ -44,20 +44,24 @@ describe('Cartesian Widget Model', () => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(dataFetcher.getData(new TimeDuration(1, TimeUnit.Minute))).toBe('(x|)', {
         x: [
-          expect.objectContaining({
-            data: [
-              [0, 10],
-              [1, 15]
-            ],
-            name: 'first'
-          }),
-          expect.objectContaining({
-            data: [
-              [0, 20],
-              [1, 25]
-            ],
-            name: 'second'
-          })
+          {
+            series: expect.objectContaining({
+              data: [
+                [0, 10],
+                [1, 15]
+              ],
+              name: 'first'
+            })
+          },
+          {
+            series: expect.objectContaining({
+              data: [
+                [0, 20],
+                [1, 25]
+              ],
+              name: 'second'
+            })
+          }
         ]
       });
 

@@ -1,4 +1,7 @@
 export interface MetricTimeseriesInterval {
-  value: number;
   timestamp: Date;
+  value: number;
+  baseline?: number;
+  upperBound?: number;
+  lowerBound?: number;
 }

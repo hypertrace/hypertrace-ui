@@ -99,32 +99,35 @@ describe('Cartesian widget renderer component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.data$!).toBe('(x|)', {
-        x: [
-          {
-            name: 'Series 1',
-            color: 'blue',
-            stacking: false,
-            hide: false,
-            type: CartesianSeriesVisualizationType.Area,
-            units: 'ms',
-            data: [
-              [1, 2],
-              [2, 4]
-            ]
-          },
-          {
-            name: 'Series 2',
-            color: 'red',
-            stacking: false,
-            hide: false,
-            type: CartesianSeriesVisualizationType.Area,
-            units: 'ms',
-            data: [
-              [3, 5],
-              [4, 6]
-            ]
-          }
-        ]
+        x: {
+          series: [
+            {
+              name: 'Series 1',
+              color: 'blue',
+              stacking: false,
+              hide: false,
+              type: CartesianSeriesVisualizationType.Area,
+              units: 'ms',
+              data: [
+                [1, 2],
+                [2, 4]
+              ]
+            },
+            {
+              name: 'Series 2',
+              color: 'red',
+              stacking: false,
+              hide: false,
+              type: CartesianSeriesVisualizationType.Area,
+              units: 'ms',
+              data: [
+                [3, 5],
+                [4, 6]
+              ]
+            }
+          ],
+          bands: []
+        }
       });
     });
   });
