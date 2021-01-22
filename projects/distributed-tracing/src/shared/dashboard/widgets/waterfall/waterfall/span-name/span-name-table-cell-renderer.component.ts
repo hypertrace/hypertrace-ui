@@ -11,13 +11,13 @@ import { WaterfallTableCellType } from './span-name-cell-type';
     <div class="span-title" [htTooltip]="this.tooltip" [ngClass]="{ clickable: this.clickable }">
       <div class="color-bar" [style.backgroundColor]="this.value.color" *ngIf="this.value.color"></div>
       <div class="service-name">
-        <span class="text">{{ this.value.serviceName }}</span>
+        <span class="text" data-sensitive-pii>{{ this.value.serviceName }}</span>
       </div>
       <div class="protocol-name" *ngIf="this.value.protocolName">
-        <span class="text">{{ this.value.protocolName }}</span>
+        <span class="text" data-sensitive-pii>{{ this.value.protocolName }}</span>
       </div>
       <div class="span-name">
-        <span class="text">{{ this.value.name }}</span>
+        <span class="text" data-sensitive-pii>{{ this.value.name }}</span>
       </div>
     </div>
   `

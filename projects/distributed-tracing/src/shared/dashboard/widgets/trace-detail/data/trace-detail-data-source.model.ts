@@ -1,5 +1,5 @@
-import { Dictionary } from '@hypertrace/common';
-import { ARRAY_PROPERTY, Model, ModelProperty, PLAIN_OBJECT_PROPERTY } from '@hypertrace/hyperdash';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
+import { ARRAY_PROPERTY, Model, ModelProperty, PLAIN_OBJECT_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
@@ -22,12 +22,20 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   public trace!: Trace;
 
   @ModelProperty({
+    key: 'start-time',
+    required: false,
+    type: UNKNOWN_PROPERTY.type
+  })
+  public startTime?: unknown;
+
+  @ModelProperty({
     key: 'attributes',
     type: ARRAY_PROPERTY.type
   })
   public attributes: string[] = [];
 
   private readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public getData(): Observable<TraceDetailData> {
     return this.query<TraceGraphQlQueryHandlerService>({
@@ -35,7 +43,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       traceType: this.trace[traceTypeKey],
       traceId: this.trace[traceIdKey],
       spanLimit: 0,
-      timeRange: this.getTimeRangeOrThrow(),
+      timestamp: this.dateCoercer.coerce(this.startTime ?? this.trace.startTime),
       traceProperties: this.getTraceAttributes().map(attribute =>
         this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
       )

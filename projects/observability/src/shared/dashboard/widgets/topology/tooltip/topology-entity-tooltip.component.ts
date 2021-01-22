@@ -28,9 +28,9 @@ import {
           {{ data.title.value }}
         </span>
         <ng-template #edgeTitle>
-          <span class="title-text">{{ data.title.from }}</span>
+          <span class="title-text" data-sensitive-pii>{{ data.title.from }}</span>
           <ht-icon icon="${IconType.ArrowUp}" size="${IconSize.Small}" class="edge-title-arrow"></ht-icon>
-          <span class="title-text">{{ data.title.to }}</span>
+          <span class="title-text" data-sensitive-pii>{{ data.title.to }}</span>
         </ng-template>
         <div class="hide-tooltip-button-container" *ngIf="data.showHideButton">
           <ht-icon

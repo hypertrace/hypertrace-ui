@@ -11,7 +11,7 @@ import { EMPTY, Observable, of } from 'rxjs';
   template: `
     <div class="call-headers">
       <ht-label label="Headers" class="title"></ht-label>
-      <div class="container">
+      <div class="container" data-sensitive-pii>
         <ng-container *htLoadAsync="this.headerRecords$ as headerRecords">
           <ht-list-view [records]="headerRecords"></ht-list-view>
         </ng-container>
