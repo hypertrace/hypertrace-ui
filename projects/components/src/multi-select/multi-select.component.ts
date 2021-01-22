@@ -29,7 +29,7 @@ import { SelectSize } from '../select/select-size';
       [ngClass]="[this.size, this.showBorder ? 'border' : '', this.disabled ? 'disabled' : '']"
       *htLetAsync="this.selected$ as selected"
     >
-      <ht-popover [disabled]="this.disabled" class="multi-select-container" >
+      <ht-popover [disabled]="this.disabled" class="multi-select-container">
         <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="this.justifyClass" #triggerContainer>
             <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
@@ -39,7 +39,7 @@ import { SelectSize } from '../select/select-size';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content" [ngStyle]="{'min-width.px': triggerContainer.offsetWidth}">
+          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
             <ng-container *ngIf="this.showAllOptionControl">
               <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
                 <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
@@ -151,7 +151,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     this.selected$ = this.buildObservableOfSelected();
     this.selectedChange.emit(this.selected);
   }
-
 
   private setTriggerLabel(): void {
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
