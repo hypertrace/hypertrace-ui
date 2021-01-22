@@ -7,8 +7,8 @@ import {
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 
-export const servicesListDashboard: DashboardDefaultConfiguration = {
-  location: 'SERVICE_LIST',
+export const endpointListDashboard: DashboardDefaultConfiguration = {
+  location: 'ENDPOINT_LIST',
   json: {
     type: 'container-widget',
     layout: {
@@ -18,7 +18,7 @@ export const servicesListDashboard: DashboardDefaultConfiguration = {
     children: [
       {
         type: 'table-widget',
-        id: 'services-list.table',
+        id: 'endpoint-list.table',
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
