@@ -25,7 +25,13 @@ describe('TraceDetailService', () => {
     providers: [
       mockProvider(ActivatedRoute, {
         paramMap: of({
-          get: () => 'test-id'
+          get: (param: string) => {
+            if (param === 'startTime') {
+              return 1608151401295;
+            }
+
+            return 'test-id';
+          }
         })
       }),
       mockProvider(TimeRangeService, {
@@ -74,6 +80,7 @@ describe('TraceDetailService', () => {
         x: {
           id: 'test-id',
           entrySpanId: 'test-id',
+          startTime: 1608151401295,
           timeString: `${new DisplayDatePipe().transform(1576364117792, {
             mode: DateFormatMode.DateAndTimeWithSeconds
           })} for 20 ms`,

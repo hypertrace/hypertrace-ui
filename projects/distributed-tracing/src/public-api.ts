@@ -55,6 +55,9 @@ export * from './shared/graphql/model/metadata/attribute-metadata';
 export * from './shared/graphql/model/metrics/metric-aggregation';
 export * from './shared/graphql/model/metrics/metric-health';
 
+// Navigation
+export * from './shared/services/navigation/tracing-navigation.service';
+
 // Schema
 export * from './shared/graphql/model/schema/filter/field/graphql-field-filter';
 export * from './shared/graphql/model/schema/filter/id/graphql-id-filter';

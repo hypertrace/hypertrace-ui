@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +18,10 @@ import {
 export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<GraphQlSpanRequest, Span | undefined> {
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
-  public constructor(private readonly spansGraphQlQueryHandlerService: SpansGraphQlQueryHandlerService) {}
+  public constructor(
+    private readonly spansGraphQlQueryHandlerService: SpansGraphQlQueryHandlerService,
+    private readonly timeRangeService: TimeRangeService
+  ) {}
 
   public matchesRequest(request: unknown): request is GraphQlSpanRequest {
     return (
@@ -41,7 +45,7 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
     return {
       requestType: SPANS_GQL_REQUEST,
       limit: 1,
-      timeRange: request.timeRange,
+      timeRange: this.buildTimeRange(request.timestamp),
       properties: request.properties,
       filters: [this.buildIdFilter(request)]
     };
@@ -49,6 +53,21 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
 
   private buildIdFilter(request: GraphQlSpanRequest): GraphQlFilter {
     return new GraphQlFieldFilter('id', GraphQlOperatorType.Equals, request.id);
+  }
+
+  protected buildTimeRange(timestamp?: Date): GraphQlTimeRange {
+    let timeRange;
+    if (timestamp) {
+      const duration = new TimeDuration(30, TimeUnit.Second);
+      timeRange = {
+        startTime: timestamp.getTime() - duration.toMillis(),
+        endTime: timestamp.getTime() + duration.toMillis()
+      };
+    } else {
+      timeRange = this.timeRangeService.getCurrentTimeRange();
+    }
+
+    return new GraphQlTimeRange(timeRange.startTime, timeRange.endTime);
   }
 }
 
@@ -58,5 +77,5 @@ export interface GraphQlSpanRequest {
   requestType: typeof SPAN_GQL_REQUEST;
   id: string;
   properties: Specification[];
-  timeRange: GraphQlTimeRange;
+  timestamp?: Date;
 }

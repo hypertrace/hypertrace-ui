@@ -54,7 +54,6 @@
 .multi-select-content {
   @include dropdown();
   min-width: 120px;
-  max-height: 204px;
 
   .multi-select-option {
     display: flex;
@@ -65,15 +64,15 @@
     align-items: center;
 
     .checkbox {
-      margin-right: 8px;
+      margin: 0px;
     }
 
     .icon {
-      margin-right: 8px;
+      margin-left: 8px;
     }
 
     .label {
-      margin-right: 8px;
+      margin-left: 8px;
     }
 
     &:hover {
