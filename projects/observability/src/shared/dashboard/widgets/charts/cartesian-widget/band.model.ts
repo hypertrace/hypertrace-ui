@@ -13,7 +13,7 @@ import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
   type: 'band'
 })
 export class BandModel {
-  public static readonly BAND_COLOR: string = Color.Gray1;
+  public static readonly BAND_COLOR: string = Color.Gray2;
   public static readonly BASELINE_COLOR: string = Color.Gray4;
   public static readonly BASELINE_NAME: string = 'Baseline';
   public static readonly UPPER_BOUND_NAME: string = 'Upper Bound';

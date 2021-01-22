@@ -230,8 +230,15 @@ export class CartesianWidgetModel<TInterval> {
   }
 
   private convertToBaseline(metricSeries: MetricSeries<TInterval>, model: BandModel): Series<TInterval> {
+    // TODO: These interval maps are in the wrong place.
     return {
-      data: metricSeries.intervals,
+      data: metricSeries.intervals.map(
+        (interval: unknown) =>
+          (({
+            ...(interval as object),
+            value: (interval as MetricTimeseriesInterval).baseline
+          } as unknown) as TInterval)
+      ),
       units: metricSeries.units,
       color: BandModel.BASELINE_COLOR,
       name: BandModel.BASELINE_NAME,
