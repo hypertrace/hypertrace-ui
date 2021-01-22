@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { ExternalUrlNavigator, TraceRoute } from '@hypertrace/common';
 import { NotFoundComponent, NotFoundModule } from '@hypertrace/components';
-import { ApiDetailBreadcrumbResolver, ApiDetailService, ObservabilityIconType } from '@hypertrace/observability';
+import { ObservabilityIconType } from '@hypertrace/observability';
 import { ApplicationFrameComponent } from '../application-frame/application-frame.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
