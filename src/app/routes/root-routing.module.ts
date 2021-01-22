@@ -65,12 +65,15 @@ const ROUTE_CONFIG: TraceRoute[] = [
               import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
           },
           {
-            path: `endpoint/:${ApiDetailService.API_ID_PARAM_NAME}`,
-            resolve: {
-              breadcrumb: ApiDetailBreadcrumbResolver
+            path: 'endpoints',
+            data: {
+              breadcrumb: {
+                icon: ObservabilityIconType.Api,
+                label: 'Endpoints'
+              }
             },
             loadChildren: () =>
-              import('./api-detail/api-detail-routing.module').then(module => module.ApiDetailRoutingModule)
+              import('./endpoints/endpoint-routing.module').then(module => module.EndpointRoutingModule)
           },
           {
             path: 'trace',
