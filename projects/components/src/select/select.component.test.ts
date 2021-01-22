@@ -158,7 +158,7 @@ describe('Select Component', () => {
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
   }));
 
-  test('should set popover width correct', fakeAsync(() => {
+  test('should get select container width', fakeAsync(() => {
     spectator = hostFactory(
       `
     <ht-select [selected]="selected" [showBorder]="showBorder">
@@ -177,6 +177,5 @@ describe('Select Component', () => {
     spectator.tick();
 
     expect(spectator.component.selectContainerWidth).toBeTruthy();
-    expect(spectator.query('.select-content')).toHaveStyle({ minWidth: spectator.component.selectContainerWidth });
   }));
 });

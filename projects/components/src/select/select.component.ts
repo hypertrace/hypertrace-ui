@@ -4,13 +4,13 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
-  EventEmitter,
-  ViewChild,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
+  ViewChild
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';

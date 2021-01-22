@@ -8,12 +8,12 @@ import {
   Output
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { IconSize } from '../icon/icon-size';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
+import { IconSize } from '../icon/icon-size';
+import { ToggleViewMode } from '../toggle-button-group/toggle-button';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
-import { ToggleViewMode } from '../toggle-button-group/toggle-button';
 
 @Component({
   selector: 'ht-paginator',
