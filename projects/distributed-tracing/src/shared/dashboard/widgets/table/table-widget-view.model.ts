@@ -1,5 +1,6 @@
 import { ModelTemplatePropertyType } from '@hypertrace/dashboards';
 import { Model, ModelJson, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+
 @Model({
   type: 'table-widget-view'
 })

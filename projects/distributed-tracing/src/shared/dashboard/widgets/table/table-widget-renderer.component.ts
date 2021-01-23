@@ -16,7 +16,7 @@ import {
   StatefulTableRow,
   TableColumnConfig,
   TableDataSource,
-  TableFilter,
+  TableFilter, TableMode,
   TableRow,
   TableSelectionMode,
   TableStyle,
@@ -122,6 +122,8 @@ export class TableWidgetRendererComponent
 
   public ngOnInit(): void {
     super.ngOnInit();
+
+    this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
@@ -325,8 +327,11 @@ export class TableWidgetRendererComponent
     this.searchFilterSubject.next([searchFilter]);
   }
 
+  public onModeChange(mode: TableMode): void {
+    this.activeMode = mode;
+  }
+
   public onViewChange(view: string): void {
-    this.activeMode = view;
     this.model.setView(view);
     this.columnConfigs$ = this.getColumnConfigs();
   }
