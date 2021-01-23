@@ -31,7 +31,7 @@ import { SelectSize } from '../select/select-size';
     >
       <ht-popover [disabled]="this.disabled" class="multi-select-container">
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="this.justifyClass">
+          <div class="trigger-content" [ngClass]="this.justifyClass" #triggerContainer>
             <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
             </ht-icon>
             <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
@@ -39,7 +39,7 @@ import { SelectSize } from '../select/select-size';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content">
+          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
             <ng-container *ngIf="this.showAllOptionControl">
               <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
                 <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
