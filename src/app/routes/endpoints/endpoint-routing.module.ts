@@ -18,7 +18,8 @@ const ROUTE_CONFIG: TraceRoute[] = [
     resolve: {
       breadcrumb: ApiDetailBreadcrumbResolver
     },
-    loadChildren: () => import('./endpoint-detail/endpoint-detail-routing.module').then(module => module.EndpointDetailRoutingModule)
+    loadChildren: () =>
+      import('./endpoint-detail/endpoint-detail-routing.module').then(module => module.EndpointDetailRoutingModule)
   }
 ];
 
