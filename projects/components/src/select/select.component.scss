@@ -16,11 +16,16 @@
   align-items: center;
   border: 1px solid $color-border;
   border-radius: 6px;
-  height: 100%;
   width: 100%;
+  height: 34px;
+
+  &.small {
+    height: 32px;
+  }
 
   .select-container {
     width: 100%;
+    height: 100%;
   }
 
   &.disabled {
@@ -52,7 +57,7 @@
     align-items: center;
     padding: 0 8px;
     cursor: pointer;
-    height: 34px;
+    height: 100%;
 
     &.justify-left {
       justify-content: flex-start;
@@ -107,6 +112,10 @@
 
     &:hover {
       background: $gray-1;
+    }
+
+    &.small {
+      height: 32px;
     }
   }
 }
