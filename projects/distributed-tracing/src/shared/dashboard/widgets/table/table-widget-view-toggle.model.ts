@@ -41,11 +41,11 @@ export class TableWidgetViewToggleModel extends TableWidgetBaseModel {
   }
 
   public getViewOptions(): string[] {
-    return this.views.map(v => v.view);
+    return this.views.map(v => v.label);
   }
 
   private createDelegate(view: string): TableWidgetModel | undefined {
-    const found = this.views.find(v => v.view.toLowerCase() === view.toLowerCase());
+    const found = this.views.find(v => v.label.toLowerCase() === view.toLowerCase());
 
     return found ? this.api.createChild<TableWidgetModel>(found.template) : undefined;
   }

@@ -17,7 +17,6 @@ import {
   TableColumnConfig,
   TableDataSource,
   TableFilter,
-  TableMode,
   TableRow,
   TableSelectionMode,
   TableStyle,
@@ -72,7 +71,7 @@ import { TableWidgetModel } from './table-widget.model';
           [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
           [columnConfigs]="this.columnConfigs$ | async"
           [metadata]="this.metadata$ | async"
-          [mode]="this.activeMode"
+          [mode]="this.model.mode"
           [selectionMode]="this.model.getSelectionMode()"
           [display]="this.model.style"
           [data]="this.data$ | async"
@@ -97,7 +96,6 @@ export class TableWidgetRendererComponent
   implements OnInit {
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public viewItems: ToggleItem<string>[] = [];
-  public activeMode!: string;
 
   public selectFilterItems$!: Observable<SelectFilter[]>;
 
@@ -123,8 +121,6 @@ export class TableWidgetRendererComponent
 
   public ngOnInit(): void {
     super.ngOnInit();
-
-    this.onModeChange(this.model.mode);
 
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
@@ -326,10 +322,6 @@ export class TableWidgetRendererComponent
       value: text
     };
     this.searchFilterSubject.next([searchFilter]);
-  }
-
-  public onModeChange(mode: TableMode): void {
-    this.activeMode = mode;
   }
 
   public onViewChange(view: string): void {

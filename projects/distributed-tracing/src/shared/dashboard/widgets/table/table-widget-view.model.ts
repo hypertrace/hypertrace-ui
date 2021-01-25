@@ -6,10 +6,10 @@ import { Model, ModelJson, ModelProperty, STRING_PROPERTY } from '@hypertrace/hy
 })
 export class TableWidgetViewModel {
   @ModelProperty({
-    key: 'view',
+    key: 'label',
     type: STRING_PROPERTY.type
   })
-  public view!: string;
+  public label!: string;
 
   @ModelProperty({
     key: 'template',
