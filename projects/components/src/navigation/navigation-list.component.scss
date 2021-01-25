@@ -5,10 +5,10 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  padding: 18px 12px;
 
   height: 100%;
   width: 100%;
-  padding-right: 5px;
   justify-content: space-between;
 
   .content {
@@ -34,7 +34,7 @@
     position: absolute;
     display: flex;
     align-items: center;
-    top: 6px;
+    top: 22px;
     right: -12px;
     height: 28px;
     width: 12px;
