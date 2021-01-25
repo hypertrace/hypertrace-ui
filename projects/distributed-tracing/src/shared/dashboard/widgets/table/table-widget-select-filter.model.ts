@@ -3,6 +3,7 @@ import { FilterOperator, TableFilter } from '@hypertrace/components';
 import { Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Model({
   type: 'table-widget-select-filter',
@@ -26,7 +27,15 @@ export class TableWidgetSelectFilterModel {
   protected readonly api!: ModelApi;
 
   public getData(): Observable<PrimitiveValue[]> {
-    return this.api.getData<PrimitiveValue[]>();
+    return this.api.getData<PrimitiveValue[]>().pipe(
+      map(values => values.filter(value => !this.isEmpty(value))),
+      map(values => values.sort())
+    );
+  }
+
+  public isEmpty(value: unknown): boolean {
+    // Empty values can't be queried through filtering yet, so need to remove them so they don't appear in the dropdown
+    return value === undefined || value === null || value === '';
   }
 
   public getTableFilter(value: unknown): TableFilter {

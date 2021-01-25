@@ -138,18 +138,22 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return TableSelectionMode.Single;
   }
 
-  public setMode(_mode: TableMode): void {
+  public setView(_view: string): void {
     // No-op here, but can be overridden
     return;
   }
 
-  public getModeOptions(): TableMode[] {
+  public getViewOptions(): string[] {
     // No-op here, but can be overridden
     return [];
   }
 
   public getFilterOptions(): TableWidgetFilterModel[] {
     return this.filterOptions;
+  }
+
+  public getSearchAttribute(): string | undefined {
+    return this.searchAttribute;
   }
 
   public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
