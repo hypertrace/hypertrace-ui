@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { LayoutChangeService, SubscriptionLifecycle } from '@hypertrace/common';
 import { Observable, throwError } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
 import { SplitterService } from './splitter.service';
 
@@ -42,12 +42,11 @@ export class SplitterComponent implements OnChanges {
 
     this.subscriptionLifecycle.add(
       this.buildSplitterLayoutChangeObservable()
-        .pipe(
-          debounceTime(this.debounceTime),
-          tap(layoutChange => this.layoutChange.emit(layoutChange)),
-          tap(layoutChange => layoutChange && this.layoutChangeService.publishLayoutChange())
-        )
-        .subscribe()
+        .pipe(debounceTime(this.debounceTime))
+        .subscribe(layoutChange => {
+          this.layoutChange.emit(layoutChange);
+          layoutChange && this.layoutChangeService.publishLayoutChange();
+        })
     );
   }
 

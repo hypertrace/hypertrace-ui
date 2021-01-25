@@ -24,9 +24,11 @@ export class SplitterService {
         const previousElementUpdatedDimension = prevSibling
           ? this.calculateUpdatedDimensionForPreviousElement(event, parentBounds, direction)
           : 0;
+
         const nextElementUpdatedDimension = nextSibling
           ? this.calculateUpdatedDimensionForNextElement(previousElementUpdatedDimension, parentBounds, direction)
           : 0;
+
         const updatedDimensionData: UpdatedDimensionData[] = [];
 
         if (prevSibling) {
