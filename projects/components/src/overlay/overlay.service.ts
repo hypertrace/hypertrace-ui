@@ -3,7 +3,8 @@ import { Subscription } from 'rxjs';
 import { PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
-import { SheetOverlayConfig, SHEET_DATA } from './sheet/sheet';
+import { DefaultSheetRef } from './sheet/default-sheet-ref';
+import { SheetOverlayConfig, SheetRef, SHEET_DATA } from './sheet/sheet';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
@@ -16,10 +17,14 @@ export class OverlayService {
 
   public constructor(private readonly popoverService: PopoverService, private readonly defaultInjector: Injector) {}
 
-  public createSheet(config: SheetOverlayConfig, injector: Injector = this.defaultInjector): PopoverRef {
+  public createSheet<TData = unknown, TResponse = unknown>(
+    config: SheetOverlayConfig<TData>,
+    injector: Injector = this.defaultInjector
+  ): SheetRef<TResponse> {
     this.activeSheetPopover?.close();
 
-    const metadata = this.buildMetadata(config, injector);
+    const sheetRef = new DefaultSheetRef();
+    const metadata = this.buildMetadata(config, injector, sheetRef);
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: SheetOverlayComponent,
       parentInjector: injector,
@@ -31,13 +36,18 @@ export class OverlayService {
     });
 
     popover.closeOnNavigation();
+    sheetRef.initialize(popover);
 
     this.setActiveSheetPopover(popover);
 
-    return popover;
+    return sheetRef as SheetRef<TResponse>;
   }
 
-  private buildMetadata(config: SheetOverlayConfig, parentInjector: Injector): SheetConstructionData {
+  private buildMetadata(
+    config: SheetOverlayConfig,
+    parentInjector: Injector,
+    sheetRef: SheetRef
+  ): SheetConstructionData {
     return {
       config: config,
       injector: Injector.create({
@@ -45,6 +55,10 @@ export class OverlayService {
           {
             provide: SHEET_DATA,
             useValue: config.data
+          },
+          {
+            provide: SheetRef,
+            useValue: sheetRef
           }
         ],
         parent: parentInjector
