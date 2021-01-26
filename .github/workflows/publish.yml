@@ -66,3 +66,13 @@ jobs:
         with:
           helm-gcs-repository: ${{ secrets.HELM_GCS_REPOSITORY }}
           helm-gcs-credentials: ${{ secrets.HELM_GCS_CREDENTIALS }}
+
+  publish-release-notes:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - uses: hypertrace/github-actions/release-notes@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

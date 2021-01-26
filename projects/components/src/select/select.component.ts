@@ -46,7 +46,7 @@ import { SelectSize } from './select-size';
             <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
             </ht-icon>
             <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
-            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
+            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
