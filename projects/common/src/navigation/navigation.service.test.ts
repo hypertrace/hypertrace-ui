@@ -3,7 +3,7 @@ import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationService } from './navigation.service';
+import { NavigationService, NavigationParamsType } from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
@@ -204,5 +204,34 @@ describe('Navigation Service', () => {
         relativeTo: undefined
       })
     });
+  });
+
+  test('test build navigation options with skip location (shadow option)', () => {
+    expect(
+      spectator.service.buildNavigationParams({
+        navType: NavigationParamsType.InApp,
+        path: 'child',
+        shadow: true
+      })
+    ).toEqual({
+      path: 'child',
+      extras: expect.objectContaining({
+        // tslint:disable-next-line: no-null-keyword
+        queryParams: { time: null },
+        relativeTo: undefined,
+        skipLocationChange: true
+      })
+    });
+  });
+
+  test('can run navigation with skip location (shadow option)', () => {
+    router.navigate = jest.fn().mockResolvedValue(true);
+    spectator.service.navigateWithinApp(['root', 'child'], undefined, undefined, true);
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['root', 'child'],
+      expect.objectContaining({
+        skipLocationChange: true
+      })
+    );
   });
 });

@@ -83,7 +83,7 @@ export class NavigationListComponent {
   }
 
   public navigate(item: NavItemLinkConfig): void {
-    this.navigationService.navigateWithinApp(item.matchPaths[0], this.activatedRoute);
+    this.navigationService.navigateWithinApp(item.matchPaths[0], this.activatedRoute, undefined, item.shadow);
   }
 
   public toggleView(): void {
@@ -116,6 +116,7 @@ export interface NavItemLinkConfig {
   label: string;
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
+  shadow?: boolean;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;
