@@ -157,25 +157,4 @@ describe('Select Component', () => {
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
   }));
-
-  test('should get select container width', fakeAsync(() => {
-    spectator = hostFactory(
-      `
-    <ht-select [selected]="selected" [showBorder]="showBorder">
-      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
-      </ht-select-option>
-    </ht-select>`,
-      {
-        hostProps: {
-          options: selectionOptions,
-          selected: selectionOptions[1].value,
-          showBorder: true
-        }
-      }
-    );
-
-    spectator.tick();
-
-    expect(spectator.component.selectContainerWidth).toBeTruthy();
-  }));
 });

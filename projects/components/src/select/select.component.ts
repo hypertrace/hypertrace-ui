@@ -4,13 +4,11 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   Output,
-  QueryList,
-  ViewChild
+  QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
@@ -40,9 +38,9 @@ import { SelectSize } from './select-size';
       ]"
       *htLetAsync="this.selected$ as selected"
     >
-      <ht-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container" #selectContainer>
+      <ht-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container">
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="this.justifyClass">
+          <div class="trigger-content" [ngClass]="this.justifyClass" #triggerContainer>
             <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
             </ht-icon>
             <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
@@ -50,7 +48,7 @@ import { SelectSize } from './select-size';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="select-content" [ngStyle]="{ minWidth: this.selectContainerWidth }">
+          <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
             <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="select-option">
               <span class="label">{{ item.label }}</span>
               <ht-icon
@@ -95,9 +93,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   @Output()
   public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
 
-  @ViewChild('selectContainer', { read: ElementRef })
-  public readonly selectContainer!: ElementRef;
-
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
 
@@ -122,10 +117,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
-
-    setTimeout(() => {
-      this.selectContainerWidth = `${this.selectContainer.nativeElement.offsetWidth}px`;
-    });
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
