@@ -3,7 +3,7 @@ import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationService, NavigationParamsType } from './navigation.service';
+import { NavigationParamsType, NavigationService } from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
