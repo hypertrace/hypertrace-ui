@@ -1,24 +1,15 @@
 @import 'mixins';
 
-@mixin top-bar-button() {
-  // Custom styling for top bar different shades than normal buttons
-  background-color: $gray-6;
-  border-radius: 6px;
-
-  &:hover {
-    background-color: $gray-5;
-  }
-}
-
 .time-range {
   display: flex;
   align-items: center;
 }
 
 .time-range-selector {
-  @include top-bar-button();
+  @include top-bar-dark-button-background;
+  @include top-bar-dark-button-foreground;
   min-width: 200px;
-  color: white;
+  border-radius: 6px;
 }
 
 .trigger {
@@ -49,16 +40,21 @@
   }
 }
 
-.refresh {
-  ::ng-deep {
-    button.button.secondary {
-      @include top-bar-button();
+:host {
+  .refresh {
+    ::ng-deep {
+      button.button.solid {
+        @include top-bar-dark-button-background;
+        .label {
+          @include top-bar-dark-button-foreground;
+        }
+      }
     }
+
+    margin-left: 8px;
+    cursor: pointer;
+    height: 32px;
+    display: flex;
+    align-items: center;
   }
-  margin-left: 8px;
-  cursor: pointer;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  color: $gray-3;
 }
