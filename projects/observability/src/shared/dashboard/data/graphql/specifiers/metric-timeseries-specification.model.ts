@@ -1,6 +1,6 @@
 import { Dictionary, IntervalDurationService, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { BOOLEAN_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { GraphQlMetricTimeseriesContainer } from '../../../../graphql/model/schema/metric/graphql-metric-timeseries';
@@ -33,6 +33,12 @@ export class MetricTimeseriesSpecificationModel
   })
   public timeUnit?: TimeUnit;
 
+  @ModelProperty({
+    key: 'showBands',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public showBands: boolean = false;
+
   @ModelInject(IntervalDurationService)
   private readonly intervalDurationService!: IntervalDurationService;
 
@@ -40,7 +46,8 @@ export class MetricTimeseriesSpecificationModel
     return new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
       this.metric,
       this.aggregation,
-      this.intervalDurationService.getAutoDuration()
+      this.intervalDurationService.getAutoDuration(),
+      this.showBands
     );
   }
 

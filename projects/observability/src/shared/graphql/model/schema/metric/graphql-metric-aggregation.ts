@@ -11,6 +11,8 @@ export const enum GraphQlMetricAggregationPath {
 
 export interface GraphQlMetricAggregation {
   value: number;
+  upperBound?: number;
+  lowerBound?: number;
 }
 
 export type GraphQlMetricAggregationContainer<

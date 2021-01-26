@@ -4,6 +4,6 @@ import { GraphQlMetricAggregation, GraphQlMetricAggregationContainer } from './g
 export type GraphQlMetricTimeseriesContainer = Dictionary<GraphQlMetricInterval[]>;
 
 export interface GraphQlMetricInterval
-  extends GraphQlMetricAggregationContainer<Pick<GraphQlMetricAggregation, 'value'>> {
+  extends GraphQlMetricAggregationContainer<Pick<GraphQlMetricAggregation, 'value' | 'lowerBound' | 'upperBound'>> {
   startTime: string;
 }

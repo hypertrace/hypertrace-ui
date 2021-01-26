@@ -6,6 +6,7 @@ import { DashboardPropertyEditorsModule } from '@hypertrace/dashboards';
 import { DashboardCoreModule, DashboardEditorModule } from '@hypertrace/hyperdash-angular';
 import { CartesianChartModule } from '../../../../components/cartesian/cartesian-chart.module';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
+import { BandModel } from './band.model';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
 import { SeriesArrayEditorComponent } from './series-array/series-array-editor.component';
@@ -22,7 +23,7 @@ import { SeriesModel } from './series.model';
     DashboardEditorModule,
     ButtonModule,
     DashboardCoreModule.with({
-      models: [CartesianWidgetModel, SeriesModel, CartesianAxisModel],
+      models: [CartesianWidgetModel, SeriesModel, BandModel, CartesianAxisModel],
       renderers: [CartesianWidgetRendererComponent],
       editors: [SeriesArrayEditorComponent],
       propertyTypes: [SERIES_ARRAY_TYPE]

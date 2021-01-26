@@ -11,7 +11,7 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
-import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
+import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -21,6 +21,7 @@ import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { SeriesResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 
 describe('Explore cartesian data source model', () => {
@@ -55,7 +56,7 @@ describe('Explore cartesian data source model', () => {
   });
   let model: ExploreCartesianDataSourceModel;
 
-  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<Series<ExplorerData>[]> => {
+  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<SeriesResult<ExplorerData>[]> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
       query.responseObserver.complete();
@@ -126,19 +127,21 @@ describe('Explore cartesian data source model', () => {
       ).toBe('(x|)', {
         x: [
           {
-            color: 'first color',
-            name: 'sum(foo)',
-            type: CartesianSeriesVisualizationType.Line,
-            data: [
-              {
-                timestamp: new Date(0),
-                value: 10
-              },
-              {
-                timestamp: new Date(1),
-                value: 15
-              }
-            ]
+            series: {
+              color: 'first color',
+              name: 'sum(foo)',
+              type: CartesianSeriesVisualizationType.Line,
+              data: [
+                {
+                  timestamp: new Date(0),
+                  value: 10
+                },
+                {
+                  timestamp: new Date(1),
+                  value: 15
+                }
+              ]
+            }
           }
         ]
       });
@@ -190,13 +193,15 @@ describe('Explore cartesian data source model', () => {
       ).toBe('(x|)', {
         x: [
           {
-            color: 'first color',
-            name: 'sum(foo)',
-            type: CartesianSeriesVisualizationType.Column,
-            data: [
-              ['first', 10],
-              ['second', 15]
-            ]
+            series: {
+              color: 'first color',
+              name: 'sum(foo)',
+              type: CartesianSeriesVisualizationType.Column,
+              data: [
+                ['first', 10],
+                ['second', 15]
+              ]
+            }
           }
         ]
       });
@@ -272,34 +277,38 @@ describe('Explore cartesian data source model', () => {
       ).toBe('(x|)', {
         x: [
           {
-            color: 'first color',
-            name: 'sum(foo): first',
-            type: CartesianSeriesVisualizationType.Area,
-            data: [
-              {
-                timestamp: new Date(0),
-                value: 10
-              },
-              {
-                timestamp: new Date(1),
-                value: 15
-              }
-            ]
+            series: {
+              color: 'first color',
+              name: 'sum(foo): first',
+              type: CartesianSeriesVisualizationType.Area,
+              data: [
+                {
+                  timestamp: new Date(0),
+                  value: 10
+                },
+                {
+                  timestamp: new Date(1),
+                  value: 15
+                }
+              ]
+            }
           },
           {
-            color: 'second color',
-            name: 'sum(foo): second',
-            type: CartesianSeriesVisualizationType.Area,
-            data: [
-              {
-                timestamp: new Date(0),
-                value: 20
-              },
-              {
-                timestamp: new Date(1),
-                value: 25
-              }
-            ]
+            series: {
+              color: 'second color',
+              name: 'sum(foo): second',
+              type: CartesianSeriesVisualizationType.Area,
+              data: [
+                {
+                  timestamp: new Date(0),
+                  value: 20
+                },
+                {
+                  timestamp: new Date(1),
+                  value: 25
+                }
+              ]
+            }
           }
         ]
       });
