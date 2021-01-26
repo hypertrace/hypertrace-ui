@@ -93,8 +93,7 @@ export class NavigationService {
         queryParams: params?.queryParams ?? this.buildQueryParam(),
         queryParamsHandling: params?.queryParamsHandling,
         replaceUrl: params?.replaceCurrentHistory,
-        relativeTo: params?.relativeTo,
-        skipLocationChange: params?.skipLocationChange
+        relativeTo: params?.relativeTo
       }
     };
   }
@@ -106,15 +105,13 @@ export class NavigationService {
   public navigateWithinApp(
     path: NavigationPath,
     relativeTo?: ActivatedRoute,
-    preserveParameters?: string[],
-    skipLocationChange?: boolean
+    preserveParameters?: string[]
   ): Observable<boolean> {
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: path,
       queryParams: this.buildQueryParam(preserveParameters ?? []),
-      relativeTo: relativeTo,
-      skipLocationChange: skipLocationChange
+      relativeTo: relativeTo
     });
   }
 
@@ -307,7 +304,6 @@ export interface InAppNavigationParams {
   queryParams?: QueryParamObject;
   queryParamsHandling?: 'merge' | 'preserve';
   relativeTo?: ActivatedRoute;
-  skipLocationChange?: boolean;
 }
 
 export interface ExternalNavigationParamsNew {

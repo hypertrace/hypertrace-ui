@@ -206,27 +206,13 @@ describe('Navigation Service', () => {
     });
   });
 
-  test('test build navigation options with skip location', () => {
-    expect(
-      spectator.service.buildNavigationParams({
-        navType: NavigationParamsType.InApp,
-        path: 'child',
-        skipLocationChange: true
-      })
-    ).toEqual({
-      path: 'child',
-      extras: expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
-        relativeTo: undefined,
-        skipLocationChange: true
-      })
-    });
-  });
-
-  test('can run navigation with skip location', () => {
+  test('can run navigation with location replace', () => {
     router.navigate = jest.fn().mockResolvedValue(true);
-    spectator.service.navigateWithinApp(['root', 'child'], undefined, undefined, true);
+    spectator.service.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['root', 'child'],
+      replaceCurrentHistory: true
+    });
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
