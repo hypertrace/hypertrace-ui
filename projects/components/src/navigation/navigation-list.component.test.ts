@@ -95,7 +95,32 @@ describe('Navigation List Component', () => {
     spectator.click(spectator.query(NavItemComponent, { read: ElementRef })!);
     expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(
       'foo',
-      spectator.inject(ActivatedRoute)
+      spectator.inject(ActivatedRoute),
+      undefined,
+      undefined
+    );
+  });
+
+  test('should navigate to first match on click, relative to activated route with skip location change option', () => {
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'Foo Label',
+        matchPaths: ['foo', 'bar'],
+        shadow: true
+      }
+    ];
+    spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {
+      hostProps: { navItems: navItems }
+    });
+
+    spectator.click(spectator.query(NavItemComponent, { read: ElementRef })!);
+    expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(
+      'foo',
+      spectator.inject(ActivatedRoute),
+      undefined,
+      true
     );
   });
 });
