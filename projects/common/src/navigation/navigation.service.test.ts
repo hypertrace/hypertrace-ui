@@ -206,12 +206,12 @@ describe('Navigation Service', () => {
     });
   });
 
-  test('test build navigation options with skip location (shadow option)', () => {
+  test('test build navigation options with skip location', () => {
     expect(
       spectator.service.buildNavigationParams({
         navType: NavigationParamsType.InApp,
         path: 'child',
-        shadow: true
+        skipLocationChange: true
       })
     ).toEqual({
       path: 'child',
@@ -224,7 +224,7 @@ describe('Navigation Service', () => {
     });
   });
 
-  test('can run navigation with skip location (shadow option)', () => {
+  test('can run navigation with skip location', () => {
     router.navigate = jest.fn().mockResolvedValue(true);
     spectator.service.navigateWithinApp(['root', 'child'], undefined, undefined, true);
     expect(router.navigate).toHaveBeenCalledWith(
