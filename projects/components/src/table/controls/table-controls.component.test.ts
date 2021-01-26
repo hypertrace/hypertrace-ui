@@ -17,10 +17,10 @@ describe('Table Controls component', () => {
         [searchEnabled]="searchEnabled"
         [searchPlaceholder]="searchPlaceholder"
         [filterItems]="filterItems"
-        [modeItems]="modeItems"
+        [viewItems]="viewItems"
         (searchChange)="searchChange($event)"
         (filterChange)="filterChange($event)"
-        (modeChange)="modeChange($event)"
+        (viewChange)="viewChange($event)"
       >
       </ht-table-controls>
     `
@@ -103,10 +103,10 @@ describe('Table Controls component', () => {
     expect(onChangeSpy).toHaveBeenCalled();
   });
 
-  test('should provide toggle group items for each mode', () => {
+  test('should provide toggle group items for each view', () => {
     const spectator = createHost(undefined, {
       hostProps: {
-        modeItems: [
+        viewItems: [
           {
             label: 'test1',
             value: 'TEST1'
@@ -122,12 +122,12 @@ describe('Table Controls component', () => {
     expect(spectator.query(ToggleGroupComponent)?.items?.length).toEqual(2);
   });
 
-  test('should emit mode when selected', () => {
+  test('should emit view when selected', () => {
     const onChangeSpy = jest.fn();
 
     const spectator = createHost(undefined, {
       hostProps: {
-        modeItems: [
+        viewItems: [
           {
             label: 'test1',
             value: 'TEST1'
@@ -137,7 +137,7 @@ describe('Table Controls component', () => {
             value: 'TEST2'
           }
         ],
-        modeChange: onChangeSpy
+        viewChange: onChangeSpy
       }
     });
 
