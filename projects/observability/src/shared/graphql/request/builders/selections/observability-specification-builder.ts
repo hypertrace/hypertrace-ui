@@ -12,7 +12,9 @@ import {
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import { assignIn } from 'lodash-es';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
-import { GraphQlMetricInterval } from '../../../model/schema/metric/graphql-metric-timeseries';
+import {
+  GraphQlMetricBandInterval,
+} from '../../../model/schema/metric/graphql-metric-timeseries';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';
 import {
@@ -20,6 +22,7 @@ import {
   ErrorPercentageMetricValueCategory
 } from '../../../model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../model/schema/specifications/metric-aggregation-specification';
+import { MetricTimeseriesBandSpecification } from '../../../model/schema/specifications/metric-timeseries-band-specification';
 import { MetricTimeseriesSpecification } from '../../../model/schema/specifications/metric-timeseries-specification';
 import {
   PercentileLatencyMetricAggregationSpecification,
@@ -177,12 +180,10 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
   public metricTimeseriesSpec(
     metric: string,
     aggregation: MetricAggregationType,
-    intervalDuration: TimeDuration,
-    fetchBands: boolean = false
+    intervalDuration: TimeDuration
   ): MetricTimeseriesSpecification {
     const dateCoercer: DateCoercer = new DateCoercer();
     const seriesAlias = `${aggregation}_series_${intervalDuration.toString()}`;
-    const baselineSeriesAlias = `${aggregation}_baselineSeries_${intervalDuration.toString()}`;
 
     // Timeseries does not require unique because it's deduping at the series level
     const aggregationSelection = this.buildAggregationSelection(aggregation, false);
@@ -190,7 +191,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     return {
       ...this.getMetricSpecificationBase(metric, aggregation),
       resultAlias: () => this.buildResultAlias(metric, aggregation, [intervalDuration.toString()]),
-      withNewIntervalDuration: newInterval => this.metricTimeseriesSpec(metric, aggregation, newInterval, fetchBands),
+      withNewIntervalDuration: newInterval => this.metricTimeseriesSpec(metric, aggregation, newInterval),
       getIntervalDuration: () => intervalDuration,
       asGraphQlSelections: () => ({
         ...this.getMetricSelectionBase(metric),
@@ -206,59 +207,61 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
                 children: [{ path: 'value' }]
               }
             ]
-          },
-          ...(fetchBands
-            ? [
-                {
-                  path: 'baselineSeries',
-                  alias: baselineSeriesAlias,
-                  arguments: this.argBuilder.forIntervalArgs(intervalDuration),
-                  children: [
-                    { path: 'startTime' },
-                    {
-                      ...aggregationSelection,
-                      children: [{ path: 'value' }, { path: 'upperBound' }, { path: 'lowerBound' }]
-                    }
-                  ]
-                }
-              ]
-            : [])
+          }
+        ]
+      }),
+      extractFromServerData: resultContainer =>
+        resultContainer[metric][seriesAlias].map(interval => ({
+          value: interval[convertToGraphQlMetricAggregationPath(aggregation)]!.value,
+          timestamp: dateCoercer.coerce(interval.startTime)!
+        }))
+    };
+  }
+
+  public metricTimeseriesBandSpec(
+    metric: string,
+    aggregation: MetricAggregationType,
+    intervalDuration: TimeDuration
+  ): MetricTimeseriesBandSpecification {
+    const dateCoercer: DateCoercer = new DateCoercer();
+    const baselineSeriesAlias = `${aggregation}_baselineSeries_${intervalDuration.toString()}`;
+
+    // Timeseries does not require unique because it's deduping at the series level
+    const aggregationSelection = this.buildAggregationSelection(aggregation, false);
+
+    return {
+      ...this.getMetricSpecificationBase(metric, aggregation),
+      resultAlias: () => this.buildResultAlias(metric, aggregation, [intervalDuration.toString()]),
+      withNewIntervalDuration: newInterval => this.metricTimeseriesBandSpec(metric, aggregation, newInterval),
+      getIntervalDuration: () => intervalDuration,
+      asGraphQlSelections: () => ({
+        ...this.getMetricSelectionBase(metric),
+        children: [
+          {
+            path: 'baselineSeries',
+            alias: baselineSeriesAlias,
+            arguments: this.argBuilder.forIntervalArgs(intervalDuration),
+            children: [
+              { path: 'startTime' },
+              {
+                ...aggregationSelection,
+                children: [{ path: 'value' }, { path: 'upperBound' }, { path: 'lowerBound' }]
+              }
+            ]
+          }
         ]
       }),
       extractFromServerData: resultContainer => {
-        // NOTE: baselineSeries include each interval, while series may skip intervals.
-        const baselineSeries: GraphQlMetricInterval[] | undefined = resultContainer[metric][baselineSeriesAlias];
-        const series: GraphQlMetricInterval[] = resultContainer[metric][seriesAlias];
-
-        // Not sure why tslint is flagging "baselineSeries === undefined" as always false
-        // tslint:disable-next-line:strict-type-predicates
-        if (baselineSeries === undefined || baselineSeries.length === 0) {
-          // No baselineSeries, so just return series data
-          return series.map(interval => ({
-            value: interval[convertToGraphQlMetricAggregationPath(aggregation)]!.value,
-            timestamp: dateCoercer.coerce(interval.startTime)!
-          }));
-        }
-
-        // Transform series array to Map based on interval timestamp to avoid a find() each time. O(n^2)
-        const seriesMap: Map<string, number> = new Map<string, number>();
-        series.forEach(seriesInterval => {
-          seriesMap.set(
-            seriesInterval.startTime,
-            seriesInterval[convertToGraphQlMetricAggregationPath(aggregation)]!.value
-          );
-        });
-
-        return baselineSeries.map(baselineInterval => {
-          const baselineArgInterval = baselineInterval[convertToGraphQlMetricAggregationPath(aggregation)]!;
+        const baselineSeries: GraphQlMetricBandInterval[] = resultContainer[metric][baselineSeriesAlias];
+        return baselineSeries.map(interval => {
+          const baselineArgInterval = interval[convertToGraphQlMetricAggregationPath(aggregation)]!;
 
           return {
-            timestamp: dateCoercer.coerce(baselineInterval.startTime)!,
-            value: seriesMap.get(baselineInterval.startTime) ?? 0,
-            baseline: baselineArgInterval.value,
+            timestamp: dateCoercer.coerce(interval.startTime)!,
+            value: baselineArgInterval.value,
             upperBound: baselineArgInterval.upperBound,
             lowerBound: baselineArgInterval.lowerBound
-          };
+          }
         });
       }
     };

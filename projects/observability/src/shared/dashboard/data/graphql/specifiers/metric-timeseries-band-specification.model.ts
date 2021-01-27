@@ -2,19 +2,18 @@ import { Dictionary, IntervalDurationService, TimeDuration, TimeUnit } from '@hy
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
-import { GraphQlMetricTimeseriesContainer } from '../../../../graphql/model/schema/metric/graphql-metric-timeseries';
-import { MetricTimeseriesSpecification } from '../../../../graphql/model/schema/specifications/metric-timeseries-specification';
+import { MetricTimeseriesBandInterval } from '../../../../graphql/model/metric/metric-timeseries';
+import { GraphQlMetricTimeseriesBandContainer } from '../../../../graphql/model/schema/metric/graphql-metric-timeseries';
+import { MetricTimeseriesBandSpecification } from '../../../../graphql/model/schema/specifications/metric-timeseries-band-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
 import { MetricSpecificationModel } from './metric-specification.model';
 
 @Model({
-  type: 'metric-timeseries',
-  displayName: 'Metric'
+  type: 'metric-timeseries-band'
 })
-export class MetricTimeseriesSpecificationModel
-  extends MetricSpecificationModel<MetricTimeseriesSpecification>
-  implements MetricTimeseriesSpecification {
+export class MetricTimeseriesBandSpecificationModel
+  extends MetricSpecificationModel<MetricTimeseriesBandSpecification>
+  implements MetricTimeseriesBandSpecification {
   @ModelProperty({
     key: 'interval-duration',
     displayName: 'Interval Duration',
@@ -36,8 +35,8 @@ export class MetricTimeseriesSpecificationModel
   @ModelInject(IntervalDurationService)
   private readonly intervalDurationService!: IntervalDurationService;
 
-  protected buildInnerSpec(): MetricTimeseriesSpecification {
-    return new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
+  protected buildInnerSpec(): MetricTimeseriesBandSpecification {
+    return new ObservabilitySpecificationBuilder().metricTimeseriesBandSpec(
       this.metric,
       this.aggregation,
       this.intervalDurationService.getAutoDuration()
@@ -48,13 +47,13 @@ export class MetricTimeseriesSpecificationModel
     return this.maybeBuildDuration();
   }
 
-  public withNewIntervalDuration(intervalDuration: TimeDuration): MetricTimeseriesSpecification {
+  public withNewIntervalDuration(intervalDuration: TimeDuration): MetricTimeseriesBandSpecification {
     return this.innerSpec.withNewIntervalDuration(intervalDuration);
   }
 
   public extractFromServerData(
-    resultContainer: Dictionary<GraphQlMetricTimeseriesContainer>
-  ): MetricTimeseriesInterval[] {
+    resultContainer: Dictionary<GraphQlMetricTimeseriesBandContainer>
+  ): MetricTimeseriesBandInterval[] {
     return this.innerSpec.extractFromServerData(resultContainer);
   }
 

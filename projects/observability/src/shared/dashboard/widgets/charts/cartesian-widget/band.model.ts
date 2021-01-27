@@ -1,4 +1,4 @@
-import { Color } from '@hypertrace/common';
+import { Color, TimeDuration } from '@hypertrace/common';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -8,11 +8,12 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { Observable } from 'rxjs';
 
 @Model({
   type: 'band'
 })
-export class BandModel {
+export class BandModel<TInterval> {
   public static readonly BAND_COLOR: string = Color.Gray2;
   public static readonly BASELINE_COLOR: string = Color.Gray4;
   public static readonly BASELINE_NAME: string = 'Baseline';
@@ -48,4 +49,18 @@ export class BandModel {
 
   @ModelInject(MODEL_API)
   public api!: ModelApi;
+
+  public getDataFetcher(): Observable<MetricBandDataFetcher<TInterval>> {
+    return this.api.getData();
+  }
+}
+
+export interface MetricBandDataFetcher<TInterval> {
+  getData(interval: TimeDuration): Observable<MetricBand<TInterval>>;
+  getRequestedInterval?(): TimeDuration | undefined;
+}
+
+export interface MetricBand<TInterval> {
+  intervals: TInterval[];
+  units: string;
 }
