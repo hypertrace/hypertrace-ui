@@ -27,6 +27,7 @@ export class NavigationService {
   );
 
   private isFirstNavigation: boolean = true;
+  private readonly globalQueryParams: Set<string> = new Set();
 
   public constructor(
     private readonly router: Router,
@@ -55,6 +56,13 @@ export class NavigationService {
       queryParams: newParams,
       replaceCurrentHistory: true
     });
+  }
+
+  /**
+   * Global query params will be preserved by default on navigation
+   */
+  public registerGlobalQueryParamKey(queryParamKey: string): void {
+    this.globalQueryParams.add(queryParamKey);
   }
 
   public getQueryParameter(parameterName: string, defaultValue: string): string {
@@ -116,7 +124,7 @@ export class NavigationService {
   }
 
   private buildQueryParam(preserveParameters: string[] = []): QueryParamObject {
-    return ['time', ...preserveParameters].reduce<Params>(
+    return [...this.globalQueryParams, ...preserveParameters].reduce<Params>(
       (paramObj, param) => ({
         ...paramObj,
         [param]: this.currentParamMap.get(param)
