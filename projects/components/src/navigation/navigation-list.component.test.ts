@@ -1,7 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -93,9 +93,34 @@ describe('Navigation List Component', () => {
     });
 
     spectator.click(spectator.query(NavItemComponent, { read: ElementRef })!);
-    expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith(
-      'foo',
-      spectator.inject(ActivatedRoute)
-    );
+    expect(spectator.inject(NavigationService).navigate).toHaveBeenCalledWith<NavigationParams[]>({
+      navType: NavigationParamsType.InApp,
+      path: 'foo',
+      relativeTo: spectator.inject(ActivatedRoute),
+      replaceCurrentHistory: undefined
+    });
+  });
+
+  test('should navigate to first match on click, relative to activated route with skip location change option', () => {
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'Foo Label',
+        matchPaths: ['foo', 'bar'],
+        replaceCurrentHistory: true
+      }
+    ];
+    spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {
+      hostProps: { navItems: navItems }
+    });
+
+    spectator.click(spectator.query(NavItemComponent, { read: ElementRef })!);
+    expect(spectator.inject(NavigationService).navigate).toHaveBeenCalledWith<NavigationParams[]>({
+      navType: NavigationParamsType.InApp,
+      path: 'foo',
+      relativeTo: spectator.inject(ActivatedRoute),
+      replaceCurrentHistory: true
+    });
   });
 });
