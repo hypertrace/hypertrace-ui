@@ -216,17 +216,22 @@ describe('Navigation Service', () => {
   });
 
   test('propagates global query params', () => {
-    router.navigate = jest.fn().mockResolvedValue(true);
+    spectator.service.navigate({
+      navType: NavigationParamsType.InApp,
+      path: 'root',
+      queryParams: {
+        global: 'foo',
+        other: 'bar'
+      }
+    });
+
     spectator.service.registerGlobalQueryParamKey('global');
-    spectator.service.navigateWithinApp('root');
-    expect(router.navigate).toHaveBeenLastCalledWith(
-      ['root'],
-      expect.objectContaining({
-        queryParams: {
-          // tslint:disable-next-line: no-null-keyword
-          global: null
-        }
-      })
-    );
+
+    spectator.service.navigate('root/child');
+
+    expect(spectator.service.getCurrentActivatedRoute().snapshot.url).toEqual([
+      expect.objectContaining({ path: 'child' })
+    ]);
+    expect(spectator.service.getCurrentActivatedRoute().snapshot.queryParams).toEqual({ global: 'foo' });
   });
 });
