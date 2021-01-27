@@ -141,8 +141,6 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: undefined
       })
     );
@@ -155,8 +153,6 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenLastCalledWith(
       ['child'],
       expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: spectator.service.getCurrentActivatedRoute()
       })
     );
@@ -199,8 +195,6 @@ describe('Navigation Service', () => {
     expect(spectator.service.buildNavigationParams('/services')).toEqual({
       path: '/services',
       extras: expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: undefined
       })
     });
@@ -217,6 +211,21 @@ describe('Navigation Service', () => {
       ['root', 'child'],
       expect.objectContaining({
         replaceUrl: true
+      })
+    );
+  });
+
+  test('propagates global query params', () => {
+    router.navigate = jest.fn().mockResolvedValue(true);
+    spectator.service.registerGlobalQueryParamKey('global');
+    spectator.service.navigateWithinApp('root');
+    expect(router.navigate).toHaveBeenLastCalledWith(
+      ['root'],
+      expect.objectContaining({
+        queryParams: {
+          // tslint:disable-next-line: no-null-keyword
+          global: null
+        }
       })
     );
   });
