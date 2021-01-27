@@ -1,7 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, NavigationParamsType, NavigationParams } from '@hypertrace/common';
+import { NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
