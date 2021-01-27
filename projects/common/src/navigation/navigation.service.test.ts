@@ -216,7 +216,7 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
-        skipLocationChange: true
+        replaceUrl: true
       })
     );
   });
