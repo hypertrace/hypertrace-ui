@@ -108,7 +108,7 @@ describe('Navigation List Component', () => {
         icon: 'icon',
         label: 'Foo Label',
         matchPaths: ['foo', 'bar'],
-        skipLocationChange: true
+        replaceCurrentHistory: true
       }
     ];
     spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {

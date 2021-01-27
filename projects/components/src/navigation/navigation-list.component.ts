@@ -87,7 +87,7 @@ export class NavigationListComponent {
       navType: NavigationParamsType.InApp,
       path: item.matchPaths[0],
       relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.skipLocationChange
+      replaceCurrentHistory: item.replaceCurrentHistory
     });
   }
 
@@ -121,7 +121,7 @@ export interface NavItemLinkConfig {
   label: string;
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
-  skipLocationChange?: boolean;
+  replaceCurrentHistory?: boolean;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;
