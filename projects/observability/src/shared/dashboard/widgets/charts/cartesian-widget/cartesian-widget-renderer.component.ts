@@ -43,8 +43,10 @@ import {
     </ht-titled-content>
   `
 })
-export class CartesianWidgetRendererComponent extends InteractiveDataWidgetRenderer<CartesianWidgetModel,
-  CartesianData<MetricTimeseriesInterval>> {
+export class CartesianWidgetRendererComponent extends InteractiveDataWidgetRenderer<
+  CartesianWidgetModel,
+  CartesianData<MetricTimeseriesInterval>
+> {
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel>,
     changeDetector: ChangeDetectorRef,
@@ -89,17 +91,17 @@ export class CartesianWidgetRendererComponent extends InteractiveDataWidgetRende
 
   protected buildDataObservable(): Observable<CartesianData<MetricTimeseriesInterval>> {
     return forkJoinSafeEmpty({
-      seriesResult: this.seriesFetcher ? this.fetchCartesianSeriesData(this.seriesFetcher, this.selectedInterval) : of([]),
+      seriesResult: this.seriesFetcher
+        ? this.fetchCartesianSeriesData(this.seriesFetcher, this.selectedInterval)
+        : of([]),
       bandResult: this.bandFetcher ? this.fetchCartesianBandData(this.bandFetcher, this.selectedInterval) : of([])
     }).pipe(
       map((combinedResults: CombinedResults) => ({
         series: [
-          ...combinedResults.seriesResult ? combinedResults.seriesResult.map(r => r.series) : [],
-          ...combinedResults.bandResult ? combinedResults.bandResult.map(r => r.baseline) : []
+          ...combinedResults.seriesResult.map(r => r.series),
+          ...combinedResults.bandResult.map(r => r.baseline)
         ],
-        bands: [
-          ...combinedResults.bandResult ? combinedResults.bandResult.map(r => r.band) : [],
-        ]
+        bands: [...combinedResults.bandResult.map(r => r.band)]
       }))
     );
   }

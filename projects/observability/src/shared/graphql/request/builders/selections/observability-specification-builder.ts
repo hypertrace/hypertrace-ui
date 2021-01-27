@@ -12,9 +12,7 @@ import {
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import { assignIn } from 'lodash-es';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
-import {
-  GraphQlMetricBandInterval,
-} from '../../../model/schema/metric/graphql-metric-timeseries';
+import { GraphQlMetricBandInterval } from '../../../model/schema/metric/graphql-metric-timeseries';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';
 import {
@@ -253,6 +251,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
       }),
       extractFromServerData: resultContainer => {
         const baselineSeries: GraphQlMetricBandInterval[] = resultContainer[metric][baselineSeriesAlias];
+
         return baselineSeries.map(interval => {
           const baselineArgInterval = interval[convertToGraphQlMetricAggregationPath(aggregation)]!;
 
@@ -261,7 +260,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
             value: baselineArgInterval.value,
             upperBound: baselineArgInterval.upperBound,
             lowerBound: baselineArgInterval.lowerBound
-          }
+          };
         });
       }
     };
