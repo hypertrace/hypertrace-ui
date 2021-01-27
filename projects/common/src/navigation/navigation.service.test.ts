@@ -3,7 +3,7 @@ import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationService } from './navigation.service';
+import { NavigationParamsType, NavigationService } from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
@@ -204,5 +204,20 @@ describe('Navigation Service', () => {
         relativeTo: undefined
       })
     });
+  });
+
+  test('can run navigation with location replace', () => {
+    router.navigate = jest.fn().mockResolvedValue(true);
+    spectator.service.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['root', 'child'],
+      replaceCurrentHistory: true
+    });
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['root', 'child'],
+      expect.objectContaining({
+        replaceUrl: true
+      })
+    );
   });
 });
