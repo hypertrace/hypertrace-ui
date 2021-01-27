@@ -17,11 +17,14 @@
   border: 1px solid $color-border;
   border-radius: 6px;
   width: 100%;
-  min-height: 34px;
-  height: inherit;
+  height: 34px;
 
   &.small {
     height: 32px;
+  }
+
+  &.large {
+    height: 44px;
   }
 
   .select-container {
@@ -117,6 +120,10 @@
 
     &.small {
       height: 32px;
+    }
+
+    &.large {
+      height: 44px;
     }
   }
 }
