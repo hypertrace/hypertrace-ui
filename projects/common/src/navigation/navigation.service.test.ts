@@ -3,7 +3,7 @@ import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationService } from './navigation.service';
+import { NavigationParamsType, NavigationService } from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
@@ -141,8 +141,6 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: undefined
       })
     );
@@ -155,8 +153,6 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenLastCalledWith(
       ['child'],
       expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: spectator.service.getCurrentActivatedRoute()
       })
     );
@@ -199,10 +195,43 @@ describe('Navigation Service', () => {
     expect(spectator.service.buildNavigationParams('/services')).toEqual({
       path: '/services',
       extras: expect.objectContaining({
-        // tslint:disable-next-line: no-null-keyword
-        queryParams: { time: null },
         relativeTo: undefined
       })
     });
+  });
+
+  test('can run navigation with location replace', () => {
+    router.navigate = jest.fn().mockResolvedValue(true);
+    spectator.service.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['root', 'child'],
+      replaceCurrentHistory: true
+    });
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['root', 'child'],
+      expect.objectContaining({
+        replaceUrl: true
+      })
+    );
+  });
+
+  test('propagates global query params', () => {
+    spectator.service.navigate({
+      navType: NavigationParamsType.InApp,
+      path: 'root',
+      queryParams: {
+        global: 'foo',
+        other: 'bar'
+      }
+    });
+
+    spectator.service.registerGlobalQueryParamKey('global');
+
+    spectator.service.navigate('root/child');
+
+    expect(spectator.service.getCurrentActivatedRoute().snapshot.url).toEqual([
+      expect.objectContaining({ path: 'child' })
+    ]);
+    expect(spectator.service.getCurrentActivatedRoute().snapshot.queryParams).toEqual({ global: 'foo' });
   });
 });

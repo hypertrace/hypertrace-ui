@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OverlayConfig } from './../overlay';
 
 export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
@@ -15,3 +16,8 @@ export const enum SheetSize {
 }
 
 export const SHEET_DATA = new InjectionToken<unknown>('SHEET_DATA');
+
+export abstract class SheetRef<TResult = unknown> {
+  public abstract readonly closed$: Observable<TResult>;
+  public abstract close(result?: TResult): void;
+}

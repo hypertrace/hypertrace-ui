@@ -6,8 +6,10 @@ export const entityMetadata: EntityMetadataMap = new Map([
     {
       entityType: ObservabilityEntityType.Api,
       icon: ObservabilityIconType.Api,
-      detailPath: (id: string, sourceRoute?: string) => [sourceRoute ?? '', 'endpoint', id],
-      sourceRoutes: ['services']
+      detailPath: (id: string, sourceRoute?: string) => [sourceRoute ?? 'endpoints', 'endpoint', id],
+      sourceRoutes: ['services'],
+      listPath: ['endpoints'],
+      typeDisplayName: 'Endpoint'
     }
   ],
   [
