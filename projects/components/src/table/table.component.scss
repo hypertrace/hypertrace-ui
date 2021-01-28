@@ -3,6 +3,11 @@
 
 .table {
   height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  overflow: auto;
 }
 
 .title-row {
@@ -11,12 +16,6 @@
   height: 36px;
   min-height: 36px;
   @include overline($gray-4);
-}
-
-.table {
-  width: 100%;
-  flex: 1 1;
-  overflow: auto;
 }
 
 .bottom-margin {
@@ -39,7 +38,7 @@
 .data-row {
   display: flex;
   flex-direction: row;
-  height: 44px;
+  min-height: 44px;
   cursor: pointer;
 
   &.selected-row {
