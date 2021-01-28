@@ -16,7 +16,8 @@ import { map, toArray } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
 import {
-  MetricTimeseriesBandInterval, MetricTimeseriesInterval
+  MetricTimeseriesBandInterval,
+  MetricTimeseriesInterval
 } from '../../../../graphql/model/metric/metric-timeseries';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { BAND_ARRAY_TYPE } from './band-array/band-array-type';
@@ -188,9 +189,7 @@ export class CartesianWidgetModel<TSeriesInterval> {
     )[0];
   }
 
-  private combineBandsCurrentInterval(
-    dataFetchers: Required<DecoratedBandDataFetcher>[]
-  ): TimeDuration | undefined {
+  private combineBandsCurrentInterval(dataFetchers: Required<DecoratedBandDataFetcher>[]): TimeDuration | undefined {
     // If same interval from each, use it
     return intersectionBy(
       dataFetchers.map(fetcher => fetcher.getRequestedInterval()),
@@ -325,9 +324,7 @@ export class CartesianWidgetModel<TSeriesInterval> {
     };
   }
 
-  private getSeriesVizTypeFromModel(
-    seriesModel: SeriesModel<TSeriesInterval>
-  ): CartesianSeriesVisualizationType {
+  private getSeriesVizTypeFromModel(seriesModel: SeriesModel<TSeriesInterval>): CartesianSeriesVisualizationType {
     switch (seriesModel.visualizationType) {
       case SeriesVisualizationType.Area:
         return CartesianSeriesVisualizationType.Area;
@@ -364,8 +361,7 @@ export class CartesianWidgetModel<TSeriesInterval> {
   }
 }
 
-interface DecoratedSeriesDataFetcher<TInterval>
-  extends MetricSeriesDataFetcher<TInterval> {
+interface DecoratedSeriesDataFetcher<TInterval> extends MetricSeriesDataFetcher<TInterval> {
   series: SeriesModel<TInterval>;
 }
 

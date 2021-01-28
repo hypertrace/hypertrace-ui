@@ -8,7 +8,8 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import {
-  MetricTimeseriesBandInterval, MetricTimeseriesInterval
+  MetricTimeseriesBandInterval,
+  MetricTimeseriesInterval
 } from '../../../../graphql/model/metric/metric-timeseries';
 import {
   BandResult,
