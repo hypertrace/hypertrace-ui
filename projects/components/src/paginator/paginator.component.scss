@@ -22,64 +22,13 @@
   .pagination-buttons {
     display: flex;
     margin: 0 24px 0 12px;
-    ::ng-deep {
-      .toggle-button-group {
-        .button-group-view-mode {
-          width: 32px;
-          min-width: auto;
-          height: 32px;
-
-          .button {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            border-top: 1px solid $color-border;
-            border-bottom: 1px solid $color-border;
-            border-left: 1px solid $color-border;
-            border-right: none;
-
-            background: white;
-            color: $gray-7;
-
-            &.disabled {
-              opacity: 1;
-
-              .button-icon {
-                opacity: 0.4;
-              }
-            }
-
-            .button-icon {
-              padding-right: 0;
-              color: inherit;
-            }
-
-            &:not(.disabled):hover {
-              background-color: $gray-1;
-            }
-          }
-
-          .first {
-            border-radius: 6px 0 0 6px;
-          }
-
-          .last {
-            border-radius: 0 6px 6px 0;
-            border-right: 1px solid $color-border;
-          }
-        }
-      }
-    }
   }
 
   .previous-button {
     ::ng-deep {
       .button {
+        width: 32px;
+
         border-radius: 6px 0 0 6px;
         border-color: $gray-2;
       }
@@ -89,9 +38,11 @@
   .next-button {
     ::ng-deep {
       .button {
+        width: 32px;
+        margin-left: -1px;
+
         border-radius: 0 6px 6px 0;
         border-color: $gray-2;
-        margin-left: -1px;
       }
     }
   }
