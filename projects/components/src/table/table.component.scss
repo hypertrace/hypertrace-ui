@@ -2,11 +2,12 @@
 @import 'layout';
 
 .table {
-  height: 100%;
-  width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 1;
+  height: 100%;
+  width: 100%;
   overflow: auto;
 }
 
@@ -105,7 +106,7 @@
 }
 
 .state-watcher {
-  height: 100%;
+  height: calc(100% - #{$paginator-height});
   width: 100%;
   position: absolute;
   background: transparent;
