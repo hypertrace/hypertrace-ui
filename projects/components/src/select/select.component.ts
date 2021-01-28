@@ -100,8 +100,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
-  public selectContainerWidth!: string;
-
   public get justifyClass(): string {
     if (this.justify !== undefined) {
       return this.justify;
