@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -83,7 +83,12 @@ export class NavigationListComponent {
   }
 
   public navigate(item: NavItemLinkConfig): void {
-    this.navigationService.navigateWithinApp(item.matchPaths[0], this.activatedRoute);
+    this.navigationService.navigate({
+      navType: NavigationParamsType.InApp,
+      path: item.matchPaths[0],
+      relativeTo: this.activatedRoute,
+      replaceCurrentHistory: item.replaceCurrentHistory
+    });
   }
 
   public toggleView(): void {
@@ -116,6 +121,7 @@ export interface NavItemLinkConfig {
   label: string;
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
+  replaceCurrentHistory?: boolean;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;

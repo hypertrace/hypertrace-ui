@@ -1,4 +1,4 @@
-import { PopoverRef, SheetSize } from '@hypertrace/components';
+import { SheetRef, SheetSize } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE, ModelTemplatePropertyType } from '@hypertrace/dashboards';
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelJson, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -53,7 +53,7 @@ export class DetailSheetInteractionHandlerModel implements InteractionHandler {
   @ModelInject(DetailSheetInteractionHandlerService)
   private readonly handlerService!: DetailSheetInteractionHandlerService;
 
-  private popover?: PopoverRef;
+  private sheet?: SheetRef;
 
   public execute(data?: unknown): Observable<void> {
     if (isEmpty(data)) {
@@ -81,7 +81,7 @@ export class DetailSheetInteractionHandlerModel implements InteractionHandler {
     const title = get(source, this.titlePropertyPath ?? '');
     const model = this.getDetailModel(source);
 
-    this.popover = this.handlerService.showSheet(model, this.sheetSize, title, this.showHeader);
+    this.sheet = this.handlerService.showSheet(model, this.sheetSize, title, this.showHeader);
   }
 
   private getDetailModel(source: unknown): object {
@@ -92,6 +92,6 @@ export class DetailSheetInteractionHandlerModel implements InteractionHandler {
   }
 
   private clear(): void {
-    this.popover?.close();
+    this.sheet?.close();
   }
 }

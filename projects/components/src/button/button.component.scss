@@ -188,22 +188,6 @@
   }
 }
 
-.small-square {
-  height: 32px;
-  width: 32px;
-  min-width: auto;
-  border-radius: 6px;
-
-  &:not(.icon-only) {
-    padding: 0 16px;
-  }
-
-  .label {
-    @include body-1-medium();
-    color: inherit;
-  }
-}
-
 .extra-small {
   height: 24px;
   border-radius: 4px;

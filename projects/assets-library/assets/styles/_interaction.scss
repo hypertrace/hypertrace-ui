@@ -55,3 +55,27 @@
 
   @include list-hover;
 }
+
+@mixin top-bar-light-button-background {
+  background-color: white;
+
+  &:hover {
+    background-color: $gray-1;
+  }
+}
+
+@mixin top-bar-light-button-foreground {
+  @include body-1-medium($gray-8);
+}
+
+@mixin top-bar-dark-button-background {
+  background-color: $gray-6;
+
+  &:hover {
+    background-color: $gray-5;
+  }
+}
+
+@mixin top-bar-dark-button-foreground {
+  @include body-1-medium(white);
+}

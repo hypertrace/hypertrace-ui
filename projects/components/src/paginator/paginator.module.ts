@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
 import { LabelModule } from '../label/label.module';
 import { SelectModule } from '../select/select.module';
+import { ToggleButtonModule } from '../toggle-button-group/toggle-button.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { PaginatorComponent } from './paginator.component';
-import { ToggleButtonModule } from '../toggle-button-group/toggle-button.module';
 
 @NgModule({
   declarations: [PaginatorComponent],

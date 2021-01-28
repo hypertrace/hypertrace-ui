@@ -12,12 +12,16 @@ import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
           <ng-content select="[logo]"></ng-content>
         </div>
         <div class="divider"></div>
+        <div class="left-side-content">
+          <ng-content select="[left]"></ng-content>
+        </div>
         <div class="time-range">
           <ht-time-range></ht-time-range>
         </div>
       </div>
-      <div class="right-side">
+      <div class="right-side-content">
         <ng-content></ng-content>
+        <ng-content select="[right]"></ng-content>
       </div>
     </div>
   `
