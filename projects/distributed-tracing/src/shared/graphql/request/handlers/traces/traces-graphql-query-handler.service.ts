@@ -4,6 +4,7 @@ import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hype
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
 import { Specification } from '../../../model/schema/specifier/specification';
@@ -18,7 +19,10 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
-  public constructor(private readonly metadataService: MetadataService) {}
+  public constructor(
+    private readonly metadataService: MetadataService,
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+  ) {}
 
   public matchesRequest(request: unknown): request is GraphQlTracesRequest {
     return (
@@ -37,7 +41,9 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
-        ...this.argBuilder.forFilters(request.filters)
+        ...this.argBuilder.forFilters(
+          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), request.filters)
+        )
       ],
       children: [
         {
