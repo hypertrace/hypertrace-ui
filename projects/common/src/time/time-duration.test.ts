@@ -80,4 +80,14 @@ describe('Time duration', () => {
       new TimeDuration(0, TimeUnit.Millisecond)
     );
   });
+
+  test('can parse ISO 8601 duration string', () => {
+    let duration = TimeDuration.parse('PT1H');
+    expect(duration.value).toBe(3600);
+    expect(duration.unit).toBe(TimeUnit.Second);
+
+    duration = TimeDuration.parse('PT1H5M');
+    expect(duration.value).toBe(3900);
+    expect(duration.unit).toBe(TimeUnit.Second);
+  });
 });
