@@ -15,7 +15,7 @@ export class TimeDuration {
   }
 
   public static parse(durationString: string): TimeDuration {
-    return new TimeDuration(toSeconds(parse(durationString as string)), TimeUnit.Second);
+    return new TimeDuration(toSeconds(parse(durationString)), TimeUnit.Second);
   }
 
   public getAmountForUnit(unit: ConvertibleTimeUnit): number {
