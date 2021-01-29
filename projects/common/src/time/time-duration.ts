@@ -16,6 +16,10 @@ export class TimeDuration {
     return this.toMillis() / this.unitInMillis(unit);
   }
 
+  public toIso8601DurationString(): string {
+    return `PT${this.toMillis() / 1000}S`;
+  }
+
   public toMultiUnitString(
     smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
     displayZero: boolean = true,

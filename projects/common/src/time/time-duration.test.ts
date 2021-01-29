@@ -7,6 +7,10 @@ describe('Time duration', () => {
     expect(new TimeDuration(4, TimeUnit.Hour).toMillis()).toBe(4 * 60 * 60 * 1000);
   });
 
+  test('converts to ISO 8601 duration string correctly', () => {
+    expect(new TimeDuration(1, TimeUnit.Hour).toIso8601DurationString()).toBe('PT3600S');
+  });
+
   test('can print a multi unit string', () => {
     expect(
       new TimeDuration(4 * 60 * 60 * 1000 + 3 * 60 * 1000 + 5 * 1000 + 689, TimeUnit.Millisecond).toMultiUnitString(
