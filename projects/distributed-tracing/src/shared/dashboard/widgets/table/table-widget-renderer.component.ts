@@ -146,21 +146,6 @@ export class TableWidgetRendererComponent
       label: capitalize(viewOption),
       value: viewOption
     }));
-
-    this.populateStaticControls();
-  }
-
-  private populateStaticControls(): void {
-    /*
-     * CAUTION: If TableWidgetViewToggleModel is used, this.model is not hydrated until after setView() is called,
-     *  which is triggered by onViewChange().
-     */
-    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
-      label: capitalize(filterOption.label),
-      value: filterOption
-    }));
-
-    this.maybeEmitInitialCheckboxFilterChange();
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -168,11 +153,18 @@ export class TableWidgetRendererComponent
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(
       startWith(undefined),
-      tap(() => this.fetchAndPopulateDynamicControls())
+      tap(() => this.fetchAndPopulateControlFilters())
     );
   }
 
-  protected fetchAndPopulateDynamicControls(): void {
+  protected fetchAndPopulateControlFilters(): void {
+    this.maybeEmitInitialCheckboxFilterChange();
+
+    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
+      label: capitalize(filterOption.label),
+      value: filterOption
+    }));
+
     this.selectFilterItems$ = forkJoinSafeEmpty(
       this.model.getSelectFilterOptions().map(selectFilterModel =>
         // Fetch the values for the selectFilter dropdown
@@ -334,7 +326,6 @@ export class TableWidgetRendererComponent
 
   public onViewChange(view: string): void {
     this.model.setView(view);
-    this.populateStaticControls();
     this.columnConfigs$ = this.getColumnConfigs();
   }
 
