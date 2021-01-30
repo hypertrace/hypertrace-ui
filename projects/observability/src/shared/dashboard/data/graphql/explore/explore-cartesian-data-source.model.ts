@@ -5,6 +5,7 @@ import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Series } from '../../../../components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -12,12 +13,12 @@ import {
   ExploreGraphQlQueryHandlerService,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { MetricSeriesFetcher, SeriesResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
 @Model({
   type: 'explore-cartesian-data-source'
 })
-export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<MetricSeriesFetcher<ExplorerData>> {
+export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
   public request?: ExploreVisualizationRequest;
 
   @ModelInject(ColorService)
@@ -26,7 +27,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  public getData(): Observable<MetricSeriesFetcher<ExplorerData>> {
+  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
     return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
       switchMap(request =>
         this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
@@ -40,16 +41,22 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
         })
       ),
       map(response => ({
-        getData: () => this.getAllData(response)
+        getData: () => this.getAllData(response).pipe(
+          map(explorerResults => ({
+            series: explorerResults,
+            baselines: [],
+            bands: []
+          }))
+        )
       }))
     );
   }
 
-  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
+  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerResult[]> {
     return this.buildAllSeries(this.request!, new ExploreResult(response));
   }
 
-  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerSeries[]> {
+  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerResult[]> {
     const seriesData = this.gatherSeriesData(request, result);
     const colors = this.colorService.getColorPalette().forNColors(seriesData.length);
 
@@ -85,24 +92,23 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
     request: ExploreVisualizationRequest,
     result: SeriesData,
     color: string
-  ): Observable<ExplorerSeries> {
+  ): Observable<ExplorerResult> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
     }).pipe(
-      map(obj => ({
-        series: {
+      map(obj => (
+        {
           data: result.data,
           units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
           type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
           name: isEmpty(result.groupName)
             ? obj.specDisplayName
             : request.useGroupName
-            ? result.groupName!
-            : `${obj.specDisplayName}: ${result.groupName}`,
+              ? result.groupName!
+              : `${obj.specDisplayName}: ${result.groupName}`,
           color: color
-        }
-      }))
+        }))
     );
   }
 
@@ -142,7 +148,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
 }
 
 export type ExplorerData = MetricTimeseriesInterval | [string, number];
-type ExplorerSeries = SeriesResult<ExplorerData>;
+type ExplorerResult = Series<ExplorerData>;
 interface SeriesData {
   data: ExplorerData[];
   spec: AggregatableSpec;

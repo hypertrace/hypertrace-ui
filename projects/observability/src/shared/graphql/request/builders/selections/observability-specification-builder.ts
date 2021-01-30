@@ -266,16 +266,14 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     };
   }
 
-  public buildAggregationSelection(
+  private buildAggregationSelection(
     aggregation: MetricAggregationType,
-    requireUnique: boolean = true,
-    fetchBounds: boolean = false
+    requireUnique: boolean = true
   ): GraphQlSelection {
     return {
       path: convertToGraphQlMetricAggregationPath(aggregation),
       alias: requireUnique ? aggregation : undefined,
-      arguments: this.argBuilder.forAggregationArgs(aggregation),
-      children: fetchBounds ? [{ path: 'upperBound' }, { path: 'lowerBound' }] : []
+      arguments: this.argBuilder.forAggregationArgs(aggregation)
     };
   }
 

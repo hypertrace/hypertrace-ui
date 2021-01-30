@@ -10,15 +10,11 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { intersectionBy } from 'lodash-es';
 import { merge, Observable } from 'rxjs';
-import { map, toArray } from 'rxjs/operators';
+import { map, tap, toArray } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
-import {
-  MetricTimeseriesBandInterval,
-  MetricTimeseriesInterval
-} from '../../../../graphql/model/metric/metric-timeseries';
+import { MetricTimeseriesBandInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { BAND_ARRAY_TYPE } from './band-array/band-array-type';
 import { BandModel, MetricBand, MetricBandDataFetcher } from './band.model';
@@ -30,7 +26,7 @@ import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from './series.mod
   type: 'cartesian-widget',
   displayName: 'Cartesian Widget'
 })
-export class CartesianWidgetModel<TSeriesInterval> {
+export class CartesianWidgetModel<TInterval> {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',
@@ -44,13 +40,13 @@ export class CartesianWidgetModel<TSeriesInterval> {
     displayName: 'Series',
     type: SERIES_ARRAY_TYPE.type
   })
-  public series: SeriesModel<TSeriesInterval>[] = [];
+  public series: SeriesModel<TInterval>[] = [];
 
   @ModelProperty({
     key: 'bands',
     type: BAND_ARRAY_TYPE.type
   })
-  public bands: BandModel<MetricTimeseriesBandInterval>[] = [];
+  public bands: BandModel<TInterval>[] = [];
 
   @ModelProperty({
     key: 'color-palette',
@@ -139,174 +135,51 @@ export class CartesianWidgetModel<TSeriesInterval> {
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
 
-  public getSeriesFetcher(): Observable<MetricSeriesFetcher<TSeriesInterval>> {
+  public getFetcher(): Observable<CartesianDataFetcher<TInterval>> {
     if (this.seriesFromData) {
-      return this.api.getData<MetricSeriesFetcher<TSeriesInterval>>();
+      return this.api.getData<CartesianDataFetcher<TInterval>>();
     }
 
-    return merge(...this.series.map(series => this.getDecoratedSeriesDataFetcher(series))).pipe(
-      toArray(),
-      map(dataFetchers => this.combineSeriesDataFetchers(dataFetchers))
+    return forkJoinSafeEmpty({
+      series: this.getDecoratedSeriesDataFetchers(),
+      bands: this.getDecoratedBandsDataFetchers()
+    }).pipe(
+      map((decoratedFetchers: DataFetchers<TInterval>) => this.combineDataFetchers(decoratedFetchers))
     );
   }
 
-  public getBandsFetcher(): Observable<MetricBandFetcher<MetricTimeseriesInterval>> {
-    return merge(...this.bands.map(band => this.getDecoratedBandsDataFetcher(band))).pipe(
-      toArray(),
-      map(dataFetchers => this.combineBandsDataFetchers(dataFetchers))
+  private combineDataFetchers(
+    decoratedFetchers: DataFetchers<TInterval>
+  ): CartesianDataFetcher<TInterval> {
+    return {
+      getData: (interval: TimeDuration) => this.getCombinedData(interval, decoratedFetchers.series, decoratedFetchers.bands),
+      getRequestedInterval: undefined // TODO
+    };
+  }
+
+  private getCombinedData(
+    interval: TimeDuration,
+    series: DecoratedSeriesDataFetcher<TInterval>[],
+    bands: DecoratedBandDataFetcher<TInterval>[]
+  ): Observable<CartesianResult<TInterval>> {
+    return forkJoinSafeEmpty({
+      series: this.fetchAllSeries(series, interval),
+      bands: this.fetchAllBands(bands, interval)
+    }).pipe(
+      tap((result: CombinedResult<TInterval>) => console.warn('result', result)),
+      map((result: CombinedResult<TInterval>) => ({
+        series: result.series.map((s: MetricSeries<TInterval>, index: number) => this.mapToSeries(series[index].seriesModel, s, index)),
+        baselines: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBaseline(bands[index].bandModel, b, index)),
+        bands: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBand(bands[index].bandModel, b, index))
+      }))
     );
   }
 
-  private combineSeriesDataFetchers(
-    dataFetchers: DecoratedSeriesDataFetcher<TSeriesInterval>[]
-  ): MetricSeriesFetcher<TSeriesInterval> {
-    return {
-      getRequestedInterval: this.supportsSeriesInterval(dataFetchers)
-        ? () => this.combineSeriesCurrentInterval(dataFetchers)
-        : undefined,
-      getData: interval => this.combineSeries(dataFetchers, interval)
-    };
-  }
-
-  private combineBandsDataFetchers(
-    dataFetchers: DecoratedBandDataFetcher[]
-  ): MetricBandFetcher<MetricTimeseriesInterval> {
-    return {
-      getRequestedInterval: this.supportsBandsInterval(dataFetchers)
-        ? () => this.combineBandsCurrentInterval(dataFetchers)
-        : undefined,
-      getData: interval => this.combineBands(dataFetchers, interval)
-    };
-  }
-
-  private combineSeriesCurrentInterval(
-    dataFetchers: Required<DecoratedSeriesDataFetcher<TSeriesInterval>>[]
-  ): TimeDuration | undefined {
-    // If same interval from each, use it
-    return intersectionBy(
-      dataFetchers.map(fetcher => fetcher.getRequestedInterval()),
-      interval => interval && `${interval.value}${interval.unit}`
-    )[0];
-  }
-
-  private combineBandsCurrentInterval(dataFetchers: Required<DecoratedBandDataFetcher>[]): TimeDuration | undefined {
-    // If same interval from each, use it
-    return intersectionBy(
-      dataFetchers.map(fetcher => fetcher.getRequestedInterval()),
-      interval => interval && `${interval.value}${interval.unit}`
-    )[0];
-  }
-
-  private supportsSeriesInterval(
-    dataFetchers: DecoratedSeriesDataFetcher<TSeriesInterval>[]
-  ): dataFetchers is Required<DecoratedSeriesDataFetcher<TSeriesInterval>>[] {
-    return dataFetchers.every(fetcher => fetcher.getRequestedInterval !== undefined);
-  }
-
-  private supportsBandsInterval(
-    dataFetchers: DecoratedBandDataFetcher[]
-  ): dataFetchers is Required<DecoratedBandDataFetcher>[] {
-    return dataFetchers.every(fetcher => fetcher.getRequestedInterval !== undefined);
-  }
-
-  private combineSeries(
-    dataFetchers: DecoratedSeriesDataFetcher<TSeriesInterval>[],
-    interval: TimeDuration
-  ): Observable<SeriesResult<TSeriesInterval>[]> {
-    return forkJoinSafeEmpty(dataFetchers.map((dataFetcher, index) => this.fetchSeries(dataFetcher, index, interval)));
-  }
-
-  private combineBands(
-    dataFetchers: DecoratedBandDataFetcher[],
-    interval: TimeDuration
-  ): Observable<BandResult<MetricTimeseriesInterval>[]> {
-    return forkJoinSafeEmpty(dataFetchers.map(dataFetcher => this.fetchBands(dataFetcher, interval)));
-  }
-
-  private fetchSeries(
-    dataFetcher: DecoratedSeriesDataFetcher<TSeriesInterval>,
-    index: number,
-    interval: TimeDuration
-  ): Observable<SeriesResult<TSeriesInterval>> {
-    return dataFetcher
-      .getData(interval)
-      .pipe(map(metricSeries => this.convertToCartesianSeriesData(dataFetcher, metricSeries, index)));
-  }
-
-  private fetchBands(
-    dataFetcher: DecoratedBandDataFetcher,
-    interval: TimeDuration
-  ): Observable<BandResult<MetricTimeseriesInterval>> {
-    return dataFetcher
-      .getData(interval)
-      .pipe(map(metricBand => this.convertToCartesianBandData(dataFetcher, metricBand)));
-  }
-
-  private convertToCartesianSeriesData(
-    dataFetcher: DecoratedSeriesDataFetcher<TSeriesInterval>,
-    metricSeries: MetricSeries<TSeriesInterval>,
+  private mapToSeries(
+    model: SeriesModel<TInterval>,
+    metricSeries: MetricSeries<TInterval>,
     index: number
-  ): SeriesResult<TSeriesInterval> {
-    return {
-      series: this.convertToSeries(metricSeries, dataFetcher.series, index)
-    };
-  }
-
-  private convertToCartesianBandData(
-    dataFetcher: DecoratedBandDataFetcher,
-    metricBand: MetricBand<MetricTimeseriesBandInterval>
-  ): BandResult<MetricTimeseriesInterval> {
-    return {
-      baseline: this.convertToBaseline(metricBand, dataFetcher.band),
-      band: this.convertToBand(metricBand)
-    };
-  }
-
-  private convertToBand(metricSeries: MetricSeries<MetricTimeseriesBandInterval>): Band<MetricTimeseriesBandInterval> {
-    return {
-      name: '',
-      color: BandModel.BAND_COLOR,
-      opacity: BandModel.DEFAULT_OPACITY,
-      upper: {
-        data: metricSeries.intervals.map((interval: MetricTimeseriesBandInterval) => ({
-          ...interval,
-          value: interval.upperBound
-        })),
-        type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.UPPER_BOUND_NAME
-      },
-      lower: {
-        data: metricSeries.intervals.map((interval: MetricTimeseriesBandInterval) => ({
-          ...interval,
-          value: interval.lowerBound
-        })),
-        type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.LOWER_BOUND_NAME
-      }
-    };
-  }
-
-  private convertToBaseline(
-    metricBand: MetricBand<MetricTimeseriesBandInterval>,
-    model: BandModel<MetricTimeseriesBandInterval>
-  ): Series<MetricTimeseriesInterval> {
-    return {
-      data: metricBand.intervals,
-      units: metricBand.units,
-      color: BandModel.BASELINE_COLOR,
-      name: BandModel.BASELINE_NAME,
-      type: CartesianSeriesVisualizationType.DashedLine,
-      hide: model.hide
-    };
-  }
-
-  private convertToSeries(
-    metricSeries: MetricSeries<TSeriesInterval>,
-    model: SeriesModel<TSeriesInterval>,
-    index: number
-  ): Series<TSeriesInterval> {
+  ): Series<TInterval> {
     return {
       data: metricSeries.intervals,
       units: metricSeries.units,
@@ -324,7 +197,96 @@ export class CartesianWidgetModel<TSeriesInterval> {
     };
   }
 
-  private getSeriesVizTypeFromModel(seriesModel: SeriesModel<TSeriesInterval>): CartesianSeriesVisualizationType {
+  private mapToBaseline(
+    model: BandModel<TInterval>,
+    metricBand: MetricBand<TInterval>,
+    _index: number
+  ): Series<TInterval> {
+    return {
+      data: metricBand.intervals,
+      units: metricBand.units,
+      color: BandModel.BASELINE_COLOR,
+      name: BandModel.BASELINE_NAME,
+      type: CartesianSeriesVisualizationType.DashedLine,
+      hide: model.hide
+    };
+  }
+
+  private mapToBand(
+    _model: BandModel<TInterval>,
+    metricSeries: MetricSeries<TInterval>,
+    _index: number
+  ): Band<TInterval> {
+    return {
+      name: '',
+      color: BandModel.BAND_COLOR,
+      opacity: BandModel.DEFAULT_OPACITY,
+      upper: {
+        data: metricSeries.intervals
+          .map((interval: unknown) => (interval as MetricTimeseriesBandInterval))
+          .map((interval: MetricTimeseriesBandInterval) => ({
+            ...interval,
+            value: interval.upperBound
+          } as unknown))
+          .map(interval => interval as TInterval),
+        type: CartesianSeriesVisualizationType.DashedLine,
+        color: BandModel.BAND_COLOR,
+        name: BandModel.UPPER_BOUND_NAME
+      },
+      lower: {
+        data: metricSeries.intervals
+          .map((interval: unknown) => (interval as MetricTimeseriesBandInterval))
+          .map((interval: MetricTimeseriesBandInterval) => ({
+            ...interval,
+            value: interval.lowerBound
+          } as unknown))
+          .map(interval => interval as TInterval),
+        type: CartesianSeriesVisualizationType.DashedLine,
+        color: BandModel.BAND_COLOR,
+        name: BandModel.LOWER_BOUND_NAME
+      }
+    };
+  }
+
+  private fetchAllSeries(series: DecoratedSeriesDataFetcher<TInterval>[], interval: TimeDuration): Observable<MetricSeries<TInterval>[]> {
+    return merge(...series.map(fetcher => fetcher.getData(interval))).pipe(toArray());
+  }
+
+  private fetchAllBands(bands: DecoratedBandDataFetcher<TInterval>[], interval: TimeDuration): Observable<MetricBand<TInterval>[]> {
+    return merge(...bands.map(fetcher => fetcher.getData(interval))).pipe(toArray());
+  }
+
+  private getDecoratedSeriesDataFetchers(): Observable<DecoratedSeriesDataFetcher<TInterval>[]> {
+    return forkJoinSafeEmpty(this.series.map(seriesModel => this.getDecoratedSeriesDataFetcher(seriesModel)));
+  }
+
+  private getDecoratedBandsDataFetchers(): Observable<DecoratedBandDataFetcher<TInterval>[]> {
+    return forkJoinSafeEmpty(this.bands.map(bandModel => this.getDecoratedBandsDataFetcher(bandModel)));
+  }
+
+  private getDecoratedSeriesDataFetcher(
+    seriesModel: SeriesModel<TInterval>
+  ): Observable<DecoratedSeriesDataFetcher<TInterval>> {
+    return seriesModel.getDataFetcher().pipe(
+      map(fetcher => ({
+        ...fetcher,
+        seriesModel: seriesModel
+      }))
+    );
+  }
+
+  private getDecoratedBandsDataFetcher(
+    bandModel: BandModel<TInterval>
+  ): Observable<DecoratedBandDataFetcher<TInterval>> {
+    return bandModel.getDataFetcher().pipe(
+      map(fetcher => ({
+        ...fetcher,
+        bandModel: bandModel
+      }))
+    );
+  }
+
+  private getSeriesVizTypeFromModel(seriesModel: SeriesModel<TInterval>): CartesianSeriesVisualizationType {
     switch (seriesModel.visualizationType) {
       case SeriesVisualizationType.Area:
         return CartesianSeriesVisualizationType.Area;
@@ -337,53 +299,33 @@ export class CartesianWidgetModel<TSeriesInterval> {
         return CartesianSeriesVisualizationType.Line;
     }
   }
+}
 
-  private getDecoratedSeriesDataFetcher(
-    series: SeriesModel<TSeriesInterval>
-  ): Observable<DecoratedSeriesDataFetcher<TSeriesInterval>> {
-    return series.getDataFetcher().pipe(
-      map(fetcher => ({
-        ...fetcher,
-        series: series
-      }))
-    );
-  }
-
-  private getDecoratedBandsDataFetcher(
-    band: BandModel<MetricTimeseriesBandInterval>
-  ): Observable<DecoratedBandDataFetcher> {
-    return band.getDataFetcher().pipe(
-      map(fetcher => ({
-        ...fetcher,
-        band: band
-      }))
-    );
-  }
+interface DataFetchers<TInterval> {
+  series: DecoratedSeriesDataFetcher<TInterval>[];
+  bands: DecoratedBandDataFetcher<TInterval>[];
 }
 
 interface DecoratedSeriesDataFetcher<TInterval> extends MetricSeriesDataFetcher<TInterval> {
-  series: SeriesModel<TInterval>;
+  seriesModel: SeriesModel<TInterval>;
 }
 
-interface DecoratedBandDataFetcher extends MetricBandDataFetcher<MetricTimeseriesBandInterval> {
-  band: BandModel<MetricTimeseriesBandInterval>;
+interface DecoratedBandDataFetcher<TInterval> extends MetricBandDataFetcher<TInterval> {
+  bandModel: BandModel<TInterval>;
 }
 
-export interface MetricSeriesFetcher<TInterval> {
-  getData(interval: TimeDuration): Observable<SeriesResult<TInterval>[]>;
+export interface CartesianDataFetcher<TInterval> {
+  getData(interval: TimeDuration): Observable<CartesianResult<TInterval>>;
   getRequestedInterval?(): TimeDuration | undefined;
 }
 
-export interface MetricBandFetcher<TSeriesInterval> {
-  getData(interval: TimeDuration): Observable<BandResult<TSeriesInterval>[]>;
-  getRequestedInterval?(): TimeDuration | undefined;
+export interface CombinedResult<TInterval> {
+  series: MetricSeries<TInterval>[];
+  bands: MetricBand<TInterval>[]
 }
 
-export interface SeriesResult<TInterval> {
-  series: Series<TInterval>;
-}
-
-export interface BandResult<TSeriesInterval> {
-  baseline: Series<TSeriesInterval>;
-  band: Band<MetricTimeseriesBandInterval>;
+export interface CartesianResult<TInterval> {
+  series: Series<TInterval>[];
+  baselines: Series<TInterval>[];
+  bands: Band<TInterval>[]
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -8,15 +8,8 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import {
-  MetricTimeseriesBandInterval,
-  MetricTimeseriesInterval
-} from '../../../../graphql/model/metric/metric-timeseries';
-import {
-  BandResult,
-  CartesianWidgetModel,
-  MetricBandFetcher,
-  MetricSeriesFetcher,
-  SeriesResult
+  CartesianDataFetcher, CartesianResult,
+  CartesianWidgetModel
 } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
@@ -45,7 +38,7 @@ import {
 })
 export class CartesianWidgetRendererComponent<TSeriesInterval> extends InteractiveDataWidgetRenderer<
   CartesianWidgetModel<TSeriesInterval>,
-  CartesianData<TSeriesInterval, MetricTimeseriesBandInterval>
+  CartesianData<TSeriesInterval>
 > {
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
@@ -57,28 +50,23 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
 
   public selectedInterval?: IntervalValue;
   public intervalOptions?: IntervalValue[];
-  private seriesFetcher?: MetricSeriesFetcher<TSeriesInterval>;
-  private bandFetcher?: MetricBandFetcher<MetricTimeseriesInterval>;
+  private fetcher?: CartesianDataFetcher<TSeriesInterval>;
 
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
     this.updateDataObservable();
   }
 
-  protected fetchData(): Observable<CartesianData<TSeriesInterval, MetricTimeseriesBandInterval>> {
-    return forkJoinSafeEmpty({
-      seriesFetcher: this.model.getSeriesFetcher(),
-      bandFetcher: this.model.getBandsFetcher()
-    }).pipe(
-      tap(fetchers => {
-        this.seriesFetcher = fetchers.seriesFetcher;
-        this.bandFetcher = fetchers.bandFetcher;
+  protected fetchData(): Observable<CartesianData<TSeriesInterval>> {
+    return this.model.getFetcher().pipe(
+      tap(fetcher => {
+        this.fetcher = fetcher;
 
-        if (this.intervalSupported(this.seriesFetcher)) {
+        if (this.intervalSupported(this.fetcher)) {
           this.intervalOptions = this.buildIntervalOptions();
           this.selectedInterval = this.getBestIntervalMatch(
             this.intervalOptions,
-            this.selectedInterval || this.seriesFetcher.getRequestedInterval()
+            this.selectedInterval || this.fetcher.getRequestedInterval()
           );
         } else {
           this.intervalOptions = undefined;
@@ -89,51 +77,32 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     );
   }
 
-  protected buildDataObservable(): Observable<CartesianData<TSeriesInterval, MetricTimeseriesBandInterval>> {
-    return forkJoinSafeEmpty({
-      seriesResult: this.seriesFetcher
-        ? this.fetchCartesianSeriesData(this.seriesFetcher, this.selectedInterval)
-        : of([]),
-      bandResult: this.bandFetcher ? this.fetchCartesianBandData(this.bandFetcher, this.selectedInterval) : of([])
-    }).pipe(
-      map((combinedResults: CombinedResults<TSeriesInterval>) => ({
+  protected buildDataObservable(): Observable<CartesianData<TSeriesInterval>> {
+    if (!this.fetcher) {
+      return of({ series: [], bands: [] });
+    }
+
+    return this.fetchCartesianData(this.fetcher, this.selectedInterval).pipe(
+      map((cartesianResult: CartesianResult<TSeriesInterval>) => ({
         series: [
-          ...combinedResults.seriesResult.map(r => r.series),
-          /*
-           * This is a little kludgy and not entirely type safe, but safe...ish because we can make some assumptions.
-           *
-           * The assumption being that if we are plotting a series and bands on the same chart, the intervals will have
-           * the same shape. Since we already know the shape all bands take, we assume the series is also in the form
-           * of a timestamp and value (and maybe additional properties).
-           *
-           * With those assumptions in mind, prepare yourself for some ugly casting below.
-           */
-          ...combinedResults.bandResult
-            .map(result => result.baseline as unknown)
-            .map(baseline => baseline as Series<TSeriesInterval>)
+          ...cartesianResult.series,
+          ...cartesianResult.baselines
         ],
-        bands: [...combinedResults.bandResult.map(r => r.band)]
+        bands: cartesianResult.bands
       }))
     );
   }
 
-  private fetchCartesianSeriesData(
-    fetcher: MetricSeriesFetcher<TSeriesInterval>,
+  private fetchCartesianData(
+    fetcher: CartesianDataFetcher<TSeriesInterval>,
     interval?: IntervalValue
-  ): Observable<SeriesResult<TSeriesInterval>[]> {
-    return fetcher.getData(this.resolveInterval(interval));
-  }
-
-  private fetchCartesianBandData(
-    fetcher: MetricBandFetcher<MetricTimeseriesInterval>,
-    interval?: IntervalValue
-  ): Observable<BandResult<MetricTimeseriesInterval>[]> {
+  ): Observable<CartesianResult<TSeriesInterval>> {
     return fetcher.getData(this.resolveInterval(interval));
   }
 
   private intervalSupported(
-    fetcher: MetricSeriesFetcher<TSeriesInterval>
-  ): fetcher is Required<MetricSeriesFetcher<TSeriesInterval>> {
+    fetcher: CartesianDataFetcher<TSeriesInterval>
+  ): fetcher is Required<CartesianDataFetcher<TSeriesInterval>> {
     return this.model.selectableInterval && !!fetcher.getRequestedInterval;
   }
 
@@ -162,12 +131,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   }
 }
 
-interface CartesianData<TSeriesInterval, TBandInterval> {
+interface CartesianData<TSeriesInterval> {
   series: Series<TSeriesInterval>[];
-  bands: Band<TBandInterval>[];
-}
-
-interface CombinedResults<TSeriesInterval> {
-  seriesResult: SeriesResult<TSeriesInterval>[];
-  bandResult: BandResult<MetricTimeseriesInterval>[];
+  bands: Band<TSeriesInterval>[];
 }

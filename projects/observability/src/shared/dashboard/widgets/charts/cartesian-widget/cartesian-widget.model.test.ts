@@ -1,7 +1,7 @@
 import { TimeDuration, TimeUnit } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
-import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.model';
+import { CartesianWidgetModel } from './cartesian-widget.model';
 import { SeriesModel } from './series.model';
 
 describe('Cartesian Widget Model', () => {
