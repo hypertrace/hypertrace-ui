@@ -40,8 +40,9 @@
   }
 }
 
-:host {
-  .refresh {
+.refresh {
+  margin-left: 8px;
+  &:not(.emphasized) {
     ::ng-deep {
       button.button.solid {
         @include top-bar-dark-button-background;
@@ -50,11 +51,5 @@
         }
       }
     }
-
-    margin-left: 8px;
-    cursor: pointer;
-    height: 32px;
-    display: flex;
-    align-items: center;
   }
 }

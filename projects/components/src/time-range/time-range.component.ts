@@ -56,6 +56,7 @@ import { PopoverRef } from '../popover/popover-ref';
       <ht-button
         *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         class="refresh"
+        [ngClass]="refreshButton.isEmphasized ? 'emphasized' : ''"
         [label]="refreshButton.text$ | async"
         icon="${IconType.Refresh}"
         size="${ButtonSize.Small}"
@@ -106,6 +107,7 @@ export class TimeRangeComponent {
         of({
           text$: of('Refresh'),
           role: ButtonRole.Secondary,
+          isEmphasized: false,
           onClick: () => this.onRefresh(timeRange)
         }),
         this.ngZone.runOutsideAngular(() =>
@@ -123,6 +125,7 @@ export class TimeRangeComponent {
                 map(duration => `Refresh - updated ${duration.toString()} ago`)
               ),
               role: ButtonRole.Primary,
+              isEmphasized: true,
               onClick: () => this.onRefresh(timeRange)
             }))
           )
@@ -141,5 +144,6 @@ export class TimeRangeComponent {
 interface RefreshButtonData {
   text$: Observable<string>;
   role: ButtonRole;
+  isEmphasized: boolean;
   onClick(): void;
 }
