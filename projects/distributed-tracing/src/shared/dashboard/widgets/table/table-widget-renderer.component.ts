@@ -142,17 +142,10 @@ export class TableWidgetRendererComponent
       ])
     );
 
-    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
-      label: capitalize(filterOption.label),
-      value: filterOption
-    }));
-
     this.viewItems = this.model.getViewOptions().map(viewOption => ({
       label: capitalize(viewOption),
       value: viewOption
     }));
-
-    this.maybeEmitInitialCheckboxFilterChange();
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -160,11 +153,18 @@ export class TableWidgetRendererComponent
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(
       startWith(undefined),
-      tap(() => this.fetchFilterValues())
+      tap(() => this.fetchAndPopulateControlFilters())
     );
   }
 
-  protected fetchFilterValues(): void {
+  protected fetchAndPopulateControlFilters(): void {
+    this.maybeEmitInitialCheckboxFilterChange();
+
+    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
+      label: capitalize(filterOption.label),
+      value: filterOption
+    }));
+
     this.selectFilterItems$ = forkJoinSafeEmpty(
       this.model.getSelectFilterOptions().map(selectFilterModel =>
         // Fetch the values for the selectFilter dropdown
