@@ -1,6 +1,7 @@
 import { FixedTimeRange, isEqualIgnoreFunctions } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType, MetricHealth } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { createServiceFactory } from '@ngneat/spectator/jest';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
 import { GraphQlIntervalUnit } from '../../../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilitySpecificationBuilder } from '../../../../builders/selections/observability-specification-builder';
@@ -15,7 +16,7 @@ import {
 
 // tslint:disable: max-file-line-count
 describe('Entity topology graphql query handler', () => {
-  const service = new EntityTopologyGraphQlQueryHandlerService();
+  const createService = createServiceFactory({ service: EntityTopologyGraphQlQueryHandlerService });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
     new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
@@ -229,14 +230,16 @@ describe('Entity topology graphql query handler', () => {
   });
 
   test('only matches topology request', () => {
-    expect(service.matchesRequest(buildTopologyRequest())).toBe(true);
-    expect(service.matchesRequest({ requestType: 'other' })).toBe(false);
+    const spectator = createService();
+    expect(spectator.service.matchesRequest(buildTopologyRequest())).toBe(true);
+    expect(spectator.service.matchesRequest({ requestType: 'other' })).toBe(false);
   });
 
   test('builds expected request', () => {
+    const spectator = createService();
     const request = buildTopologyRequest();
 
-    expect(service.convertRequest(request)).toEqual({
+    expect(spectator.service.convertRequest(request)).toEqual({
       path: 'entities',
       arguments: [
         { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Service) },
@@ -413,6 +416,7 @@ describe('Entity topology graphql query handler', () => {
     });
   });
   test('correctly parses response', () => {
+    const spectator = createService();
     const request = buildTopologyRequest();
     const serverResponse = buildTopologyResponse();
 
@@ -544,7 +548,7 @@ describe('Entity topology graphql query handler', () => {
     serviceNode3.edges.push(service3ToBackendBEdge);
     backendNodeB.edges.push(service3ToBackendBEdge);
 
-    const actual = service.convertResponse(serverResponse, request);
+    const actual = spectator.service.convertResponse(serverResponse, request);
     const expected = [serviceNode1, backendNodeA, serviceNode2, serviceNode3, backendNodeB];
     // Custom equality checking because built in doesn't do well with circular references + functions (which are checked by reference)
     expect(isEqualIgnoreFunctions(actual, expected)).toBe(true);
