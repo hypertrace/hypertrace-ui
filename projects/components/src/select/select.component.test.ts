@@ -5,7 +5,7 @@ import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { SelectJustify } from './select-justify';
-import { SelectComponent } from './select.component';
+import { SelectComponent, SelectTriggerDisplayMode } from './select.component';
 import { SelectModule } from './select.module';
 
 describe('Select Component', () => {
@@ -54,6 +54,46 @@ describe('Select Component', () => {
     spectator.tick();
     expect(spectator.element).toHaveText(selectionOptions[2].label);
   }));
+
+  test('should apply classes and render items correctly when triggerDisplayMode is button', () => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [triggerDisplayMode]="displayMode">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          displayMode: SelectTriggerDisplayMode.Button
+        }
+      }
+    );
+
+    expect(spectator.query('.select')?.classList.contains('button')).toBe(true);
+    expect(spectator.query('.trigger-icon')).not.toExist();
+  });
+
+  test('should apply classes and render items correctly when triggerDisplayMode is menu with chevron', () => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [triggerDisplayMode]="displayMode">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          displayMode: SelectTriggerDisplayMode.MenuWithChevron
+        }
+      }
+    );
+
+    expect(spectator.query('.select')?.classList.contains('menu-with-chevron')).toBe(true);
+    expect(spectator.query('.trigger-icon')).toExist();
+  });
 
   test('should display provided options when clicked', fakeAsync(() => {
     spectator = hostFactory(

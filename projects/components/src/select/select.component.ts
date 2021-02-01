@@ -34,17 +34,23 @@ import { SelectSize } from './select-size';
         this.groupPosition,
         selected ? selected.style.toString() : '',
         this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : ''
+        this.disabled ? 'disabled' : '',
+        this.triggerDisplayMode
       ]"
       *htLetAsync="this.selected$ as selected"
     >
       <ht-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container">
         <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="this.justifyClass">
-            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </ht-icon>
+            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
             <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
-            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+            <ht-icon
+              *ngIf="this.triggerDisplayMode === '${SelectTriggerDisplayMode.MenuWithChevron}'"
+              class="trigger-icon"
+              icon="${IconType.ChevronDown}"
+              size="${IconSize.ExtraSmall}"
+            >
+            </ht-icon>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -81,6 +87,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public icon?: string;
 
   @Input()
+  public iconSize?: IconSize = IconSize.Small;
+
+  @Input()
   public placeholder?: string;
 
   @Input()
@@ -94,6 +103,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public highlightSelected: boolean = true;
+
+  @Input()
+  public triggerDisplayMode: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithChevron;
 
   @Output()
   public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
@@ -163,4 +175,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
     return this.items.find(item => item.value === value);
   }
+}
+
+export const enum SelectTriggerDisplayMode {
+  MenuWithChevron = 'menu-with-chevron',
+  Button = 'button'
 }
