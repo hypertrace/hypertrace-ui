@@ -1,39 +1,78 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+  ElementRef
+} from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ht-description',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./description.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="description">
+    <div class="description" (htLayoutChange)="this.remeasure()" #eventDescriptionContainer>
       <div
         class="description-text"
-        [ngClass]="{ 'truncated-text': !this.isDescriptionTextToggled }"
+        [ngClass]="{ 'truncated-text': !isDescriptionTextToggled }"
         data-sensitive-pii
-        #eventDescription
+        #eventDescriptionText
       >
         {{ description }}
-        <span *ngIf="this.isDescriptionTextToggled" (click)="this.toggleDescriptionText()" class="description-button"
+        <span
+          *ngIf="(isDescriptionTruncated$ | async) && isDescriptionTextToggled"
+          (click)="toggleDescriptionText()"
+          class="description-button"
           >show less</span
         >
       </div>
       <div
-        class="description-button"
-        *ngIf="eventDescription.offsetWidth < eventDescription.scrollWidth && !this.isDescriptionTextToggled"
-        (click)="this.toggleDescriptionText()"
+        class="description-button description-button-more"
+        *ngIf="(isDescriptionTruncated$ | async) && !isDescriptionTextToggled"
+        (click)="toggleDescriptionText()"
       >
         show more
       </div>
     </div>
   `
 })
-export class DescriptionComponent {
+export class DescriptionComponent implements OnChanges, AfterViewInit {
+  public isInitialized: boolean = false;
   public isDescriptionTextToggled: boolean = false;
+  public readonly isDescriptionTruncated$: Subject<boolean> = new Subject();
+  public fullDescriptionTextWidth!: number;
+
+  @ViewChild('eventDescriptionText', { read: ElementRef })
+  public readonly eventDescriptionText!: ElementRef;
+
+  @ViewChild('eventDescriptionContainer', { read: ElementRef })
+  public readonly eventDescriptionContainer!: ElementRef;
 
   @Input()
   public description!: string;
 
+  public ngOnChanges(): void {
+    if (this.isInitialized) {
+      this.remeasure();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.fullDescriptionTextWidth = this.eventDescriptionText.nativeElement.scrollWidth;
+    this.isInitialized = true;
+    this.remeasure();
+  }
+
   public toggleDescriptionText(): void {
     this.isDescriptionTextToggled = !this.isDescriptionTextToggled;
+  }
+
+  public remeasure(): void {
+    this.isDescriptionTruncated$.next(
+      this.eventDescriptionContainer.nativeElement.offsetWidth < this.fullDescriptionTextWidth
+    );
   }
 }

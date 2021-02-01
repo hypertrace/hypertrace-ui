@@ -6,14 +6,13 @@
   display: flex;
 }
 
-.description-text {
-  margin-right: 6px;
-}
-
 .description-button {
   cursor: pointer;
   text-decoration: underline;
   white-space: nowrap;
+  &-more {
+    margin-left: 5px;
+  }
 }
 
 .truncated-text {
