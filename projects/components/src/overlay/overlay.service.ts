@@ -30,7 +30,7 @@ export class OverlayService {
       parentInjector: injector,
       position: {
         type: PopoverPositionType.Fixed,
-        location: PopoverFixedPositionLocation.RightUnderHeader
+        location: config.position ?? PopoverFixedPositionLocation.RightUnderHeader
       },
       data: metadata
     });
