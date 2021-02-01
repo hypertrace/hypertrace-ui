@@ -63,6 +63,7 @@ export * from './shared/graphql/model/schema/filter/field/graphql-field-filter';
 export * from './shared/graphql/model/schema/filter/id/graphql-id-filter';
 
 export * from './shared/graphql/model/schema/filter/graphql-filter';
+export * from './shared/graphql/model/schema/filter/global-graphql-filter.service';
 export {
   GraphQlMetricAggregationType,
   convertToGraphQlMetricAggregationType

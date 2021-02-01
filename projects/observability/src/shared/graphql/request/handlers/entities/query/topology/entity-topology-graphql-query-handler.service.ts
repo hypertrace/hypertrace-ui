@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import {
+  GlobalGraphQlFilterService,
   GraphQlFilter,
   GraphQlSelectionBuilder,
   GraphQlTimeRange,
@@ -22,6 +23,7 @@ export class EntityTopologyGraphQlQueryHandlerService
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly argBuilder: GraphQlObservabilityArgumentBuilder = new GraphQlObservabilityArgumentBuilder();
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
+  public constructor(private readonly globalGraphQlFilterService: GlobalGraphQlFilterService) {}
 
   public matchesRequest(request: unknown): request is GraphQlEntityTopologyRequest {
     return (
@@ -38,7 +40,9 @@ export class EntityTopologyGraphQlQueryHandlerService
         this.argBuilder.forEntityType(request.rootNodeType),
         this.argBuilder.forLimit(request.rootNodeLimit),
         this.argBuilder.forTimeRange(request.timeRange),
-        ...this.argBuilder.forFilters(request.rootNodeFilters)
+        ...this.argBuilder.forFilters(
+          this.globalGraphQlFilterService.mergeGlobalFilters(request.rootNodeType, request.rootNodeFilters)
+        )
       ],
       children: [
         {
