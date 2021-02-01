@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DateCoercer, Dictionary, TimeDuration } from '@hypertrace/common';
 import {
+  GlobalGraphQlFilterService,
   GraphQlFilter,
   GraphQlSelectionBuilder,
   GraphQlSortBySpecification,
@@ -29,6 +30,8 @@ export class ExploreGraphQlQueryHandlerService
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
+  public constructor(private readonly globalGraphQlFilterService: GlobalGraphQlFilterService) {}
+
   public matchesRequest(request: unknown): request is GraphQlExploreRequest {
     return (
       typeof request === 'object' &&
@@ -51,7 +54,9 @@ export class ExploreGraphQlQueryHandlerService
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forInterval(request.interval),
-        ...this.argBuilder.forFilters(request.filters),
+        ...this.argBuilder.forFilters(
+          this.globalGraphQlFilterService.mergeGlobalFilters(request.context, request.filters)
+        ),
         ...this.argBuilder.forGroupBy(request.groupBy),
         ...this.argBuilder.forOrderBys(request.orderBy)
       ],

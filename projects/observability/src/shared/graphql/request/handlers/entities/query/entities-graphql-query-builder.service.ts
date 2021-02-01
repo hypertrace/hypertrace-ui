@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
+  GlobalGraphQlFilterService,
   GraphQlFilter,
   GraphQlSelectionBuilder,
   GraphQlSortBySpecification,
@@ -27,7 +28,8 @@ export class EntitiesGraphqlQueryBuilderService {
 
   public constructor(
     private readonly metadataService: MetadataService,
-    @Inject(ENTITY_METADATA) private readonly entityMetetadata: EntityMetadataMap
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
+    @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap
   ) {}
 
   public buildRequestArguments(request: GraphQlEntitiesRequest): GraphQlArgument[] {
@@ -43,7 +45,9 @@ export class EntitiesGraphqlQueryBuilderService {
   }
 
   protected buildFilters(request: GraphQlEntitiesRequest): GraphQlArgument[] {
-    return this.argBuilder.forFilters(request.filters);
+    return this.argBuilder.forFilters(
+      this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters)
+    );
   }
 
   public buildRequestSpecifications(request: GraphQlEntitiesRequest): GraphQlSelection[] {
@@ -83,7 +87,7 @@ export class EntitiesGraphqlQueryBuilderService {
   }
 
   public getRequestOptions(request: Pick<GraphQlEntitiesRequest, 'entityType'>): GraphQlRequestOptions {
-    if (this.entityMetetadata.get(request.entityType)?.volatile) {
+    if (this.entityMetadata.get(request.entityType)?.volatile) {
       return { cacheability: GraphQlRequestCacheability.NotCacheable };
     }
 
