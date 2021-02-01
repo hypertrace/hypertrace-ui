@@ -34,17 +34,40 @@ import { SelectSize } from './select-size';
         this.groupPosition,
         selected ? selected.style.toString() : '',
         this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : ''
+        this.disabled ? 'disabled' : '',
+        this.triggerDisplayMode
       ]"
       *htLetAsync="this.selected$ as selected"
     >
-      <ht-popover [disabled]="this.disabled" [closeOnClick]="true" class="select-container">
+      <ht-popover
+        [disabled]="this.disabled"
+        [closeOnClick]="true"
+        class="select-container"
+        [ngSwitch]="this.triggerDisplayMode"
+      >
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="this.justifyClass">
-            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </ht-icon>
+          <div
+            *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBorder}'"
+            class="trigger-content"
+            [ngClass]="this.justifyClass"
+          >
+            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
             <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
             <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+          </div>
+          <div
+            *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
+            class="trigger-content icon-only"
+            [ngClass]="this.selected !== undefined ? 'selected' : ''"
+          >
+            <ht-icon
+              class="icon"
+              *ngIf="this.icon"
+              [icon]="this.icon"
+              [size]="this.iconSize"
+              [htTooltip]="this.placeholder"
+            >
+            </ht-icon>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -79,6 +102,12 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public icon?: string;
+
+  @Input()
+  public iconSize?: IconSize = IconSize.Small;
+
+  @Input()
+  public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
 
   @Input()
   public placeholder?: string;
@@ -163,4 +192,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
     return this.items.find(item => item.value === value);
   }
+}
+
+export const enum SelectTriggerDisplayMode {
+  MenuWithBorder = 'menu-with-border',
+  Icon = 'icon'
 }
