@@ -8,7 +8,6 @@ import {
   OnChanges,
   ElementRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ht-description',
@@ -24,7 +23,7 @@ import { Subject } from 'rxjs';
       >
         {{ description }}
         <span
-          *ngIf="(isDescriptionTruncated$ | async) && isDescriptionTextToggled"
+          *ngIf="isDescriptionTruncated && isDescriptionTextToggled"
           (click)="toggleDescriptionText()"
           class="description-button"
           >show less</span
@@ -32,7 +31,7 @@ import { Subject } from 'rxjs';
       </div>
       <div
         class="description-button description-button-more"
-        *ngIf="(isDescriptionTruncated$ | async) && !isDescriptionTextToggled"
+        *ngIf="isDescriptionTruncated && !isDescriptionTextToggled"
         (click)="toggleDescriptionText()"
       >
         show more
@@ -43,8 +42,7 @@ import { Subject } from 'rxjs';
 export class DescriptionComponent implements OnChanges, AfterViewInit {
   public isInitialized: boolean = false;
   public isDescriptionTextToggled: boolean = false;
-  public readonly isDescriptionTruncated$: Subject<boolean> = new Subject();
-  public fullDescriptionTextWidth!: number;
+  public isDescriptionTruncated!: boolean;
 
   @ViewChild('eventDescriptionText', { read: ElementRef })
   public readonly eventDescriptionText!: ElementRef;
@@ -55,7 +53,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @Input()
   public description!: string;
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  constructor(private readonly cdRef: ChangeDetectorRef) {}
 
   public ngOnChanges(): void {
     if (this.isInitialized) {
@@ -64,10 +62,8 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.fullDescriptionTextWidth = this.eventDescriptionText.nativeElement.scrollWidth;
     this.isInitialized = true;
     this.remeasure();
-    this.cdr.detectChanges();
   }
 
   public toggleDescriptionText(): void {
@@ -75,8 +71,11 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   }
 
   public remeasure(): void {
-    this.isDescriptionTruncated$.next(
-      this.eventDescriptionContainer.nativeElement.offsetWidth < this.fullDescriptionTextWidth
-    );
+    this.isDescriptionTextToggled = false;
+    this.cdRef.detectChanges();
+
+    this.isDescriptionTruncated =
+      this.eventDescriptionContainer.nativeElement.offsetWidth < this.eventDescriptionText.nativeElement.scrollWidth;
+    this.cdRef.detectChanges();
   }
 }
