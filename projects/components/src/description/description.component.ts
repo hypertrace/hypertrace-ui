@@ -1,12 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
-  ViewChild,
-  AfterViewInit,
   OnChanges,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -55,7 +55,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @Input()
   public description!: string;
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnChanges(): void {
     if (this.isInitialized) {
@@ -63,7 +63,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     this.fullDescriptionTextWidth = this.eventDescriptionText.nativeElement.scrollWidth;
     this.isInitialized = true;
     this.remeasure();
