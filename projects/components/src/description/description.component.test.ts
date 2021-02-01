@@ -1,7 +1,7 @@
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { DescriptionComponent } from './description.component';
 
-describe('Divider Component', () => {
+describe('Description Component', () => {
   let spectator: Spectator<DescriptionComponent>;
 
   const createHost = createHostFactory<DescriptionComponent>({
@@ -15,6 +15,7 @@ describe('Divider Component', () => {
         description: 'Description text'
       }
     });
+
     expect(spectator.query('.description')).toExist();
     expect(spectator.query('.description-text')).toHaveText('Description text');
   });

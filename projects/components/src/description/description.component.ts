@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   ViewChild,
@@ -54,6 +55,8 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @Input()
   public description!: string;
 
+  constructor(private readonly cdr: ChangeDetectorRef) {}
+
   public ngOnChanges(): void {
     if (this.isInitialized) {
       this.remeasure();
@@ -64,6 +67,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
     this.fullDescriptionTextWidth = this.eventDescriptionText.nativeElement.scrollWidth;
     this.isInitialized = true;
     this.remeasure();
+    this.cdr.detectChanges();
   }
 
   public toggleDescriptionText(): void {
