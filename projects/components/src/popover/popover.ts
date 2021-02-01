@@ -64,7 +64,8 @@ export const enum PopoverRelativePositionLocation {
 
 export const enum PopoverFixedPositionLocation {
   RightUnderHeader,
-  Centered
+  Centered,
+  Right
 }
 
 export const POPOVER_DATA = new InjectionToken<unknown>('POPOVER_DATA');
