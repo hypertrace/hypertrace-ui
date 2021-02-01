@@ -1,10 +1,12 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PopoverFixedPositionLocation } from '../../popover/popover';
 import { OverlayConfig } from './../overlay';
 
 export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   size: SheetSize;
   data?: TData;
+  position?: PopoverFixedPositionLocation;
 }
 
 export const enum SheetSize {
