@@ -7,10 +7,7 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
-import {
-  CartesianDataFetcher, CartesianResult,
-  CartesianWidgetModel
-} from './cartesian-widget.model';
+import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -84,10 +81,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
 
     return this.fetchCartesianData(this.fetcher, this.selectedInterval).pipe(
       map((cartesianResult: CartesianResult<TSeriesInterval>) => ({
-        series: [
-          ...cartesianResult.series,
-          ...cartesianResult.baselines
-        ],
+        series: [...cartesianResult.series, ...cartesianResult.baselines],
         bands: cartesianResult.bands
       }))
     );

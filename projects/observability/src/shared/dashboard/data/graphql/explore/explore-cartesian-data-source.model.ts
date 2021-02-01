@@ -41,13 +41,14 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
         })
       ),
       map(response => ({
-        getData: () => this.getAllData(response).pipe(
-          map(explorerResults => ({
-            series: explorerResults,
-            baselines: [],
-            bands: []
-          }))
-        )
+        getData: () =>
+          this.getAllData(response).pipe(
+            map(explorerResults => ({
+              series: explorerResults,
+              baselines: [],
+              bands: []
+            }))
+          )
       }))
     );
   }
@@ -97,18 +98,17 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
     }).pipe(
-      map(obj => (
-        {
-          data: result.data,
-          units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
-          type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
-          name: isEmpty(result.groupName)
-            ? obj.specDisplayName
-            : request.useGroupName
-              ? result.groupName!
-              : `${obj.specDisplayName}: ${result.groupName}`,
-          color: color
-        }))
+      map(obj => ({
+        data: result.data,
+        units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
+        type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
+        name: isEmpty(result.groupName)
+          ? obj.specDisplayName
+          : request.useGroupName
+          ? result.groupName!
+          : `${obj.specDisplayName}: ${result.groupName}`,
+        color: color
+      }))
     );
   }
 
