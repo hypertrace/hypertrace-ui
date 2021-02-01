@@ -4,6 +4,7 @@ import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hype
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
 import { Span, spanIdKey, SPAN_SCOPE } from '../../../model/schema/span';
@@ -19,7 +20,10 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
   private readonly argBuilder: GraphQlArgumentBuilder = new GraphQlArgumentBuilder();
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
 
-  public constructor(private readonly metadataService: MetadataService) {}
+  public constructor(
+    private readonly metadataService: MetadataService,
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+  ) {}
 
   public matchesRequest(request: unknown): request is GraphQlSpansRequest {
     return (
@@ -37,7 +41,7 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
-        ...this.argBuilder.forFilters(request.filters)
+        ...this.argBuilder.forFilters(this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, request.filters))
       ],
       children: [
         {

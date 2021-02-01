@@ -1,12 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
-  ViewChild,
-  AfterViewInit,
   OnChanges,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 
 @Component({
