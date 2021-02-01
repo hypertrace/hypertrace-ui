@@ -53,7 +53,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @Input()
   public description!: string;
 
-  constructor(private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(private readonly cdRef: ChangeDetectorRef) {}
 
   public ngOnChanges(): void {
     if (this.isInitialized) {
@@ -61,7 +61,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     this.isInitialized = true;
     this.remeasure();
   }
