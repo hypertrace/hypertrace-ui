@@ -6,7 +6,7 @@ import { OverlayConfig } from './../overlay';
 export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   size: SheetSize;
   data?: TData;
-  position?: PopoverFixedPositionLocation;
+  position?: PopoverFixedPositionLocation.Right | PopoverFixedPositionLocation.RightUnderHeader;
 }
 
 export const enum SheetSize {
