@@ -171,9 +171,7 @@ export class CartesianWidgetModel<TInterval> {
             this.mapToBaseline(bands[index].bandModel, b)
           )
         ],
-        bands: result.bands.map((b: MetricBand<TInterval>) =>
-          this.mapToBand(b)
-        )
+        bands: result.bands.map((b: MetricBand<TInterval>) => this.mapToBand(b))
       }))
     );
   }
@@ -200,10 +198,7 @@ export class CartesianWidgetModel<TInterval> {
     };
   }
 
-  private mapToBaseline(
-    model: BandModel<TInterval>,
-    metricBand: MetricBand<TInterval>,
-  ): Series<TInterval> {
+  private mapToBaseline(model: BandModel<TInterval>, metricBand: MetricBand<TInterval>): Series<TInterval> {
     return {
       data: metricBand.intervals,
       units: metricBand.units,
@@ -214,9 +209,7 @@ export class CartesianWidgetModel<TInterval> {
     };
   }
 
-  private mapToBand(
-    metricSeries: MetricSeries<TInterval>,
-  ): Band<TInterval> {
+  private mapToBand(metricSeries: MetricSeries<TInterval>): Band<TInterval> {
     return {
       name: '',
       color: BandModel.BAND_COLOR,
