@@ -49,7 +49,12 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="select-option">
+            <div
+              *ngFor="let item of items"
+              (click)="this.onSelectionChange(item)"
+              class="select-option"
+              [ngClass]="this.size"
+            >
               <span class="label">{{ item.label }}</span>
               <ht-icon
                 class="status-icon"
