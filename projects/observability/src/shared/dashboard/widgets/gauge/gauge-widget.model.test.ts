@@ -1,26 +1,19 @@
 import { Color } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { GaugeWidgetModel } from './gauge-widget.model';
 
 describe('Gauge widget model', () => {
-  test('uses colors from color map', () => {
-    const modelFactory = createModelFactory();
+  const modelFactory = createModelFactory();
 
+  test('uses colors from color map', () => {
     const value = 5;
 
     const spectator = modelFactory(GaugeWidgetModel, {
       api: {
         getData: () => of(value)
       },
-      providers: [
-        {
-          provide: MODEL_PROPERTY_TYPES,
-          useValue: []
-        }
-      ],
       properties: {
         title: 'Test Title',
         maxValue: 10,
