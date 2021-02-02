@@ -1,6 +1,6 @@
 import { TableDataSource, TableRow } from '@hypertrace/components';
 import { ArrayPropertyTypeInstance } from '@hypertrace/dashboards';
-import { ARRAY_PROPERTY, Model, ModelApi, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelApi, ModelOnInit, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
@@ -14,7 +14,7 @@ import { TableWidgetModel } from './table-widget.model';
 @Model({
   type: 'table-widget-view-toggle'
 })
-export class TableWidgetViewToggleModel extends TableWidgetBaseModel {
+export class TableWidgetViewToggleModel extends TableWidgetBaseModel implements ModelOnInit {
   @ModelProperty({
     key: 'views',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -32,8 +32,20 @@ export class TableWidgetViewToggleModel extends TableWidgetBaseModel {
   protected readonly api!: ModelApi;
 
   private delegateModel?: TableWidgetModel;
+  private currentView?: string;
+
+  public modelOnInit(): void {
+    if (this.views.length > 0) {
+      this.setView(this.views[0].label);
+    }
+  }
 
   public setView(view: string): void {
+    if (this.currentView === view) {
+      return;
+    }
+    this.currentView = view;
+
     if (this.delegateModel) {
       this.api.destroyChild(this.delegateModel);
     }

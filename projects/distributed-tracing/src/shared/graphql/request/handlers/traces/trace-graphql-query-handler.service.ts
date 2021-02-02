@@ -3,9 +3,10 @@ import { Dictionary, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrac
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { GraphQlFieldFilter } from '../../../model/schema/filter/field/graphql-field-filter';
+import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlFilter, GraphQlOperatorType } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlIdFilter } from '../../../model/schema/filter/id/graphql-id-filter';
-import { Span, spanIdKey } from '../../../model/schema/span';
+import { Span, spanIdKey, SPAN_SCOPE } from '../../../model/schema/span';
 import { Specification } from '../../../model/schema/specifier/specification';
 import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
 import { resolveTraceType, Trace, traceIdKey, TraceType, traceTypeKey } from '../../../model/schema/trace';
@@ -21,7 +22,10 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
   private readonly argBuilder: GraphQlArgumentBuilder = new GraphQlArgumentBuilder();
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
 
-  public constructor(private readonly timeRangeService: TimeRangeService) {}
+  public constructor(
+    private readonly timeRangeService: TimeRangeService,
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+  ) {}
 
   public matchesRequest(request: unknown): request is GraphQlTraceRequest {
     return (
@@ -40,7 +44,11 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forTraceType(resolveTraceType(request.traceType)),
         this.argBuilder.forLimit(1),
         this.argBuilder.forTimeRange(timeRange),
-        ...this.argBuilder.forFilters([this.buildTraceIdFilter(request)])
+        ...this.argBuilder.forFilters(
+          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), [
+            this.buildTraceIdFilter(request)
+          ])
+        )
       ],
       children: [
         {
@@ -58,7 +66,9 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         arguments: [
           this.argBuilder.forLimit(request.spanLimit),
           this.argBuilder.forTimeRange(timeRange),
-          ...this.argBuilder.forFilters([...this.buildSpansFilter(request)])
+          ...this.argBuilder.forFilters(
+            this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, this.buildSpansFilter(request))
+          )
         ],
         children: [
           {
