@@ -5,7 +5,6 @@ import { isEmpty } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ToggleItem } from '../../toggle-group/toggle-item';
-import { TableMode } from '../table-api';
 import { SelectChange, SelectFilter } from './table-controls-api';
 
 @Component({
@@ -60,10 +59,10 @@ import { SelectChange, SelectFilter } from './table-controls-api';
 
       <!-- Mode Toggle -->
       <ht-toggle-group
-        *ngIf="this.modeToggleEnabled"
+        *ngIf="this.viewToggleEnabled"
         class="control mode-toggle-group"
-        [items]="this.modeItems"
-        [activeItem]="this.activeModeItem"
+        [items]="this.viewItems"
+        [activeItem]="this.activeViewItem"
         (activeItemChange)="this.onModeChange($event)"
       ></ht-toggle-group>
     </div>
@@ -86,10 +85,10 @@ export class TableControlsComponent implements OnChanges {
   public activeFilterItem?: ToggleItem;
 
   @Input()
-  public modeItems?: ToggleItem[] = [];
+  public viewItems?: ToggleItem[] = [];
 
   @Input()
-  public activeModeItem?: ToggleItem;
+  public activeViewItem?: ToggleItem;
 
   // Checkbox filter
   @Input()
@@ -111,10 +110,10 @@ export class TableControlsComponent implements OnChanges {
   public readonly filterChange: EventEmitter<ToggleItem> = new EventEmitter<ToggleItem>();
 
   @Output()
-  public readonly modeChange: EventEmitter<TableMode> = new EventEmitter<TableMode>();
+  public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
 
-  public get modeToggleEnabled(): boolean {
-    return !!this.modeItems && this.modeItems.length > 0;
+  public get viewToggleEnabled(): boolean {
+    return !!this.viewItems && this.viewItems.length > 0;
   }
 
   public get checkboxEnabled(): boolean {
@@ -126,7 +125,7 @@ export class TableControlsComponent implements OnChanges {
   }
 
   public get anyControlsEnabled(): boolean {
-    return this.modeToggleEnabled || this.checkboxEnabled || this.filterItemsEnabled || !!this.searchEnabled;
+    return this.viewToggleEnabled || this.checkboxEnabled || this.filterItemsEnabled || !!this.searchEnabled;
   }
 
   private readonly searchDebounceSubject: Subject<string> = new Subject<string>();
@@ -142,8 +141,8 @@ export class TableControlsComponent implements OnChanges {
       this.setActiveFilterItem();
     }
 
-    if (changes.modeItems) {
-      this.setActiveModeItem();
+    if (changes.viewItems) {
+      this.setActiveViewItem();
     }
   }
 
@@ -153,9 +152,9 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
-  private setActiveModeItem(): void {
-    if (this.modeItems !== undefined) {
-      this.activeModeItem = this.modeItems.find(item => item === this.activeModeItem) ?? this.modeItems[0];
+  private setActiveViewItem(): void {
+    if (this.viewItems !== undefined) {
+      this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
     }
   }
 
@@ -174,7 +173,7 @@ export class TableControlsComponent implements OnChanges {
     this.searchDebounceSubject.next(text);
   }
 
-  public onModeChange(item: ToggleItem<TableMode>): void {
-    this.modeChange.emit(item.value);
+  public onModeChange(item: ToggleItem<string>): void {
+    this.viewChange.emit(item.value);
   }
 }

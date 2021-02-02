@@ -20,6 +20,9 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
     };
   }
 
+  public forIncludeInactive(includeInactive?: boolean): GraphQlArgument[] {
+    return includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : [];
+  }
   public forNeighborType(type: EntityType): GraphQlArgument {
     return {
       name: 'neighborType',

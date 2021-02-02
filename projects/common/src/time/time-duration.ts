@@ -1,8 +1,10 @@
+import { parse, toSeconds } from 'iso8601-duration';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 import { TimeUnit } from './time-unit.type';
 
 export class TimeDuration {
   private readonly millis: number;
+
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
     this.toUnitString(); // Fail if unrecognized TimeUnit
     this.millis = this.normalizeToMillis(value, unit);
@@ -12,8 +14,16 @@ export class TimeDuration {
     return this.millis;
   }
 
+  public static parse(durationString: string): TimeDuration {
+    return new TimeDuration(toSeconds(parse(durationString)), TimeUnit.Second);
+  }
+
   public getAmountForUnit(unit: ConvertibleTimeUnit): number {
     return this.toMillis() / this.unitInMillis(unit);
+  }
+
+  public toIso8601DurationString(): string {
+    return `PT${this.toMillis() / 1000}S`;
   }
 
   public toMultiUnitString(

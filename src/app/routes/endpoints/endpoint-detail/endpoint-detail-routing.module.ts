@@ -39,4 +39,4 @@ const ROUTE_CONFIG: TraceRoute[] = [
 @NgModule({
   imports: [RouterModule.forChild(ROUTE_CONFIG), ApiDetailModule]
 })
-export class ApiDetailRoutingModule {}
+export class EndpointDetailRoutingModule {}

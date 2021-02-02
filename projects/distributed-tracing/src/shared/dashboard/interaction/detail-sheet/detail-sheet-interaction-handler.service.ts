@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OverlayService, PopoverRef, SheetSize } from '@hypertrace/components';
+import { OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
 import { DetailSheetInteractionContainerComponent } from './container/detail-sheet-interaction-container.component';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class DetailSheetInteractionHandlerService {
     sheetSize: SheetSize = SheetSize.Medium,
     title?: string,
     showHeader: boolean = true
-  ): PopoverRef {
+  ): SheetRef {
     return this.overlayService.createSheet({
       content: DetailSheetInteractionContainerComponent,
       size: sheetSize,

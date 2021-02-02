@@ -48,7 +48,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             role="${ButtonRole.Tertiary}"
             display="${ButtonStyle.Bordered}"
             label="See Full Trace"
-            (click)="this.navigateToFullTrace(traceDetails.traceId)"
+            (click)="this.navigateToFullTrace(traceDetails.traceId, traceDetails.startTime)"
           ></ht-button>
         </div>
       </div>
@@ -113,7 +113,7 @@ export class ApiTraceDetailPageComponent {
     this.navigationService.navigateBack();
   }
 
-  public navigateToFullTrace(traceId: string): void {
-    this.navigationService.navigateWithinApp(['/trace', traceId]);
+  public navigateToFullTrace(traceId: string, startTime: string): void {
+    this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
 }

@@ -5,7 +5,7 @@
   width: 100%;
   // Height set from config
   display: flex;
-  background: $blue-9;
+  background: $gray-7;
   padding: 12px 0;
   color: white;
 
@@ -45,9 +45,14 @@
     padding-left: 46px;
   }
 
-  .right-side {
+  .right-side-content {
     display: flex;
     margin-left: auto;
+    align-items: center;
+  }
+
+  .left-side-content {
+    display: flex;
     align-items: center;
   }
 

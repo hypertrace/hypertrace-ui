@@ -8,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ButtonStyle, OverlayService, PopoverRef, SheetSize } from '@hypertrace/components';
+import { ButtonStyle, OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -83,7 +83,7 @@ export class WaterfallWidgetRendererComponent
   @ViewChild('sidebarDetails', { static: true })
   public sidebarDetails!: TemplateRef<unknown>;
 
-  private popoverRef?: PopoverRef;
+  private sheet?: SheetRef;
   public selectedData?: WaterfallData;
 
   public constructor(
@@ -111,13 +111,10 @@ export class WaterfallWidgetRendererComponent
   }
 
   private openSheet(selected: WaterfallData): void {
-    if (this.popoverRef !== undefined) {
-      this.popoverRef.close();
-    }
-
+    this.sheet?.close();
     this.selectedData = selected;
 
-    this.popoverRef = this.overlayService.createSheet({
+    this.sheet = this.overlayService.createSheet({
       showHeader: false,
       size: SheetSize.ResponsiveExtraLarge,
       content: this.sidebarDetails
@@ -125,7 +122,7 @@ export class WaterfallWidgetRendererComponent
   }
 
   public closeSheet(): void {
-    this.popoverRef?.close();
+    this.sheet?.close();
     this.selectedData = undefined;
     this.changeDetector.markForCheck(); // Need this for child table to remove selected-row class
   }
