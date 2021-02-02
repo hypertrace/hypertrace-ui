@@ -34,8 +34,7 @@ import { SelectSize } from './select-size';
         this.groupPosition,
         selected ? selected.style.toString() : '',
         this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : '',
-        this.triggerDisplayMode
+        this.disabled ? 'disabled' : ''
       ]"
       *htLetAsync="this.selected$ as selected"
     >
@@ -48,8 +47,8 @@ import { SelectSize } from './select-size';
         <ht-popover-trigger>
           <div
             *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBorder}'"
-            class="trigger-content"
-            [ngClass]="this.justifyClass"
+            class="trigger-content menu-with-border"
+            [ngClass]="[this.justifyClass]"
           >
             <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
             <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
@@ -65,7 +64,7 @@ import { SelectSize } from './select-size';
               *ngIf="this.icon"
               [icon]="this.icon"
               [size]="this.iconSize"
-              [htTooltip]="this.placeholder"
+              [htTooltip]="this.selected?.label || this.placeholder"
             >
             </ht-icon>
           </div>
