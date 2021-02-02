@@ -7,9 +7,8 @@ import { DonutSeriesResults } from '../../../components/donut/donut';
 import { DonutWidgetModel } from './donut-widget.model';
 
 describe('Donut widget model', () => {
+  const modelFactory = createModelFactory();
   test('uses colors from color map', () => {
-    const modelFactory = createModelFactory();
-
     const series: DonutSeriesResults = {
       series: [
         {
