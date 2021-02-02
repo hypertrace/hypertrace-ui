@@ -34,6 +34,7 @@
 
       .string-value {
         color: $green-5;
+        word-break: break-all;
       }
 
       .null-value {

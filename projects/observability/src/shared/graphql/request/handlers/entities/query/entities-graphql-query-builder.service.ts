@@ -39,7 +39,8 @@ export class EntitiesGraphqlQueryBuilderService {
       this.argBuilder.forTimeRange(request.timeRange),
       ...this.argBuilder.forOffset(request.offset),
       ...this.argBuilder.forOrderBy(request.sort),
-      ...this.buildFilters(request)
+      ...this.buildFilters(request),
+      ...this.argBuilder.forIncludeInactive(request.includeInactive)
     ];
   }
 
@@ -103,6 +104,7 @@ export interface GraphQlEntitiesRequest {
   sort?: GraphQlSortBySpecification;
   filters?: GraphQlFilter[];
   includeTotal?: boolean;
+  includeInactive?: boolean;
 }
 
 export interface EntitiesResponse {
