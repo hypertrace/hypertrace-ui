@@ -18,6 +18,7 @@ import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-ag
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
+import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
 import { PercentileLatencyAggregationSpecificationModel } from './specifiers/percentile-latency-metric-aggregation.model';
@@ -58,6 +59,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         TraceMetricAggregationDataSourceModel,
         TraceDonutDataSourceModel,
         MetricTimeseriesSpecificationModel,
+        MetricTimeseriesBandSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
         PercentageCompositeDataSourceModel,

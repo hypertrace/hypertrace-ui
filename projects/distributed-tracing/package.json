@@ -14,8 +14,8 @@
     "@hypertrace/common": "^0.0.0",
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/dashboard": "^0.0.0",
-    "@hypertrace/hyperdash-angular": "^2.3.1",
-    "@hypertrace/hyperdash": "^1.1.2"
+    "@hypertrace/hyperdash-angular": "^2.4.0",
+    "@hypertrace/hyperdash": "^1.2.1"
   },
   "devDependencies": {
     "@hypertrace/test-utils": "^0.0.0"

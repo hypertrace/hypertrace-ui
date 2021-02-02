@@ -45,8 +45,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval),
-      getRequestedInterval: () => undefined
+      getData: interval => this.getAllData(interval)
     });
   }
 
