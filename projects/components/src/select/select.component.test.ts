@@ -95,7 +95,7 @@ describe('Select Component', () => {
       }
     );
 
-    expect(spectator.query('.select')?.classList.contains('menu-with-border')).toBe(true);
+    expect(spectator.query('.menu-with-border')).toExist();
     expect(spectator.query('.icon-only')).not.toExist();
   });
 
@@ -115,8 +115,7 @@ describe('Select Component', () => {
       }
     );
 
-    expect(spectator.query('.select')?.classList.contains('menu-with-border')).not.toBe(true);
-    expect(spectator.query('.select')?.classList.contains('icon')).toBe(true);
+    expect(spectator.query('.menu-with-border')).not.toExist();
     expect(spectator.query('.icon-only')).toExist();
     expect(spectator.query('.icon-only')?.classList.contains('selected')).toBe(true);
   });
