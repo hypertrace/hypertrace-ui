@@ -29,8 +29,7 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval),
-      getRequestedInterval: () => this.specification.getIntervalDuration()
+      getData: interval => this.getAllData(interval)
     });
   }
 

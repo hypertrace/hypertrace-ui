@@ -32,7 +32,7 @@ import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
 
-// TODO should support dynamic update and redraw
+// tslint:disable:max-file-line-count
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
 
@@ -47,6 +47,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected mouseEventContainer?: SVGSVGElement;
   protected legend?: CartesianLegend;
   protected tooltip?: ChartTooltipRef<TData>;
+  protected allSeriesData: CartesianData<TData, Series<TData>>[] = [];
   protected allCartesianData: CartesianData<TData, Series<TData> | Band<TData>>[] = [];
   protected renderedAxes: CartesianAxis<TData>[] = [];
   protected scaleBuilder: CartesianScaleBuilder<TData> = CartesianScaleBuilder.newBuilder();
@@ -411,7 +412,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     }
     const location = mouse(this.dataElement);
 
-    return this.allCartesianData.flatMap(viz => viz.dataForLocation({ x: location[0], y: location[1] }));
+    return this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location[0], y: location[1] }));
   }
 
   private getNativeEventName(chartEvent: ChartEvent): string {
@@ -428,14 +429,22 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private buildVisualizations(): void {
-    this.allCartesianData.length = 0;
-    this.allCartesianData.push(
+    this.allSeriesData = [
       ...this.series.map(series => this.getChartSeriesVisualization(series)),
+      ...this.bands.flatMap(band => [
+        // Need to add bands as series to get tooltips
+        this.getChartSeriesVisualization(band.upper),
+        this.getChartSeriesVisualization(band.lower)
+      ])
+    ];
+
+    this.allCartesianData = [
+      ...this.allSeriesData,
       ...this.bands.map(
         band =>
           new CartesianBand(this.d3Utils, this.domRenderer, band, this.scaleBuilder, this.getTooltipTrackingStrategy())
       )
-    );
+    ];
   }
 
   private getChartSeriesVisualization(series: Series<TData>): CartesianSeries<TData> {
