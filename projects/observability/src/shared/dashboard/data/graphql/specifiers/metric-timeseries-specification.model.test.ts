@@ -1,24 +1,18 @@
 import { IntervalDurationService, isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
 import { MetricTimeseriesSpecificationModel } from './metric-timeseries-specification.model';
 
 describe('Metric timeseries specification model', () => {
+  const modelFactory = createModelFactory();
   test('matches spec from builder', () => {
-    const modelFactory = createModelFactory();
-
     const spectator = modelFactory(MetricTimeseriesSpecificationModel, {
       providers: [
         mockProvider(IntervalDurationService, {
           getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
-        }),
-        {
-          provide: MODEL_PROPERTY_TYPES,
-          useValue: []
-        }
+        })
       ],
       properties: {
         aggregation: MetricAggregationType.Average,
