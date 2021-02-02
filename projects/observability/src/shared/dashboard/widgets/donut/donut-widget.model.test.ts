@@ -1,6 +1,5 @@
 import { DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { MODEL_PROPERTY_TYPES } from '@hypertrace/hyperdash-angular';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { DonutSeriesResults } from '../../../components/donut/donut';
@@ -34,10 +33,6 @@ describe('Donut widget model', () => {
             name: 'default',
             colors: []
           }
-        },
-        {
-          provide: MODEL_PROPERTY_TYPES,
-          useValue: []
         }
       ]
     });
