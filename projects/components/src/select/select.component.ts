@@ -60,7 +60,6 @@ import { SelectSize } from './select-size';
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
               class="trigger-content icon-only"
               [ngClass]="this.selected !== undefined ? 'selected' : ''"
-              #triggerContainer
             >
               <ht-icon
                 class="icon"
