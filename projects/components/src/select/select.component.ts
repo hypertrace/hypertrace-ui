@@ -45,28 +45,32 @@ import { SelectSize } from './select-size';
         [ngSwitch]="this.triggerDisplayMode"
       >
         <ht-popover-trigger>
-          <div
-            *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBorder}'"
-            class="trigger-content menu-with-border"
-            [ngClass]="[this.justifyClass]"
-          >
-            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
-            <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
-            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
-          </div>
-          <div
-            *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
-            class="trigger-content icon-only"
-            [ngClass]="this.selected !== undefined ? 'selected' : ''"
-          >
-            <ht-icon
-              class="icon"
-              *ngIf="this.icon"
-              [icon]="this.icon"
-              [size]="this.iconSize"
-              [htTooltip]="this.selected?.label || this.placeholder"
+          <div class="trigger-container" #triggerContainer>
+            <div
+              *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBorder}'"
+              class="trigger-content menu-with-border"
+              [ngClass]="[this.justifyClass]"
             >
-            </ht-icon>
+              <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
+              </ht-icon>
+              <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+            </div>
+            <div
+              *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
+              class="trigger-content icon-only"
+              [ngClass]="this.selected !== undefined ? 'selected' : ''"
+              #triggerContainer
+            >
+              <ht-icon
+                class="icon"
+                *ngIf="this.icon"
+                [icon]="this.icon"
+                [size]="this.iconSize"
+                [htTooltip]="this.selected?.label || this.placeholder"
+              >
+              </ht-icon>
+            </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
