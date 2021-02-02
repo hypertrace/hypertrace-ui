@@ -1,12 +1,12 @@
 import { TimeDuration, TimeUnit } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
-import { CartesianWidgetModel } from './cartesian-widget.model';
+import { CartesianDataFetcher, CartesianWidgetModel } from './cartesian-widget.model';
 import { SeriesModel } from './series.model';
 
 describe('Cartesian Widget Model', () => {
   let model!: CartesianWidgetModel<[number, number]>;
-  let dataFetcher: MetricSeriesFetcher<[number, number]>;
+  let dataFetcher: CartesianDataFetcher<[number, number]>;
 
   const buildMockSeries = (name: string, data: [number, number][]): SeriesModel<[number, number]> => {
     const series = new SeriesModel<[number, number]>();
@@ -16,8 +16,7 @@ describe('Cartesian Widget Model', () => {
         getData: () =>
           of({
             intervals: data
-          }),
-        getRequestedInterval: () => new TimeDuration(1, TimeUnit.Minute)
+          })
       })
     );
 
@@ -37,35 +36,32 @@ describe('Cartesian Widget Model', () => {
         [1, 25]
       ])
     ];
-    model.getSeriesFetcher().subscribe(fetcher => (dataFetcher = fetcher));
+    model.getDataFetcher().subscribe(fetcher => (dataFetcher = fetcher));
   });
 
   test('correctly merges data fetcher', () => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(dataFetcher.getData(new TimeDuration(1, TimeUnit.Minute))).toBe('(x|)', {
-        x: [
-          {
-            series: expect.objectContaining({
+        x: {
+          series: [
+            expect.objectContaining({
               data: [
                 [0, 10],
                 [1, 15]
               ],
               name: 'first'
-            })
-          },
-          {
-            series: expect.objectContaining({
+            }),
+            expect.objectContaining({
               data: [
                 [0, 20],
                 [1, 25]
               ],
               name: 'second'
             })
-          }
-        ]
+          ],
+          bands: []
+        }
       });
-
-      expect(dataFetcher.getRequestedInterval!()).toEqual(new TimeDuration(1, TimeUnit.Minute));
     });
   });
 });

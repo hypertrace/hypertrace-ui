@@ -53,11 +53,11 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
     );
   }
 
-  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerResult[]> {
+  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
     return this.buildAllSeries(this.request!, new ExploreResult(response));
   }
 
-  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerResult[]> {
+  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerSeries[]> {
     const seriesData = this.gatherSeriesData(request, result);
     const colors = this.colorService.getColorPalette().forNColors(seriesData.length);
 
@@ -93,7 +93,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
     request: ExploreVisualizationRequest,
     result: SeriesData,
     color: string
-  ): Observable<ExplorerResult> {
+  ): Observable<ExplorerSeries> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
@@ -148,7 +148,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
 }
 
 export type ExplorerData = MetricTimeseriesInterval | [string, number];
-type ExplorerResult = Series<ExplorerData>;
+type ExplorerSeries = Series<ExplorerData>;
 interface SeriesData {
   data: ExplorerData[];
   spec: AggregatableSpec;

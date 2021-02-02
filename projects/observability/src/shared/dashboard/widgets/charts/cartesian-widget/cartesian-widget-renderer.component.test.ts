@@ -51,16 +51,14 @@ describe('Cartesian widget renderer component', () => {
   };
 
   const fetcherFactory = (
-    data: [number, number][],
-    interval?: TimeDuration
+    data: [number, number][]
   ): MetricSeriesDataFetcher<[number, number]> => ({
     getData: jest.fn(() =>
       of({
         intervals: data,
         units: 'ms'
       })
-    ),
-    getRequestedInterval: () => interval
+    )
   });
 
   const cartesianModelFactory = (
@@ -135,8 +133,8 @@ describe('Cartesian widget renderer component', () => {
   test('calculates correct interval to use', () => {
     const mockModel = cartesianModelFactory({
       series: [
-        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute))),
-        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute)))
+        seriesFactory({}, fetcherFactory([])),
+        seriesFactory({}, fetcherFactory([]))
       ]
     });
     const spectator = buildComponent({

@@ -429,7 +429,15 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private buildVisualizations(): void {
-    this.allSeriesData = [...this.series.map(series => this.getChartSeriesVisualization(series))];
+    this.allSeriesData = [
+      ...this.series.map(series => this.getChartSeriesVisualization(series)),
+      ...this.bands.flatMap(band => ([
+        // Need to add bands as series to get tooltips
+        this.getChartSeriesVisualization(band.upper),
+        this.getChartSeriesVisualization(band.lower)
+      ]))
+    ];
+
     this.allCartesianData = [
       ...this.allSeriesData,
       ...this.bands.map(

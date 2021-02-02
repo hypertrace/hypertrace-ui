@@ -57,7 +57,6 @@ export class BandModel<TInterval> {
 
 export interface MetricBandDataFetcher<TInterval> {
   getData(interval: TimeDuration): Observable<MetricBand<TInterval>>;
-  getRequestedInterval?(): TimeDuration | undefined;
 }
 
 export interface MetricBand<TInterval> {

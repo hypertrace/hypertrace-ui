@@ -3,7 +3,8 @@ export interface MetricTimeseriesInterval {
   value: number;
 }
 
-export interface MetricTimeseriesBandInterval extends MetricTimeseriesInterval {
+export interface MetricTimeseriesBandInterval {
+  timestamp: Date;
   upperBound: number;
   lowerBound: number;
 }
