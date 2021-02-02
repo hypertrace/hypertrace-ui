@@ -135,7 +135,7 @@ describe('Cartesian widget renderer component', () => {
     const spectator = buildComponent({
       providers: [...mockDashboardWidgetProviders(mockModel)]
     });
-    expect(spectator.component.selectedInterval).toEqual(new TimeDuration(3, TimeUnit.Minute));
+    expect(spectator.component.selectedInterval).toEqual('AUTO');
   });
 
   test('provides expected interval options', () => {

@@ -32,7 +32,7 @@ import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
 
-// TODO should support dynamic update and redraw
+// tslint:disable:max-file-line-count
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
 

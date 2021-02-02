@@ -45,7 +45,6 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
           this.getAllData(response).pipe(
             map(explorerResults => ({
               series: explorerResults,
-              baselines: [],
               bands: []
             }))
           )

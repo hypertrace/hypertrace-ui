@@ -21,7 +21,7 @@ import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { SeriesResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 
 describe('Explore cartesian data source model', () => {
@@ -56,7 +56,7 @@ describe('Explore cartesian data source model', () => {
   });
   let model: ExploreCartesianDataSourceModel;
 
-  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<SeriesResult<ExplorerData>[]> => {
+  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<CartesianResult<ExplorerData>> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
       query.responseObserver.complete();
@@ -125,9 +125,9 @@ describe('Explore cartesian data source model', () => {
           ]
         })
       ).toBe('(x|)', {
-        x: [
-          {
-            series: {
+        x: {
+          series: [
+            {
               color: 'first color',
               name: 'sum(foo)',
               type: CartesianSeriesVisualizationType.Line,
@@ -142,8 +142,9 @@ describe('Explore cartesian data source model', () => {
                 }
               ]
             }
-          }
-        ]
+          ],
+          bands: []
+        }
       });
     });
   });
@@ -191,9 +192,9 @@ describe('Explore cartesian data source model', () => {
           ]
         })
       ).toBe('(x|)', {
-        x: [
-          {
-            series: {
+        x: {
+          series: [
+            {
               color: 'first color',
               name: 'sum(foo)',
               type: CartesianSeriesVisualizationType.Column,
@@ -202,8 +203,9 @@ describe('Explore cartesian data source model', () => {
                 ['second', 15]
               ]
             }
-          }
-        ]
+          ],
+          bands: []
+        }
       });
     });
   });
@@ -275,9 +277,9 @@ describe('Explore cartesian data source model', () => {
           ]
         })
       ).toBe('(x|)', {
-        x: [
-          {
-            series: {
+        x: {
+          series: [
+            {
               color: 'first color',
               name: 'sum(foo): first',
               type: CartesianSeriesVisualizationType.Area,
@@ -291,10 +293,8 @@ describe('Explore cartesian data source model', () => {
                   value: 15
                 }
               ]
-            }
-          },
-          {
-            series: {
+            },
+            {
               color: 'second color',
               name: 'sum(foo): second',
               type: CartesianSeriesVisualizationType.Area,
@@ -309,8 +309,9 @@ describe('Explore cartesian data source model', () => {
                 }
               ]
             }
-          }
-        ]
+          ],
+          bands: []
+        }
       });
     });
   });
