@@ -17,9 +17,7 @@ import { SplitterService } from './splitter.service';
       [ngClass]="[this.direction | lowercase]"
       [ngStyle]="this.splitterSizeStyle"
     >
-      <div class="line"></div>
       <div class="cursor"></div>
-      <div class="line"></div>
     </div>
   `
 })
