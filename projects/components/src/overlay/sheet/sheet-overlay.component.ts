@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Injector, TemplateRef, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
 import { ButtonStyle } from '../../button/button';
@@ -45,6 +45,10 @@ export class SheetOverlayComponent {
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
   public visible: boolean = true;
+
+  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+    this.close();
+  }
 
   public constructor(
     private readonly popoverRef: PopoverRef,
