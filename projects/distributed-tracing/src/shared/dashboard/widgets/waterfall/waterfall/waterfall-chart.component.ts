@@ -41,7 +41,7 @@ import { WaterfallChartService } from './waterfall-chart.service';
         >
         </ht-table>
       </div>
-      <ht-splitter class="splitter" direction="${SplitterDirection.Horizontal}"></ht-splitter>
+      <ht-splitter class="splitter" direction="${SplitterDirection.Vertical}"></ht-splitter>
       <div class="sequence">
         <ht-sequence-chart
           unit="ms"

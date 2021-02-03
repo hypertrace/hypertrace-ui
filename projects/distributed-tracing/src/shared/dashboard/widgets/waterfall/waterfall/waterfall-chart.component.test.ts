@@ -1,7 +1,7 @@
 import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { DEFAULT_COLOR_PALETTE, NavigationService } from '@hypertrace/common';
+import { DEFAULT_COLOR_PALETTE, LayoutChangeService, NavigationService } from '@hypertrace/common';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
@@ -89,7 +89,7 @@ describe('Waterfall Chart component', () => {
       }),
       ...getMockFlexLayoutProviders()
     ],
-    mocks: [NavigationService],
+    mocks: [NavigationService, LayoutChangeService],
     declareComponent: false,
     imports: [WaterfallChartModule, IconLibraryTestingModule]
   });

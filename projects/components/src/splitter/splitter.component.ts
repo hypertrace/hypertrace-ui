@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { LayoutChangeService, SubscriptionLifecycle } from '@hypertrace/common';
+import { LayoutChangeService, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Observable, throwError } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
@@ -11,8 +11,15 @@ import { SplitterService } from './splitter.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SplitterService, SubscriptionLifecycle],
   template: `
-    <div class="splitter" *ngIf="this.direction" [ngClass]="[this.direction | lowercase]">
+    <div
+      class="splitter"
+      *ngIf="this.direction"
+      [ngClass]="[this.direction | lowercase]"
+      [ngStyle]="this.splitterSizeStyle"
+    >
+      <div class="line"></div>
       <div class="cursor"></div>
+      <div class="line"></div>
     </div>
   `
 })
@@ -23,8 +30,13 @@ export class SplitterComponent implements OnChanges {
   @Input()
   public readonly debounceTime: number = 20;
 
+  @Input()
+  public readonly splitterSize: number = 3;
+
   @Output()
   public readonly layoutChange: EventEmitter<boolean> = new EventEmitter();
+
+  public splitterSizeStyle?: Partial<CSSStyleDeclaration>;
 
   public constructor(
     private readonly element: ElementRef<HTMLElement>,
@@ -33,7 +45,10 @@ export class SplitterComponent implements OnChanges {
     private readonly layoutChangeService: LayoutChangeService
   ) {}
 
-  public ngOnChanges(): void {
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.splitterSize || changes.direction) {
+      this.setSplitterSizeStyle();
+    }
     this.setupMouseActionSubscription();
   }
 
@@ -58,10 +73,29 @@ export class SplitterComponent implements OnChanges {
       return throwError('Parent container element not present');
     }
 
-    if (!this.direction) {
+    if (this.direction === undefined) {
       return throwError('Direction must be defined');
     }
 
-    return this.splitterService.buildSplitterLayoutChangeObservable(hostElement, parentOfHostElement, this.direction!);
+    return this.splitterService.buildSplitterLayoutChangeObservable(
+      hostElement,
+      parentOfHostElement,
+      this.direction,
+      this.splitterSize
+    );
+  }
+
+  private setSplitterSizeStyle(): void {
+    if (this.direction === SplitterDirection.Horizontal) {
+      this.splitterSizeStyle = {
+        height: `${this.splitterSize}px`
+      };
+    }
+
+    if (this.direction === SplitterDirection.Vertical) {
+      this.splitterSizeStyle = {
+        width: `${this.splitterSize}px`
+      };
+    }
   }
 }

@@ -8,7 +8,8 @@ export class SplitterService {
   public buildSplitterLayoutChangeObservable(
     splitterElement: HTMLElement,
     parentElement: HTMLElement,
-    direction: SplitterDirection
+    direction: SplitterDirection,
+    splitterSize: number = 4
   ): Observable<boolean> {
     const moveOnParent$ = fromEvent<MouseEvent>(parentElement, 'mousemove');
     const downOnHost$ = fromEvent<MouseEvent>(splitterElement, 'mousedown');
@@ -26,7 +27,12 @@ export class SplitterService {
           : 0;
 
         const nextElementUpdatedDimension = nextSibling
-          ? this.calculateUpdatedDimensionForNextElement(previousElementUpdatedDimension, parentBounds, direction)
+          ? this.calculateUpdatedDimensionForNextElement(
+              previousElementUpdatedDimension,
+              parentBounds,
+              direction,
+              splitterSize
+            )
           : 0;
 
         const updatedDimensionData: UpdatedDimensionData[] = [];
@@ -54,7 +60,7 @@ export class SplitterService {
   private maybeUpdateLayoutOfSiblings(data: UpdatedDimensionData[], direction: SplitterDirection): boolean {
     let layoutChanged = false;
     data.forEach(datum => {
-      if (direction === SplitterDirection.Horizontal) {
+      if (direction === SplitterDirection.Vertical) {
         this.updateWidth(datum.element, datum.dimension);
       } else {
         this.updateHeight(datum.element, datum.dimension);
@@ -74,7 +80,7 @@ export class SplitterService {
     parentBounds: DOMRect,
     direction: SplitterDirection
   ): number {
-    return direction === SplitterDirection.Horizontal
+    return direction === SplitterDirection.Vertical
       ? Math.min(event.clientX - parentBounds.x, parentBounds.width)
       : Math.min(event.clientY - parentBounds.y, parentBounds.height);
   }
@@ -82,12 +88,13 @@ export class SplitterService {
   private calculateUpdatedDimensionForNextElement(
     previousElementUpdatedDimension: number,
     parentBounds: DOMRect,
-    direction: SplitterDirection
+    direction: SplitterDirection,
+    splitterSize: number
   ): number {
     return (
-      (direction === SplitterDirection.Horizontal ? parentBounds.width : parentBounds.height) -
+      (direction === SplitterDirection.Vertical ? parentBounds.width : parentBounds.height) -
       previousElementUpdatedDimension -
-      4
+      splitterSize
     );
   }
 
