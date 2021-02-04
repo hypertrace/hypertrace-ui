@@ -1,4 +1,4 @@
-import { parse, toSeconds } from 'iso8601-duration';
+import { Duration, parse } from 'iso8601-duration';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 import { TimeUnit } from './time-unit.type';
 
@@ -14,8 +14,43 @@ export class TimeDuration {
     return this.millis;
   }
 
-  public static parse(durationString: string): TimeDuration {
-    return new TimeDuration(toSeconds(parse(durationString)), TimeUnit.Second);
+  /**
+   * Method to convert a duration string to TimeDuration object
+   * Currently we store the information as a single unit string.
+   * Will need to be updated to handle multiple units when needed.
+   */
+  public static parse(durationString: string): TimeDuration | undefined {
+    const duration: Duration = parse(durationString);
+    const isValid = (durationValue: number | undefined) => durationValue !== undefined && durationValue !== 0;
+    if (isValid(duration.years)) {
+      return new TimeDuration(duration.years!, TimeUnit.Year);
+    }
+
+    if (isValid(duration.months)) {
+      return new TimeDuration(duration.months!, TimeUnit.Month);
+    }
+
+    if (isValid(duration.weeks)) {
+      return new TimeDuration(duration.weeks!, TimeUnit.Week);
+    }
+
+    if (isValid(duration.days)) {
+      return new TimeDuration(duration.days!, TimeUnit.Day);
+    }
+
+    if (isValid(duration.hours)) {
+      return new TimeDuration(duration.hours!, TimeUnit.Hour);
+    }
+
+    if (isValid(duration.minutes)) {
+      return new TimeDuration(duration.minutes!, TimeUnit.Minute);
+    }
+
+    if (isValid(duration.seconds)) {
+      return new TimeDuration(duration.seconds!, TimeUnit.Second);
+    }
+
+    return undefined;
   }
 
   public getAmountForUnit(unit: ConvertibleTimeUnit): number {
@@ -23,7 +58,11 @@ export class TimeDuration {
   }
 
   public toIso8601DurationString(): string {
-    return `PT${this.toMillis() / 1000}S`;
+    if ([TimeUnit.Year, TimeUnit.Month, TimeUnit.Week, TimeUnit.Day].includes(this.unit)) {
+      return `P${this.value}${this.unit.toUpperCase()}`;
+    }
+
+    return `PT${this.value}${this.unit.toUpperCase()}`;
   }
 
   public toMultiUnitString(

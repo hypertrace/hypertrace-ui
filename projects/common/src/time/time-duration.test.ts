@@ -8,7 +8,8 @@ describe('Time duration', () => {
   });
 
   test('converts to ISO 8601 duration string correctly', () => {
-    expect(new TimeDuration(1, TimeUnit.Hour).toIso8601DurationString()).toBe('PT3600S');
+    expect(new TimeDuration(1, TimeUnit.Hour).toIso8601DurationString()).toBe('PT1H');
+    expect(new TimeDuration(1, TimeUnit.Day).toIso8601DurationString()).toBe('P1D');
   });
 
   test('can print a multi unit string', () => {
@@ -83,11 +84,11 @@ describe('Time duration', () => {
 
   test('can parse ISO 8601 duration string', () => {
     let duration = TimeDuration.parse('PT1H');
-    expect(duration.value).toBe(3600);
-    expect(duration.unit).toBe(TimeUnit.Second);
+    expect(duration!.value).toBe(1);
+    expect(duration!.unit).toBe(TimeUnit.Hour);
 
-    duration = TimeDuration.parse('PT1H5M');
-    expect(duration.value).toBe(3900);
-    expect(duration.unit).toBe(TimeUnit.Second);
+    duration = TimeDuration.parse('P5D');
+    expect(duration!.value).toBe(5);
+    expect(duration!.unit).toBe(TimeUnit.Day);
   });
 });
