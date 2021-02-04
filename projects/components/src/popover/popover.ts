@@ -6,6 +6,7 @@ export interface PopoverOptions<TData = never> {
   position: PopoverPosition;
   parentInjector?: Injector;
   backdrop?: PopoverBackdrop;
+  closeOnEscapeKey?: boolean;
 }
 
 export const enum PopoverBackdrop {

@@ -45,10 +45,7 @@ export class SheetOverlayComponent {
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
   public visible: boolean = true;
-
-  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-    this.close();
-  }
+  public readonly closeOnEscape: boolean;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -60,6 +57,7 @@ export class SheetOverlayComponent {
     this.showHeader = sheetConfig.showHeader === true;
     this.sheetTitle = sheetConfig.title === undefined ? '' : sheetConfig.title;
     this.size = sheetConfig.size;
+    this.closeOnEscape = sheetConfig.closeOnEscapeKey === undefined ? true : sheetConfig.closeOnEscapeKey;
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
     this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));
@@ -77,6 +75,11 @@ export class SheetOverlayComponent {
       ],
       parent: sheetData.injector
     });
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  public onKeydownHandler(): void {
+    if (this.closeOnEscape) this.close();
   }
 
   public close(): void {

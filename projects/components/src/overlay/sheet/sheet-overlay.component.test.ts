@@ -60,6 +60,7 @@ describe('Sheet Overlay component', () => {
               title: 'test title',
               content: TestComponent,
               size: SheetSize.Small,
+              closeOnEscapeKey: true,
               ...configOverrides
             },
             injector: Injector.create({
@@ -98,6 +99,15 @@ describe('Sheet Overlay component', () => {
     spectator.click('.close-button');
     expect(spectator.query('.sheet-overlay')).toBeNull();
     expect(spectator.inject(PopoverRef).close).toHaveBeenCalled();
+  });
+
+  test('closes on press ESC key', () => {
+    spectator = createConfiguredHost();
+
+    // spectator.keyboard.pressEscape(document, 'keydown');
+    spectator.dispatchKeyboardEvent(document, 'keydown', { key: 'Escape', keyCode: 27 });
+    expect(spectator.inject(PopoverRef).close).toHaveBeenCalled();
+    expect(spectator.query('.sheet-overlay')).toBeNull();
   });
 
   test('displays contents provided', () => {

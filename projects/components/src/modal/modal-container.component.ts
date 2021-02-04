@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Injector, TemplateRef, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { LayoutChangeService } from '@hypertrace/common';
 import { ButtonSize, ButtonStyle } from '../button/button';
@@ -46,6 +46,7 @@ export class ModalContainerComponent {
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
   public readonly rendererContext: unknown;
+  public readonly closeOnEscape: boolean;
 
   public visible: boolean = true;
 
@@ -59,6 +60,7 @@ export class ModalContainerComponent {
     this.modalTitle = config.title ?? '';
     this.size = config.size;
     this.isComponentModal = !(config.content instanceof TemplateRef);
+    this.closeOnEscape = config.closeOnEscapeKey === undefined ? true : config.closeOnEscapeKey;
     this.renderer = config.content;
     this.rendererInjector = Injector.create({
       providers: [
@@ -70,6 +72,11 @@ export class ModalContainerComponent {
       parent: constructionData.injector
     });
     this.rendererContext = this.rendererInjector.get(MODAL_DATA, {});
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  public onKeydownHandler(): void {
+    if (this.closeOnEscape) this.close();
   }
 
   public close(): void {
