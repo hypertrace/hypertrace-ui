@@ -76,7 +76,9 @@ export class ModalContainerComponent {
 
   @HostListener('document:keydown.escape', ['$event'])
   public onKeydownHandler(): void {
-    if (this.closeOnEscape) this.close();
+    if (this.closeOnEscape) {
+      this.close();
+    }
   }
 
   public close(): void {

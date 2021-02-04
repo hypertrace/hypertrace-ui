@@ -104,7 +104,6 @@ describe('Sheet Overlay component', () => {
   test('closes on press ESC key', () => {
     spectator = createConfiguredHost();
 
-    // spectator.keyboard.pressEscape(document, 'keydown');
     spectator.dispatchKeyboardEvent(document, 'keydown', { key: 'Escape', keyCode: 27 });
     expect(spectator.inject(PopoverRef).close).toHaveBeenCalled();
     expect(spectator.query('.sheet-overlay')).toBeNull();
