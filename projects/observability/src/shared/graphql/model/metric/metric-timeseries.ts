@@ -1,4 +1,10 @@
 export interface MetricTimeseriesInterval {
-  value: number;
   timestamp: Date;
+  value: number;
+}
+
+export interface MetricTimeseriesBandInterval {
+  timestamp: Date;
+  upperBound: number;
+  lowerBound: number;
 }

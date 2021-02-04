@@ -5,9 +5,9 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { Series } from '../../../../components/cartesian/chart';
+import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
-import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.model';
+import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -17,7 +17,8 @@ import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.mo
     <ht-titled-content *htLoadAsync="this.data$ as data" [title]="this.model.title | htDisplayTitle">
       <ht-cartesian-chart
         class="fill-container"
-        [series]="data"
+        [series]="data.series"
+        [bands]="data.bands"
         [xAxisOption]="this.model.xAxis && this.model.xAxis!.getAxisOption()"
         [yAxisOption]="this.model.yAxis && this.model.yAxis!.getAxisOption()"
         [showXAxis]="this.model.showXAxis"
@@ -32,12 +33,12 @@ import { CartesianWidgetModel, MetricSeriesFetcher } from './cartesian-widget.mo
     </ht-titled-content>
   `
 })
-export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidgetRenderer<
-  CartesianWidgetModel<TData>,
-  Series<TData>[]
+export class CartesianWidgetRendererComponent<TSeriesInterval> extends InteractiveDataWidgetRenderer<
+  CartesianWidgetModel<TSeriesInterval>,
+  CartesianData<TSeriesInterval>
 > {
   public constructor(
-    @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TData>>,
+    @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
     private readonly intervalDurationService: IntervalDurationService
   ) {
@@ -46,23 +47,21 @@ export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidg
 
   public selectedInterval?: IntervalValue;
   public intervalOptions?: IntervalValue[];
-  private fetcher?: MetricSeriesFetcher<TData>;
+  private fetcher?: CartesianDataFetcher<TSeriesInterval>;
 
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
     this.updateDataObservable();
   }
 
-  protected fetchData(): Observable<Series<TData>[]> {
-    return this.model.getSeriesFetcher().pipe(
+  protected fetchData(): Observable<CartesianData<TSeriesInterval>> {
+    return this.model.getDataFetcher().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
-        if (this.intervalSupported(fetcher)) {
+
+        if (this.intervalSupported()) {
           this.intervalOptions = this.buildIntervalOptions();
-          this.selectedInterval = this.getBestIntervalMatch(
-            this.intervalOptions,
-            this.selectedInterval || fetcher.getRequestedInterval()
-          );
+          this.selectedInterval = this.getBestIntervalMatch(this.intervalOptions, this.selectedInterval);
         } else {
           this.intervalOptions = undefined;
           this.selectedInterval = undefined;
@@ -72,16 +71,23 @@ export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidg
     );
   }
 
-  protected buildDataObservable(): Observable<Series<TData>[]> {
-    return this.fetcher ? this.buildSeries(this.fetcher, this.selectedInterval) : NEVER;
+  protected buildDataObservable(): Observable<CartesianData<TSeriesInterval>> {
+    if (!this.fetcher) {
+      return NEVER;
+    }
+
+    return this.fetchCartesianData(this.fetcher, this.selectedInterval);
   }
 
-  private buildSeries(fetcher: MetricSeriesFetcher<TData>, interval?: IntervalValue): Observable<Series<TData>[]> {
+  private fetchCartesianData(
+    fetcher: CartesianDataFetcher<TSeriesInterval>,
+    interval?: IntervalValue
+  ): Observable<CartesianResult<TSeriesInterval>> {
     return fetcher.getData(this.resolveInterval(interval));
   }
 
-  private intervalSupported(fetcher: MetricSeriesFetcher<TData>): fetcher is Required<MetricSeriesFetcher<TData>> {
-    return this.model.selectableInterval && !!fetcher.getRequestedInterval;
+  private intervalSupported(): boolean {
+    return this.model.selectableInterval;
   }
 
   private resolveInterval(value?: IntervalValue): TimeDuration {
@@ -107,4 +113,9 @@ export class CartesianWidgetRendererComponent<TData> extends InteractiveDataWidg
 
     return match || 'AUTO';
   }
+}
+
+interface CartesianData<TSeriesInterval> {
+  series: Series<TSeriesInterval>[];
+  bands: Band<TSeriesInterval>[];
 }

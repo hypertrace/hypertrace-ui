@@ -50,17 +50,13 @@ describe('Cartesian widget renderer component', () => {
     return series;
   };
 
-  const fetcherFactory = (
-    data: [number, number][],
-    interval?: TimeDuration
-  ): MetricSeriesDataFetcher<[number, number]> => ({
+  const fetcherFactory = (data: [number, number][]): MetricSeriesDataFetcher<[number, number]> => ({
     getData: jest.fn(() =>
       of({
         intervals: data,
         units: 'ms'
       })
-    ),
-    getRequestedInterval: () => interval
+    )
   });
 
   const cartesianModelFactory = (
@@ -99,47 +95,47 @@ describe('Cartesian widget renderer component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.data$!).toBe('(x|)', {
-        x: [
-          {
-            name: 'Series 1',
-            color: 'blue',
-            stacking: false,
-            hide: false,
-            type: CartesianSeriesVisualizationType.Area,
-            units: 'ms',
-            data: [
-              [1, 2],
-              [2, 4]
-            ]
-          },
-          {
-            name: 'Series 2',
-            color: 'red',
-            stacking: false,
-            hide: false,
-            type: CartesianSeriesVisualizationType.Area,
-            units: 'ms',
-            data: [
-              [3, 5],
-              [4, 6]
-            ]
-          }
-        ]
+        x: {
+          series: [
+            {
+              name: 'Series 1',
+              color: 'blue',
+              stacking: false,
+              hide: false,
+              type: CartesianSeriesVisualizationType.Area,
+              units: 'ms',
+              data: [
+                [1, 2],
+                [2, 4]
+              ]
+            },
+            {
+              name: 'Series 2',
+              color: 'red',
+              stacking: false,
+              hide: false,
+              type: CartesianSeriesVisualizationType.Area,
+              units: 'ms',
+              data: [
+                [3, 5],
+                [4, 6]
+              ]
+            }
+          ],
+          bands: []
+        }
       });
     });
   });
 
   test('calculates correct interval to use', () => {
     const mockModel = cartesianModelFactory({
-      series: [
-        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute))),
-        seriesFactory({}, fetcherFactory([], new TimeDuration(3, TimeUnit.Minute)))
-      ]
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
     });
     const spectator = buildComponent({
       providers: [...mockDashboardWidgetProviders(mockModel)]
     });
-    expect(spectator.component.selectedInterval).toEqual(new TimeDuration(3, TimeUnit.Minute));
+    expect(spectator.component.selectedInterval).toEqual('AUTO');
   });
 
   test('provides expected interval options', () => {

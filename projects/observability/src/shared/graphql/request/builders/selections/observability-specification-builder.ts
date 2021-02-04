@@ -12,6 +12,7 @@ import {
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import { assignIn } from 'lodash-es';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
+import { GraphQlMetricBandInterval } from '../../../model/schema/metric/graphql-metric-timeseries';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';
 import {
@@ -19,6 +20,7 @@ import {
   ErrorPercentageMetricValueCategory
 } from '../../../model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../model/schema/specifications/metric-aggregation-specification';
+import { MetricTimeseriesBandSpecification } from '../../../model/schema/specifications/metric-timeseries-band-specification';
 import { MetricTimeseriesSpecification } from '../../../model/schema/specifications/metric-timeseries-specification';
 import {
   PercentileLatencyMetricAggregationSpecification,
@@ -52,6 +54,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
       neighborDirection: neighborDirection
     };
   }
+
   public metricAggregationSpecForKey(
     metric: string,
     aggregation: MetricAggregationType,
@@ -213,7 +216,57 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     };
   }
 
-  public buildAggregationSelection(
+  public metricTimeseriesBandSpec(
+    metric: string,
+    aggregation: MetricAggregationType,
+    intervalDuration: TimeDuration
+  ): MetricTimeseriesBandSpecification {
+    const dateCoercer: DateCoercer = new DateCoercer();
+    const baselineSeriesAlias = `${aggregation}_baselineSeries_${intervalDuration.toString()}`;
+
+    // Timeseries does not require unique because it's deduping at the series level
+    const aggregationSelection = this.buildAggregationSelection(aggregation, false);
+
+    return {
+      ...this.getMetricSpecificationBase(metric, aggregation),
+      resultAlias: () => this.buildResultAlias(metric, aggregation, [intervalDuration.toString()]),
+      withNewIntervalDuration: newInterval => this.metricTimeseriesBandSpec(metric, aggregation, newInterval),
+      getIntervalDuration: () => intervalDuration,
+      asGraphQlSelections: () => ({
+        ...this.getMetricSelectionBase(metric),
+        children: [
+          {
+            path: 'baselineSeries',
+            alias: baselineSeriesAlias,
+            arguments: this.argBuilder.forIntervalArgs(intervalDuration),
+            children: [
+              { path: 'startTime' },
+              {
+                ...aggregationSelection,
+                children: [{ path: 'value' }, { path: 'upperBound' }, { path: 'lowerBound' }]
+              }
+            ]
+          }
+        ]
+      }),
+      extractFromServerData: resultContainer => {
+        const baselineSeries: GraphQlMetricBandInterval[] = resultContainer[metric][baselineSeriesAlias];
+
+        return baselineSeries.map(interval => {
+          const baselineArgInterval = interval[convertToGraphQlMetricAggregationPath(aggregation)]!;
+
+          return {
+            timestamp: dateCoercer.coerce(interval.startTime)!,
+            value: baselineArgInterval.value,
+            upperBound: baselineArgInterval.upperBound,
+            lowerBound: baselineArgInterval.lowerBound
+          };
+        });
+      }
+    };
+  }
+
+  private buildAggregationSelection(
     aggregation: MetricAggregationType,
     requireUnique: boolean = true
   ): GraphQlSelection {
