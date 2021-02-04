@@ -57,7 +57,7 @@ export class SheetOverlayComponent {
     this.showHeader = sheetConfig.showHeader === true;
     this.sheetTitle = sheetConfig.title === undefined ? '' : sheetConfig.title;
     this.size = sheetConfig.size;
-    this.closeOnEscape = sheetConfig.closeOnEscapeKey === undefined ? true : sheetConfig.closeOnEscapeKey;
+    this.closeOnEscape = sheetConfig.closeOnEscapeKey ?? true;
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
     this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));

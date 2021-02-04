@@ -60,7 +60,7 @@ export class ModalContainerComponent {
     this.modalTitle = config.title ?? '';
     this.size = config.size;
     this.isComponentModal = !(config.content instanceof TemplateRef);
-    this.closeOnEscape = config.closeOnEscapeKey === undefined ? true : config.closeOnEscapeKey;
+    this.closeOnEscape = config.closeOnEscapeKey ?? true;
     this.renderer = config.content;
     this.rendererInjector = Injector.create({
       providers: [
