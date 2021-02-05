@@ -59,6 +59,10 @@ export class TimeRangeService {
     return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
   }
 
+  public refresh(): void {
+    this.setTimeRange(this.getCurrentTimeRange());
+  }
+
   private initializeTimeRange(): void {
     this.navigationService.navigation$
       .pipe(
