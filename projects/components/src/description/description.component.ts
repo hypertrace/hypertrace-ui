@@ -21,10 +21,11 @@ import {
         data-sensitive-pii
         #eventDescriptionText
       >
+        <ng-content></ng-content>
         {{ description }}
         <span
           *ngIf="isDescriptionTruncated && isDescriptionTextToggled"
-          (click)="toggleDescriptionText()"
+          (click)="toggleDescriptionText($event)"
           class="description-button"
           >show less</span
         >
@@ -32,7 +33,7 @@ import {
       <div
         class="description-button description-button-more"
         *ngIf="isDescriptionTruncated && !isDescriptionTextToggled"
-        (click)="toggleDescriptionText()"
+        (click)="toggleDescriptionText($event)"
       >
         show more
       </div>
@@ -66,7 +67,8 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
     this.remeasure();
   }
 
-  public toggleDescriptionText(): void {
+  public toggleDescriptionText(event: Event): void {
+    event.stopPropagation();
     this.isDescriptionTextToggled = !this.isDescriptionTextToggled;
   }
 
