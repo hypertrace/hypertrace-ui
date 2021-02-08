@@ -54,7 +54,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @Input()
   public description!: string;
 
-  public constructor(private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(public readonly cdRef: ChangeDetectorRef) {}
 
   public ngOnChanges(): void {
     if (this.isInitialized) {

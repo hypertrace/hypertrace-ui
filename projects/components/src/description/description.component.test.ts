@@ -27,8 +27,9 @@ describe('Description Component', () => {
       }
     });
 
-    expect(spectator.component.isDescriptionTextToggled).toBeFalsy();
-    spectator.component.toggleDescriptionText();
-    expect(spectator.component.isDescriptionTextToggled).toBeTruthy();
+    expect(spectator.query('.description-text')).toHaveClass('description-text truncated-text');
+    spectator.component.isDescriptionTextToggled = true;
+    spectator.component.cdRef.detectChanges();
+    expect(spectator.query('.description-text')).not.toHaveClass('truncated-text');
   });
 });
