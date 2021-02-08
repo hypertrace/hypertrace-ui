@@ -1,5 +1,4 @@
 import { fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { SearchBoxComponent } from './search-box.component';
@@ -13,17 +12,14 @@ describe('Search box Component', () => {
   });
 
   test('should work with default values', fakeAsync(() => {
-    spectator = createHost(
-      `<ht-search-box [placeholder]="placeholder" (valueChange)="onValueChange($event)"></ht-search-box>`,
-      {
-        hostProps: {
-          placeholder: 'Test Placeholder'
-        }
+    spectator = createHost(`<ht-search-box [placeholder]="placeholder"></ht-search-box>`, {
+      hostProps: {
+        placeholder: 'Test Placeholder'
       }
-    );
+    });
 
-    const inputDebugElement = spectator.debugElement.query(By.css('input'));
-    expect((inputDebugElement.nativeElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
+    const inputElement = spectator.query('input');
+    expect((inputElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
     spectator.component.value = 'Test';
 
     runFakeRxjs(({ expectObservable }) => {
@@ -31,14 +27,14 @@ describe('Search box Component', () => {
         x: 'Test'
       });
 
-      spectator.triggerEventHandler(inputDebugElement, 'input', spectator.component.value);
+      spectator.triggerEventHandler('input', 'input', spectator.component.value);
       spectator.tick();
     });
   }));
 
   test('should work with arbitrary debounce time', fakeAsync(() => {
     spectator = createHost(
-      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" (valueChange)="onValueChange($event)"></ht-search-box>`,
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime"></ht-search-box>`,
       {
         hostProps: {
           placeholder: 'Test Placeholder',
@@ -47,8 +43,8 @@ describe('Search box Component', () => {
       }
     );
 
-    const inputDebugElement = spectator.debugElement.query(By.css('input'));
-    expect((inputDebugElement.nativeElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
+    const inputElement = spectator.query('input');
+    expect((inputElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
     spectator.component.value = 'Test2';
 
     runFakeRxjs(({ expectObservable }) => {
@@ -56,7 +52,7 @@ describe('Search box Component', () => {
         x: 'Test2'
       });
 
-      spectator.triggerEventHandler(inputDebugElement, 'input', spectator.component.value);
+      spectator.triggerEventHandler('input', 'input', spectator.component.value);
       spectator.tick();
     });
   }));

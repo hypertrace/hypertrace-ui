@@ -1,4 +1,4 @@
-import { TimeDuration } from '@hypertrace/common';
+import { Color, TimeDuration } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -6,12 +6,11 @@ import { Observable } from 'rxjs';
 import { SeriesVisualizationType } from './series-visualization/series-visualization-type';
 
 @Model({
-  type: 'series' // Todo : Add supported data types -> EntityMetricTimeseriesDataSourceModel
+  type: 'series'
 })
-export class SeriesModel<TData> {
-  public static readonly DEFAULT_COLOR: string = 'steelblue';
+export class SeriesModel<TInterval> {
+  public static readonly DEFAULT_COLOR: string = Color.Blue5;
 
-  // TODO make optional, calculate defaults, subclass/compose for different types of viz
   @ModelProperty({
     key: 'name',
     displayName: 'Name',
@@ -49,6 +48,7 @@ export class SeriesModel<TData> {
       values: [
         SeriesVisualizationType.Area,
         SeriesVisualizationType.Line,
+        SeriesVisualizationType.DashedLine,
         SeriesVisualizationType.Scatter,
         SeriesVisualizationType.Column
       ]
@@ -59,14 +59,13 @@ export class SeriesModel<TData> {
   @ModelInject(MODEL_API)
   public api!: ModelApi;
 
-  public getDataFetcher(): Observable<MetricSeriesDataFetcher<TData>> {
+  public getDataFetcher(): Observable<MetricSeriesDataFetcher<TInterval>> {
     return this.api.getData();
   }
 }
 
 export interface MetricSeriesDataFetcher<TInterval> {
   getData(interval: TimeDuration): Observable<MetricSeries<TInterval>>;
-  getRequestedInterval?(): TimeDuration | undefined;
 }
 
 export interface MetricSeries<TInterval> {

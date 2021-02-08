@@ -4,22 +4,22 @@ import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
 import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.component';
 
-export interface CartesianChart<TData> {
+export interface CartesianChart<TInterval> {
   destroy(): this;
   draw(): this;
   isDrawn(): boolean;
-  withSeries(...series: Series<TData>[]): this;
-  withBands(...bands: Band<TData>[]): this;
+  withSeries(...series: Series<TInterval>[]): this;
+  withBands(...bands: Band<TInterval>[]): this;
   withLegend(legendPosition: LegendPosition): this;
-  withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this;
+  withEventListener(eventType: ChartEvent, listener: ChartEventListener<TInterval>): this;
   withAxis(axis: Axis): this;
   withIntervalData(intervalData: CartesianIntervalData): this;
-  withTooltip(tooltip: ChartTooltipRef<TData>): this;
+  withTooltip(tooltip: ChartTooltipRef<TInterval>): this;
   withTimeRange(timeRange: TimeRange): this;
 }
 
-export interface Series<TData> {
-  data: TData[];
+export interface Series<TInterval> {
+  data: TInterval[];
   units?: string;
   summary?: Summary;
   color: string;
@@ -30,9 +30,9 @@ export interface Series<TData> {
   hide?: boolean;
 }
 
-export interface Band<TData> {
-  upper: Series<TData>;
-  lower: Series<TData>;
+export interface Band<TInterval> {
+  upper: Series<TInterval>;
+  lower: Series<TInterval>;
   color: string;
   opacity: number;
   name: string;

@@ -16,7 +16,6 @@
   }
 
   .page-size-select {
-    min-width: 86px;
     margin-left: 12px;
   }
 
@@ -28,7 +27,10 @@
   .previous-button {
     ::ng-deep {
       .button {
-        border-radius: 4px 0 0 4px;
+        width: 32px;
+
+        border-radius: 6px 0 0 6px;
+        border-color: $gray-2;
       }
     }
   }
@@ -36,8 +38,11 @@
   .next-button {
     ::ng-deep {
       .button {
-        border-radius: 0 4px 4px 0;
+        width: 32px;
         margin-left: -1px;
+
+        border-radius: 0 6px 6px 0;
+        border-color: $gray-2;
       }
     }
   }

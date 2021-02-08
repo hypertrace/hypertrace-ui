@@ -14,8 +14,6 @@
 .select {
   display: flex;
   align-items: center;
-  border: 1px solid $color-border;
-  border-radius: 6px;
   width: 100%;
   height: 34px;
 
@@ -56,12 +54,22 @@
     }
   }
 
+  .trigger-container {
+    width: 100%;
+    height: 100%;
+  }
+
   .trigger-content {
     display: flex;
     align-items: center;
     padding: 0 8px;
     cursor: pointer;
     height: 100%;
+
+    &.menu-with-border {
+      border: 1px solid $color-border;
+      border-radius: 6px;
+    }
 
     &.justify-left {
       justify-content: flex-start;
@@ -90,11 +98,31 @@
       color: $gray-7;
     }
   }
+
+  .icon-only {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      padding: 6px;
+      border: 1px solid white;
+      box-sizing: border-box;
+
+      &:hover {
+        background: $blue-1;
+        border: 1px solid $blue-2;
+        border-radius: 50%;
+      }
+    }
+
+    &.selected {
+      color: $blue-5;
+    }
+  }
 }
 
 .select-content {
   @include dropdown();
-  min-width: 120px;
   max-height: 204px;
 
   .select-option {
