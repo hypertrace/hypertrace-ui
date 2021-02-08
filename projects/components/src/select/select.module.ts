@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DividerModule } from '../divider/divider.module';
 import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
@@ -9,10 +10,18 @@ import { TooltipModule } from '../tooltip/tooltip.module';
 import { SelectGroupComponent } from './select-group.component';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectComponent } from './select.component';
-import { DividerModule } from '../divider/divider.module';
 
 @NgModule({
-  imports: [FormsModule, CommonModule, IconModule, LabelModule, LetAsyncModule, PopoverModule, TooltipModule, DividerModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    IconModule,
+    LabelModule,
+    LetAsyncModule,
+    PopoverModule,
+    TooltipModule,
+    DividerModule
+  ],
   declarations: [SelectComponent, SelectOptionComponent, SelectGroupComponent],
   exports: [SelectComponent, SelectOptionComponent, SelectGroupComponent]
 })
