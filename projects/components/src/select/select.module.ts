@@ -9,9 +9,10 @@ import { TooltipModule } from '../tooltip/tooltip.module';
 import { SelectGroupComponent } from './select-group.component';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectComponent } from './select.component';
+import { DividerModule } from '../divider/divider.module';
 
 @NgModule({
-  imports: [FormsModule, CommonModule, IconModule, LabelModule, LetAsyncModule, PopoverModule, TooltipModule],
+  imports: [FormsModule, CommonModule, IconModule, LabelModule, LetAsyncModule, PopoverModule, TooltipModule, DividerModule],
   declarations: [SelectComponent, SelectOptionComponent, SelectGroupComponent],
   exports: [SelectComponent, SelectOptionComponent, SelectGroupComponent]
 })

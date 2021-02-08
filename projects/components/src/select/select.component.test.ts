@@ -29,7 +29,7 @@ describe('Select Component', () => {
     { label: 'third', value: 'third-value' }
   ];
 
-  test('should display intial selection', fakeAsync(() => {
+  test('should display initial selection', fakeAsync(() => {
     spectator = hostFactory(
       `
     <ht-select [selected]="selected">
@@ -197,5 +197,36 @@ describe('Select Component', () => {
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
+  }));
+
+  test('should show none selection if applicable and emit correct value', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" (selectedChange)="onChange($event)" [showNoneSelection]="showNone">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          onChange: onChange,
+          showNone: true
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    expect(spectator.query('.none-option', { root: true })).toExist();
+    const options = spectator.queryAll('.select-option', { root: true });
+    expect(options[0].classList.contains('none-option')).toBe(true);
+    // Click on none option
+    spectator.click(options[0]);
+    expect(onChange).toHaveBeenCalledWith(undefined);
+    flush();
   }));
 });

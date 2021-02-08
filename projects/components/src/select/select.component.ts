@@ -74,6 +74,19 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
+            <ng-container *ngIf="this.showNoneSelection">
+              <div class="select-option none-option" (click)="this.onSelectionChange(this.noneOption)">
+                <span class="label">None</span>
+                <ht-icon
+                  class="status-icon"
+                  *ngIf="this.highlightSelected && this.isSelectedItem(this.noneOption)"
+                  icon="${IconType.Checkmark}"
+                  size="${IconSize.Small}"
+                ></ht-icon>
+              </div>
+
+              <ht-divider></ht-divider>
+            </ng-container>
             <div
               *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
@@ -100,7 +113,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public size: SelectSize = SelectSize.Medium;
 
   @Input()
-  public selected?: V;
+  public selected?: V | undefined;
 
   @Input()
   public icon?: string;
@@ -126,8 +139,11 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   @Input()
   public highlightSelected: boolean = true;
 
+  @Input()
+  public showNoneSelection: boolean = false;
+
   @Output()
-  public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
+  public readonly selectedChange: EventEmitter<V | undefined> = new EventEmitter<V | undefined>();
 
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
@@ -135,6 +151,10 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public selected$?: Observable<SelectOption<V> | undefined>;
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
+  public noneOption: SelectOption<undefined> = {
+    value: undefined,
+    label: 'None'
+  };
 
   public get justifyClass(): string {
     if (this.justify !== undefined) {
@@ -159,7 +179,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     }
   }
 
-  public isSelectedItem(item: SelectOptionComponent<V>): boolean {
+  public isSelectedItem(item: SelectOptionComponent<V> | SelectOption<undefined>): boolean {
     return this.selected === item.value;
   }
 
@@ -179,7 +199,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     );
   }
 
-  public onSelectionChange(item: SelectOptionComponent<V>): void {
+  public onSelectionChange(item: SelectOptionComponent<V> | SelectOption<undefined>): void {
     this.selected = item.value;
     this.selected$ = this.buildObservableOfSelected();
     this.selectedChange.emit(this.selected);
