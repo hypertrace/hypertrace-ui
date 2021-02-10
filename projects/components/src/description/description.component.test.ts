@@ -10,25 +10,18 @@ describe('Description Component', () => {
   });
 
   test('should render the description', () => {
-    spectator = createHost('<ht-description [description] = "description"> </ht-description>', {
-      hostProps: {
-        description: 'Description text'
-      }
-    });
+    spectator = createHost('<ht-description> Description text </ht-description>');
 
     expect(spectator.query('.description')).toExist();
     expect(spectator.query('.description-text')).toHaveText('Description text');
   });
 
   test('should show full description text if pressed button show more', () => {
-    spectator = createHost('<ht-description [description] = "description"> </ht-description>', {
-      hostProps: {
-        description: 'Description text'
-      }
-    });
+    spectator = createHost('<ht-description> Description text </ht-description>');
 
-    expect(spectator.component.isDescriptionTextToggled).toBeFalsy();
-    spectator.component.toggleDescriptionText();
-    expect(spectator.component.isDescriptionTextToggled).toBeTruthy();
+    expect(spectator.query('.description-text')).toHaveClass('description-text truncated-text');
+    spectator.component.isDescriptionTextToggled = true;
+    spectator.component.cdRef.detectChanges();
+    expect(spectator.query('.description-text')).not.toHaveClass('truncated-text');
   });
 });
