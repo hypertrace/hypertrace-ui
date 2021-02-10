@@ -75,13 +75,15 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <div *ngIf="this.topControlItems?.length !== 0">
-              <ng-container
-                *ngTemplateOutlet="controlItemTemplate; context: { controlItems: this.topControlItems }"
-              ></ng-container>
+            <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
+              <div *ngIf="topControlItems?.length !== 0">
+                <ng-container
+                  *ngTemplateOutlet="controlItemTemplate; context: { controlItems: topControlItems }"
+                ></ng-container>
 
-              <ht-divider></ht-divider>
-            </div>
+                <ht-divider></ht-divider>
+              </div>
+            </ng-container>
 
             <div
               *ngFor="let item of items"
@@ -160,7 +162,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
-  public topControlItems?: SelectControlOptionComponent<V>[];
+  public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
 
   public get justifyClass(): string {
     if (this.justify !== undefined) {
@@ -177,7 +179,11 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
-    this.topControlItems = this.controlItems?.filter(item => item.position === SelectControlOptionPosition.Top);
+    if (this.controlItems !== undefined) {
+      this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
+        map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
+      );
+    }
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
