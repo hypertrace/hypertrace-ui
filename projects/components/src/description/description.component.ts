@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
   OnChanges,
   ViewChild
 } from '@angular/core';
@@ -22,7 +21,6 @@ import {
         #eventDescriptionText
       >
         <ng-content></ng-content>
-        {{ description }}
         <span
           *ngIf="isDescriptionTruncated && isDescriptionTextToggled"
           (click)="toggleDescriptionText($event)"
@@ -50,9 +48,6 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
 
   @ViewChild('eventDescriptionContainer', { read: ElementRef })
   public readonly eventDescriptionContainer!: ElementRef;
-
-  @Input()
-  public description!: string;
 
   public constructor(public readonly cdRef: ChangeDetectorRef) {}
 
