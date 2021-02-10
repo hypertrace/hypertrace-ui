@@ -109,6 +109,15 @@ export class CartesianAxis<TData = {}> {
     );
   }
 
+  private getTickTransformValue(tick: Selection<BaseType, unknown, null, undefined>, axis: 'x' | 'y'): number {
+    const tickTranslateAxis = axis === 'x' ? 0 : 1;
+
+    const tickTranslateValues = tick.attr('transform').replace(/.*\(|\).*/g, '');
+    const tickTranslateValue = tickTranslateValues.split(',')[tickTranslateAxis] ?? '0';
+
+    return parseInt(tickTranslateValue);
+  }
+
   private removeOverflowedTicks(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
     maxTextTickTextLength: number,
@@ -117,20 +126,12 @@ export class CartesianAxis<TData = {}> {
     axisSvgSelection.selectAll('.tick').each((_d, i, n) => {
       const tick = select(n[i]);
 
-      const getTickPosistion = (tick: Selection<BaseType, unknown, null, undefined>): number => {
-        const translate = tick
-          .attr('transform')
-          .replace(/.*\(|\).*/g, '')
-          .split(',')[0];
-        return parseInt(translate);
-      };
+      const currentTickPosition = this.getTickTransformValue(tick, 'x');
+      const isTickOutOfLeftEdge = currentTickPosition < maxTextTickTextLength / 2;
+      const isTickOutOfRightEdge =
+        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0;
 
-      const currentTickPosition = getTickPosistion(tick);
-
-      if (
-        currentTickPosition < maxTextTickTextLength / 2 ||
-        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0
-      ) {
+      if (isTickOutOfLeftEdge || isTickOutOfRightEdge) {
         tick.remove();
       }
     });
@@ -138,13 +139,13 @@ export class CartesianAxis<TData = {}> {
 
   private rotateAxisTicks(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
-    maxTextLenght: number
+    maxTextLength: number
   ): boolean {
     const ticksSelection = axisSvgSelection.selectAll('text');
 
     const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
-    const isLabelRotate = maxTextLenght > tickBandwidth;
+    const isLabelRotate = maxTextLength > tickBandwidth;
 
     if (isLabelRotate) {
       axisSvgSelection
