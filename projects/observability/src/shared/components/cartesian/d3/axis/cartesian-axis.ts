@@ -126,21 +126,12 @@ export class CartesianAxis<TData = {}> {
     axisSvgSelection.selectAll('.tick').each((_, i, n) => {
       const currentTick = select(n[i]);
 
-      const getTickTranslateXValue = (tick: Selection<BaseType, unknown, null, undefined>): number => {
-        const translateXValue = tick
-          .attr('transform')
-          .replace(/.*\(|\).*/g, '')
-          .split(',')[0];
+      const currentTickPosition = this.getTickTransformValue(currentTick, 'x');
+      const isTickOutOfLeftEdge = currentTickPosition < maxTextTickTextLength / 2;
+      const isTickOutOfRightEdge =
+        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0;
 
-        return parseInt(translateXValue);
-      };
-
-      const currentTickPosition = getTickTranslateXValue(currentTick);
-
-      if (
-        currentTickPosition < maxTextTickTextLength / 2 ||
-        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0
-      ) {
+      if (isTickOutOfLeftEdge || isTickOutOfRightEdge) {
         currentTick.remove();
       }
     });
