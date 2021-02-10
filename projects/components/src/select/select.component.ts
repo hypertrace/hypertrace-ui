@@ -78,31 +78,19 @@ import { SelectSize } from './select-size';
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
-                  *ngTemplateOutlet="controlItemTemplate; context: { controlItems: topControlItems }"
+                  *ngTemplateOutlet="itemsTemplate; context: { items: topControlItems, showSelectionStatus: false }"
                 ></ng-container>
 
                 <ht-divider></ht-divider>
               </div>
             </ng-container>
 
-            <div
-              *ngFor="let item of items"
-              (click)="this.onSelectionChange(item)"
-              class="select-option"
-              [ngClass]="this.size"
-            >
-              <span class="label">{{ item.label }}</span>
-              <ht-icon
-                class="status-icon"
-                *ngIf="this.highlightSelected && this.isSelectedItem(item)"
-                icon="${IconType.Checkmark}"
-                size="${IconSize.Small}"
-              >
-              </ht-icon>
-            </div>
+            <ng-container
+              *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
+            ></ng-container>
           </div>
 
-          <ng-template #controlItemTemplate let-items="controlItems">
+          <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
             <div
               *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
@@ -111,6 +99,12 @@ import { SelectSize } from './select-size';
             >
               <ht-icon *ngIf="item.icon" class="icon" [icon]="item.icon" size="${IconSize.Small}"> </ht-icon>
               <span class="label">{{ item.label }}</span>
+              <ht-icon
+                class="status-icon"
+                *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
+                icon="${IconType.Checkmark}"
+                size="${IconSize.Small}"
+              ></ht-icon>
             </div>
           </ng-template>
         </ht-popover-content>
