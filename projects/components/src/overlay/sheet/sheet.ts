@@ -7,6 +7,7 @@ export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   size: SheetSize;
   data?: TData;
   position?: PopoverFixedPositionLocation.Right | PopoverFixedPositionLocation.RightUnderHeader;
+  closeOnEscapeKey?: boolean;
 }
 
 export const enum SheetSize {
