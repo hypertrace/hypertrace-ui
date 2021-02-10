@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { FieldFilter } from '../filtering/filter/filter';
@@ -9,7 +10,7 @@ export interface TableColumnConfig {
   name?: string; // Attribute name (for composite columns use the attribute that should be filtered/sorted)
   display?: string;
   title?: string;
-  titleTooltip?: string;
+  titleTooltip?: string | TemplateRef<unknown>;
   sort?: TableSortDirection;
   visible?: boolean; // Is the column shown
   editable?: boolean; // Can the column be added/removed
