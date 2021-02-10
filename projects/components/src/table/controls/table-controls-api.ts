@@ -1,12 +1,56 @@
-import { KeyValue } from '@angular/common';
+import { Dictionary } from '@hypertrace/common';
 import { SelectOption } from '../../select/select-option';
+import { TableFilter } from '../table-api';
 
-export interface SelectFilter {
+export interface SelectControl {
   placeholder?: string;
-  options: SelectOption<KeyValue<string, unknown>>[];
+  default?: SelectOption<TableControlOption>;
+  options: SelectOption<TableControlOption>[];
 }
 
 export interface SelectChange {
-  select: SelectFilter;
-  value: KeyValue<string, unknown>;
+  select: SelectControl;
+  value: TableControlOption;
 }
+
+export interface CheckboxControl {
+  label: string;
+  value: boolean;
+  options: TableCheckboxOptions;
+}
+
+export interface CheckboxChange {
+  checkbox: CheckboxControl;
+  value: boolean;
+  option: TableControlOption<unknown, boolean>;
+}
+
+export const enum TableControlOptionType {
+  Unset = 'unset',
+  Filter = 'filter',
+  Property = 'property'
+}
+
+export interface TableControlOption<TMetaValue = unknown, TValue = unknown> {
+  type: TableControlOptionType;
+  label: string;
+  metaValue: TMetaValue; // Used in a query - type based on TableWidgetControlOptionType
+  value?: TValue; // If a control needs to carry a value, use this (example: checkbox boolean)
+}
+
+export interface TableUnsetControlOption extends TableControlOption<string, undefined> {
+  type: TableControlOptionType.Unset;
+  metaValue: string;
+}
+
+export interface TableFilterControlOption extends TableControlOption<TableFilter> {
+  type: TableControlOptionType.Filter;
+  metaValue: TableFilter;
+}
+
+export interface TablePropertyControlOption extends TableControlOption<Dictionary<unknown>> {
+  type: TableControlOptionType.Property;
+  metaValue: Dictionary<unknown>;
+}
+
+export type TableCheckboxOptions = [TableControlOption<unknown, boolean>, TableControlOption<unknown, boolean>];

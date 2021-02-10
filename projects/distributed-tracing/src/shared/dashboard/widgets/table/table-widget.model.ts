@@ -22,7 +22,6 @@ import { TableWidgetRowSelectionModel } from './selections/table-widget-row-sele
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
-import { TableWidgetFilterModel } from './table-widget-filter-model';
 
 @Model({
   type: 'table-widget',
@@ -96,10 +95,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
 
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.api.getData<TableDataSource<TableRow>>();
-  }
-
-  public getFilterOptions(): TableWidgetFilterModel[] {
-    return this.filterOptions;
   }
 
   public getRowSelectionHandlers(_row: TableRow): TableWidgetRowSelectionModel[] {

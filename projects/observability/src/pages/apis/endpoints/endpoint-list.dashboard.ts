@@ -22,17 +22,18 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
-        selectFilterOptions: [
+        'select-control-options': [
           {
-            type: 'table-widget-select-filter',
-            attribute: 'serviceName',
-            'unset-option': 'All Services',
+            type: 'table-widget-select-option',
+            'unique-values': true,
             data: {
-              type: 'entities-attribute-data-source',
-              entity: ObservabilityEntityType.Service,
+              type: 'entities-attribute-options-data-source',
+              'unset-label': 'All Services',
+              // Use API so we can inherit API filters
+              entity: ObservabilityEntityType.Api,
               attribute: {
                 type: 'attribute-specification',
-                attribute: 'name'
+                attribute: 'serviceName'
               }
             }
           }
@@ -43,6 +44,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             title: 'Name',
             display: ObservabilityTableCellType.Entity,
             width: '20%',
+            sortable: false,
             value: {
               type: 'entity-specification'
             }
@@ -52,6 +54,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             title: 'Service',
             display: ObservabilityTableCellType.Entity,
             width: '20%',
+            sortable: false,
             value: {
               type: 'entity-specification',
               'id-attribute': 'serviceId',
@@ -63,17 +66,19 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'p99 Latency',
             display: TracingTableCellType.Metric,
+            sortable: false,
+            sort: TableSortDirection.Descending,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
               aggregation: 'p99'
-            },
-            sort: TableSortDirection.Descending
+            }
           },
           {
             type: 'table-widget-column',
             title: 'Errors/s',
             display: CoreTableCellRendererType.Number,
+            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -84,6 +89,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'Calls/s',
             display: CoreTableCellRendererType.Number,
+            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -94,6 +100,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'Last Called',
             display: CoreTableCellRendererType.Timestamp,
+            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'endTime',

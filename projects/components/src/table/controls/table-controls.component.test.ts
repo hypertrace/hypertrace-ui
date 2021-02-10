@@ -1,5 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SubscriptionLifecycle } from '@hypertrace/common';
+import { SelectComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
@@ -11,15 +12,19 @@ describe('Table Controls component', () => {
     component: TableControlsComponent,
     shallow: true,
     providers: [mockProvider(SubscriptionLifecycle)],
-    declarations: [MockComponent(SearchBoxComponent), MockComponent(ToggleGroupComponent)],
+    declarations: [
+      MockComponent(SearchBoxComponent),
+      MockComponent(SelectComponent),
+      MockComponent(ToggleGroupComponent)
+    ],
     template: `
       <ht-table-controls
         [searchEnabled]="searchEnabled"
         [searchPlaceholder]="searchPlaceholder"
-        [filterItems]="filterItems"
+        [selectControls]="selectControls"
         [viewItems]="viewItems"
         (searchChange)="searchChange($event)"
-        (filterChange)="filterChange($event)"
+        (selectChange)="selectChange($event)"
         (viewChange)="viewChange($event)"
       >
       </ht-table-controls>
@@ -53,51 +58,57 @@ describe('Table Controls component', () => {
     expect(onChangeSpy).toHaveBeenCalledWith('testing');
   }));
 
-  test('should provide toggle group items for each filter', () => {
+  test('should provide select options for each select control', () => {
     const spectator = createHost(undefined, {
       hostProps: {
-        filterItems: [
+        selectControls: [
           {
-            label: 'test1',
-            value: 'TEST1'
-          },
-          {
-            label: 'test2',
-            value: 'TEST2'
+            placeholder: 'test1',
+            options: [
+              {
+                label: 'first1',
+                value: 'first-1'
+              },
+              {
+                label: 'second1',
+                value: 'second-1'
+              }
+            ]
           }
         ]
       }
     });
 
-    expect(spectator.query(ToggleGroupComponent)?.items?.length).toEqual(2);
-    expect(spectator.query(ToggleGroupComponent)?.items![0]).toEqual({
-      label: 'test1',
-      value: 'TEST1'
-    });
+    expect(spectator.query(SelectComponent)?.placeholder).toEqual('test1');
   });
 
-  test('should emit filter when selected', () => {
+  test('should emit selection when selected', () => {
     const onChangeSpy = jest.fn();
 
     const spectator = createHost(undefined, {
       hostProps: {
-        filterItems: [
+        selectControls: [
           {
-            label: 'test1',
-            value: 'TEST1'
-          },
-          {
-            label: 'test2',
-            value: 'TEST2'
+            placeholder: 'test1',
+            options: [
+              {
+                label: 'first1',
+                value: 'first-1'
+              },
+              {
+                label: 'second1',
+                value: 'second-1'
+              }
+            ]
           }
         ],
-        filterChange: onChangeSpy
+        selectChange: onChangeSpy
       }
     });
 
-    spectator.triggerEventHandler(ToggleGroupComponent, 'activeItemChange', {
-      label: 'test1',
-      value: 'TEST1'
+    spectator.triggerEventHandler(SelectComponent, 'selectedChange', {
+      label: 'first1',
+      value: 'first-1'
     });
 
     expect(onChangeSpy).toHaveBeenCalled();
