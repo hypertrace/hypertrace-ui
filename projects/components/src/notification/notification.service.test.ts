@@ -1,5 +1,6 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { of, throwError } from 'rxjs';
 import { NotificationComponent, NotificationMode } from './notification.component';
 import { NotificationService } from './notification.service';
 
@@ -52,6 +53,62 @@ describe('NotificationService', () => {
         verticalPosition: 'bottom',
         duration: 5000,
         data: expect.objectContaining({ message: 'info', mode: NotificationMode.Info })
+      })
+    );
+  });
+
+  test('withNotification should work correctly', () => {
+    spectator = createService();
+
+    spectator.service.wrapWithNotification(of(true), 'success', 'failure').subscribe();
+
+    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+      NotificationComponent,
+      expect.objectContaining({
+        horizontalPosition: 'left',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
+      })
+    );
+
+    spectator.service.wrapWithNotification(throwError('error'), 'success', 'failure').subscribe();
+
+    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+      NotificationComponent,
+      expect.objectContaining({
+        horizontalPosition: 'left',
+        verticalPosition: 'bottom',
+        duration: 0,
+        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
+      })
+    );
+  });
+
+  test('withNotification operator should work correctly', () => {
+    spectator = createService();
+
+    of(true).pipe(spectator.service.withNotification('success', 'failure')).subscribe();
+
+    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+      NotificationComponent,
+      expect.objectContaining({
+        horizontalPosition: 'left',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
+      })
+    );
+
+    throwError('error').pipe(spectator.service.withNotification('success', 'failure')).subscribe();
+
+    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+      NotificationComponent,
+      expect.objectContaining({
+        horizontalPosition: 'left',
+        verticalPosition: 'bottom',
+        duration: 0,
+        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
       })
     );
   });
