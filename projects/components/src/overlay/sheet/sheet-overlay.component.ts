@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, Injector, TemplateRef, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
 import { ButtonStyle } from '../../button/button';
-import { POPOVER_DATA } from '../../popover/popover';
+import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
 import { SheetConstructionData } from '../overlay.service';
 import { SheetOverlayConfig, SheetSize } from './sheet';
@@ -45,6 +45,7 @@ export class SheetOverlayComponent {
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
   public visible: boolean = true;
+  public readonly closeOnEscape: boolean;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -56,9 +57,10 @@ export class SheetOverlayComponent {
     this.showHeader = sheetConfig.showHeader === true;
     this.sheetTitle = sheetConfig.title === undefined ? '' : sheetConfig.title;
     this.size = sheetConfig.size;
+    this.closeOnEscape = sheetConfig.closeOnEscapeKey ?? true;
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
-    this.popoverRef.height(`calc(100vh - ${globalHeaderHeight})`);
+    this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));
 
     if (this.size === SheetSize.ResponsiveExtraLarge) {
       this.popoverRef.width('60%');
@@ -75,8 +77,19 @@ export class SheetOverlayComponent {
     });
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  public onKeydownHandler(): void {
+    if (this.closeOnEscape) {
+      this.close();
+    }
+  }
+
   public close(): void {
     this.visible = false;
     this.popoverRef.close();
+  }
+
+  private getHeightForPopover(globalHeaderHeight: string, position?: PopoverFixedPositionLocation): string {
+    return position === PopoverFixedPositionLocation.Right ? '100vh' : `calc(100vh - ${globalHeaderHeight})`;
   }
 }

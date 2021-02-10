@@ -67,8 +67,12 @@ export * from './shared/components/donut/donut';
 // Pages
 export * from './pages/apis/backends/backend-list.module';
 export * from './pages/apis/backends/backend-list.component';
+export * from './pages/apis/endpoints/endpoint-list.component';
+export * from './pages/apis/endpoints/endpoint-list.dashboard';
+export * from './pages/apis/endpoints/endpoint-list.module';
 export * from './pages/apis/services/service-list.component';
-export * from './pages/apis/services/services-list.dashboard';
+export * from './pages/apis/services/service-list.dashboard';
+export * from './pages/apis/services/service-list.module';
 export * from './pages/apis/topology/application-flow.component';
 export * from './pages/apis/topology/application-flow.module';
 
@@ -82,7 +86,6 @@ export * from './pages/apis/api-detail/traces/api-trace-list.component';
 export * from './pages/apis/api-detail/traces/api-trace-list.dashboard';
 export * from './pages/api-trace-detail/api-trace-detail.page.component';
 
-export * from './pages/apis/services/service-list.module';
 export * from './pages/apis/service-detail/service-detail.module';
 export * from './pages/apis/service-detail/service-detail.component';
 export * from './pages/apis/service-detail/service-detail.service';
@@ -154,7 +157,7 @@ export * from './shared/components/cartesian/cartesian-chart.module';
 export * from './shared/components/cartesian/chart';
 export * from './shared/components/cartesian/chart-interactivty';
 export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
-export { MetricSeriesFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
+export { CartesianDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
 export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 
 // Histogram

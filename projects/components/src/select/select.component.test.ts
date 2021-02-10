@@ -5,7 +5,7 @@ import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { SelectJustify } from './select-justify';
-import { SelectComponent } from './select.component';
+import { SelectComponent, SelectTriggerDisplayMode } from './select.component';
 import { SelectModule } from './select.module';
 
 describe('Select Component', () => {
@@ -78,6 +78,47 @@ describe('Select Component', () => {
 
     optionElements.forEach((element, index) => expect(element).toHaveText(selectionOptions[index].label));
   }));
+
+  test('should apply classes and render items correctly when triggerDisplayMode is menu with border', () => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [triggerDisplayMode]="displayMode">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          displayMode: SelectTriggerDisplayMode.MenuWithBorder
+        }
+      }
+    );
+
+    expect(spectator.query('.menu-with-border')).toExist();
+    expect(spectator.query('.icon-only')).not.toExist();
+  });
+
+  test('should apply classes and render items correctly when triggerDisplayMode is button', () => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [triggerDisplayMode]="displayMode">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value,
+          displayMode: SelectTriggerDisplayMode.Icon
+        }
+      }
+    );
+
+    expect(spectator.query('.menu-with-border')).not.toExist();
+    expect(spectator.query('.icon-only')).toExist();
+    expect(spectator.query('.icon-only')?.classList.contains('selected')).toBe(true);
+  });
 
   test('should notify and update selection when selection is changed', fakeAsync(() => {
     const onChange = jest.fn();

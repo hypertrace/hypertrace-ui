@@ -26,6 +26,7 @@ export class TimeRangeService {
     private readonly timeDurationService: TimeDurationService
   ) {
     this.initializeTimeRange();
+    this.navigationService.registerGlobalQueryParamKey(TimeRangeService.TIME_RANGE_QUERY_PARAM);
   }
 
   public getShareableCurrentUrl(): string {
@@ -56,6 +57,10 @@ export class TimeRangeService {
 
   public setFixedRange(startTime: Date, endTime: Date): this {
     return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
+  }
+
+  public refresh(): void {
+    this.setTimeRange(this.getCurrentTimeRange());
   }
 
   private initializeTimeRange(): void {

@@ -13,12 +13,12 @@ import {
   ExploreGraphQlQueryHandlerService,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { MetricSeriesFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
 @Model({
   type: 'explore-cartesian-data-source'
 })
-export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<MetricSeriesFetcher<ExplorerData>> {
+export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
   public request?: ExploreVisualizationRequest;
 
   @ModelInject(ColorService)
@@ -27,7 +27,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  public getData(): Observable<MetricSeriesFetcher<ExplorerData>> {
+  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
     return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
       switchMap(request =>
         this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
@@ -41,7 +41,13 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
         })
       ),
       map(response => ({
-        getData: () => this.getAllData(response)
+        getData: () =>
+          this.getAllData(response).pipe(
+            map(explorerResults => ({
+              series: explorerResults,
+              bands: []
+            }))
+          )
       }))
     );
   }

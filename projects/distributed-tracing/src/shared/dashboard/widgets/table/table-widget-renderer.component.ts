@@ -1,13 +1,22 @@
+import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { isEqualIgnoreFunctions, isNonEmptyString, PreferenceService } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  isEqualIgnoreFunctions,
+  isNonEmptyString,
+  PreferenceService,
+  PrimitiveValue
+} from '@hypertrace/common';
 import {
   FilterAttribute,
   FilterOperator,
+  SelectChange,
+  SelectFilter,
+  SelectOption,
   StatefulTableRow,
   TableColumnConfig,
   TableDataSource,
   TableFilter,
-  TableMode,
   TableRow,
   TableSelectionMode,
   TableStyle,
@@ -16,20 +25,20 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, pick } from 'lodash-es';
+import { capitalize, isEmpty, pick, uniq } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
-import { ModeToggleTableWidgetModel } from './mode-toggle-table-widget.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetFilterModel } from './table-widget-filter-model';
+import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Renderer({ modelClass: TableWidgetModel })
-@Renderer({ modelClass: ModeToggleTableWidgetModel })
+@Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({
   selector: 'ht-table-widget-renderer',
   styleUrls: ['./table-widget-renderer.component.scss'],
@@ -43,15 +52,17 @@ import { TableWidgetModel } from './table-widget.model';
       <div class="table-content-container">
         <ht-table-controls
           class="table-controls"
-          [searchEnabled]="!!this.api.model.searchAttribute"
+          [searchEnabled]="!!this.api.model.getSearchAttribute()"
+          [selectFilterItems]="this.selectFilterItems$ | async"
           [filterItems]="this.filterItems"
-          [modeItems]="this.modeItems"
+          [viewItems]="this.viewItems"
           [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
           [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
           (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
+          (selectChange)="this.onSelectChange($event)"
           (searchChange)="this.onSearchChange($event)"
           (filterChange)="this.onFilterChange($event)"
-          (modeChange)="this.onModeChange($event)"
+          (viewChange)="this.onViewChange($event)"
         >
         </ht-table-controls>
 
@@ -60,7 +71,7 @@ import { TableWidgetModel } from './table-widget.model';
           [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
           [columnConfigs]="this.columnConfigs$ | async"
           [metadata]="this.metadata$ | async"
-          [mode]="this.activeMode"
+          [mode]="this.model.mode"
           [selectionMode]="this.model.getSelectionMode()"
           [display]="this.model.style"
           [data]="this.data$ | async"
@@ -84,8 +95,9 @@ export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
   public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
-  public modeItems: ToggleItem<TableMode>[] = [];
-  public activeMode!: TableMode;
+  public viewItems: ToggleItem<string>[] = [];
+
+  public selectFilterItems$!: Observable<SelectFilter[]>;
 
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
@@ -94,6 +106,7 @@ export class TableWidgetRendererComponent
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly checkboxFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+  private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
@@ -109,8 +122,6 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.onModeChange(this.model.mode);
-
     this.metadata$ = this.getScopeAttributes();
     this.columnConfigs$ = (isNonEmptyString(this.model.id)
       ? this.preferenceService.get<TableColumnConfig[]>(this.model.id, [])
@@ -120,28 +131,85 @@ export class TableWidgetRendererComponent
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
       this.searchFilterSubject,
-      this.checkboxFilterSubject
+      this.checkboxFilterSubject,
+      this.selectFilterSubject
     ]).pipe(
-      map(([toggleFilters, searchFilters, checkboxFilter]) => [...toggleFilters, ...searchFilters, ...checkboxFilter])
+      map(([toggleFilters, searchFilters, checkboxFilter, selectFilters]) => [
+        ...toggleFilters,
+        ...searchFilters,
+        ...checkboxFilter,
+        ...selectFilters
+      ])
     );
+
+    this.viewItems = this.model.getViewOptions().map(viewOption => ({
+      label: capitalize(viewOption),
+      value: viewOption
+    }));
+  }
+
+  public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
+
+  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
+    return this.model.getData().pipe(
+      startWith(undefined),
+      tap(() => this.fetchAndPopulateControlFilters())
+    );
+  }
+
+  protected fetchAndPopulateControlFilters(): void {
+    this.maybeEmitInitialCheckboxFilterChange();
 
     this.filterItems = this.model.getFilterOptions().map(filterOption => ({
       label: capitalize(filterOption.label),
       value: filterOption
     }));
 
-    this.modeItems = this.model.getModeOptions().map(modeOption => ({
-      label: capitalize(modeOption),
-      value: modeOption
-    }));
+    this.selectFilterItems$ = forkJoinSafeEmpty(
+      this.model.getSelectFilterOptions().map(selectFilterModel =>
+        // Fetch the values for the selectFilter dropdown
+        selectFilterModel.getData().pipe(
+          first(),
+          map(uniq),
+          map((values: PrimitiveValue[]) => {
+            /*
+             * Map the values to SelectOptions, but also include the attribute since there may be multiple select
+             * dropdowns and we need to be able to associate the selected values to the attribute so we can filter
+             * on them.
+             *
+             * The KeyValue typing requires the union with undefined only for the unsetOption below.
+             */
+            const options: SelectOption<KeyValue<string, PrimitiveValue | undefined>>[] = values.map(value => ({
+              label: String(value),
+              value: {
+                // The value is the only thing Outputted from select component, so we need both the attribute and value
+                key: selectFilterModel.attribute,
+                value: value
+              }
+            }));
 
-    this.maybeEmitInitialCheckboxFilterChange();
-  }
+            /*
+             * If there is an unsetOption, we want to add that as the first option as a way to set this select
+             * filter to undefined and remove it from our query.
+             */
+            if (selectFilterModel.unsetOption !== undefined) {
+              options.unshift({
+                label: selectFilterModel.unsetOption,
+                value: {
+                  key: selectFilterModel.attribute,
+                  value: undefined
+                }
+              });
+            }
 
-  public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
-
-  protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
-    return this.model.getData().pipe(startWith(undefined));
+            return {
+              placeholder: selectFilterModel.unsetOption,
+              options: options
+            };
+          })
+        )
+      )
+    );
   }
 
   public get syncWithUrl(): boolean {
@@ -226,18 +294,38 @@ export class TableWidgetRendererComponent
     this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
   }
 
+  public onSelectChange(changed: SelectChange): void {
+    const selectFilterModel = this.model
+      .getSelectFilterOptions()
+      .find(option => option.attribute === changed.value.key);
+
+    if (selectFilterModel === undefined) {
+      return; // This shouldn't happen
+    }
+
+    const existingSelectFiltersWithChangedRemoved = this.selectFilterSubject
+      .getValue()
+      .filter(f => f.field !== changed.value.key);
+    const changedSelectFilter = selectFilterModel.getTableFilter(changed.value.value);
+
+    const selectFilters = [...existingSelectFiltersWithChangedRemoved, changedSelectFilter].filter(
+      f => f.value !== undefined
+    ); // Remove filters that are unset
+
+    this.selectFilterSubject.next(selectFilters);
+  }
+
   public onSearchChange(text: string): void {
     const searchFilter: TableFilter = {
-      field: this.api.model.searchAttribute!,
+      field: this.api.model.getSearchAttribute()!,
       operator: FilterOperator.Like,
       value: text
     };
     this.searchFilterSubject.next([searchFilter]);
   }
 
-  public onModeChange(mode: TableMode): void {
-    this.activeMode = mode;
-    this.model.setMode(mode);
+  public onViewChange(view: string): void {
+    this.model.setView(view);
     this.columnConfigs$ = this.getColumnConfigs();
   }
 

@@ -13,6 +13,12 @@ export interface GraphQlMetricAggregation {
   value: number;
 }
 
+export interface GraphQlMetricBandAggregation {
+  value: number;
+  upperBound: number;
+  lowerBound: number;
+}
+
 export type GraphQlMetricAggregationContainer<
   T extends Partial<GraphQlMetricAggregation> = GraphQlMetricAggregation
 > = {

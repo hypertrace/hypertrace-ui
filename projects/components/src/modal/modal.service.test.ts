@@ -69,4 +69,24 @@ describe('Modal service', () => {
 
     flush(); // CDK timer to remove overlay
   }));
+
+  test('modal can be closed on press ESC key', fakeAsync(() => {
+    const spectator = createHost();
+    const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
+      content: TestComponent,
+      size: ModalSize.Small,
+      data: 'custom input'
+    });
+
+    spectator.tick();
+    const subscription = modal.closed$.subscribe();
+    expect(subscription.closed).toBe(false);
+
+    spectator.dispatchKeyboardEvent(document, 'keydown', { key: 'Escape', keyCode: 27 });
+
+    expect(spectator.query('.test-modal-content', { root: true })).not.toExist();
+    expect(subscription.closed).toBe(true);
+
+    flush();
+  }));
 });

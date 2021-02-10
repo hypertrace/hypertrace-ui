@@ -219,6 +219,7 @@ export * from './summary-value/summary-value.component';
 export * from './summary-value/summary-value.module';
 
 // Table
+export * from './table/controls/table-controls-api';
 export * from './table/data/table-data-source';
 export * from './table/table.module';
 export * from './table/table.component';
@@ -303,3 +304,7 @@ export * from './confirmation/confirmation.service';
 // Notification
 export * from './notification/notification.service';
 export * from './notification/notification.module';
+
+// Description
+export * from './description/description.component';
+export * from './description/description.module';

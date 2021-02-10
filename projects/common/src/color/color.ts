@@ -7,6 +7,8 @@ export const enum Color {
   BlueGray4 = '#4b5f77',
   Gray1 = '#f4f5f5',
   Gray2 = '#e1e4e5',
+  Gray3 = '#b7bfc2',
+  Gray4 = '#889499',
   Gray5 = '#657277',
   Gray7 = '#272c2e',
   Gray9 = '#080909',

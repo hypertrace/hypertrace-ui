@@ -9,6 +9,7 @@ import { EntityTopologyGraphQlQueryHandlerService } from '../../../graphql/reque
 import { ExploreGraphQlQueryHandlerService } from '../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count/api-calls-count-data-source-model';
 import { EntityMetricAggregationDataSourceModel } from './entity/aggregation/entity-metric-aggregation-data-source.model';
+import { EntitiesAttributeDataSourceModel } from './entity/attribute/entities-attribute-data-source.model';
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
@@ -17,6 +18,7 @@ import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-ag
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
+import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
 import { PercentileLatencyAggregationSpecificationModel } from './specifiers/percentile-latency-metric-aggregation.model';
@@ -47,6 +49,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,
+        EntitiesAttributeDataSourceModel,
         EntitySpecificationModel,
         NeighborEntitySpecificationModel,
         ExploreCartesianDataSourceModel,
@@ -56,6 +59,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         TraceMetricAggregationDataSourceModel,
         TraceDonutDataSourceModel,
         MetricTimeseriesSpecificationModel,
+        MetricTimeseriesBandSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
         PercentageCompositeDataSourceModel,

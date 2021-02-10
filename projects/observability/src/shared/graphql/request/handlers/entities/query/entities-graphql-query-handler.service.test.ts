@@ -58,19 +58,22 @@ describe('Entities graphql query handler', () => {
   const specBuilder = new ObservabilitySpecificationBuilder();
   const buildRequest = (
     entityType: ObservabilityEntityType = ObservabilityEntityType.Service,
-    limit: number = 30
+    limit: number = 30,
+    includeInactive?: boolean
   ): GraphQlEntitiesQueryRequest => ({
     requestType: ENTITIES_GQL_REQUEST,
     entityType: entityType,
     timeRange: testTimeRange,
     properties: [specBuilder.attributeSpecificationForKey('name')],
     limit: limit,
-    includeTotal: true
+    includeTotal: true,
+    includeInactive: includeInactive
   });
 
   const buildRequestGraphqlSelection = (
     entityType: ObservabilityEntityType = ObservabilityEntityType.Service,
-    limit: number = 30
+    limit: number = 30,
+    includeInactive?: boolean
   ): GraphQlSelection => ({
     path: 'entities',
     arguments: [
@@ -82,7 +85,8 @@ describe('Entities graphql query handler', () => {
           startTime: new Date(testTimeRange.from),
           endTime: new Date(testTimeRange.to)
         }
-      }
+      },
+      ...(includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : [])
     ],
     children: [
       {
@@ -130,6 +134,22 @@ describe('Entities graphql query handler', () => {
     const graphqlSelection = buildRequestGraphqlSelection(ObservabilityEntityType.Api);
     expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api))).toEqual(graphqlSelection);
   });
+
+  test('adds includeInactive param when required', () => {
+    const spectator = createService();
+    expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30, true))).toEqual(
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, true)
+    );
+
+    expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30, false))).toEqual(
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, false)
+    );
+
+    expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30))).toEqual(
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30)
+    );
+  });
+
   test('converts response to entities array', fakeAsync(() => {
     const spectator = createService();
     const serverResponse = {
