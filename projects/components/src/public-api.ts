@@ -304,3 +304,7 @@ export * from './confirmation/confirmation.service';
 // Notification
 export * from './notification/notification.service';
 export * from './notification/notification.module';
+
+// Description
+export * from './description/description.component';
+export * from './description/description.module';

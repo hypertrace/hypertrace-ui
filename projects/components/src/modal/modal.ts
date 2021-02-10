@@ -7,6 +7,7 @@ export interface ModalConfig<TData = unknown> {
   showControls?: boolean;
   title?: string;
   data?: TData;
+  closeOnEscapeKey?: boolean;
 }
 
 export const enum ModalSize {
