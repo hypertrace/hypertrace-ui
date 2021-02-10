@@ -50,7 +50,7 @@ export class NotificationService {
     });
   }
 
-  public withNotification<T>(source: Observable<T>, successMessage: string, failureMessage: string): Observable<T> {
+  public wrapWithNotification<T>(source: Observable<T>, successMessage: string, failureMessage: string): Observable<T> {
     return source.pipe(
       tap(
         noop,
@@ -60,10 +60,7 @@ export class NotificationService {
     );
   }
 
-  public withNotificationOperator<T>(
-    successMessage: string,
-    failureMessage: string
-  ): (source: Observable<T>) => Observable<T> {
-    return (source: Observable<T>) => this.withNotification(source, successMessage, failureMessage);
+  public withNotification<T>(successMessage: string, failureMessage: string): (source: Observable<T>) => Observable<T> {
+    return (source: Observable<T>) => this.wrapWithNotification(source, successMessage, failureMessage);
   }
 }

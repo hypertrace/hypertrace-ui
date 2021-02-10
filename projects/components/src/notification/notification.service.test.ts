@@ -60,7 +60,7 @@ describe('NotificationService', () => {
   test('withNotification should work correctly', () => {
     spectator = createService();
 
-    spectator.service.withNotification(of(true), 'success', 'failure').subscribe();
+    spectator.service.wrapWithNotification(of(true), 'success', 'failure').subscribe();
 
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
@@ -72,7 +72,7 @@ describe('NotificationService', () => {
       })
     );
 
-    spectator.service.withNotification(throwError('error'), 'success', 'failure').subscribe();
+    spectator.service.wrapWithNotification(throwError('error'), 'success', 'failure').subscribe();
 
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
@@ -88,7 +88,7 @@ describe('NotificationService', () => {
   test('withNotification operator should work correctly', () => {
     spectator = createService();
 
-    of(true).pipe(spectator.service.withNotificationOperator('success', 'failure')).subscribe();
+    of(true).pipe(spectator.service.withNotification('success', 'failure')).subscribe();
 
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
@@ -100,7 +100,7 @@ describe('NotificationService', () => {
       })
     );
 
-    throwError('error').pipe(spectator.service.withNotificationOperator('success', 'failure')).subscribe();
+    throwError('error').pipe(spectator.service.withNotification('success', 'failure')).subscribe();
 
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
