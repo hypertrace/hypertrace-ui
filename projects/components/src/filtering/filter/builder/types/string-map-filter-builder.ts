@@ -38,7 +38,9 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string | [stri
       return attribute.displayName;
     }
 
-    return `${attribute.displayName}${MAP_LHS_DELIMITER}${Array.isArray(value) ? value[0] : value}`;
+    const displayValue: string = Array.isArray(value) ? (value.length > 0 ? value[0] : '') : value;
+
+    return `${attribute.displayName}${MAP_LHS_DELIMITER}${displayValue}`;
   }
 
   private buildUserFilterStringRhs(operator?: FilterOperator, value?: string | string[]): string {
