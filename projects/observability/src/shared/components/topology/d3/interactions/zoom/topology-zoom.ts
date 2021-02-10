@@ -14,8 +14,8 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
   private static readonly DATA_BRUSH_OVERLAY_CLASS: string = 'overlay';
   private static readonly DATA_BRUSH_SELECTION_CLASS: string = 'selection';
 
-  private static readonly DATA_BRUSH_OVERLAY_WIDTH: number = 200;
-  private static readonly DATA_BRUSH_OVERLAY_HEIGHT: number = 200;
+  private static readonly DATA_BRUSH_OVERLAY_WIDTH: number = 240;
+  private static readonly DATA_BRUSH_OVERLAY_HEIGHT: number = 168;
   private config?: TopologyZoomConfiguration<TContainer, TTarget>;
   private readonly zoomBehavior: ZoomBehavior<TContainer, unknown>;
   private readonly zoomChangeSubject: BehaviorSubject<number> = new BehaviorSubject(1);
