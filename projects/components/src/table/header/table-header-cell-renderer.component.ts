@@ -87,7 +87,7 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-  private readonly HTML_TOOLTIP_PREFIX = 'html:';
+  private readonly HTML_TOOLTIP_PREFIX: string = 'html:';
 
   @Input()
   public editable?: boolean = false;
