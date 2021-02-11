@@ -11,13 +11,14 @@
   padding: 0 8px;
 
   .icon {
-    color: $gray-5;
+    color: $gray-7;
     position: absolute;
     padding: 0 6px;
     cursor: pointer;
   }
 
   .close {
+    color: $gray-5;
     right: 0;
   }
 
@@ -42,12 +43,12 @@
     width: 420px;
     background: transparent;
     border: 1px solid transparent;
-    padding-left: 40px;
+    padding-left: 28px;
     padding-right: 36px;
     border-radius: 4px;
 
     &::placeholder {
-      @include body-1-regular($gray-5);
+      @include body-1-regular($gray-7);
       line-height: 30px;
     }
 
