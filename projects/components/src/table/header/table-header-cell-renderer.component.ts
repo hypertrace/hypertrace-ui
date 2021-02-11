@@ -6,11 +6,9 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SecurityContext,
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
@@ -78,7 +76,7 @@ import { TableColumnConfigExtended } from '../table.service';
         </ht-popover>
 
         <ng-template #htmlTooltip>
-          <div [innerHTML]="this.sanitizedHtmlForTooltip"></div>
+          <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
         </ng-template>
       </ng-template>
     </div>
@@ -124,8 +122,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public constructor(
     private readonly modalService: ModalService,
-    private readonly filterParserLookupService: FilterParserLookupService,
-    private readonly sanitizer: DomSanitizer
+    private readonly filterParserLookupService: FilterParserLookupService
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -135,7 +132,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
-      this.sanitizedHtmlForTooltip = this.getSanitizedHtml(this.columnConfig?.titleTooltip) ?? undefined;
     }
   }
 
@@ -175,14 +171,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     }
 
     return this.htmlTooltipTemplate;
-  }
-
-  public getSanitizedHtml(tooltipString: string | undefined): string | null {
-    if (tooltipString === undefined) {
-      return '';
-    }
-
-    return this.sanitizer.sanitize(SecurityContext.HTML, tooltipString);
   }
 
   private isAttributeFilterable(): boolean {
