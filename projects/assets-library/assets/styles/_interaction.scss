@@ -9,9 +9,13 @@
 
 @mixin card-hover {
   &:hover {
-    @include dropdown-box-shadow();
+    @include card-box-shadow();
     cursor: pointer;
   }
+}
+
+@mixin card-box-shadow {
+  box-shadow: 0px 2px 5px rgba(63, 71, 74, 0.16), 0px 3px 4px rgba(63, 71, 74, 0.08), 0px 1px 4px rgba(63, 71, 74, 0.16);
 }
 
 @mixin filter-box-shadow {

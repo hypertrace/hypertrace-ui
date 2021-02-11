@@ -3,8 +3,10 @@
 .ht-card-list {
   display: flex;
   flex-direction: column;
-  padding-left: 1px;
+
+  padding-top: 1px;
   padding-right: 1px;
+  padding-left: 1px;
 
   .content {
     display: flex;
@@ -30,8 +32,7 @@
     }
 
     &:hover {
-      background: $gray-1;
-      border: 1px solid $gray-2;
+      border: 1px solid transparent;
     }
   }
 
