@@ -80,6 +80,10 @@ export class SvgUtilService {
     throw Error('No parent SVG tag found for provided element');
   }
 
+  public getElementTextLength(element: SVGTextElement): number {
+    return this.domElementMeasurerService.getComputedTextLength(element);
+  }
+
   public truncateText(element: SVGTextElement, width: number): void {
     let textLength = this.domElementMeasurerService.getComputedTextLength(element);
 
