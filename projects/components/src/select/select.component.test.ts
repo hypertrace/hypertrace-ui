@@ -1,9 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
-import { IconLibraryTestingModule } from '@hypertrace/assets-library';
+import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
+import { SelectControlOptionPosition } from './select-control-option.component';
 import { SelectJustify } from './select-justify';
 import { SelectComponent, SelectTriggerDisplayMode } from './select.component';
 import { SelectModule } from './select.module';
@@ -197,5 +198,39 @@ describe('Select Component', () => {
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
+  }));
+
+  test('should show control options on the top as expected', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-select (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value"></ht-select-option>
+      <ht-select-control-option [label]="controlLabel" [value]="controlValue" [position]="controlPosition" [icon]="controlIcon"></ht-select-control-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          controlLabel: 'None',
+          controlValue: 'none-id',
+          controlIcon: IconType.Debug,
+          controlPosition: SelectControlOptionPosition.Top,
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const optionElements = spectator.queryAll('.select-option', { root: true });
+    expect(optionElements[0].querySelector('.icon')).toExist();
+    expect(optionElements[0]).toContainText('None');
+    spectator.click(optionElements[0]);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith('none-id');
+    flush();
   }));
 });
