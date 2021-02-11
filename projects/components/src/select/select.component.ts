@@ -15,6 +15,7 @@ import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimple
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
 import { SelectGroupPosition } from './select-group-position';
 import { SelectJustify } from './select-justify';
 import { SelectOption } from './select-option';
@@ -74,22 +75,38 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
+            <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
+              <div *ngIf="topControlItems?.length !== 0">
+                <ng-container
+                  *ngTemplateOutlet="itemsTemplate; context: { items: topControlItems, showSelectionStatus: false }"
+                ></ng-container>
+
+                <ht-divider></ht-divider>
+              </div>
+            </ng-container>
+
+            <ng-container
+              *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
+            ></ng-container>
+          </div>
+
+          <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
             <div
               *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
               class="select-option"
               [ngClass]="this.size"
             >
+              <ht-icon *ngIf="item.icon" class="icon" [icon]="item.icon" size="${IconSize.Small}"> </ht-icon>
               <span class="label">{{ item.label }}</span>
               <ht-icon
                 class="status-icon"
-                *ngIf="this.highlightSelected && this.isSelectedItem(item)"
+                *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
                 icon="${IconType.Checkmark}"
                 size="${IconSize.Small}"
-              >
-              </ht-icon>
+              ></ht-icon>
             </div>
-          </div>
+          </ng-template>
         </ht-popover-content>
       </ht-popover>
     </div>
@@ -132,9 +149,14 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
 
+  @ContentChildren(SelectControlOptionComponent)
+  public controlItems?: QueryList<SelectControlOptionComponent<V>>;
+
   public selected$?: Observable<SelectOption<V> | undefined>;
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
+
+  public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
 
   public get justifyClass(): string {
     if (this.justify !== undefined) {
@@ -151,6 +173,11 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
+    if (this.controlItems !== undefined) {
+      this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
+        map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
+      );
+    }
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
