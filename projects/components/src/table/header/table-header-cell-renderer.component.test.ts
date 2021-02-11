@@ -134,8 +134,8 @@ describe('Table Header Cell Renderer', () => {
       }
     });
 
-    expect(spectator.component.getTooltip('html:<div></div>', 'title') instanceof TemplateRef).toBe(true);
-    expect(spectator.component.getTooltip('titleTooltip', 'title')).toBe('titleTooltip');
+    expect(spectator.component.getTooltip('<div></div>', 'title') instanceof TemplateRef).toBe(true);
+    expect(spectator.component.getTooltip('titleTooltip', 'title') instanceof TemplateRef).toBe(true);
     expect(spectator.component.getTooltip(undefined, 'title')).toBe('title');
   });
 });

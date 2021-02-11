@@ -87,7 +87,6 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-  private readonly HTML_TOOLTIP_PREFIX: string = 'html:';
 
   @Input()
   public editable?: boolean = false;
@@ -121,7 +120,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   @ViewChild('htmlTooltip')
   public htmlTooltipTemplate?: TemplateRef<unknown>;
-  public sanitizedHtmlForTooltip?: string | null;
+  public sanitizedHtmlForTooltip?: string;
 
   public constructor(
     private readonly modalService: ModalService,
@@ -136,7 +135,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
-      this.sanitizedHtmlForTooltip = this.getSanitizedHtml(this.columnConfig?.titleTooltip);
+      this.sanitizedHtmlForTooltip = this.getSanitizedHtml(this.columnConfig?.titleTooltip) ?? undefined;
     }
   }
 
@@ -175,19 +174,15 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       return title;
     }
 
-    if (titleTooltip.startsWith(this.HTML_TOOLTIP_PREFIX)) {
-      return this.htmlTooltipTemplate;
-    }
-
-    return titleTooltip;
+    return this.htmlTooltipTemplate;
   }
 
   public getSanitizedHtml(tooltipString: string | undefined): string | null {
-    if (tooltipString === undefined || !tooltipString.startsWith(this.HTML_TOOLTIP_PREFIX)) {
+    if (tooltipString === undefined) {
       return '';
     }
 
-    return this.sanitizer.sanitize(SecurityContext.HTML, tooltipString.split(this.HTML_TOOLTIP_PREFIX)[1]);
+    return this.sanitizer.sanitize(SecurityContext.HTML, tooltipString);
   }
 
   private isAttributeFilterable(): boolean {
