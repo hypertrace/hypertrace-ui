@@ -183,6 +183,7 @@ export { SelectJustify } from './select/select-justify';
 export { SelectOption } from './select/select-option';
 export { SelectSize } from './select/select-size';
 export * from './select/select-option.component';
+export * from './select/select-control-option.component';
 export * from './select/select.component';
 export * from './select/select.module';
 
