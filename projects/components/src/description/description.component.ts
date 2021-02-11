@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
   OnChanges,
   ViewChild
 } from '@angular/core';
@@ -21,10 +20,10 @@ import {
         data-sensitive-pii
         #eventDescriptionText
       >
-        {{ description }}
+        <ng-content></ng-content>
         <span
           *ngIf="isDescriptionTruncated && isDescriptionTextToggled"
-          (click)="toggleDescriptionText()"
+          (click)="toggleDescriptionText($event)"
           class="description-button"
           >show less</span
         >
@@ -32,7 +31,7 @@ import {
       <div
         class="description-button description-button-more"
         *ngIf="isDescriptionTruncated && !isDescriptionTextToggled"
-        (click)="toggleDescriptionText()"
+        (click)="toggleDescriptionText($event)"
       >
         show more
       </div>
@@ -50,10 +49,7 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
   @ViewChild('eventDescriptionContainer', { read: ElementRef })
   public readonly eventDescriptionContainer!: ElementRef;
 
-  @Input()
-  public description!: string;
-
-  public constructor(private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(public readonly cdRef: ChangeDetectorRef) {}
 
   public ngOnChanges(): void {
     if (this.isInitialized) {
@@ -66,7 +62,8 @@ export class DescriptionComponent implements OnChanges, AfterViewInit {
     this.remeasure();
   }
 
-  public toggleDescriptionText(): void {
+  public toggleDescriptionText(event: Event): void {
+    event.stopPropagation();
     this.isDescriptionTextToggled = !this.isDescriptionTextToggled;
   }
 

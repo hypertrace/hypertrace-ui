@@ -59,7 +59,7 @@ import { MultiSelectJustify } from './multi-select-justify';
             <ng-container *ngIf="this.showAllOptionControl">
               <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
                 <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
-                <span class="label">All</span>
+                <span class="label">Select All</span>
               </div>
 
               <ht-divider></ht-divider>

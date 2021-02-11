@@ -1,4 +1,4 @@
-import { assertUnreachable } from '@hypertrace/common';
+import { assertUnreachable, isNonEmptyString } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER } from '../../filter-delimiters';
@@ -46,7 +46,23 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     splitFilter: SplitFilter<FilterOperator>
   ): string[] | undefined {
     if (splitFilter.lhs === attribute.displayName) {
-      return splitFilter.rhs.split(MAP_RHS_DELIMITER);
+      switch (splitFilter.operator) {
+        case FilterOperator.ContainsKey:
+          return [splitFilter.rhs];
+        case FilterOperator.ContainsKeyValue:
+          return splitFirstOccurrenceOmitEmpty(splitFilter.rhs, MAP_RHS_DELIMITER);
+        case FilterOperator.Equals:
+        case FilterOperator.NotEquals:
+        case FilterOperator.LessThan:
+        case FilterOperator.LessThanOrEqualTo:
+        case FilterOperator.GreaterThan:
+        case FilterOperator.GreaterThanOrEqualTo:
+        case FilterOperator.Like:
+        case FilterOperator.In:
+          return undefined;
+        default:
+          assertUnreachable(splitFilter.operator);
+      }
     }
 
     const splitLhs = this.splitLhs(attribute, splitFilter);
@@ -76,3 +92,9 @@ interface SplitLhs {
   displayName: string;
   key?: string;
 }
+
+const splitFirstOccurrenceOmitEmpty = (str: string, delimiter: string): string[] => {
+  const firstIndex = str.indexOf(delimiter);
+
+  return [str.substr(0, firstIndex), str.substr(firstIndex + 1)].filter(isNonEmptyString);
+};

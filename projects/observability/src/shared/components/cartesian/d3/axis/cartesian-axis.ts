@@ -48,7 +48,6 @@ export class CartesianAxis<TData = {}> {
       .attr('transform', this.getAxisTransform())
       .node()!;
 
-    this.maybeTruncateAxisTicks(axisSvgSelection);
     this.addGridLinesIfNeeded();
 
     return this;
@@ -79,15 +78,85 @@ export class CartesianAxis<TData = {}> {
     if (!this.configuration.tickLabels) {
       selection.selectAll('.tick text').remove();
     }
+
+    if (this.configuration.location === AxisLocation.Bottom) {
+      const maxTextTickTextLength = this.getMaxTickTextLength(selection);
+      const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
+      this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+    } else {
+      this.maybeTruncateAxisTicks(selection);
+    }
+  }
+
+  private getMaxTickTextLength(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): number {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const allElementLength: number[] = [];
+
+    ticksSelection.each((_, index, nodes) =>
+      allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
+    );
+
+    return Math.max(...allElementLength);
   }
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
     const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
-    ticksSelection.each((_datum, index, nodes) =>
+    ticksSelection.each((_, index, nodes) =>
       this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
     );
+  }
+
+  private getTickTransformValue(tick: Selection<BaseType, unknown, null, undefined>, axis: 'x' | 'y'): number {
+    const tickTranslateAxis = axis === 'x' ? 0 : 1;
+
+    const tickTranslateValues = tick.attr('transform').replace(/.*\(|\).*/g, '');
+    const tickTranslateValue = tickTranslateValues.split(',')[tickTranslateAxis] ?? '0';
+
+    return parseInt(tickTranslateValue);
+  }
+
+  private removeOverflowedTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextTickTextLength: number,
+    isLabelRotated: boolean
+  ): void {
+    axisSvgSelection.selectAll('.tick').each((_, i, n) => {
+      const currentTick = select(n[i]);
+
+      const currentTickPosition = this.getTickTransformValue(currentTick, 'x');
+      const isTickOutOfLeftEdge = currentTickPosition < maxTextTickTextLength / 2;
+      const isTickOutOfRightEdge =
+        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0;
+
+      if (isTickOutOfLeftEdge || isTickOutOfRightEdge) {
+        currentTick.remove();
+      }
+    });
+  }
+
+  private rotateAxisTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextLength: number
+  ): boolean {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+
+    const isLabelRotate = maxTextLength > tickBandwidth;
+
+    if (isLabelRotate) {
+      axisSvgSelection
+        .selectAll('.tick text')
+        .style('text-anchor', 'end')
+        .style('font-size', '100%')
+        .attr('y', '3')
+        .attr('transform', `rotate(-35)`);
+    }
+
+    return isLabelRotate;
   }
 
   private getAxisTransform(): string {
