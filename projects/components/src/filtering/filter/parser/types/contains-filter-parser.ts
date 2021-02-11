@@ -1,7 +1,7 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER, splitFirstOccurrence } from '../../filter-delimiters';
+import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER, splitFirstOccurrenceOmitEmpty } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
@@ -46,7 +46,23 @@ export class ContainsFilterParser extends AbstractFilterParser<PossibleValuesTyp
     splitFilter: SplitFilter<FilterOperator>
   ): string[] | undefined {
     if (splitFilter.lhs === attribute.displayName) {
-      return splitFirstOccurrence(splitFilter.rhs, MAP_RHS_DELIMITER);
+      switch (splitFilter.operator) {
+        case FilterOperator.ContainsKey:
+          return [splitFilter.rhs];
+        case FilterOperator.ContainsKeyValue:
+          return splitFirstOccurrenceOmitEmpty(splitFilter.rhs, MAP_RHS_DELIMITER);
+        case FilterOperator.Equals:
+        case FilterOperator.NotEquals:
+        case FilterOperator.LessThan:
+        case FilterOperator.LessThanOrEqualTo:
+        case FilterOperator.GreaterThan:
+        case FilterOperator.GreaterThanOrEqualTo:
+        case FilterOperator.Like:
+        case FilterOperator.In:
+          return undefined;
+        default:
+          assertUnreachable(splitFilter.operator);
+      }
     }
 
     const splitLhs = this.splitLhs(attribute, splitFilter);
