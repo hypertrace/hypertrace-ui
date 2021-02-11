@@ -23,7 +23,7 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
 
   private buildUnsetOption(attribute: string): TableUnsetControlOption {
     return {
-      type: TableControlOptionType.Unset,
+      type: TableControlOptionType.UnsetFilter,
       label: this.unsetLabel,
       metaValue: attribute
     };

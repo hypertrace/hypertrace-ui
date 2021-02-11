@@ -26,6 +26,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-select-option',
             'unique-values': true,
+            placeholder: 'All Services',
             data: {
               type: 'entities-attribute-options-data-source',
               'unset-label': 'All Services',
@@ -44,7 +45,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             title: 'Name',
             display: ObservabilityTableCellType.Entity,
             width: '20%',
-            sortable: false,
             value: {
               type: 'entity-specification'
             }
@@ -54,7 +54,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             title: 'Service',
             display: ObservabilityTableCellType.Entity,
             width: '20%',
-            sortable: false,
             value: {
               type: 'entity-specification',
               'id-attribute': 'serviceId',
@@ -66,7 +65,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'p99 Latency',
             display: TracingTableCellType.Metric,
-            sortable: false,
             sort: TableSortDirection.Descending,
             value: {
               type: 'metric-aggregation',
@@ -78,7 +76,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'Errors/s',
             display: CoreTableCellRendererType.Number,
-            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
@@ -89,7 +86,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'Calls/s',
             display: CoreTableCellRendererType.Number,
-            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
@@ -100,7 +96,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'Last Called',
             display: CoreTableCellRendererType.Timestamp,
-            sortable: false,
             value: {
               type: 'metric-aggregation',
               metric: 'endTime',

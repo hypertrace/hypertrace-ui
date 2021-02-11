@@ -175,7 +175,7 @@ export class TableWidgetRendererComponent
             }));
 
             return {
-              placeholder: selectOptions[0]?.label,
+              placeholder: selectControlModel.placeholder,
               options: selectOptions
             };
           })
@@ -202,7 +202,6 @@ export class TableWidgetRendererComponent
         checkboxControls.forEach(checkboxControl => {
           this.onCheckboxChange({
             checkbox: checkboxControl,
-            value: checkboxControl.value,
             option: checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
           });
         });
@@ -273,7 +272,7 @@ export class TableWidgetRendererComponent
 
   public onSelectChange(changed: SelectChange): void {
     switch (changed.value.type) {
-      case TableControlOptionType.Unset:
+      case TableControlOptionType.UnsetFilter:
         this.selectFilterSubject.next(
           this.selectFilterSubject.getValue().filter(existingFilter => existingFilter.field !== changed.value.metaValue)
         );
@@ -297,7 +296,7 @@ export class TableWidgetRendererComponent
       case TableControlOptionType.Filter:
         this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue as TableFilter));
         break;
-      case TableControlOptionType.Unset:
+      case TableControlOptionType.UnsetFilter:
         break; // Not supported - No use case yet
       default:
         assertUnreachable(changed.option.type);
@@ -312,7 +311,7 @@ export class TableWidgetRendererComponent
           map((options: TableCheckboxOptions) => {
             options.forEach(option => {
               if (option === changed.option) {
-                checkboxControlModel.checked = changed.value;
+                checkboxControlModel.checked = changed.option.value === true;
               }
             });
 

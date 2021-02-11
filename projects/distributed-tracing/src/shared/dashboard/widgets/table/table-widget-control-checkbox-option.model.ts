@@ -2,12 +2,12 @@ import { TableCheckboxOptions, TableControlOption } from '@hypertrace/components
 import { BOOLEAN_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TableWidgetControlModelBase } from './table-widget-control-model-base';
+import { TableWidgetControlModel } from './table-widget-control.model';
 
 @Model({
   type: 'table-widget-checkbox-option'
 })
-export class TableWidgetControlCheckboxOptionModel extends TableWidgetControlModelBase {
+export class TableWidgetControlCheckboxOptionModel extends TableWidgetControlModel {
   @ModelProperty({
     key: 'checked',
     displayName: 'Checked',

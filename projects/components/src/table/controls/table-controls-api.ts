@@ -21,14 +21,13 @@ export interface CheckboxControl {
 
 export interface CheckboxChange {
   checkbox: CheckboxControl;
-  value: boolean;
   option: TableControlOption<unknown, boolean>;
 }
 
 export const enum TableControlOptionType {
-  Unset = 'unset',
   Filter = 'filter',
-  Property = 'property'
+  Property = 'property',
+  UnsetFilter = 'unset-filter'
 }
 
 export interface TableControlOption<TMetaValue = unknown, TValue = unknown> {
@@ -39,7 +38,7 @@ export interface TableControlOption<TMetaValue = unknown, TValue = unknown> {
 }
 
 export interface TableUnsetControlOption extends TableControlOption<string, undefined> {
-  type: TableControlOptionType.Unset;
+  type: TableControlOptionType.UnsetFilter;
   metaValue: string;
 }
 
@@ -53,4 +52,4 @@ export interface TablePropertyControlOption extends TableControlOption<Dictionar
   metaValue: Dictionary<unknown>;
 }
 
-export type TableCheckboxOptions = [TableControlOption<unknown, boolean>, TableControlOption<unknown, boolean>];
+export type TableCheckboxOptions = [TableControlOption<unknown, true>, TableControlOption<unknown, false>];

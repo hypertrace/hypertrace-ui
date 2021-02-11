@@ -5,7 +5,7 @@ import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option-model';
+import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetViewModel } from './table-widget-view.model';
 import { TableWidgetModel } from './table-widget.model';
@@ -89,7 +89,6 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
 
   public setCheckboxControlOptions(checkboxOptions: TableWidgetControlCheckboxOptionModel[]): void {
     this.delegateModel?.setCheckboxControlOptions(checkboxOptions);
-    this.checkboxOptions = checkboxOptions;
   }
 
   public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {

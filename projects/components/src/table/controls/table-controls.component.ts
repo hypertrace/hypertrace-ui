@@ -197,7 +197,6 @@ export class TableControlsComponent implements OnChanges {
       if (found) {
         this.checkboxChange.emit({
           checkbox: found,
-          value: true,
           option: found.options[0] // First index is always the true option
         });
       }
@@ -210,7 +209,6 @@ export class TableControlsComponent implements OnChanges {
       if (found) {
         this.checkboxChange.emit({
           checkbox: found,
-          value: false,
           option: found.options[1] // Second index is always the false option
         });
       }

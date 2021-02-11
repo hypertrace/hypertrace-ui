@@ -13,7 +13,7 @@ import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TracingTableCellRendererModule } from '../../../components/table/tracing-table-cell-renderer.module';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
-import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option-model';
+import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';

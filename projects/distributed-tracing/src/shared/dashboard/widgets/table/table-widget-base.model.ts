@@ -19,7 +19,7 @@ import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option-model';
+import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 
 export abstract class TableWidgetBaseModel extends BaseModel {

@@ -5,7 +5,7 @@ import { uniqWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export abstract class TableWidgetControlModelBase {
+export abstract class TableWidgetControlModel {
   @ModelProperty({
     key: 'sort',
     type: BOOLEAN_PROPERTY.type
@@ -35,10 +35,10 @@ export abstract class TableWidgetControlModelBase {
   private applySort(options: TableControlOption[]): TableControlOption[] {
     return options.sort((a: TableControlOption, b: TableControlOption) => {
       // Unset option always at the top
-      if (a.type === TableControlOptionType.Unset) {
+      if (a.type === TableControlOptionType.UnsetFilter) {
         return -1;
       }
-      if (b.type === TableControlOptionType.Unset) {
+      if (b.type === TableControlOptionType.UnsetFilter) {
         return 1;
       }
 
