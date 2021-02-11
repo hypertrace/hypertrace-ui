@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SecurityContext,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
@@ -22,7 +34,7 @@ import { TableColumnConfigExtended } from '../table.service';
     <div
       *ngIf="this.columnConfig"
       [ngClass]="this.classes"
-      [htTooltip]="this.columnConfig.titleTooltip || this.columnConfig.title"
+      [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
     >
       <ng-container *ngIf="this.leftAlignFilterButton">
@@ -64,6 +76,10 @@ import { TableColumnConfigExtended } from '../table.service';
             </div>
           </ht-popover-content>
         </ht-popover>
+
+        <ng-template #htmlTooltip>
+          <div [innerHTML]="this.sanitizedHtmlForTooltip"></div>
+        </ng-template>
       </ng-template>
     </div>
   `
@@ -71,6 +87,7 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
+  private readonly HTML_TOOLTIP_PREFIX = 'html:';
 
   @Input()
   public editable?: boolean = false;
@@ -102,9 +119,14 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public isFilterable: boolean = false;
 
+  @ViewChild('htmlTooltip')
+  public htmlTooltipTemplate?: TemplateRef<unknown>;
+  public sanitizedHtmlForTooltip?: string | null;
+
   public constructor(
     private readonly modalService: ModalService,
-    private readonly filterParserLookupService: FilterParserLookupService
+    private readonly filterParserLookupService: FilterParserLookupService,
+    private readonly sanitizer: DomSanitizer
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -114,6 +136,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
+      this.sanitizedHtmlForTooltip = this.getSanitizedHtml(this.columnConfig?.titleTooltip);
     }
   }
 
@@ -142,6 +165,29 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onSortChange(direction?: TableSortDirection): void {
     this.sortChange.emit(direction ?? this.getNextSortDirection(this.sort));
+  }
+
+  public getTooltip(
+    titleTooltip: string | undefined,
+    title: string | undefined
+  ): string | TemplateRef<unknown> | undefined {
+    if (titleTooltip === undefined) {
+      return title;
+    }
+
+    if (titleTooltip.startsWith(this.HTML_TOOLTIP_PREFIX)) {
+      return this.htmlTooltipTemplate;
+    }
+
+    return titleTooltip;
+  }
+
+  public getSanitizedHtml(tooltipString: string | undefined): string | null {
+    if (tooltipString === undefined || !tooltipString.startsWith(this.HTML_TOOLTIP_PREFIX)) {
+      return '';
+    }
+
+    return this.sanitizer.sanitize(SecurityContext.HTML, tooltipString.split(this.HTML_TOOLTIP_PREFIX)[1]);
   }
 
   private isAttributeFilterable(): boolean {
