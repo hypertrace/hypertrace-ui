@@ -1,7 +1,7 @@
-import { assertUnreachable } from '@hypertrace/common';
+import { assertUnreachable, isNonEmptyString } from '@hypertrace/common';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
-import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER, splitFirstOccurrenceOmitEmpty } from '../../filter-delimiters';
+import { MAP_LHS_DELIMITER, MAP_RHS_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
@@ -92,3 +92,9 @@ interface SplitLhs {
   displayName: string;
   key?: string;
 }
+
+const splitFirstOccurrenceOmitEmpty = (str: string, delimiter: string): string[] => {
+  const firstIndex = str.indexOf(delimiter);
+
+  return [str.substr(0, firstIndex), str.substr(firstIndex + 1)].filter(isNonEmptyString);
+};
