@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
@@ -22,7 +32,7 @@ import { TableColumnConfigExtended } from '../table.service';
     <div
       *ngIf="this.columnConfig"
       [ngClass]="this.classes"
-      [htTooltip]="this.columnConfig.titleTooltip || this.columnConfig.title"
+      [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
     >
       <ng-container *ngIf="this.leftAlignFilterButton">
@@ -64,6 +74,10 @@ import { TableColumnConfigExtended } from '../table.service';
             </div>
           </ht-popover-content>
         </ht-popover>
+
+        <ng-template #htmlTooltip>
+          <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
+        </ng-template>
       </ng-template>
     </div>
   `
@@ -101,6 +115,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public classes: string[] = [];
 
   public isFilterable: boolean = false;
+
+  @ViewChild('htmlTooltip')
+  public htmlTooltipTemplate?: TemplateRef<unknown>;
+  public sanitizedHtmlForTooltip?: string;
 
   public constructor(
     private readonly modalService: ModalService,
@@ -142,6 +160,17 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onSortChange(direction?: TableSortDirection): void {
     this.sortChange.emit(direction ?? this.getNextSortDirection(this.sort));
+  }
+
+  public getTooltip(
+    titleTooltip: string | undefined,
+    title: string | undefined
+  ): string | TemplateRef<unknown> | undefined {
+    if (titleTooltip === undefined) {
+      return title;
+    }
+
+    return this.htmlTooltipTemplate;
   }
 
   private isAttributeFilterable(): boolean {

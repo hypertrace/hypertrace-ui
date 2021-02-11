@@ -335,7 +335,7 @@ export class TraceD3Selection<
   ): ValueOrSelection<typeof value, T, WElement, WData, QElement, QData> {
     // Unwrap any returned value (which is going to d3) that are instances of trace selections
     if (value instanceof TraceD3Selection) {
-      return value.d3Selection;
+      return (value as TraceD3Selection<WElement, WData, QElement, QData>).d3Selection;
     }
 
     return value as ValueOrSelection<typeof value, T, WElement, WData, QElement, QData>;

@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { FilterParserLookupService } from '../../filtering/filter/parser/filter-parser-lookup.service';
@@ -115,5 +116,26 @@ describe('Table Header Cell Renderer', () => {
     spectator.click('.options-button');
     expect(spectator.query('.sort-ascending', { root: true })).not.toExist();
     expect(spectator.query('.sort-descending', { root: true })).not.toExist();
+  });
+
+  test('should create tooltip correctly', () => {
+    const columnConfig: TableColumnConfigExtended = {
+      id: 'test-column',
+      renderer: TextTableCellRendererComponent,
+      parser: new TableCellStringParser(undefined!),
+      filterValues: [],
+      titleTooltip: 'html:<div></div>',
+      sortable: false
+    };
+
+    const spectator = createHost(undefined, {
+      hostProps: {
+        columnConfig: columnConfig
+      }
+    });
+
+    expect(spectator.component.getTooltip('<div></div>', 'title') instanceof TemplateRef).toBe(true);
+    expect(spectator.component.getTooltip('titleTooltip', 'title') instanceof TemplateRef).toBe(true);
+    expect(spectator.component.getTooltip(undefined, 'title')).toBe('title');
   });
 });
