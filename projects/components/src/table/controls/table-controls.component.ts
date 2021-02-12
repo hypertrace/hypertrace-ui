@@ -106,9 +106,6 @@ export class TableControlsComponent implements OnChanges {
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output()
-  public readonly filterChange: EventEmitter<ToggleItem> = new EventEmitter<ToggleItem>();
-
-  @Output()
   public readonly selectChange: EventEmitter<SelectChange> = new EventEmitter<SelectChange>();
 
   @Output()
@@ -171,10 +168,6 @@ export class TableControlsComponent implements OnChanges {
 
   public onSearchChange(text: string): void {
     this.searchDebounceSubject.next(text);
-  }
-
-  public onFilterChange(item: ToggleItem): void {
-    this.filterChange.emit(item);
   }
 
   public onSelectChange(select: SelectControl, value: TableControlOption): void {
