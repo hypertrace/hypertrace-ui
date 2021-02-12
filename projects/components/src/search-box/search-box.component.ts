@@ -12,7 +12,7 @@ import { IconSize } from '../icon/icon-size';
   providers: [SubscriptionLifecycle],
   template: `
     <div class="ht-search-box" [class.focused]="this.isFocused">
-      <ht-icon icon="${IconType.Search}" size="${IconSize.Medium}" class="icon" (click)="onSubmit()"></ht-icon>
+      <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="onSubmit()"></ht-icon>
       <input
         class="input"
         type="text"
