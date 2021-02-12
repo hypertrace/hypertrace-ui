@@ -171,9 +171,7 @@ export class CartesianWidgetModel<TInterval> {
             this.mapToBaseline(bands[index].bandModel, b)
           )
         ],
-        bands: result.bands.map((b: MetricBand<TInterval>, index: number) =>
-          this.mapToBand(bands[index].bandModel, b)
-        )
+        bands: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBand(bands[index].bandModel, b))
       }))
     );
   }
