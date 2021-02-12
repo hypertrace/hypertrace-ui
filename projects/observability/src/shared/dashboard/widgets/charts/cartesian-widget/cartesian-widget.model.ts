@@ -171,7 +171,9 @@ export class CartesianWidgetModel<TInterval> {
             this.mapToBaseline(bands[index].bandModel, b)
           )
         ],
-        bands: result.bands.map((b: MetricBand<TInterval>) => this.mapToBand(b))
+        bands: result.bands.map((b: MetricBand<TInterval>, index: number) =>
+          this.mapToBand(bands[index].bandModel, b)
+        )
       }))
     );
   }
@@ -202,18 +204,18 @@ export class CartesianWidgetModel<TInterval> {
     return {
       data: metricBand.intervals,
       units: metricBand.units,
-      color: BandModel.BASELINE_COLOR,
-      name: BandModel.BASELINE_NAME,
+      color: model.color,
+      name: model.name,
       type: CartesianSeriesVisualizationType.DashedLine,
       hide: model.hide
     };
   }
 
-  private mapToBand(metricSeries: MetricSeries<TInterval>): Band<TInterval> {
+  private mapToBand(model: BandModel<TInterval>, metricSeries: MetricSeries<TInterval>): Band<TInterval> {
     return {
       name: '',
-      color: BandModel.BAND_COLOR,
-      opacity: BandModel.DEFAULT_OPACITY,
+      color: model.bandColor,
+      opacity: model.opacity,
       upper: {
         data: metricSeries.intervals
           .map((interval: unknown) => interval as MetricTimeseriesBandInterval)
@@ -226,8 +228,8 @@ export class CartesianWidgetModel<TInterval> {
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.UPPER_BOUND_NAME
+        color: model.bandColor,
+        name: model.upperBoundName
       },
       lower: {
         data: metricSeries.intervals
@@ -241,8 +243,8 @@ export class CartesianWidgetModel<TInterval> {
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.LOWER_BOUND_NAME
+        color: model.bandColor,
+        name: model.lowerBoundName
       }
     };
   }

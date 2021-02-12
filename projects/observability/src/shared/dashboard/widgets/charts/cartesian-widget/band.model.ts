@@ -14,24 +14,42 @@ import { Observable } from 'rxjs';
   type: 'band'
 })
 export class BandModel<TInterval> {
-  public static readonly BAND_COLOR: string = Color.Gray2;
-  public static readonly BASELINE_COLOR: string = Color.Gray4;
-  public static readonly BASELINE_NAME: string = 'Baseline';
-  public static readonly UPPER_BOUND_NAME: string = 'Upper Bound';
-  public static readonly LOWER_BOUND_NAME: string = 'Lower Bound';
-  public static readonly DEFAULT_OPACITY: number = 0.4;
+  private static readonly BAND_COLOR: string = Color.Gray2;
+  private static readonly BASELINE_COLOR: string = Color.Gray4;
+  private static readonly DEFAULT_OPACITY: number = 0.4;
+  private static readonly BASELINE_NAME: string = 'Baseline';
+  private static readonly UPPER_BOUND_NAME: string = 'Upper Bound';
+  private static readonly LOWER_BOUND_NAME: string = 'Lower Bound';
+
+  @ModelProperty({
+    key: 'name',
+    type: STRING_PROPERTY.type
+  })
+  public name: string = BandModel.BASELINE_NAME;
+
+  @ModelProperty({
+    key: 'upper-bound-name',
+    type: STRING_PROPERTY.type
+  })
+  public upperBoundName: string = BandModel.UPPER_BOUND_NAME;
+
+  @ModelProperty({
+    key: 'lower-bound-name',
+    type: STRING_PROPERTY.type
+  })
+  public lowerBoundName: string = BandModel.LOWER_BOUND_NAME;
+
+  @ModelProperty({
+    key: 'color',
+    type: STRING_PROPERTY.type
+  })
+  public color: string = BandModel.BASELINE_COLOR;
 
   @ModelProperty({
     key: 'band-color',
     type: STRING_PROPERTY.type
   })
   public bandColor: string = BandModel.BAND_COLOR;
-
-  @ModelProperty({
-    key: 'baseline-color',
-    type: STRING_PROPERTY.type
-  })
-  public baselineColor: string = BandModel.BASELINE_COLOR;
 
   @ModelProperty({
     key: 'opacity',
