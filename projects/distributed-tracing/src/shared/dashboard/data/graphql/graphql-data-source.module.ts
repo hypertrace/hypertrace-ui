@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { GraphQlModule } from '@hypertrace/graphql-client';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TableWidgetColumnModel } from '../../widgets/table/table-widget-column.model';
-import { TableWidgetFilterModel } from '../../widgets/table/table-widget-filter-model';
 import { GraphQlFilterDataSourceModel } from './filter/graphql-filter-data-source.model';
 import { GraphqlIdScopeFilterModel } from './filter/graphql-id-scope-filter.model';
 import { GraphQlKeyValueFilterModel } from './filter/graphql-key-value-filter.model';
@@ -35,7 +34,6 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         TracesTableDataSourceModel,
         SpanDataSourceModel,
         TableWidgetColumnModel,
-        TableWidgetFilterModel,
         TraceDataSourceModel,
         TracesDataSourceModel,
         CompositeSpecificationModel,

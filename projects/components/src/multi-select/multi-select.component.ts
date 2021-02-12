@@ -14,10 +14,10 @@ import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypert
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
-import { SelectJustify } from '../select/select-justify';
 import { SelectOption } from '../select/select-option';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
+import { MultiSelectJustify } from './multi-select-justify';
 
 @Component({
   selector: 'ht-multi-select',
@@ -26,16 +26,32 @@ import { SelectSize } from '../select/select-size';
   template: `
     <div
       class="multi-select"
-      [ngClass]="[this.size, this.showBorder ? 'border' : '', this.disabled ? 'disabled' : '']"
+      [ngClass]="[
+        this.size,
+        this.showBorder ? 'border' : '',
+        this.disabled ? 'disabled' : '',
+        this.popoverOpen ? 'open' : ''
+      ]"
       *htLetAsync="this.selected$ as selected"
     >
-      <ht-popover [disabled]="this.disabled" class="multi-select-container">
+      <ht-popover
+        [disabled]="this.disabled"
+        class="multi-select-container"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.popoverOpen = false"
+      >
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="this.justifyClass" #triggerContainer>
-            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </ht-icon>
-            <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
-            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+          <div
+            class="trigger-content"
+            [style.justify-content]="this.justify"
+            [ngClass]="this.triggerLabelDisplayMode"
+            #triggerContainer
+          >
+            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
+            <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
+              <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+            </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -77,6 +93,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public icon?: string;
 
   @Input()
+  public iconSize: IconSize = IconSize.Small;
+
+  @Input()
   public placeholder?: string;
 
   @Input()
@@ -86,7 +105,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public showBorder: boolean = false;
 
   @Input()
-  public justify?: SelectJustify;
+  public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
   public showAllOptionControl?: boolean = false;
@@ -100,16 +119,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
 
-  public selected$?: Observable<SelectOption<V>[] | undefined>;
+  public popoverOpen: boolean = false;
+  public selected$?: Observable<SelectOption<V>[]>;
   public triggerLabel?: string;
-
-  public get justifyClass(): string {
-    if (this.justify !== undefined) {
-      return this.justify;
-    }
-
-    return this.showBorder ? SelectJustify.Left : SelectJustify.Right;
-  }
 
   public constructor(private readonly loggerService: LoggerService) {}
 
@@ -128,6 +140,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public onAllSelectionChange(): void {
     this.selected = this.areAllOptionsSelected() ? [] : this.items!.map(item => item.value); // Select All or none
     this.setSelection();
+  }
+
+  public isIconOnlyMode(): boolean {
+    return this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Icon;
   }
 
   public areAllOptionsSelected(): boolean {
@@ -169,14 +185,14 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     }
   }
 
-  private buildObservableOfSelected(): Observable<SelectOption<V>[] | undefined> {
+  private buildObservableOfSelected(): Observable<SelectOption<V>[]> {
     if (!this.items) {
       return EMPTY;
     }
 
     return queryListAndChanges$(this.items).pipe(
       switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
-      map(() => this.findItems(this.selected))
+      map(() => this.findItems(this.selected) ?? [])
     );
   }
 
@@ -193,6 +209,8 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 }
 
 export const enum TriggerLabelDisplayMode {
-  Placeholder = 'placeholder',
-  Selection = 'selection'
+  // These may be used as css classes
+  Placeholder = 'placeholder-mode',
+  Selection = 'selection-mode',
+  Icon = 'icon-mode'
 }

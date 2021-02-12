@@ -5,8 +5,8 @@ import { MockComponent } from 'ng-mocks';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
 import { LetAsyncModule } from '../let-async/let-async.module';
-import { SelectJustify } from '../select/select-justify';
 import { SelectOptionComponent } from '../select/select-option.component';
+import { MultiSelectJustify } from './multi-select-justify';
 import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.component';
 
 describe('Multi Select Component', () => {
@@ -215,10 +215,10 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
-  test('should set correct label alignment', fakeAsync(() => {
+  test('should set correct justification', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" [showBorder]="showBorder">
+    <ht-multi-select [selected]="selected" [showBorder]="showBorder" [justify]="justify">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -226,41 +226,28 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
-          showBorder: true
+          showBorder: true,
+          justify: MultiSelectJustify.Left
         }
       }
     );
     spectator.tick();
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-start;');
 
     spectator.setInput({
-      showBorder: false
+      justify: MultiSelectJustify.Center
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: center;');
 
     spectator.setInput({
-      justify: SelectJustify.Left
+      justify: MultiSelectJustify.Right
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
-
-    spectator.setInput({
-      justify: SelectJustify.Right
-    });
-
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
-
-    spectator.setInput({
-      justify: SelectJustify.Center
-    });
-
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
   }));
 });

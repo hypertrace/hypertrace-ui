@@ -4,17 +4,16 @@ import { ARRAY_PROPERTY, Model, ModelApi, ModelOnInit, ModelProperty, ModelPrope
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
-import { TableWidgetBaseModel } from './table-widget-base.model';
-import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { TableWidgetSelectFilterModel } from './table-widget-select-filter.model';
+import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
+import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetViewModel } from './table-widget-view.model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Model({
   type: 'table-widget-view-toggle'
 })
-export class TableWidgetViewToggleModel extends TableWidgetBaseModel implements ModelOnInit {
+export class TableWidgetViewToggleModel extends TableWidgetModel implements ModelOnInit {
   @ModelProperty({
     key: 'views',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -84,11 +83,15 @@ export class TableWidgetViewToggleModel extends TableWidgetBaseModel implements 
     return this.delegateModel?.getSearchAttribute() ?? this.searchAttribute;
   }
 
-  public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
-    return this.delegateModel?.getCheckboxFilterOption() ?? this.checkboxFilterOption;
+  public getCheckboxControlOptions(): TableWidgetControlCheckboxOptionModel[] {
+    return this.delegateModel?.getCheckboxControlOptions() ?? this.checkboxOptions;
   }
 
-  public getSelectFilterOptions(): TableWidgetSelectFilterModel[] {
-    return this.delegateModel?.getSelectFilterOptions() ?? this.selectFilterOptions;
+  public setCheckboxControlOptions(checkboxOptions: TableWidgetControlCheckboxOptionModel[]): void {
+    this.delegateModel?.setCheckboxControlOptions(checkboxOptions);
+  }
+
+  public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {
+    return this.delegateModel?.getSelectControlOptions() ?? this.selectOptions;
   }
 }
