@@ -23,6 +23,7 @@ export const enum GraphQlOperatorType {
   GreaterThanOrEqualTo = 'GREATER_THAN_OR_EQUAL_TO',
   Like = 'LIKE',
   In = 'IN',
+  NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY',
   ContainsKeyValue = 'CONTAINS_KEY_VALUE'
 }
