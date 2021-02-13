@@ -1,3 +1,5 @@
+@import 'mixins';
+
 .table-controls {
   display: flex;
   padding-bottom: 16px;
@@ -9,7 +11,7 @@
     }
   }
 
-  .filter-controls {
+  .table-controls-left {
     display: flex;
 
     .search-box {
@@ -17,8 +19,11 @@
     }
   }
 
-  .filter-checkbox {
+  .table-controls-right {
     display: flex;
-    align-items: center;
+
+    .filter-multi-select {
+      color: $gray-7;
+    }
   }
 }

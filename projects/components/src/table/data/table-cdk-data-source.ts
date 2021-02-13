@@ -1,5 +1,5 @@
 import { DataSource } from '@angular/cdk/collections';
-import { forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
+import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
@@ -21,6 +21,7 @@ type WatchedObservables = [
   TableColumnConfigExtended[],
   PageEvent,
   TableFilter[],
+  Dictionary<unknown>,
   TableColumnConfigExtended | undefined,
   StatefulTableRow | undefined
 ];
@@ -60,8 +61,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
          * Below debouce is needed to handle multiple emission from buildChangeObservable.
          */
         debounceTime(100),
-        mergeMap(([columnConfigs, pageEvent, filters, changedColumn, changedRow]) =>
-          this.buildDataObservable(columnConfigs, pageEvent, filters, changedColumn, changedRow)
+        mergeMap(([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow]) =>
+          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow)
         )
       )
       .subscribe(this.rowsChange$);
@@ -160,6 +161,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       this.columnConfigChange(),
       this.pageChange(),
       this.filtersProvider.filters$,
+      this.filtersProvider.queryProperties$,
       this.columnStateChangeProvider.columnState$,
       this.rowStateChangeProvider.rowState$
     ]).pipe(map(values => this.detectRowStateChanges(...values)));
@@ -186,10 +188,11 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
     filters: TableFilter[],
+    queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined
   ): WatchedObservables {
-    return [columnConfigs, pageEvent, filters, changedColumn, this.buildRowStateChange(changedRow)];
+    return [columnConfigs, pageEvent, filters, queryProperties, changedColumn, this.buildRowStateChange(changedRow)];
   }
 
   private buildRowStateChange(changedRow: StatefulTableRow | undefined): StatefulTableRow | undefined {
@@ -213,6 +216,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
     filters: TableFilter[],
+    queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined
   ): Observable<StatefulTableRow[]> {
@@ -228,7 +232,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       TableCdkColumnUtil.unsortOtherColumns(changedColumn, columnConfigs);
     }
 
-    return this.fetchNewData(columnConfigs, pageEvent, filters);
+    return this.fetchNewData(columnConfigs, pageEvent, filters, queryProperties);
   }
 
   private fetchAndAppendNewChildren(stateChanges: RowStateChange[]): Observable<StatefulTableRow[]> {
@@ -257,29 +261,33 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private fetchNewData(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
-    filters: TableFilter[]
+    filters: TableFilter[],
+    queryProperties: Dictionary<unknown>
   ): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
     }
 
-    return this.tableDataSourceProvider.data.getData(this.buildRequest(columnConfigs, pageEvent, filters)).pipe(
-      tap(response => this.updatePaginationTotalCount(response.totalCount)),
-      map(response => response.data),
-      map(rows => this.paginateRows(rows, pageEvent)),
-      map(TableCdkRowUtil.buildInitialRowStates),
-      map(rows =>
-        this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
-          ? TableCdkRowUtil.expandAllRows(rows)
-          : rows
-      )
-    );
+    return this.tableDataSourceProvider.data
+      .getData(this.buildRequest(columnConfigs, pageEvent, filters, queryProperties))
+      .pipe(
+        tap(response => this.updatePaginationTotalCount(response.totalCount)),
+        map(response => response.data),
+        map(rows => this.paginateRows(rows, pageEvent)),
+        map(TableCdkRowUtil.buildInitialRowStates),
+        map(rows =>
+          this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
+            ? TableCdkRowUtil.expandAllRows(rows)
+            : rows
+        )
+      );
   }
 
   private buildRequest(
     columnConfigs: TableColumnConfigExtended[],
     pageConfig: PageEvent,
-    filters: TableFilter[]
+    filters: TableFilter[],
+    queryProperties: Dictionary<unknown>
   ): TableDataRequest {
     const request: TableDataRequest = {
       columns: TableCdkColumnUtil.fetchableColumnConfigs(columnConfigs),
@@ -305,7 +313,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
         };
       });
 
-    return request;
+    return { ...request, ...queryProperties };
   }
 
   /****************************

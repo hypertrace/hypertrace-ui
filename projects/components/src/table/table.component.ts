@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
+  Dictionary,
   DomElementMeasurerService,
   isEqualIgnoreFunctions,
   NavigationService,
@@ -225,6 +226,9 @@ export class TableComponent
   public filters?: TableFilter[];
 
   @Input()
+  public queryProperties?: Dictionary<unknown> = {};
+
+  @Input()
   public mode?: TableMode = TableMode.Flat;
 
   @Input()
@@ -323,6 +327,10 @@ export class TableComponent
    */
   private readonly filtersSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   public readonly filters$: Observable<TableFilter[]> = this.filtersSubject.asObservable();
+  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<
+    Dictionary<unknown>
+  >({});
+  public readonly queryProperties$: Observable<Dictionary<unknown>> = this.queryPropertiesSubject.asObservable();
 
   /*
    * Pagination
@@ -367,6 +375,7 @@ export class TableComponent
       changes.mode ||
       changes.data ||
       changes.filters ||
+      changes.queryProperties ||
       changes.pageSize ||
       changes.pageSizeOptions ||
       changes.pageable
@@ -388,6 +397,7 @@ export class TableComponent
 
   public ngOnDestroy(): void {
     this.filtersSubject.complete();
+    this.queryPropertiesSubject.complete();
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
@@ -480,6 +490,7 @@ export class TableComponent
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
     });
     this.filtersSubject.next(this.filters || []);
+    this.queryPropertiesSubject.next(this.queryProperties || {});
 
     this.initializeRows();
   }

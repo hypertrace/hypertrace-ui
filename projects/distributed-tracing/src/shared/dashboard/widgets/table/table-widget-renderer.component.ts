@@ -1,20 +1,25 @@
-import { KeyValue } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
+  assertUnreachable,
+  Dictionary,
   forkJoinSafeEmpty,
   isEqualIgnoreFunctions,
   isNonEmptyString,
-  PreferenceService,
-  PrimitiveValue
+  PreferenceService
 } from '@hypertrace/common';
 import {
+  CheckboxChange,
+  CheckboxControl,
   FilterAttribute,
   FilterOperator,
   SelectChange,
-  SelectFilter,
+  SelectControl,
   SelectOption,
   StatefulTableRow,
+  TableCheckboxOptions,
   TableColumnConfig,
+  TableControlOption,
+  TableControlOptionType,
   TableDataSource,
   TableFilter,
   TableRow,
@@ -25,7 +30,7 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, pick, uniq } from 'lodash-es';
+import { capitalize, isEmpty, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
@@ -33,7 +38,6 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { TableWidgetFilterModel } from './table-widget-filter-model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -53,15 +57,12 @@ import { TableWidgetModel } from './table-widget.model';
         <ht-table-controls
           class="table-controls"
           [searchEnabled]="!!this.api.model.getSearchAttribute()"
-          [selectFilterItems]="this.selectFilterItems$ | async"
-          [filterItems]="this.filterItems"
+          [selectControls]="this.selectControls$ | async"
+          [checkboxControls]="this.checkboxControls$ | async"
           [viewItems]="this.viewItems"
-          [checkboxLabel]="this.model.getCheckboxFilterOption()?.label"
-          [checkboxChecked]="this.model.getCheckboxFilterOption()?.checked"
-          (checkboxCheckedChange)="this.onCheckboxCheckedChange($event)"
-          (selectChange)="this.onSelectChange($event)"
           (searchChange)="this.onSearchChange($event)"
-          (filterChange)="this.onFilterChange($event)"
+          (selectChange)="this.onSelectChange($event)"
+          (checkboxChange)="this.onCheckboxChange($event)"
           (viewChange)="this.onViewChange($event)"
         >
         </ht-table-controls>
@@ -76,6 +77,7 @@ import { TableWidgetModel } from './table-widget.model';
           [display]="this.model.style"
           [data]="this.data$ | async"
           [filters]="this.combinedFilters$ | async"
+          [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
@@ -94,10 +96,10 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
-  public filterItems: ToggleItem<TableWidgetFilterModel>[] = [];
   public viewItems: ToggleItem<string>[] = [];
 
-  public selectFilterItems$!: Observable<SelectFilter[]>;
+  public selectControls$!: Observable<SelectControl[]>;
+  public checkboxControls$!: Observable<CheckboxControl[]>;
 
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
@@ -105,18 +107,22 @@ export class TableWidgetRendererComponent
 
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
-  private readonly checkboxFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
+
+  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<
+    Dictionary<unknown>
+  >({});
+  public queryProperties$: Observable<Dictionary<unknown>> = this.queryPropertiesSubject.asObservable();
 
   private selectedRowInteractionHandler?: InteractionHandler;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
-    changeDetector: ChangeDetectorRef,
+    changeDetectorRef: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
     private readonly preferenceService: PreferenceService
   ) {
-    super(api, changeDetector);
+    super(api, changeDetectorRef);
   }
 
   public ngOnInit(): void {
@@ -131,15 +137,9 @@ export class TableWidgetRendererComponent
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
       this.searchFilterSubject,
-      this.checkboxFilterSubject,
       this.selectFilterSubject
     ]).pipe(
-      map(([toggleFilters, searchFilters, checkboxFilter, selectFilters]) => [
-        ...toggleFilters,
-        ...searchFilters,
-        ...checkboxFilter,
-        ...selectFilters
-      ])
+      map(([toggleFilters, searchFilters, selectFilters]) => [...toggleFilters, ...searchFilters, ...selectFilters])
     );
 
     this.viewItems = this.model.getViewOptions().map(viewOption => ({
@@ -158,57 +158,54 @@ export class TableWidgetRendererComponent
   }
 
   protected fetchAndPopulateControlFilters(): void {
-    this.maybeEmitInitialCheckboxFilterChange();
+    this.fetchAndPopulateSelectControls();
+    this.fetchAndPopulateCheckboxControls();
+  }
 
-    this.filterItems = this.model.getFilterOptions().map(filterOption => ({
-      label: capitalize(filterOption.label),
-      value: filterOption
-    }));
-
-    this.selectFilterItems$ = forkJoinSafeEmpty(
-      this.model.getSelectFilterOptions().map(selectFilterModel =>
+  protected fetchAndPopulateSelectControls(): void {
+    this.selectControls$ = forkJoinSafeEmpty(
+      this.model.getSelectControlOptions().map(selectControlModel =>
         // Fetch the values for the selectFilter dropdown
-        selectFilterModel.getData().pipe(
+        selectControlModel.getOptions().pipe(
           first(),
-          map(uniq),
-          map((values: PrimitiveValue[]) => {
-            /*
-             * Map the values to SelectOptions, but also include the attribute since there may be multiple select
-             * dropdowns and we need to be able to associate the selected values to the attribute so we can filter
-             * on them.
-             *
-             * The KeyValue typing requires the union with undefined only for the unsetOption below.
-             */
-            const options: SelectOption<KeyValue<string, PrimitiveValue | undefined>>[] = values.map(value => ({
-              label: String(value),
-              value: {
-                // The value is the only thing Outputted from select component, so we need both the attribute and value
-                key: selectFilterModel.attribute,
-                value: value
-              }
+          map((options: TableControlOption[]) => {
+            const selectOptions: SelectOption<TableControlOption>[] = options.map(option => ({
+              label: option.label,
+              value: option
             }));
 
-            /*
-             * If there is an unsetOption, we want to add that as the first option as a way to set this select
-             * filter to undefined and remove it from our query.
-             */
-            if (selectFilterModel.unsetOption !== undefined) {
-              options.unshift({
-                label: selectFilterModel.unsetOption,
-                value: {
-                  key: selectFilterModel.attribute,
-                  value: undefined
-                }
-              });
-            }
-
             return {
-              placeholder: selectFilterModel.unsetOption,
-              options: options
+              placeholder: selectControlModel.placeholder,
+              options: selectOptions
             };
           })
         )
       )
+    );
+  }
+
+  protected fetchAndPopulateCheckboxControls(): void {
+    this.checkboxControls$ = forkJoinSafeEmpty(
+      this.model.getCheckboxControlOptions().map(checkboxControlModel =>
+        checkboxControlModel.getOptions().pipe(
+          first(),
+          map((options: TableCheckboxOptions) => ({
+            label: checkboxControlModel.checked ? options[0].label : options[1].label,
+            value: checkboxControlModel.checked,
+            options: options
+          }))
+        )
+      )
+    ).pipe(
+      tap((checkboxControls: CheckboxControl[]) => {
+        // Apply initial values for checkboxes
+        checkboxControls.forEach(checkboxControl => {
+          this.onCheckboxChange({
+            checkbox: checkboxControl,
+            option: checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
+          });
+        });
+      })
     );
   }
 
@@ -273,46 +270,60 @@ export class TableWidgetRendererComponent
     );
   }
 
-  public onFilterChange(item: ToggleItem<TableWidgetFilterModel>): void {
-    if (item.value && item.value.attribute && item.value.operator && item.value.value !== undefined) {
-      this.toggleFilterSubject.next([
-        {
-          field: item.value.attribute,
-          operator: item.value.operator,
-          value: item.value.value
-        }
-      ]);
-
-      return;
-    }
-
-    this.toggleFilterSubject.next([]);
-  }
-
-  public onCheckboxCheckedChange(checked: boolean): void {
-    const tableFilter = this.model.getCheckboxFilterOption()?.getTableFilter(checked);
-    this.checkboxFilterSubject.next(tableFilter ? [tableFilter] : []);
-  }
-
   public onSelectChange(changed: SelectChange): void {
-    const selectFilterModel = this.model
-      .getSelectFilterOptions()
-      .find(option => option.attribute === changed.value.key);
+    switch (changed.value.type) {
+      case TableControlOptionType.UnsetFilter:
+        this.selectFilterSubject.next(
+          this.selectFilterSubject.getValue().filter(existingFilter => existingFilter.field !== changed.value.metaValue)
+        );
+        break;
+      case TableControlOptionType.Filter:
+        this.selectFilterSubject.next(this.mergeFilters(changed.value.metaValue as TableFilter));
+        break;
+      case TableControlOptionType.Property:
+        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.value.metaValue as Dictionary<unknown>));
+        break;
+      default:
+        assertUnreachable(changed.value.type);
+    }
+  }
 
-    if (selectFilterModel === undefined) {
-      return; // This shouldn't happen
+  public onCheckboxChange(changed: CheckboxChange): void {
+    switch (changed.option.type) {
+      case TableControlOptionType.Property:
+        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.option.metaValue as Dictionary<unknown>));
+        break;
+      case TableControlOptionType.Filter:
+        this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue as TableFilter));
+        break;
+      case TableControlOptionType.UnsetFilter:
+        break; // Not supported - No use case yet
+      default:
+        assertUnreachable(changed.option.type);
     }
 
-    const existingSelectFiltersWithChangedRemoved = this.selectFilterSubject
-      .getValue()
-      .filter(f => f.field !== changed.value.key);
-    const changedSelectFilter = selectFilterModel.getTableFilter(changed.value.value);
+    // Update checkbox option label
 
-    const selectFilters = [...existingSelectFiltersWithChangedRemoved, changedSelectFilter].filter(
-      f => f.value !== undefined
-    ); // Remove filters that are unset
+    this.checkboxControls$ = forkJoinSafeEmpty(
+      this.model.getCheckboxControlOptions().map(checkboxControlModel =>
+        checkboxControlModel.getOptions().pipe(
+          first(),
+          map((options: TableCheckboxOptions) => {
+            options.forEach(option => {
+              if (option === changed.option) {
+                checkboxControlModel.checked = changed.option.value === true;
+              }
+            });
 
-    this.selectFilterSubject.next(selectFilters);
+            return {
+              label: checkboxControlModel.checked ? options[0].label : options[1].label,
+              value: checkboxControlModel.checked,
+              options: options
+            };
+          })
+        )
+      )
+    );
   }
 
   public onSearchChange(text: string): void {
@@ -353,13 +364,6 @@ export class TableWidgetRendererComponent
     }
   }
 
-  private maybeEmitInitialCheckboxFilterChange(): void {
-    const checkboxFilterModel = this.model.getCheckboxFilterOption();
-    if (checkboxFilterModel?.checked !== undefined) {
-      this.onCheckboxCheckedChange(checkboxFilterModel.checked);
-    }
-  }
-
   private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
     const matchedSelectionHandlers = this.api.model
       .getRowSelectionHandlers(selectedRow)
@@ -375,5 +379,20 @@ export class TableWidgetRendererComponent
      * to convert and store. We want to just pluck the relevant properties that are required to be saved.
      */
     return pick(column, ['id', 'visible']);
+  }
+
+  private mergeFilters(tableFilter: TableFilter): TableFilter[] {
+    const existingSelectFiltersWithChangedRemoved = this.selectFilterSubject
+      .getValue()
+      .filter(existingFilter => existingFilter.field !== tableFilter.field);
+
+    return [...existingSelectFiltersWithChangedRemoved, tableFilter].filter(f => f.value !== undefined); // Remove filters that are unset
+  }
+
+  private mergeQueryProperties(properties: Dictionary<unknown>): Dictionary<unknown> {
+    return {
+      ...this.queryPropertiesSubject.getValue(),
+      ...properties
+    };
   }
 }

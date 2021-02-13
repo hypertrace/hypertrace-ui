@@ -95,6 +95,12 @@ export class TableWidgetColumnModel {
   })
   public sort?: TableSortDirection;
 
+  @ModelProperty({
+    key: 'sortable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public sortable: boolean = true;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
@@ -119,6 +125,7 @@ export class TableWidgetColumnModel {
       editable: true,
       filterable: this.filterable,
       sort: this.sort,
+      sortable: this.sortable,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
     };
