@@ -6,7 +6,7 @@ import {
   forkJoinSafeEmpty,
   TimeDuration
 } from '@hypertrace/common';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -16,7 +16,7 @@ import {
   NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
