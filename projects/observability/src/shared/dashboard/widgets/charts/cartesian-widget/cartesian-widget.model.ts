@@ -1,5 +1,12 @@
-import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
+import {
+  ColorPaletteKey,
+  ColorService,
+  FeatureState,
+  FeatureStateResolver,
+  forkJoinSafeEmpty,
+  TimeDuration
+} from '@hypertrace/common';
+import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -9,9 +16,9 @@ import {
   NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { MODEL_API, ModelInject } from '@hypertrace/hyperdash-angular';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
 import { MetricTimeseriesBandInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -134,6 +141,9 @@ export class CartesianWidgetModel<TInterval> {
 
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
+
+  @ModelInject(FeatureStateResolver)
+  private readonly featureResolver!: FeatureStateResolver;
 
   public getDataFetcher(): Observable<CartesianDataFetcher<TInterval>> {
     if (this.seriesFromData) {
@@ -258,7 +268,17 @@ export class CartesianWidgetModel<TInterval> {
     bands: DecoratedBandDataFetcher<TInterval>[],
     interval: TimeDuration
   ): Observable<MetricBand<TInterval>[]> {
-    return forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
+    return this.featureResolver
+      .getFeatureState('ui.cartesian-metric-health') // CartesianMetricHealth
+      .pipe(
+        switchMap(featureState => {
+          if (featureState === FeatureState.Disabled) {
+            return of([]);
+          }
+
+          return forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
+        })
+      );
   }
 
   private getDecoratedSeriesDataFetchers(): Observable<DecoratedSeriesDataFetcher<TInterval>[]> {
