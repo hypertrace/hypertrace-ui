@@ -15,6 +15,7 @@ import { ButtonSize } from '../button/button';
         [size]="this.size"
         icon="${IconType.Share}"
         [text]="this.shareableUrl$ | async"
+        tooltip="Copy shareable url link to clipboard"
       ></ht-copy-to-clipboard>
     </div>
   `
