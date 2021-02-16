@@ -10,7 +10,7 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
@@ -47,6 +47,12 @@ export class CartesianWidgetModel<TInterval> {
     type: BAND_ARRAY_TYPE.type
   })
   public bands: BandModel<TInterval>[] = [];
+
+  @ModelProperty({
+    key: 'disable-bands',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public disableBands: boolean = false;
 
   @ModelProperty({
     key: 'color-palette',
@@ -258,7 +264,7 @@ export class CartesianWidgetModel<TInterval> {
     bands: DecoratedBandDataFetcher<TInterval>[],
     interval: TimeDuration
   ): Observable<MetricBand<TInterval>[]> {
-    return forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
+    return this.disableBands ? of([]) : forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
   }
 
   private getDecoratedSeriesDataFetchers(): Observable<DecoratedSeriesDataFetcher<TInterval>[]> {
