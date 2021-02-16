@@ -132,6 +132,7 @@ export {
 
 // Datasources
 export * from './shared/dashboard/data/graphql/trace/trace-value-data-source.model';
+export * from './shared/dashboard/data/graphql/entity/attribute/entities-attribute-data-source.model';
 
 // Topology
 export * from './shared/components/topology/topology';

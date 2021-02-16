@@ -12,6 +12,7 @@ export const enum Color {
   Gray5 = '#657277',
   Gray7 = '#272c2e',
   Gray9 = '#080909',
+  Green3 = '#95EABE',
   Orange3 = '#FDC088',
   Orange5 = '#fb8b24',
   Purple2 = '#f2d0f5',
@@ -23,5 +24,6 @@ export const enum Color {
   Red3 = '#FEA395',
   Red5 = '#FD5138',
   Red6 = '#F72202',
-  Brown1 = '#9e4c41'
+  Brown1 = '#9e4c41',
+  White = '#FFFFFF'
 }

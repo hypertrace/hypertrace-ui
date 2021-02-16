@@ -18,10 +18,9 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
-import { TableWidgetCheckboxFilterModel } from './table-widget-checkbox-filter-model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { TableWidgetFilterModel } from './table-widget-filter-model';
-import { TableWidgetSelectFilterModel } from './table-widget-select-filter.model';
+import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
+import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
@@ -50,44 +49,32 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public searchAttribute?: string;
 
   @ModelProperty({
-    key: 'filterOptions',
-    displayName: 'Filter Toggle Options',
+    key: 'select-control-options',
+    displayName: 'Select Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetFilterModel
+        defaultModelClass: TableWidgetControlSelectOptionModel
       }
     } as ArrayPropertyTypeInstance
   })
-  public filterOptions: TableWidgetFilterModel[] = [];
+  public selectOptions: TableWidgetControlSelectOptionModel[] = [];
 
   @ModelProperty({
-    key: 'selectFilterOptions',
-    displayName: 'Filter Select Options',
+    key: 'checkbox-control-options',
+    displayName: 'Checkbox Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetSelectFilterModel
+        defaultModelClass: TableWidgetControlCheckboxOptionModel
       }
     } as ArrayPropertyTypeInstance
   })
-  public selectFilterOptions: TableWidgetSelectFilterModel[] = [];
-
-  @ModelProperty({
-    key: 'checkbox-filter-option',
-    displayName: 'Checkbox Filter Option',
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    type: {
-      key: ModelPropertyType.TYPE,
-      defaultModelClass: TableWidgetCheckboxFilterModel
-    } as ModelModelPropertyTypeInstance,
-    required: false
-  })
-  public checkboxFilterOption?: TableWidgetCheckboxFilterModel;
+  public checkboxOptions: TableWidgetControlCheckboxOptionModel[] = [];
 
   @ModelProperty({
     key: 'mode',
@@ -148,20 +135,20 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return [];
   }
 
-  public getFilterOptions(): TableWidgetFilterModel[] {
-    return this.filterOptions;
-  }
-
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;
   }
 
-  public getCheckboxFilterOption(): TableWidgetCheckboxFilterModel | undefined {
-    return this.checkboxFilterOption;
+  public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {
+    return this.selectOptions;
   }
 
-  public getSelectFilterOptions(): TableWidgetSelectFilterModel[] {
-    return this.selectFilterOptions;
+  public getCheckboxControlOptions(): TableWidgetControlCheckboxOptionModel[] {
+    return this.checkboxOptions;
+  }
+
+  public setCheckboxControlOptions(checkboxOptions: TableWidgetControlCheckboxOptionModel[]): void {
+    this.checkboxOptions = checkboxOptions;
   }
 
   public isPageable(): boolean {

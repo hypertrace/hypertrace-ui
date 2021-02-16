@@ -3,10 +3,13 @@
 .multi-select {
   display: flex;
   align-items: center;
-  border: 1px solid $color-border;
-  border-radius: 6px;
   height: 100%;
   width: 100%;
+
+  &.border {
+    border: 1px solid $color-border;
+    border-radius: 6px;
+  }
 
   .multi-select-container {
     width: 100%;
@@ -16,6 +19,12 @@
     opacity: 0.4;
   }
 
+  &.open .trigger-content.icon-mode {
+    color: $blue-5;
+    background: $blue-1;
+    border-color: $blue-3;
+  }
+
   .trigger-content {
     display: flex;
     align-items: center;
@@ -23,30 +32,33 @@
     cursor: pointer;
     height: 34px;
 
-    &.justify-left {
-      justify-content: flex-start;
+    &.icon-mode {
+      border: 1px solid transparent;
+      border-radius: 64px;
+      padding: 0 4px;
+
+      &:hover {
+        color: $blue-5;
+        background: $blue-1;
+        border-color: $blue-3;
+      }
     }
 
-    &.justify-right {
-      justify-content: flex-end;
-    }
-
-    &.justify-center {
-      justify-content: center;
-    }
-
-    .trigger-prefix-icon {
-      padding-right: 8px;
-    }
-
-    .trigger-label {
-      @include body-2-medium();
+    .trigger-label-container {
+      display: flex;
+      width: 100%;
+      align-items: center;
       padding-left: 8px;
-    }
 
-    .trigger-icon {
-      padding: 0 8px;
-      margin-left: auto;
+      .trigger-label {
+        @include body-2-medium();
+        padding-left: 8px;
+      }
+
+      .trigger-icon {
+        padding: 0 8px;
+        margin-left: auto;
+      }
     }
   }
 }
