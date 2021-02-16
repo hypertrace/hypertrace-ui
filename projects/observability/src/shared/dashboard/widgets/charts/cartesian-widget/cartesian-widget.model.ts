@@ -52,7 +52,7 @@ export class CartesianWidgetModel<TInterval> {
     key: 'show-bands',
     type: BOOLEAN_PROPERTY.type
   })
-  public showBands: boolean = true;
+  public showBands: boolean = false;
 
   @ModelProperty({
     key: 'color-palette',
