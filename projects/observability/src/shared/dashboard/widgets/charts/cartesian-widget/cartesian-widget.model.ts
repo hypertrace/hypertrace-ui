@@ -49,10 +49,10 @@ export class CartesianWidgetModel<TInterval> {
   public bands: BandModel<TInterval>[] = [];
 
   @ModelProperty({
-    key: 'disable-bands',
+    key: 'show-bands',
     type: BOOLEAN_PROPERTY.type
   })
-  public disableBands: boolean = false;
+  public showBands: boolean = true;
 
   @ModelProperty({
     key: 'color-palette',
@@ -264,7 +264,7 @@ export class CartesianWidgetModel<TInterval> {
     bands: DecoratedBandDataFetcher<TInterval>[],
     interval: TimeDuration
   ): Observable<MetricBand<TInterval>[]> {
-    return this.disableBands ? of([]) : forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
+    return this.showBands ? forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval))) : of([]);
   }
 
   private getDecoratedSeriesDataFetchers(): Observable<DecoratedSeriesDataFetcher<TInterval>[]> {
