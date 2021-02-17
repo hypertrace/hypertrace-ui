@@ -108,7 +108,6 @@ export class NavigableDashboardComponent implements OnChanges {
     for (const key of Object.keys(variables)) {
       dashboard.setVariable(key, variables[key]);
     }
-    dashboard.refresh();
   }
 
   public applyFiltersToDashboard(dashboard: Dashboard, explicitFilters: Filter[]): void {
