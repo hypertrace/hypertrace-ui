@@ -281,7 +281,7 @@ export class D3Topology implements Topology {
     topologyData.nodes.forEach(node => nodeRenderer.drawNode(groupElement, node));
     topologyData.edges.forEach(edge => edgeRenderer.drawEdge(groupElement, edge));
     topologyData.nodes.forEach(node => this.select(nodeRenderer.getElementForNode(node)!).raise());
-    this.zoom.updateBrushOverlay(topologyData.nodes);
+    this.zoom.updateBrushOverlayWithData(topologyData.nodes);
   }
 
   private updateMeasuredDimensions(): void {
