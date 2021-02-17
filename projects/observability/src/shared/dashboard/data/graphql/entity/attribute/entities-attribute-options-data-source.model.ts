@@ -3,7 +3,7 @@ import {
   TableControlOption,
   TableControlOptionType,
   TableFilter,
-  TableUnsetControlOption
+  TableUnsetFilterControlOption
 } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
   })
   public unsetLabel: string = 'All';
 
-  private buildUnsetOption(attribute: string): TableUnsetControlOption {
+  private buildUnsetOption(attribute: string): TableUnsetFilterControlOption {
     return {
       type: TableControlOptionType.UnsetFilter,
       label: this.unsetLabel,

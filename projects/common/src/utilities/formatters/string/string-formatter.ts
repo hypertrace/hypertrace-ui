@@ -13,6 +13,10 @@ export const titleCaseFromSnakeCase = (snakeCaseString: string): string =>
     .join(' ');
 
 export const displayString = (provided?: unknown): string => {
+  if (provided === null) {
+    return '-';
+  }
+
   switch (typeof provided) {
     case 'object':
       return Array.isArray(provided)

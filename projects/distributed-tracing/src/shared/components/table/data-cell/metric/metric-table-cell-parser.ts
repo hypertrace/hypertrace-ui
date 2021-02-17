@@ -5,12 +5,14 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
 @TableCellParser({
   type: TracingTableCellType.Metric
 })
-export class MetricTableCellParser extends TableCellParserBase<number, number, number> {
-  public parseValue(cellData: CellData): number {
-    return Math.round(this.extractValue(cellData)!);
+export class MetricTableCellParser extends TableCellParserBase<number, number | null, number | null> {
+  public parseValue(cellData: CellData): number | null {
+    const extractedValue = this.extractValue(cellData);
+
+    return extractedValue === null ? extractedValue : Math.round(this.extractValue(cellData)!);
   }
 
-  public parseFilterValue(cellData: number): number {
+  public parseFilterValue(cellData: number): number | null {
     return this.parseValue(cellData);
   }
 
@@ -18,7 +20,8 @@ export class MetricTableCellParser extends TableCellParserBase<number, number, n
     return this.extractUnits(cellData)!;
   }
 
-  private extractValue(cellData: CellData): number | undefined {
+  // tslint:disable-next-line:no-null-undefined-union
+  private extractValue(cellData: CellData): number | undefined | null {
     switch (typeof cellData) {
       case 'number':
         return cellData;
