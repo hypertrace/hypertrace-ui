@@ -211,6 +211,22 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
               'min-upper-limit': 25
             },
             'max-series-data-points': 150,
+            bands: [
+              {
+                type: 'band',
+                name: 'P99 Baseline',
+                'upper-bound-name': 'P99 Upper Bound',
+                'lower-bound-name': 'P99 Lower Bound',
+                data: {
+                  type: 'entity-metric-timeseries-data-source',
+                  metric: {
+                    type: 'metric-timeseries-band',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.P99
+                  }
+                }
+              }
+            ],
             series: [
               {
                 type: 'series',
@@ -288,6 +304,22 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
               'min-upper-limit': 25
             },
             'max-series-data-points': 150,
+            bands: [
+              {
+                type: 'band',
+                name: 'Errors Baseline',
+                'upper-bound-name': 'Errors Upper Bound',
+                'lower-bound-name': 'Errors Lower Bound',
+                data: {
+                  type: 'entity-metric-timeseries-data-source',
+                  metric: {
+                    type: 'metric-timeseries-band',
+                    metric: 'errorCount',
+                    aggregation: MetricAggregationType.Sum
+                  }
+                }
+              }
+            ],
             series: [
               {
                 type: 'series',
@@ -366,6 +398,22 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
               'min-upper-limit': 25
             },
             'max-series-data-points': 150,
+            bands: [
+              {
+                type: 'band',
+                name: 'Calls Baseline',
+                'upper-bound-name': 'Calls Upper Bound',
+                'lower-bound-name': 'Calls Lower Bound',
+                data: {
+                  type: 'entity-metric-timeseries-data-source',
+                  metric: {
+                    type: 'metric-timeseries-band',
+                    metric: 'numCalls',
+                    aggregation: MetricAggregationType.Sum
+                  }
+                }
+              }
+            ],
             series: [
               {
                 type: 'series',
