@@ -27,10 +27,10 @@ describe('Select Component', () => {
   const selectionOptions = [
     { label: 'first', value: 'first-value' },
     { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value' }
+    { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!' }
   ];
 
-  test('should display intial selection', fakeAsync(() => {
+  test('should display initial selection', fakeAsync(() => {
     spectator = hostFactory(
       `
     <ht-select [selected]="selected">
@@ -127,7 +127,7 @@ describe('Select Component', () => {
     spectator = hostFactory(
       `
     <ht-select [selected]="selected" (selectedChange)="onChange($event)">
-      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [selectedLabel]="option.selectedLabel">
       </ht-select-option>
     </ht-select>`,
       {
@@ -140,6 +140,7 @@ describe('Select Component', () => {
     );
 
     spectator.tick();
+    expect(spectator.query('.trigger-content')).toHaveText(selectionOptions[1].label);
     spectator.click('.trigger-content');
 
     const optionElements = spectator.queryAll('.select-option', { root: true });
@@ -147,7 +148,7 @@ describe('Select Component', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(selectionOptions[2].value);
-    expect(spectator.element).toHaveText(selectionOptions[2].label);
+    expect(spectator.query('.trigger-content')).toHaveText(selectionOptions[2].selectedLabel!);
     flush();
   }));
 
