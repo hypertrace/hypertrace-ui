@@ -16,6 +16,9 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   public label!: string;
 
   @Input()
+  public selectedLabel?: string;
+
+  @Input()
   public style: SelectOptionStyle = SelectOptionStyle.Default;
 
   @Input()

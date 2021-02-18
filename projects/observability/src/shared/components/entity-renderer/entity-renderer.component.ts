@@ -11,6 +11,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
+      *ngIf="this.name"
       class="ht-entity-renderer"
       [ngClass]="{ navigable: this.navigable }"
       [htTooltip]="this.name"
@@ -24,6 +25,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
       ></ht-icon>
       <div class="name" *ngIf="this.name" data-sensitive-pii>{{ this.name }}</div>
     </div>
+    <div *ngIf="!this.name">-</div>
   `
 })
 export class EntityRendererComponent implements OnChanges {
