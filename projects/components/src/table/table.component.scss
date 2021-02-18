@@ -49,9 +49,9 @@
     border-top: 1px solid $blue-2;
 
     &.hovered-row {
-      background: $blue-2;
-      border-bottom: 1px solid $blue-5;
-      border-top: 1px solid $blue-5;
+      background: $gray-1;
+      border-bottom: 1px solid transparent;
+      border-top: 1px solid transparent;
     }
   }
 
