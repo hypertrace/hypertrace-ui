@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
@@ -37,10 +37,13 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
 })
 export class NavigableDashboardComponent implements OnChanges {
   @Input()
-  public readonly defaultJson?: ModelJson;
+  public navLocation?: string | null;
 
   @Input()
-  public navLocation?: string | null;
+  public defaultJson?: ModelJson;
+
+  @Input()
+  public variables?: Dictionary<unknown>;
 
   @Input()
   public filterConfig?: NavigableDashboardFilterConfig;
@@ -89,6 +92,7 @@ export class NavigableDashboardComponent implements OnChanges {
 
   public onDashboardReady(dashboard: Dashboard): void {
     this.dashboard = dashboard;
+    this.applyVariablesToDashboard(this.dashboard, this.variables);
     this.applyFiltersToDashboard(dashboard, this.explicitFilters);
     this.dashboardReady.emit(dashboard);
   }
@@ -97,6 +101,12 @@ export class NavigableDashboardComponent implements OnChanges {
     this.explicitFilters = explicitFilters;
     if (this.dashboard) {
       this.applyFiltersToDashboard(this.dashboard, explicitFilters);
+    }
+  }
+
+  public applyVariablesToDashboard(dashboard: Dashboard, variables: Dictionary<unknown> = {}): void {
+    for (const key of Object.keys(variables)) {
+      dashboard.setVariable(key, variables[key]);
     }
   }
 

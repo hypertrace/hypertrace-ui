@@ -3,7 +3,7 @@ import { ReplayObservable } from '@hypertrace/common';
 import { NavigableDashboardFilterConfig } from '@hypertrace/distributed-tracing';
 import { map } from 'rxjs/operators';
 import { ApiDetailService } from '../api-detail.service';
-import { apiMetricsDashboard } from './api-metrics-dashboard';
+import { apiMetricsDashboard } from './api-metrics.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
