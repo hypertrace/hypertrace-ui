@@ -13,6 +13,8 @@ import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
+import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
+import { TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableControlOption } from './table-controls-api';
 
@@ -55,6 +57,8 @@ import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableCont
         <ht-multi-select
           class="filter-multi-select"
           *ngIf="this.checkboxControlsEnabled"
+          justify="${MultiSelectJustify.Center}"
+          triggerLabelDisplayMode="${TriggerLabelDisplayMode.Icon}"
           icon="${IconType.Settings}"
           iconSize="${IconSize.Large}"
           [selected]="this.checkboxSelections"

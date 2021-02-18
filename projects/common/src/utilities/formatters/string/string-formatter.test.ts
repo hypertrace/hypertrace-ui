@@ -15,7 +15,7 @@ describe('String formatter', () => {
 
   test('can convert to display string', () => {
     // tslint:disable-next-line: no-null-keyword
-    expect(displayString(null)).toBe('Unknown');
+    expect(displayString(null)).toBe('-');
     expect(displayString(undefined)).toBe('Unknown');
     expect(displayString('')).toBe('Unknown');
     expect(displayString('value')).toBe('value');

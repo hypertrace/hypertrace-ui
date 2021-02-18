@@ -33,11 +33,11 @@ export const enum TableControlOptionType {
 export interface TableControlOption<TMetaValue = unknown, TValue = unknown> {
   type: TableControlOptionType;
   label: string;
-  metaValue: TMetaValue; // Used in a query - type based on TableWidgetControlOptionType
+  metaValue: TMetaValue; // Used in a query - type based on TableControlOptionType
   value?: TValue; // If a control needs to carry a value, use this (example: checkbox boolean)
 }
 
-export interface TableUnsetControlOption extends TableControlOption<string, undefined> {
+export interface TableUnsetFilterControlOption extends TableControlOption<string, undefined> {
   type: TableControlOptionType.UnsetFilter;
   metaValue: string;
 }
