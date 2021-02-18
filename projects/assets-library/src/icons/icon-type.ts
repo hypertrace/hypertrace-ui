@@ -87,6 +87,7 @@ export const enum IconType {
   SidebarCollapse = 'svg:sidebar-collapse',
   SidebarExpand = 'svg:sidebar-expand',
   Slack = 'svg:slack',
+  Sort = 'svg:sort',
   SpanId = 'bookmark_border',
   Spinner = 'svg:spinner',
   StatusCode = 'svg:status-code',
