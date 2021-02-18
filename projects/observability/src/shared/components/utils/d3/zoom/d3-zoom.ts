@@ -12,10 +12,11 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
   protected static readonly DATA_BRUSH_CONTEXT_CLASS: string = 'brush-context';
   protected static readonly DATA_BRUSH_OVERLAY_CLASS: string = 'overlay';
   protected static readonly DATA_BRUSH_SELECTION_CLASS: string = 'selection';
-
   protected static readonly DATA_BRUSH_OVERLAY_WIDTH: number = 200;
   protected static readonly DATA_BRUSH_OVERLAY_HEIGHT: number = 200;
-  protected config?: D3ZoomConfiguration<TContainer, TTarget>;
+
+  protected config?: InternalD3ZoomConfiguration<TContainer, TTarget>;
+
   protected readonly zoomBehavior: ZoomBehavior<TContainer, unknown>;
   protected readonly zoomChangeSubject: BehaviorSubject<number> = new BehaviorSubject(1);
   protected readonly brushBehaviour: BrushBehavior<unknown>;
@@ -46,12 +47,16 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
   }
 
   public attachZoom(configuration: D3ZoomConfiguration<TContainer, TTarget>): this {
-    this.config = configuration;
+    this.config = { ...configuration };
     this.zoomBehavior.scaleExtent([this.minScale, this.maxScale]);
     this.config.container
       .call(this.zoomBehavior)
       // tslint:disable-next-line: no-null-keyword
       .on('dblclick.zoom', null); // Remove default double click handler
+
+    if (this.config.showBrush) {
+      this.showBrushOverlay();
+    }
 
     return this;
   }
@@ -97,7 +102,11 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     );
   }
 
-  public updateBrushOverlay(overlayZoomScale: number = 1): void {
+  protected showBrushOverlay(overlayZoomScale: number = 1): void {
+    if (!this.config?.showBrush) {
+      return;
+    }
+
     const containerSelection = this.getContainerSelectionOrThrow();
     containerSelection.select(`.${D3Zoom.DATA_BRUSH_CONTEXT_CLASS}`).remove();
     const containerdBox = throwIfNil(containerSelection.node()).getBoundingClientRect();
@@ -116,17 +125,17 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       [D3Zoom.DATA_BRUSH_OVERLAY_WIDTH / overlayZoomScale, D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT / overlayZoomScale]
     ]);
 
-    this.config!.brushOverlay = throwIfNil(this.config)
+    this.config.brushOverlay = throwIfNil(this.config)
       .target.clone(true)
       .classed(D3Zoom.DATA_BRUSH_CONTEXT_CLASS, true)
       .attr('width', boundingBox.width)
       .attr('height', boundingBox.height)
       .attr('transform', `translate(${boundingBox.left - 20}, ${boundingBox.top - 40}) scale(${overlayZoomScale})`)
-      .insert('g', '.entity-edge')
+      .insert('g', ':first-child')
       // tslint:disable-next-line: no-any
       .call(this.brushBehaviour as any);
 
-    this.styleBrushSelection(this.config!.brushOverlay, overlayZoomScale);
+    this.styleBrushSelection(this.config.brushOverlay, overlayZoomScale);
   }
 
   protected styleBrushSelection(
@@ -258,13 +267,16 @@ interface ZoomHandlerEvent extends D3ZoomEvent<Element, unknown> {
 export interface D3ZoomConfiguration<TContainer extends Element, TTarget extends Element> {
   container: Selection<TContainer, unknown, null, undefined>;
   target: Selection<TTarget, unknown, null, undefined>;
-  brushOverlay?: Selection<SVGGElement, unknown, null, undefined>;
   scroll?: D3EventTriggerConfig;
   pan?: D3EventTriggerConfig;
+  showBrush?: boolean;
   minScale?: number;
   maxScale?: number;
 }
-
+interface InternalD3ZoomConfiguration<TContainer extends Element, TTarget extends Element>
+  extends D3ZoomConfiguration<TContainer, TTarget> {
+  brushOverlay?: Selection<SVGGElement, unknown, null, undefined>;
+}
 interface D3EventTriggerConfig {
   requireModifiers?: ZoomEventKeyModifier[];
 }

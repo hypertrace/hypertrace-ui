@@ -181,7 +181,8 @@ export class D3Topology implements Topology {
       container: svg,
       target: data,
       scroll: this.config.zoomable ? zoomScrollConfig : undefined,
-      pan: this.config.zoomable ? zoomPanConfig : undefined
+      pan: this.config.zoomable ? zoomPanConfig : undefined,
+      showBrush: true
     });
 
     this.onDestroy(() => {

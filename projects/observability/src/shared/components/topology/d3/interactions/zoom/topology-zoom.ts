@@ -1,7 +1,7 @@
-import { D3ZoomConfiguration } from './../../../../utils/d3/zoom/d3-zoom';
 import { throwIfNil, unionOfClientRects } from '@hypertrace/common';
 import { D3Zoom } from '../../../../utils/d3/zoom/d3-zoom';
 import { RenderableTopologyNode, RenderableTopologyNodeRenderedData } from '../../../topology';
+import { D3ZoomConfiguration } from './../../../../utils/d3/zoom/d3-zoom';
 
 export class TopologyZoom<TContainer extends Element = Element, TTarget extends Element = Element> extends D3Zoom<
   TContainer,
@@ -60,7 +60,7 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
 
     const overlayZoomScale = this.determineZoomScale(nodes, boundingBox);
 
-    this.updateBrushOverlay(overlayZoomScale);
+    this.showBrushOverlay(overlayZoomScale);
   }
 }
 
