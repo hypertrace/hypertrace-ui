@@ -200,6 +200,22 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
             'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
+            bands: [
+              {
+                type: 'band',
+                name: 'Average Baseline',
+                'upper-bound-name': 'Average Upper Bound',
+                'lower-bound-name': 'Average Lower Bound',
+                data: {
+                  type: 'entity-metric-timeseries-data-source',
+                  metric: {
+                    type: 'metric-timeseries-band',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.Average
+                  }
+                }
+              }
+            ],
             series: [
               {
                 type: 'series',
@@ -321,6 +337,22 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                 'legend-position': LegendPosition.None,
                 'show-summary': true,
                 title: 'Error Rate',
+                bands: [
+                  {
+                    type: 'band',
+                    name: 'Baseline',
+                    'upper-bound-name': 'Upper Bound',
+                    'lower-bound-name': 'Lower Bound',
+                    data: {
+                      type: 'entity-metric-timeseries-data-source',
+                      metric: {
+                        type: 'metric-timeseries-band',
+                        metric: 'errorCount',
+                        aggregation: MetricAggregationType.AvgrateSecond
+                      }
+                    }
+                  }
+                ],
                 series: [
                   {
                     type: 'series',

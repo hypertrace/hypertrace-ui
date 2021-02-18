@@ -134,6 +134,16 @@
     align-items: center;
     justify-content: space-between;
 
+    .select-option-info {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      & > * {
+        margin-right: 8px;
+      }
+    }
+
     .label {
       padding-right: 8px;
     }

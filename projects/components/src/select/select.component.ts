@@ -54,7 +54,8 @@ import { SelectSize } from './select-size';
             >
               <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
               </ht-icon>
-              <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
+              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
+              </ht-label>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
             </div>
             <div
@@ -97,8 +98,17 @@ import { SelectSize } from './select-size';
               class="select-option"
               [ngClass]="this.size"
             >
-              <ht-icon *ngIf="item.icon" class="icon" [icon]="item.icon" size="${IconSize.Small}"> </ht-icon>
-              <span class="label">{{ item.label }}</span>
+              <div class="select-option-info">
+                <ht-icon
+                  *ngIf="item.icon"
+                  class="icon"
+                  [icon]="item.icon"
+                  size="${IconSize.Small}"
+                  [color]="item.iconColor"
+                >
+                </ht-icon>
+                <span class="label">{{ item.label }}</span>
+              </div>
               <ht-icon
                 class="status-icon"
                 *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"

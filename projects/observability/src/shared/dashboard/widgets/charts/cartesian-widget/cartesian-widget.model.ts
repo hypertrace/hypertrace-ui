@@ -10,7 +10,7 @@ import {
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
@@ -47,6 +47,12 @@ export class CartesianWidgetModel<TInterval> {
     type: BAND_ARRAY_TYPE.type
   })
   public bands: BandModel<TInterval>[] = [];
+
+  @ModelProperty({
+    key: 'show-bands',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public showBands: boolean = false;
 
   @ModelProperty({
     key: 'color-palette',
@@ -171,7 +177,7 @@ export class CartesianWidgetModel<TInterval> {
             this.mapToBaseline(bands[index].bandModel, b)
           )
         ],
-        bands: result.bands.map((b: MetricBand<TInterval>) => this.mapToBand(b))
+        bands: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBand(bands[index].bandModel, b))
       }))
     );
   }
@@ -202,18 +208,18 @@ export class CartesianWidgetModel<TInterval> {
     return {
       data: metricBand.intervals,
       units: metricBand.units,
-      color: BandModel.BASELINE_COLOR,
-      name: BandModel.BASELINE_NAME,
+      color: model.color,
+      name: model.name,
       type: CartesianSeriesVisualizationType.DashedLine,
       hide: model.hide
     };
   }
 
-  private mapToBand(metricSeries: MetricSeries<TInterval>): Band<TInterval> {
+  private mapToBand(model: BandModel<TInterval>, metricSeries: MetricSeries<TInterval>): Band<TInterval> {
     return {
       name: '',
-      color: BandModel.BAND_COLOR,
-      opacity: BandModel.DEFAULT_OPACITY,
+      color: model.bandColor,
+      opacity: model.opacity,
       upper: {
         data: metricSeries.intervals
           .map((interval: unknown) => interval as MetricTimeseriesBandInterval)
@@ -226,8 +232,8 @@ export class CartesianWidgetModel<TInterval> {
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.UPPER_BOUND_NAME
+        color: model.bandColor,
+        name: model.upperBoundName
       },
       lower: {
         data: metricSeries.intervals
@@ -241,8 +247,8 @@ export class CartesianWidgetModel<TInterval> {
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
-        color: BandModel.BAND_COLOR,
-        name: BandModel.LOWER_BOUND_NAME
+        color: model.bandColor,
+        name: model.lowerBoundName
       }
     };
   }
@@ -258,7 +264,7 @@ export class CartesianWidgetModel<TInterval> {
     bands: DecoratedBandDataFetcher<TInterval>[],
     interval: TimeDuration
   ): Observable<MetricBand<TInterval>[]> {
-    return forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval)));
+    return this.showBands ? forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval))) : of([]);
   }
 
   private getDecoratedSeriesDataFetchers(): Observable<DecoratedSeriesDataFetcher<TInterval>[]> {
