@@ -12,7 +12,7 @@ import { ContainerLayout } from './layout/container-layout';
 @Model({
   type: 'container-widget'
 })
-export class ContainerWidgetModel {
+export class ContainerWidgetModel<TChild = object> {
   @ModelProperty({
     type: STRING_PROPERTY.type,
     key: 'title',
@@ -24,7 +24,7 @@ export class ContainerWidgetModel {
     type: ARRAY_PROPERTY.type,
     key: 'children'
   })
-  public children: object[] = [];
+  public children: TChild[] = [];
 
   @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion

@@ -9,6 +9,10 @@ export class DisplayNumberPipe implements PipeTransform {
   private static readonly FLOAT_FORMATTER: NumericFormatter = floatFormatter;
 
   public transform(value: unknown, style: FormatterStyle = FormatterStyle.Auto): string {
+    if (value === null) {
+      return '-';
+    }
+
     const valueAsNumber = Number(value);
     if (isNaN(valueAsNumber)) {
       return '-';

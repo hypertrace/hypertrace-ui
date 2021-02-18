@@ -5,12 +5,14 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
 @TableCellParser({
   type: TracingTableCellType.Metric
 })
-export class MetricTableCellParser extends TableCellParserBase<number, number, number> {
-  public parseValue(cellData: CellData): number {
-    return Math.round(this.extractValue(cellData)!);
+export class MetricTableCellParser extends TableCellParserBase<number, CellValue, CellValue> {
+  public parseValue(cellData: CellData): CellValue {
+    const extractedValue = this.extractValue(cellData);
+
+    return extractedValue === undefined ? extractedValue : Math.round(extractedValue);
   }
 
-  public parseFilterValue(cellData: number): number {
+  public parseFilterValue(cellData: number): CellValue {
     return this.parseValue(cellData);
   }
 
@@ -18,12 +20,12 @@ export class MetricTableCellParser extends TableCellParserBase<number, number, n
     return this.extractUnits(cellData)!;
   }
 
-  private extractValue(cellData: CellData): number | undefined {
+  private extractValue(cellData: CellData): CellValue {
     switch (typeof cellData) {
       case 'number':
         return cellData;
       case 'object':
-        return cellData.value;
+        return cellData === null ? undefined : cellData.value;
       default:
         return undefined;
     }
@@ -34,11 +36,12 @@ export class MetricTableCellParser extends TableCellParserBase<number, number, n
       case 'number':
         return undefined;
       case 'object':
-        return cellData.units;
+        return cellData === null ? undefined : cellData.units;
       default:
         return undefined;
     }
   }
 }
 
-type CellData = number | Partial<MetricAggregation>;
+type CellData = number | null | Partial<MetricAggregation>;
+type CellValue = number | undefined;

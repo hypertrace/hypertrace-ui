@@ -5,7 +5,7 @@ import { DateFormatOptions, DateFormatter } from './date-formatter';
   name: 'htDisplayDate'
 })
 export class DisplayDatePipe implements PipeTransform {
-  public transform(value?: Date | number, options: DateFormatOptions = {}): string {
-    return new DateFormatter(options).format(value);
+  public transform(value?: Date | number | null, options: DateFormatOptions = {}): string {
+    return value !== null ? new DateFormatter(options).format(value) : '-';
   }
 }
