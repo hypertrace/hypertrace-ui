@@ -54,7 +54,8 @@ import { SelectSize } from './select-size';
             >
               <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
               </ht-icon>
-              <ht-label class="trigger-label" [label]="selected?.label || this.placeholder"> </ht-label>
+              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
+              </ht-label>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
             </div>
             <div
