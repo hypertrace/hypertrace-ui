@@ -20,7 +20,6 @@ export class MetricTableCellParser extends TableCellParserBase<number, CellValue
     return this.extractUnits(cellData)!;
   }
 
-  // tslint:disable-next-line:no-null-undefined-union
   private extractValue(cellData: CellData): CellValue {
     switch (typeof cellData) {
       case 'number':
