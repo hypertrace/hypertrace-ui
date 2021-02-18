@@ -66,6 +66,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Search, url: `${iconsRootPath}/search.svg` },
         { key: IconType.SidebarCollapse, url: `${iconsRootPath}/sidebar-collapse.svg` },
         { key: IconType.SidebarExpand, url: `${iconsRootPath}/sidebar-expand.svg` },
+        { key: IconType.Sort, url: `${iconsRootPath}/sort.svg` },
         { key: IconType.Slack, url: `${iconsRootPath}/slack.svg` },
         { key: IconType.Spinner, url: `${iconsRootPath}/spinner.svg` },
         { key: IconType.StatusCode, url: `${iconsRootPath}/status-code.svg` },
