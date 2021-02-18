@@ -14,15 +14,8 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
       .map(renderedData => renderedData.getBoudingBox());
 
     const requestedRect = unionOfClientRects(...nodeClientRects);
-    const availableRect = throwIfNil(this.config && this.config.container.node()).getBoundingClientRect();
-    // Add a bit of padding to requested width/height for padding
-    const requestedWidthScale = availableRect.width / (requestedRect.width + 24);
-    const requestedHeightScale = availableRect.height / (requestedRect.height + 24);
-    // Zoomed in more than this is fine, but this is min to fit everything
-    const minOverallScale = Math.min(requestedWidthScale, requestedHeightScale);
-    // Never zoom beyond 100% with zoom to fit
-    this.setZoomScale(Math.min(1, Math.max(this.minScale, minOverallScale)));
-    this.translateToRect(requestedRect);
+
+    this.zoomToRect(requestedRect);
   }
 
   public panToTopLeft(nodes: RenderableTopologyNode[]): void {

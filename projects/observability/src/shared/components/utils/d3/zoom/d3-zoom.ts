@@ -36,6 +36,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
 
   public constructor() {
     this.zoomBehavior = zoom<TContainer, unknown>()
+      .duration(750)
       .filter(() => this.checkValidZoomEvent(this.getCurrentD3Event()))
       .on('zoom', () => this.updateZoom(this.getCurrentD3Event<ZoomHandlerEvent>().transform))
       .on('start.drag', () => this.updateDraggingClassIfNeeded(this.getCurrentD3Event()))
@@ -73,6 +74,17 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
 
   public canDecreaseScale(): boolean {
     return this.minScale < this.getZoomScale();
+  }
+
+  public zoomToRect(requestedRect: ClientRect): void {
+    const availableRect = throwIfNil(this.config && this.config.container.node()).getBoundingClientRect();
+    // Add a bit of padding to requested width/height for padding
+    const requestedWidthScale = availableRect.width / (requestedRect.width + 24);
+    const requestedHeightScale = availableRect.height / (requestedRect.height + 24);
+    // Zoomed in more than this is fine, but this is min to fit everything
+    const minOverallScale = Math.min(requestedWidthScale, requestedHeightScale);
+    this.setZoomScale(Math.max(this.minScale, minOverallScale));
+    this.translateToRect(requestedRect);
   }
 
   public panToRect(viewRect: ClientRect): void {
@@ -161,7 +173,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     this.panToRect(viewRect);
   }
 
-  protected translateToRect(rect: ClientRect): void {
+  public translateToRect(rect: ClientRect): void {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     this.zoomBehavior.translateTo(this.getContainerSelectionOrThrow(), centerX, centerY);
