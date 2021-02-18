@@ -20,7 +20,7 @@ export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source
 export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-table-control-options-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-data-source.model';
-export * from './shared/dashboard/data/graphql/graphql-options-data-source.model';
+export * from './shared/dashboard/data/graphql/graphql-table-control-options-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-query-event.service';
 export * from './shared/dashboard/data/graphql/graphql-data-source.module';
 export * from './shared/dashboard/data/graphql/specifiers/attribute-specification.model';

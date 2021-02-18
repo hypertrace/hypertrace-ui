@@ -25,7 +25,7 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
       <!-- This displays as "<value> <unit>", e.g. 120 ms -->
       <span
         >{{ this.value | htDisplayNumber: this.formatter }}
-        <span *ngIf="this.value !== null && this.units">{{ this.units }}</span></span
+        <span *ngIf="this.value !== undefined && this.units">{{ this.units }}</span></span
       >
     </div>
   `
