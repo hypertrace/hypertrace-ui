@@ -73,7 +73,8 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       },
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
-      includeTotal: true
+      includeTotal: true,
+      includeInactive: request.includeInactive
     };
   }
 

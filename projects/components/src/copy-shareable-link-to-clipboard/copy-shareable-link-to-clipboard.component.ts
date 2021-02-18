@@ -10,11 +10,12 @@ import { ButtonSize } from '../button/button';
   styleUrls: ['./copy-shareable-link-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="shareable-link" htTooltip="Copy shareable url link to clipboard">
+    <div class="shareable-link">
       <ht-copy-to-clipboard
         [size]="this.size"
         icon="${IconType.Share}"
         [text]="this.shareableUrl$ | async"
+        tooltip="Copy shareable url link to clipboard"
       ></ht-copy-to-clipboard>
     </div>
   `

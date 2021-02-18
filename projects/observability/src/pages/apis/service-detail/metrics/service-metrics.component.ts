@@ -18,8 +18,9 @@ import { serviceMetricsDashboard } from './service-metrics.dashboard';
 })
 export class ServiceMetricsComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
-  public constructor(serviceDetailService: ServiceDetailService) {
-    this.filterConfig$ = serviceDetailService.entityFilter$.pipe(
+
+  public constructor(private readonly serviceDetailService: ServiceDetailService) {
+    this.filterConfig$ = this.serviceDetailService.entityFilter$.pipe(
       map(filter => ({
         implicitFilters: [filter]
       }))
