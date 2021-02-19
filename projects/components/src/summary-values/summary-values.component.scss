@@ -1,0 +1,32 @@
+@import 'font';
+@import 'color-palette';
+
+.ht-summary-values {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .additional-values {
+    margin-left: 8px;
+    background: $gray-2;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 6px;
+    cursor: pointer;
+
+    .count {
+      @include overline($gray-7);
+    }
+  }
+}
+
+.tooltip-contents {
+  display: flex;
+  flex-direction: column;
+
+  .value {
+    @include body-small(white);
+  }
+}

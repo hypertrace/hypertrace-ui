@@ -30,7 +30,7 @@ describe('Summary Value Component', () => {
     expect(spectator.query('.icon')).not.toExist();
     expect(spectator.query('.dot')).not.toExist();
     expect(spectator.query('.label')).not.toExist();
-    expect(spectator.query('.value')).not.toExist();
+    expect(spectator.query('.value')).toHaveText('-');
   });
 
   test('should display only value', () => {
@@ -107,7 +107,7 @@ describe('Summary Value Component', () => {
     expect(spectator.query(TooltipDirective)!.content).toBe('98.23.456.23');
 
     spectator.setHostInput({ value: undefined });
-    expect(spectator.query(TooltipDirective)).not.toExist();
+    expect(spectator.query(TooltipDirective)!.content).toBe('-');
   });
 
   test('use custom tooltip if provided', () => {
