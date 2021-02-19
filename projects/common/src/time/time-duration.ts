@@ -26,21 +26,6 @@ export class TimeDuration {
     return `PT${this.toMillis() / 1000}S`;
   }
 
-  public toTimeAgoString(): string {
-    const secondsAgo = Math.floor(this.millis / 1000);
-
-    if (secondsAgo < 59) {
-      return 'Just now';
-    }
-
-    const mostSignificantPortion = this.getMostSignificantUnitOnly();
-
-    const value = mostSignificantPortion.value;
-    const units = mostSignificantPortion.toUnitString();
-
-    return `${value} ${units}${value === 1 ? '' : 's'} ago`;
-  }
-
   public toMultiUnitString(
     smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
     displayZero: boolean = true,
