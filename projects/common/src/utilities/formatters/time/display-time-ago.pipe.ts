@@ -20,7 +20,12 @@ export class DisplayTimeAgo implements PipeTransform {
       return '-';
     }
 
-    return new TimeDuration(this.calcSecondsAgo(value), TimeUnit.Second).toTimeAgoString();
+    const durationAgo = new TimeDuration(this.calcSecondsAgo(value), TimeUnit.Second);
+    if (durationAgo.getAmountForUnit(TimeUnit.Seconds) >= 60) {
+       return 'Just now';
+     }
+     
+    return `${durationAgo.getMostSignificantUnitOnly().toLongString()} ago`;
   }
 
   private calcSecondsAgo(timestamp: DateOrMillis): number {
