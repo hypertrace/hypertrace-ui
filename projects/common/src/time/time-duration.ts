@@ -26,6 +26,25 @@ export class TimeDuration {
     return `PT${this.toMillis() / 1000}S`;
   }
 
+  public toTimeAgoString(): string {
+    const secondsAgo = this.calcSecondsAgo();
+
+    if (secondsAgo < 59) {
+      return 'Just now';
+    }
+
+    const mostSignificantPortion = this.getMostSignificantUnitOnly();
+
+    const value = mostSignificantPortion.value;
+    const units = mostSignificantPortion.toUnitString();
+
+    return `${value} ${units}${value === 1 ? '' : 's'} ago`;
+  }
+
+  private calcSecondsAgo(): number {
+    return Math.floor((Date.now() - this.millis) / 1000);
+  }
+
   public toMultiUnitString(
     smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
     displayZero: boolean = true,
