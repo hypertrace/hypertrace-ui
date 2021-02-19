@@ -27,7 +27,7 @@ export class TimeDuration {
   }
 
   public toTimeAgoString(): string {
-    const secondsAgo = this.calcSecondsAgo();
+    const secondsAgo = Math.floor(this.millis / 1000);
 
     if (secondsAgo < 59) {
       return 'Just now';
@@ -39,10 +39,6 @@ export class TimeDuration {
     const units = mostSignificantPortion.toUnitString();
 
     return `${value} ${units}${value === 1 ? '' : 's'} ago`;
-  }
-
-  private calcSecondsAgo(): number {
-    return Math.floor((Date.now() - this.millis) / 1000);
   }
 
   public toMultiUnitString(
