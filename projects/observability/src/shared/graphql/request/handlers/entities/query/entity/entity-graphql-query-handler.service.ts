@@ -8,7 +8,7 @@ import {
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
-import { Entity, EntityType } from '../../../../../model/schema/entity';
+import { Entity, EntityType, ObservabilityEntityType } from '../../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../model/schema/filter/entity/graphql-entity-filter';
 import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-builder.service';
 import {
@@ -56,7 +56,9 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
       limit: 1,
       timeRange: request.timeRange,
       properties: request.properties,
-      filters: [new GraphQlEntityFilter(request.id, request.entityType)]
+      filters: [new GraphQlEntityFilter(request.id, request.entityType)],
+      // If querying for a single API, then always want to includeInactive
+      includeInactive: request.entityType === ObservabilityEntityType.Api
     };
   }
 }
