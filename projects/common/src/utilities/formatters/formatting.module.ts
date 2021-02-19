@@ -6,11 +6,13 @@ import { OrdinalPipe } from './ordinal/ordinal.pipe';
 import { DisplayStringPipe } from './string/display-string.pipe';
 import { DisplayTitlePipe } from './string/display-title.pipe';
 import { HighlightPipe } from './string/highlight.pipe';
+import { DisplayTimeAgo } from './time/display-time-ago.pipe';
 
 @NgModule({
   declarations: [
     DisplayNumberPipe,
     DisplayDatePipe,
+    DisplayTimeAgo,
     DisplayDurationPipe,
     DisplayStringPipe,
     HighlightPipe,
@@ -20,6 +22,7 @@ import { HighlightPipe } from './string/highlight.pipe';
   exports: [
     DisplayNumberPipe,
     DisplayDatePipe,
+    DisplayTimeAgo,
     DisplayDurationPipe,
     DisplayStringPipe,
     HighlightPipe,

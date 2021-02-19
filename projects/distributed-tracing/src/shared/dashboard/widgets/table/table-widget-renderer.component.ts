@@ -14,11 +14,8 @@ import {
   FilterOperator,
   SelectChange,
   SelectControl,
-  SelectOption,
   StatefulTableRow,
-  TableCheckboxOptions,
   TableColumnConfig,
-  TableControlOption,
   TableControlOptionType,
   TableDataSource,
   TableFilter,
@@ -168,8 +165,8 @@ export class TableWidgetRendererComponent
         // Fetch the values for the selectFilter dropdown
         selectControlModel.getOptions().pipe(
           first(),
-          map((options: TableControlOption[]) => {
-            const selectOptions: SelectOption<TableControlOption>[] = options.map(option => ({
+          map(options => {
+            const selectOptions = options.map(option => ({
               label: option.label,
               value: option
             }));
@@ -189,7 +186,7 @@ export class TableWidgetRendererComponent
       this.model.getCheckboxControlOptions().map(checkboxControlModel =>
         checkboxControlModel.getOptions().pipe(
           first(),
-          map((options: TableCheckboxOptions) => ({
+          map(options => ({
             label: checkboxControlModel.checked ? options[0].label : options[1].label,
             value: checkboxControlModel.checked,
             options: options
@@ -278,28 +275,28 @@ export class TableWidgetRendererComponent
         );
         break;
       case TableControlOptionType.Filter:
-        this.selectFilterSubject.next(this.mergeFilters(changed.value.metaValue as TableFilter));
+        this.selectFilterSubject.next(this.mergeFilters(changed.value.metaValue));
         break;
       case TableControlOptionType.Property:
-        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.value.metaValue as Dictionary<unknown>));
+        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.value.metaValue));
         break;
       default:
-        assertUnreachable(changed.value.type);
+        assertUnreachable(changed.value);
     }
   }
 
   public onCheckboxChange(changed: CheckboxChange): void {
     switch (changed.option.type) {
       case TableControlOptionType.Property:
-        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.option.metaValue as Dictionary<unknown>));
+        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.option.metaValue));
         break;
       case TableControlOptionType.Filter:
-        this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue as TableFilter));
+        this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue));
         break;
       case TableControlOptionType.UnsetFilter:
         break; // Not supported - No use case yet
       default:
-        assertUnreachable(changed.option.type);
+        assertUnreachable(changed.option);
     }
 
     // Update checkbox option label
@@ -308,7 +305,7 @@ export class TableWidgetRendererComponent
       this.model.getCheckboxControlOptions().map(checkboxControlModel =>
         checkboxControlModel.getOptions().pipe(
           first(),
-          map((options: TableCheckboxOptions) => {
+          map(options => {
             options.forEach(option => {
               if (option === changed.option) {
                 checkboxControlModel.checked = changed.option.value === true;
