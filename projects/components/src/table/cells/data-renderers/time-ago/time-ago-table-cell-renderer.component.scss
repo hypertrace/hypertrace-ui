@@ -1,0 +1,6 @@
+@import 'font';
+
+.cell-value {
+  @include ellipsis-overflow();
+  @include body-1-regular();
+}

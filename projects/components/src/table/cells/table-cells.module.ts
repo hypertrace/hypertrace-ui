@@ -20,6 +20,7 @@ import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
+import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
 import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
 import { TableExpandedDetailRowCellRendererComponent } from './expanded-detail/table-expanded-detail-row-cell-renderer.component';
 import { TableCellStateParser } from './state-parsers/table-cell-state-parser';
@@ -60,7 +61,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TableExpanderCellRendererComponent,
     TableHeaderCellRendererComponent,
     TextTableCellRendererComponent,
-    TimestampTableCellRendererComponent
+    TimestampTableCellRendererComponent,
+    TimeAgoTableCellRendererComponent
   ],
   providers: [
     {
@@ -71,7 +73,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCheckboxCellRendererComponent,
         TableExpanderCellRendererComponent,
         TextTableCellRendererComponent,
-        TimestampTableCellRendererComponent
+        TimestampTableCellRendererComponent,
+        TimeAgoTableCellRendererComponent
       ],
       multi: true
     },
