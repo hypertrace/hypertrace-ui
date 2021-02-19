@@ -21,19 +21,19 @@ export abstract class TableWidgetControlModel {
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
-  public getOptions(): Observable<TableControlOption[]> {
-    return this.api.getData<TableControlOption[]>().pipe(
-      map((options: TableControlOption[]) => (this.uniqueValues ? this.filterUniqueValues(options) : options)),
-      map((options: TableControlOption[]) => (this.sort ? this.applySort(options) : options))
+  public getOptions(): Observable<LabeledTableControlOption[]> {
+    return this.api.getData<LabeledTableControlOption[]>().pipe(
+      map(options => (this.uniqueValues ? this.filterUniqueValues(options) : options)),
+      map(options => (this.sort ? this.applySort(options) : options))
     );
   }
 
-  private filterUniqueValues(options: TableControlOption[]): TableControlOption[] {
-    return uniqWith(options, (a: TableControlOption, b: TableControlOption) => a.value === b.value);
+  private filterUniqueValues(options: LabeledTableControlOption[]): LabeledTableControlOption[] {
+    return uniqWith(options, (a, b) => a.value === b.value);
   }
 
-  private applySort(options: TableControlOption[]): TableControlOption[] {
-    return options.sort((a: TableControlOption, b: TableControlOption) => {
+  private applySort(options: LabeledTableControlOption[]): LabeledTableControlOption[] {
+    return options.sort((a, b) => {
       // Unset option always at the top
       if (a.type === TableControlOptionType.UnsetFilter) {
         return -1;
@@ -46,3 +46,7 @@ export abstract class TableWidgetControlModel {
     });
   }
 }
+
+export type LabeledTableControlOption = TableControlOption & {
+  label: string;
+};
