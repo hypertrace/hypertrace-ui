@@ -6,6 +6,12 @@ import { DateCoercer } from '../../coercers/date-coercer';
 @Pipe({
   name: 'htDisplayTimeAgo'
 })
+/*
+ * WARNING: This pipe is configured as pure, but this could lead to it not updating on change detection.
+ *  This limitation is fine for the current use case of cell renderers, which update with refresh anyway.
+ *  If this pipe is used somewhere that the value would require dynamically changing while the component
+ *  itself is not recreated, this will cause a bug.
+ */
 export class DisplayTimeAgo implements PipeTransform {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
