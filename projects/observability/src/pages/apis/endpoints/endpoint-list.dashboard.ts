@@ -69,7 +69,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: 'p99'
+              aggregation: MetricAggregationType.P99
             }
           },
           {
@@ -79,7 +79,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: 'avgrate_sec'
+              aggregation: MetricAggregationType.AvgrateSecond
             }
           },
           {
@@ -89,7 +89,18 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: 'avgrate_sec'
+              aggregation: MetricAggregationType.AvgrateSecond
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Calls',
+            display: CoreTableCellRendererType.Number,
+            visible: false,
+            value: {
+              type: 'metric-aggregation',
+              metric: 'numCalls',
+              aggregation: MetricAggregationType.Sum
             }
           },
           {
