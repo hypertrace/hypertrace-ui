@@ -25,7 +25,7 @@ export class MetricTableCellParser extends TableCellParserBase<number, CellValue
       case 'number':
         return cellData;
       case 'object':
-        return cellData === null ? undefined : cellData.value === null ? undefined : cellData.value;
+        return cellData?.value ?? undefined;
       default:
         return undefined;
     }
@@ -36,7 +36,7 @@ export class MetricTableCellParser extends TableCellParserBase<number, CellValue
       case 'number':
         return undefined;
       case 'object':
-        return cellData === null ? undefined : cellData.units;
+        return cellData?.units ?? undefined;
       default:
         return undefined;
     }
