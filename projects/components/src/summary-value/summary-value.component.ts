@@ -9,7 +9,7 @@ import { IconSize } from '../icon/icon-size';
   template: `
     <div class="ht-summary-value" *ngIf="this.value" [htTooltip]="this.tooltipText">
       <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
-      <div class="dot" *ngIf="!this.icon && this.value"></div>
+      <div class="dot" *ngIf="!this.icon"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>
       <div class="value" [ngClass]="this.summaryValueDisplayStyle">
         {{ this.value }}
