@@ -7,19 +7,19 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./summary-value.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-summary-value" [htTooltip]="this.tooltipText">
+    <div class="ht-summary-value" *ngIf="this.value" [htTooltip]="this.tooltipText">
       <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
       <div class="dot" *ngIf="!this.icon && this.value"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>
       <div class="value" [ngClass]="this.summaryValueDisplayStyle">
-        {{ this.value !== undefined ? this.value : '-' }}
+        {{ this.value }}
       </div>
     </div>
   `
 })
 export class SummaryValueComponent implements OnChanges {
   @Input()
-  public value?: string;
+  public value!: string;
 
   @Input()
   public icon?: string;
@@ -43,7 +43,7 @@ export class SummaryValueComponent implements OnChanges {
     } else if (!isEmpty(this.value)) {
       this.tooltipText = this.value;
     } else {
-      this.tooltipText = '-';
+      this.tooltipText = undefined;
     }
   }
 }

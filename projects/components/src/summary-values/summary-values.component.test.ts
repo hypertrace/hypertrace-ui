@@ -94,4 +94,31 @@ describe('Summary Values Component', () => {
     expect(spectator.query('.additional-values')).not.toExist();
     expect(spectator.query(TooltipDirective)).not.toExist();
   });
+
+  test('should handle empty strings', () => {
+    spectator = createHost(
+      `<ht-summary-values [values]="values" [icon]="icon" [label]="label" [tooltip]="tooltip" [summaryValueDisplayStyle]="summaryValueDisplayStyle">
+      </ht-summary-values>`,
+      {
+        hostProps: {
+          values: ['', 'val2', 'val3', 'val4', 'val5'],
+          icon: IconType.Add,
+          label: 'label',
+          tooltip: 'label tooltip',
+          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text
+        }
+      }
+    );
+
+    const summaryValueComponent = spectator.query(SummaryValueComponent);
+    expect(summaryValueComponent).toExist();
+    expect(summaryValueComponent?.value).toEqual('val2');
+    expect(summaryValueComponent?.icon).toEqual(IconType.Add);
+    expect(summaryValueComponent?.label).toEqual('label');
+    expect(summaryValueComponent?.tooltip).toEqual('label tooltip');
+    expect(summaryValueComponent?.summaryValueDisplayStyle).toEqual(SummaryValueDisplayStyle.Text);
+
+    expect(spectator.query('.additional-values')).toHaveText('+3');
+    expect(spectator.query(TooltipDirective)?.content).toBeDefined();
+  });
 });

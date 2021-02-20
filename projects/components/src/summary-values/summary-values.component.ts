@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { compact } from 'lodash-es';
 import { SummaryValueDisplayStyle } from '../summary-value/summary-value.component';
 
 @Component({
@@ -49,8 +50,9 @@ export class SummaryValuesComponent implements OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.values) {
-      this.displayValue = this.values && this.values?.length > 0 ? this.values[0] : undefined;
-      this.additionalValues = this.values?.slice(1);
+      const compactValues = compact(this.values ?? []);
+      this.displayValue = compactValues[0] ?? '-';
+      this.additionalValues = compactValues?.slice(1);
     }
   }
 }
