@@ -25,7 +25,7 @@ export class MetricTableCellParser extends TableCellParserBase<number, CellValue
       case 'number':
         return cellData;
       case 'object':
-        return cellData === null ? undefined : cellData.value;
+        return cellData?.value ?? undefined;
       default:
         return undefined;
     }
@@ -36,12 +36,16 @@ export class MetricTableCellParser extends TableCellParserBase<number, CellValue
       case 'number':
         return undefined;
       case 'object':
-        return cellData === null ? undefined : cellData.units;
+        return cellData?.units ?? undefined;
       default:
         return undefined;
     }
   }
 }
 
-type CellData = number | null | Partial<MetricAggregation>;
+type CellData = number | null | Partial<NullableValueMetricAggregation>;
 type CellValue = number | undefined;
+
+interface NullableValueMetricAggregation extends Omit<MetricAggregation, 'value'> {
+  value: number | null;
+}

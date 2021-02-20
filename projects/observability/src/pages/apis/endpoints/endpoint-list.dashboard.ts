@@ -106,7 +106,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-column',
             title: 'Last Called',
-            display: CoreTableCellRendererType.Timestamp,
+            display: CoreTableCellRendererType.TimeAgo,
             value: {
               type: 'metric-aggregation',
               metric: 'endTime',

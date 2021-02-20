@@ -21,7 +21,7 @@ export interface CheckboxControl {
 
 export interface CheckboxChange {
   checkbox: CheckboxControl;
-  option: TableControlOption<unknown, boolean>;
+  option: TableControlOption<boolean>;
 }
 
 export const enum TableControlOptionType {
@@ -30,26 +30,29 @@ export const enum TableControlOptionType {
   UnsetFilter = 'unset-filter'
 }
 
-export interface TableControlOption<TMetaValue = unknown, TValue = unknown> {
-  type: TableControlOptionType;
-  label: string;
-  metaValue: TMetaValue; // Used in a query - type based on TableControlOptionType
-  value?: TValue; // If a control needs to carry a value, use this (example: checkbox boolean)
-}
+export type TableControlOption<T = unknown> =
+  | TableUnsetFilterControlOption<T>
+  | TableFilterControlOption<T>
+  | TablePropertyControlOption<T>;
 
-export interface TableUnsetFilterControlOption extends TableControlOption<string, undefined> {
+interface TableControlOptionBase<T> {
+  value?: T;
+}
+export interface TableUnsetFilterControlOption<T = unknown> extends TableControlOptionBase<T> {
   type: TableControlOptionType.UnsetFilter;
   metaValue: string;
 }
 
-export interface TableFilterControlOption extends TableControlOption<TableFilter> {
+export interface TableFilterControlOption<T = unknown> extends TableControlOptionBase<T> {
   type: TableControlOptionType.Filter;
   metaValue: TableFilter;
 }
 
-export interface TablePropertyControlOption extends TableControlOption<Dictionary<unknown>> {
+export interface TablePropertyControlOption<T = unknown> extends TableControlOptionBase<T> {
   type: TableControlOptionType.Property;
   metaValue: Dictionary<unknown>;
 }
 
-export type TableCheckboxOptions = [TableControlOption<unknown, true>, TableControlOption<unknown, false>];
+export type TableCheckboxControlOption<T extends boolean> = TableControlOption<T> & { label: string };
+
+export type TableCheckboxOptions = [TableCheckboxControlOption<true>, TableCheckboxControlOption<false>];

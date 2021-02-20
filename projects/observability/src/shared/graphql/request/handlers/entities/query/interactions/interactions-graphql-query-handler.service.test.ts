@@ -92,6 +92,10 @@ describe('Interactions graphql query handler', () => {
               idType: new GraphQlEnumArgument(ObservabilityEntityType.Backend)
             }
           ]
+        },
+        {
+          name: 'includeInactive',
+          value: false
         }
       ],
       children: [

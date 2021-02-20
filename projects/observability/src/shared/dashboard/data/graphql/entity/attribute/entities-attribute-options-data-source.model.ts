@@ -1,8 +1,7 @@
 import {
   FilterOperator,
-  TableControlOption,
   TableControlOptionType,
-  TableFilter,
+  TableFilterControlOption,
   TableUnsetFilterControlOption
 } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
@@ -21,7 +20,7 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
   })
   public unsetLabel: string = 'All';
 
-  private buildUnsetOption(attribute: string): TableUnsetFilterControlOption {
+  private buildUnsetOption(attribute: string): Labeled<TableUnsetFilterControlOption> {
     return {
       type: TableControlOptionType.UnsetFilter,
       label: this.unsetLabel,
@@ -29,12 +28,12 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
     };
   }
 
-  public getData(): Observable<TableControlOption<TableFilter | string>[]> {
+  public getData(): Observable<(Labeled<TableUnsetFilterControlOption> | Labeled<TableFilterControlOption>)[]> {
     return super.getData().pipe(
       map((values: unknown[]) => [
         this.buildUnsetOption(this.specification.name),
         ...values.map(value => ({
-          type: TableControlOptionType.Filter,
+          type: TableControlOptionType.Filter as const,
           label: String(value),
           value: value,
           metaValue: {
@@ -47,3 +46,5 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
     );
   }
 }
+
+type Labeled<T> = T & { label: string };
