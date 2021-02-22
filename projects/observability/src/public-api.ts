@@ -204,6 +204,8 @@ export * from './shared/graphql/model/schema/observability-traces';
 
 export * from './shared/components/utils/d3/d3-visualization-builder.service';
 export * from './shared/components/utils/d3/d3-util.service';
+export * from './shared/components/utils/d3/zoom/d3-zoom';
+
 export * from './shared/components/utils/chart-tooltip/chart-tooltip-builder.service';
 export * from './shared/components/utils/chart-tooltip/chart-tooltip.module';
 export * from './shared/components/utils/svg/svg-util.service';

@@ -15,7 +15,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
       class="ht-entity-renderer"
       [ngClass]="{ navigable: this.navigable }"
       [htTooltip]="this.name"
-      (click)="this.onClickNavigate()"
+      (click)="this.navigable && this.onClickNavigate()"
     >
       <ht-icon
         [icon]="this.entityIconType"
