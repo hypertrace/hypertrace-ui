@@ -6,11 +6,20 @@ import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { PopoverModule } from '../popover/popover.module';
-import { MultiSelectComponent } from './multi-select.component';
 import { TraceSearchBoxModule } from '../search-box/search-box.module';
+import { MultiSelectComponent } from './multi-select.component';
 
 @NgModule({
-  imports: [FormsModule, CommonModule, IconModule, LabelModule, LetAsyncModule, PopoverModule, DividerModule, TraceSearchBoxModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    IconModule,
+    LabelModule,
+    LetAsyncModule,
+    PopoverModule,
+    DividerModule,
+    TraceSearchBoxModule
+  ],
   declarations: [MultiSelectComponent],
   exports: [MultiSelectComponent]
 })
