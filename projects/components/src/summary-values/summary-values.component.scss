@@ -14,7 +14,6 @@
     justify-content: center;
     align-items: center;
     padding: 2px 6px;
-    cursor: pointer;
 
     .count {
       @include overline($gray-7);
@@ -25,6 +24,11 @@
 .tooltip-contents {
   display: flex;
   flex-direction: column;
+
+  .divider {
+    width: 100%;
+    border-bottom: 1px solid white;
+  }
 
   .value {
     @include body-small(white);

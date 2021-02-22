@@ -8,28 +8,33 @@ import { SummaryValueDisplayStyle } from '../summary-value/summary-value.compone
   styleUrls: ['./summary-values.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-summary-values" data-sensitive-pii>
+    <div class="ht-summary-values" data-sensitive-pii [htTooltip]="detailsTemplate">
       <ht-summary-value
         [icon]="this.icon"
         [value]="this.displayValue"
         [label]="this.label"
-        [tooltip]="this.tooltip"
+        [showTooltip]="false"
         summaryValueDisplayStyle="${SummaryValueDisplayStyle.Text}"
         class="summary-value"
       ></ht-summary-value>
       <ng-container *ngIf="this.additionalValues && this.additionalValues!.length > 0">
-        <div class="additional-values" [htTooltip]="detailsTemplate">
+        <div class="additional-values">
           <span class="count">+{{ this.additionalValues!.length }}</span>
         </div>
-        <ng-template #detailsTemplate>
-          <div class="tooltip-contents">
-            <span *ngFor="let value of this.additionalValues" class="value">
-              {{ value }}
-            </span>
-          </div>
-        </ng-template>
       </ng-container>
     </div>
+
+    <ng-template #detailsTemplate>
+      <div class="tooltip-contents">
+        <ng-container *ngIf="this.tooltip">
+          <span class="value">{{ this.tooltip }}</span>
+          <div class="divider"></div>
+        </ng-container>
+        <span *ngFor="let value of this.allValues" class="value">
+          {{ value }}
+        </span>
+      </div>
+    </ng-template>
   `
 })
 export class SummaryValuesComponent implements OnChanges {
@@ -46,13 +51,14 @@ export class SummaryValuesComponent implements OnChanges {
   public tooltip?: string;
 
   public displayValue?: string;
+  public allValues?: string[];
   public additionalValues?: string[];
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.values) {
-      const compactValues = compact(this.values ?? []);
-      this.displayValue = compactValues[0] ?? '-';
-      this.additionalValues = compactValues?.slice(1);
+      this.allValues = compact(this.values ?? []);
+      this.displayValue = this.allValues[0] ?? '-';
+      this.additionalValues = this.allValues?.slice(1);
     }
   }
 }

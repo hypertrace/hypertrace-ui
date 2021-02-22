@@ -34,7 +34,7 @@ describe('Summary Values Component', () => {
     expect(summaryValueComponent?.value).toEqual('val1');
     expect(summaryValueComponent?.icon).toEqual(IconType.Add);
     expect(summaryValueComponent?.label).toEqual('label');
-    expect(summaryValueComponent?.tooltip).toEqual('label tooltip');
+    expect(summaryValueComponent?.tooltip).toEqual(undefined);
     expect(summaryValueComponent?.summaryValueDisplayStyle).toEqual(SummaryValueDisplayStyle.Text);
 
     expect(spectator.query('.additional-values')).toHaveText('+4');
@@ -61,11 +61,11 @@ describe('Summary Values Component', () => {
     expect(summaryValueComponent?.value).toEqual('val1');
     expect(summaryValueComponent?.icon).toEqual(IconType.Add);
     expect(summaryValueComponent?.label).toEqual('label');
-    expect(summaryValueComponent?.tooltip).toEqual('label tooltip');
+    expect(summaryValueComponent?.tooltip).toEqual(undefined);
     expect(summaryValueComponent?.summaryValueDisplayStyle).toEqual(SummaryValueDisplayStyle.Text);
 
     expect(spectator.query('.additional-values')).not.toExist();
-    expect(spectator.query(TooltipDirective)).not.toExist();
+    expect(spectator.query(TooltipDirective)?.content).toBeDefined();
   });
 
   test('should hide additional details if empty array is passed as value', () => {
@@ -88,11 +88,11 @@ describe('Summary Values Component', () => {
     expect(summaryValueComponent?.value).not.toExist();
     expect(summaryValueComponent?.icon).toEqual(IconType.Add);
     expect(summaryValueComponent?.label).toEqual('label');
-    expect(summaryValueComponent?.tooltip).toEqual('label tooltip');
+    expect(summaryValueComponent?.tooltip).toEqual(undefined);
     expect(summaryValueComponent?.summaryValueDisplayStyle).toEqual(SummaryValueDisplayStyle.Text);
 
     expect(spectator.query('.additional-values')).not.toExist();
-    expect(spectator.query(TooltipDirective)).not.toExist();
+    expect(spectator.query(TooltipDirective)?.content).toBeDefined();
   });
 
   test('should handle empty strings', () => {
@@ -115,7 +115,7 @@ describe('Summary Values Component', () => {
     expect(summaryValueComponent?.value).toEqual('val2');
     expect(summaryValueComponent?.icon).toEqual(IconType.Add);
     expect(summaryValueComponent?.label).toEqual('label');
-    expect(summaryValueComponent?.tooltip).toEqual('label tooltip');
+    expect(summaryValueComponent?.tooltip).toEqual(undefined);
     expect(summaryValueComponent?.summaryValueDisplayStyle).toEqual(SummaryValueDisplayStyle.Text);
 
     expect(spectator.query('.additional-values')).toHaveText('+3');

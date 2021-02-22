@@ -31,11 +31,20 @@ export class SummaryValueComponent implements OnChanges {
   public tooltip?: string;
 
   @Input()
+  public showTooltip?: boolean = true;
+
+  @Input()
   public summaryValueDisplayStyle: SummaryValueDisplayStyle = SummaryValueDisplayStyle.Text;
 
   public tooltipText?: string;
 
   public ngOnChanges(): void {
+    if (this.showTooltip) {
+      this.setTooltipText();
+    }
+  }
+
+  private setTooltipText(): void {
     if (!isEmpty(this.tooltip)) {
       this.tooltipText = this.tooltip;
     } else if (!isEmpty(this.label) && !isEmpty(this.value)) {
