@@ -14,6 +14,7 @@ import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypert
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOption } from '../select/select-option';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
@@ -56,16 +57,23 @@ import { MultiSelectJustify } from './multi-select-justify';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
+            <ng-container *ngIf="this.enableSearch">
+              <ht-search-box
+                class="search-bar"
+                (valueChange)="this.searchOptions($event)"
+                displayMode="${SearchBoxDisplayMode.NoBorder}"
+              ></ht-search-box>
+            </ng-container>
             <ng-container *ngIf="this.showAllOptionControl">
               <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
                 <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
                 <span class="label">Select All</span>
               </div>
-
-              <ht-divider></ht-divider>
             </ng-container>
 
-            <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="multi-select-option">
+            <ht-divider *ngIf="this.showAllOptionControl || this.enableSearch"></ht-divider>
+
+            <div *ngFor="let item of filteredItems" (click)="this.onSelectionChange(item)" class="multi-select-option">
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
               <ht-icon
                 class="icon"
@@ -105,6 +113,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public showBorder: boolean = false;
 
   @Input()
+  public enableSearch: boolean = false;
+
+  @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
@@ -122,12 +133,14 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public popoverOpen: boolean = false;
   public selected$?: Observable<SelectOption<V>[]>;
   public triggerLabel?: string;
+  public filteredItems?: SelectOptionComponent<V>[];
 
   public constructor(private readonly loggerService: LoggerService) {}
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
     this.setTriggerLabel();
+    this.filteredItems = this.items?.toArray();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -135,6 +148,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
       this.selected$ = this.buildObservableOfSelected();
     }
     this.setTriggerLabel();
+  }
+
+  public searchOptions(searchText: string): void {
+    this.filteredItems = this.items?.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase()));
   }
 
   public onAllSelectionChange(): void {
