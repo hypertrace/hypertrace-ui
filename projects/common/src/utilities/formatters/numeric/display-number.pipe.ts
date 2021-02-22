@@ -9,7 +9,7 @@ export class DisplayNumberPipe implements PipeTransform {
   private static readonly FLOAT_FORMATTER: NumericFormatter = floatFormatter;
 
   public transform(value: unknown, style: FormatterStyle = FormatterStyle.Auto): string {
-    if (value === null) {
+    if (value === null || value === undefined) {
       return '-';
     }
 
