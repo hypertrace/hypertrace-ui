@@ -284,7 +284,7 @@ describe('Multi Select Component', () => {
     options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(2);
     expect(options[0]).toContainText('first');
-    expect(options[0]).toContainText('third');
+    expect(options[1]).toContainText('third');
     flush();
   }));
 });
