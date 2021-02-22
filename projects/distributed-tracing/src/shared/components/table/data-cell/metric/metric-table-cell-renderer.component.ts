@@ -13,7 +13,7 @@ import {
   TABLE_DATA_PARSER,
   TABLE_ROW_DATA
 } from '@hypertrace/components';
-import { MetricAggregation } from '../../../../../shared/graphql/model/metrics/metric-aggregation';
+import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggregation';
 import { TracingTableCellType } from '../../tracing-table-cell-type';
 
 @Component({
@@ -23,10 +23,10 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
   template: `
     <div class="metric-cell" [htTooltip]="this.tooltip">
       <!-- This displays as "<value> <unit>", e.g. 120 ms -->
-      <span
-        >{{ this.value | htDisplayNumber: this.formatter }}
-        <span *ngIf="this.value !== undefined && this.units">{{ this.units }}</span></span
+      <span *ngIf="this.value !== undefined"
+        >{{ this.value | htDisplayNumber: this.formatter }} <span *ngIf="this.units">{{ this.units }}</span></span
       >
+      <span *ngIf="this.value === undefined">-</span>
     </div>
   `
 })
