@@ -63,16 +63,15 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (valueChange)="this.searchOptions($event)"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
               ></ht-search-box>
-              <ht-divider></ht-divider>
             </ng-container>
             <ng-container *ngIf="this.showAllOptionControl">
               <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
                 <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
                 <span class="label">Select All</span>
               </div>
-
-              <ht-divider></ht-divider>
             </ng-container>
+
+            <ht-divider *ngIf="this.showAllOptionControl || this.enableSearch"></ht-divider>
 
             <div *ngFor="let item of filteredItems" (click)="this.onSelectionChange(item)" class="multi-select-option">
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
