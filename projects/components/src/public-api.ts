@@ -219,6 +219,10 @@ export * from './summay-card/summary-card.module';
 export * from './summary-value/summary-value.component';
 export * from './summary-value/summary-value.module';
 
+// Summary Values
+export * from './summary-values/summary-values.component';
+export * from './summary-values/summary-values.module';
+
 // Table
 export * from './table/controls/table-controls-api';
 export * from './table/data/table-data-source';
