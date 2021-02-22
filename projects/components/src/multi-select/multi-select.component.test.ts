@@ -1,5 +1,6 @@
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { SearchBoxComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { DividerComponent } from '../divider/divider.component';
@@ -14,7 +15,7 @@ describe('Multi Select Component', () => {
     component: MultiSelectComponent,
     imports: [LetAsyncModule],
     entryComponents: [SelectOptionComponent],
-    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent)],
+    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent), MockComponent(SearchBoxComponent)],
     shallow: true
   });
 
@@ -249,5 +250,41 @@ describe('Multi Select Component', () => {
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
+  }));
+
+  test('should show searchbox if applicable and function as expected', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [enableSearch]="enableSearch">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          enableSearch: true
+        }
+      }
+    );
+
+    spectator.tick();
+    expect(spectator.query('.search-bar')).toExist();
+    spectator.click('.search-bar');
+
+    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'fi');
+    spectator.tick();
+
+    let options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(1);
+    expect(options[0]).toContainText('first');
+
+    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'i');
+    spectator.tick();
+
+    options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(2);
+    expect(options[0]).toContainText('first');
+    expect(options[0]).toContainText('third');
+    flush();
   }));
 });

@@ -91,4 +91,13 @@
       background: $gray-1;
     }
   }
+
+  .search-bar {
+    display: flex;
+    height: 34px;
+    margin-top: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    align-items: center;
+  }
 }

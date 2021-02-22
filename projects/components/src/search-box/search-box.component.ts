@@ -11,7 +11,7 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
   template: `
-    <div class="ht-search-box" [class.focused]="this.isFocused">
+    <div class="ht-search-box" [ngClass]="this.displayMode" [class.focused]="this.isFocused">
       <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="onSubmit()"></ht-icon>
       <input
         class="input"
@@ -42,6 +42,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   @Input()
   public debounceTime?: number;
+
+  @Input()
+  public displayMode: SearchBoxDisplayMode = SearchBoxDisplayMode.Border;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -90,4 +93,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         .subscribe(value => this.valueChange.emit(value))
     );
   }
+}
+
+export const enum SearchBoxDisplayMode {
+  Border = 'border',
+  NoBorder = 'no-border'
 }

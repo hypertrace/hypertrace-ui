@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { SearchBoxComponent } from './search-box.component';
+import { SearchBoxComponent, SearchBoxDisplayMode } from './search-box.component';
 
 describe('Search box Component', () => {
   let spectator: Spectator<SearchBoxComponent>;
@@ -31,6 +31,24 @@ describe('Search box Component', () => {
       spectator.tick();
     });
   }));
+
+  test('should apply no-border class correctly', () => {
+    spectator = createHost(`<ht-search-box [displayMode]="displayMode"></ht-search-box>`, {
+      hostProps: {
+        displayMode: SearchBoxDisplayMode.NoBorder
+      }
+    });
+
+    expect(spectator.query('.ht-search-box')?.classList).toContain('no-border');
+    expect(spectator.query('.ht-search-box')?.classList).not.toContain('border');
+  });
+
+  test('should apply border class correctly by default', () => {
+    spectator = createHost(`<ht-search-box></ht-search-box>`);
+
+    expect(spectator.query('.ht-search-box')?.classList).not.toContain('no-border');
+    expect(spectator.query('.ht-search-box')?.classList).toContain('border');
+  });
 
   test('should work with arbitrary debounce time', fakeAsync(() => {
     spectator = createHost(
