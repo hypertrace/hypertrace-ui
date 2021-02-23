@@ -1,4 +1,4 @@
-import { LabeledTableControlOption, TableControlOptionType } from '@hypertrace/components';
+import { TableControlOption, TableControlOptionType } from '@hypertrace/components';
 import { BOOLEAN_PROPERTY, ModelApi, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { uniqWith } from 'lodash-es';
@@ -46,3 +46,7 @@ export abstract class TableWidgetControlModel {
     });
   }
 }
+
+export type LabeledTableControlOption = TableControlOption & {
+  label: string;
+};

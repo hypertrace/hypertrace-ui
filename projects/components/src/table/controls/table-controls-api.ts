@@ -35,10 +35,6 @@ export type TableControlOption<T = unknown> =
   | TableFilterControlOption<T>
   | TablePropertyControlOption<T>;
 
-export type LabeledTableControlOption = TableControlOption & {
-  label: string;
-};
-
 interface TableControlOptionBase<T> {
   value?: T;
 }
