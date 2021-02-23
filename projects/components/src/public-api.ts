@@ -219,6 +219,10 @@ export * from './summay-card/summary-card.module';
 export * from './summary-value/summary-value.component';
 export * from './summary-value/summary-value.module';
 
+// Summary Values
+export * from './summary-values/summary-values.component';
+export * from './summary-values/summary-values.module';
+
 // Table
 export * from './table/controls/table-controls-api';
 export * from './table/data/table-data-source';
@@ -238,6 +242,7 @@ export { TableCellRenderer } from './table/cells/table-cell-renderer';
 export { TableCellParser } from './table/cells/table-cell-parser';
 export * from './table/cells/data-parsers/table-cell-no-op-parser';
 export * from './table/cells/data-parsers/table-cell-string-parser';
+export * from './table/cells/data-parsers/table-cell-timestamp-parser';
 
 // Table Controls
 export * from './table/controls/table-controls.module';
