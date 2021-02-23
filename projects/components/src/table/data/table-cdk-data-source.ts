@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
-import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
@@ -37,6 +37,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private readonly loadingStateSubject: Subject<TableLoadingState> = new BehaviorSubject<TableLoadingState>({
     loading$: NEVER
   });
+  private changeSubscription?: Subscription;
 
   public loadingStateChange$: Observable<TableLoadingState> = this.loadingStateSubject.asObservable();
 
@@ -54,7 +55,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
    ****************************/
 
   public connect(): Observable<ReadonlyArray<TableRow>> {
-    this.buildChangeObservable()
+    this.changeSubscription = this.buildChangeObservable()
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
         /**
@@ -80,6 +81,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   }
 
   public disconnect(): void {
+    this.changeSubscription?.unsubscribe();
     this.rowsChange$.complete();
     this.loadingStateSubject.complete();
   }
