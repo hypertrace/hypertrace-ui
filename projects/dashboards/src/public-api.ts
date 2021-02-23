@@ -14,5 +14,6 @@ export * from './persistence/dashboard-persistence.service';
 export * from './widgets/widget-renderer';
 export * from './widgets/interactive-data-widget-renderer';
 export * from './widgets/header/widget-header.model';
+export * from './widgets/container/container-widget.model';
 
 export * from './dashboard.module';

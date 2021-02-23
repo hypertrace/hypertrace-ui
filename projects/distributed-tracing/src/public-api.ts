@@ -32,6 +32,7 @@ export * from './shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 export * from './shared/dashboard/tracing-dashboard.module';
 export * from './shared/dashboard/widgets/table/table-widget.model';
 export * from './shared/dashboard/widgets/table/table-widget-control.model';
+export * from './shared/dashboard/widgets/table/table-widget-view-toggle.model';
 
 // Filter
 export * from './shared/services/filter-builder/graphql-filter-builder.service';
