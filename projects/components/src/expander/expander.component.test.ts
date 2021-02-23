@@ -43,6 +43,7 @@ describe('Expander component', () => {
     );
 
     expect(spectator.query('ht-icon')).toExist();
+    expect(spectator.query('collapse')).toExist();
     expect(spectator.component.getTooltipText()).toEqual(ExpanderToggleComponent.EXPAND);
     expect(spectator.component.getIconType()).toEqual(IconType.Collapsed);
   });

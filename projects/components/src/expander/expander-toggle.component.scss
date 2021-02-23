@@ -13,3 +13,11 @@
 .expander-toggle:hover {
   color: $gray-5;
 }
+
+.collapse {
+  color: $gray-7;
+
+  &:hover {
+    color: $gray-7;
+  }
+}
