@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnChanges, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { TooltipContentContainerComponent } from './tooltip-content-container.co
 @Directive({
   selector: '[htTooltip]'
 })
-export class TooltipDirective implements OnDestroy {
+export class TooltipDirective implements OnDestroy, OnChanges {
   private static readonly DEFAULT_HOVER_DELAY_MS: number = 400;
 
   @Input('htTooltip')
@@ -41,6 +41,12 @@ export class TooltipDirective implements OnDestroy {
   @HostListener('mouseleave', ['$event'])
   public onHoverEnd(event: MouseEvent): void {
     this.mouseLeave$.next(event);
+  }
+
+  public ngOnChanges(): void {
+    if (this.popover) {
+      this.removeTooltip();
+    }
   }
 
   public ngOnDestroy(): void {
