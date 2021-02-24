@@ -79,3 +79,10 @@
 @mixin top-bar-dark-button-foreground {
   @include body-1-medium(white);
 }
+
+@mixin disableable {
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
