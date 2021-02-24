@@ -16,7 +16,7 @@ import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
-import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';

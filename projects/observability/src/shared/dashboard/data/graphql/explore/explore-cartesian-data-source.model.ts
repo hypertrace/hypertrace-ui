@@ -1,25 +1,98 @@
-import { ColorService, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
+import { GraphQlFilter } from '../../../../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
+import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
+import { GraphQlDataSourceModel, GraphQlSortBySpecification, MetadataService, Specification } from '@hypertrace/distributed-tracing';
+import {
+  ARRAY_PROPERTY,
+  Model,
+  ModelModelPropertyTypeInstance,
+  ModelProperty,
+  ModelPropertyType,
+  NUMBER_PROPERTY,
+  PLAIN_OBJECT_PROPERTY,
+  STRING_PROPERTY
+} from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
-import { EMPTY, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, NEVER } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
-import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import {
+  ExploreRequestState,
+  ExploreSeries
+} from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import {
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
+  GraphQlExploreRequest,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
+import { ExploreSelectionSpecificationModel } from '../specifiers/explore-selection-specification.model';
 @Model({
   type: 'explore-cartesian-data-source'
 })
 export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
-  public request?: ExploreVisualizationRequest;
+
+  // @ModelProperty({
+  //   key: 'metric',
+  //   // tslint:disable-next-line: no-object-literal-type-assertion
+  //   type: {
+  //     key: ModelPropertyType.TYPE,
+  //     defaultModelClass: ExploreSelectionSpecificationModel
+  //   } as ModelModelPropertyTypeInstance,
+  //   required: true
+  // })
+  // public metricSpecification!: ExploreSelectionSpecificationModel;
+
+  // @ModelProperty({
+  //   key: 'group-by-specifications',
+  //   displayName: 'Group by specifications',
+  //   required: false,
+  //   type: ARRAY_PROPERTY.type
+  // })
+  // public groupBySpecifications: Specification[] = [];
+
+  @ModelProperty({
+    key: 'series',
+    displayName: 'Explore Series',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public series: ExploreSeries[] = [];
+
+  @ModelProperty({
+    key: 'context',
+    displayName: 'Context',
+    type: STRING_PROPERTY.type
+  })
+  public context?: string;
+
+  @ModelProperty({
+    key: 'order-by',
+    displayName: 'Order By',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public orderBy: GraphQlSortBySpecification[] = [];
+
+  @ModelProperty({
+    key: 'group-by',
+    displayName: 'Group By',
+    required: false,
+    type: PLAIN_OBJECT_PROPERTY.type
+  })
+  public groupBy?: GraphQlGroupBy;
+
+  @ModelProperty({
+    key: 'groupByLimit',
+    displayName: 'Group by limit',
+    type: NUMBER_PROPERTY.type
+  })
+  public groupByLimit: number = 100;
 
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
@@ -28,42 +101,70 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
   private readonly metadataService!: MetadataService;
 
   public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
-    return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
-      switchMap(request =>
-        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
-          // Add inherited filters
-          request.filters?.push(...inheritedFilters);
+    return of({
+      getData: (interval: TimeDuration) => {
+        const requestState = this.buildRequestState(interval);
 
-          return {
-            ...request,
-            timeRange: this.getTimeRangeOrThrow()
-          };
-        })
-      ),
-      map(response => ({
-        getData: () =>
-          this.getAllData(response).pipe(
-            map(explorerResults => ({
-              series: explorerResults,
-              bands: []
-            }))
+        if (requestState === undefined) {
+          return NEVER;
+        }
+
+        return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+          this.buildExploreRequest(requestState, this.getFilters(inheritedFilters))
+        ).pipe(
+          mergeMap(response =>
+            this.getAllData(requestState, response).pipe(
+              map(explorerResults => ({
+                series: explorerResults,
+                bands: []
+              }))
+            )
           )
-      }))
-    );
+        );
+      }
+    });
   }
 
-  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
-    return this.buildAllSeries(this.request!, new ExploreResult(response));
+  protected buildExploreRequest(requestState: ExploreRequestState, filters: GraphQlFilter[]): GraphQlExploreRequest {
+    return {
+      requestType: EXPLORE_GQL_REQUEST,
+      selections: requestState.series.map(series => series.specification),
+      context: requestState.context,
+      limit: requestState.groupByLimit ?? 100,
+      timeRange: this.getTimeRangeOrThrow(),
+      interval: requestState.interval as TimeDuration,
+      filters: filters,
+      groupBy: requestState.groupBy
+    };
   }
 
-  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerSeries[]> {
+  protected buildRequestState(interval: TimeDuration | 'AUTO' = 'AUTO'): ExploreRequestState | undefined {
+    if (this.series.length === 0 || this.context === undefined) {
+      return undefined;
+    }
+
+    return {
+      series: this.series,
+      context: this.context,
+      interval: interval,
+      groupBy: this.groupBy,
+      groupByLimit: this.groupByLimit,
+      useGroupName: true
+    };
+  }
+
+  private getAllData(request: ExploreRequestState, response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
+    return this.buildAllSeries(request, new ExploreResult(response));
+  }
+
+  protected buildAllSeries(request: ExploreRequestState, result: ExploreResult): Observable<ExplorerSeries[]> {
     const seriesData = this.gatherSeriesData(request, result);
     const colors = this.colorService.getColorPalette().forNColors(seriesData.length);
 
     return forkJoinSafeEmpty(seriesData.map((data, index) => this.buildSeries(request, data, colors[index])));
   }
 
-  private gatherSeriesData(request: ExploreVisualizationRequest, result: ExploreResult): SeriesData[] {
+  private gatherSeriesData(request: ExploreRequestState, result: ExploreResult): SeriesData[] {
     const aggregatableSpecs = request.series
       .map(series => series.specification)
       .filter(
@@ -88,11 +189,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
     return [];
   }
 
-  private buildSeries(
-    request: ExploreVisualizationRequest,
-    result: SeriesData,
-    color: string
-  ): Observable<ExplorerSeries> {
+  private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)

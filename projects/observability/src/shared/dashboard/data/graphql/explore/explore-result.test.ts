@@ -1,5 +1,5 @@
 import { AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { ExploreResult } from './explore-result';
 
 describe('Explore result', () => {

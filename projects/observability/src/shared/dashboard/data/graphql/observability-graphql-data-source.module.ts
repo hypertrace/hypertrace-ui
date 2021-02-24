@@ -14,6 +14,7 @@ import { EntitiesAttributeOptionsDataSourceModel } from './entity/attribute/enti
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ExploreCartesianDataSourceModel } from './explore/explore-cartesian-data-source.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-aggregation-data-source.model';
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
@@ -30,6 +31,7 @@ import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
 import { TraceMetricTimeseriesDataSourceModel } from './trace/timeseries/trace-metric-timeseries-data-source.model';
 import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfall-data-source.model';
+import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
 
 @NgModule({
   imports: [
@@ -43,6 +45,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
     ]),
     DashboardCoreModule.with({
       models: [
+        ExploreSelectionSpecificationModel,
         ApiTraceWaterfallDataSourceModel,
         EntityMetricTimeseriesDataSourceModel,
         EntityMetricAggregationDataSourceModel,
@@ -55,6 +58,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntitySpecificationModel,
         NeighborEntitySpecificationModel,
         ExploreCartesianDataSourceModel,
+        ExplorerVisualizationCartesianDataSourceModel,
         ApiCallsCountDataSourceModel,
         EntityErrorPercentageTimeseriesDataSourceModel,
         TraceMetricTimeseriesDataSourceModel,
