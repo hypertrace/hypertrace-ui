@@ -2,9 +2,5 @@
 
 .menu-item {
   @include popover-menu-item;
-
-  &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  @include disableable;
 }
