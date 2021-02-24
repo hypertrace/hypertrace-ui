@@ -50,11 +50,12 @@ export abstract class TableWidgetControlModel {
         return 1;
       }
 
-      return a.label.localeCompare(b.label);
+      // Sort undefined labels to the bottom
+      return a.label === undefined ? 1 : b.label === undefined ? -1 : a.label.localeCompare(b.label);
     });
   }
 }
 
 export type LabeledTableControlOption = TableControlOption & {
-  label: string;
+  label: string | undefined;
 };
