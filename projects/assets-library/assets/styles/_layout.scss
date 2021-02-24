@@ -51,3 +51,15 @@ $paginator-height: 48px;
   margin: 0 2px;
   border: 1px solid $gray-2;
 }
+
+@mixin override-table-overflow {
+  ::ng-deep {
+    ht-table > div.table {
+      overflow: initial;
+
+      & > .table {
+        overflow: initial;
+      }
+    }
+  }
+}
