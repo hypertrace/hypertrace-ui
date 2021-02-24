@@ -57,5 +57,5 @@ export abstract class TableWidgetControlModel {
 }
 
 export type LabeledTableControlOption = TableControlOption & {
-  label: string | undefined;
+  label: string;
 };
