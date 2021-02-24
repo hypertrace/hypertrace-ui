@@ -1,6 +1,7 @@
 @import 'mixins';
 
 .multi-select {
+  @include disableable;
   display: flex;
   align-items: center;
   height: 100%;
@@ -13,10 +14,6 @@
 
   .multi-select-container {
     width: 100%;
-  }
-
-  &.disabled {
-    opacity: 0.4;
   }
 
   &.open .trigger-content.icon-mode {
