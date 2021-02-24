@@ -18,6 +18,14 @@ export abstract class TableWidgetControlModel {
   })
   public uniqueValues: boolean = false;
 
+  @ModelProperty({
+    key: 'visible',
+    displayName: 'Visible',
+    type: BOOLEAN_PROPERTY.type,
+    required: false
+  })
+  public visible: boolean = true;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 

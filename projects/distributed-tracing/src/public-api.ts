@@ -21,6 +21,7 @@ export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source
 export * from './shared/dashboard/data/graphql/graphql-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-query-event.service';
 export * from './shared/dashboard/data/graphql/graphql-data-source.module';
+export * from './shared/dashboard/data/graphql/graphql-table-control-options-data-source.model';
 export * from './shared/dashboard/data/graphql/specifiers/attribute-specification.model';
 export * from './shared/dashboard/data/graphql/specifiers/specification.model';
 export * from './shared/dashboard/data/graphql/specifiers/trace-status-specification.model';
@@ -31,6 +32,7 @@ export * from './shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 export * from './shared/dashboard/tracing-dashboard.module';
 export * from './shared/dashboard/widgets/table/table-widget.model';
 export * from './shared/dashboard/widgets/table/table-widget-control.model';
+export * from './shared/dashboard/widgets/table/table-widget-view-toggle.model';
 
 // Filter
 export * from './shared/services/filter-builder/graphql-filter-builder.service';

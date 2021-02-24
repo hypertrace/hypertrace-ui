@@ -1,9 +1,5 @@
-import {
-  FilterOperator,
-  TableControlOptionType,
-  TableFilterControlOption,
-  TableUnsetFilterControlOption
-} from '@hypertrace/components';
+import { FilterOperator, TableControlOptionType } from '@hypertrace/components';
+import { LabeledTableControlOption } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,18 +16,14 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
   })
   public unsetLabel: string = 'All';
 
-  private buildUnsetOption(attribute: string): Labeled<TableUnsetFilterControlOption> {
-    return {
-      type: TableControlOptionType.UnsetFilter,
-      label: this.unsetLabel,
-      metaValue: attribute
-    };
-  }
-
-  public getData(): Observable<(Labeled<TableUnsetFilterControlOption> | Labeled<TableFilterControlOption>)[]> {
+  public getData(): Observable<LabeledTableControlOption[]> {
     return super.getData().pipe(
       map((values: unknown[]) => [
-        this.buildUnsetOption(this.specification.name),
+        {
+          type: TableControlOptionType.UnsetFilter,
+          label: this.unsetLabel,
+          metaValue: this.specification.name
+        },
         ...values.map(value => ({
           type: TableControlOptionType.Filter as const,
           label: String(value),
@@ -46,5 +38,3 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
     );
   }
 }
-
-type Labeled<T> = T & { label: string };

@@ -161,38 +161,44 @@ export class TableWidgetRendererComponent
 
   protected fetchAndPopulateSelectControls(): void {
     this.selectControls$ = forkJoinSafeEmpty(
-      this.model.getSelectControlOptions().map(selectControlModel =>
-        // Fetch the values for the selectFilter dropdown
-        selectControlModel.getOptions().pipe(
-          first(),
-          map(options => {
-            const selectOptions = options.map(option => ({
-              label: option.label,
-              value: option
-            }));
+      this.model
+        .getSelectControlOptions()
+        .filter(checkboxControlModel => checkboxControlModel.visible)
+        .map(selectControlModel =>
+          // Fetch the values for the selectFilter dropdown
+          selectControlModel.getOptions().pipe(
+            first(),
+            map(options => {
+              const selectOptions = options.map(option => ({
+                label: option.label,
+                value: option
+              }));
 
-            return {
-              placeholder: selectControlModel.placeholder,
-              options: selectOptions
-            };
-          })
+              return {
+                placeholder: selectControlModel.placeholder,
+                options: selectOptions
+              };
+            })
+          )
         )
-      )
     );
   }
 
   protected fetchAndPopulateCheckboxControls(): void {
     this.checkboxControls$ = forkJoinSafeEmpty(
-      this.model.getCheckboxControlOptions().map(checkboxControlModel =>
-        checkboxControlModel.getOptions().pipe(
-          first(),
-          map(options => ({
-            label: checkboxControlModel.checked ? options[0].label : options[1].label,
-            value: checkboxControlModel.checked,
-            options: options
-          }))
+      this.model
+        .getCheckboxControlOptions()
+        .filter(checkboxControlModel => checkboxControlModel.visible)
+        .map(checkboxControlModel =>
+          checkboxControlModel.getOptions().pipe(
+            first(),
+            map(options => ({
+              label: checkboxControlModel.checked ? options[0].label : options[1].label,
+              value: checkboxControlModel.checked,
+              options: options
+            }))
+          )
         )
-      )
     ).pipe(
       tap((checkboxControls: CheckboxControl[]) => {
         // Apply initial values for checkboxes

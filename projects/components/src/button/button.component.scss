@@ -1,5 +1,6 @@
 @import 'font';
 @import 'color-palette';
+@import 'interaction';
 
 @mixin button-style(
   $background-color,
@@ -27,6 +28,7 @@
 }
 
 .button {
+  @include disableable;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,11 +48,6 @@
 
   &:focus {
     outline: 0;
-  }
-
-  &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
   }
 }
 
