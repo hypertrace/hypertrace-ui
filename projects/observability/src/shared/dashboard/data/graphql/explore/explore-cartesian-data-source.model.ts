@@ -1,9 +1,8 @@
-import { GraphQlFilter } from '../../../../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
+import { GraphQlDataSourceModel, GraphQlFilter, MetadataService } from '@hypertrace/distributed-tracing';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
-import { Observable, of, NEVER } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
@@ -15,7 +14,7 @@ import {
   GraphQlExploreRequest,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
 
 export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<
@@ -27,31 +26,36 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  protected abstract buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined;
+  protected abstract buildRequestState(interval: TimeDuration | 'AUTO'): ExploreRequestState | undefined;
 
   public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
     return of({
-      getData: (interval?: TimeDuration) => {
-        const requestState = this.buildRequestState(interval);
-
-        if (requestState === undefined) {
-          return NEVER;
-        }
-
-        return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-          this.buildExploreRequest(requestState, this.getFilters(inheritedFilters))
-        ).pipe(
-          mergeMap(response =>
-            this.getAllData(requestState, response).pipe(
-              map(explorerResults => ({
-                series: explorerResults,
-                bands: []
-              }))
-            )
-          )
-        );
-      }
+      getData: (interval: TimeDuration) => this.fetchResults(interval)
     });
+  }
+
+  protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
+    const requestState = this.buildRequestState(interval);
+
+    if (requestState === undefined) {
+      return NEVER;
+    }
+
+    return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters))
+    ).pipe(mergeMap(response => this.mapResponseData(requestState, response)));
+  }
+
+  protected mapResponseData(
+    requestState: ExploreRequestState,
+    response: GraphQlExploreResponse
+  ): Observable<CartesianResult<ExplorerData>> {
+    return this.getAllData(requestState, response).pipe(
+      map(explorerResults => ({
+        series: explorerResults,
+        bands: []
+      }))
+    );
   }
 
   protected buildExploreRequest(requestState: ExploreRequestState, filters: GraphQlFilter[]): GraphQlExploreRequest {

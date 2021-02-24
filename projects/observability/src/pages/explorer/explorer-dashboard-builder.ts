@@ -65,7 +65,7 @@ export class ExplorerDashboardBuilder {
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
         const dataSource = dashboard.getRootDataSource<ExplorerVisualizationCartesianDataSourceModel>()!;
-        dataSource.request = request;
+        dataSource.request = request; // This was generated request
       }
     });
   }

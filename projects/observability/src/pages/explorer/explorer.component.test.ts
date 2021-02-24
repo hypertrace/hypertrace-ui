@@ -181,7 +181,7 @@ describe('Explorer component', () => {
     detectQueryChange();
     // Spans tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
-      2,
+      1,
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
@@ -193,7 +193,7 @@ describe('Explorer component', () => {
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
-      3,
+      2,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],

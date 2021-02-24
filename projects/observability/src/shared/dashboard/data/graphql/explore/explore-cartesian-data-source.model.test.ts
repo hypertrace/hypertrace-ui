@@ -10,7 +10,6 @@ import {
 import { Model } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { GraphQlGroupBy } from 'projects/observability/src/shared/graphql/model/schema/groupby/graphql-group-by';
 import { Observable, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
@@ -25,6 +24,7 @@ import {
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 
 describe('Explore cartesian data source model', () => {
@@ -90,19 +90,6 @@ describe('Explore cartesian data source model', () => {
     ];
     model.groupBy = undefined;
 
-    // model.request = buildVisualizationRequest({
-    //   interval: 'AUTO',
-    //   groupBy: undefined,
-    //   series: [
-    //     {
-    //       specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-    //       visualizationOptions: {
-    //         type: CartesianSeriesVisualizationType.Line
-    //       }
-    //     }
-    //   ]
-    // });
-
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
         getDataForQueryResponse(
@@ -165,21 +152,6 @@ describe('Explore cartesian data source model', () => {
       keys: ['baz'],
       includeRest: true
     };
-
-    // model.request = buildVisualizationRequest({
-    //   interval: undefined,
-    //   groupBy: {
-    //     keys: ['baz']
-    //   },
-    //   series: [
-    //     {
-    //       specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-    //       visualizationOptions: {
-    //         type: CartesianSeriesVisualizationType.Column
-    //       }
-    //     }
-    //   ]
-    // });
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(

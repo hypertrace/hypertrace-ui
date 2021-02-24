@@ -19,6 +19,7 @@ import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-ag
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
+import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
 import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
@@ -30,7 +31,6 @@ import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
 import { TraceMetricTimeseriesDataSourceModel } from './trace/timeseries/trace-metric-timeseries-data-source.model';
 import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfall-data-source.model';
-import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
 
 @NgModule({
   imports: [
