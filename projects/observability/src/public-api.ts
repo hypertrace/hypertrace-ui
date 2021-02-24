@@ -46,7 +46,7 @@ export * from './shared/components/table/observability-table-cell-type';
 export * from './shared/dashboard/observability-dashboard.module';
 
 // Explorer
-export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+export * from './shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 export * from './shared/dashboard/data/graphql/explore/explore-result';
 export * from './shared/dashboard/data/graphql/specifiers/explore-selection-specification.model';
 export * from './shared/components/explore-query-editor/explore-query-editor.component';
@@ -55,6 +55,8 @@ export {
   ExploreSeries,
   ExploreRequestState
 } from './shared/components/explore-query-editor/explore-visualization-builder';
+export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+
 export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 

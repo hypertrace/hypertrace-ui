@@ -14,11 +14,12 @@ import { EntitiesAttributeOptionsDataSourceModel } from './entity/attribute/enti
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
-import { ExploreCartesianDataSourceModel } from './explore/explore-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-aggregation-data-source.model';
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
+import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
 import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
@@ -43,6 +44,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
     ]),
     DashboardCoreModule.with({
       models: [
+        ExploreSelectionSpecificationModel,
         ApiTraceWaterfallDataSourceModel,
         EntityMetricTimeseriesDataSourceModel,
         EntityMetricAggregationDataSourceModel,
@@ -54,7 +56,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntitiesAttributeOptionsDataSourceModel,
         EntitySpecificationModel,
         NeighborEntitySpecificationModel,
-        ExploreCartesianDataSourceModel,
+        ExplorerVisualizationCartesianDataSourceModel,
         ApiCallsCountDataSourceModel,
         EntityErrorPercentageTimeseriesDataSourceModel,
         TraceMetricTimeseriesDataSourceModel,

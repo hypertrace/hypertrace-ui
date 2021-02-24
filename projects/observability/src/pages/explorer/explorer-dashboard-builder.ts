@@ -22,7 +22,7 @@ import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
-import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
 export class ExplorerDashboardBuilder {
@@ -63,8 +63,8 @@ export class ExplorerDashboardBuilder {
         'legend-position': LegendPosition.Bottom
       },
       onReady: dashboard => {
-        dashboard.createAndSetRootDataFromModelClass(ExploreCartesianDataSourceModel);
-        const dataSource = dashboard.getRootDataSource<ExploreCartesianDataSourceModel>()!;
+        dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
+        const dataSource = dashboard.getRootDataSource<ExplorerVisualizationCartesianDataSourceModel>()!;
         dataSource.request = request;
       }
     });
