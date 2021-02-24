@@ -1,15 +1,12 @@
-import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
 import { GraphQlFilter } from '../../../../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlSortBySpecification, MetadataService, Specification } from '@hypertrace/distributed-tracing';
+import { GraphQlDataSourceModel, GraphQlSortBySpecification, MetadataService } from '@hypertrace/distributed-tracing';
 import {
   ARRAY_PROPERTY,
+  BOOLEAN_PROPERTY,
   Model,
-  ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType,
   NUMBER_PROPERTY,
-  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
@@ -31,39 +28,10 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
-import { ExploreSelectionSpecificationModel } from '../specifiers/explore-selection-specification.model';
 @Model({
   type: 'explore-cartesian-data-source'
 })
 export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
-
-  // @ModelProperty({
-  //   key: 'metric',
-  //   // tslint:disable-next-line: no-object-literal-type-assertion
-  //   type: {
-  //     key: ModelPropertyType.TYPE,
-  //     defaultModelClass: ExploreSelectionSpecificationModel
-  //   } as ModelModelPropertyTypeInstance,
-  //   required: true
-  // })
-  // public metricSpecification!: ExploreSelectionSpecificationModel;
-
-  // @ModelProperty({
-  //   key: 'group-by-specifications',
-  //   displayName: 'Group by specifications',
-  //   required: false,
-  //   type: ARRAY_PROPERTY.type
-  // })
-  // public groupBySpecifications: Specification[] = [];
-
-  @ModelProperty({
-    key: 'series',
-    displayName: 'Explore Series',
-    required: false,
-    type: ARRAY_PROPERTY.type
-  })
-  public series: ExploreSeries[] = [];
-
   @ModelProperty({
     key: 'context',
     displayName: 'Context',
@@ -72,20 +40,20 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
   public context?: string;
 
   @ModelProperty({
-    key: 'order-by',
-    displayName: 'Order By',
-    required: false,
-    type: ARRAY_PROPERTY.type
+    key: 'metric-explore-series',
+    displayName: 'Metric explore series',
+    type: ARRAY_PROPERTY.type,
+    required: true
   })
-  public orderBy: GraphQlSortBySpecification[] = [];
+  public metricExploreSeries: ExploreSeries[] = [];
 
   @ModelProperty({
     key: 'group-by',
     displayName: 'Group By',
     required: false,
-    type: PLAIN_OBJECT_PROPERTY.type
+    type: STRING_PROPERTY.type
   })
-  public groupBy?: GraphQlGroupBy;
+  public groupBy: string[] = [];
 
   @ModelProperty({
     key: 'groupByLimit',
@@ -93,6 +61,22 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
     type: NUMBER_PROPERTY.type
   })
   public groupByLimit: number = 100;
+
+  @ModelProperty({
+    key: 'group-by-include-rest',
+    displayName: 'Group By',
+    required: false,
+    type: BOOLEAN_PROPERTY.type
+  })
+  public groupByIncludeRest: boolean = true;
+
+  @ModelProperty({
+    key: 'order-by',
+    displayName: 'Order By',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public orderBy: GraphQlSortBySpecification[] = [];
 
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
@@ -139,15 +123,21 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
   }
 
   protected buildRequestState(interval: TimeDuration | 'AUTO' = 'AUTO'): ExploreRequestState | undefined {
-    if (this.series.length === 0 || this.context === undefined) {
+    if (this.metricExploreSeries.length === 0 || this.context === undefined) {
       return undefined;
     }
 
     return {
-      series: this.series,
+      series: this.metricExploreSeries,
       context: this.context,
       interval: interval,
-      groupBy: this.groupBy,
+      groupBy:
+        this.groupBy?.length > 0
+          ? {
+              keys: this.groupBy,
+              includeRest: this.groupByIncludeRest
+            }
+          : undefined,
       groupByLimit: this.groupByLimit,
       useGroupName: true
     };
