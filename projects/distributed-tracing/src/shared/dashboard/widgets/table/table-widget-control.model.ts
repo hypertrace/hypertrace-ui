@@ -51,6 +51,7 @@ export abstract class TableWidgetControlModel {
       }
 
       // Sort undefined labels to the bottom
+      // tslint:disable-next-line:strict-type-predicates TODO: Find Root Cause of undefined labels
       return a.label === undefined ? 1 : b.label === undefined ? -1 : a.label.localeCompare(b.label);
     });
   }
