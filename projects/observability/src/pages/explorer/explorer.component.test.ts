@@ -163,7 +163,6 @@ describe('Explorer component', () => {
         })
       ]
     });
-    querySpy.mockClear();
     const filterBar = spectator.query(FilterBarComponent)!;
 
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -177,11 +176,12 @@ describe('Explorer component', () => {
         urlString: ''
       }
     ]);
+    querySpy.mockClear();
 
     detectQueryChange();
     // Spans tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
-      1,
+      2,
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
@@ -193,7 +193,7 @@ describe('Explorer component', () => {
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
-      2,
+      3,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],

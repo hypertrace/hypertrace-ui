@@ -55,6 +55,8 @@ export {
   ExploreSeries,
   ExploreRequestState
 } from './shared/components/explore-query-editor/explore-visualization-builder';
+export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+
 export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 

@@ -23,9 +23,9 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExplorerData } from '../explore/explore-cartesian-data-source.model';
-import { ExplorerCartesianDataSourceModel } from './explorer-visualization-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization-cartesian-data-source.model';
 
-describe('Explorer cartesian data source model', () => {
+describe('Explorer Visualization cartesian data source model', () => {
   const testInterval = new TimeDuration(5, TimeUnit.Minute);
 
   const modelFactory = createModelFactory({
@@ -55,15 +55,18 @@ describe('Explorer cartesian data source model', () => {
       })
     ]
   });
-  let model: ExplorerCartesianDataSourceModel;
+  let model: ExplorerVisualizationCartesianDataSourceModel;
 
-  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<CartesianResult<ExplorerData>> => {
+  const getDataForQueryResponse = (
+    response: GraphQlExploreResponse,
+    requestInterval?: TimeDuration
+  ): Observable<CartesianResult<ExplorerData>> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
       query.responseObserver.complete();
     });
 
-    return model.getData().pipe(mergeMap(fetcher => fetcher.getData(testInterval)));
+    return model.getData().pipe(mergeMap(fetcher => fetcher.getData(requestInterval)));
   };
 
   const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({
@@ -84,7 +87,7 @@ describe('Explorer cartesian data source model', () => {
   });
 
   beforeEach(() => {
-    model = modelFactory(ExplorerCartesianDataSourceModel, {
+    model = modelFactory(ExplorerVisualizationCartesianDataSourceModel, {
       api: {
         getTimeRange: jest.fn().mockReturnValue(new GraphQlTimeRange(2, 3))
       }
@@ -107,24 +110,27 @@ describe('Explorer cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+              }
+            ]
+          },
+          testInterval
+        )
       ).toBe('(x|)', {
         x: {
           series: [
@@ -168,30 +174,33 @@ describe('Explorer cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                }
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                }
               }
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              }
-            }
-          ]
-        })
+            ]
+          },
+          undefined
+        )
       ).toBe('(x|)', {
         x: {
           series: [
@@ -229,54 +238,57 @@ describe('Explorer cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
               },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
+              {
+                'sum(foo)': {
+                  value: 20,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            },
-            {
-              'sum(foo)': {
-                value: 20,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 25,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
+              {
+                'sum(foo)': {
+                  value: 25,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+              }
+            ]
+          },
+          testInterval
+        )
       ).toBe('(x|)', {
         x: {
           series: [

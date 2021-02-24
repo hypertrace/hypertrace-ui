@@ -7,17 +7,20 @@ import {
   MetadataService,
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
+import { Model } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY, Observable, of } from 'rxjs';
+import { GraphQlGroupBy } from 'projects/observability/src/shared/graphql/model/schema/groupby/graphql-group-by';
+import { Observable, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
-import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
-import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import {
+  ExploreRequestState,
+  ExploreSeries
+} from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
@@ -54,11 +57,11 @@ describe('Explore cartesian data source model', () => {
       })
     ]
   });
-  let model: ExploreCartesianDataSourceModel;
+  let model: TestExploreCartesianDataSourceModel;
 
   const getDataForQueryResponse = (
     response: GraphQlExploreResponse,
-    requestInterval: TimeDuration | undefined = testInterval
+    requestInterval?: TimeDuration
   ): Observable<CartesianResult<ExplorerData>> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
@@ -68,25 +71,8 @@ describe('Explore cartesian data source model', () => {
     return model.getData().pipe(mergeMap(fetcher => fetcher.getData(requestInterval)));
   };
 
-  const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({
-    exploreQuery$: of({
-      requestType: EXPLORE_GQL_REQUEST,
-      context: ObservabilityTraceType.Api,
-      limit: 1000,
-      offset: 0,
-      interval: partialRequest.interval as TimeDuration,
-      groupBy: partialRequest.groupBy,
-      selections: partialRequest.series.map(series => series.specification)
-    } as const),
-    resultsQuery$: EMPTY,
-    series: partialRequest.series,
-    groupBy: partialRequest.groupBy,
-    interval: partialRequest.interval,
-    context: ObservabilityTraceType.Api
-  });
-
   beforeEach(() => {
-    model = modelFactory(ExploreCartesianDataSourceModel, {
+    model = modelFactory(TestExploreCartesianDataSourceModel, {
       api: {
         getTimeRange: jest.fn().mockReturnValue(new GraphQlTimeRange(2, 3))
       }
@@ -102,6 +88,7 @@ describe('Explore cartesian data source model', () => {
         }
       }
     ];
+    model.groupBy = undefined;
 
     // model.request = buildVisualizationRequest({
     //   interval: 'AUTO',
@@ -118,24 +105,27 @@ describe('Explore cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+              }
+            ]
+          },
+          testInterval
+        )
       ).toBe('(x|)', {
         x: {
           series: [
@@ -172,7 +162,8 @@ describe('Explore cartesian data source model', () => {
     ];
 
     model.groupBy = {
-      keys: ['baz']
+      keys: ['baz'],
+      includeRest: true
     };
 
     // model.request = buildVisualizationRequest({
@@ -192,30 +183,33 @@ describe('Explore cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                }
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                }
               }
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              }
-            }
-          ]
-        })
+            ]
+          },
+          undefined
+        )
       ).toBe('(x|)', {
         x: {
           series: [
@@ -251,54 +245,57 @@ describe('Explore cartesian data source model', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
+        getDataForQueryResponse(
+          {
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
               },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
+              {
+                'sum(foo)': {
+                  value: 20,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
               },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            },
-            {
-              'sum(foo)': {
-                value: 20,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 25,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
+              {
+                'sum(foo)': {
+                  value: 25,
+                  type: AttributeMetadataType.Number
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+              }
+            ]
+          },
+          testInterval
+        )
       ).toBe('(x|)', {
         x: {
           series: [
@@ -340,4 +337,26 @@ describe('Explore cartesian data source model', () => {
   });
 });
 
-interface TestExplorePartial extends Pick<ExploreVisualizationRequest, 'series' | 'groupBy' | 'interval'> {}
+@Model({
+  type: 'test-explore-cartesian-data-source'
+})
+export class TestExploreCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
+  public series?: ExploreSeries[];
+  public context?: string = 'context_scope';
+  public groupBy?: GraphQlGroupBy;
+  public groupByLimit?: number;
+
+  protected buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
+    if ((this.series ?? [])?.length === 0 || this.context === undefined) {
+      return undefined;
+    }
+
+    return {
+      series: this.series!,
+      context: this.context,
+      interval: interval,
+      groupBy: this.groupBy,
+      groupByLimit: this.groupByLimit
+    };
+  }
+}

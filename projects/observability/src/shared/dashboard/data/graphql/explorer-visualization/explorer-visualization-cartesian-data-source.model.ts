@@ -12,7 +12,7 @@ import { ExploreCartesianDataSourceModel } from '../explore/explore-cartesian-da
 export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
   public request?: ExploreVisualizationRequest;
 
-  protected buildRequestState(interval: TimeDuration | 'AUTO' = 'AUTO'): ExploreRequestState | undefined {
+  protected buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
     if (this.request?.series.length === 0 || this.request?.context === undefined) {
       return undefined;
     }

@@ -1,23 +1,12 @@
 import { GraphQlFilter } from '../../../../../../../distributed-tracing/src/shared/graphql/model/schema/filter/graphql-filter';
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlSortBySpecification, MetadataService } from '@hypertrace/distributed-tracing';
-import {
-  ARRAY_PROPERTY,
-  BOOLEAN_PROPERTY,
-  Model,
-  ModelProperty,
-  NUMBER_PROPERTY,
-  STRING_PROPERTY
-} from '@hypertrace/hyperdash';
+import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { Observable, of, NEVER } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
-import {
-  ExploreRequestState,
-  ExploreSeries
-} from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import {
@@ -28,65 +17,21 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
-@Model({
-  type: 'explore-cartesian-data-source'
-})
-export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
-  @ModelProperty({
-    key: 'context',
-    displayName: 'Context',
-    type: STRING_PROPERTY.type
-  })
-  public context?: string;
 
-  @ModelProperty({
-    key: 'metric-explore-series',
-    displayName: 'Metric explore series',
-    type: ARRAY_PROPERTY.type,
-    required: true
-  })
-  public metricExploreSeries: ExploreSeries[] = [];
-
-  @ModelProperty({
-    key: 'group-by',
-    displayName: 'Group By',
-    required: false,
-    type: STRING_PROPERTY.type
-  })
-  public groupBy: string[] = [];
-
-  @ModelProperty({
-    key: 'groupByLimit',
-    displayName: 'Group by limit',
-    type: NUMBER_PROPERTY.type
-  })
-  public groupByLimit: number = 100;
-
-  @ModelProperty({
-    key: 'group-by-include-rest',
-    displayName: 'Group By',
-    required: false,
-    type: BOOLEAN_PROPERTY.type
-  })
-  public groupByIncludeRest: boolean = true;
-
-  @ModelProperty({
-    key: 'order-by',
-    displayName: 'Order By',
-    required: false,
-    type: ARRAY_PROPERTY.type
-  })
-  public orderBy: GraphQlSortBySpecification[] = [];
-
+export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<
+  CartesianDataFetcher<ExplorerData>
+> {
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
+  protected abstract buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined;
+
   public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
     return of({
-      getData: (interval: TimeDuration) => {
+      getData: (interval?: TimeDuration) => {
         const requestState = this.buildRequestState(interval);
 
         if (requestState === undefined) {
@@ -119,27 +64,6 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
       interval: requestState.interval as TimeDuration,
       filters: filters,
       groupBy: requestState.groupBy
-    };
-  }
-
-  protected buildRequestState(interval: TimeDuration | 'AUTO' = 'AUTO'): ExploreRequestState | undefined {
-    if (this.metricExploreSeries.length === 0 || this.context === undefined) {
-      return undefined;
-    }
-
-    return {
-      series: this.metricExploreSeries,
-      context: this.context,
-      interval: interval,
-      groupBy:
-        this.groupBy?.length > 0
-          ? {
-              keys: this.groupBy,
-              includeRest: this.groupByIncludeRest
-            }
-          : undefined,
-      groupByLimit: this.groupByLimit,
-      useGroupName: true
     };
   }
 

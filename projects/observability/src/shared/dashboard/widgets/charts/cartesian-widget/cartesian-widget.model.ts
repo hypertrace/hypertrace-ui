@@ -326,7 +326,7 @@ interface DecoratedBandDataFetcher<TInterval> extends MetricBandDataFetcher<TInt
 }
 
 export interface CartesianDataFetcher<TInterval> {
-  getData(interval: TimeDuration): Observable<CartesianResult<TInterval>>;
+  getData(interval?: TimeDuration): Observable<CartesianResult<TInterval>>;
 }
 
 export interface CombinedResult<TInterval> {
