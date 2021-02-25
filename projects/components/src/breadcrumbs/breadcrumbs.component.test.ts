@@ -62,14 +62,13 @@ describe('BreadcrumbsComponent', () => {
     expect(crumbs[0].querySelector('ht-icon')).toExist();
   });
 
-  it('should display the icon if alwaysShowIcon is true', () => {
+  it('should display the icon', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
-    crumbs.shift();
     crumbs.forEach((crumb, index) => {
-      if (index === 0) {
-        expect(crumb.querySelector('ht-icon')).toExist();
-      } else {
+      if (index < crumbs.length - 1) {
         expect(crumb.querySelector('ht-icon')).toBeNull();
+      } else {
+        expect(crumb.querySelector('hwt-icon')).toExist();
       }
     });
   });
