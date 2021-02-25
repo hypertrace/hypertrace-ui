@@ -66,9 +66,9 @@ describe('BreadcrumbsComponent', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
     crumbs.forEach((crumb, index) => {
       if (index < crumbs.length - 1) {
-        expect(crumb.querySelector('ht-icon')).toBeNull();
-      } else {
         expect(crumb.querySelector('ht-icon')).toExist();
+      } else {
+        expect(crumb.querySelector('ht-icon')).toBeNull();
       }
     });
   });
