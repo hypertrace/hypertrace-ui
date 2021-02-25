@@ -68,7 +68,7 @@ describe('BreadcrumbsComponent', () => {
       if (index < crumbs.length - 1) {
         expect(crumb.querySelector('ht-icon')).toBeNull();
       } else {
-        expect(crumb.querySelector('hwt-icon')).toExist();
+        expect(crumb.querySelector('ht-icon')).toExist();
       }
     });
   });
