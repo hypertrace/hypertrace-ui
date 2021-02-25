@@ -6,7 +6,7 @@ import { EMPTY } from 'rxjs';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsModule } from './breadcrumbs.module';
 
-fdescribe('BreadcrumbsComponent', () => {
+describe('BreadcrumbsComponent', () => {
   let spectator: Spectator<BreadcrumbsComponent>;
   let spy: jest.SpyInstance;
 
