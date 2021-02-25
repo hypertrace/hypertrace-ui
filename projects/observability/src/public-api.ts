@@ -60,6 +60,9 @@ export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-so
 export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 
+// Explore Data source
+export * from './shared/dashboard/data/graphql/table/explore/explore-table-data-source.model';
+
 // Legend
 export { LegendPosition } from './shared/components/legend/legend.component';
 

@@ -43,7 +43,7 @@ export class ExploreGraphQlQueryHandlerService
   public convertRequest(request: GraphQlExploreRequest): GraphQlSelection {
     const totalSelection = request.includeTotal ? [{ path: 'total' }] : [];
 
-    return {
+    const selection = {
       path: 'explore',
       arguments: [
         {
@@ -72,6 +72,8 @@ export class ExploreGraphQlQueryHandlerService
         ...totalSelection
       ]
     };
+
+    return selection;
   }
 
   public convertResponse(

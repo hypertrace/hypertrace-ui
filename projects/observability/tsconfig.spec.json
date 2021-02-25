@@ -4,5 +4,10 @@
     "outDir": "../../out-tsc/spec",
     "types": ["jest", "webpack-env"]
   },
-  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"]
+  "include": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.d.ts",
+    "../dashboards/src/model/time-duration/time-duration.model.test.ts"
+  ]
 }
