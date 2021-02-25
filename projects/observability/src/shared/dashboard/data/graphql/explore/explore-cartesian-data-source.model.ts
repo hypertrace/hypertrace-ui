@@ -1,69 +1,88 @@
-import { ColorService, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
+import { GraphQlDataSourceModel, GraphQlFilter, MetadataService } from '@hypertrace/distributed-tracing';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
-import { EMPTY, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { NEVER, Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
-import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import {
   ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
+  GraphQlExploreRequest,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { CartesianDataFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
-@Model({
-  type: 'explore-cartesian-data-source'
-})
-export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<CartesianDataFetcher<ExplorerData>> {
-  public request?: ExploreVisualizationRequest;
 
+export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<
+  CartesianDataFetcher<ExplorerData>
+> {
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
-    return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
-      switchMap(request =>
-        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
-          // Add inherited filters
-          request.filters?.push(...inheritedFilters);
+  protected abstract buildRequestState(interval: TimeDuration | 'AUTO'): ExploreRequestState | undefined;
 
-          return {
-            ...request,
-            timeRange: this.getTimeRangeOrThrow()
-          };
-        })
-      ),
-      map(response => ({
-        getData: () =>
-          this.getAllData(response).pipe(
-            map(explorerResults => ({
-              series: explorerResults,
-              bands: []
-            }))
-          )
+  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
+    return of({
+      getData: (interval: TimeDuration) => this.fetchResults(interval)
+    });
+  }
+
+  protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
+    const requestState = this.buildRequestState(interval);
+
+    if (requestState === undefined) {
+      return NEVER;
+    }
+
+    return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters))
+    ).pipe(mergeMap(response => this.mapResponseData(requestState, response)));
+  }
+
+  protected mapResponseData(
+    requestState: ExploreRequestState,
+    response: GraphQlExploreResponse
+  ): Observable<CartesianResult<ExplorerData>> {
+    return this.getAllData(requestState, response).pipe(
+      map(explorerResults => ({
+        series: explorerResults,
+        bands: []
       }))
     );
   }
 
-  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
-    return this.buildAllSeries(this.request!, new ExploreResult(response));
+  protected buildExploreRequest(requestState: ExploreRequestState, filters: GraphQlFilter[]): GraphQlExploreRequest {
+    return {
+      requestType: EXPLORE_GQL_REQUEST,
+      selections: requestState.series.map(series => series.specification),
+      context: requestState.context,
+      limit: requestState.groupByLimit ?? 100,
+      timeRange: this.getTimeRangeOrThrow(),
+      interval: requestState.interval as TimeDuration,
+      filters: filters,
+      groupBy: requestState.groupBy
+    };
   }
 
-  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerSeries[]> {
+  private getAllData(request: ExploreRequestState, response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
+    return this.buildAllSeries(request, new ExploreResult(response));
+  }
+
+  protected buildAllSeries(request: ExploreRequestState, result: ExploreResult): Observable<ExplorerSeries[]> {
     const seriesData = this.gatherSeriesData(request, result);
     const colors = this.colorService.getColorPalette().forNColors(seriesData.length);
 
     return forkJoinSafeEmpty(seriesData.map((data, index) => this.buildSeries(request, data, colors[index])));
   }
 
-  private gatherSeriesData(request: ExploreVisualizationRequest, result: ExploreResult): SeriesData[] {
+  private gatherSeriesData(request: ExploreRequestState, result: ExploreResult): SeriesData[] {
     const aggregatableSpecs = request.series
       .map(series => series.specification)
       .filter(
@@ -88,11 +107,7 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Cart
     return [];
   }
 
-  private buildSeries(
-    request: ExploreVisualizationRequest,
-    result: SeriesData,
-    color: string
-  ): Observable<ExplorerSeries> {
+  private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)

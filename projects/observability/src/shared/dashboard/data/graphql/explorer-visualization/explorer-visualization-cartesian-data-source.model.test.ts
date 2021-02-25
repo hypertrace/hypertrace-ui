@@ -7,27 +7,25 @@ import {
   MetadataService,
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
-import {
-  ExploreRequestState,
-  ExploreSeries
-} from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
+  EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
-import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
-import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
+import { ExplorerData } from '../explore/explore-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization-cartesian-data-source.model';
 
-describe('Explore cartesian data source model', () => {
+describe('Explorer Visualization cartesian data source model', () => {
   const testInterval = new TimeDuration(5, TimeUnit.Minute);
 
   const modelFactory = createModelFactory({
@@ -57,7 +55,7 @@ describe('Explore cartesian data source model', () => {
       })
     ]
   });
-  let model: TestExploreCartesianDataSourceModel;
+  let model: ExplorerVisualizationCartesianDataSourceModel;
 
   const getDataForQueryResponse = (
     response: GraphQlExploreResponse,
@@ -71,8 +69,25 @@ describe('Explore cartesian data source model', () => {
     return model.getData().pipe(mergeMap(fetcher => fetcher.getData(requestInterval)));
   };
 
+  const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({
+    exploreQuery$: of({
+      requestType: EXPLORE_GQL_REQUEST,
+      context: ObservabilityTraceType.Api,
+      limit: 1000,
+      offset: 0,
+      interval: partialRequest.interval as TimeDuration,
+      groupBy: partialRequest.groupBy,
+      selections: partialRequest.series.map(series => series.specification)
+    } as const),
+    resultsQuery$: EMPTY,
+    series: partialRequest.series,
+    groupBy: partialRequest.groupBy,
+    interval: partialRequest.interval,
+    context: ObservabilityTraceType.Api
+  });
+
   beforeEach(() => {
-    model = modelFactory(TestExploreCartesianDataSourceModel, {
+    model = modelFactory(ExplorerVisualizationCartesianDataSourceModel, {
       api: {
         getTimeRange: jest.fn().mockReturnValue(new GraphQlTimeRange(2, 3))
       }
@@ -80,15 +95,18 @@ describe('Explore cartesian data source model', () => {
   });
 
   test('can build timeseries data', () => {
-    model.series = [
-      {
-        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-        visualizationOptions: {
-          type: CartesianSeriesVisualizationType.Line
+    model.request = buildVisualizationRequest({
+      interval: 'AUTO',
+      groupBy: undefined,
+      series: [
+        {
+          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+          visualizationOptions: {
+            type: CartesianSeriesVisualizationType.Line
+          }
         }
-      }
-    ];
-    model.groupBy = undefined;
+      ]
+    });
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
@@ -139,19 +157,20 @@ describe('Explore cartesian data source model', () => {
   });
 
   test('can build grouped series data', () => {
-    model.series = [
-      {
-        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-        visualizationOptions: {
-          type: CartesianSeriesVisualizationType.Column
+    model.request = buildVisualizationRequest({
+      interval: undefined,
+      groupBy: {
+        keys: ['baz']
+      },
+      series: [
+        {
+          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+          visualizationOptions: {
+            type: CartesianSeriesVisualizationType.Column
+          }
         }
-      }
-    ];
-
-    model.groupBy = {
-      keys: ['baz'],
-      includeRest: true
-    };
+      ]
+    });
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
@@ -202,18 +221,20 @@ describe('Explore cartesian data source model', () => {
   });
 
   test('can build grouped timeseries data', () => {
-    model.series = [
-      {
-        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-        visualizationOptions: {
-          type: CartesianSeriesVisualizationType.Area
+    model.request = buildVisualizationRequest({
+      interval: 'AUTO',
+      groupBy: {
+        keys: ['baz']
+      },
+      series: [
+        {
+          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+          visualizationOptions: {
+            type: CartesianSeriesVisualizationType.Area
+          }
         }
-      }
-    ];
-
-    model.groupBy = {
-      keys: ['baz']
-    };
+      ]
+    });
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
@@ -309,26 +330,4 @@ describe('Explore cartesian data source model', () => {
   });
 });
 
-@Model({
-  type: 'test-explore-cartesian-data-source'
-})
-export class TestExploreCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
-  public series?: ExploreSeries[];
-  public context?: string = 'context_scope';
-  public groupBy?: GraphQlGroupBy;
-  public groupByLimit?: number;
-
-  protected buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
-    if ((this.series ?? [])?.length === 0 || this.context === undefined) {
-      return undefined;
-    }
-
-    return {
-      series: this.series!,
-      context: this.context,
-      interval: interval,
-      groupBy: this.groupBy,
-      groupByLimit: this.groupByLimit
-    };
-  }
-}
+interface TestExplorePartial extends Pick<ExploreVisualizationRequest, 'series' | 'groupBy' | 'interval'> {}

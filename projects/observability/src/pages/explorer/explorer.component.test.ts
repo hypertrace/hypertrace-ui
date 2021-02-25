@@ -163,7 +163,6 @@ describe('Explorer component', () => {
         })
       ]
     });
-    querySpy.mockClear();
     const filterBar = spectator.query(FilterBarComponent)!;
 
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -177,6 +176,7 @@ describe('Explorer component', () => {
         urlString: ''
       }
     ]);
+    querySpy.mockClear();
 
     detectQueryChange();
     // Spans tab is auto selected
