@@ -29,7 +29,8 @@ describe('Backend detail breadcrumb resolver', () => {
             [entityTypeKey]: ObservabilityEntityType.Backend,
             [entityIdKey]: 'test-id',
             name: 'test backend',
-            type: BackendType.Mysql
+            type: BackendType.Mysql,
+            alwaysShowIcon: false
           })
         )
       }),
@@ -62,7 +63,8 @@ describe('Backend detail breadcrumb resolver', () => {
         expectObservable(breadcrumb$).toBe('(x|)', {
           x: {
             label: 'test backend',
-            icon: ObservabilityIconType.Mysql
+            icon: ObservabilityIconType.Mysql,
+            alwaysShowIcon: false
           }
         });
       });

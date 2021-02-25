@@ -57,16 +57,16 @@ fdescribe('BreadcrumbsComponent', () => {
     expect(spectator.queryAll('.breadcrumbs .breadcrumb').length).toBe(3);
   });
 
-  it('should show icon on the first crumb if alwaysShowIcon is false', () => {
+  it('should show icon on the first crumb', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
     expect(crumbs[0].querySelector('ht-icon')).toExist();
   });
 
-  it('should display the icon on a different crumb than the first one if alwaysShowIcon is true', () => {
+  it('should display the icon if alwaysShowIcon is true', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
     crumbs.shift();
     crumbs.forEach((crumb, index) => {
-      if (index == 0) {
+      if (index === 0) {
         expect(crumb.querySelector('ht-icon')).toExist();
       } else {
         expect(crumb.querySelector('ht-icon')).toBeNull();
