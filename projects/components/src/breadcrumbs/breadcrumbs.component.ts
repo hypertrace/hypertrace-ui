@@ -18,7 +18,7 @@ import { IconSize } from '../icon/icon-size';
         >
           <ht-icon
             class="icon"
-            *ngIf="isFirst"
+            *ngIf="isFirst || breadcrumb.alwaysShowIcon"
             [icon]="breadcrumb.icon"
             [label]="breadcrumb.label"
             size="${IconSize.Small}"
