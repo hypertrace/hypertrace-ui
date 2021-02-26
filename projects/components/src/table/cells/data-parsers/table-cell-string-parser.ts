@@ -13,12 +13,11 @@ export class TableCellStringParser extends TableCellParserBase<string, CellValue
 
   private extractValue(cellData: CellData): CellValue {
     switch (typeof cellData) {
-      case 'string':
-        return cellData;
       case 'object':
         return cellData?.value ?? undefined;
+      case 'string':
       default:
-        return undefined;
+        return cellData;
     }
   }
 
