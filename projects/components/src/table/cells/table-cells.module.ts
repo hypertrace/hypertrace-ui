@@ -14,7 +14,6 @@ import { TableCellBooleanParser } from './data-parsers/table-cell-boolean-parser
 import { TableCellIconParser } from './data-parsers/table-cell-icon-parser';
 import { TableCellNoOpParser } from './data-parsers/table-cell-no-op-parser';
 import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
-import { TableCellRowParser } from './data-parsers/table-cell-row-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
 import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
@@ -91,8 +90,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCellNumberParser,
         TableCellStringParser,
         TableCellTimestampParser,
-        TableCellNoOpParser,
-        TableCellRowParser
+        TableCellNoOpParser
       ],
       multi: true
     }
