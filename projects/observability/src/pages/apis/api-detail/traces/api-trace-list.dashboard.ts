@@ -23,6 +23,15 @@ export const apiTraceListDashboard = {
       },
       {
         type: 'table-widget-column',
+        title: 'Exit Calls',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'apiExitCalls'
+        }
+      },
+      {
+        type: 'table-widget-column',
         title: 'Status',
         width: '20%',
         display: TracingTableCellType.TraceStatus,

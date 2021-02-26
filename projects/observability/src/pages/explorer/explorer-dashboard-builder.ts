@@ -203,6 +203,18 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Exit Calls',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiExitCalls'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Status',
             width: '184px',
             display: TracingTableCellType.TraceStatus,
