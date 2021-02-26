@@ -7,6 +7,7 @@
   position: relative;
   align-items: center;
   padding: 0 8px;
+  width: 100%;
 
   .icon {
     color: $gray-7;
@@ -39,7 +40,7 @@
     @include body-1-regular($gray-9);
     height: 34px;
     line-height: 34px;
-    width: 420px;
+    width: 100%;
     background: transparent;
     border: 1px solid transparent;
     padding-left: 28px;
