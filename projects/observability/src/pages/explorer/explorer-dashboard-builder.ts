@@ -25,6 +25,7 @@ import { LegendPosition } from '../../shared/components/legend/legend.component'
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
+// tslint:disable: max-file-line-count
 export class ExplorerDashboardBuilder {
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
 
