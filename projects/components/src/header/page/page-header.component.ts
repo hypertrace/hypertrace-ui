@@ -18,11 +18,10 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
     >
       <div class="breadcrumb-container">
         <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-
         <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
           <ht-icon
             class="icon"
-            *ngIf="titlecrumb.icon"
+            *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
             [icon]="titlecrumb.icon"
             [label]="titlecrumb.label"
             size="${IconSize.Large}"

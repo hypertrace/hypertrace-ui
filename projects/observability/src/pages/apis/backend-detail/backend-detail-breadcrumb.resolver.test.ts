@@ -62,7 +62,8 @@ describe('Backend detail breadcrumb resolver', () => {
         expectObservable(breadcrumb$).toBe('(x|)', {
           x: {
             label: 'test backend',
-            icon: ObservabilityIconType.Mysql
+            icon: ObservabilityIconType.Mysql,
+            alwaysShowIcon: true
           }
         });
       });
