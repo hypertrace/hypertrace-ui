@@ -1,3 +1,6 @@
+// Models
+export * from './model/time-duration/time-duration.model';
+
 // Types
 export * from './properties/arrays/array-property-type';
 export * from './properties/enums/enum-property-type';

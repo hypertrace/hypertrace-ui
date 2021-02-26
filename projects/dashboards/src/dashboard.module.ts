@@ -1,11 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DefaultConfigurationService } from '@hypertrace/hyperdash-angular';
+import { DashboardCoreModule, DefaultConfigurationService } from '@hypertrace/hyperdash-angular';
+import { TimeDurationModel } from './model/time-duration/time-duration.model';
 import { DashboardPropertyEditorsModule } from './properties/dashboard-properties.module';
 import { DashboardWidgetsModule } from './widgets/dashboard-widgets.module';
 
 @NgModule({
-  imports: [CommonModule, DashboardWidgetsModule, DashboardPropertyEditorsModule]
+  imports: [
+    CommonModule,
+    DashboardWidgetsModule,
+    DashboardPropertyEditorsModule,
+    DashboardCoreModule.with({
+      models: [TimeDurationModel]
+    })
+  ]
 })
 // tslint:disable-next-line: no-unnecessary-class
 export class DashboardModule {
