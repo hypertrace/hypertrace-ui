@@ -7,12 +7,11 @@ import { BackendIconTableCellRendererModule } from './data-cell/backend-icon/bac
 import { EntityTableCellParser } from './data-cell/entity/entity-table-cell-parser';
 import { EntityTableCellRendererComponent } from './data-cell/entity/entity-table-cell-renderer.component';
 import { EntityTableCellRendererModule } from './data-cell/entity/entity-table-cell-renderer.module';
-import { ExploreValueTableCellParser } from './data-cell/explore/explore-table-cell-parser';
 
 @NgModule({
   imports: [
     CommonModule,
-    TableModule.withCellParsers([EntityTableCellParser, BackendIconTableCellParser, ExploreValueTableCellParser]),
+    TableModule.withCellParsers([EntityTableCellParser, BackendIconTableCellParser]),
     TableModule.withCellRenderers([EntityTableCellRendererComponent, BackendIconTableCellRendererComponent]),
     EntityTableCellRendererModule,
     BackendIconTableCellRendererModule

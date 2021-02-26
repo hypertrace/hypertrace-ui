@@ -116,8 +116,6 @@ export * from './pages/explorer/explorer.module';
 
 export * from './pages/api-trace-detail/api-trace-detail.page.module';
 
-// Parsers
-export { ExploreValueTableCellParser } from './shared/components/table/data-cell/explore/explore-table-cell-parser';
 // Icon Types
 export * from './shared/icons/observability-icon-type';
 export * from './shared/icons/observability-icon-library.module';
