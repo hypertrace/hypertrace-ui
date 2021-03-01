@@ -16,7 +16,7 @@ export class DisplayTimeAgo implements PipeTransform {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public transform(value?: DateOrMillis | null): string {
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value === 0) {
       return '-';
     }
 
