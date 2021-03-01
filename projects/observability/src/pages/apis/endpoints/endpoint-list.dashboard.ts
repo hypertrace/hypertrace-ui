@@ -108,9 +108,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             title: 'Last Called',
             display: CoreTableCellRendererType.TimeAgo,
             value: {
-              type: 'metric-aggregation',
-              metric: 'endTime',
-              aggregation: MetricAggregationType.Max
+              type: 'attribute-specification',
+              attribute: 'lastCalledTimestamp'
             }
           }
         ],
