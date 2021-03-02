@@ -7,7 +7,9 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./expander-toggle.component.scss'],
   template: `
-    <div class="expander-toggle">
+    <div 
+      class="expander-toggle" 
+      [ngClass]="{ 'expanded-toggle' : this.colorChange && this.expanded }">
       <ht-icon
         [icon]="this.getIconType()"
         size="${IconSize.Small}"
@@ -26,6 +28,9 @@ export class ExpanderToggleComponent {
 
   @Input()
   public showTooltip: boolean = true;
+
+  @Input()
+  public colorChange: boolean = false;
 
   public getTooltipText(): string {
     return this.expanded ? ExpanderToggleComponent.COLLAPSE : ExpanderToggleComponent.EXPAND;
