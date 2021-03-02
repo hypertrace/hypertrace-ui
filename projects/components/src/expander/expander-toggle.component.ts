@@ -7,9 +7,7 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./expander-toggle.component.scss'],
   template: `
-    <div 
-      class="expander-toggle" 
-      [ngClass]="{ 'expanded-toggle' : this.expanded }">
+    <div class="expander-toggle" [ngClass]="{ 'expanded-toggle': this.expanded }">
       <ht-icon
         [icon]="this.getIconType()"
         size="${IconSize.Small}"
