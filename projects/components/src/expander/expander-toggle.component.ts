@@ -26,7 +26,7 @@ export class ExpanderToggleComponent {
 
   @Input()
   public showTooltip: boolean = true;
-  
+
   public getTooltipText(): string {
     return this.expanded ? ExpanderToggleComponent.COLLAPSE : ExpanderToggleComponent.EXPAND;
   }
