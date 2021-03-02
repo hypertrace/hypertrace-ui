@@ -1,0 +1,66 @@
+@import 'mixins';
+
+:host {
+  ::ng-deep {
+    &.mat-form-field {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+
+    &.mat-focused {
+      .mat-form-field-label {
+        color: $gray-5;
+      }
+    }
+
+    .mat-form-field-underline {
+      display: none;
+    }
+
+    .mat-form-field-infix {
+      height: inherit;
+      width: inherit;
+      border: unset;
+      padding: 0 0 0 8px;
+    }
+
+    .mat-form-field-flex {
+      height: inherit;
+      width: inherit;
+    }
+
+    .mat-form-field-wrapper {
+      height: inherit;
+      width: inherit;
+      padding-bottom: 0;
+
+      .mat-form-field-label {
+        padding: 0 0 0 8px;
+        line-height: initial;
+        color: $gray-5;
+      }
+    }
+
+    .mat-input-element {
+      height: inherit;
+      width: inherit;
+      margin: 0;
+
+      &:after {
+        width: unset;
+        margin: 4px;
+      }
+    }
+
+    .textarea.mat-input-element {
+      padding: 0;
+      margin-top: 8px;
+    }
+  }
+}
+
+.textarea {
+  height: 100%;
+  width: 100%;
+}
