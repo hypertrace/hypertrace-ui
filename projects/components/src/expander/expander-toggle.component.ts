@@ -9,7 +9,7 @@ import { IconSize } from '../icon/icon-size';
   template: `
     <div 
       class="expander-toggle" 
-      [ngClass]="{ 'expanded-toggle' : this.colorChange && this.expanded }">
+      [ngClass]="{ 'expanded-toggle' : this.expanded }">
       <ht-icon
         [icon]="this.getIconType()"
         size="${IconSize.Small}"
@@ -28,9 +28,6 @@ export class ExpanderToggleComponent {
 
   @Input()
   public showTooltip: boolean = true;
-
-  @Input()
-  public colorChange: boolean = false;
 
   public getTooltipText(): string {
     return this.expanded ? ExpanderToggleComponent.COLLAPSE : ExpanderToggleComponent.EXPAND;

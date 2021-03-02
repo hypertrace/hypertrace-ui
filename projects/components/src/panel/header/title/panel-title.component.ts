@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-panel-title">
-      <ht-expander-toggle [expanded]="this.expanded" [colorChange]="true" class="expander"></ht-expander-toggle>
+      <ht-expander-toggle [expanded]="this.expanded" class="expander"></ht-expander-toggle>
       <div class="label"><ng-content></ng-content></div>
     </div>
   `

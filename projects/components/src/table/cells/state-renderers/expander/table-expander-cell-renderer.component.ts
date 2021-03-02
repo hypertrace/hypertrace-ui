@@ -16,7 +16,6 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
         *ngIf="!this.value.leaf"
         [expanded]="this.value.expanded"
         [showTooltip]="false"
-        [colorChange]="true"
       ></ht-expander-toggle>
     </div>
   `
