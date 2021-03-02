@@ -6,8 +6,9 @@ import { LoggerService } from '@hypertrace/common';
   styleUrls: ['./textarea.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-form-field class="full-page">
+    <mat-form-field class="fill-container" floatLabel="never">
       <textarea
+        class="textarea"
         matInput
         [disabled]="this.disabled"
         [placeholder]="this.placeholder"

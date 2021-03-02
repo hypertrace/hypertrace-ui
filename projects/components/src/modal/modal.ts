@@ -14,6 +14,7 @@ export const enum ModalSize {
   Small = 'small',
   Medium = 'medium',
   Large = 'large',
+  LargeTall = 'large-tall',
   MediumWide = 'medium-wide'
 }
 
