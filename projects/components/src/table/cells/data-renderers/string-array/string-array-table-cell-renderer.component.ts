@@ -1,0 +1,60 @@
+import { ChangeDetectionStrategy, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { TableColumnConfig, TableRow } from '../../../table-api';
+import {
+  TABLE_CELL_DATA,
+  TABLE_COLUMN_CONFIG,
+  TABLE_COLUMN_INDEX,
+  TABLE_DATA_PARSER,
+  TABLE_ROW_DATA
+} from '../../table-cell-injection';
+import { TableCellParserBase } from '../../table-cell-parser-base';
+import { TableCellRenderer } from '../../table-cell-renderer';
+import { TableCellRendererBase } from '../../table-cell-renderer-base';
+import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type';
+import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-type';
+import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
+
+@Component({
+  selector: 'ht-string-array-table-cell-renderer',
+  styleUrls: ['./string-array-table-cell-renderer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="string-array-cell">
+      <span class="first-item">{{ this.firstItem }}</span>
+      <span class="summary-text" [htTooltip]="this.summaryTooltip">{{ this.summaryText }}</span>
+
+      <ng-template #summaryTooltipElement>
+        <div *ngFor="let value of this.value.slice(1, this.value.length)">{{ value }}</div>
+      </ng-template>
+    </div>
+  `
+})
+@TableCellRenderer({
+  type: CoreTableCellRendererType.StringArray,
+  alignment: TableCellAlignmentType.Left,
+  parser: CoreTableCellParserType.NoOp
+})
+export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {
+  public firstItem!: string;
+  public summaryText!: string;
+
+  @ViewChild('summaryTooltipElement')
+  public summaryTooltip!: TemplateRef<unknown>;
+
+  public constructor(
+    @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
+    @Inject(TABLE_COLUMN_INDEX) index: number,
+    @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<string[], string[], unknown>,
+    @Inject(TABLE_CELL_DATA) cellData: string[],
+    @Inject(TABLE_ROW_DATA) rowData: TableRow
+  ) {
+    super(columnConfig, index, parser, cellData, rowData);
+  }
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+
+    this.firstItem = this.value[0] ?? '-';
+    this.summaryText = this.value.length > 1 ? `+${this.value.length - 1}` : '';
+  }
+}

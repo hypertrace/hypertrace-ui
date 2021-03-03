@@ -1,0 +1,18 @@
+@import 'font';
+@import 'color-palette';
+
+.string-array-cell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .first-item {
+    padding-right: 8px;
+  }
+
+  .summary-text {
+    padding: 0 6px;
+    background-color: $gray-2;
+    border-radius: 4px;
+  }
+}
