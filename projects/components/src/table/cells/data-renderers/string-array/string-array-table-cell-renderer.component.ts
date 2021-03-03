@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { TableColumnConfig, TableRow } from '../../../table-api';
 import {
   TABLE_CELL_DATA,
@@ -19,11 +19,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./string-array-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="string-array-cell" [htTooltip]="this.summaryTooltip">
+    <div class="string-array-cell" [htTooltip]="summaryTooltip">
       <span class="first-item">{{ this.firstItem }}</span>
       <span class="summary-text">{{ this.summaryText }}</span>
 
-      <ng-template #summaryTooltipElement>
+      <ng-template #summaryTooltip>
         <div *ngFor="let value of this.value">{{ value }}</div>
       </ng-template>
     </div>
@@ -37,9 +37,6 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {
   public firstItem!: string;
   public summaryText!: string;
-
-  @ViewChild('summaryTooltipElement')
-  public summaryTooltip!: TemplateRef<unknown>;
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
