@@ -10,11 +10,5 @@
 
   .expandable-column-row {
     overflow: hidden;
-
-    // Left dashed border 4px dash, 4px space
-    background-image: linear-gradient($gray-4 50%, rgba(255, 255, 255, 0) 0%);
-    background-position: left;
-    background-size: 1px 8px;
-    background-repeat: repeat-y;
   }
 }
