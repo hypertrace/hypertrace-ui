@@ -19,12 +19,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./string-array-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="string-array-cell">
+    <div class="string-array-cell" [htTooltip]="this.summaryTooltip">
       <span class="first-item">{{ this.firstItem }}</span>
-      <span class="summary-text" [htTooltip]="this.summaryTooltip">{{ this.summaryText }}</span>
+      <span class="summary-text">{{ this.summaryText }}</span>
 
       <ng-template #summaryTooltipElement>
-        <div *ngFor="let value of this.value.slice(1, this.value.length)">{{ value }}</div>
+        <div *ngFor="let value of this.value">{{ value }}</div>
       </ng-template>
     </div>
   `

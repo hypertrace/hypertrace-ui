@@ -7,6 +7,7 @@
   align-items: center;
 
   .first-item {
+    @include ellipsis-overflow();
     padding-right: 8px;
   }
 
