@@ -45,7 +45,6 @@ export const collapseWhitespace = (str: string): string =>
 
 export const getStringsFromCommaSeparatedList = (text: string): string[] =>
   text
-    .trim()
     .split(',')
     .map(part => part.trim())
     .filter(part => part !== '');
