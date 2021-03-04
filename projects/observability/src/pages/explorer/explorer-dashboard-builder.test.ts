@@ -122,6 +122,7 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Type' }),
               expect.objectContaining({ title: 'Service' }),
               expect.objectContaining({ title: 'Endpoint' }),
+              expect.objectContaining({ title: 'Exit Calls' }),
               expect.objectContaining({ title: 'Status' }),
               expect.objectContaining({ title: 'Duration' }),
               expect.objectContaining({ title: 'Start Time' }),

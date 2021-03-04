@@ -25,6 +25,7 @@ import { LegendPosition } from '../../shared/components/legend/legend.component'
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
+// tslint:disable: max-file-line-count
 export class ExplorerDashboardBuilder {
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
 
@@ -196,6 +197,18 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'apiName'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Exit Calls',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiExitCalls'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
