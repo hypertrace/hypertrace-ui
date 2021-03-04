@@ -36,7 +36,7 @@ describe('String formatter', () => {
     expect(getStringsFromCommaSeparatedList('first,second,   third   ')).toEqual(
       expect.arrayContaining(['first', 'second', 'third'])
     );
-    expect(getStringsFromCommaSeparatedList('first,second,   ')).toEqual(expect.arrayContaining(['first', 'second']));
-    expect(getStringsFromCommaSeparatedList('first')).toEqual(expect.arrayContaining(['first']));
+    expect(getStringsFromCommaSeparatedList('first,second,   ')).toEqual(['first', 'second']);
+    expect(getStringsFromCommaSeparatedList('first')).toEqual(['first']);
   });
 });
