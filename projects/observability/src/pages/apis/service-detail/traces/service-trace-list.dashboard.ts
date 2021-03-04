@@ -49,6 +49,15 @@ export const serviceTraceListDashboard = {
       },
       {
         type: 'table-widget-column',
+        title: 'Exit Calls',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'apiExitCalls'
+        }
+      },
+      {
+        type: 'table-widget-column',
         title: 'Status',
         width: '10%',
         display: TracingTableCellType.TraceStatus,

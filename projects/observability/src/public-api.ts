@@ -53,7 +53,8 @@ export * from './shared/components/explore-query-editor/explore-query-editor.com
 export * from './shared/components/explore-query-editor/explore-query-editor.module';
 export {
   ExploreSeries,
-  ExploreRequestState
+  ExploreRequestState,
+  ExploreVisualizationRequest
 } from './shared/components/explore-query-editor/explore-visualization-builder';
 export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
 
