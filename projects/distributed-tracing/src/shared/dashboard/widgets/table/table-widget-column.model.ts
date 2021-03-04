@@ -140,6 +140,6 @@ export class TableWidgetColumnModel {
   }
 }
 
-export interface SpecificationBackedTableColumnDef extends TableColumnConfig {
-  specification: Specification;
+export interface SpecificationBackedTableColumnDef<T extends Specification = Specification> extends TableColumnConfig {
+  specification: T;
 }

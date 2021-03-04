@@ -26,6 +26,7 @@ export class ExploreSelectionSpecificationModel
   @ModelProperty({
     key: 'aggregation',
     displayName: 'Aggregation',
+    required: false,
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
@@ -45,7 +46,7 @@ export class ExploreSelectionSpecificationModel
       ]
     } as EnumPropertyTypeInstance
   })
-  public aggregation!: MetricAggregationType;
+  public aggregation?: MetricAggregationType;
 
   protected buildInnerSpec(): ExploreSpecification {
     return new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric, this.aggregation);

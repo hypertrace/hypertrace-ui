@@ -19,6 +19,7 @@ import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-pa
 import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
+import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
 import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
@@ -64,7 +65,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TextTableCellRendererComponent,
     TimestampTableCellRendererComponent,
     TimeAgoTableCellRendererComponent,
-    CodeTableCellRendererComponent
+    CodeTableCellRendererComponent,
+    StringArrayTableCellRendererComponent
   ],
   providers: [
     {
@@ -77,7 +79,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TextTableCellRendererComponent,
         TimestampTableCellRendererComponent,
         TimeAgoTableCellRendererComponent,
-        CodeTableCellRendererComponent
+        CodeTableCellRendererComponent,
+        StringArrayTableCellRendererComponent
       ],
       multi: true
     },

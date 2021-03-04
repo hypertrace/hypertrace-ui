@@ -32,7 +32,8 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
         take(1),
         map(backend => ({
           label: backend.name,
-          icon: this.iconLookupService.forBackendEntity(backend, this.getBackendTypeAttributeName())
+          icon: this.iconLookupService.forBackendEntity(backend, this.getBackendTypeAttributeName()),
+          alwaysShowIcon: true
         }))
       )
     );
