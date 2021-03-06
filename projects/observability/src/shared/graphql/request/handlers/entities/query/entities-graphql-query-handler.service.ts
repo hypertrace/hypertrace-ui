@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
+  GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
+  MutationTrackerService,
+  MutationType
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import {
@@ -16,8 +19,12 @@ import {
 export class EntitiesGraphQlQueryHandlerService
   implements GraphQlQueryHandler<GraphQlEntitiesQueryRequest, EntitiesResponse> {
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
+  public readonly relatedMutationType: MutationType = MutationType.Entity;
 
-  public constructor(private readonly entitiesGraphQlQueryBuilderService: EntitiesGraphqlQueryBuilderService) {}
+  public constructor(
+    private readonly entitiesGraphQlQueryBuilderService: EntitiesGraphqlQueryBuilderService,
+    private readonly mutationTrackerService: MutationTrackerService
+  ) {}
 
   public matchesRequest(request: unknown): request is GraphQlEntitiesQueryRequest {
     return (
@@ -44,10 +51,18 @@ export class EntitiesGraphQlQueryHandlerService
   }
 
   public convertResponse(response: unknown, request: GraphQlEntitiesQueryRequest): Observable<EntitiesResponse> {
+    this.mutationTrackerService.markMutationAsConsumedByListQuery(this.relatedMutationType);
+
     return this.entitiesGraphQlQueryBuilderService.buildResponse(response, request);
   }
 
   public getRequestOptions(request: GraphQlEntitiesQueryRequest): GraphQlRequestOptions {
+    if (this.mutationTrackerService.isAffectedByMutation(this.relatedMutationType)) {
+      console.log('Refresh cache!!!');
+
+      return { cacheability: GraphQlRequestCacheability.RefreshCache };
+    }
+
     return this.entitiesGraphQlQueryBuilderService.getRequestOptions(request);
   }
 }

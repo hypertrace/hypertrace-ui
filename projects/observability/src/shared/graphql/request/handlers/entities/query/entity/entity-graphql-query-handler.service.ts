@@ -3,8 +3,11 @@ import { GraphQlTimeRange, Specification } from '@hypertrace/distributed-tracing
 import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
+  GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
+  MutationTrackerService,
+  MutationType
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
@@ -20,10 +23,12 @@ import {
 @Injectable({ providedIn: 'root' })
 export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<GraphQlEntityRequest, Entity | undefined> {
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
+  public readonly relatedMutationType: MutationType = MutationType.Entity;
 
   public constructor(
     private readonly entitiesGraphQlQueryHandler: EntitiesGraphQlQueryHandlerService,
-    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService
+    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService,
+    private readonly mutationTrackerService: MutationTrackerService
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlEntityRequest {
@@ -39,6 +44,8 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   }
 
   public convertResponse(response: unknown, request: GraphQlEntityRequest): Observable<Entity | undefined> {
+    this.mutationTrackerService.markMutationAsConsumedByIdQuery(request.id);
+
     return this.entitiesGraphQlQueryHandler.convertResponse(response, this.asEntitiesRequest(request)).pipe(
       map(results => results.results[0]),
       throwIfEmpty(() => new Error('No Entity found'))
@@ -46,6 +53,12 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   }
 
   public getRequestOptions(request: GraphQlEntityRequest): GraphQlRequestOptions {
+    if (this.mutationTrackerService.isAffectedByMutation(this.relatedMutationType, request.id)) {
+      console.log('Refresh cache!!!');
+
+      return { cacheability: GraphQlRequestCacheability.RefreshCache };
+    }
+
     return this.entityGraphQlQueryBuilder.getRequestOptions(request);
   }
 
