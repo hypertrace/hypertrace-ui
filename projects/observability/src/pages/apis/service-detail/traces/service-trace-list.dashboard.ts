@@ -54,6 +54,9 @@ export const serviceTraceListDashboard = {
         value: {
           type: 'attribute-specification',
           attribute: 'apiExitCalls'
+        },
+        'click-handler': {
+          type: 'api-trace-navigation-handler'
         }
       },
       {
