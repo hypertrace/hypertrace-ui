@@ -187,6 +187,11 @@ export * from './select/select-control-option.component';
 export * from './select/select.component';
 export * from './select/select.module';
 
+// Splitter
+export * from './splitter/splitter';
+export * from './splitter/splitter.component';
+export * from './splitter/splitter.module';
+
 // Multi-select
 export * from './multi-select/multi-select.component';
 export * from './multi-select/multi-select.module';

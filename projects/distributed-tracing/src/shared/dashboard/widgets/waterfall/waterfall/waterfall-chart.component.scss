@@ -17,8 +17,7 @@
   width: 100%;
 
   .table {
-    min-width: 500px;
-    flex: 1 1;
+    width: 500px;
 
     .header-cell {
       @include widget-title();
@@ -26,7 +25,7 @@
   }
 
   .sequence {
-    flex: 2 2;
+    flex: 1 1 auto;
     width: 0;
 
     .chart {
