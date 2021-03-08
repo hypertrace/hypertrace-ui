@@ -9,6 +9,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
     <mat-slide-toggle
       color="primary"
       [(ngModel)]="this.checked"
+      [ngClass]="{ 'small-slide-toogle': this.size === 'small' }"
       [disabled]="this.disabled"
       (change)="this.onToggle($event)"
     >
@@ -25,6 +26,9 @@ export class ToggleSwitchComponent {
 
   @Input()
   public disabled?: boolean;
+
+  @Input()
+  public size?: string = 'small';
 
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();

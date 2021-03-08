@@ -4,13 +4,42 @@
 :host {
   ::ng-deep {
     .mat-slide-toggle {
-      height: 20px;
-      line-height: 20px;
+      &.small-slide-toogle {
+        height: 20px;
+        line-height: 20px;
+
+        &.mat-checked .mat-slide-toggle-thumb-container {
+          transform: translate3d(7px, 0, 0) !important;
+        }
+
+        .mat-slide-toggle-label {
+          .mat-slide-toggle-bar .mat-slide-toggle-thumb-container {
+            width: 12px;
+            height: 12px;
+
+            .mat-slide-toggle-ripple {
+              top: calc(50% - 7px);
+              left: calc(50% - 7px);
+              height: 14px;
+              width: 14px;
+            }
+          }
+
+          .mat-slide-toggle-thumb {
+            height: 12px;
+            width: 12px;
+          }
+
+          .mat-slide-toggle-bar {
+            width: 18px;
+            height: 6px;
+          }
+        }
+      }
     }
 
     .mat-checked {
       .mat-slide-toggle-thumb-container {
-        transform: translate3d(7px, 0, 0) !important;
         margin-left: 1px;
       }
 
@@ -25,27 +54,14 @@
 
     .mat-slide-toggle-thumb-container {
       margin-left: -1px;
-      width: 12px;
-      height: 12px;
-
-      .mat-slide-toggle-ripple {
-        top: calc(50% - 7px);
-        left: calc(50% - 7px);
-        height: 20px;
-        width: 20px;
-      }
     }
 
     .mat-slide-toggle-thumb {
       background-color: $gray-2;
-      height: 12px;
-      width: 12px;
     }
 
     .mat-slide-toggle-bar {
       background-color: $gray-5;
-      width: 18px;
-      height: 6px;
     }
   }
 }
