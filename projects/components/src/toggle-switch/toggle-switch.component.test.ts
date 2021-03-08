@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { ToggleSwitchComponent } from './toggle-switch.component';
+import { ToggleSwitchSize } from './toggle-switch-size';
 
 describe('Toggle Switch Component', () => {
   let spectator: Spectator<ToggleSwitchComponent>;
@@ -17,13 +18,13 @@ describe('Toggle Switch Component', () => {
   test('should pass properties to Mat Slide toggle correctly', fakeAsync(() => {
     const onCheckedChangeSpy = jest.fn();
     spectator = createHost(
-      `<ht-toggle-switch [checked]="checked" [label]="label" [disabled]="disabled" [size]="small" (checkedChange)="onCheckedChange($event)"></ht-toggle-switch>`,
+      `<ht-toggle-switch [checked]="checked" [label]="label" [disabled]="disabled" [size]="size" (checkedChange)="onCheckedChange($event)"></ht-toggle-switch>`,
       {
         hostProps: {
           checked: true,
           label: 'label',
           disabled: false,
-          size: 'small',
+          size: ToggleSwitchSize.Small,
           onCheckedChange: onCheckedChangeSpy
         }
       }
