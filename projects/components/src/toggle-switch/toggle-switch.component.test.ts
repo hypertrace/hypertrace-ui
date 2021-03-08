@@ -3,8 +3,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { ToggleSwitchComponent } from './toggle-switch.component';
 import { ToggleSwitchSize } from './toggle-switch-size';
+import { ToggleSwitchComponent } from './toggle-switch.component';
 
 describe('Toggle Switch Component', () => {
   let spectator: Spectator<ToggleSwitchComponent>;
