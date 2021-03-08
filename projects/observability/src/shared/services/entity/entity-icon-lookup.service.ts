@@ -61,6 +61,9 @@ export class EntityIconLookupService {
       case BackendType.JDBC:
         return ObservabilityIconType.JDBC;
 
+      case BackendType.KAFKA:
+        return ObservabilityIconType.Kafka;
+
       case BackendType.Kong:
         return ObservabilityIconType.Kong;
 
@@ -90,6 +93,9 @@ export class EntityIconLookupService {
 
       case BackendType.Redis:
         return ObservabilityIconType.Redis;
+
+      case BackendType.SQS:
+        return ObservabilityIconType.SQS;
 
       case BackendType.Tyk:
         return ObservabilityIconType.Tyk;
