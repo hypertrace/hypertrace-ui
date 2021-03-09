@@ -3,16 +3,14 @@
 
 .table-container {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 1fr max-content;
   height: 100%;
   width: 100%;
 }
 
-.table {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0;
+.data-container {
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -114,16 +112,15 @@
 }
 
 .state-watcher {
-  height: calc(100% - #{$paginator-height});
+  height: 100%;
   width: 100%;
   position: absolute;
   background: transparent;
+  z-index: 10;
 }
 
 .pagination-controls {
-  position: fixed;
   width: 100%;
   height: #{$paginator-height};
-  bottom: 0;
   background: white;
 }
