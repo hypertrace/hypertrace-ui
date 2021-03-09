@@ -1,11 +1,18 @@
 @import 'mixins';
 @import 'layout';
 
-.table {
+.table-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 1;
+  height: 100%;
+  width: 100%;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -116,6 +123,7 @@
 .pagination-controls {
   position: fixed;
   width: 100%;
+  height: #{$paginator-height};
   bottom: 0;
   background: white;
 }
