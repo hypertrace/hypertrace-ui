@@ -29,7 +29,7 @@ export class ToggleSwitchComponent {
   public disabled?: boolean;
 
   @Input()
-  public size: ToggleSwitchSize = ToggleSwitchSize.Medium;
+  public size: ToggleSwitchSize = ToggleSwitchSize.Small;
 
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
