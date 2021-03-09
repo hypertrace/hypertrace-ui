@@ -1,4 +1,9 @@
-import { displayString, titleCaseFromKebabCase, titleCaseFromSnakeCase } from './string-formatter';
+import {
+  displayString,
+  getStringsFromCommaSeparatedList,
+  titleCaseFromKebabCase,
+  titleCaseFromSnakeCase
+} from './string-formatter';
 
 describe('String formatter', () => {
   test('can convert from kebab case to title case', () => {
@@ -25,5 +30,13 @@ describe('String formatter', () => {
     expect(displayString(() => 'hi')).toBe('Function');
     expect(displayString(Symbol('test symbol'))).toBe('Symbol(test symbol)');
     expect(displayString(false)).toBe('false');
+  });
+
+  test('creates string array correctly from comma separated list', () => {
+    expect(getStringsFromCommaSeparatedList('first,second,   third   ')).toEqual(
+      expect.arrayContaining(['first', 'second', 'third'])
+    );
+    expect(getStringsFromCommaSeparatedList('first,second,   ')).toEqual(['first', 'second']);
+    expect(getStringsFromCommaSeparatedList('first')).toEqual(['first']);
   });
 });

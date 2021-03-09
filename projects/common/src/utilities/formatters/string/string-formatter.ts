@@ -42,3 +42,9 @@ export const displayString = (provided?: unknown): string => {
 export const collapseWhitespace = (str: string): string =>
   // Replace all whitespace with a single space
   str.replace(/\s\s+/g, ' ');
+
+export const getStringsFromCommaSeparatedList = (text: string): string[] =>
+  text
+    .split(',')
+    .map(part => part.trim())
+    .filter(part => part !== '');
