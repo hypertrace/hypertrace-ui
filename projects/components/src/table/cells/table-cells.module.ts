@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
 import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
+import { CopyToClipboardModule } from '../../copy-to-clipboard/copy-to-clipboard.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
 import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
@@ -21,6 +22,7 @@ import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
 import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
+import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
 import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
 import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
@@ -47,7 +49,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TraceCheckboxModule,
     FilterButtonModule,
     FilterModalModule,
-    PopoverModule
+    PopoverModule,
+    CopyToClipboardModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
@@ -66,7 +69,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TimestampTableCellRendererComponent,
     TimeAgoTableCellRendererComponent,
     CodeTableCellRendererComponent,
-    StringArrayTableCellRendererComponent
+    StringArrayTableCellRendererComponent,
+    TextWithCopyActionTableCellRendererComponent
   ],
   providers: [
     {
@@ -80,7 +84,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TimestampTableCellRendererComponent,
         TimeAgoTableCellRendererComponent,
         CodeTableCellRendererComponent,
-        StringArrayTableCellRendererComponent
+        StringArrayTableCellRendererComponent,
+        TextWithCopyActionTableCellRendererComponent
       ],
       multi: true
     },
