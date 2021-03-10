@@ -13,6 +13,7 @@ export interface ModalConfig<TData = unknown> {
 export const enum ModalSize {
   Small = 'small',
   Medium = 'medium',
+  LargeShort = 'large-short',
   Large = 'large',
   LargeTall = 'large-tall',
   MediumWide = 'medium-wide'
