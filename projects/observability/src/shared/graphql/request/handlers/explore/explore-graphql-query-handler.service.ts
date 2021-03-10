@@ -13,12 +13,13 @@ import {
   GraphQlQueryHandler,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
-import { GQL_EXPLORE_RESULT_INTERVAL_KEY, INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
+import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 
+export const GQL_EXPLORE_RESULT_INTERVAL_KEY = Symbol('Interval Start');
 @Injectable({ providedIn: 'root' })
 export class ExploreGraphQlQueryHandlerService
   implements GraphQlQueryHandler<GraphQlExploreRequest, GraphQlExploreResponse> {

@@ -5,9 +5,9 @@ import { ExploreSpecification } from '../../../../graphql/model/schema/specifica
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   GraphQlExploreResponse,
-  GraphQlExploreResult
+  GraphQlExploreResult,
+  GQL_EXPLORE_RESULT_INTERVAL_KEY
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from './../../../../graphql/model/schema/explore';
 
 export class ExploreResult {
   private static readonly OTHER_SERVER_GROUP_NAME: string = '__Other';
