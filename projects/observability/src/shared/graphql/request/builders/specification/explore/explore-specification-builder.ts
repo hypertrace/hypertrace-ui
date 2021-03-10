@@ -15,8 +15,6 @@ export class ExploreSpecificationBuilder {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public exploreSpecificationForInterval(): ExploreSpecification {
-    // Const key = GQL_EXPLORE_RESULT_INTERVAL_KEY.toString();
-
     return {
       resultAlias: () => INTERVAL_START_QUERY_KEY,
       name: INTERVAL_START_QUERY_KEY,
