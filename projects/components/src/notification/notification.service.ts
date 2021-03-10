@@ -52,6 +52,7 @@ export class NotificationService {
 
   public wrapWithNotification<T>(source: Observable<T>, successMessage: string, failureMessage: string): Observable<T> {
     let emitted = false;
+
     return source.pipe(
       tap(
         () => (emitted = true),
