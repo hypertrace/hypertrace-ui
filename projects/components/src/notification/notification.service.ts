@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
-import { EMPTY, noop, Observable, Subject } from 'rxjs';
+import { EMPTY, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NotificationComponent, NotificationMode } from './notification.component';
 import { NotificationModule } from './notification.module';
@@ -51,11 +51,12 @@ export class NotificationService {
   }
 
   public wrapWithNotification<T>(source: Observable<T>, successMessage: string, failureMessage: string): Observable<T> {
+    let emitted = false;
     return source.pipe(
       tap(
-        noop,
+        () => (emitted = true),
         () => this.createFailureToast(failureMessage),
-        () => this.createSuccessToast(successMessage)
+        () => emitted && this.createSuccessToast(successMessage)
       )
     );
   }
