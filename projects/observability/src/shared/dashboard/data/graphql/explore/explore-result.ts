@@ -4,10 +4,10 @@ import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metri
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse,
   GraphQlExploreResult
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from './../../../../graphql/model/schema/explore';
 
 export class ExploreResult {
   private static readonly OTHER_SERVER_GROUP_NAME: string = '__Other';

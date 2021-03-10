@@ -13,13 +13,13 @@ import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../model/schema/entity';
+import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../model/schema/explore';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilityTraceType } from '../../../model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import {
   ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
-  GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreRequest
 } from './explore-graphql-query-handler.service';
 

@@ -20,6 +20,7 @@ import { PercentageCompositeDataSourceModel } from './percentage/percentage-comp
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
 import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
+import { ExploreIntervalTimestampSelectionSpecificationModel } from './specifiers/explore/explorer-interval-timestamp-selection.model';
 import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
@@ -46,6 +47,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
     DashboardCoreModule.with({
       models: [
         ExploreSelectionSpecificationModel,
+        ExploreIntervalTimestampSelectionSpecificationModel,
         ExploreTableDataSourceModel,
         ApiTraceWaterfallDataSourceModel,
         EntityMetricTimeseriesDataSourceModel,
