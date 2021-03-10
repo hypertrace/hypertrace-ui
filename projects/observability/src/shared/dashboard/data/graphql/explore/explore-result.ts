@@ -4,9 +4,9 @@ import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metri
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
+  GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse,
-  GraphQlExploreResult,
-  GQL_EXPLORE_RESULT_INTERVAL_KEY
+  GraphQlExploreResult
 } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 
 export class ExploreResult {
