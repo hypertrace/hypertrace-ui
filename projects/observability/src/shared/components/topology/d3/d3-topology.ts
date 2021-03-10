@@ -167,7 +167,8 @@ export class D3Topology implements Topology {
       .append('svg')
       .classed(D3Topology.SVG_CLASS, true)
       .attr('width', '100%')
-      .attr('height', '100%');
+      .attr('height', '100%')
+      .style('padding-top', '24px');
 
     const data = svg.append('g').classed(D3Topology.DATA_CLASS, true);
     const zoomScrollConfig = {
