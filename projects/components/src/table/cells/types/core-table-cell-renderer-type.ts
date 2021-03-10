@@ -6,6 +6,7 @@ export const enum CoreTableCellRendererType {
   RowExpander = 'row-expander',
   StringArray = 'string-array',
   Text = 'text',
+  TextWithCopyAction = 'text-with-copy-action',
   Timestamp = 'timestamp',
   TimeAgo = 'time-ago'
 }
