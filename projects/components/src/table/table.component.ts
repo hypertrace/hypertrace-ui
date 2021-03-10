@@ -59,7 +59,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table-container">
+    <div class="table">
       <cdk-table
         *ngIf="this.dataSource"
         [multiTemplateDataRows]="this.isDetailType()"
