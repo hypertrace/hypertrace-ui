@@ -24,7 +24,7 @@ describe('Toggle Group Component', () => {
       },
       {
         label: 'Second',
-        icon: IconType.Add, 
+        icon: IconType.Add,
         value: 'second-value'
       }
     ];
