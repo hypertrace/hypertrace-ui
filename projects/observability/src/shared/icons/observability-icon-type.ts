@@ -14,7 +14,7 @@ export const enum ObservabilityIconType {
   Helm = 'svg:helm',
   HTTP = 'svg:http',
   JDBC = 'svg:jdbc',
-  Kafka = 'svg:backend',
+  Kafka = 'svg:kafka',
   Kong = 'svg:kong',
   Kubernetes = 'svg:kubernetes',
   MicrosoftAzure = 'svg:microsoft-azure',
@@ -30,6 +30,6 @@ export const enum ObservabilityIconType {
   Serverless = 'svg:serverless',
   Service = 'svg:service',
   ServicesList = 'svg:services-list',
-  SQS = 'svg:backend',
+  SQS = 'svg:amazon-sqs',
   Tyk = 'svg:tyk'
 }
