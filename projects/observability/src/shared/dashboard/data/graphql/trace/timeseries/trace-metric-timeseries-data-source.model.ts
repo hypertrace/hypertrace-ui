@@ -7,7 +7,10 @@ import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
 import { ExploreSpecification } from '../../../../../graphql/model/schema/specifications/explore-specification';
-import { GQL_EXPLORE_RESULT_INTERVAL_KEY, GraphQlExploreResult } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import {
+  GQL_EXPLORE_RESULT_INTERVAL_KEY,
+  GraphQlExploreResult
+} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-selection-specification.model';
 import { TraceSeriesValuesDataSourceModel } from '../trace-series-values-data-source.model';
