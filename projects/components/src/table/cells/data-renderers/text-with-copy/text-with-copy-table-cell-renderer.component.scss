@@ -1,0 +1,36 @@
+@import 'font';
+@import 'color-palette';
+
+:host {
+  .text {
+    overflow: hidden;
+    @include ellipsis-overflow();
+    @include body-1-regular($gray-7);
+    padding-right: 8px;
+  }
+
+  .copy-button {
+    visibility: hidden;
+  }
+}
+
+.text-with-copy-action-cell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &.first-column {
+    @include body-1-medium($gray-9);
+  }
+
+  &:hover {
+    .copy-button {
+      visibility: visible;
+    }
+  }
+}
+
+.clickable {
+  @include link-hover();
+}

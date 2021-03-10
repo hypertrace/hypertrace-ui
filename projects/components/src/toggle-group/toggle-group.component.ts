@@ -28,7 +28,12 @@ import { ToggleItemComponent } from './toggle-item.component';
         ></div>
         <div class="container" *ngFor="let item of this.items; let index = index">
           <div class="divider" *ngIf="index !== 0" [class.hide-divider]="this.shouldHideDivider(index)"></div>
-          <ht-toggle-item class="tab" [label]="item.label" (click)="this.setActiveItem(item)"></ht-toggle-item>
+          <ht-toggle-item
+            class="tab"
+            [label]="item.label"
+            [icon]="item.icon"
+            (click)="this.setActiveItem(item)"
+          ></ht-toggle-item>
         </div>
       </div>
     </div>

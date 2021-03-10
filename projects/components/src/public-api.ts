@@ -278,6 +278,7 @@ export * from './toggle-group/toggle-item';
 // Toggle Switch
 export * from './toggle-switch/toggle-switch.component';
 export * from './toggle-switch/toggle-switch.module';
+export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
