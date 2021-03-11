@@ -2,6 +2,20 @@ process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependen
 
 module.exports = {
   rootDir: '.',
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.spec.json',
+      stringifyContentPathRegex: '\\.html$',
+      astTransformers: {
+        before: [
+          'jest-preset-angular/build/InlineFilesTransformer',
+          'jest-preset-angular/build/StripStylesTransformer',
+        ],
+      }
+    }
+  },
+  preset: 'jest-preset-angular',
+  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   reporters: [
     'default',
     [
