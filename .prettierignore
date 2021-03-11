@@ -14,3 +14,4 @@ nginx/
 browserslist
 LICENSE*
 conf/
+coverage/
