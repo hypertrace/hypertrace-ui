@@ -36,7 +36,7 @@ export const backendTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'backendOperation'
+          attribute: 'operation'
         }
       },
       {
