@@ -21,12 +21,12 @@ describe('String formatter', () => {
   test('can convert to display string', () => {
     // tslint:disable-next-line: no-null-keyword
     expect(displayString(null)).toBe('-');
-    expect(displayString(undefined)).toBe('Unknown');
-    expect(displayString('')).toBe('Unknown');
+    expect(displayString(undefined)).toBe('-');
+    expect(displayString('')).toBe('');
     expect(displayString('value')).toBe('value');
     expect(displayString(15)).toBe('15');
     expect(displayString({})).toBe('Object');
-    expect(displayString([undefined])).toBe('[Unknown]');
+    expect(displayString([undefined])).toBe('[-]');
     expect(displayString(() => 'hi')).toBe('Function');
     expect(displayString(Symbol('test symbol'))).toBe('Symbol(test symbol)');
     expect(displayString(false)).toBe('false');
