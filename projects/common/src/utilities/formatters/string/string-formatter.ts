@@ -17,11 +17,7 @@ export const displayString = (provided?: unknown): string => {
 
   switch (typeof provided) {
     case 'object':
-      return Array.isArray(provided)
-        ? `[${provided.map(displayString).join(', ')}]`
-        : provided === null
-        ? 'Unknown'
-        : 'Object';
+      return Array.isArray(provided) ? `[${provided.map(displayString).join(', ')}]` : 'Object';
     case 'undefined':
       return '-';
     case 'function':
