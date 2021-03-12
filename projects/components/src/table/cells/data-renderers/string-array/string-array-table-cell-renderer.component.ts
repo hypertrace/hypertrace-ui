@@ -20,7 +20,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="string-array-cell" [htTooltip]="summaryTooltip">
-      <span class="first-item">{{ this.firstItem }}</span>
+      <span class="first-item">{{ this.firstItem | htDisplayString }}</span>
       <span class="summary-text">{{ this.summaryText }}</span>
 
       <ng-template #summaryTooltip>
@@ -51,7 +51,7 @@ export class StringArrayTableCellRendererComponent extends TableCellRendererBase
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.firstItem = this.value[0] ?? '';
+    this.firstItem = this.value[0];
     this.summaryText = this.value.length > 1 ? `+${this.value.length - 1}` : '';
   }
 }

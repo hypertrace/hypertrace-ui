@@ -32,7 +32,7 @@ describe('String array table cell renderer component', () => {
       providers: [tableCellDataProvider([])]
     });
 
-    expect(spectator.query('.first-item')).toHaveText('');
+    expect(spectator.query('.first-item')).toHaveText('-');
     expect(spectator.query('.summary-text')).toHaveText('');
   });
 
