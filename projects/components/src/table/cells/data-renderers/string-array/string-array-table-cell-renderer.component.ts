@@ -51,7 +51,7 @@ export class StringArrayTableCellRendererComponent extends TableCellRendererBase
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.firstItem = this.value[0] ?? '-';
+    this.firstItem = this.value[0] ?? '';
     this.summaryText = this.value.length > 1 ? `+${this.value.length - 1}` : '';
   }
 }
