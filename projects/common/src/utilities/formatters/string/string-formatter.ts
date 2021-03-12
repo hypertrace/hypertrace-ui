@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash-es';
-
 export const titleCaseFromKebabCase = (kebabCaseString: string): string =>
   kebabCaseString
     .split('-')
@@ -25,11 +23,11 @@ export const displayString = (provided?: unknown): string => {
         ? 'Unknown'
         : 'Object';
     case 'undefined':
-      return 'Unknown';
+      return '-';
     case 'function':
       return 'Function';
     case 'string':
-      return isEmpty(provided) ? 'Unknown' : provided;
+      return provided;
     case 'boolean':
     case 'number':
     case 'bigint':
