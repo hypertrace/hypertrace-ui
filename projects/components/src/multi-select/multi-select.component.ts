@@ -12,7 +12,7 @@ import {
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
 import { EMPTY, merge, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOption } from '../select/select-option';
@@ -140,7 +140,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
     this.setTriggerLabel();
-    this.filteredItems = this.items?.toArray();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -209,6 +208,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
     return queryListAndChanges$(this.items).pipe(
       switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
+      tap(() =>     this.filteredItems = this.items?.toArray()),
       map(() => this.findItems(this.selected) ?? [])
     );
   }

@@ -2,6 +2,7 @@
  * Public API Surface of observability
  */
 
+
 // Schema
 
 export * from './shared/graphql/model/schema/entity';
@@ -16,6 +17,9 @@ export * from './shared/graphql/request/builders/argument/graphql-observability-
 export * from './shared/graphql/request/builders/selections/observability-specification-builder';
 export * from './shared/graphql/request/builders/specification/entity/entity-specification-builder';
 export * from './shared/graphql/request/builders/specification/explore/explore-specification-builder';
+
+// Field Value
+export * from './shared/services/field-value/field-value.service';
 
 // Handlers
 export * from './shared/graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
