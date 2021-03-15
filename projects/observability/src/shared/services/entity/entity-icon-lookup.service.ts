@@ -35,6 +35,7 @@ export class EntityIconLookupService {
     return this.forBackendType(entity[backendTypeKey] as string | undefined);
   }
 
+  // tslint:disable: cyclomatic-complexity
   public forBackendType(backendType?: string): string {
     switch (backendType) {
       case BackendType.AWS:
@@ -60,6 +61,9 @@ export class EntityIconLookupService {
 
       case BackendType.JDBC:
         return ObservabilityIconType.JDBC;
+
+      case BackendType.KAFKA:
+        return ObservabilityIconType.Kafka;
 
       case BackendType.Kong:
         return ObservabilityIconType.Kong;
@@ -90,6 +94,9 @@ export class EntityIconLookupService {
 
       case BackendType.Redis:
         return ObservabilityIconType.Redis;
+
+      case BackendType.SQS:
+        return ObservabilityIconType.SQS;
 
       case BackendType.Tyk:
         return ObservabilityIconType.Tyk;

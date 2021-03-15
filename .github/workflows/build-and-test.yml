@@ -146,6 +146,7 @@ jobs:
 
       - name: Publish Unit Test Results
         uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+        continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: artifacts/**/*.xml

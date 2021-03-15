@@ -5,6 +5,7 @@
 // Schema
 
 export * from './shared/graphql/model/schema/entity';
+export * from './shared/graphql/model/schema/explore';
 export * from './shared/graphql/model/schema/filter/entity/graphql-entity-filter';
 export * from './shared/graphql/model/schema/neighbor';
 export * from './shared/graphql/model/schema/specifications/entity-specification';
