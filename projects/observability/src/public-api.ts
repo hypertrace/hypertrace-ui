@@ -18,9 +18,6 @@ export * from './shared/graphql/request/builders/selections/observability-specif
 export * from './shared/graphql/request/builders/specification/entity/entity-specification-builder';
 export * from './shared/graphql/request/builders/specification/explore/explore-specification-builder';
 
-// Field Value
-export * from './shared/services/field-value/field-value.service';
-
 // Handlers
 export * from './shared/graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 export * from './shared/graphql/request/handlers/entities/query/entities-graphql-query-handler.service';

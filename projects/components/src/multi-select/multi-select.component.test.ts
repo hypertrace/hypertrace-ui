@@ -1,11 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
-import { SearchBoxComponent } from '@hypertrace/components';
+import { NavigationService } from '@hypertrace/common';
+import { mockProvider } from '@ngneat/spectator';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { NEVER } from 'rxjs';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
 import { LetAsyncModule } from '../let-async/let-async.module';
+import { PopoverComponent } from '../popover/popover.component';
+import { PopoverModule } from '../popover/popover.module';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { MultiSelectJustify } from './multi-select-justify';
 import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.component';
@@ -13,9 +19,18 @@ import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.co
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [LetAsyncModule],
-    entryComponents: [SelectOptionComponent],
-    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent), MockComponent(SearchBoxComponent)],
+    imports: [LetAsyncModule, PopoverModule, CommonModule],
+    providers: [
+      mockProvider(NavigationService, {
+        navigation$: NEVER
+      })
+    ],
+    declarations: [
+      SelectOptionComponent,
+      MockComponent(LabelComponent),
+      MockComponent(DividerComponent),
+      MockComponent(SearchBoxComponent)
+    ],
     shallow: true
   });
 
@@ -30,21 +45,41 @@ describe('Multi Select Component', () => {
   test('should display initial selections', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected">
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [enableSearch]="true">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
-          selected: [selectionOptions[1].value]
+          selected: [selectionOptions[1].value],
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
         }
       }
     );
+
     spectator.tick();
 
+    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
+
+    const popoverComponent = spectator.query(PopoverComponent);
+    expect(popoverComponent?.closeOnClick).toEqual(false);
+    expect(popoverComponent?.closeOnNavigate).toEqual(true);
+
     spectator.click('.trigger-content');
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .search-bar', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .multi-select-option', { root: true })).toExist();
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+
+    expect(optionElements.length).toEqual(3);
 
     spectator.setHostInput({
       selected: [selectionOptions[1].value, selectionOptions[2].value]
@@ -234,21 +269,23 @@ describe('Multi Select Component', () => {
     );
     spectator.tick();
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
+    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-start;');
 
     spectator.setInput({
       justify: MultiSelectJustify.Center
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: center;');
 
     spectator.setInput({
       justify: MultiSelectJustify.Right
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
   }));
 
@@ -267,18 +304,19 @@ describe('Multi Select Component', () => {
       }
     );
 
-    spectator.tick();
-    expect(spectator.query('.search-bar')).toExist();
-    spectator.click('.search-bar');
+    spectator.click('.trigger-content');
 
-    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'fi');
+    const searchBar = spectator.query('.search-bar', { root: true });
+    expect(searchBar).toExist();
+
+    spectator.component.searchOptions('fi');
     spectator.tick();
 
     let options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(1);
     expect(options[0]).toContainText('first');
 
-    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'i');
+    spectator.component.searchOptions('i');
     spectator.tick();
 
     options = spectator.queryAll('.multi-select-option', { root: true });
