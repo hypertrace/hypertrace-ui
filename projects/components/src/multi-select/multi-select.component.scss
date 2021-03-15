@@ -63,6 +63,12 @@
 .multi-select-content {
   @include dropdown(6px);
   min-width: 120px;
+  display: flex;
+  flex-direction: column;
+
+  .divider {
+    padding: 0px 16px 4px 16px;;
+  }
 
   .multi-select-option {
     display: flex;

@@ -10,12 +10,12 @@ import {
   QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
-import { EMPTY, merge, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { LoggerService, queryListAndChanges$ } from '@hypertrace/common';
+import { EMPTY, Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
-import { SelectOption } from '../select/select-option';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { MultiSelectJustify } from './multi-select-justify';
@@ -33,7 +33,6 @@ import { MultiSelectJustify } from './multi-select-justify';
         this.disabled ? 'disabled' : '',
         this.popoverOpen ? 'open' : ''
       ]"
-      *htLetAsync="this.selected$ as selected"
     >
       <ht-popover
         [disabled]="this.disabled"
@@ -61,19 +60,35 @@ import { MultiSelectJustify } from './multi-select-justify';
               <ht-search-box
                 class="search-bar"
                 (valueChange)="this.searchOptions($event)"
+                [debounceTime]="200"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
               ></ht-search-box>
             </ng-container>
-            <ng-container *ngIf="this.showAllOptionControl">
-              <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
-                <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
-                <span class="label">Select All</span>
-              </div>
-            </ng-container>
+            <ht-divider *ngIf="this.enableSearch" class="divider"></ht-divider>
 
-            <ht-divider *ngIf="this.showAllOptionControl || this.enableSearch"></ht-divider>
+            <ht-button
+              class="clear-selected"
+              *ngIf="this.isAnyOptionSelected()"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              label="Clear Selected"
+              (click)="this.onClearSelected()"
+            ></ht-button>
 
-            <div *ngFor="let item of filteredItems" (click)="this.onSelectionChange(item)" class="multi-select-option">
+            <ht-button
+              class="select-all"
+              *ngIf="!this.isAnyOptionSelected()"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              label="Select All"
+              (click)="this.onSelectAll()"
+            ></ht-button>
+
+            <div
+              *ngFor="let item of this.filteredOptions$ | async"
+              (click)="this.onSelectionChange(item)"
+              class="multi-select-option"
+            >
               <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
               <ht-icon
                 class="icon"
@@ -119,6 +134,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
+  /** @deprecated */
   public showAllOptionControl?: boolean = false;
 
   @Input()
@@ -128,59 +144,66 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
   @ContentChildren(SelectOptionComponent)
-  public items?: QueryList<SelectOptionComponent<V>>;
+  private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
+  private allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
+
+  public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
+  private readonly searchSubject: Subject<string> = new BehaviorSubject('');
 
   public popoverOpen: boolean = false;
-  public selected$?: Observable<SelectOption<V>[]>;
   public triggerLabel?: string;
-  public filteredItems?: SelectOptionComponent<V>[];
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  public constructor(_loggerService: LoggerService) {}
 
   public ngAfterContentInit(): void {
-    this.selected$ = this.buildObservableOfSelected();
+    this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
+      map(([options, searchText]) =>
+        options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
     this.setTriggerLabel();
   }
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (this.items !== undefined && changes.selected !== undefined) {
-      this.selected$ = this.buildObservableOfSelected();
-    }
+  public ngOnChanges(): void {
     this.setTriggerLabel();
   }
 
   public searchOptions(searchText: string): void {
-    this.filteredItems = this.items?.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase()));
+    this.searchSubject.next(searchText);
   }
 
-  public onAllSelectionChange(): void {
-    this.selected = this.areAllOptionsSelected() ? [] : this.items!.map(item => item.value); // Select All or none
-    this.setSelection();
+  public onSelectAll(): void {
+    this.setSelection(this.allOptionsList!.map(item => item.value));
+  }
+
+  public onClearSelected(): void {
+    this.setSelection([]);
   }
 
   public isIconOnlyMode(): boolean {
     return this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Icon;
   }
 
-  public areAllOptionsSelected(): boolean {
-    return this.selected !== undefined && this.items !== undefined && this.selected.length === this.items.length;
+  public isAnyOptionSelected(): boolean {
+    return this.selected !== undefined && this.allOptionsList !== undefined && this.selected.length > 0;
   }
 
   public onSelectionChange(item: SelectOptionComponent<V>): void {
-    this.selected = this.isSelectedItem(item)
+    const selected = this.isSelectedItem(item)
       ? this.selected?.filter(value => value !== item.value)
       : (this.selected ?? []).concat(item.value);
 
-    this.setSelection();
+    this.setSelection(selected ?? []);
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
     return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
   }
 
-  private setSelection(): void {
+  private setSelection(selected: V[]): void {
+    this.selected = selected;
     this.setTriggerLabel();
-    this.selected$ = this.buildObservableOfSelected();
     this.selectedChange.emit(this.selected);
   }
 
@@ -191,7 +214,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
       return;
     }
 
-    const selectedItems: SelectOptionComponent<V>[] | undefined = this.items?.filter(item => this.isSelectedItem(item));
+    const selectedItems: SelectOptionComponent<V>[] | undefined = this.allOptionsList?.filter(item =>
+      this.isSelectedItem(item)
+    );
     if (selectedItems === undefined || selectedItems.length === 0) {
       this.triggerLabel = this.placeholder;
     } else if (selectedItems.length === 1) {
@@ -199,29 +224,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     } else {
       this.triggerLabel = `${selectedItems[0].label} and ${selectedItems.length - 1} more`;
     }
-  }
-
-  private buildObservableOfSelected(): Observable<SelectOption<V>[]> {
-    if (!this.items) {
-      return EMPTY;
-    }
-
-    return queryListAndChanges$(this.items).pipe(
-      switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
-      tap(() =>     this.filteredItems = this.items?.toArray()),
-      map(() => this.findItems(this.selected) ?? [])
-    );
-  }
-
-  // Find the select option object for a value
-  private findItems(value: V[] | undefined): SelectOption<V>[] | undefined {
-    if (this.items === undefined) {
-      this.loggerService.warn(`Invalid items for select option '${String(value)}'`);
-
-      return undefined;
-    }
-
-    return this.items.filter(item => this.isSelectedItem(item));
   }
 }
 

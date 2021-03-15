@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from '../button/button.module';
 import { DividerModule } from '../divider/divider.module';
 import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
@@ -18,7 +19,8 @@ import { MultiSelectComponent } from './multi-select.component';
     LetAsyncModule,
     PopoverModule,
     DividerModule,
-    TraceSearchBoxModule
+    TraceSearchBoxModule,
+    ButtonModule
   ],
   declarations: [MultiSelectComponent],
   exports: [MultiSelectComponent]
