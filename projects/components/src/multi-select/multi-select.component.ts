@@ -10,8 +10,8 @@ import {
   QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { LoggerService, queryListAndChanges$ } from '@hypertrace/common';
-import { EMPTY, Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
+import { queryListAndChanges$ } from '@hypertrace/common';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -152,8 +152,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   public popoverOpen: boolean = false;
   public triggerLabel?: string;
-
-  public constructor(_loggerService: LoggerService) {}
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;

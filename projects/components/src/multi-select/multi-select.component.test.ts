@@ -2,14 +2,12 @@ import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { mockProvider } from '@ngneat/spectator';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { NEVER } from 'rxjs';
 import { ButtonComponent } from '../button/button.component';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
-import { LetAsyncModule } from '../let-async/let-async.module';
 import { PopoverComponent } from '../popover/popover.component';
 import { PopoverModule } from '../popover/popover.module';
 import { SearchBoxComponent } from '../search-box/search-box.component';
@@ -20,7 +18,7 @@ import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.co
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [LetAsyncModule, PopoverModule, CommonModule],
+    imports: [PopoverModule, CommonModule],
     providers: [
       mockProvider(NavigationService, {
         navigation$: NEVER
