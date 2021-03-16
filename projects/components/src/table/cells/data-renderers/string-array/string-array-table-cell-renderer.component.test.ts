@@ -1,3 +1,4 @@
+import { FormattingModule } from '@hypertrace/common';
 import { TableCellNoOpParser } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
@@ -6,6 +7,7 @@ import { StringArrayTableCellRendererComponent } from './string-array-table-cell
 describe('String array table cell renderer component', () => {
   const buildComponent = createComponentFactory({
     component: StringArrayTableCellRendererComponent,
+    imports: [FormattingModule],
     providers: [
       tableCellProviders(
         {
