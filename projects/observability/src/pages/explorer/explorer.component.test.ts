@@ -138,7 +138,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
-        limit: 500,
+        limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
       expect.objectContaining({})
@@ -186,7 +186,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
-        limit: 500,
+        limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
       expect.objectContaining({})
@@ -222,7 +222,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 500,
+        limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
       expect.objectContaining({})
@@ -274,7 +274,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 500,
+        limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
       }),

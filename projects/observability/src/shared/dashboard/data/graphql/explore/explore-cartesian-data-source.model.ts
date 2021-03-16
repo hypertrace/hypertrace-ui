@@ -63,7 +63,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
       requestType: EXPLORE_GQL_REQUEST,
       selections: requestState.series.map(series => series.specification),
       context: requestState.context,
-      limit: requestState.groupByLimit ?? 100,
+      limit: requestState.resultLimit,
       timeRange: this.getTimeRangeOrThrow(),
       interval: requestState.interval as TimeDuration,
       filters: filters,
