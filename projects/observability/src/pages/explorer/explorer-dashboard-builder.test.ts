@@ -87,6 +87,7 @@ describe('Explorer dashboard builder', () => {
       const mockRequest: ExploreVisualizationRequest = {
         context: ObservabilityTraceType.Api,
         series: [series],
+        resultLimit: 1000,
         exploreQuery$: EMPTY,
         resultsQuery$: of({
           requestType: TRACES_GQL_REQUEST,
