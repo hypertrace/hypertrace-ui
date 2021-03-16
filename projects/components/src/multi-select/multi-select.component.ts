@@ -63,26 +63,26 @@ import { MultiSelectJustify } from './multi-select-justify';
                 [debounceTime]="200"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
               ></ht-search-box>
+              <ht-divider class="divider"></ht-divider>
+
+              <ht-button
+                class="clear-selected"
+                *ngIf="this.isAnyOptionSelected()"
+                role="${ButtonRole.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Clear Selected"
+                (click)="this.onClearSelected()"
+              ></ht-button>
+
+              <ht-button
+                class="select-all"
+                *ngIf="!this.isAnyOptionSelected()"
+                role="${ButtonRole.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Select All"
+                (click)="this.onSelectAll()"
+              ></ht-button>
             </ng-container>
-            <ht-divider *ngIf="this.enableSearch" class="divider"></ht-divider>
-
-            <ht-button
-              class="clear-selected"
-              *ngIf="this.isAnyOptionSelected()"
-              role="${ButtonRole.Primary}"
-              display="${ButtonStyle.Text}"
-              label="Clear Selected"
-              (click)="this.onClearSelected()"
-            ></ht-button>
-
-            <ht-button
-              class="select-all"
-              *ngIf="!this.isAnyOptionSelected()"
-              role="${ButtonRole.Primary}"
-              display="${ButtonStyle.Text}"
-              label="Select All"
-              (click)="this.onSelectAll()"
-            ></ht-button>
 
             <div
               *ngFor="let item of this.filteredOptions$ | async"
@@ -132,10 +132,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
-
-  @Input()
-  /** @deprecated */
-  public showAllOptionControl?: boolean = false;
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;

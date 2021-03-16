@@ -184,7 +184,7 @@ describe('Multi Select Component', () => {
 
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder">
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [enableSearch]="enableSearch">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -193,6 +193,7 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           placeholder: 'Select options',
+          enableSearch: true,
           onChange: onChange
         }
       }
@@ -200,6 +201,9 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     spectator.click('.trigger-content');
+
+    expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
 
     expect(spectator.component.isAnyOptionSelected()).toEqual(true);
     const clearSelectedButton = spectator.query('.clear-selected', { root: true });
@@ -222,6 +226,16 @@ describe('Multi Select Component', () => {
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
     expect(spectator.query(LabelComponent)?.label).toEqual('first and 2 more');
+
+    spectator.setHostInput({
+      enableSearch: false
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).not.toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
+
     flush();
   }));
 
