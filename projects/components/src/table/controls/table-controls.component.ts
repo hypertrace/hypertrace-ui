@@ -152,16 +152,20 @@ export class TableControlsComponent implements OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.checkboxControls) {
-      this.checkboxSelections = this.checkboxControls
-        ? this.checkboxControls.filter(control => control.value).map(control => control.label)
-        : [];
-
-      this.checkboxDiffer?.diff(this.checkboxSelections);
+      this.diffCheckboxes();
     }
 
     if (changes.viewItems) {
       this.setActiveViewItem();
     }
+  }
+
+  private diffCheckboxes(): void {
+    this.checkboxSelections = this.checkboxControls
+      ? this.checkboxControls.filter(control => control.value).map(control => control.label)
+      : [];
+
+    this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 
   private setActiveViewItem(): void {
@@ -210,6 +214,9 @@ export class TableControlsComponent implements OnChanges {
         });
       }
     });
+
+    this.checkboxSelections = checks;
+    this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 
   public onViewChange(item: ToggleItem<string>): void {
