@@ -1,11 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
-import { SearchBoxComponent } from '@hypertrace/components';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { NavigationService } from '@hypertrace/common';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { NEVER } from 'rxjs';
+import { ButtonComponent } from '../button/button.component';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
-import { LetAsyncModule } from '../let-async/let-async.module';
+import { PopoverComponent } from '../popover/popover.component';
+import { PopoverModule } from '../popover/popover.module';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { MultiSelectJustify } from './multi-select-justify';
 import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.component';
@@ -13,9 +18,19 @@ import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.co
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [LetAsyncModule],
-    entryComponents: [SelectOptionComponent],
-    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent), MockComponent(SearchBoxComponent)],
+    imports: [PopoverModule, CommonModule],
+    providers: [
+      mockProvider(NavigationService, {
+        navigation$: NEVER
+      })
+    ],
+    declarations: [
+      SelectOptionComponent,
+      MockComponent(LabelComponent),
+      MockComponent(DividerComponent),
+      MockComponent(SearchBoxComponent),
+      MockComponent(ButtonComponent)
+    ],
     shallow: true
   });
 
@@ -24,27 +39,50 @@ describe('Multi Select Component', () => {
   const selectionOptions = [
     { label: 'first', value: 'first-value' },
     { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value' }
+    { label: 'third', value: 'third-value' },
+    { label: 'fourth', value: 'fourth-value' },
+    { label: 'fifth', value: 'fifth-value' },
+    { label: 'sixth', value: 'sixth-value' }
   ];
 
   test('should display initial selections', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected">
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [enableSearch]="true">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
-          selected: [selectionOptions[1].value]
+          selected: [selectionOptions[1].value],
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
         }
       }
     );
+
     spectator.tick();
 
+    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
+
+    const popoverComponent = spectator.query(PopoverComponent);
+    expect(popoverComponent?.closeOnClick).toEqual(false);
+    expect(popoverComponent?.closeOnNavigate).toEqual(true);
+
     spectator.click('.trigger-content');
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .search-bar', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .multi-select-option', { root: true })).toExist();
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+
+    expect(optionElements.length).toEqual(6);
 
     spectator.setHostInput({
       selected: [selectionOptions[1].value, selectionOptions[2].value]
@@ -79,7 +117,7 @@ describe('Multi Select Component', () => {
     spectator.click('.trigger-content');
     const optionElements = spectator.queryAll('.multi-select-option:not(.all-options)', { root: true });
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
-    expect(optionElements.length).toBe(3);
+    expect(optionElements.length).toBe(6);
 
     const selectedElements = spectator.queryAll('input:checked', { root: true });
     expect(selectedElements.length).toBe(2);
@@ -144,12 +182,12 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
-  test('should notify and update selection when all checkbox is selected', fakeAsync(() => {
+  test('should show select all and clear selected buttons', fakeAsync(() => {
     const onChange = jest.fn();
 
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [showAllOptionControl]="showAllOptionControl">
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [enableSearch]="enableSearch">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -158,7 +196,7 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           placeholder: 'Select options',
-          showAllOptionControl: true,
+          enableSearch: true,
           onChange: onChange
         }
       }
@@ -167,19 +205,39 @@ describe('Multi Select Component', () => {
     spectator.tick();
     spectator.click('.trigger-content');
 
-    const allOptionElement = spectator.query('.all-options', { root: true });
+    expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+
+    expect(spectator.component.isAnyOptionSelected()).toEqual(true);
+    const clearSelectedButton = spectator.query('.clear-selected', { root: true });
+    expect(clearSelectedButton).toExist();
+    spectator.click(clearSelectedButton!);
+
+    spectator.tick();
+    expect(spectator.queryAll('input:checked', { root: true }).length).toBe(0);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
+
+    const allOptionElement = spectator.query('.select-all', { root: true });
     expect(allOptionElement).toExist();
     spectator.click(allOptionElement!);
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
-    expect(spectator.query(LabelComponent)?.label).toEqual('first and 2 more');
+    spectator.tick();
+    const selectedElements = spectator.queryAll('input:checked', { root: true });
+    expect(selectedElements.length).toBe(6);
 
-    // De select all
-    spectator.click(allOptionElement!);
-    expect(onChange).toHaveBeenCalledTimes(2);
-    expect(onChange).toHaveBeenLastCalledWith([]);
-    expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
+    expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
+    expect(spectator.query(LabelComponent)?.label).toEqual('first and 5 more');
+
+    spectator.setHostInput({
+      enableSearch: false
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).not.toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
 
     flush();
   }));
@@ -234,21 +292,23 @@ describe('Multi Select Component', () => {
     );
     spectator.tick();
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
+    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-start;');
 
     spectator.setInput({
       justify: MultiSelectJustify.Center
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: center;');
 
     spectator.setInput({
       justify: MultiSelectJustify.Right
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
   }));
 
@@ -267,24 +327,39 @@ describe('Multi Select Component', () => {
       }
     );
 
-    spectator.tick();
-    expect(spectator.query('.search-bar')).toExist();
-    spectator.click('.search-bar');
+    spectator.click('.trigger-content');
 
-    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'fi');
+    const searchBar = spectator.query('.search-bar', { root: true });
+    expect(searchBar).toExist();
+
+    spectator.component.searchOptions('fi');
     spectator.tick();
 
     let options = spectator.queryAll('.multi-select-option', { root: true });
-    expect(options.length).toBe(1);
+    expect(options.length).toBe(2);
     expect(options[0]).toContainText('first');
 
-    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'i');
+    spectator.component.searchOptions('i');
     spectator.tick();
 
     options = spectator.queryAll('.multi-select-option', { root: true });
-    expect(options.length).toBe(2);
+    expect(options.length).toBe(4);
     expect(options[0]).toContainText('first');
     expect(options[1]).toContainText('third');
+
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist(); // Due to initial selection
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
+    // Set selected options to less than 5 and search box and buttons should hide
+    spectator.setHostInput({
+      options: selectionOptions.slice(0, 3)
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).not.toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
     flush();
   }));
 });
