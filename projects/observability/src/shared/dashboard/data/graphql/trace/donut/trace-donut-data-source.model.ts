@@ -63,7 +63,8 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
       timeRange: this.getTimeRangeOrThrow(),
       filters: filters,
       groupBy: {
-        keys: [this.groupBy.name]
+        keys: [this.groupBy.name],
+        limit: this.maxResults
       }
     })).pipe(map(exploreResponse => this.buildDonutResults(exploreResponse, this.metric)));
   }

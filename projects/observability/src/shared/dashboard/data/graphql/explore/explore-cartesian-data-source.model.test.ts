@@ -150,7 +150,8 @@ describe('Explore cartesian data source model', () => {
 
     model.groupBy = {
       keys: ['baz'],
-      includeRest: true
+      includeRest: true,
+      limit: 5
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -212,7 +213,8 @@ describe('Explore cartesian data source model', () => {
     ];
 
     model.groupBy = {
-      keys: ['baz']
+      keys: ['baz'],
+      limit: 5
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -316,7 +318,7 @@ export class TestExploreCartesianDataSourceModel extends ExploreCartesianDataSou
   public series?: ExploreSeries[];
   public context?: string = 'context_scope';
   public groupBy?: GraphQlGroupBy;
-  public groupByLimit?: number;
+  public resultLimit: number = 100;
 
   protected buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
     if ((this.series ?? [])?.length === 0 || this.context === undefined) {
@@ -328,7 +330,7 @@ export class TestExploreCartesianDataSourceModel extends ExploreCartesianDataSou
       context: this.context,
       interval: interval,
       groupBy: this.groupBy,
-      groupByLimit: this.groupByLimit
+      resultLimit: this.resultLimit
     };
   }
 }

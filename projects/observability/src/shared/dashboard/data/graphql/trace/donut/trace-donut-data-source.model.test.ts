@@ -65,7 +65,8 @@ describe('Donut data source model', () => {
           timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
           filters: [],
           groupBy: {
-            keys: ['bar']
+            keys: ['bar'],
+            limit: 3
           },
           limit: 3,
           selections: [
