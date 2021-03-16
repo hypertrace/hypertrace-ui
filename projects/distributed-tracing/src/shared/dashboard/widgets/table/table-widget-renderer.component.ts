@@ -29,12 +29,13 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, pairwise, share, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, map, pairwise, share, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
+import { LabeledTableControlOption } from './table-widget-control.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -167,7 +168,7 @@ export class TableWidgetRendererComponent
         .map(selectControlModel =>
           // Fetch the values for the selectFilter dropdown
           selectControlModel.getOptions().pipe(
-            first(),
+            take(1),
             map(options => {
               const selectOptions = options.map(option => ({
                 label: option.label,
@@ -191,7 +192,7 @@ export class TableWidgetRendererComponent
         .filter(checkboxControlModel => checkboxControlModel.visible)
         .map(checkboxControlModel =>
           checkboxControlModel.getOptions().pipe(
-            first(),
+            take(1),
             map(options => ({
               label: checkboxControlModel.checked ? options[0].label : options[1].label,
               value: checkboxControlModel.checked,
@@ -300,7 +301,8 @@ export class TableWidgetRendererComponent
         this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue));
         break;
       case TableControlOptionType.UnsetFilter:
-        break; // Not supported - No use case yet
+        this.selectFilterSubject.next(this.removeFilters(changed.option.metaValue));
+        break;
       default:
         assertUnreachable(changed.option);
     }
@@ -310,10 +312,10 @@ export class TableWidgetRendererComponent
     this.checkboxControls$ = forkJoinSafeEmpty(
       this.model.getCheckboxControlOptions().map(checkboxControlModel =>
         checkboxControlModel.getOptions().pipe(
-          first(),
+          take(1),
           map(options => {
             options.forEach(option => {
-              if (option === changed.option) {
+              if (this.isLabeledOptionMatch(option, changed.option as LabeledTableControlOption)) {
                 checkboxControlModel.checked = changed.option.value === true;
               }
             });
@@ -327,6 +329,10 @@ export class TableWidgetRendererComponent
         )
       )
     );
+  }
+
+  private isLabeledOptionMatch(option1: LabeledTableControlOption, option2: LabeledTableControlOption): boolean {
+    return option1.label === option2.label && option1.value === option2.value;
   }
 
   public onSearchChange(text: string): void {
@@ -385,11 +391,13 @@ export class TableWidgetRendererComponent
   }
 
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {
-    const existingSelectFiltersWithChangedRemoved = this.selectFilterSubject
-      .getValue()
-      .filter(existingFilter => existingFilter.field !== tableFilter.field);
+    const existingSelectFiltersWithChangedRemoved = this.removeFilters(tableFilter.field);
 
     return [...existingSelectFiltersWithChangedRemoved, tableFilter].filter(f => f.value !== undefined); // Remove filters that are unset
+  }
+
+  private removeFilters(field: string): TableFilter[] {
+    return this.selectFilterSubject.getValue().filter(existingFilter => existingFilter.field !== field);
   }
 
   private mergeQueryProperties(properties: Dictionary<unknown>): Dictionary<unknown> {
