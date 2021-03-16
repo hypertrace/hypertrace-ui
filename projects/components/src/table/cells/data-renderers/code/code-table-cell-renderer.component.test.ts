@@ -34,7 +34,7 @@ describe('Code table cell renderer component', () => {
   test('should render a missing string', () => {
     const spectator = buildComponent();
 
-    expect(spectator.element).toHaveText('Unknown');
-    expect(spectator.query(TooltipDirective)?.content).toBe('Unknown');
+    expect(spectator.element).toHaveText('-');
+    expect(spectator.query(TooltipDirective)?.content).toBe('-');
   });
 });
