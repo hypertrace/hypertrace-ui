@@ -2,7 +2,6 @@
  * Public API Surface of observability
  */
 
-
 // Schema
 
 export * from './shared/graphql/model/schema/entity';
