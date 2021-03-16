@@ -57,31 +57,35 @@ import { MultiSelectJustify } from './multi-select-justify';
         <ht-popover-content>
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
             <ng-container *ngIf="this.enableSearch">
-              <ht-search-box
-                class="search-bar"
-                (valueChange)="this.searchOptions($event)"
-                [debounceTime]="200"
-                displayMode="${SearchBoxDisplayMode.NoBorder}"
-              ></ht-search-box>
-              <ht-divider class="divider"></ht-divider>
+              <ng-container *ngIf="this.allOptions$ | async as allOptions">
+                <ng-container *ngIf="allOptions.length > 5">
+                  <ht-search-box
+                    class="search-bar"
+                    (valueChange)="this.searchOptions($event)"
+                    [debounceTime]="200"
+                    displayMode="${SearchBoxDisplayMode.NoBorder}"
+                  ></ht-search-box>
+                  <ht-divider class="divider"></ht-divider>
 
-              <ht-button
-                class="clear-selected"
-                *ngIf="this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
-                display="${ButtonStyle.Text}"
-                label="Clear Selected"
-                (click)="this.onClearSelected()"
-              ></ht-button>
+                  <ht-button
+                    class="clear-selected"
+                    *ngIf="this.isAnyOptionSelected()"
+                    role="${ButtonRole.Primary}"
+                    display="${ButtonStyle.Text}"
+                    label="Clear Selected"
+                    (click)="this.onClearSelected()"
+                  ></ht-button>
 
-              <ht-button
-                class="select-all"
-                *ngIf="!this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
-                display="${ButtonStyle.Text}"
-                label="Select All"
-                (click)="this.onSelectAll()"
-              ></ht-button>
+                  <ht-button
+                    class="select-all"
+                    *ngIf="!this.isAnyOptionSelected()"
+                    role="${ButtonRole.Primary}"
+                    display="${ButtonStyle.Text}"
+                    label="Select All"
+                    (click)="this.onSelectAll()"
+                  ></ht-button>
+                </ng-container>
+              </ng-container>
             </ng-container>
 
             <div
@@ -141,7 +145,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @ContentChildren(SelectOptionComponent)
   private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
-  private allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
+  public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly searchSubject: Subject<string> = new BehaviorSubject('');
