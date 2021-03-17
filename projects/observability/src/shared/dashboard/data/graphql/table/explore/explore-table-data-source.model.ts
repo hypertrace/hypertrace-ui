@@ -12,6 +12,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
+  NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';
@@ -57,6 +58,13 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
   })
   public groupByIncludeRest: boolean = true;
 
+  @ModelProperty({
+    key: 'group-limit',
+    required: false,
+    type: NUMBER_PROPERTY.type
+  })
+  public groupLimit: number = 100;
+
   public getScope(): string {
     return this.context;
   }
@@ -82,7 +90,8 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       timeRange: this.getTimeRangeOrThrow(),
       groupBy: {
         keys: this.groupBy,
-        includeRest: this.groupByIncludeRest
+        includeRest: this.groupByIncludeRest,
+        limit: this.groupLimit
       }
     };
   }

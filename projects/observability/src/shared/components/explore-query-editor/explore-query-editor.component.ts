@@ -44,12 +44,12 @@ import {
         ></ht-explore-query-group-by-editor>
 
         <ht-explore-query-limit-editor
+          *ngIf="currentVisualization.groupBy"
           class="limit"
-          [limit]="currentVisualization.groupByLimit"
-          (limitChange)="this.setLimit($event)"
+          [limit]="currentVisualization.groupBy?.limit"
+          (limitChange)="this.updateGroupByLimit(currentVisualization.groupBy!, $event)"
           [includeRest]="currentVisualization.groupBy?.includeRest"
           (includeRestChange)="this.updateGroupByIncludeRest(currentVisualization.groupBy!, $event)"
-          [disabled]="!currentVisualization.groupBy"
         >
         </ht-explore-query-limit-editor>
       </div>
@@ -57,6 +57,7 @@ import {
   `
 })
 export class ExploreQueryEditorComponent implements OnChanges, OnInit {
+  private static readonly DEFAULT_GROUP_LIMIT: number = 5;
   @Input()
   public filters?: Filter[];
 
@@ -94,7 +95,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     if (key === undefined) {
       this.visualizationBuilder.groupBy();
     } else {
-      this.visualizationBuilder.groupBy(groupBy ? { ...groupBy, keys: [key] } : { keys: [key] });
+      this.visualizationBuilder.groupBy(
+        groupBy ? { ...groupBy, keys: [key] } : { keys: [key], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+      );
     }
   }
 
@@ -102,8 +105,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.groupBy({ ...groupBy, includeRest: includeRest });
   }
 
-  public setLimit(limit: number): void {
-    this.visualizationBuilder.groupByLimit(limit);
+  public updateGroupByLimit(groupBy: GraphQlGroupBy, limit: number): void {
+    this.visualizationBuilder.groupBy({ ...groupBy, limit: limit });
   }
 
   public setInterval(interval: IntervalValue): void {

@@ -1,15 +1,18 @@
 import { TableDataRequest, TableDataResponse, TableDataSource, TableFilter, TableRow } from '@hypertrace/components';
-import { GraphQlArgumentValue, GraphQlRequestOptions } from '@hypertrace/graphql-client';
+import { GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
-import { toGraphQlOperator } from '../../../../services/filter-builder/graphql-filter-builder.service';
+import { GraphQlFilterBuilderService } from '../../../../services/filter-builder/graphql-filter-builder.service';
 import { SpecificationBackedTableColumnDef } from '../../../widgets/table/table-widget-column.model';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableDataSource<TableRow>> {
+  @ModelInject(GraphQlFilterBuilderService)
+  public graphQlFilterBuilderService!: GraphQlFilterBuilderService;
+
   @ModelProperty({
     key: 'limit',
     displayName: 'Query Limit',
@@ -44,9 +47,6 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
   ): TableDataResponse<TableRow>;
 
   protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {
-    return tableFilters.map(
-      filter =>
-        new GraphQlFieldFilter(filter.field, toGraphQlOperator(filter.operator), filter.value as GraphQlArgumentValue)
-    );
+    return this.graphQlFilterBuilderService.buildGraphQlFilters(tableFilters);
   }
 }
