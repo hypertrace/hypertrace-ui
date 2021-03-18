@@ -2,7 +2,8 @@ import {
   displayString,
   getStringsFromCommaSeparatedList,
   titleCaseFromKebabCase,
-  titleCaseFromSnakeCase
+  titleCaseFromSnakeCase,
+  titleCaseFromWhiteSpacedString
 } from './string-formatter';
 
 describe('String formatter', () => {
@@ -16,6 +17,12 @@ describe('String formatter', () => {
     expect(titleCaseFromSnakeCase('my_snake_case')).toBe('My Snake Case');
     expect(titleCaseFromKebabCase('single')).toBe('Single');
     expect(titleCaseFromKebabCase('')).toBe('');
+  });
+
+  test('can convert from white spaced string to title case', () => {
+    expect(titleCaseFromWhiteSpacedString('to title case')).toBe('To Title Case');
+    expect(titleCaseFromWhiteSpacedString('title')).toBe('Title');
+    expect(titleCaseFromWhiteSpacedString('')).toBe('');
   });
 
   test('can convert to display string', () => {
