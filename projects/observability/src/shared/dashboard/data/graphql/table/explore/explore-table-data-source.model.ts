@@ -80,6 +80,7 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       interval: this.interval?.getDuration(),
       limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
+      includeTotal: true,
       orderBy: request.sort && [
         {
           direction: request.sort.direction,
