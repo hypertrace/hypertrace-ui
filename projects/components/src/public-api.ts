@@ -2,6 +2,10 @@
  * Public API Surface of components
  */
 
+// Beta tag
+export * from './beta-tag/beta-tag.component';
+export * from './beta-tag/beta-tag.module';
+
 // Breadcrumbs
 export * from './breadcrumbs/breadcrumbs.component';
 export * from './breadcrumbs/breadcrumbs.module';
@@ -21,6 +25,10 @@ export * from './combo-box/combo-box.module';
 export * from './combo-box/combo-box.component';
 export * from './combo-box/combo-box-api';
 
+// Confirmation
+export * from './confirmation/confirmation.module';
+export * from './confirmation/confirmation.service';
+
 // Content Holder
 export * from './content/content-holder';
 
@@ -37,17 +45,26 @@ export * from './copy-to-clipboard/copy-to-clipboard.module';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.component';
 export * from './copy-shareable-link-to-clipboard/copy-shareable-link-to-clipboard.module';
 
-// Open in new tab
-export * from './open-in-new-tab/open-in-new-tab.component';
-export * from './open-in-new-tab/open-in-new-tab.module';
-
 // Date Time picker
 export * from './datetime-picker/datetime-picker.component';
 export * from './datetime-picker/datetime-picker.module';
 
+// Description
+export * from './description/description.component';
+export * from './description/description.module';
+
 // Divider
 export * from './divider/divider.component';
 export * from './divider/divider.module';
+
+// Dropdown menu
+export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
+export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
+export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
+
+// Dynamic label
+export * from './highlighted-label/highlighted-label.component';
+export * from './highlighted-label/highlighted-label.module';
 
 // Event Blocker
 export * from './event-blocker/event-blocker.component';
@@ -83,6 +100,10 @@ export * from './filtering/filter-modal/in-filter-modal.component';
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
 
+// Greeting label
+export { GreetingLabelModule } from './greeting-label/greeting-label.module';
+export { GreetingLabelComponent } from './greeting-label/greeting-label.component';
+
 // Header
 export * from './header/application/application-header.component';
 export * from './header/application/application-header.module';
@@ -108,9 +129,9 @@ export { JsonViewerModule } from './viewer/json-viewer/json-viewer.module';
 export * from './label/label.component';
 export * from './label/label.module';
 
-// Dynamic label
-export * from './highlighted-label/highlighted-label.component';
-export * from './highlighted-label/highlighted-label.module';
+// Label tag
+export * from './label-tag/label-tag.component';
+export * from './label-tag/label-tag.module';
 
 // Layout Change
 export { LayoutChangeTriggerDirective } from './layout/layout-change-trigger.directive';
@@ -142,6 +163,15 @@ export { LoadAsyncModule } from './load-async/load-async.module';
 export { MessageDisplayComponent } from './message-display/message-display.component';
 export { MessageDisplayModule } from './message-display/message-display.module';
 
+// Modal
+export * from './modal/modal';
+export * from './modal/modal.module';
+export * from './modal/modal.service';
+
+// Multi-select
+export * from './multi-select/multi-select.component';
+export * from './multi-select/multi-select.module';
+
 // Navigable Tab
 export * from './tabs/navigable/navigable-tab';
 export * from './tabs/navigable/navigable-tab-group.component';
@@ -151,6 +181,14 @@ export * from './tabs/navigable/navigable-tab.module';
 // Not-Found Component
 export * from './not-found/not-found.component';
 export * from './not-found/not-found.module';
+
+// Notification
+export * from './notification/notification.service';
+export * from './notification/notification.module';
+
+// Open in new tab
+export * from './open-in-new-tab/open-in-new-tab.component';
+export * from './open-in-new-tab/open-in-new-tab.module';
 
 // Paginator
 export * from './paginator/page.event';
@@ -187,14 +225,15 @@ export * from './select/select-control-option.component';
 export * from './select/select.component';
 export * from './select/select.module';
 
-// Multi-select
-export * from './multi-select/multi-select.component';
-export * from './multi-select/multi-select.module';
-
 // Sequence
 export { SequenceSegment } from './sequence/sequence';
 export * from './sequence/sequence-chart.component';
 export * from './sequence/sequence-chart.module';
+
+// Summary List
+export * from './summary-list/summary-list.module';
+export * from './summary-list/summary-list.component';
+export * from './summary-list/summary-list-api';
 
 // Overlay
 export { OverlayService } from './overlay/overlay.service';
@@ -283,36 +322,3 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
-
-// Greeting label
-export { GreetingLabelModule } from './greeting-label/greeting-label.module';
-export { GreetingLabelComponent } from './greeting-label/greeting-label.component';
-
-// Dropdown menu
-export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
-export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
-export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
-
-// Beta tag
-export * from './beta-tag/beta-tag.component';
-export * from './beta-tag/beta-tag.module';
-
-// Label tag
-export * from './label-tag/label-tag.component';
-export * from './label-tag/label-tag.module';
-
-// Modal
-export * from './modal/modal';
-export * from './modal/modal.module';
-export * from './modal/modal.service';
-
-export * from './confirmation/confirmation.module';
-export * from './confirmation/confirmation.service';
-
-// Notification
-export * from './notification/notification.service';
-export * from './notification/notification.module';
-
-// Description
-export * from './description/description.component';
-export * from './description/description.module';
