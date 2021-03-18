@@ -88,20 +88,22 @@ import { MultiSelectJustify } from './multi-select-justify';
               </ng-container>
             </ng-container>
 
-            <div
-              *ngFor="let item of this.filteredOptions$ | async"
-              (click)="this.onSelectionChange(item)"
-              class="multi-select-option"
-            >
-              <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
-              <ht-icon
-                class="icon"
-                *ngIf="item.icon"
-                [icon]="item.icon"
-                size="${IconSize.ExtraSmall}"
-                [color]="item.iconColor"
-              ></ht-icon>
-              <span class="label">{{ item.label }}</span>
+            <div class="multi-select-options">
+              <div
+                *ngFor="let item of this.filteredOptions$ | async"
+                (click)="this.onSelectionChange(item)"
+                class="multi-select-option"
+              >
+                <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
+                <ht-icon
+                  class="icon"
+                  *ngIf="item.icon"
+                  [icon]="item.icon"
+                  size="${IconSize.ExtraSmall}"
+                  [color]="item.iconColor"
+                ></ht-icon>
+                <span class="label">{{ item.label }}</span>
+              </div>
             </div>
           </div>
         </ht-popover-content>
