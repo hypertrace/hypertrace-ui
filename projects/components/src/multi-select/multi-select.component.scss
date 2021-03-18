@@ -64,10 +64,15 @@
   @include dropdown(6px);
   min-width: 120px;
   display: flex;
+  height: 100%;
   flex-direction: column;
 
   .divider {
     padding: 0px 16px 4px 16px;
+  }
+
+  .multi-select-options {
+    overflow: auto;
   }
 
   .multi-select-option {
