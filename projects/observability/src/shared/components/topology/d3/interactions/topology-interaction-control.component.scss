@@ -1,5 +1,5 @@
-@import 'color-palette';
-@import 'font';
+@import "color-palette";
+@import "font";
 
 .topology-control {
   border-radius: 6px;
@@ -20,6 +20,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
+  bottom: 24px;
 }
 
 button {
