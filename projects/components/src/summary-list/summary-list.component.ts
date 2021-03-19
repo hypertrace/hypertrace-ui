@@ -26,10 +26,10 @@ import { SummaryItem } from './summary-list-api';
 })
 export class SummaryListComponent {
   @Input()
-  public title?: string = 'External';
+  public title?: string;
 
   @Input()
-  public icon?: IconType = IconType.External;
+  public icon?: IconType;
 
   @Input()
   public items?: SummaryItem[] = [];
