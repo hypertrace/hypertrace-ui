@@ -53,7 +53,7 @@ describe('Explore graphql query handler', () => {
     requestType: EXPLORE_GQL_REQUEST,
     context: ObservabilityTraceType.Api,
     timeRange: testTimeRange,
-    limit: 2,
+    limit: 4,
     offset: 0,
     includeTotal: true,
     selections: [
@@ -62,6 +62,7 @@ describe('Explore graphql query handler', () => {
     ],
     interval: new TimeDuration(1, TimeUnit.Minute),
     groupBy: {
+      limit: 2,
       includeRest: true,
       keys: ['serviceName']
     },
@@ -90,7 +91,7 @@ describe('Explore graphql query handler', () => {
       path: 'explore',
       arguments: [
         { name: 'context', value: new GraphQlEnumArgument(ObservabilityTraceType.Api) },
-        { name: 'limit', value: 2 },
+        { name: 'limit', value: 4 },
         {
           name: 'between',
           value: {
@@ -121,7 +122,8 @@ describe('Explore graphql query handler', () => {
           name: 'groupBy',
           value: {
             includeRest: true,
-            keys: ['serviceName']
+            keys: ['serviceName'],
+            groupLimit: 2
           }
         },
         {
@@ -184,7 +186,7 @@ describe('Explore graphql query handler', () => {
       path: 'explore',
       arguments: [
         { name: 'context', value: new GraphQlEnumArgument(ObservabilityEntityType.Api) },
-        { name: 'limit', value: 2 },
+        { name: 'limit', value: 4 },
         {
           name: 'between',
           value: {
@@ -215,7 +217,8 @@ describe('Explore graphql query handler', () => {
           name: 'groupBy',
           value: {
             includeRest: true,
-            keys: ['serviceName']
+            keys: ['serviceName'],
+            groupLimit: 2
           }
         },
         {

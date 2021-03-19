@@ -80,6 +80,7 @@ describe('Explorer Visualization cartesian data source model', () => {
       selections: partialRequest.series.map(series => series.specification)
     } as const),
     resultsQuery$: EMPTY,
+    resultLimit: 1000,
     series: partialRequest.series,
     groupBy: partialRequest.groupBy,
     interval: partialRequest.interval,
@@ -160,7 +161,8 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: undefined,
       groupBy: {
-        keys: ['baz']
+        keys: ['baz'],
+        limit: 10
       },
       series: [
         {
@@ -224,7 +226,8 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: 'AUTO',
       groupBy: {
-        keys: ['baz']
+        keys: ['baz'],
+        limit: 5
       },
       series: [
         {

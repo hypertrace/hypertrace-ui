@@ -30,8 +30,7 @@ import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 
 @Injectable()
 export class ExploreVisualizationBuilder implements OnDestroy {
-  private static readonly DEFAULT_GROUP_LIMIT: number = 5;
-  private static readonly DEFAULT_UNGROUPED_LIMIT: number = 500;
+  private static readonly DEFAULT_LIMIT: number = 1000;
 
   public readonly visualizationRequest$: Observable<ExploreVisualizationRequest>;
   private readonly destroyed$: Subject<void> = new Subject();
@@ -80,20 +79,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   public groupBy(groupBy?: GraphQlGroupBy): this {
-    const groupByLimit =
-      this.currentState().groupByLimit !== undefined
-        ? this.currentState().groupByLimit
-        : ExploreVisualizationBuilder.DEFAULT_GROUP_LIMIT;
-
     return this.updateState({
-      groupBy: groupBy,
-      groupByLimit: groupBy && groupByLimit
-    });
-  }
-
-  public groupByLimit(limit: number): this {
-    return this.updateState({
-      groupByLimit: limit
+      groupBy: groupBy
     });
   }
 
@@ -128,11 +115,11 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
     return {
       context: state.context,
+      resultLimit: state.resultLimit,
       series: [...state.series],
       filters: state.filters && [...state.filters],
       interval: this.resolveInterval(state.interval),
       groupBy: state.groupBy && { ...state.groupBy },
-      groupByLimit: state.groupByLimit,
       exploreQuery$: this.mapStateToExploreQuery(state),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
@@ -146,7 +133,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       interval: this.resolveInterval(state.interval),
       filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFilters(state.filters),
       groupBy: state.groupBy,
-      limit: state.groupByLimit === undefined ? ExploreVisualizationBuilder.DEFAULT_UNGROUPED_LIMIT : state.groupByLimit
+      limit: state.resultLimit
     });
   }
 
@@ -215,6 +202,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return {
       context: context,
       interval: 'AUTO',
+      resultLimit: ExploreVisualizationBuilder.DEFAULT_LIMIT,
       series: [this.buildDefaultSeries(context)]
     };
   }
@@ -242,8 +230,8 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
-  groupByLimit?: number;
   useGroupName?: boolean;
+  resultLimit: number;
 }
 
 export type ExploreRequestContext = TraceType | 'SPAN' | 'DOMAIN_EVENT';
