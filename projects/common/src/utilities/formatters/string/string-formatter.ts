@@ -1,16 +1,3 @@
-const titleCaseFromString = (text: string, splitter: string): string =>
-  text
-    .split(splitter)
-    .map(str => (str.length === 0 ? str : str[0].toUpperCase() + str.slice(1)))
-    .join(' ');
-
-export const titleCaseFromKebabCase = (kebabCaseString: string): string => titleCaseFromString(kebabCaseString, '-');
-
-export const titleCaseFromWhiteSpacedString = (whiteSpacedString: string): string =>
-  titleCaseFromString(whiteSpacedString, ' ');
-
-export const titleCaseFromSnakeCase = (snakeCaseString: string): string => titleCaseFromString(snakeCaseString, '_');
-
 export const displayString = (provided?: unknown): string => {
   if (provided === null) {
     return '-';

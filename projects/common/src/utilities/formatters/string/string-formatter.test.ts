@@ -1,30 +1,6 @@
-import {
-  displayString,
-  getStringsFromCommaSeparatedList,
-  titleCaseFromKebabCase,
-  titleCaseFromSnakeCase,
-  titleCaseFromWhiteSpacedString
-} from './string-formatter';
+import { displayString, getStringsFromCommaSeparatedList } from './string-formatter';
 
 describe('String formatter', () => {
-  test('can convert from kebab case to title case', () => {
-    expect(titleCaseFromKebabCase('my-kebab-case')).toBe('My Kebab Case');
-    expect(titleCaseFromKebabCase('single')).toBe('Single');
-    expect(titleCaseFromKebabCase('')).toBe('');
-  });
-
-  test('can convert from snake case to title case', () => {
-    expect(titleCaseFromSnakeCase('my_snake_case')).toBe('My Snake Case');
-    expect(titleCaseFromKebabCase('single')).toBe('Single');
-    expect(titleCaseFromKebabCase('')).toBe('');
-  });
-
-  test('can convert from white spaced string to title case', () => {
-    expect(titleCaseFromWhiteSpacedString('to title case')).toBe('To Title Case');
-    expect(titleCaseFromWhiteSpacedString('title')).toBe('Title');
-    expect(titleCaseFromWhiteSpacedString('')).toBe('');
-  });
-
   test('can convert to display string', () => {
     // tslint:disable-next-line: no-null-keyword
     expect(displayString(null)).toBe('-');
