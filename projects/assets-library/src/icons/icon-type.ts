@@ -43,6 +43,7 @@ export const enum IconType {
   Expand = 'launch',
   ExpandAll = 'svg:expand-all',
   Expanded = 'svg:minus-square',
+  ExpandedReverse = 'svg:minus-circle-reverse',
   Eye = 'svg:eye',
   Favorite = 'favorite_border',
   FileCode = 'svg:file-code',

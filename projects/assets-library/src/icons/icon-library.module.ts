@@ -43,6 +43,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Edge, url: `${iconsRootPath}/edge.svg` },
         { key: IconType.ExpandAll, url: `${iconsRootPath}/expand-all.svg` },
         { key: IconType.Expanded, url: `${iconsRootPath}/minus-circle.svg` },
+        { key: IconType.ExpandedReverse, url: `${iconsRootPath}/minus-circle-reverse.svg` },
         { key: IconType.Eye, url: `${iconsRootPath}/eye.svg` },
         { key: IconType.FileCode, url: `${iconsRootPath}/file-code.svg` },
         { key: IconType.Filter, url: `${iconsRootPath}/filter.svg` },
