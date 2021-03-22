@@ -1,32 +1,79 @@
-import { SummaryListComponent } from '@hypertrace/components';
-import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { IconType } from '@hypertrace/assets-library';
+import { IconComponent, LabelComponent, SummaryListComponent } from '@hypertrace/components';
+import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 
 describe('Summary List component', () => {
-  let spectator: Spectator<SummaryListComponent>;
+  let spectator: SpectatorHost<SummaryListComponent>;
 
-  const createComponent = createComponentFactory({
+  const createHost = createHostFactory({
     component: SummaryListComponent,
     shallow: true,
-    declarations: []
+    declarations: [MockComponent(IconComponent), MockComponent(LabelComponent)]
   });
 
   beforeEach(() => {
-    spectator = createComponent();
+    spectator = createHost(
+      `
+      <ht-summary-list
+        [title]="title"
+        [icon]="icon"
+        [items]="items"
+      ></ht-summary-list>`,
+      {
+        hostProps: {
+          title: 'My Title',
+          icon: IconType.Add,
+          items: [
+            {
+              label: 'number',
+              value: 0
+            },
+            {
+              label: 'Number-Array',
+              value: [0, 1, 2]
+            },
+            {
+              label: 'STRING',
+              value: 'zero'
+            },
+            {
+              label: 'STRING_ARRAY',
+              value: ['zero', 'one', 'two', 'three']
+            },
+            {
+              label: 'bOOleAN',
+              value: true
+            },
+            {
+              label: 'boolean-array',
+              value: [true, false]
+            }
+          ]
+        }
+      }
+    );
+  });
+
+  test('sets title and icon', () => {
+    expect(spectator.query('.summary-icon', { read: IconComponent })?.icon).toEqual(IconType.Add);
+    expect(spectator.query('.summary-title', { read: LabelComponent })?.label).toEqual('My Title');
   });
 
   test('formats label', () => {
-    expect(spectator.component.getFormattedLabel('TEST_UNDERSCORE')).toEqual('Test Underscore');
-    expect(spectator.component.getFormattedLabel('TEST-DASH')).toEqual('Test Dash');
-    expect(spectator.component.getFormattedLabel('Test_mixed-LABEL')).toEqual('Test Mixed Label');
-    expect(spectator.component.getFormattedLabel('test MORE')).toEqual('Test More');
+    const labelComponents = spectator.queryAll('.summary-value-title', { read: LabelComponent });
+    expect(labelComponents.map(c => c.label)).toEqual([
+      'Number',
+      'Number Array',
+      'String',
+      'String Array',
+      'Boolean',
+      'Boolean Array'
+    ]);
   });
 
   test('gets value array', () => {
-    expect(spectator.component.getValuesArray(1)).toEqual([1]);
-    expect(spectator.component.getValuesArray([1])).toEqual([1]);
-    expect(spectator.component.getValuesArray('two')).toEqual(['two']);
-    expect(spectator.component.getValuesArray(['two', 'three'])).toEqual(['two', 'three']);
-    expect(spectator.component.getValuesArray(true)).toEqual([true]);
-    expect(spectator.component.getValuesArray([true, false])).toEqual([true, false]);
+    const values = spectator.queryAll('li').map(e => e.textContent);
+    expect(values).toEqual(['0', '0', '1', '2', 'zero', 'zero', 'one', 'two', 'three', 'true', 'true', 'false']);
   });
 });
