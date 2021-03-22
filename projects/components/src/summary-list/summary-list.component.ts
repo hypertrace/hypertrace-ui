@@ -35,7 +35,7 @@ export class SummaryListComponent {
   public items?: SummaryItem[] = [];
 
   public getFormattedLabel(item: SummaryItem): string {
-    return startCase(item.label.trim().replace('-', ' ').replace('_', ' ').toLowerCase());
+    return startCase(item.label.trim().toLowerCase());
   }
 
   public getValuesArray(item: SummaryItem): PrimitiveValue[] {
