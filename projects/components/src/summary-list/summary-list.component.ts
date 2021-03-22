@@ -15,10 +15,10 @@ import { SummaryItem } from './summary-list-api';
         <ht-label class="summary-title" [label]="this.title"></ht-label>
       </div>
       <ng-container *ngFor="let item of this.items">
-        <ht-label class="summary-value-title" [label]="this.getFormattedLabel(item)"></ht-label>
+        <ht-label class="summary-value-title" [label]="this.getFormattedLabel(item.label)"></ht-label>
         <ul class="summary-value-list">
-          <li class="summary-value" *ngIf="this.getValuesArray(item).length === 0">None</li>
-          <li class="summary-value" *ngFor="let value of this.getValuesArray(item)">{{ value }}</li>
+          <li class="summary-value" *ngIf="this.getValuesArray(item.value).length === 0">None</li>
+          <li class="summary-value" *ngFor="let value of this.getValuesArray(item.value)">{{ value }}</li>
         </ul>
       </ng-container>
     </div>
@@ -34,11 +34,11 @@ export class SummaryListComponent {
   @Input()
   public items?: SummaryItem[] = [];
 
-  public getFormattedLabel(item: SummaryItem): string {
-    return startCase(item.label.trim().toLowerCase());
+  public getFormattedLabel(label: string): string {
+    return startCase(label.toLowerCase());
   }
 
-  public getValuesArray(item: SummaryItem): PrimitiveValue[] {
-    return Array.isArray(item.value) ? item.value : [item.value];
+  public getValuesArray(value: PrimitiveValue | PrimitiveValue[]): PrimitiveValue[] {
+    return Array.isArray(value) ? value : [value];
   }
 }
