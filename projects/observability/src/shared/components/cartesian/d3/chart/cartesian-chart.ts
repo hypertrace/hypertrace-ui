@@ -439,11 +439,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     ];
 
     this.allCartesianData = [
-      ...this.allSeriesData,
       ...this.bands.map(
         band =>
           new CartesianBand(this.d3Utils, this.domRenderer, band, this.scaleBuilder, this.getTooltipTrackingStrategy())
-      )
+      ),
+      ...this.allSeriesData
     ];
   }
 
