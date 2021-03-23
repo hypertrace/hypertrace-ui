@@ -35,7 +35,7 @@
       @include body-2-regular($gray-7);
       padding-top: 3px;
 
-      &.navigable {
+      &.clickable {
         @include link();
       }
 

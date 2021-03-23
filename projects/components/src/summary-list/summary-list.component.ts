@@ -20,7 +20,7 @@ import { SummaryItem } from './summary-list-api';
           <li class="summary-value" *ngIf="this.getValuesArray(item.value).length === 0">None</li>
           <li
             class="summary-value"
-            [class.navigable]="item.navigable"
+            [class.clickable]="item.clickable"
             *ngFor="let value of this.getValuesArray(item.value)"
             (click)="this.itemClick.emit(item)"
           >
