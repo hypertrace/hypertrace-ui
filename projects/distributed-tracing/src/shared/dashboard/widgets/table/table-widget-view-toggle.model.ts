@@ -83,6 +83,10 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return this.delegateModel?.getSearchAttribute() ?? this.searchAttribute;
   }
 
+  public getSearchPlaceholder(): string | undefined {
+    return this.delegateModel?.getSearchPlaceholder() ?? this.searchPlaceholder;
+  }
+
   public getCheckboxControlOptions(): TableWidgetControlCheckboxOptionModel[] {
     return this.delegateModel?.getCheckboxControlOptions() ?? this.checkboxOptions;
   }

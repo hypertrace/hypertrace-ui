@@ -55,6 +55,7 @@ import { TableWidgetModel } from './table-widget.model';
         <ht-table-controls
           class="table-controls"
           [searchEnabled]="!!this.api.model.getSearchAttribute()"
+          [searchPlaceholder]="this.api.model.getSearchPlaceholder()"
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
           [viewItems]="this.viewItems"

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { PrimitiveValue } from '@hypertrace/common';
 import { startCase } from 'lodash-es';
@@ -18,7 +18,14 @@ import { SummaryItem } from './summary-list-api';
         <ht-label class="summary-value-title" [label]="this.getFormattedLabel(item.label)"></ht-label>
         <ul class="summary-value-list">
           <li class="summary-value" *ngIf="this.getValuesArray(item.value).length === 0">None</li>
-          <li class="summary-value" *ngFor="let value of this.getValuesArray(item.value)">{{ value }}</li>
+          <li
+            class="summary-value"
+            [class.navigable]="item.navigable"
+            *ngFor="let value of this.getValuesArray(item.value)"
+            (click)="this.itemClick.emit(item)"
+          >
+            {{ value }}
+          </li>
         </ul>
       </ng-container>
     </div>
@@ -33,6 +40,9 @@ export class SummaryListComponent {
 
   @Input()
   public items?: SummaryItem[] = [];
+
+  @Output()
+  public readonly itemClick: EventEmitter<SummaryItem> = new EventEmitter();
 
   public getFormattedLabel(label: string): string {
     return startCase(label.toLowerCase());
