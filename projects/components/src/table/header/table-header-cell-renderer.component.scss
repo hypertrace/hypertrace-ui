@@ -49,6 +49,11 @@
     min-width: 0;
     width: 100%;
 
+    &.asc,
+    &.desc {
+      color: $gray-9;
+    }
+
     &:after {
       display: inline-block;
     }
