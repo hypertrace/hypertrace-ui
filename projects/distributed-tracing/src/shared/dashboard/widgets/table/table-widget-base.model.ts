@@ -49,6 +49,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public searchAttribute?: string;
 
   @ModelProperty({
+    key: 'search-placeholder',
+    displayName: 'Search Placeholder',
+    type: STRING_PROPERTY.type
+  })
+  public searchPlaceholder?: string;
+
+  @ModelProperty({
     key: 'select-control-options',
     displayName: 'Select Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -137,6 +144,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;
+  }
+
+  public getSearchPlaceholder(): string | undefined {
+    return this.searchPlaceholder;
   }
 
   public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {

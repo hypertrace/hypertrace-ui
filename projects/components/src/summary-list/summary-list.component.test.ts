@@ -73,7 +73,7 @@ describe('Summary List component', () => {
   });
 
   test('gets value array', () => {
-    const values = spectator.queryAll('li').map(e => e.textContent);
+    const values = spectator.queryAll('li').map(e => e.textContent?.trim());
     expect(values).toEqual(['0', '0', '1', '2', 'zero', 'zero', 'one', 'two', 'three', 'true', 'true', 'false']);
   });
 });
