@@ -2,6 +2,10 @@
 
 .table-content-container {
   @include flex-layout(column);
+
+  &.titled {
+    padding-top: 12px;
+  }
 }
 
 .table {
