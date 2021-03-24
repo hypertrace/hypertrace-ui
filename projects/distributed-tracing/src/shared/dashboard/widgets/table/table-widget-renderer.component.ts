@@ -69,7 +69,6 @@ import { TableWidgetModel } from './table-widget.model';
 
         <ht-table
           class="table"
-          [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
           [columnConfigs]="this.columnConfigs$ | async"
           [metadata]="this.metadata$ | async"
           [mode]="this.model.mode"
