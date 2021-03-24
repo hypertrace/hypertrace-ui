@@ -13,22 +13,16 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
             [attr.d]="rendererData.backgroundArc"
             *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
           />
-          <g
-            class="input-data"
-            *ngIf="rendererData.data"
-            htTooltip="{{ rendererData.data.value }} of {{ rendererData.data.maxValue }}"
-          >
-            <path
-              class="value-ring"
-              *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
-              [attr.d]="rendererData.data.valueArc"
-              [attr.fill]="rendererData.data.threshold.color"
-            />
-            <text x="0" y="-4" class="value-display" [attr.fill]="rendererData.data.threshold.color">
-              {{ rendererData.data.value }}
-            </text>
-            <text x="0" y="20" class="label-display">{{ rendererData.data.threshold.label }}</text>
-          </g>
+          <ng-template *ngIf="rendererData.data">
+            <ht-basic-gauge 
+              [value]="this.value" 
+              [maxValue]="this.maxValue" 
+              [hasRadius]="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
+              [defaultLabel]="rendererData.data.threshold.label" 
+              [defaultColor]="rendererData.data.threshold.color" 
+              [valueArc]="rendererData.data.valueArc">
+            </ht-basic-gauge>
+          </ng-template>
         </g>
       </svg>
     </div>
@@ -56,7 +50,7 @@ export class GaugeComponent implements OnChanges {
   public constructor(
     public readonly elementRef: ElementRef,
     private readonly domElementMeasurerService: DomElementMeasurerService
-  ) {}
+  ) { }
 
   public ngOnChanges(): void {
     this.rendererData = this.buildRendererData();
@@ -190,6 +184,12 @@ export interface GaugeThreshold {
   color: Color | string;
 }
 
+
+interface GaugeSingleThreshold {
+  label: string;
+  color: Color | string;
+}
+
 interface GaugeSvgRendererData {
   origin: Point;
   radius: number;
@@ -201,7 +201,7 @@ interface GaugeData {
   valueArc: string;
   value: number;
   maxValue: number;
-  threshold: GaugeThreshold;
+  threshold: GaugeThreshold | GaugeSingleThreshold;
 }
 
 interface GaugeInputData {
