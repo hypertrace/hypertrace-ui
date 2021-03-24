@@ -22,7 +22,7 @@ import { SummaryItem } from './summary-list-api';
             class="summary-value"
             [class.clickable]="item.clickable"
             *ngFor="let value of this.getValuesArray(item.value)"
-            (click)="this.itemClick.emit(item)"
+            (click)="this.onItemCLick(item)"
           >
             {{ value }}
           </li>
@@ -50,5 +50,9 @@ export class SummaryListComponent {
 
   public getValuesArray(value: PrimitiveValue | PrimitiveValue[]): PrimitiveValue[] {
     return Array.isArray(value) ? value : [value];
+  }
+
+  public onItemCLick(item: SummaryItem): void {
+    item.clickable && this.itemClick.emit(item);
   }
 }
