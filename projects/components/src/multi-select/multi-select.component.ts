@@ -58,7 +58,7 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
             <ng-container *ngIf="this.enableSearch">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
-                <ng-container *ngIf="allOptions.length > 5">
+                <ng-container *ngIf="!this.enableImplicitOptionsSearch || allOptions.length > 5">
                   <ht-search-box
                     class="search-bar"
                     (valueChange)="this.searchOptions($event)"
@@ -78,7 +78,7 @@ import { MultiSelectJustify } from './multi-select-justify';
 
                   <ht-button
                     class="select-all"
-                    *ngIf="!this.isAnyOptionSelected()"
+                    *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
                     role="${ButtonRole.Primary}"
                     display="${ButtonStyle.Text}"
                     label="Select All"
@@ -137,6 +137,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public enableSearch: boolean = false;
 
   @Input()
+  public enableImplicitOptionsSearch: boolean = true;
+
+  @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
@@ -144,6 +147,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
+
+  @Output()
+  public readonly optionsSearchChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ContentChildren(SelectOptionComponent)
   private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
@@ -170,7 +176,11 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public searchOptions(searchText: string): void {
-    this.searchSubject.next(searchText);
+    if (!this.enableImplicitOptionsSearch) {
+      this.optionsSearchChange.emit(searchText);
+    } else {
+      this.searchSubject.next(searchText);
+    }
   }
 
   public onSelectAll(): void {
