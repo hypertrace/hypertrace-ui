@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
 import { Color, DomElementMeasurerService, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
-import { String } from 'lodash';
 
 @Component({
   selector: 'ht-gauge',
