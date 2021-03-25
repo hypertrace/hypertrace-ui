@@ -59,7 +59,7 @@ export class GaugeComponent implements OnChanges {
   public constructor(
     public readonly elementRef: ElementRef,
     private readonly domElementMeasurerService: DomElementMeasurerService
-  ) { }
+  ) {}
 
   public ngOnChanges(): void {
     this.rendererData = this.buildRendererData();
@@ -165,7 +165,12 @@ export class GaugeComponent implements OnChanges {
           color: currentThreshold.color
         };
       }
-    } else if (this.value !== undefined && this.maxValue !== undefined && this.defaultColor !== undefined && this.defaultColor !== undefined) {
+    } else if (
+      this.value !== undefined &&
+      this.maxValue !== undefined &&
+      this.defaultColor !== undefined &&
+      this.defaultColor !== undefined
+    ) {
       return {
         value: this.value,
         maxValue: this.maxValue,

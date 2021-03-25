@@ -64,14 +64,17 @@ describe('Gauge component', () => {
   });
 
   test('render data from default values', () => {
-    spectator = createHost(`<ht-gauge [value]="value" [maxValue]="maxValue" [defaultColor]="defaultColor" [defaultLabel]="defaultLabel"></ht-gauge>`, {
-      hostProps: {
-        value: 80,
-        maxValue: 100,
-        defaultColor: '#9e4c41',
-        defaultLabel: 'Medium'
+    spectator = createHost(
+      `<ht-gauge [value]="value" [maxValue]="maxValue" [defaultColor]="defaultColor" [defaultLabel]="defaultLabel"></ht-gauge>`,
+      {
+        hostProps: {
+          value: 80,
+          maxValue: 100,
+          defaultColor: '#9e4c41',
+          defaultLabel: 'Medium'
+        }
       }
-    });
+    );
     spectator.component.onLayoutChange();
     expect(spectator.component.rendererData).toEqual({
       backgroundArc:
