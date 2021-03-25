@@ -24,14 +24,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
-    key: 'title',
-    displayName: 'Title',
-    type: STRING_PROPERTY.type
-  })
-  // @deprecated
-  public title?: string;
-
-  @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,

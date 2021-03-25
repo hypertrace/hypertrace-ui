@@ -452,8 +452,7 @@ export class BackendOverviewComponent {
         style: TableStyle.Embedded,
         header: {
           type: 'widget-header',
-          title: 'Services',
-          'top-margin': true
+          title: 'Services'
         },
         pageable: false,
         columns: [
