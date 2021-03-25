@@ -58,33 +58,31 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
-                <ng-container *ngIf="this.searchMode === '${MultiSelectSearchMode.EmitOnly}' || allOptions.length > 5">
-                  <ht-search-box
-                    class="search-bar"
-                    (valueChange)="this.searchOptions($event)"
-                    [debounceTime]="200"
-                    displayMode="${SearchBoxDisplayMode.NoBorder}"
-                  ></ht-search-box>
-                  <ht-divider class="divider"></ht-divider>
+                <ht-search-box
+                  class="search-bar"
+                  (valueChange)="this.searchOptions($event)"
+                  [debounceTime]="200"
+                  displayMode="${SearchBoxDisplayMode.NoBorder}"
+                ></ht-search-box>
+                <ht-divider class="divider"></ht-divider>
 
-                  <ht-button
-                    class="clear-selected"
-                    *ngIf="this.isAnyOptionSelected()"
-                    role="${ButtonRole.Primary}"
-                    display="${ButtonStyle.Text}"
-                    label="Clear Selected"
-                    (click)="this.onClearSelected()"
-                  ></ht-button>
+                <ht-button
+                  class="clear-selected"
+                  *ngIf="this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Clear Selected"
+                  (click)="this.onClearSelected()"
+                ></ht-button>
 
-                  <ht-button
-                    class="select-all"
-                    *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
-                    role="${ButtonRole.Primary}"
-                    display="${ButtonStyle.Text}"
-                    label="Select All"
-                    (click)="this.onSelectAll()"
-                  ></ht-button>
-                </ng-container>
+                <ht-button
+                  class="select-all"
+                  *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Select All"
+                  (click)="this.onSelectAll()"
+                ></ht-button>
               </ng-container>
             </ng-container>
 
@@ -249,6 +247,6 @@ export const enum TriggerLabelDisplayMode {
 
 export const enum MultiSelectSearchMode {
   Disabled = 'disabled', // Search is not available
-  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is not triggered
   EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
-import { IconType } from '@hypertrace/assets-library';
+import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -19,7 +19,7 @@ import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [PopoverModule, CommonModule, LoadAsyncModule],
+    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule],
     providers: [
       mockProvider(NavigationService, {
         navigation$: NEVER
@@ -358,13 +358,13 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.clear-selected', { root: true })).not.toExist(); // Due to initial selection
     expect(spectator.query('.select-all', { root: true })).toExist();
 
-    // Set selected options to less than 5 and search box and buttons should hide
+    // Set options list to less than 1 and search control buttons should be hidden
     spectator.setHostInput({
-      options: selectionOptions.slice(0, 3)
+      options: []
     });
 
-    expect(spectator.query('.search-bar', { root: true })).not.toExist();
-    expect(spectator.query('.divider', { root: true })).not.toExist();
+    expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
     expect(spectator.query('.clear-selected', { root: true })).not.toExist();
     expect(spectator.query('.select-all', { root: true })).not.toExist();
     flush();
