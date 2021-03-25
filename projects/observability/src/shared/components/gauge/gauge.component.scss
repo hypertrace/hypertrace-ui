@@ -1,5 +1,6 @@
-@import "font";
-@import "color-palette";
+  
+@import 'font';
+@import 'color-palette';
 
 .gauge-container {
   width: 100%;
@@ -13,5 +14,26 @@
 
   .gauge-ring {
     fill: $gray-2;
+  }
+
+  .input-data {
+    cursor: default;
+  }
+
+  .value-ring {
+    transition: transform 0.2s ease-out;
+  }
+
+  .value-display {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 56px;
+    text-anchor: middle;
+  }
+
+  .label-display {
+    @include body-1-semibold($gray-7);
+    font-family: $font-family;
+    text-anchor: middle;
   }
 }

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges } from '@angular/core';
 import { Color, DomElementMeasurerService, Point } from '@hypertrace/common';
 import { Arc, arc, DefaultArcObject } from 'd3-shape';
+import { String } from 'lodash';
 
 @Component({
   selector: 'ht-gauge',
@@ -8,21 +9,23 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
     <div class="gauge-container" (htLayoutChange)="this.onLayoutChange()">
       <svg class="gauge" *ngIf="this.rendererData">
         <g attr.transform="translate({{ rendererData.origin.x }}, {{ rendererData.origin.y }})">
-          <path
-            class="gauge-ring"
-            [attr.d]="rendererData.backgroundArc"
-            *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
-          />
-          <ng-template *ngIf="rendererData.data">
-            <ht-basic-gauge 
-              [value]="this.value" 
-              [maxValue]="this.maxValue" 
-              [hasRadius]="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
-              [defaultLabel]="rendererData.data.threshold.label" 
-              [defaultColor]="rendererData.data.threshold.color" 
-              [valueArc]="rendererData.data.valueArc">
-            </ht-basic-gauge>
-          </ng-template>
+          <path class="gauge-ring" [attr.d]="rendererData.backgroundArc" *ngIf="rendererData.radius > 80" />
+          <g
+            class="input-data"
+            *ngIf="rendererData.data"
+            htTooltip="{{ rendererData.data.value }} of {{ rendererData.data.maxValue }}"
+          >
+            <path
+              class="value-ring"
+              *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
+              [attr.d]="rendererData.data.valueArc"
+              [attr.fill]="rendererData.data.color"
+            />
+            <text x="0" y="0" class="value-display" [attr.fill]="rendererData.data.color">
+              {{ rendererData.data.value }}
+            </text>
+            <text x="0" y="24" class="label-display">{{ rendererData.data.label }}</text>
+          </g>
         </g>
       </svg>
     </div>
@@ -44,6 +47,12 @@ export class GaugeComponent implements OnChanges {
 
   @Input()
   public thresholds: GaugeThreshold[] = [];
+
+  @Input()
+  public defaultLabel?: string;
+
+  @Input()
+  public defaultColor?: Color | string;
 
   public rendererData?: GaugeSvgRendererData;
 
@@ -152,9 +161,17 @@ export class GaugeComponent implements OnChanges {
         return {
           value: this.value,
           maxValue: this.maxValue,
-          threshold: currentThreshold
+          label: currentThreshold.label,
+          color: currentThreshold.color
         };
       }
+    } else if (this.value !== undefined && this.maxValue !== undefined && this.defaultColor !== undefined && this.defaultColor !== undefined) {
+      return {
+        value: this.value,
+        maxValue: this.maxValue,
+        label: this.defaultColor,
+        color: this.defaultColor
+      };
     }
   }
 
@@ -184,12 +201,6 @@ export interface GaugeThreshold {
   color: Color | string;
 }
 
-
-interface GaugeSingleThreshold {
-  label: string;
-  color: Color | string;
-}
-
 interface GaugeSvgRendererData {
   origin: Point;
   radius: number;
@@ -201,11 +212,13 @@ interface GaugeData {
   valueArc: string;
   value: number;
   maxValue: number;
-  threshold: GaugeThreshold | GaugeSingleThreshold;
+  color: Color | string;
+  label: string;
 }
 
 interface GaugeInputData {
   value: number;
   maxValue: number;
-  threshold: GaugeThreshold;
+  label: string;
+  color: Color | string;
 }
