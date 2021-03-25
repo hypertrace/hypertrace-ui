@@ -168,13 +168,13 @@ export class GaugeComponent implements OnChanges {
     } else if (
       this.value !== undefined &&
       this.maxValue !== undefined &&
-      this.defaultColor !== undefined &&
+      this.defaultLabel !== undefined &&
       this.defaultColor !== undefined
     ) {
       return {
         value: this.value,
         maxValue: this.maxValue,
-        label: this.defaultColor,
+        label: this.defaultLabel,
         color: this.defaultColor
       };
     }
