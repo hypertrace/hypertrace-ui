@@ -245,6 +245,6 @@ export const enum TriggerLabelDisplayMode {
 
 export const enum MultiSelectSearchMode {
   Disabled = 'disabled', // Search is not available
-  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is not triggered
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
   EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }
