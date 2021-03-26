@@ -339,7 +339,7 @@ describe('Multi Select Component', () => {
 
     spectator.component.searchOptions('fi');
     spectator.tick();
-    expect(onSearchValueChangeSpy).not.toHaveBeenCalled();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('fi');
 
     let options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(2);
@@ -347,7 +347,7 @@ describe('Multi Select Component', () => {
 
     spectator.component.searchOptions('i');
     spectator.tick();
-    expect(onSearchValueChangeSpy).not.toHaveBeenCalled();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('i');
 
     options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(4);

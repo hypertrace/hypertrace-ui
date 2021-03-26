@@ -171,17 +171,15 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public searchOptions(searchText: string): void {
+    if (this.searchMode === MultiSelectSearchMode.Disabled) {
+      return;
+    }
+
     if (this.searchMode === MultiSelectSearchMode.CaseInsensitive) {
       this.searchSubject.next(searchText);
-
-      return;
     }
 
-    if (this.searchMode === MultiSelectSearchMode.EmitOnly) {
-      this.searchValueChange.emit(searchText);
-
-      return;
-    }
+    this.searchValueChange.emit(searchText);
   }
 
   public onSelectAll(): void {
