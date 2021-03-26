@@ -68,7 +68,8 @@ export class InteractionsGraphQlQueryHandlerService
       id: request.entityId,
       entityType: request.entityType,
       properties: [],
-      timeRange: request.timeRange
+      timeRange: request.timeRange,
+      includeInactive: false
     };
   }
 
