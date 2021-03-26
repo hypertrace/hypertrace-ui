@@ -22,7 +22,7 @@ describe('Gauge component', () => {
     ]
   });
 
-  test('render data from threasholds', () => {
+  test('render data from thresholds', () => {
     spectator = createHost(`<ht-gauge [value]="value" [maxValue]="maxValue" [thresholds]="thresholds"></ht-gauge>`, {
       hostProps: {
         value: 80,
