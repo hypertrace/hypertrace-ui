@@ -50,6 +50,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
     );
   }
 
+  // TODO : request for 'apiCalleeNameCount' here
   protected getSpanAttributes(): string[] {
     return [
       'displayEntityName',
@@ -106,7 +107,8 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       name: span.displaySpanName as string,
       protocolName: span.protocolName as string,
       spanType: span.type as SpanType,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
+      exitCallsBreakup: span.exitCallsBreakup as Dictionary<string>
     };
   }
 }
