@@ -43,6 +43,9 @@ import { SpanDetailLayoutStyle } from './span-detail-layout-style';
         <ht-tab label="Attributes" class="attributes">
           <ht-span-tags-detail [tags]="this.spanData.tags"></ht-span-tags-detail>
         </ht-tab>
+        <ht-tab label="Exit Calls" *ngIf="this.showExitCallsTab">
+          <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
+        </ht-tab>
       </ht-tab-group>
     </div>
   `
@@ -62,11 +65,13 @@ export class SpanDetailComponent implements OnChanges {
 
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
+  public showExitCallsTab?: boolean;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
       this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
       this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
+      this.showExitCallsTab = Object.keys(this.spanData?.exitCallsBreakup ?? {}).length > 0;
     }
   }
 }
