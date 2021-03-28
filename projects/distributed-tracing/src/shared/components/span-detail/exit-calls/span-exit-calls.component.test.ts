@@ -26,7 +26,7 @@ describe('SpanExitCallsComponent', () => {
     ]
   });
 
-  it('should render data correctly', fakeAsync(() => {
+  test('should render data correctly', fakeAsync(() => {
     spectator = createHost(`<ht-span-exit-calls [exitCalls]="exitCalls"></ht-span-exit-calls>`, {
       hostProps: { exitCalls: { 'name 1': '10', 'name 2': '11' } }
     });
