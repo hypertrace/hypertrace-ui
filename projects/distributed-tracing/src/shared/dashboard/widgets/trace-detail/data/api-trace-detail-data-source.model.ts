@@ -9,7 +9,6 @@ import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data
 })
 export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
   protected getTraceAttributes(): string[] {
-    // TODO : request for 'apiCalleeNameCount' here
     return [...super.getTraceAttributes(), 'traceId', 'apiCalleeNameCount'];
   }
 
