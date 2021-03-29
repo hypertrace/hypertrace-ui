@@ -10,7 +10,7 @@ import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data
 export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
   protected getTraceAttributes(): string[] {
     // TODO : request for 'apiCalleeNameCount' here
-    return [...super.getTraceAttributes(), 'traceId'];
+    return [...super.getTraceAttributes(), 'traceId', 'apiCalleeNameCount'];
   }
 
   protected constructTraceDetailData(trace: Trace): ApiTraceDetailData {
@@ -18,7 +18,7 @@ export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
       ...super.constructTraceDetailData(trace),
       traceId: trace.traceId as string, // For API Trace traceId is real Trace ID. NOT Symbol('traceId').
       entrySpanId: trace[traceIdKey], // API Trace Symbol('traceId') same as apiTraceId which is actually Entry Span ID,
-      exitCallsBreakup: trace.exitCallsBreakup as Dictionary<string>
+      exitCallsBreakup: trace.apiCalleeNameCount as Dictionary<string>
     };
   }
 }

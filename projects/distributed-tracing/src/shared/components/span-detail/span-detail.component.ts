@@ -71,7 +71,7 @@ export class SpanDetailComponent implements OnChanges {
     if (changes.spanData) {
       this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
       this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
-      this.showExitCallsTab = Object.keys(this.spanData?.exitCallsBreakup ?? {}).length > 0;
+      this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
     }
   }
 }
