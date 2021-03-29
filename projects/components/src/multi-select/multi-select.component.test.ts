@@ -93,10 +93,8 @@ describe('Multi Select Component', () => {
     });
 
     spectator.tick();
-    const selectedElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(
-      selectedElements.filter(checkboxOption => checkboxOption.getAttribute('ng-reflect-checked') === 'true').length
-    ).toBe(2);
+    const checkboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(checkboxElements.length).toBe(6);
   }));
 
   test('should display provided options with icons when clicked', fakeAsync(() => {
@@ -125,10 +123,8 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
     expect(optionElements.length).toBe(6);
 
-    const selectedElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(
-      selectedElements.filter(checkboxOption => checkboxOption.getAttribute('ng-reflect-checked') === 'true').length
-    ).toBe(2);
+    const checkboxElements = spectator.queryAll('ht-checkbox');
+    expect(checkboxElements.length).toBe(6);
 
     optionElements.forEach((element, index) => {
       expect(element).toHaveText(selectionOptions[index].label);
@@ -223,11 +219,7 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
 
-    expect(
-      spectator
-        .queryAll('ht-checkbox', { root: true })
-        .filter(checkboxOption => checkboxOption.getAttribute('ng-reflect-checked') === 'true').length
-    ).toBe(0);
+    expect(spectator.queryAll('ht-checkbox', { root: true }).length).toBe(6);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith([]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
