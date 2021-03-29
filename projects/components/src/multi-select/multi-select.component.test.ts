@@ -123,7 +123,7 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
     expect(optionElements.length).toBe(6);
 
-    const checkboxElements = spectator.queryAll('ht-checkbox');
+    const checkboxElements = spectator.queryAll('ht-checkbox', { root: true });
     expect(checkboxElements.length).toBe(6);
 
     optionElements.forEach((element, index) => {
