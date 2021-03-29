@@ -11,4 +11,5 @@ export interface SpanData {
   responseBody: string;
   tags: Dictionary<unknown>;
   requestUrl: string;
+  exitCallsBreakup?: Dictionary<string>;
 }
