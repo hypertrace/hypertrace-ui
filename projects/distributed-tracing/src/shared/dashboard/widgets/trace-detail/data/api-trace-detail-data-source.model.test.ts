@@ -79,7 +79,8 @@ describe('Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
-          expect.objectContaining({ name: 'statusCode' })
+          expect.objectContaining({ name: 'statusCode' }),
+          expect.objectContaining({ name: 'apiCalleeNameCount' })
         ])
       })
     );
@@ -99,7 +100,8 @@ describe('Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
-          expect.objectContaining({ name: 'statusCode' })
+          expect.objectContaining({ name: 'statusCode' }),
+          expect.objectContaining({ name: 'apiCalleeNameCount' })
         ])
       })
     );
