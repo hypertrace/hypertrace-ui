@@ -3,7 +3,6 @@ import {
   PopoverBackdrop,
   PopoverPositionType,
   PopoverRef,
-  PopoverRelativePositionLocation,
   PopoverService
 } from '@hypertrace/components';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
@@ -86,9 +85,10 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     }
 
     popover.updatePositionStrategy({
-      type: PopoverPositionType.Relative,
-      locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
-      origin: this.container
+      type: PopoverPositionType.FollowMouse,
+      boundingElement: this.container.nativeElement,
+      offsetX: 50,
+      offsetY: 30
     });
 
     return popover;
