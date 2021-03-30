@@ -95,7 +95,8 @@ describe('Multi Select Component', () => {
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
     expect(
-      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
     ).toBe(2);
   }));
 
@@ -127,7 +128,8 @@ describe('Multi Select Component', () => {
 
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
     expect(
-      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
     ).toBe(2);
 
     optionElements.forEach((element, index) => {
