@@ -93,8 +93,10 @@ describe('Multi Select Component', () => {
     });
 
     spectator.tick();
-    const checkboxElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(checkboxElements.length).toBe(6);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+    ).toBe(2);
   }));
 
   test('should display provided options with icons when clicked', fakeAsync(() => {
@@ -123,8 +125,10 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
     expect(optionElements.length).toBe(6);
 
-    const checkboxElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(checkboxElements.length).toBe(6);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+    ).toBe(2);
 
     optionElements.forEach((element, index) => {
       expect(element).toHaveText(selectionOptions[index].label);
@@ -219,7 +223,11 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
 
-    expect(spectator.queryAll('ht-checkbox', { root: true }).length).toBe(6);
+    expect(
+      spectator
+        .queryAll('ht-checkbox', { root: true })
+        .filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+    ).toBe(0);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith([]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
@@ -229,8 +237,8 @@ describe('Multi Select Component', () => {
     spectator.click(allOptionElement!);
 
     spectator.tick();
-    const selectedElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(selectedElements.length).toBe(6);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(selectedCheckboxElements.length).toBe(6);
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
     expect(spectator.query(LabelComponent)?.label).toEqual('first and 5 more');
