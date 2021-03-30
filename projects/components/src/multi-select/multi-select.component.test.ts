@@ -6,6 +6,7 @@ import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectato
 import { MockComponent } from 'ng-mocks';
 import { NEVER } from 'rxjs';
 import { ButtonComponent } from '../button/button.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
 import { LoadAsyncModule } from '../load-async/load-async.module';
@@ -30,7 +31,8 @@ describe('Multi Select Component', () => {
       MockComponent(LabelComponent),
       MockComponent(DividerComponent),
       MockComponent(SearchBoxComponent),
-      MockComponent(ButtonComponent)
+      MockComponent(ButtonComponent),
+      MockComponent(CheckboxComponent)
     ],
     shallow: true
   });
@@ -91,8 +93,11 @@ describe('Multi Select Component', () => {
     });
 
     spectator.tick();
-    const selectedElements = spectator.queryAll('input:checked', { root: true });
-    expect(selectedElements.length).toBe(2);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
+    ).toBe(2);
   }));
 
   test('should display provided options with icons when clicked', fakeAsync(() => {
@@ -121,8 +126,11 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
     expect(optionElements.length).toBe(6);
 
-    const selectedElements = spectator.queryAll('input:checked', { root: true });
-    expect(selectedElements.length).toBe(2);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
+    ).toBe(2);
 
     optionElements.forEach((element, index) => {
       expect(element).toHaveText(selectionOptions[index].label);
@@ -216,7 +224,12 @@ describe('Multi Select Component', () => {
     spectator.click(clearSelectedButton!);
 
     spectator.tick();
-    expect(spectator.queryAll('input:checked', { root: true }).length).toBe(0);
+
+    expect(
+      spectator
+        .queryAll('ht-checkbox', { root: true })
+        .filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+    ).toBe(0);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith([]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
@@ -226,8 +239,8 @@ describe('Multi Select Component', () => {
     spectator.click(allOptionElement!);
 
     spectator.tick();
-    const selectedElements = spectator.queryAll('input:checked', { root: true });
-    expect(selectedElements.length).toBe(6);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(selectedCheckboxElements.length).toBe(6);
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
     expect(spectator.query(LabelComponent)?.label).toEqual('first and 5 more');
