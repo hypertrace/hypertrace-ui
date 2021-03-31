@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList, AfterContentInit } from '@angular/core';
+import { queryListAndChanges$ } from '@hypertrace/common';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { CardContainerComponent } from './container/card-container.component';
 
 @Component({
@@ -7,8 +10,13 @@ import { CardContainerComponent } from './container/card-container.component';
     <div class="ht-card-list">
       <div
         class="content"
-        [ngClass]="this.getCardStyle(card)"
-        *ngFor="let card of this.cards"
+        [ngClass]="{
+          card: this.mode === '${CardListMode.Card}',
+          list: this.mode === '${CardListMode.List}',
+          'selected-card': this.selectedCard === card,
+          'grouped-style': card.showGroupedStyle
+        }"
+        *ngFor="let card of this.cards$ | async"
         (click)="this.onCardClicked(card)"
       >
         <ng-container *ngTemplateOutlet="card.content"></ng-container>
@@ -18,27 +26,26 @@ import { CardContainerComponent } from './container/card-container.component';
   styleUrls: ['./card-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardListComponent {
-  @ContentChildren(CardContainerComponent)
-  public readonly cards!: QueryList<CardContainerComponent>;
-
+export class CardListComponent implements AfterContentInit {
   @Input()
   public mode?: CardListMode = CardListMode.List;
+
+  @ContentChildren(CardContainerComponent)
+  private readonly cards!: QueryList<CardContainerComponent>;
+
+  public cards$!: Observable<CardContainerComponent[]>;
+
+  public ngAfterContentInit(): void {
+    this.cards$ = queryListAndChanges$(this.cards).pipe(
+      map(list => list.toArray()),
+      tap(console.log)
+    );
+  }
 
   public selectedCard?: CardContainerComponent;
 
   public onCardClicked(card: CardContainerComponent): void {
     this.selectedCard = this.selectedCard === card ? undefined : card;
-  }
-
-  public getCardStyle(card: CardContainerComponent): string[] {
-    const classes: string[] = [this.mode ?? CardListMode.List];
-
-    if (this.selectedCard === card) {
-      classes.push('selected-card');
-    }
-
-    return classes;
   }
 }
 
