@@ -36,10 +36,7 @@ export class CardListComponent implements AfterContentInit {
   public cards$!: Observable<CardContainerComponent[]>;
 
   public ngAfterContentInit(): void {
-    this.cards$ = queryListAndChanges$(this.cards).pipe(
-      map(list => list.toArray()),
-      tap(console.log)
-    );
+    this.cards$ = queryListAndChanges$(this.cards).pipe(map(list => list.toArray()));
   }
 
   public selectedCard?: CardContainerComponent;
