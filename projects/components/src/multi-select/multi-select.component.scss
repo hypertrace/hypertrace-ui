@@ -29,10 +29,19 @@
     cursor: pointer;
     height: 34px;
 
+    &.open {
+      background-color: $gray-2;
+    }
+
     &.icon-mode {
       border: 1px solid transparent;
       border-radius: 64px;
       padding: 0 4px;
+
+      &.open {
+        background: $blue-2;
+        border-color: $blue-3;
+      }
 
       &:hover {
         color: $blue-5;
@@ -57,6 +66,10 @@
         margin-left: auto;
       }
     }
+
+    &:hover {
+      background-color: $gray-1;
+    }
   }
 }
 
@@ -80,11 +93,16 @@
     height: 34px;
     padding: 4px 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     align-items: center;
 
     .checkbox {
       margin: 0px;
+      color: $gray-3;
+
+      ::ng-deep .mat-ripple {
+        display: none;
+      }
     }
 
     .icon {

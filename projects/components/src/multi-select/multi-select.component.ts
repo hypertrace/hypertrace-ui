@@ -44,7 +44,7 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="this.triggerLabelDisplayMode"
+            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
@@ -92,7 +92,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (click)="this.onSelectionChange(item)"
                 class="multi-select-option"
               >
-                <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
+                <ht-checkbox class="checkbox" [checked]="this.isSelectedItem(item)"></ht-checkbox>
                 <ht-icon
                   class="icon"
                   *ngIf="item.icon"
