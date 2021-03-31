@@ -54,17 +54,6 @@
     }
   }
 
-  .card:before {
-    content: ' ';
-    position: absolute;
-    z-index: -1;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 5px solid #ffea00;
-  }
-
   .list {
     &:first-child {
       margin-top: 12px;
