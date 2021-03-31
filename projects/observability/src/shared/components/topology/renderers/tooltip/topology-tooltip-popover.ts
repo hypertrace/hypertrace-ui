@@ -1,10 +1,5 @@
 import { ElementRef, Injector } from '@angular/core';
-import {
-  PopoverBackdrop,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverService
-} from '@hypertrace/components';
+import { PopoverBackdrop, PopoverPositionType, PopoverRef, PopoverService } from '@hypertrace/components';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TopologyEdge, TopologyNode, TopologyTooltip, TopologyTooltipOptions } from '../../topology';
