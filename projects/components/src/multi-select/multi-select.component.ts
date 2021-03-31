@@ -29,7 +29,6 @@ import { MultiSelectJustify } from './multi-select-justify';
       class="multi-select"
       [ngClass]="[
         this.size,
-        this.isSelected ? 'selected' : '',
         this.showBorder ? 'border' : '',
         this.disabled ? 'disabled' : '',
         this.popoverOpen ? 'open' : ''
@@ -209,10 +208,6 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
     return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
-  }
-
-  get isSelected() {
-    return this.selected && this.selected.length > 0
   }
 
   private setSelection(selected: V[]): void {

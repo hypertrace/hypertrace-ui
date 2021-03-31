@@ -11,7 +11,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
     <ht-event-blocker event="click" [enabled]="true">
       <ht-popover [closeOnClick]="true" [disabled]="this.disabled">
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="{ disabled: this.disabled, labeled: this.isLabeled }">
+          <div class="trigger-content" [ngClass]="{ disabled: this.disabled, labeled: !!this.label }">
             <ht-label *ngIf="this.label" class="trigger-label" [label]="this.label"> </ht-label>
             <ht-icon *ngIf="this.icon" class="trigger-icon" [icon]="this.icon" size="${IconSize.Small}"></ht-icon>
           </div>
@@ -34,10 +34,6 @@ export class MenuDropdownComponent {
 
   @Input()
   public disabled: boolean = false;
-
-  get isLabeled () {
-    return this.label && this.label !== '';
-  }
 
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
