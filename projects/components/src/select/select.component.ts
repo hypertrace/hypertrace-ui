@@ -44,8 +44,8 @@ import { SelectSize } from './select-size';
         [disabled]="this.disabled"
         [closeOnClick]="true"
         class="select-container"
-        (popoverOpen) = "this.popoverOpen = true"
-        (popoverClose) = "this.popoverOpen = false"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.popoverOpen = false"
         [ngSwitch]="this.triggerDisplayMode"
       >
         <ht-popover-trigger>
@@ -64,10 +64,7 @@ import { SelectSize } from './select-size';
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
               class="trigger-content icon-only"
-              [ngClass]="[
-                this.selected !== undefined ? 'selected' : '',
-                this.popoverOpen ? 'open' : ''
-              ]"
+              [ngClass]="[this.selected !== undefined ? 'selected' : '', this.popoverOpen ? 'open' : '']"
             >
               <ht-icon
                 class="icon"
