@@ -44,7 +44,7 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="this.triggerLabelDisplayMode"
+            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>

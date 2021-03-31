@@ -35,7 +35,8 @@ import { SelectSize } from './select-size';
         this.groupPosition,
         selected ? selected.style.toString() : '',
         this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : ''
+        this.disabled ? 'disabled' : '',
+        this.popoverOpen ? 'open' : ''
       ]"
       *htLetAsync="this.selected$ as selected"
     >
@@ -43,6 +44,8 @@ import { SelectSize } from './select-size';
         [disabled]="this.disabled"
         [closeOnClick]="true"
         class="select-container"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.popoverOpen = false"
         [ngSwitch]="this.triggerDisplayMode"
       >
         <ht-popover-trigger>
@@ -61,7 +64,7 @@ import { SelectSize } from './select-size';
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
               class="trigger-content icon-only"
-              [ngClass]="this.selected !== undefined ? 'selected' : ''"
+              [ngClass]="{ selected: this.selected !== undefined, open: this.popoverOpen }"
             >
               <ht-icon
                 class="icon"
@@ -167,6 +170,8 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
+
+  public popoverOpen: boolean = false;
 
   public get justifyClass(): string {
     if (this.justify !== undefined) {
