@@ -64,7 +64,7 @@ import { SelectSize } from './select-size';
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
               class="trigger-content icon-only"
-              [ngClass]="[this.selected !== undefined ? 'selected' : '', this.popoverOpen ? 'open' : '']"
+              [ngClass]="{ selected: this.selected !== undefined, open: this.popoverOpen }"
             >
               <ht-icon
                 class="icon"

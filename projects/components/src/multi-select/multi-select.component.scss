@@ -12,10 +12,6 @@
     border-radius: 6px;
   }
 
-  &.open {
-    background-color: $gray-2;
-  }
-
   .multi-select-container {
     width: 100%;
   }
@@ -33,10 +29,19 @@
     cursor: pointer;
     height: 34px;
 
+    &.open {
+      background-color: $gray-2;
+    }
+
     &.icon-mode {
       border: 1px solid transparent;
       border-radius: 64px;
       padding: 0 4px;
+
+      &.open {
+        background: $blue-2;
+        border-color: $blue-3;
+      }
 
       &:hover {
         color: $blue-5;
@@ -61,10 +66,10 @@
         margin-left: auto;
       }
     }
-  }
 
-  &:hover {
-    background-color: $gray-1;
+    &:hover {
+      background-color: $gray-1;
+    }
   }
 }
 
