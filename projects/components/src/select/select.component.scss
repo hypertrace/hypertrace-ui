@@ -31,6 +31,11 @@
     height: 100%;
   }
 
+  &.open {
+    background-color: $gray-2;
+    border-radius: 6px;
+  }
+
   &.border {
     &.group-right {
       border-radius: 0 2px 2px 0;
@@ -99,6 +104,10 @@
     display: flex;
     align-items: center;
 
+    &.open {
+      background-color: transparent;
+    }
+
     .icon {
       padding: 6px;
       border: 1px solid white;
@@ -111,9 +120,24 @@
       }
     }
 
+    &.open {
+      background-color: white;
+
+      .icon {
+        background: $blue-2;
+        border: 1px solid $blue-3;
+        border-radius: 50%;
+      }
+    }
+
     &.selected {
       color: $blue-5;
     }
+  }
+
+  &:hover {
+    background-color: $gray-1;
+    border-radius: 6px;
   }
 }
 

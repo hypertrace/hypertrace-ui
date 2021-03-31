@@ -23,6 +23,15 @@
   .trigger-label:not(:last-child) {
     margin-right: 8px;
   }
+
+  &:hover {
+    background-color: $gray-1;
+    border-radius: 50%;
+  }
+
+  &.labeled:hover {
+    border-radius: 6px;
+  } 
 }
 
 .dropdown-content {
