@@ -57,45 +57,43 @@ import { MultiSelectJustify } from './multi-select-justify';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.enableSearch">
+            <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
-                <ng-container *ngIf="allOptions.length > 5">
-                  <ht-search-box
-                    class="search-bar"
-                    (valueChange)="this.searchOptions($event)"
-                    [debounceTime]="200"
-                    displayMode="${SearchBoxDisplayMode.NoBorder}"
-                  ></ht-search-box>
-                  <ht-divider class="divider"></ht-divider>
+                <ht-search-box
+                  class="search-bar"
+                  (valueChange)="this.searchOptions($event)"
+                  [debounceTime]="200"
+                  displayMode="${SearchBoxDisplayMode.NoBorder}"
+                ></ht-search-box>
+                <ht-divider class="divider"></ht-divider>
 
-                  <ht-button
-                    class="clear-selected"
-                    *ngIf="this.isAnyOptionSelected()"
-                    role="${ButtonRole.Primary}"
-                    display="${ButtonStyle.Text}"
-                    label="Clear Selected"
-                    (click)="this.onClearSelected()"
-                  ></ht-button>
+                <ht-button
+                  class="clear-selected"
+                  *ngIf="this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Clear Selected"
+                  (click)="this.onClearSelected()"
+                ></ht-button>
 
-                  <ht-button
-                    class="select-all"
-                    *ngIf="!this.isAnyOptionSelected()"
-                    role="${ButtonRole.Primary}"
-                    display="${ButtonStyle.Text}"
-                    label="Select All"
-                    (click)="this.onSelectAll()"
-                  ></ht-button>
-                </ng-container>
+                <ht-button
+                  class="select-all"
+                  *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Select All"
+                  (click)="this.onSelectAll()"
+                ></ht-button>
               </ng-container>
             </ng-container>
 
-            <div class="multi-select-options">
+            <div class="multi-select-options" *htLoadAsync="this.filteredOptions$ as filteredOptions">
               <div
-                *ngFor="let item of this.filteredOptions$ | async"
+                *ngFor="let item of filteredOptions"
                 (click)="this.onSelectionChange(item)"
                 class="multi-select-option"
               >
-                <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
+                <ht-checkbox class="checkbox" [checked]="this.isSelectedItem(item)"></ht-checkbox>
                 <ht-icon
                   class="icon"
                   *ngIf="item.icon"
@@ -135,7 +133,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public showBorder: boolean = false;
 
   @Input()
-  public enableSearch: boolean = false;
+  public searchMode: MultiSelectSearchMode = MultiSelectSearchMode.Disabled;
 
   @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
@@ -145,6 +143,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
+
+  @Output()
+  public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ContentChildren(SelectOptionComponent)
   private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
@@ -171,7 +172,15 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public searchOptions(searchText: string): void {
-    this.searchSubject.next(searchText);
+    if (this.searchMode === MultiSelectSearchMode.Disabled) {
+      return;
+    }
+
+    if (this.searchMode === MultiSelectSearchMode.CaseInsensitive) {
+      this.searchSubject.next(searchText);
+    }
+
+    this.searchValueChange.emit(searchText);
   }
 
   public onSelectAll(): void {
@@ -237,4 +246,10 @@ export const enum TriggerLabelDisplayMode {
   Placeholder = 'placeholder-mode',
   Selection = 'selection-mode',
   Icon = 'icon-mode'
+}
+
+export const enum MultiSelectSearchMode {
+  Disabled = 'disabled', // Search is not available
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
+  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }

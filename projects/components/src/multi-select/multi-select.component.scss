@@ -88,11 +88,16 @@
     height: 34px;
     padding: 4px 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     align-items: center;
 
     .checkbox {
       margin: 0px;
+      color: $gray-3;
+
+      ::ng-deep .mat-ripple {
+        display: none;
+      }
     }
 
     .icon {

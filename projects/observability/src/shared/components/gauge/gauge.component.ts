@@ -22,12 +22,12 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
               class="value-ring"
               *ngIf="rendererData.radius > ${GaugeComponent.GAUGE_MIN_RADIUS_TO_SHOW_PATH}"
               [attr.d]="rendererData.data.valueArc"
-              [attr.fill]="rendererData.data.threshold.color"
+              [attr.fill]="rendererData.data.color"
             />
-            <text x="0" y="-4" class="value-display" [attr.fill]="rendererData.data.threshold.color">
+            <text x="0" y="-4" class="value-display" [attr.fill]="rendererData.data.color">
               {{ rendererData.data.value }}
             </text>
-            <text x="0" y="20" class="label-display">{{ rendererData.data.threshold.label }}</text>
+            <text x="0" y="20" class="label-display">{{ rendererData.data.label }}</text>
           </g>
         </g>
       </svg>
@@ -41,6 +41,7 @@ export class GaugeComponent implements OnChanges {
   private static readonly GAUGE_ARC_CORNER_RADIUS: number = 10;
   private static readonly GAUGE_MIN_RADIUS_TO_SHOW_PATH: number = 80;
   private static readonly EXTRA_ARC_ANGLE: number = Math.PI / 12;
+  private static readonly DEFAULT_COLOR: string = Color.Blue5;
 
   @Input()
   public value?: number;
@@ -50,6 +51,12 @@ export class GaugeComponent implements OnChanges {
 
   @Input()
   public thresholds: GaugeThreshold[] = [];
+
+  @Input()
+  public defaultLabel?: string;
+
+  @Input()
+  public defaultColor?: Color | string;
 
   public rendererData?: GaugeSvgRendererData;
 
@@ -149,18 +156,17 @@ export class GaugeComponent implements OnChanges {
   }
 
   private calculateInputData(): GaugeInputData | undefined {
-    if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0 && this.thresholds.length > 0) {
+    if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0) {
       const currentThreshold = this.thresholds.find(
         threshold => this.value! >= threshold.start && this.value! <= threshold.end
       );
 
-      if (currentThreshold) {
-        return {
-          value: this.value,
-          maxValue: this.maxValue,
-          threshold: currentThreshold
-        };
-      }
+      return {
+        value: this.value,
+        maxValue: this.maxValue,
+        label: currentThreshold?.label ?? this.defaultLabel ?? '',
+        color: currentThreshold?.color ?? this.defaultColor ?? GaugeComponent.DEFAULT_COLOR
+      };
     }
   }
 
@@ -197,15 +203,13 @@ interface GaugeSvgRendererData {
   data?: GaugeData;
 }
 
-interface GaugeData {
+interface GaugeData extends GaugeInputData {
   valueArc: string;
-  value: number;
-  maxValue: number;
-  threshold: GaugeThreshold;
 }
 
 interface GaugeInputData {
   value: number;
   maxValue: number;
-  threshold: GaugeThreshold;
+  label: string;
+  color: Color | string;
 }
