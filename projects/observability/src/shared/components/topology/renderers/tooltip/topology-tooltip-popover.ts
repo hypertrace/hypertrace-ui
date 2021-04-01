@@ -20,7 +20,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     private readonly injector: Injector,
     private readonly popoverService: PopoverService
   ) {
-    this.popoverSubject = new BehaviorSubject(this.buildPopover(null, false));
+    this.popoverSubject = new BehaviorSubject(this.buildPopover(false));
     this.hidden$ = this.popoverSubject.pipe(switchMap(popover => merge(popover.hidden$, popover.closed$)));
   }
 
@@ -61,10 +61,10 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     }
 
     this.popover.close(); // Close existing popover
-    this.popoverSubject.next(this.buildPopover(node, modal));
+    this.popoverSubject.next(this.buildPopover(modal, node));
   }
 
-  private buildPopover(node: any, modal: boolean): PopoverRef {
+  private buildPopover(modal: boolean, node: any = null): PopoverRef {
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
