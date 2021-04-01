@@ -20,7 +20,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     private readonly injector: Injector,
     private readonly popoverService: PopoverService
   ) {
-    this.popoverSubject = new BehaviorSubject(this.buildPopover(false));
+    this.popoverSubject = new BehaviorSubject(this.buildPopover(false, null));
     this.hidden$ = this.popoverSubject.pipe(switchMap(popover => merge(popover.hidden$, popover.closed$)));
   }
 
@@ -64,7 +64,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popoverSubject.next(this.buildPopover(modal, node));
   }
 
-  private buildPopover(modal: boolean, node: any = null): PopoverRef {
+  private buildPopover(modal: boolean, node: TopologyNode | TopologyEdge | null): PopoverRef {
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
@@ -81,7 +81,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
 
     popover.updatePositionStrategy({
       type: PopoverPositionType.FollowMouse,
-      boundingElement: this.getElementContainer(node?.data?.name, modal),
+      boundingElement: this.getElementContainer((node as any)?.data?.name, modal),
       offsetX: 50,
       offsetY: 30
     });
@@ -94,14 +94,14 @@ export class TopologyTooltipPopover implements TopologyTooltip {
       return this.container.nativeElement;
     }
 
-    if (textContent) {
+    if (textContent !== '') {
       return (
         Array.from(this.container.nativeElement.querySelector('.topology-data').children as HTMLCollection).find(
           el => el.querySelector('text')?.textContent === textContent
         ) ?? this.container.nativeElement
       );
-    } else {
-      return this.container.nativeElement.querySelector('.topology-data .emphasized');
     }
+
+    return this.container.nativeElement.querySelector('.topology-data .emphasized');
   }
 }
