@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList, AfterContentInit } from '@angular/core';
 import { queryListAndChanges$ } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { CardContainerComponent } from './container/card-container.component';
 
 @Component({
