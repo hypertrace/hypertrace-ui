@@ -66,20 +66,23 @@ describe('Card List component', () => {
   test('should apply grouped style class', () => {
     const data = [
       {
-        name: 'first'
+        name: 'first',
+        grouped: true
       },
       {
-        name: 'second'
+        name: 'second',
+        grouped: false
       },
       {
-        name: 'third'
+        name: 'third',
+        grouped: false
       }
     ];
 
     spectator = createHost(
       `
     <ht-card-list [mode]="mode">
-      <ht-card-container *ngFor="let cardData of this.data; first" showGroupedStyle="{{cardData === first ? true: false}}">
+      <ht-card-container *ngFor="let cardData of this.data; first" showGroupedStyle="cardData.grouped">
         <div class="custom-card">
           <div class="title">{{cardData.name}}</div>
         </div>
