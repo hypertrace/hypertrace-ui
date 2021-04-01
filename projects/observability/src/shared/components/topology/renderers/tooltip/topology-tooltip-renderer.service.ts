@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, Injector, Type } from '@angular/core';
+import { Injectable, Injector, Type } from '@angular/core';
 import { PopoverService } from '@hypertrace/components';
 import { EMPTY } from 'rxjs';
 import {
@@ -21,9 +21,9 @@ export class TopologyTooltipRendererService implements TopologyTooltipRenderer {
     return this;
   }
 
-  public build(container: ElementRef): TopologyTooltip {
+  public build(): TopologyTooltip {
     if (this.tooltipDefinition) {
-      return new TopologyTooltipPopover(this.tooltipDefinition, container, this.injector, this.popoverService);
+      return new TopologyTooltipPopover(this.tooltipDefinition, this.injector, this.popoverService);
     }
 
     return this.getDefaultNoopTooltip();
