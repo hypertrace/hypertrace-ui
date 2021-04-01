@@ -1,6 +1,6 @@
 @import 'mixins';
 
-@mixin grouped-style($color: white) {
+@mixin grouped-style($color) {
   box-shadow: 0 3px 0 -1px $color, 0 4px 0 -1px $gray-2;
 }
 
