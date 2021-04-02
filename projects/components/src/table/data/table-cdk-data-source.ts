@@ -59,7 +59,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
         /**
-         * Below debouce is needed to handle multiple emission from buildChangeObservable.
+         * Below debounce is needed to handle multiple emission from buildChangeObservable.
          */
         debounceTime(100),
         mergeMap(([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow]) =>
