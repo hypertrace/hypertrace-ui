@@ -20,12 +20,12 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     private readonly injector: Injector,
     private readonly popoverService: PopoverService
   ) {
-    this.popoverSubject = new BehaviorSubject(this.buildPopover(false, null));
+    this.popoverSubject = new BehaviorSubject(this.buildPopover(false, this.container));
     this.hidden$ = this.popoverSubject.pipe(switchMap(popover => merge(popover.hidden$, popover.closed$)));
   }
 
-  public showWithNodeData(node: TopologyNode, options: TopologyTooltipOptions = {}): void {
-    this.rebuildPopoverIfNeeded(node, options);
+  public showWithNodeData(node: TopologyNode, origin: ElementRef, options: TopologyTooltipOptions = {}): void {
+    this.rebuildPopoverIfNeeded(origin, options);
     this.dataSubject.next({
       type: 'node',
       node: node,
@@ -34,8 +34,8 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popover.show();
   }
 
-  public showWithEdgeData(edge: TopologyEdge, options: TopologyTooltipOptions = {}): void {
-    this.rebuildPopoverIfNeeded(edge, options);
+  public showWithEdgeData(edge: TopologyEdge, origin: ElementRef, options: TopologyTooltipOptions = {}): void {
+    this.rebuildPopoverIfNeeded(origin, options);
     this.dataSubject.next({
       type: 'edge',
       edge: edge,
@@ -54,17 +54,32 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popoverSubject.complete();
   }
 
-  private rebuildPopoverIfNeeded(node: TopologyNode | TopologyEdge, options: TopologyTooltipOptions): void {
+  private rebuildPopoverIfNeeded(origin: ElementRef, options: TopologyTooltipOptions): void {
     const modal = !!options.modal;
     if (modal === this.popover.hasBackdrop()) {
       return;
     }
 
     this.popover.close(); // Close existing popover
-    this.popoverSubject.next(this.buildPopover(modal, node));
+    this.popoverSubject.next(this.buildPopover(!!options.modal, origin));
   }
 
-  private buildPopover(modal: boolean, node: TopologyNode | TopologyEdge | null): PopoverRef {
+  // private buildHiddenPopover(): PopoverRef {
+  //   const popover = this.popoverService.drawPopover({
+  //     componentOrTemplate: this.tooltipDefinition.class,
+  //     position: {
+  //       type: PopoverPositionType.Hidden
+  //     },
+  //     parentInjector: this.injector,
+  //     backdrop: PopoverBackdrop.None,
+  //     data: this.dataSubject
+  //   });
+
+  //   return popover;
+  // }
+
+  private buildPopover(modal: boolean, origin: ElementRef): PopoverRef {
+    console.log('entro aca');
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
@@ -81,27 +96,11 @@ export class TopologyTooltipPopover implements TopologyTooltip {
 
     popover.updatePositionStrategy({
       type: PopoverPositionType.FollowMouse,
-      boundingElement: this.getElementContainer((node as any)?.data?.name, modal),
+      boundingElement: modal ? origin.nativeElement : this.container.nativeElement,
       offsetX: 50,
       offsetY: 30
     });
 
     return popover;
-  }
-
-  private getElementContainer(textContent: string = '', modal: boolean): HTMLElement {
-    if (!modal) {
-      return this.container.nativeElement;
-    }
-
-    if (textContent !== '') {
-      return (
-        Array.from(this.container.nativeElement.querySelector('.topology-data').children as HTMLCollection).find(
-          el => el.querySelector('text')?.textContent === textContent
-        ) ?? this.container.nativeElement
-      );
-    }
-
-    return this.container.nativeElement.querySelector('.topology-data .emphasized');
   }
 }
