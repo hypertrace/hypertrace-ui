@@ -306,7 +306,7 @@ describe('Table component', () => {
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            id: '$$state',
+            id: '$$selected',
             display: CoreTableCellRendererType.Checkbox,
             visible: true
           }),
@@ -371,14 +371,19 @@ describe('Table component', () => {
           map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig)))
         )
       ).toBe('x', {
-        x: [true, false, false]
+        x: [true, false, false, false]
       });
 
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            id: '$$state',
+            id: '$$expanded',
             display: CoreTableCellRendererType.RowExpander,
+            visible: true
+          }),
+          expect.objectContaining({
+            id: '$$selected',
+            display: CoreTableCellRendererType.Checkbox,
             visible: true
           }),
           expect.objectContaining({
