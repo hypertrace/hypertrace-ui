@@ -18,6 +18,6 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 @TableCellRenderer({
   type: CoreTableCellRendererType.Checkbox,
   alignment: TableCellAlignmentType.Center,
-  parser: CoreTableCellParserType.Checkbox
+  parser: CoreTableCellParserType.State
 })
 export class TableCheckboxCellRendererComponent extends TableCellRendererBase<TableRowState> {}
