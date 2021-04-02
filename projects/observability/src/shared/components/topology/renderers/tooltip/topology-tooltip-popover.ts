@@ -64,22 +64,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popoverSubject.next(this.buildPopover(!!options.modal, origin));
   }
 
-  // private buildHiddenPopover(): PopoverRef {
-  //   const popover = this.popoverService.drawPopover({
-  //     componentOrTemplate: this.tooltipDefinition.class,
-  //     position: {
-  //       type: PopoverPositionType.Hidden
-  //     },
-  //     parentInjector: this.injector,
-  //     backdrop: PopoverBackdrop.None,
-  //     data: this.dataSubject
-  //   });
-
-  //   return popover;
-  // }
-
   private buildPopover(modal: boolean, origin: ElementRef): PopoverRef {
-    console.log('entro aca');
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
