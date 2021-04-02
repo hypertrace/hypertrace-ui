@@ -23,6 +23,6 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 @TableCellRenderer({
   type: CoreTableCellRendererType.RowExpander,
   alignment: TableCellAlignmentType.Center,
-  parser: CoreTableCellParserType.State
+  parser: CoreTableCellParserType.RowExpander
 })
 export class TableExpanderCellRendererComponent extends TableCellRendererBase<TableRowState> {}

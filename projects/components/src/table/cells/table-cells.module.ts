@@ -27,7 +27,9 @@ import { TextTableCellRendererComponent } from './data-renderers/text/text-table
 import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
 import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
 import { TableExpandedDetailRowCellRendererComponent } from './expanded-detail/table-expanded-detail-row-cell-renderer.component';
-import { TableCellStateParser } from './state-parsers/table-cell-state-parser';
+import { TableCellStateParserCheckbox } from './state-parsers/table-cell-state-checkbox';
+import { TableCellStateParserExpander } from './state-parsers/table-cell-state-expander';
+
 import { TableCheckboxCellRendererComponent } from './state-renderers/checkbox/table-checkbox-cell-renderer.component';
 import { TableExpanderCellRendererComponent } from './state-renderers/expander/table-expander-cell-renderer.component';
 import { TableCellParserConstructor } from './table-cell-parser';
@@ -92,7 +94,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     {
       provide: TABLE_CELL_PARSERS,
       useValue: [
-        TableCellStateParser,
+        TableCellStateParserCheckbox,
+        TableCellStateParserExpander,
         TableCellBooleanParser,
         TableCellIconParser,
         TableCellNumberParser,
