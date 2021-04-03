@@ -1,7 +1,8 @@
 import { Model } from '@hypertrace/hyperdash';
-import { Trace, traceIdKey } from '../../../../graphql/model/schema/trace';
+import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
 
 import { Dictionary } from '@hypertrace/common';
+import { ObservabilityTraceType } from '@hypertrace/observability';
 import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data-source.model';
 
 @Model({
@@ -9,7 +10,12 @@ import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data
 })
 export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
   protected getTraceAttributes(): string[] {
-    return [...super.getTraceAttributes(), 'traceId', 'apiCalleeNameCount'];
+    const attributes: string[] = [...super.getTraceAttributes(), 'traceId'];
+    if (this.trace[traceTypeKey] === ObservabilityTraceType.Api) {
+      attributes.push('apiCalleeNameCount');
+    }
+
+    return attributes;
   }
 
   protected constructTraceDetailData(trace: Trace): ApiTraceDetailData {
