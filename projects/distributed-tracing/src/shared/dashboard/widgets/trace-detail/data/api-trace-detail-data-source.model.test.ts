@@ -1,4 +1,5 @@
 import { ModelApi } from '@hypertrace/hyperdash';
+import { ObservabilityTraceType } from '@hypertrace/observability';
 import { spanIdKey } from '../../../../graphql/model/schema/span';
 import { traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import {
@@ -8,7 +9,7 @@ import {
 import { ObservedGraphQlRequest } from '../../../data/graphql/graphql-query-event.service';
 import { ApiTraceDetailDataSourceModel } from './api-trace-detail-data-source.model';
 
-describe('Trace detail data source model', () => {
+describe('API Trace detail data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model!: ApiTraceDetailDataSourceModel;
   let emittedQueries: unknown;
@@ -66,7 +67,11 @@ describe('Trace detail data source model', () => {
     });
   });
 
-  test('builds expected request', () => {
+  test('builds expected request for API_TRACE', () => {
+    model.trace = {
+      [traceIdKey]: 'test',
+      [traceTypeKey]: ObservabilityTraceType.Api
+    };
     const data$ = model.getData();
     data$.subscribe();
 
@@ -86,6 +91,25 @@ describe('Trace detail data source model', () => {
     );
   });
 
+  test('builds expected request', () => {
+    const data$ = model.getData();
+    data$.subscribe();
+
+    expect(emittedQueries).toEqual(
+      expect.objectContaining({
+        requestType: TRACE_GQL_REQUEST,
+        traceId: 'test',
+        spanLimit: 0,
+        timestamp: undefined,
+        traceProperties: expect.arrayContaining([
+          expect.objectContaining({ name: 'tags' }),
+          expect.objectContaining({ name: 'traceId' }),
+          expect.objectContaining({ name: 'statusCode' })
+        ])
+      })
+    );
+  });
+
   test('builds expected request with start time', () => {
     model.startTime = 1568907645141;
     const data$ = model.getData();
@@ -100,8 +124,7 @@ describe('Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
-          expect.objectContaining({ name: 'statusCode' }),
-          expect.objectContaining({ name: 'apiCalleeNameCount' })
+          expect.objectContaining({ name: 'statusCode' })
         ])
       })
     );
