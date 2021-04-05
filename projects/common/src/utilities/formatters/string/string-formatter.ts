@@ -1,5 +1,5 @@
 export const displayString = (provided?: unknown): string => {
-  if (provided === null) {
+  if (provided === null || provided === 'null') {
     return '-';
   }
 
