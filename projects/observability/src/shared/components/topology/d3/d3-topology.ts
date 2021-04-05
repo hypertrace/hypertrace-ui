@@ -318,7 +318,7 @@ export class D3Topology implements Topology {
         this.neighborhoodFinder.neighborhoodForNode(hoverEvent.source.userNode),
         this.neighborhoodFinder.singleNodeNeighborhood(hoverEvent.source.userNode)
       );
-      this.tooltip && this.tooltip.showWithNodeData(hoverEvent.source.userNode);
+      this.showNodeTooltip(hoverEvent.source, false);
     }
   }
 
@@ -328,7 +328,7 @@ export class D3Topology implements Topology {
       this.tooltip && this.tooltip.hide();
     } else {
       this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(hoverEvent.source.userEdge));
-      this.tooltip && this.tooltip.showWithEdgeData(hoverEvent.source.userEdge);
+      this.showEdgeTooltip(hoverEvent.source, false);
     }
   }
 
@@ -386,7 +386,7 @@ export class D3Topology implements Topology {
     );
     if (this.tooltip) {
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
-      this.tooltip.showWithNodeData(node.userNode, { modal: true });
+      this.showNodeTooltip(node, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
     }
   }
@@ -395,7 +395,7 @@ export class D3Topology implements Topology {
     this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(edge.userEdge));
     if (this.tooltip) {
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
-      this.tooltip.showWithEdgeData(edge.userEdge, { modal: true });
+      this.showEdgeTooltip(edge, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
     }
   }
@@ -422,5 +422,20 @@ export class D3Topology implements Topology {
   private select<T extends Element>(selector: string | T): Selection<T, unknown, null, undefined> {
     return this.d3Util.select<T>(selector, this.domRenderer);
   }
-  // tslint:disable-next-line: max-file-line-count
+
+  private showNodeTooltip(node: RenderableTopologyNode, modal: boolean): void {
+    const originEl = this.nodeRenderer.getElementForNode(node);
+    if (!originEl || !this.tooltip) {
+      return;
+    }
+    this.tooltip.showWithNodeData(node.userNode, new ElementRef(originEl), { modal: modal });
+  }
+
+  private showEdgeTooltip(edge: RenderableTopologyEdge, modal: boolean): void {
+    const originEl = this.edgeRenderer.getElementForEdge(edge);
+    if (!originEl || !this.tooltip) {
+      return;
+    }
+    this.tooltip.showWithEdgeData(edge.userEdge, new ElementRef(originEl), { modal: modal });
+  }
 }
