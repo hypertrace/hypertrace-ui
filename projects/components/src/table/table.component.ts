@@ -194,7 +194,7 @@ export class TableComponent
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
 
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
-    id: '$$state',
+    id: '$$expanded',
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.RowExpander,
@@ -202,7 +202,7 @@ export class TableComponent
   };
 
   private readonly multiSelectRowColumnConfig: TableColumnConfig = {
-    id: '$$state',
+    id: '$$selected',
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.Checkbox,
@@ -569,11 +569,15 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
-    const stateColumns = this.hasExpandableRows()
-      ? [this.expandableToggleColumnConfig]
-      : this.hasMultiSelect()
-      ? [this.multiSelectRowColumnConfig]
-      : [];
+    const stateColumns = [];
+
+    if (this.hasExpandableRows()) {
+      stateColumns.push(this.expandableToggleColumnConfig);
+    }
+
+    if (this.hasMultiSelect()) {
+      stateColumns.push(this.multiSelectRowColumnConfig);
+    }
 
     return this.tableService.buildExtendedColumnConfigs(
       [...stateColumns, ...columnConfigs],
