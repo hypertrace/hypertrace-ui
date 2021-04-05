@@ -5,7 +5,7 @@
   align-items: center;
   height: calc(100% - 8px); // subtract margin
   margin: 4px 4px;
-  padding: 2px 4px;
+  padding: 2px 8px;
 
   &.selected {
     background: $blue-1;
