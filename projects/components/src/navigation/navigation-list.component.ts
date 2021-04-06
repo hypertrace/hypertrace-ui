@@ -122,6 +122,7 @@ export interface NavItemLinkConfig {
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
   replaceCurrentHistory?: boolean;
+  isBeta?: boolean;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;
