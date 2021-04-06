@@ -67,11 +67,15 @@
 
   .header-cell-renderer {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 12px 10px 7px;
+  }
+
+  .header-cell-renderer:first-child {
+    padding-left: 12px;
   }
 
   .header-column-resize-handle {
-    padding: 6px 0px;
+    padding: 6px 2px;
     height: 100%;
     cursor: col-resize;
 
