@@ -67,7 +67,7 @@ export class NavigableDashboardComponent implements OnChanges {
     private readonly metadataService: MetadataService,
     private readonly dashboardPersistenceService: DashboardPersistenceService,
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService
-  ) { }
+  ) {}
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.navLocation) {
