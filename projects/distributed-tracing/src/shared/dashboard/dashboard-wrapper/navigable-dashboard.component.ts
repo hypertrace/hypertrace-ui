@@ -67,7 +67,7 @@ export class NavigableDashboardComponent implements OnChanges {
     private readonly metadataService: MetadataService,
     private readonly dashboardPersistenceService: DashboardPersistenceService,
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService
-  ) {}
+  ) { }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.navLocation) {
@@ -84,6 +84,10 @@ export class NavigableDashboardComponent implements OnChanges {
     }
 
     if (changeObject.filterConfig) {
+      if (changeObject.filterConfig.currentValue?.implicitFilters) {
+        this.onFilterChange(this.explicitFilters);
+      }
+
       this.attributes$ = this.filterConfig?.filterBar
         ? this.metadataService.getFilterAttributes(this.filterConfig.filterBar.scope)
         : of([]);
