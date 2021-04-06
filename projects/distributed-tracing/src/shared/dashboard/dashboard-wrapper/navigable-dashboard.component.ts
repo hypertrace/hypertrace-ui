@@ -84,10 +84,8 @@ export class NavigableDashboardComponent implements OnChanges {
     }
 
     if (changeObject.filterConfig) {
-      if (changeObject.filterConfig.currentValue?.implicitFilters) {
-        this.onFilterChange(this.explicitFilters);
-      }
-
+      this.onFilterChange(this.explicitFilters);
+      
       this.attributes$ = this.filterConfig?.filterBar
         ? this.metadataService.getFilterAttributes(this.filterConfig.filterBar.scope)
         : of([]);
