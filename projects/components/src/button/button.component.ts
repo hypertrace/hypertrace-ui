@@ -75,6 +75,8 @@ export class ButtonComponent {
     switch (this.size) {
       case ButtonSize.Large:
         return IconSize.Large;
+      case ButtonSize.Medium:
+        return IconSize.Medium;
       default:
         return IconSize.Small;
     }
