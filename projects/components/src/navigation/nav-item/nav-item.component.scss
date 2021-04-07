@@ -19,6 +19,11 @@
     margin-left: 14px;
     display: flex;
     flex-direction: row;
+    align-items: center;
+
+    .beta {
+      margin-left: 8px;
+    }
   }
 
   .icon {

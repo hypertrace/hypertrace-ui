@@ -47,14 +47,16 @@ import { TableWidgetModel } from './table-widget.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-titled-content
+      class="table-title"
       [title]="this.model.header?.title | htDisplayTitle"
       [link]="this.model.header?.link?.url"
       [linkLabel]="this.model.header?.link?.displayText"
     >
-      <div class="table-content-container">
+      <div class="table-content-container" [class.titled]="this.model.header?.title !== undefined">
         <ht-table-controls
           class="table-controls"
           [searchEnabled]="!!this.api.model.getSearchAttribute()"
+          [searchPlaceholder]="this.api.model.getSearchPlaceholder()"
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
           [viewItems]="this.viewItems"
@@ -67,7 +69,6 @@ import { TableWidgetModel } from './table-widget.model';
 
         <ht-table
           class="table"
-          [ngClass]="{ 'header-margin': this.model.header?.topMargin }"
           [columnConfigs]="this.columnConfigs$ | async"
           [metadata]="this.metadata$ | async"
           [mode]="this.model.mode"

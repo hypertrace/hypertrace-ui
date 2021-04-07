@@ -1,26 +1,10 @@
-import {
-  displayString,
-  getStringsFromCommaSeparatedList,
-  titleCaseFromKebabCase,
-  titleCaseFromSnakeCase
-} from './string-formatter';
+import { displayString, getStringsFromCommaSeparatedList } from './string-formatter';
 
 describe('String formatter', () => {
-  test('can convert from kebab case to title case', () => {
-    expect(titleCaseFromKebabCase('my-kebab-case')).toBe('My Kebab Case');
-    expect(titleCaseFromKebabCase('single')).toBe('Single');
-    expect(titleCaseFromKebabCase('')).toBe('');
-  });
-
-  test('can convert from snake case to title case', () => {
-    expect(titleCaseFromSnakeCase('my_snake_case')).toBe('My Snake Case');
-    expect(titleCaseFromKebabCase('single')).toBe('Single');
-    expect(titleCaseFromKebabCase('')).toBe('');
-  });
-
   test('can convert to display string', () => {
     // tslint:disable-next-line: no-null-keyword
     expect(displayString(null)).toBe('-');
+    expect(displayString('null')).toBe('-');
     expect(displayString(undefined)).toBe('-');
     expect(displayString('')).toBe('');
     expect(displayString('value')).toBe('value');

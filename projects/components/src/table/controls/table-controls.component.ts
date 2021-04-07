@@ -31,7 +31,7 @@ import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableCont
         <ht-search-box
           *ngIf="this.searchEnabled"
           class="control search-box"
-          [placeholder]="this.searchPlaceholder"
+          [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
           (valueChange)="this.onSearchChange($event)"
         ></ht-search-box>
 
@@ -85,11 +85,12 @@ import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableCont
   `
 })
 export class TableControlsComponent implements OnChanges {
+  public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
   @Input()
   public searchEnabled?: boolean;
 
   @Input()
-  public searchPlaceholder?: string = 'Search...';
+  public searchPlaceholder?: string;
 
   @Input()
   public selectControls?: SelectControl[] = [];

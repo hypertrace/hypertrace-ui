@@ -27,6 +27,7 @@ import { NavItemLinkConfig } from '../navigation-list.component';
         <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
           <span class="soon">SOON</span>
         </span>
+        <ht-beta-tag *ngIf="config.isBeta" class="beta"></ht-beta-tag>
       </div>
     </div>
   `

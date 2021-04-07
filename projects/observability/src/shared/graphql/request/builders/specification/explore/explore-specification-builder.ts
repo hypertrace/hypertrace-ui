@@ -24,7 +24,7 @@ export class ExploreSpecificationBuilder {
         type: AttributeMetadataType.Timestamp
       }),
       asGraphQlOrderByFragment: () => ({
-        key: INTERVAL_START_QUERY_KEY
+        key: 'intervalStart'
       })
     };
   }

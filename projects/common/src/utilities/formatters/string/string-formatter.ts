@@ -1,17 +1,5 @@
-export const titleCaseFromKebabCase = (kebabCaseString: string): string =>
-  kebabCaseString
-    .split('-')
-    .map(str => (str.length === 0 ? str : str[0].toUpperCase() + str.slice(1)))
-    .join(' ');
-
-export const titleCaseFromSnakeCase = (snakeCaseString: string): string =>
-  snakeCaseString
-    .split('_')
-    .map(str => (str.length === 0 ? str : str[0].toUpperCase() + str.slice(1)))
-    .join(' ');
-
 export const displayString = (provided?: unknown): string => {
-  if (provided === null) {
+  if (provided === null || provided === 'null') {
     return '-';
   }
 

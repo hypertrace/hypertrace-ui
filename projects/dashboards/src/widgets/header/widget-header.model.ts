@@ -49,10 +49,4 @@ export class WidgetHeaderModel {
     } as ModelModelPropertyTypeInstance
   })
   public link?: LinkWidgetModel;
-
-  @ModelProperty({
-    key: 'top-margin',
-    type: BOOLEAN_PROPERTY.type
-  })
-  public topMargin?: boolean = false;
 }

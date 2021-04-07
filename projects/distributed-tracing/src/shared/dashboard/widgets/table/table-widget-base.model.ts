@@ -24,14 +24,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
-    key: 'title',
-    displayName: 'Title',
-    type: STRING_PROPERTY.type
-  })
-  // @deprecated
-  public title?: string;
-
-  @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
@@ -47,6 +39,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     type: STRING_PROPERTY.type
   })
   public searchAttribute?: string;
+
+  @ModelProperty({
+    key: 'search-placeholder',
+    displayName: 'Search Placeholder',
+    type: STRING_PROPERTY.type
+  })
+  public searchPlaceholder?: string;
 
   @ModelProperty({
     key: 'select-control-options',
@@ -137,6 +136,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;
+  }
+
+  public getSearchPlaceholder(): string | undefined {
+    return this.searchPlaceholder;
   }
 
   public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {
