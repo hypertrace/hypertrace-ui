@@ -4,6 +4,7 @@ describe('String formatter', () => {
   test('can convert to display string', () => {
     // tslint:disable-next-line: no-null-keyword
     expect(displayString(null)).toBe('-');
+    expect(displayString('null')).toBe('-');
     expect(displayString(undefined)).toBe('-');
     expect(displayString('')).toBe('');
     expect(displayString('value')).toBe('value');

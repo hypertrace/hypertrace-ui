@@ -7,22 +7,22 @@
   cursor: pointer;
 
   .icon {
-    width: 32px;
-    height: 32px;
+    margin-left: 6px;
     border-radius: 50%;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    background: $gray-1;
+    color: $gray-5;
   }
 
   .label-icon {
-    background: $blue-1;
-    color: $blue-4;
-  }
-
-  .expand {
-    background: $gray-1;
+    &:hover {
+      color: $gray-7;
+    }
   }
 
   .label {

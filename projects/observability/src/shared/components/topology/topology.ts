@@ -179,8 +179,8 @@ export interface TopologyTooltipRenderer {
 }
 
 export interface TopologyTooltip {
-  showWithNodeData(node: TopologyNode, options?: TopologyTooltipOptions): void;
-  showWithEdgeData(edge: TopologyEdge, options?: TopologyTooltipOptions): void;
+  showWithNodeData(node: TopologyNode, origin: ElementRef, options?: TopologyTooltipOptions): void;
+  showWithEdgeData(edge: TopologyEdge, origin: ElementRef, options?: TopologyTooltipOptions): void;
   hide(): void;
   destroy(): void;
   hidden$: Observable<void>;
