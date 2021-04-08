@@ -1,0 +1,31 @@
+@import 'color-palette';
+@import 'font';
+
+.exit-calls-count {
+  @include body-1-regular($gray-7);
+}
+
+.api-callee-name-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px;
+
+  .api-callee-name {
+    @include ellipsis-overflow();
+    max-width: 200px;
+    font-size: 13.5px;
+    color: $gray-2;
+  }
+
+  .api-callee-count {
+    color: white;
+    font-size: 15px;
+    margin-left: 50px;
+  }
+}
+
+.remaining-api-callee {
+  font-size: 13.5px;
+  padding: 2px;
+}
