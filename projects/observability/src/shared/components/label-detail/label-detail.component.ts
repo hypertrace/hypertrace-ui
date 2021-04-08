@@ -25,11 +25,11 @@ import {
           <ht-popover-trigger>
             <div
               class="label-detail-trigger"
-              (mouseenter)="this.showdetailButton = true"
-              (mouseleave)="this.showdetailButton = false"
+              (mouseenter)="this.showDetailButton = true"
+              (mouseleave)="this.showDetailButton = false"
             >
               <ht-button
-                *ngIf="this.showdetailButton"
+                *ngIf="this.showDetailButton"
                 class="expand icon detail-button"
                 icon="${IconType.Collapsed}"
                 size="${ButtonSize.ExtraSmall}"
@@ -38,10 +38,10 @@ import {
                 htTooltip="Show Details for {{ this.label }}"
               ></ht-button>
               <ht-icon
-                *ngIf="this.icon && !this.showdetailButton"
+                *ngIf="this.icon && !this.showDetailButton"
                 class="icon label-icon"
                 [icon]="this.icon"
-                size="${IconSize.Small}"
+                size="${IconSize.ExtraSmall}"
               ></ht-icon>
               <ht-label
                 [label]="this.label"
@@ -94,7 +94,7 @@ export class LabelDetailComponent {
   @Input()
   public additionalDetails?: string[] = [];
 
-  public showdetailButton: boolean = false;
+  public showDetailButton: boolean = false;
   public locationPreferences: PopoverRelativePositionLocation[] = [PopoverRelativePositionLocation.OverLeftAligned];
 
   private popoverRef?: PopoverRef;
