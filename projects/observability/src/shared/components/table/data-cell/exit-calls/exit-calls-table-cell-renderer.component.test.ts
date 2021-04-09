@@ -1,8 +1,8 @@
 import {
-  TooltipDirective,
   TableCellNoOpParser,
   tableCellProviders,
-  tableCellRowDataProvider
+  tableCellRowDataProvider,
+  TooltipDirective
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';

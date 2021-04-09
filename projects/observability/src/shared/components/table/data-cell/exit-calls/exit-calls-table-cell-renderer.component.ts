@@ -47,7 +47,7 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
-export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<ExploreValue, any> implements OnInit {
+export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<ExploreValue, Trace> implements OnInit {
   public readonly apiCalleeNameCount: string[][];
   public readonly apiExitCalls: number;
   public readonly maxShowApiCalleeNameCount: number = 10;
