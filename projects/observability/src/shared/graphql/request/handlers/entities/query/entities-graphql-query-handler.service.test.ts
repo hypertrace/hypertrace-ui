@@ -77,7 +77,7 @@ describe('Entities graphql query handler', () => {
   ): GraphQlSelection => ({
     path: 'entities',
     arguments: [
-      { name: 'type', value: new GraphQlEnumArgument(entityType) },
+      { name: 'scope', value: entityType },
       { name: 'limit', value: limit },
       {
         name: 'between',
@@ -201,7 +201,7 @@ describe('Entities graphql query handler', () => {
     expect(spectator.service.convertRequest(requestWithAvgrates)).toEqual({
       path: 'entities',
       arguments: [
-        { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Service) },
+        { name: 'scope', value: ObservabilityEntityType.Service },
         { name: 'limit', value: 30 },
         {
           name: 'between',
@@ -327,7 +327,7 @@ describe('Entities graphql query handler', () => {
     expect(spectator.service.convertRequest(requestWithAvgrates)).toEqual({
       path: 'entities',
       arguments: [
-        { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Service) },
+        { name: 'scope', value: ObservabilityEntityType.Service },
         { name: 'limit', value: 30 },
         {
           name: 'between',
