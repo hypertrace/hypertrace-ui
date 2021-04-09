@@ -14,11 +14,10 @@ import {
 } from '@hypertrace/components';
 import { Trace } from '@hypertrace/distributed-tracing';
 import { ExploreValue } from '@hypertrace/observability';
-
-export const EXIT_CALLS_CELL = 'EXIT_CALLS_CELL';
+import { ObservabilityTableCellType } from '../../observability-table-cell-type';
 
 @Component({
-  selector: 'exit-calls-table-cell-renderer',
+  selector: 'ht-exit-calls-table-cell-renderer',
   styleUrls: ['./exit-calls-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -27,15 +26,15 @@ export const EXIT_CALLS_CELL = 'EXIT_CALLS_CELL';
 
       <ng-template #exitCallsTooltip>
         <ng-container *ngIf="this.apiExitCalls > 0">
-          <div *ngFor="let item of this.apiCalleeNameCount | keyvalue" class="api-callee-name-count">
-            <span class="api-callee-name">{{ item.key }}</span>
-            <span class="api-callee-count">{{ item.value }}</span>
+          <div *ngFor="let item of this.apiCalleeNameCount" class="api-callee-name-count">
+            <span class="api-callee-name">{{ item[0] }}</span>
+            <span class="api-callee-count">{{ item[1] }}</span>
           </div>
           <div
-            *ngIf="this.totalCountOfDifferentAPICallee > this.maxShowAPICalleeNameCount"
+            *ngIf="this.totalCountOfDifferentApiCallee > this.maxShowApiCalleeNameCount"
             class="remaining-api-callee"
           >
-            and {{ this.totalCountOfDifferentAPICallee - this.maxShowAPICalleeNameCount }} more
+            and {{ this.totalCountOfDifferentApiCallee - this.maxShowApiCalleeNameCount }} more
           </div>
         </ng-container>
         <ng-container *ngIf="this.apiExitCalls <= 0" class="no-exit-calls">No exit calls</ng-container>
@@ -44,15 +43,15 @@ export const EXIT_CALLS_CELL = 'EXIT_CALLS_CELL';
   `
 })
 @TableCellRenderer({
-  type: EXIT_CALLS_CELL,
+  type: ObservabilityTableCellType.ExitCalls,
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
 export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<ExploreValue, any> implements OnInit {
-  public readonly apiCalleeNameCount: any;
+  public readonly apiCalleeNameCount: string[][];
   public readonly apiExitCalls: number;
-  public readonly maxShowAPICalleeNameCount: number = 10;
-  public totalCountOfDifferentAPICallee!: number;
+  public readonly maxShowApiCalleeNameCount: number = 10;
+  public readonly totalCountOfDifferentApiCallee!: number;
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
@@ -62,23 +61,9 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<E
     @Inject(TABLE_ROW_DATA) rowData: Trace
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    this.apiCalleeNameCount = this.getMaxShowAPICalleeNameCount(rowData.apiCalleeNameCount);
+    const apiCalleeNameCount: string[][] = Object.entries(Object(rowData.apiCalleeNameCount));
+    this.totalCountOfDifferentApiCallee = apiCalleeNameCount.length;
+    this.apiCalleeNameCount = apiCalleeNameCount.slice(0, this.maxShowApiCalleeNameCount);
     this.apiExitCalls = Number(rowData.apiExitCalls);
-  }
-
-  public getMaxShowAPICalleeNameCount(apiCalleeNameCount: any): any {
-    if (apiCalleeNameCount) {
-      const showAPICalleeNameCount: any = {};
-      let count = 0;
-      Object.keys(apiCalleeNameCount).forEach((key: string) => {
-        if (count < this.maxShowAPICalleeNameCount) {
-          showAPICalleeNameCount[key] = apiCalleeNameCount[key];
-          count++;
-        }
-      });
-      this.totalCountOfDifferentAPICallee = Object.keys(apiCalleeNameCount).length;
-      return showAPICalleeNameCount;
-    }
-    return {};
   }
 }
