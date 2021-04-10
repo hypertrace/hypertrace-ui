@@ -68,9 +68,9 @@ describe('Graphql Argument Builder', () => {
     );
   });
 
-  test('construct arguments for entity type correctly', () => {
-    expect(argBuilder.forTraceType('entity-type')).toEqual(
-      expect.objectContaining({ name: 'type', value: new GraphQlEnumArgument('entity-type') })
+  test('construct arguments for entity scope correctly', () => {
+    expect(argBuilder.forScope('entity-type')).toEqual(
+      expect.objectContaining({ name: 'scope', value: 'entity-type' })
     );
   });
 
