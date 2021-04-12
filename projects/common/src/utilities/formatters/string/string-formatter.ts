@@ -1,13 +1,15 @@
-export const displayString = (provided?: unknown): string => {
+export const displayString = (provided?: unknown, defaultValueOnEmpty: string = '-'): string => {
   if (provided === null || provided === 'null') {
-    return '-';
+    return defaultValueOnEmpty;
   }
 
   switch (typeof provided) {
     case 'object':
-      return Array.isArray(provided) ? `[${provided.map(displayString).join(', ')}]` : 'Object';
+      return Array.isArray(provided)
+        ? `[${provided.map(value => displayString(value, defaultValueOnEmpty)).join(', ')}]`
+        : 'Object';
     case 'undefined':
-      return '-';
+      return defaultValueOnEmpty;
     case 'function':
       return 'Function';
     case 'string':
