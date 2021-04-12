@@ -5,7 +5,7 @@ import { displayString } from './string-formatter';
   name: 'htDisplayString'
 })
 export class DisplayStringPipe implements PipeTransform {
-  public transform(value: unknown): string {
-    return displayString(value);
+  public transform(value: unknown, defaultValueOnEmpty: string = '-'): string {
+    return displayString(value, defaultValueOnEmpty);
   }
 }

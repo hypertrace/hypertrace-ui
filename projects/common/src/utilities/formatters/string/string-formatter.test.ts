@@ -16,6 +16,21 @@ describe('String formatter', () => {
     expect(displayString(false)).toBe('false');
   });
 
+  test('can convert to display string with default empty value', () => {
+    // tslint:disable-next-line: no-null-keyword
+    expect(displayString(null, 'none')).toBe('none');
+    expect(displayString('null', 'none')).toBe('none');
+    expect(displayString(undefined, 'none')).toBe('none');
+    expect(displayString('', 'none')).toBe('');
+    expect(displayString('value', 'none')).toBe('value');
+    expect(displayString(15, 'none')).toBe('15');
+    expect(displayString({}, 'none')).toBe('Object');
+    expect(displayString([undefined], 'none')).toBe('[none]');
+    expect(displayString(() => 'hi', 'none')).toBe('Function');
+    expect(displayString(Symbol('test symbol'), 'none')).toBe('Symbol(test symbol)');
+    expect(displayString(false, 'none')).toBe('false');
+  });
+
   test('creates string array correctly from comma separated list', () => {
     expect(getStringsFromCommaSeparatedList('first,second,   third   ')).toEqual(
       expect.arrayContaining(['first', 'second', 'third'])
