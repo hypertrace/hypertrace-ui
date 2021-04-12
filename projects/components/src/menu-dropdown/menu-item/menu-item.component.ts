@@ -15,7 +15,7 @@ import { IconSize } from '../../icon/icon-size';
         size="${IconSize.Small}"
         [color]="this.iconColor"
       ></ht-icon>
-      <span class="label" [ngStyle]="{ color: this?.labelColor }">{{ this.label }}</span>
+      <span class="label" [ngStyle]="{ color: this.labelColor ? this.labelColor : '' }">{{ this.label }}</span>
     </div></ht-event-blocker
   >`
 })
