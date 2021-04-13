@@ -1,3 +1,4 @@
+import { TimeDurationModel } from './../../../../../../../dashboards/src/model/time-duration/time-duration.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
@@ -25,7 +26,8 @@ describe('Cartesian widget renderer component', () => {
       mockProvider(IntervalDurationService, {
         getAvailableIntervalsForTimeRange: () => [
           new TimeDuration(1, TimeUnit.Minute),
-          new TimeDuration(3, TimeUnit.Minute)
+          new TimeDuration(3, TimeUnit.Minute),
+          new TimeDuration(1, TimeUnit.Hour)
         ],
         getExactMatch: (duration: TimeDuration, availableDurations: TimeDuration[]): TimeDuration | undefined =>
           availableDurations.find(availableDuration => duration.equals(availableDuration))
@@ -138,6 +140,39 @@ describe('Cartesian widget renderer component', () => {
     expect(spectator.component.selectedInterval).toEqual('AUTO');
   });
 
+  test('sets default interval to use with selectable interval options', () => {
+    const mockTimeDurationModel = new TimeDurationModel();
+    mockTimeDurationModel.value = 1;
+    mockTimeDurationModel.unit = TimeUnit.Hour;
+
+    const mockModel = cartesianModelFactory({
+      defaultInterval: mockTimeDurationModel,
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
+
+    expect(spectator.component.selectedInterval).toEqual(expect.objectContaining({ value: 1, unit: TimeUnit.Hour }));
+  });
+
+  test('sets default interval without any interval selector options', () => {
+    const mockTimeDurationModel = new TimeDurationModel();
+    mockTimeDurationModel.value = 3;
+    mockTimeDurationModel.unit = TimeUnit.Minute;
+
+    const mockModel = cartesianModelFactory({
+      defaultInterval: mockTimeDurationModel,
+      selectableInterval: false,
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
+
+    expect(spectator.component.selectedInterval).toEqual(expect.objectContaining({ value: 3, unit: TimeUnit.Minute }));
+  });
+
   test('provides expected interval options', () => {
     const mockModel = cartesianModelFactory({
       series: [seriesFactory({}, fetcherFactory([]))]
@@ -148,7 +183,8 @@ describe('Cartesian widget renderer component', () => {
     expect(spectator.component.intervalOptions).toEqual([
       'AUTO',
       new TimeDuration(1, TimeUnit.Minute),
-      new TimeDuration(3, TimeUnit.Minute)
+      new TimeDuration(3, TimeUnit.Minute),
+      new TimeDuration(1, TimeUnit.Hour)
     ]);
   });
 
@@ -163,7 +199,9 @@ describe('Cartesian widget renderer component', () => {
       providers: [...mockDashboardWidgetProviders(mockModel)]
     });
     const originalDataObservable = spectator.component.data$;
+
     spectator.component.onIntervalChange(new TimeDuration(3, TimeUnit.Minute));
+
     expect(fetcher.getData).toHaveBeenLastCalledWith(new TimeDuration(3, TimeUnit.Minute));
     expect(originalDataObservable).not.toBe(spectator.component.data$);
     spectator.component.onIntervalChange('AUTO');

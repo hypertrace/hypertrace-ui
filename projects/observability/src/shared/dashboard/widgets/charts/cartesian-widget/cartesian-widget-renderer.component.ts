@@ -58,13 +58,14 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     return this.model.getDataFetcher().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
-        const defaultInterval =
-          this.model.defaultInterval?.value !== undefined ? this.model.defaultInterval.getDuration() : undefined;
+        const defaultInterval = this.model.defaultInterval?.getDuration();
 
         if (this.intervalSupported()) {
           this.intervalOptions = this.buildIntervalOptions();
-          this.selectedInterval =
-            defaultInterval ?? this.getBestIntervalMatch(this.intervalOptions, this.selectedInterval);
+          this.selectedInterval = this.getBestIntervalMatch(
+            this.intervalOptions,
+            this.selectedInterval ?? defaultInterval
+          );
         } else {
           this.intervalOptions = undefined;
           this.selectedInterval = defaultInterval;

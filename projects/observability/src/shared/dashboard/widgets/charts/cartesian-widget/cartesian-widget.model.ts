@@ -108,8 +108,7 @@ export class CartesianWidgetModel<TInterval> {
     required: false,
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
-      key: ModelPropertyType.TYPE,
-      defaultModelClass: TimeDurationModel
+      key: ModelPropertyType.TYPE
     } as ModelModelPropertyTypeInstance
   })
   public defaultInterval?: TimeDurationModel;
