@@ -58,13 +58,16 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     return this.model.getDataFetcher().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
+        const defaultInterval =
+          this.model.defaultInterval?.value !== undefined ? this.model.defaultInterval.getDuration() : undefined;
 
         if (this.intervalSupported()) {
           this.intervalOptions = this.buildIntervalOptions();
-          this.selectedInterval = this.getBestIntervalMatch(this.intervalOptions, this.selectedInterval);
+          this.selectedInterval =
+            defaultInterval ?? this.getBestIntervalMatch(this.intervalOptions, this.selectedInterval);
         } else {
           this.intervalOptions = undefined;
-          this.selectedInterval = undefined;
+          this.selectedInterval = defaultInterval;
         }
       }),
       switchMap(() => this.buildDataObservable())
@@ -87,7 +90,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   }
 
   private intervalSupported(): boolean {
-    return this.model.selectableInterval;
+    return this.model.selectableInterval || this.model.defaultInterval !== undefined;
   }
 
   private resolveInterval(value?: IntervalValue): TimeDuration {

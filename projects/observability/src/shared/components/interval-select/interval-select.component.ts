@@ -23,7 +23,7 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
 })
 export class IntervalSelectComponent implements OnChanges {
   @Input()
-  public interval?: IntervalValue;
+  public interval: IntervalValue = 'AUTO';
 
   @Input()
   public intervalOptions?: IntervalValue[];
@@ -54,8 +54,9 @@ export class IntervalSelectComponent implements OnChanges {
     }
   }
 
-  public onIntervalChange(value: IntervalValue): void {
-    this.intervalChange.next(value);
+  public onIntervalChange(interval: IntervalValue): void {
+    this.interval = interval;
+    this.intervalChange.next(interval);
   }
 
   public isDisabledOrUnselectable(): boolean {

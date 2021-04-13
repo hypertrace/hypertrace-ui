@@ -1,9 +1,10 @@
 import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
   ModelApi,
+  ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
   NUMBER_PROPERTY,
@@ -101,6 +102,17 @@ export class CartesianWidgetModel<TInterval> {
     type: BOOLEAN_PROPERTY.type
   })
   public selectableInterval: boolean = true;
+
+  @ModelProperty({
+    key: 'default-interval',
+    required: false,
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: TimeDurationModel
+    } as ModelModelPropertyTypeInstance
+  })
+  public defaultInterval?: TimeDurationModel;
 
   @ModelProperty({
     key: 'show-summary',
