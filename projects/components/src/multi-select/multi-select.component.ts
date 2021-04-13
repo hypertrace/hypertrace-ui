@@ -94,7 +94,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               >
                 <ht-checkbox
                   class="checkbox"
-                  (click)="blockCheckboxPropagation($event)"
+                  (click)="preventClickDefault($event)"
                   [checked]="this.isSelectedItem(item)"
                 ></ht-checkbox>
                 <ht-icon
@@ -214,7 +214,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
   }
 
-  public blockCheckboxPropagation(event: Event): void {
+  public preventClickDefault(event: Event): void {
     event.preventDefault();
   }
 
