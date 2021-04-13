@@ -92,7 +92,11 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (click)="this.onSelectionChange(item)"
                 class="multi-select-option"
               >
-                <ht-checkbox class="checkbox"  (click)="blockCheckboxPropagation($event)" [checked]="this.isSelectedItem(item)"></ht-checkbox>
+                <ht-checkbox
+                  class="checkbox"
+                  (click)="blockCheckboxPropagation($event)"
+                  [checked]="this.isSelectedItem(item)"
+                ></ht-checkbox>
                 <ht-icon
                   class="icon"
                   *ngIf="item.icon"
