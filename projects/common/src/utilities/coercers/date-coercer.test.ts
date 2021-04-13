@@ -46,7 +46,7 @@ describe('Date coercer', () => {
     expect(basicCoercer.coerce(0)).toBeUndefined();
     expect(basicCoercer.coerce('2009-04-11T16:33:47.046Z')).toBeUndefined();
     expect(basicCoercer.coerce('2019-04-11T16:33:47.046Z')).toBeDefined();
-    // This will fail in 2021 too, just bump the year
+    // This will fail in 2022 too, just bump the year
     expect(basicCoercer.coerce('2032-04-11T16:33:47.046Z')).toBeUndefined();
   });
 
