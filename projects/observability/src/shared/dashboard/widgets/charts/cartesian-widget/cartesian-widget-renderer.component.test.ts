@@ -1,4 +1,3 @@
-import { TimeDurationModel } from './../../../../../../../dashboards/src/model/time-duration/time-duration.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
@@ -9,6 +8,7 @@ import {
   TimeUnit
 } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
+import { TimeDurationModel } from '@hypertrace/dashboards';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
