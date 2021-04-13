@@ -90,7 +90,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   }
 
   private intervalSupported(): boolean {
-    return this.model.selectableInterval || this.model.defaultInterval !== undefined;
+    return this.model.selectableInterval;
   }
 
   private resolveInterval(value?: IntervalValue): TimeDuration {
