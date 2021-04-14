@@ -1,7 +1,7 @@
 import {
   TableCellNoOpParser,
+  tableCellDataProvider,
   tableCellProviders,
-  tableCellRowDataProvider,
   TooltipDirective
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
@@ -23,29 +23,21 @@ describe('Exit Calls table cell renderer component', () => {
     shallow: true
   });
 
-  test('should render a number as expected', () => {
-    const spectator = buildComponent({
-      providers: [tableCellRowDataProvider({ apiExitCalls: 1 })]
-    });
-
-    expect(spectator.query('.exit-calls-count')).toHaveText('1');
-    expect(spectator.query(TooltipDirective)).toExist();
-  });
-
   test('testing component properties', () => {
     const value = {
       key1: '1',
       key2: '2'
     };
     const spectator = buildComponent({
-      providers: [tableCellRowDataProvider({ apiExitCalls: 2, apiCalleeNameCount: value })]
+      providers: [tableCellDataProvider({ value: [3, value] })]
     });
 
+    expect(spectator.queryAll('.exit-calls-count')[0]).toContainText('3');
     expect(spectator.component.apiCalleeNameCount).toMatchObject([
       ['key1', '1'],
       ['key2', '2']
     ]);
     expect(spectator.component.totalCountOfDifferentApiCallee).toBe(2);
-    expect(spectator.component.apiExitCalls).toBe(2);
+    expect(spectator.component.apiExitCalls).toBe(3);
   });
 });
