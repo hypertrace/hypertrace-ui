@@ -138,6 +138,29 @@ describe('Multi Select Component', () => {
     });
   }));
 
+  test('should block prevent default when checkbox is clicked', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: []
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+    const preventClickDefaultSpy = spyOn(spectator.component, 'preventClickDefault');
+    const selectedCheckboxElement = spectator.queryAll('ht-checkbox', { root: true })[0];
+    spectator.click(selectedCheckboxElement);
+    expect(preventClickDefaultSpy).toHaveBeenCalled();
+  }));
+
   test('should notify and update selection when selection is changed', fakeAsync(() => {
     const onChange = jest.fn();
 
