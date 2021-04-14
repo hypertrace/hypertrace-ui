@@ -155,11 +155,8 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     spectator.click('.trigger-content');
-    const preventClickDefaultSpy = spyOn(spectator.component, 'preventClickDefault');
     const selectedCheckboxElement = spectator.queryAll('ht-checkbox', { root: true })[0];
-    spectator.click(selectedCheckboxElement);
-    spectator.component.preventClickDefault(new Event('click'));
-    expect(preventClickDefaultSpy).toHaveBeenCalled();
+    expect(spectator.dispatchFakeEvent(selectedCheckboxElement, 'click', true).defaultPrevented).toBe(true);
   }));
 
   test('should notify and update selection when selection is changed', fakeAsync(() => {
