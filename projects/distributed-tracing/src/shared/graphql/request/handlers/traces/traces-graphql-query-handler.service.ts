@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { defaultIfEmpty, map } from 'rxjs/operators';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
@@ -98,9 +98,10 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   }
 
   private resultUnits(specification: Specification, scope: string): Observable<string | undefined> {
-    return this.metadataService
-      .getAttribute(scope, specification.name)
-      .pipe(map(attribute => (attribute.units !== '' ? attribute.units : undefined)));
+    return this.metadataService.getAttribute(scope, specification.name).pipe(
+      map(attribute => (attribute.units !== '' ? attribute.units : undefined)),
+      defaultIfEmpty<string | undefined>(undefined)
+    );
   }
 }
 
