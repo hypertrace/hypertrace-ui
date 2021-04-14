@@ -1,0 +1,29 @@
+@import 'color-palette';
+@import 'font';
+
+.exit-calls-count {
+  @include body-1-regular($gray-7);
+}
+
+.api-callee-name-count {
+  @include body-small($gray-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px;
+
+  .api-callee-name {
+    @include ellipsis-overflow();
+    max-width: 200px;
+  }
+
+  .api-callee-count {
+    color: white;
+    margin-left: 50px;
+  }
+}
+
+.remaining-api-callee {
+  @include body-small($gray-3);
+  padding: 2px;
+}
