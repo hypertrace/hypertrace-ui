@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { Dictionary } from '@hypertrace/common';
 import {
   CoreTableCellParserType,
   TableCellAlignmentType,
@@ -13,9 +14,13 @@ import {
   TABLE_ROW_DATA
 } from '@hypertrace/components';
 import { Trace } from '@hypertrace/distributed-tracing';
-import { ExploreValue } from '@hypertrace/observability';
+// import { ExploreValue } from '@hypertrace/observability';
 import { ObservabilityTableCellType } from '../../observability-table-cell-type';
 
+interface CellData {
+  units: number;
+  value: [number, Dictionary<string>];
+}
 @Component({
   selector: 'ht-exit-calls-table-cell-renderer',
   styleUrls: ['./exit-calls-table-cell-renderer.component.scss'],
@@ -47,7 +52,7 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
-export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<ExploreValue, Trace> implements OnInit {
+export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<CellData, Trace> implements OnInit {
   public readonly apiCalleeNameCount: string[][];
   public readonly apiExitCalls: number;
   public readonly maxShowApiCalleeNameCount: number = 10;
@@ -56,14 +61,15 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<E
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
     @Inject(TABLE_COLUMN_INDEX) index: number,
-    @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<ExploreValue, Trace, unknown>,
-    @Inject(TABLE_CELL_DATA) cellData: ExploreValue,
+    @Inject(TABLE_DATA_PARSER)
+    parser: TableCellParserBase<CellData, Trace, unknown>,
+    @Inject(TABLE_CELL_DATA) cellData: CellData,
     @Inject(TABLE_ROW_DATA) rowData: Trace
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    const apiCalleeNameCount: string[][] = Object.entries(Object(rowData.apiCalleeNameCount));
+    const apiCalleeNameCount: string[][] = Object.entries(cellData.value[1]);
     this.totalCountOfDifferentApiCallee = apiCalleeNameCount.length;
     this.apiCalleeNameCount = apiCalleeNameCount.slice(0, this.maxShowApiCalleeNameCount);
-    this.apiExitCalls = Number(rowData.apiExitCalls);
+    this.apiExitCalls = cellData.value[0];
   }
 }
