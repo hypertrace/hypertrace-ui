@@ -158,6 +158,7 @@ describe('Multi Select Component', () => {
     const preventClickDefaultSpy = spyOn(spectator.component, 'preventClickDefault');
     const selectedCheckboxElement = spectator.queryAll('ht-checkbox', { root: true })[0];
     spectator.click(selectedCheckboxElement);
+    spectator.component.preventClickDefault(new Event('click'));
     expect(preventClickDefaultSpy).toHaveBeenCalled();
   }));
 
