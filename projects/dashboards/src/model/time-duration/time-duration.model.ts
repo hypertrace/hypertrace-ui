@@ -19,7 +19,15 @@ export class TimeDurationModel {
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
-      values: [TimeUnit.Millisecond, TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Week, TimeUnit.Month]
+      values: [
+        TimeUnit.Millisecond,
+        TimeUnit.Second,
+        TimeUnit.Minute,
+        TimeUnit.Hour,
+        TimeUnit.Day,
+        TimeUnit.Week,
+        TimeUnit.Month
+      ]
     } as EnumPropertyTypeInstance
   })
   public unit!: TimeUnit;

@@ -1,5 +1,4 @@
 import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import { EntityType } from '@hypertrace/observability';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
 import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
@@ -75,7 +74,7 @@ export class GraphQlArgumentBuilder {
     };
   }
 
-  public forEntityType(type: EntityType): GraphQlArgument {
-    return { name: 'type', value: new GraphQlEnumArgument(type) };
+  public forScope(scope: string): GraphQlArgument {
+    return { name: 'scope', value: scope };
   }
 }

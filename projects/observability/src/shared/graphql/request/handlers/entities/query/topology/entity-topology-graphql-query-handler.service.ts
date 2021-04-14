@@ -37,7 +37,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     return {
       path: 'entities',
       arguments: [
-        this.argBuilder.forEntityType(request.rootNodeType),
+        this.argBuilder.forScope(request.rootNodeType),
         this.argBuilder.forLimit(request.rootNodeLimit),
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forFilters(
