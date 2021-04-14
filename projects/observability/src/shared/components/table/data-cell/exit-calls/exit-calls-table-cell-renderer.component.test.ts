@@ -1,6 +1,6 @@
 import {
-  TableCellNoOpParser,
   tableCellDataProvider,
+  TableCellNoOpParser,
   tableCellProviders,
   TooltipDirective
 } from '@hypertrace/components';
