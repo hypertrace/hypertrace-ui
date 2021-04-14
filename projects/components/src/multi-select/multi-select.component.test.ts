@@ -138,6 +138,34 @@ describe('Multi Select Component', () => {
     });
   }));
 
+  test('should block prevent default when checkbox is clicked', fakeAsync(() => {
+    const onChange = jest.fn();
+    spectator = hostFactory(
+      `
+    <ht-multi-select (selectedChange)="onChange($event)" [selected]="selected">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [],
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+    const selectedCheckboxElement = spectator.queryAll('ht-checkbox', { root: true })[0];
+    expect(spectator.dispatchFakeEvent(selectedCheckboxElement, 'click', true).defaultPrevented).toBe(true);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith([selectionOptions[0].value]);
+    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+    flush();
+  }));
+
   test('should notify and update selection when selection is changed', fakeAsync(() => {
     const onChange = jest.fn();
 
