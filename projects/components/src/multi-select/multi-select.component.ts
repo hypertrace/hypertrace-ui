@@ -94,7 +94,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               >
                 <ht-checkbox
                   class="checkbox"
-                  (click)="preventClickDefault($event)"
+                  (click)="this.preventClickDefault($event)"
                   [checked]="this.isSelectedItem(item)"
                 ></ht-checkbox>
                 <ht-icon
