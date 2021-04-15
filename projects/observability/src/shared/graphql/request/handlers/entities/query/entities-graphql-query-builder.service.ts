@@ -34,7 +34,7 @@ export class EntitiesGraphqlQueryBuilderService {
 
   public buildRequestArguments(request: GraphQlEntitiesRequest): GraphQlArgument[] {
     return [
-      this.argBuilder.forEntityType(request.entityType),
+      this.argBuilder.forScope(request.entityType),
       this.argBuilder.forLimit(request.limit),
       this.argBuilder.forTimeRange(request.timeRange),
       ...this.argBuilder.forOffset(request.offset),
