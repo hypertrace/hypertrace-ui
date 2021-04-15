@@ -37,7 +37,7 @@ describe('Exit Calls table cell renderer component', () => {
       ['key1', '1'],
       ['key2', '2']
     ]);
-    expect(spectator.component.uniqueApiCallee).toBe(2);
+    expect(spectator.component.uniqueApiCalleeCount).toBe(2);
     expect(spectator.component.apiExitCalls).toBe(3);
   });
 });
