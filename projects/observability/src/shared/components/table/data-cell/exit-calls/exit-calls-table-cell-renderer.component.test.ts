@@ -33,7 +33,7 @@ describe('Exit Calls table cell renderer component', () => {
     });
 
     expect(spectator.queryAll('.exit-calls-count')[0]).toContainText('3');
-    expect(spectator.component.apiCalleeNameEntires).toMatchObject([
+    expect(spectator.component.apiCalleeNameEntries).toMatchObject([
       ['key1', '1'],
       ['key2', '2']
     ]);

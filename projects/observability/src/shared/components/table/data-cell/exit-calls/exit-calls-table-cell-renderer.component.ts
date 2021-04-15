@@ -30,12 +30,15 @@ interface CellData {
 
       <ng-template #exitCallsTooltip>
         <ng-container *ngIf="this.apiExitCalls > 0; else noExitCalls">
-          <div *ngFor="let item of this.apiCalleeNameEntires" class="api-callee-name-entries">
+          <div *ngFor="let item of this.apiCalleeNameEntries" class="api-callee-name-entries">
             <span class="api-callee-name">{{ item[0] }}</span>
             <span class="api-callee-count">{{ item[1] }}</span>
           </div>
-          <div *ngIf="this.uniqueApiCallee > this.MAX_API_CALLEE_TO_SHOW" class="remaining-api-callee">
-            and {{ this.uniqueApiCallee - this.MAX_API_CALLEE_TO_SHOW }} more
+          <div
+            *ngIf="this.uniqueApiCallee > ${ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW}"
+            class="remaining-api-callee"
+          >
+            and {{ this.uniqueApiCallee - ${ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW} }} more
           </div>
         </ng-container>
         <ng-template #noExitCalls>No exit calls</ng-template>
@@ -49,9 +52,9 @@ interface CellData {
   parser: CoreTableCellParserType.NoOp
 })
 export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<CellData, Trace> implements OnInit {
-  public readonly apiCalleeNameEntires: [string, string][];
+  public static readonly MAX_API_CALLEE_TO_SHOW: number = 10;
+  public readonly apiCalleeNameEntries: [string, string][];
   public readonly apiExitCalls: number;
-  public readonly MAX_API_CALLEE_TO_SHOW: number = 10;
   public readonly uniqueApiCallee: number;
 
   public constructor(
@@ -63,9 +66,12 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<C
     @Inject(TABLE_ROW_DATA) rowData: Trace
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    const apiCalleeNameEntires: [string, string][] = Object.entries(cellData.value[1]);
-    this.uniqueApiCallee = apiCalleeNameEntires.length;
-    this.apiCalleeNameEntires = apiCalleeNameEntires.slice(0, this.MAX_API_CALLEE_TO_SHOW);
+    const apiCalleeNameEntries: [string, string][] = Object.entries(cellData.value[1]);
+    this.uniqueApiCallee = apiCalleeNameEntries.length;
+    this.apiCalleeNameEntries = apiCalleeNameEntries.slice(
+      0,
+      ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW
+    );
     this.apiExitCalls = cellData.value[0];
   }
 }
