@@ -35,10 +35,10 @@ interface CellData {
             <span class="api-callee-count">{{ item[1] }}</span>
           </div>
           <div
-            *ngIf="this.uniqueApiCallee > ${ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW}"
+            *ngIf="this.uniqueApiCalleeCount > ${ExitCallsTableCellRendererComponent.MAX_API_CALLEES_TO_SHOW}"
             class="remaining-api-callee"
           >
-            and {{ this.uniqueApiCallee - ${ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW} }} more
+            and {{ this.uniqueApiCalleeCount - ${ExitCallsTableCellRendererComponent.MAX_API_CALLEES_TO_SHOW} }} more
           </div>
         </ng-container>
         <ng-template #noExitCalls>No exit calls</ng-template>
@@ -52,10 +52,10 @@ interface CellData {
   parser: CoreTableCellParserType.NoOp
 })
 export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<CellData, Trace> implements OnInit {
-  public static readonly MAX_API_CALLEE_TO_SHOW: number = 10;
+  public static readonly MAX_API_CALLEES_TO_SHOW: number = 10;
   public readonly apiCalleeNameEntries: [string, string][];
   public readonly apiExitCalls: number;
-  public readonly uniqueApiCallee: number;
+  public readonly uniqueApiCalleeCount: number;
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
@@ -67,10 +67,10 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<C
   ) {
     super(columnConfig, index, parser, cellData, rowData);
     const apiCalleeNameEntries: [string, string][] = Object.entries(cellData.value[1]);
-    this.uniqueApiCallee = apiCalleeNameEntries.length;
+    this.uniqueApiCalleeCount = apiCalleeNameEntries.length;
     this.apiCalleeNameEntries = apiCalleeNameEntries.slice(
       0,
-      ExitCallsTableCellRendererComponent.MAX_API_CALLEE_TO_SHOW
+      ExitCallsTableCellRendererComponent.MAX_API_CALLEES_TO_SHOW
     );
     this.apiExitCalls = cellData.value[0];
   }
