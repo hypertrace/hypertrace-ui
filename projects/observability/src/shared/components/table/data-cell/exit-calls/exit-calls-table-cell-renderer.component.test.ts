@@ -33,11 +33,11 @@ describe('Exit Calls table cell renderer component', () => {
     });
 
     expect(spectator.queryAll('.exit-calls-count')[0]).toContainText('3');
-    expect(spectator.component.apiCalleeNameCount).toMatchObject([
+    expect(spectator.component.apiCalleeNameEntires).toMatchObject([
       ['key1', '1'],
       ['key2', '2']
     ]);
-    expect(spectator.component.totalCountOfDifferentApiCallee).toBe(2);
+    expect(spectator.component.uniqueApiCallee).toBe(2);
     expect(spectator.component.apiExitCalls).toBe(3);
   });
 });

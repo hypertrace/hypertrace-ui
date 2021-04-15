@@ -29,19 +29,16 @@ interface CellData {
       <span class="exit-calls-count">{{ this.apiExitCalls }}</span>
 
       <ng-template #exitCallsTooltip>
-        <ng-container *ngIf="this.apiExitCalls > 0">
-          <div *ngFor="let item of this.apiCalleeNameCount" class="api-callee-name-count">
+        <ng-container *ngIf="this.apiExitCalls > 0; else noExitCalls">
+          <div *ngFor="let item of this.apiCalleeNameEntires" class="api-callee-name-entries">
             <span class="api-callee-name">{{ item[0] }}</span>
             <span class="api-callee-count">{{ item[1] }}</span>
           </div>
-          <div
-            *ngIf="this.totalCountOfDifferentApiCallee > this.maxShowApiCalleeNameCount"
-            class="remaining-api-callee"
-          >
-            and {{ this.totalCountOfDifferentApiCallee - this.maxShowApiCalleeNameCount }} more
+          <div *ngIf="this.uniqueApiCallee > this.MAX_API_CALLEE_TO_SHOW" class="remaining-api-callee">
+            and {{ this.uniqueApiCallee - this.MAX_API_CALLEE_TO_SHOW }} more
           </div>
         </ng-container>
-        <ng-container *ngIf="this.apiExitCalls <= 0" class="no-exit-calls">No exit calls</ng-container>
+        <ng-template #noExitCalls>No exit calls</ng-template>
       </ng-template>
     </div>
   `
@@ -52,10 +49,10 @@ interface CellData {
   parser: CoreTableCellParserType.NoOp
 })
 export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<CellData, Trace> implements OnInit {
-  public readonly apiCalleeNameCount: string[][];
+  public readonly apiCalleeNameEntires: [string, string][];
   public readonly apiExitCalls: number;
-  public readonly maxShowApiCalleeNameCount: number = 10;
-  public readonly totalCountOfDifferentApiCallee!: number;
+  public readonly MAX_API_CALLEE_TO_SHOW: number = 10;
+  public readonly uniqueApiCallee: number;
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
@@ -66,9 +63,9 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<C
     @Inject(TABLE_ROW_DATA) rowData: Trace
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    const apiCalleeNameCount: string[][] = Object.entries(cellData.value[1]);
-    this.totalCountOfDifferentApiCallee = apiCalleeNameCount.length;
-    this.apiCalleeNameCount = apiCalleeNameCount.slice(0, this.maxShowApiCalleeNameCount);
+    const apiCalleeNameEntires: [string, string][] = Object.entries(cellData.value[1]);
+    this.uniqueApiCallee = apiCalleeNameEntires.length;
+    this.apiCalleeNameEntires = apiCalleeNameEntires.slice(0, this.MAX_API_CALLEE_TO_SHOW);
     this.apiExitCalls = cellData.value[0];
   }
 }
