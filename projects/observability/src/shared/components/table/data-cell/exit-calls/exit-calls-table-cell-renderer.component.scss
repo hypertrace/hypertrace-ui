@@ -5,7 +5,7 @@
   @include body-1-regular($gray-7);
 }
 
-.api-callee-name-count {
+.api-callee-name-entries {
   @include body-small($gray-3);
   display: flex;
   align-items: center;
