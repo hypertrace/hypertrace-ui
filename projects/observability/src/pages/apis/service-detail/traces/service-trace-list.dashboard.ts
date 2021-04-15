@@ -62,7 +62,7 @@ export const serviceTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Exit Calls',
-        filterable: true,
+        filterable: false,
         display: ObservabilityTableCellType.ExitCalls,
         value: {
           type: 'composite-specification',
