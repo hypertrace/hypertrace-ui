@@ -27,10 +27,21 @@ export const serviceTraceListDashboard = {
         type: 'table-widget-column',
         title: 'Endpoint',
         width: '20%',
-        filterable: true,
+        display: ObservabilityTableCellType.Endpoint,
+        filterable: false,
         value: {
-          type: 'attribute-specification',
-          attribute: 'apiName'
+          type: 'composite-specification',
+          specifications: [
+            {
+              type: 'attribute-specification',
+              attribute: 'apiName'
+            },
+            {
+              type: 'attribute-specification',
+              attribute: 'errorCount'
+            }
+          ],
+          'order-by': 'apiName'
         },
         'click-handler': {
           type: 'api-trace-navigation-handler'

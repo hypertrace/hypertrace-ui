@@ -27,7 +27,7 @@ describe('Span name table cell renderer component', () => {
     shallow: true
   });
 
-  test('should render span name without color and build tooltip ', () => {
+  test('should render span name without color and error icon and build tooltip ', () => {
     const spectator = buildComponent();
 
     const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.name}`;
@@ -38,12 +38,14 @@ describe('Span name table cell renderer component', () => {
     expect(spectator.query('.protocol-name')).toHaveText('test-protocol');
     expect(spectator.query('.span-name')).toHaveText('test-span-name');
     expect(spectator.query('.color-bar')).not.toExist();
+    expect(spectator.query('.error-icon')).not.toExist();
   });
 
-  test('should render span name with color and build tooltip ', () => {
+  test('should render span name with color and error icon and build tooltip ', () => {
     const spanNameDataWithColor = {
       ...spanNameData,
-      color: 'blue'
+      color: 'blue',
+      error: true
     };
     const spectator = buildComponent({
       providers: [tableCellDataProvider(spanNameDataWithColor)]
@@ -57,5 +59,6 @@ describe('Span name table cell renderer component', () => {
     expect(spectator.query('.protocol-name')).toHaveText('test-protocol');
     expect(spectator.query('.span-name')).toHaveText('test-span-name');
     expect(spectator.query('.color-bar')).toExist();
+    expect(spectator.query('.error-icon')).toExist();
   });
 });
