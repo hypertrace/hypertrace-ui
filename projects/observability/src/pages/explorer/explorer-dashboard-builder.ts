@@ -22,6 +22,7 @@ import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
+import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 
@@ -205,10 +206,21 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Exit Calls',
-            filterable: true,
+            filterable: false,
+            display: ObservabilityTableCellType.ExitCalls,
             value: {
-              type: 'attribute-specification',
-              attribute: 'apiExitCalls'
+              type: 'composite-specification',
+              specifications: [
+                {
+                  type: 'attribute-specification',
+                  attribute: 'apiExitCalls'
+                },
+                {
+                  type: 'attribute-specification',
+                  attribute: 'apiCalleeNameCount'
+                }
+              ],
+              'order-by': 'apiExitCalls'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
