@@ -119,6 +119,6 @@ describe('Paginator component', () => {
     });
 
     const paginator = spectator.query('.paginator')!;
-    expect(paginator).toBeUndefined();
+    expect(paginator).toBeNull();
   });
 });
