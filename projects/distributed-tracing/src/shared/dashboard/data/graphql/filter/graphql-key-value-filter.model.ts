@@ -26,9 +26,11 @@ export class GraphQlKeyValueFilterModel implements GraphQlFilter {
         GraphQlOperatorType.NotEquals,
         GraphQlOperatorType.GreaterThan,
         GraphQlOperatorType.GreaterThanOrEqualTo,
+        GraphQlOperatorType.In,
         GraphQlOperatorType.LessThan,
         GraphQlOperatorType.LessThanOrEqualTo,
         GraphQlOperatorType.Like,
+        GraphQlOperatorType.NotIn,
         GraphQlOperatorType.ContainsKey,
         GraphQlOperatorType.ContainsKeyValue
       ]
