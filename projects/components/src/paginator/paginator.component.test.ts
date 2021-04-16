@@ -37,7 +37,7 @@ describe('Paginator component', () => {
     });
   });
 
-  test('should have the correct number of pages for the provided page size and total items', () => {
+  test('should hide the pager when totalItems is less than the pageSizeOptions options', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
         totalItems: totalResults
@@ -109,5 +109,16 @@ describe('Paginator component', () => {
 
     expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 50');
     expect(spectator.component.hasNextPage()).toBe(false);
+  });
+
+  test('should navigate to first page when totalItems is changed', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 20
+      }
+    });
+
+    const paginator = spectator.query('.paginator')!;
+    expect(paginator).toBeUndefined();
   });
 });
