@@ -1,6 +1,6 @@
-import { LinkModule, IconModule } from '@hypertrace/components';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { IconModule, LinkModule } from '@hypertrace/components';
 import { ExploreFilterLinkComponent } from './explore-filter-link.component';
 
 @NgModule({

@@ -1,8 +1,8 @@
-import { LinkComponent, IconComponent, IconSize } from '@hypertrace/components';
+import { IconType } from '@hypertrace/assets-library';
+import { IconComponent, IconSize, LinkComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { ExploreFilterLinkComponent } from './explore-filter-link.component';
-import { IconType } from '@hypertrace/assets-library';
 
 describe('Explore Filter Link component', () => {
   let spectator: SpectatorHost<ExploreFilterLinkComponent>;
@@ -13,7 +13,7 @@ describe('Explore Filter Link component', () => {
   });
 
   test('should display all elements', () => {
-    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
+    spectator = createHost(`<ht-explore-filter-link [paramsOrUrl]="paramsOrUrl"></ht-explore-filter-link>`, {
       props: {
         paramsOrUrl: undefined
       }
@@ -36,6 +36,6 @@ describe('Explore Filter Link component', () => {
     const iconComponent = spectator.query(IconComponent);
     expect(iconComponent).toExist();
     expect(iconComponent?.icon).toEqual(IconType.Filter);
-    expect(iconComponent?.size).toEqual(IconSize.Small);
+    expect(iconComponent?.size).toEqual(IconSize.ExtraSmall);
   });
 });
