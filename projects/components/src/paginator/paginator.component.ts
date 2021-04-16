@@ -19,7 +19,7 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="paginator" *ngIf="this.totalItems">
+    <div class="paginator" *ngIf="this.totalItems && this.totalItems > pageSizeOptions[0]">
       <ht-label
         class="label"
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
