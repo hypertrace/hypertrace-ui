@@ -59,7 +59,7 @@ import { PaginationProvider } from './paginator-api';
 })
 export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Input()
-  public pageSizeOptions: number[] = [];
+  public pageSizeOptions: number[] = [25, 50, 100];
 
   @Input()
   public set pageIndex(pageIndex: number) {
