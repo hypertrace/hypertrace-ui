@@ -110,4 +110,15 @@ describe('Paginator component', () => {
     expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 50');
     expect(spectator.component.hasNextPage()).toBe(false);
   });
+
+  test('should hide the paginator when totalItems is less than the pageSizeOptions options', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 20
+      }
+    });
+
+    const paginator = spectator.query('.paginator')!;
+    expect(paginator).toBeNull();
+  });
 });
