@@ -33,16 +33,16 @@ describe('Textarea Component', () => {
     expect(logSpy).not.toHaveBeenCalled();
   });
 
-  test('should apply disabled attribute when disabled', () => {
-    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [disabled]="disabled"></ht-textarea>`, {
+  test('should match the rowsCount with the number of rows in the textarea', () => {
+    const rows = 10;
+
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rowsCount]="rowsCount"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST',
-        disabled: true
+        rowsCount: rows
       }
     });
 
-    const disabled = spectator.query('textarea')!.getAttribute('ng-reflect-disabled');
-
-    expect(disabled).toBe('true');
+    expect((spectator.query('.textarea') as HTMLTextAreaElement).rows).toBe(rows);
   });
 });

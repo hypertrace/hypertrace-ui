@@ -10,6 +10,7 @@ import { LoggerService } from '@hypertrace/common';
       <textarea
         class="textarea"
         matInput
+        [rows]="this.rowsCount"
         [disabled]="this.disabled"
         [placeholder]="this.placeholder"
         [ngModel]="this.value"
@@ -29,6 +30,9 @@ export class TextareaComponent implements OnInit {
   @Input()
   public disabled: boolean | undefined;
 
+  @Input()
+  public rowsCount: number = 0;
+
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
@@ -36,6 +40,7 @@ export class TextareaComponent implements OnInit {
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates
+    console.log(this.rowsCount);
     if (this.placeholder === undefined) {
       this.loggerService.warn('TextareaComponent requires "placeholder" input');
     }
