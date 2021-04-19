@@ -33,6 +33,19 @@ describe('Textarea Component', () => {
     expect(logSpy).not.toHaveBeenCalled();
   });
 
+  test('should apply disabled attribute when disabled', () => {
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [disabled]="disabled"></ht-textarea>`, {
+      hostProps: {
+        placeholder: 'TEST',
+        disabled: true
+      }
+    });
+
+    const disabled = spectator.query('textarea')!.getAttribute('ng-reflect-disabled');
+
+    expect(disabled).toBe('true');
+  });
+
   test('should match the rowsCount with the number of rows in the textarea', () => {
     const rows = 10;
 
