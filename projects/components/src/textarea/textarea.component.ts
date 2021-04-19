@@ -40,7 +40,6 @@ export class TextareaComponent implements OnInit {
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates
-    console.log(this.rowsCount);
     if (this.placeholder === undefined) {
       this.loggerService.warn('TextareaComponent requires "placeholder" input');
     }
