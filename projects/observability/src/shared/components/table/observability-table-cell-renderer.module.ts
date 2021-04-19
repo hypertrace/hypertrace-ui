@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IconModule, TableModule, TooltipModule } from '@hypertrace/components';
+import { TableModule, TooltipModule } from '@hypertrace/components';
 import { BackendIconTableCellParser } from './data-cell/backend-icon/backend-icon-table-cell-parser';
 import { BackendIconTableCellRendererComponent } from './data-cell/backend-icon/backend-icon-table-cell-renderer.component';
 import { BackendIconTableCellRendererModule } from './data-cell/backend-icon/backend-icon-table-cell-renderer.module';
@@ -20,8 +20,7 @@ import { ExitCallsTableCellRendererComponent } from './data-cell/exit-calls/exit
     ]),
     EntityTableCellRendererModule,
     BackendIconTableCellRendererModule,
-    TooltipModule,
-    IconModule
+    TooltipModule
   ],
   declarations: [ExitCallsTableCellRendererComponent],
   exports: [ExitCallsTableCellRendererComponent]
