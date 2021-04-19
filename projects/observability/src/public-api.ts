@@ -197,6 +197,10 @@ export * from './shared/components/timeline-card-list/timeline-card-list.compone
 export * from './shared/components/timeline-card-list/container/timeline-card-container.component';
 export * from './shared/components/timeline-card-list/timeline-card-list.module';
 
+// Explore Filter link
+export * from './shared/components/explore-filter-link/explore-filter-link.component';
+export * from './shared/components/explore-filter-link/explore-filter-link.module';
+
 // Interval Select
 export * from './shared/components/interval-select/interval-select.component';
 export * from './shared/components/interval-select/interval-select.module';
