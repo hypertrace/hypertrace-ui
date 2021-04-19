@@ -49,10 +49,10 @@ describe('Textarea Component', () => {
   test('should match the rowsCount with the number of rows in the textarea', () => {
     const rows = 10;
 
-    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rowsCount]="rowsCount"></ht-textarea>`, {
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rows]="rows"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST',
-        rowsCount: rows
+        rows: rows
       }
     });
 
