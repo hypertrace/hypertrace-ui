@@ -15,6 +15,6 @@ import { WaterfallChartComponent } from './waterfall-chart.component';
     TooltipModule,
     IconModule
   ],
-  exports: [WaterfallChartComponent, SpanNameTableCellRendererComponent]
+  exports: [WaterfallChartComponent]
 })
 export class WaterfallChartModule {}

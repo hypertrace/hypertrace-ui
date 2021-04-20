@@ -124,17 +124,16 @@ export class WaterfallChartService {
       let color;
 
       if (node.tags?.error as boolean) {
-        color = Color.Red5; // If span conatins an error
+        // If span conatins an error
+        color = Color.Red5;
+      } else if (colorMap.has(node.serviceName)) {
+        // ServiceName seen before. Use existing service color
+        color = colorMap.get(node.serviceName)!;
       } else {
-        if (colorMap.has(node.serviceName)) {
-          // ServiceName seen before. Use existing service color
-          color = colorMap.get(node.serviceName)!;
-        } else {
-          // New serviceName. Assign a new color
-          color = originalColors[uniqueServiceIndex % originalColors.length];
-          colorMap.set(node.serviceName, color);
-          uniqueServiceIndex++;
-        }
+        // New serviceName. Assign a new color
+        color = originalColors[uniqueServiceIndex % originalColors.length];
+        colorMap.set(node.serviceName, color);
+        uniqueServiceIndex++;
       }
 
       node.color = color;
