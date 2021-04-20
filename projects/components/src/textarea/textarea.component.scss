@@ -6,6 +6,7 @@
       display: block;
       height: 100%;
       width: 100%;
+      min-height: inherit;
     }
 
     &.mat-focused {
@@ -21,6 +22,7 @@
     .mat-form-field-infix {
       height: inherit;
       width: inherit;
+      min-height: inherit;
       border: unset;
       padding: 0 0 0 8px;
     }
@@ -28,11 +30,13 @@
     .mat-form-field-flex {
       height: inherit;
       width: inherit;
+      min-height: inherit;
     }
 
     .mat-form-field-wrapper {
       height: inherit;
       width: inherit;
+      min-height: inherit;
       padding-bottom: 0;
 
       .mat-form-field-label {
@@ -45,6 +49,7 @@
     .mat-input-element {
       height: inherit;
       width: inherit;
+      min-height: inherit;
       margin: 0;
 
       &:after {

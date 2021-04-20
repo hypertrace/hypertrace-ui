@@ -9,7 +9,6 @@ import { LoggerService } from '@hypertrace/common';
     <mat-form-field class="fill-container" floatLabel="never">
       <textarea
         class="textarea"
-        [ngStyle]="{ 'minHeight.px': this.minHeight }"
         matInput
         [rows]="this.rows"
         [disabled]="this.disabled"
@@ -33,9 +32,6 @@ export class TextareaComponent implements OnInit {
 
   @Input()
   public rows: number = 2;
-
-  @Input()
-  public minHeight?: number;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
