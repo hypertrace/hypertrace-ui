@@ -46,7 +46,7 @@ describe('Textarea Component', () => {
     expect(disabled).toBe('true');
   });
 
-  test('should match the rowsCount with the number of rows in the textarea', () => {
+  test('should match the rows with the number of rows in the textarea', () => {
     const rows = 10;
 
     spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rows]="rows"></ht-textarea>`, {
