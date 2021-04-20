@@ -58,4 +58,17 @@ describe('Textarea Component', () => {
 
     expect((spectator.query('.textarea') as HTMLTextAreaElement).rows).toBe(rows);
   });
+
+  test('should match the min-height with the value received by parameter', () => {
+    const minHeight = 500;
+
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [minHeight]="minHeight"></ht-textarea>`, {
+      hostProps: {
+        placeholder: 'TEST',
+        minHeight: minHeight
+      }
+    });
+
+    expect((spectator.query('.textarea') as HTMLTextAreaElement).getAttribute('style')).toBe('min-height: 500px;');
+  });
 });
