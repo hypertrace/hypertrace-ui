@@ -45,4 +45,17 @@ describe('Textarea Component', () => {
 
     expect(disabled).toBe('true');
   });
+
+  test('should match the rows with the number of rows in the textarea', () => {
+    const rows = 10;
+
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rows]="rows"></ht-textarea>`, {
+      hostProps: {
+        placeholder: 'TEST',
+        rows: rows
+      }
+    });
+
+    expect((spectator.query('.textarea') as HTMLTextAreaElement).rows).toBe(rows);
+  });
 });

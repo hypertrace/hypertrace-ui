@@ -10,6 +10,7 @@ import { LoggerService } from '@hypertrace/common';
       <textarea
         class="textarea"
         matInput
+        [rows]="this.rows"
         [disabled]="this.disabled"
         [placeholder]="this.placeholder"
         [ngModel]="this.value"
@@ -28,6 +29,9 @@ export class TextareaComponent implements OnInit {
 
   @Input()
   public disabled: boolean | undefined;
+
+  @Input()
+  public rows: number = 2;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
