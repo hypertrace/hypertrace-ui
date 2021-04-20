@@ -241,13 +241,12 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
-            title: 'Duration',
-            width: '100px',
-            display: TracingTableCellType.Metric,
+            title: 'Errors',
+            width: '80px',
             filterable: true,
             value: {
               type: 'attribute-specification',
-              attribute: 'duration'
+              attribute: 'apiTraceErrorSpanCount'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
@@ -255,12 +254,13 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
-            title: 'Errors',
-            width: '80px',
+            title: 'Duration',
+            width: '100px',
+            display: TracingTableCellType.Metric,
             filterable: true,
             value: {
               type: 'attribute-specification',
-              attribute: 'apiTraceErrorSpanCount'
+              attribute: 'duration'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
