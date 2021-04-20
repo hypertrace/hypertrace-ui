@@ -31,7 +31,7 @@ export class TextareaComponent implements OnInit {
   public disabled: boolean | undefined;
 
   @Input()
-  public rows: number = -1;
+  public rows?: number;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
