@@ -60,7 +60,8 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       'protocolName',
       'spanTags',
       'startTime',
-      'type'
+      'type',
+      'errorCount'
     ];
   }
 
@@ -106,7 +107,8 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       name: span.displaySpanName as string,
       protocolName: span.protocolName as string,
       spanType: span.type as SpanType,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
+      errorCount: span.errorCount as number
     };
   }
 }

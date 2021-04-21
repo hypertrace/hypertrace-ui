@@ -42,7 +42,7 @@ export class WaterfallChartService {
           name: datum.name,
           serviceName: datum.serviceName,
           protocolName: datum.protocolName,
-          error: datum.tags?.error as boolean
+          error: datum.errorCount > 0
         },
         $$iconType: this.iconLookupService.forSpanType(datum.spanType)!,
         getChildren: () => of([]),
@@ -123,8 +123,8 @@ export class WaterfallChartService {
       const node = nodes.shift()!;
       let color;
 
-      if (node.tags?.error as boolean) {
-        // If span conatins an error
+      if (node.$$spanName.error) {
+        // If span contains an error
         color = Color.Red5;
       } else if (colorMap.has(node.serviceName)) {
         // ServiceName seen before. Use existing service color
