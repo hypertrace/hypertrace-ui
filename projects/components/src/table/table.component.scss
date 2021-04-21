@@ -1,6 +1,7 @@
 @import 'mixins';
 @import 'layout';
 
+$header-height: 32px;
 .table {
   position: relative;
   display: flex;
@@ -28,7 +29,7 @@
   flex-direction: row;
   position: sticky;
   top: 0;
-  height: 32px;
+  height: $header-height;
   background: $gray-1;
   border-bottom: 1px solid $gray-2;
   border-top-left-radius: 3px;
@@ -111,7 +112,8 @@
 }
 
 .state-watcher {
-  height: calc(100% - #{$paginator-height});
+  top: $header-height;
+  height: calc(100% - #{$header-height});
   width: 100%;
   position: absolute;
   background: transparent;
