@@ -1,0 +1,19 @@
+@import 'font';
+@import 'color-palette';
+
+:host {
+  overflow: hidden;
+}
+
+.string-enum-cell {
+  @include ellipsis-overflow();
+  @include body-1-regular($gray-7);
+
+  &.first-column {
+    @include body-1-medium($gray-9);
+  }
+}
+
+.clickable {
+  @include link-hover();
+}
