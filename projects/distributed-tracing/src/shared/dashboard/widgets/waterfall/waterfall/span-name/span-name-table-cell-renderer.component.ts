@@ -22,7 +22,7 @@ import { WaterfallTableCellType } from './span-name-cell-type';
         <span class="text" data-sensitive-pii>{{ this.value.name }}</span>
       </div>
       <ht-icon
-        *ngIf="this.value.error"
+        *ngIf="this.value.hasError"
         class="error-icon"
         icon="${IconType.Error}"
         size="${IconSize.Medium}"

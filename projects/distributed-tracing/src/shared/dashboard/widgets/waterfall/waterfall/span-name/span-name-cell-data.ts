@@ -3,5 +3,5 @@ export interface SpanNameCellData {
   protocolName: string;
   name: string;
   color?: string;
-  error?: boolean;
+  hasError?: boolean;
 }

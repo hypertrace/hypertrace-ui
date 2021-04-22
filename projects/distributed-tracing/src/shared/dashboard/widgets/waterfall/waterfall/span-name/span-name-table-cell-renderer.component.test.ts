@@ -45,7 +45,7 @@ describe('Span name table cell renderer component', () => {
     const spanNameDataWithColor = {
       ...spanNameData,
       color: 'blue',
-      error: true
+      hasError: true
     };
     const spectator = buildComponent({
       providers: [tableCellDataProvider(spanNameDataWithColor)]
