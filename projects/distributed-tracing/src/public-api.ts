@@ -73,6 +73,7 @@ export {
 } from './shared/graphql/model/schema/metrics/graphql-metric-aggregation-type';
 export * from './shared/graphql/model/schema/sort/graphql-sort-argument';
 export * from './shared/graphql/model/schema/sort/graphql-sort-direction';
+export * from './shared/graphql/model/schema/sort/graphql-sort-without-direction';
 export * from './shared/graphql/model/schema/sort/graphql-sort-by-specification';
 export * from './shared/graphql/model/schema/timerange/graphql-time-range';
 export * from './shared/graphql/model/schema/specifier/specification';

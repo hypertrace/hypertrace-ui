@@ -1,10 +1,9 @@
-import { Dictionary } from './../../../../../../../../common/src/utilities/types/types';
-import { GraphQlSortWithoutDirection } from './../../../../../../../../distributed-tracing/src/shared/graphql/model/schema/sort/graphql-sort-without-direction';
-import { DateCoercer } from '@hypertrace/common';
+import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   AttributeMetadataType,
   convertToGraphQlMetricAggregationType,
   GraphQlMetricAggregationType,
+  GraphQlSortWithoutDirection,
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
