@@ -433,7 +433,7 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: 'attribute-specification',
-              attribute: 'apiTraceErrorSpanCount'
+              attribute: 'errorCount'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
