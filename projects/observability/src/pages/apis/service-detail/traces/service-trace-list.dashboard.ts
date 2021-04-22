@@ -86,6 +86,19 @@ export const serviceTraceListDashboard = {
       },
       {
         type: 'table-widget-column',
+        title: 'Errors',
+        width: '80px',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'apiTraceErrorSpanCount'
+        },
+        'click-handler': {
+          type: 'api-trace-navigation-handler'
+        }
+      },
+      {
+        type: 'table-widget-column',
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,

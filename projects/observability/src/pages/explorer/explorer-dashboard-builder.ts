@@ -241,6 +241,19 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Errors',
+            width: '80px',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiTraceErrorSpanCount'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Duration',
             width: '100px',
             display: TracingTableCellType.Metric,
@@ -411,6 +424,19 @@ export class ExplorerDashboardBuilder {
             },
             'click-handler': {
               type: 'span-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Errors',
+            width: '80px',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'errorCount'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           },
           {

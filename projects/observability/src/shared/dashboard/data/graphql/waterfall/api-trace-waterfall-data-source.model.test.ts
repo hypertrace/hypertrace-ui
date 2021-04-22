@@ -98,6 +98,9 @@ describe('Api Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
             })
           ]
         }
@@ -156,6 +159,9 @@ describe('Api Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
             })
           ]
         }
