@@ -1,3 +1,5 @@
+import { Dictionary } from './../../../../../../../../common/src/utilities/types/types';
+import { GraphQlSortWithoutDirection } from './../../../../../../../../distributed-tracing/src/shared/graphql/model/schema/sort/graphql-sort-without-direction';
 import { DateCoercer } from '@hypertrace/common';
 import {
   AttributeMetadataType,
@@ -47,10 +49,17 @@ export class ExploreSpecificationBuilder {
         children: [{ path: 'value' }, { path: 'type' }]
       }),
       extractFromServerData: serverData => serverData[queryAlias],
-      asGraphQlOrderByFragment: () => ({
-        key: key,
-        aggregation: aggregation === undefined ? undefined : this.aggregationAsEnum(aggregation)
-      })
+      asGraphQlOrderByFragment: () => {
+        const fragment: GraphQlSortWithoutDirection & Dictionary<unknown> = {
+          key: key
+        };
+
+        if (aggregation !== undefined) {
+          fragment.aggregation = this.aggregationAsEnum(aggregation);
+        }
+
+        return fragment;
+      }
     };
   }
 
