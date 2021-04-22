@@ -30,7 +30,8 @@ describe('Waterfall Chart component', () => {
       requestBody: 'Request Body',
       responseHeaders: {},
       responseBody: 'Response Body',
-      tags: {}
+      tags: {},
+      errorCount: 0
     },
     {
       id: 'second-id',
@@ -50,7 +51,8 @@ describe('Waterfall Chart component', () => {
       requestBody: '',
       responseHeaders: {},
       responseBody: '',
-      tags: {}
+      tags: {},
+      errorCount: 0
     },
     {
       id: 'third-id',
@@ -70,7 +72,8 @@ describe('Waterfall Chart component', () => {
       requestBody: '',
       responseHeaders: {},
       responseBody: '',
-      tags: {}
+      tags: {},
+      errorCount: 0
     }
   ];
 

@@ -92,6 +92,9 @@ describe('Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'traceId'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
             })
           ]
         }
@@ -149,6 +152,9 @@ describe('Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'traceId'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
             })
           ]
         }
