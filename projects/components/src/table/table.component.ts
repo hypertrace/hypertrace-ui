@@ -144,7 +144,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
-          [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
+          [ngClass]="{
+            'selected-row': this.shouldHighlightRowAsSelection(row),
+            'hovered-row': this.isHoveredRow(row),
+            selectable: this.supportsRowSelection()
+          }"
           class="data-row"
         ></cdk-row>
 
@@ -695,6 +699,10 @@ export class TableComponent
 
   public hasMultiSelect(): boolean {
     return this.selectionMode === TableSelectionMode.Multiple;
+  }
+
+  public supportsRowSelection(): boolean {
+    return this.hasMultiSelect() || this.hasSingleSelect();
   }
 
   public isRowExpanded(row: StatefulTableRow): boolean {
