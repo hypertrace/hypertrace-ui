@@ -35,7 +35,6 @@ export const enum IconType {
   Dashboard = 'svg:dashboard',
   Debug = 'bug_report',
   Delete = 'delete',
-  Description = 'svg:page',
   Device = 'svg:device',
   Done = 'done',
   Edge = 'edge',
