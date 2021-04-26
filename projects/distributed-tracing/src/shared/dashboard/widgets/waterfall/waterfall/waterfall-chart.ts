@@ -22,6 +22,7 @@ export interface WaterfallData {
   responseHeaders?: Dictionary<unknown>;
   responseBody?: string;
   tags: Dictionary<unknown>;
+  errorCount: number;
 }
 
 export interface WaterfallDataNode extends WaterfallData, Omit<StatefulPrefetchedTreeTableRow, '$$state'> {

@@ -56,7 +56,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
     this.specificationBuilder.attributeSpecificationForKey('spanTags'),
     this.specificationBuilder.attributeSpecificationForKey('startTime'),
     this.specificationBuilder.attributeSpecificationForKey('type'),
-    this.specificationBuilder.attributeSpecificationForKey('traceId')
+    this.specificationBuilder.attributeSpecificationForKey('traceId'),
+    this.specificationBuilder.attributeSpecificationForKey('errorCount')
   ];
 
   public getData(): Observable<WaterfallData[]> {
@@ -100,7 +101,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       serviceName: span.serviceName as string,
       protocolName: span.protocolName as string,
       spanType: span.type as SpanType,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
+      errorCount: span.errorCount as number
     }));
   }
 }
