@@ -24,7 +24,7 @@ import {
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
@@ -144,7 +144,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
-          [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
+          [ngClass]="{
+            'selected-row': this.shouldHighlightRowAsSelection(row),
+            'hovered-row': this.isHoveredRow(row),
+            selectable: this.supportsRowSelection()
+          }"
           class="data-row"
         ></cdk-row>
 
@@ -168,7 +172,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
       >
         <ht-paginator
-          *htLetAsync="this.pagination$ as pagination"
+          *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
           [pageSize]="pagination?.pageSize"
@@ -335,9 +339,15 @@ export class TableComponent
   /*
    * Pagination
    */
-  public readonly pagination$: Observable<Partial<PageEvent> | undefined> = this.activatedRoute.queryParamMap.pipe(
-    map(params => this.getPagination(params))
-  );
+  // For pushing changes to the page explicitly
+  private readonly pageSubject: Subject<Partial<PageEvent>> = new Subject();
+  // When route, sort or filters change, reset pagination
+  public readonly paginationReset$: Observable<Partial<PageEvent>> = combineLatest([
+    this.activatedRoute.queryParamMap,
+    this.columnState$,
+    this.filters$
+  ]).pipe(map(([params]) => this.calculateDefaultPagination(params)));
+  public readonly currentPage$: Observable<Partial<PageEvent>> = merge(this.pageSubject, this.paginationReset$);
 
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
@@ -691,11 +701,16 @@ export class TableComponent
     return this.selectionMode === TableSelectionMode.Multiple;
   }
 
+  public supportsRowSelection(): boolean {
+    return this.hasMultiSelect() || this.hasSingleSelect();
+  }
+
   public isRowExpanded(row: StatefulTableRow): boolean {
     return this.hasExpandableRows() && row.$$state.expanded;
   }
 
   public onPageChange(pageEvent: PageEvent): void {
+    this.pageSubject.next(pageEvent);
     if (this.syncWithUrl) {
       this.navigationService.addQueryParametersToUrl({
         [TableComponent.PAGE_INDEX_URL_PARAM]: pageEvent.pageIndex,
@@ -711,7 +726,7 @@ export class TableComponent
     this.pageChange.emit(pageEvent);
   }
 
-  private getPagination(params: ParamMap): Partial<PageEvent> {
+  private calculateDefaultPagination(params: ParamMap): Partial<PageEvent> {
     return this.syncWithUrl
       ? {
           pageSize: new NumberCoercer({ defaultValue: this.pageSize }).coerce(
