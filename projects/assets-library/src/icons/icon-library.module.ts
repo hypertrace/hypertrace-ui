@@ -65,6 +65,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.MoreVertical, url: `${iconsRootPath}/more-vertical.svg` },
         { key: IconType.NoData, url: `${iconsRootPath}/no-data.svg` },
         { key: IconType.Node, url: `${iconsRootPath}/node.svg` },
+        { key: IconType.Note, url: `${iconsRootPath}/note.svg` },
         { key: IconType.OpenInNewTab, url: `${iconsRootPath}/open-in-new-tab.svg` },
         { key: IconType.Search, url: `${iconsRootPath}/search.svg` },
         { key: IconType.SidebarCollapse, url: `${iconsRootPath}/sidebar-collapse.svg` },
