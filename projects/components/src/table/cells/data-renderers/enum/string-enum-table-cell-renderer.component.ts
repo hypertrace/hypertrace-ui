@@ -13,7 +13,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div
       [ngClass]="{ clickable: this.clickable, 'first-column': this.isFirstColumn }"
       class="string-enum-cell"
-      [htTooltip]="this.value"
+      [htTooltip]="this.value | htDisplayStringEnum"
     >
       {{ this.value | htDisplayStringEnum }}
     </div>
