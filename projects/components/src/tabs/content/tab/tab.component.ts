@@ -10,4 +10,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../../content/content
 export class TabComponent extends ContentHolder {
   @Input()
   public label!: string;
+
+  @Input()
+  public subText?: string;
 }

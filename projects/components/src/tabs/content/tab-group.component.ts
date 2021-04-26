@@ -10,7 +10,16 @@ import { TabComponent } from './tab/tab.component';
       <mat-tab-group animationDuration="0ms" disableRipple (selectedTabChange)="this.activeTabIndex = $event.index">
         <mat-tab *ngFor="let tab of this.tabs; index as i">
           <ng-template mat-tab-label>
-            <div class="tab-label">{{ tab.label }}</div>
+            <div class="tab-label">
+              {{ tab.label }}
+              <div
+                *ngIf="tab.subText && tab.subText !== undefined"
+                [ngClass]="{ active: activeTabIndex === i }"
+                class="sub-text"
+              >
+                {{ tab.subText }}
+              </div>
+            </div>
             <div class="ink-bar" [ngClass]="{ active: activeTabIndex === i }"></div>
           </ng-template>
           <ng-template matTabContent>
