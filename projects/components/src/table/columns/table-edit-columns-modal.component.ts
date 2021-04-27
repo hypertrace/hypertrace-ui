@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ButtonRole } from '../../button/button';
+import { FilterAttribute } from '../../filtering/filter/filter-attribute';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { TableColumnConfigExtended } from '../table.service';
 
@@ -49,8 +50,12 @@ export class TableEditColumnsModalComponent {
     @Inject(MODAL_DATA) public readonly modalData: TableColumnConfigExtended[]
   ) {
     this.editColumns = this.modalData
-      .filter(column => (column.attribute?.type as string) !== '$$state')
+      .filter(column => !this.isMetaTypeColumn(column.attribute))
       .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+  }
+
+  private isMetaTypeColumn(attribute: FilterAttribute | undefined): boolean {
+    return attribute === undefined || attribute.type.startsWith('$$');
   }
 
   public isLastRemainingColumn(column: TableColumnConfigExtended): boolean {

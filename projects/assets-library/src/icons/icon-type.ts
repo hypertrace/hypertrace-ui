@@ -78,6 +78,7 @@ export const enum IconType {
   NoData = 'svg:noData',
   Node = 'node',
   None = 'none',
+  Note = 'svg:note',
   OpenInNewTab = 'svg:open-in-new-tab',
   PageView = 'pageview',
   Previous = 'navigate_before',
