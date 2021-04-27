@@ -115,7 +115,6 @@ export class SequenceChartComponent implements OnChanges {
       id: segment.id,
       start: segment.start - minStart,
       end: segment.end - minStart,
-      label: segment.label,
       color: segment.color
     }));
   }

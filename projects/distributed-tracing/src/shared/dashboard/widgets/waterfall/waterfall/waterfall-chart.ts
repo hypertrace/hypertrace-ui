@@ -13,9 +13,9 @@ export interface WaterfallData {
     value: number;
     units?: string;
   };
-  name: string;
   serviceName: string;
-  protocolName: string;
+  protocolName?: string;
+  apiName?: string;
   spanType: SpanType;
   requestHeaders?: Dictionary<unknown>;
   requestBody?: string;
