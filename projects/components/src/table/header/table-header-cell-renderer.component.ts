@@ -135,7 +135,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
       this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
-      this.isShowOptionButton = this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
+      this.isShowOptionButton =
+        this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
     }
   }
 
@@ -192,7 +193,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       return false;
     }
 
-    return this.availableColumns.some(column => this.isColumnEditable(column))
+    return this.availableColumns.some(column => this.isColumnEditable(column));
   }
 
   private isColumnEditable(columnConfig: TableColumnConfigExtended): boolean {
