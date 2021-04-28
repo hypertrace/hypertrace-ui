@@ -104,8 +104,8 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
         units: duration.units
       },
       serviceName: span.displayEntityName as string,
-      name: span.displaySpanName as string,
       protocolName: span.protocolName as string,
+      apiName: span.displaySpanName as string,
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number
