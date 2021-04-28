@@ -215,7 +215,7 @@ describe('Trace Waterfall data source model', () => {
               value: 1,
               units: 'ms'
             },
-            name: 'Span Name 1',
+            apiName: 'Span Name 1',
             serviceName: 'Service Name 1',
             protocolName: undefined,
             spanType: SpanType.Entry,
@@ -231,7 +231,7 @@ describe('Trace Waterfall data source model', () => {
               value: 2,
               units: 'ms'
             },
-            name: 'Span Name 2',
+            apiName: 'Span Name 2',
             serviceName: 'Service Name 2',
             protocolName: undefined,
             spanType: SpanType.Exit,

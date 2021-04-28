@@ -97,9 +97,9 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
         value: span.duration as number,
         units: duration.units
       },
-      name: span.displaySpanName as string,
       serviceName: span.serviceName as string,
       protocolName: span.protocolName as string,
+      apiName: span.displaySpanName as string,
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number

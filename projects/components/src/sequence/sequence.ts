@@ -5,7 +5,6 @@ export interface SequenceSegment {
   id: string;
   start: number;
   end: number;
-  label: string;
   color: string;
 }
 

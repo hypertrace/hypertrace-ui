@@ -19,7 +19,7 @@ import { WaterfallTableCellType } from './span-name-cell-type';
         <span class="text" data-sensitive-pii>{{ this.value.protocolName }}</span>
       </div>
       <div class="span-name">
-        <span class="text" data-sensitive-pii>{{ this.value.name }}</span>
+        <span class="text" data-sensitive-pii>{{ this.value.apiName }}</span>
       </div>
       <ht-icon
         *ngIf="this.value.hasError"
