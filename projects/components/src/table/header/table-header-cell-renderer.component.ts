@@ -43,6 +43,10 @@ import { TableColumnConfigExtended } from '../table.service';
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
 
+      <ng-template #htmlTooltip>
+        <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
+      </ng-template>
+
       <ng-template #optionsButton>
         <ht-popover class="options-button" [closeOnClick]="true">
           <ht-popover-trigger>
@@ -74,10 +78,6 @@ import { TableColumnConfigExtended } from '../table.service';
             </div>
           </ht-popover-content>
         </ht-popover>
-
-        <ng-template #htmlTooltip>
-          <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
-        </ng-template>
       </ng-template>
     </div>
   `
