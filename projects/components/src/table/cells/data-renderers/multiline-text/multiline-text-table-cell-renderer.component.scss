@@ -1,0 +1,6 @@
+@import 'font';
+@import 'color-palette';
+
+.multiline-text-cell {
+  @include body-1-regular($gray-7);
+}
