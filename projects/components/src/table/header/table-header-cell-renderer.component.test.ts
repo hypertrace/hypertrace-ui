@@ -113,9 +113,7 @@ describe('Table Header Cell Renderer', () => {
       }
     });
 
-    spectator.click('.options-button');
-    expect(spectator.query('.sort-ascending', { root: true })).not.toExist();
-    expect(spectator.query('.sort-descending', { root: true })).not.toExist();
+    expect(spectator.query('.options-button', { root: true })).not.toExist();
   });
 
   test('should create tooltip correctly', () => {
