@@ -35,13 +35,17 @@ import { TableColumnConfigExtended } from '../table.service';
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
     >
-      <ng-container *ngIf="this.leftAlignFilterButton">
+      <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
       <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">{{ this.columnConfig.title }}</div>
-      <ng-container *ngIf="!this.leftAlignFilterButton">
+      <ng-container *ngIf="this.isShowOptionButton && !this.leftAlignFilterButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
+
+      <ng-template #htmlTooltip>
+        <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
+      </ng-template>
 
       <ng-template #optionsButton>
         <ht-popover class="options-button" [closeOnClick]="true">
@@ -54,9 +58,9 @@ import { TableColumnConfigExtended } from '../table.service';
             <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
               <ng-container *ngIf="this.isFilterable">
                 <div class="popover-item" (click)="this.onFilterValues()" *ngIf="this.isFilterable">Filter Values</div>
-                <div class="popover-item-divider" *ngIf="this.columnConfig.sortable !== false || this.editable"></div>
               </ng-container>
               <ng-container *ngIf="this.columnConfig.sortable !== false">
+                <div class="popover-item-divider"></div>
                 <div class="popover-item sort-ascending" (click)="this.onSortChange(SORT_ASC)">
                   Sort Ascending
                   <ht-icon class="popover-item-icon" icon="${IconType.ArrowUp}" size="${IconSize.Small}"></ht-icon>
@@ -65,19 +69,15 @@ import { TableColumnConfigExtended } from '../table.service';
                   Sort Descending
                   <ht-icon class="popover-item-icon" icon="${IconType.ArrowDown}" size="${IconSize.Small}"></ht-icon>
                 </div>
-                <div class="popover-item-divider" *ngIf="this.editable"></div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable">
+              <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
+                <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
               </ng-container>
             </div>
           </ht-popover-content>
         </ht-popover>
-
-        <ng-template #htmlTooltip>
-          <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
-        </ng-template>
       </ng-template>
     </div>
   `
@@ -115,6 +115,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public classes: string[] = [];
 
   public isFilterable: boolean = false;
+  public isEditableAvailableColumns: boolean = false;
+  public isShowOptionButton: boolean = false;
 
   @ViewChild('htmlTooltip')
   public htmlTooltipTemplate?: TemplateRef<unknown>;
@@ -132,6 +134,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
+      this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
+      this.isShowOptionButton =
+        this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
     }
   }
 
@@ -181,6 +186,18 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       this.columnConfig.attribute !== undefined &&
       this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.columnConfig.attribute.type)
     );
+  }
+
+  private areAnyAvailableColumnsEditable(): boolean {
+    if (this.availableColumns === undefined) {
+      return false;
+    }
+
+    return this.availableColumns.some(column => this.isColumnEditable(column));
+  }
+
+  private isColumnEditable(columnConfig: TableColumnConfigExtended): boolean {
+    return columnConfig.editable === true;
   }
 
   public onFilterValues(): void {

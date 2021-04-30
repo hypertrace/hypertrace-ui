@@ -39,7 +39,7 @@ export class WaterfallChartService {
           children: []
         },
         $$spanName: {
-          name: datum.name,
+          apiName: datum.apiName,
           serviceName: datum.serviceName,
           protocolName: datum.protocolName,
           hasError: datum.errorCount > 0
@@ -88,7 +88,6 @@ export class WaterfallChartService {
           id: node.id,
           start: node.startTime,
           end: node.endTime,
-          label: node.name,
           color: node.color!
         });
 

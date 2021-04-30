@@ -8,7 +8,7 @@ describe('Span name table cell renderer component', () => {
   const spanNameData = {
     serviceName: 'test-entity',
     protocolName: 'test-protocol',
-    name: 'test-span-name'
+    apiName: 'test-span-name'
   };
 
   const buildComponent = createComponentFactory({
@@ -30,7 +30,7 @@ describe('Span name table cell renderer component', () => {
   test('should render span name without color and error icon and build tooltip ', () => {
     const spectator = buildComponent();
 
-    const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.name}`;
+    const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.apiName}`;
 
     expect(spectator.component.value).toEqual(spanNameData);
     expect(spectator.component.tooltip).toEqual(tooltip);
@@ -51,7 +51,7 @@ describe('Span name table cell renderer component', () => {
       providers: [tableCellDataProvider(spanNameDataWithColor)]
     });
 
-    const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.name}`;
+    const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.apiName}`;
 
     expect(spectator.component.value).toEqual(spanNameDataWithColor);
     expect(spectator.component.tooltip).toEqual(tooltip);

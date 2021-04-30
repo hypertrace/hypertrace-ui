@@ -1,7 +1,7 @@
 export interface SpanNameCellData {
   serviceName: string;
-  protocolName: string;
-  name: string;
+  protocolName?: string;
+  apiName?: string;
   color?: string;
   hasError?: boolean;
 }

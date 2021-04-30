@@ -103,14 +103,14 @@ export class TraceDetailService implements OnDestroy {
   private buildTimeString(trace: Trace, units: string): string {
     return `${new DateFormatter({ mode: DateFormatMode.DateAndTimeWithSeconds }).format(
       trace.startTime as number
-    )} for ${trace.duration as string} ${units}`;
+    )} for ${trace.duration as string} ${units ?? ''}`.trim();
   }
 
   private buildTitleString(trace: Trace): string {
     if (trace.spans?.length === 1) {
       const entrySpan = trace.spans[0];
 
-      return `${entrySpan.serviceName as string} ${entrySpan.displaySpanName as string}`;
+      return `${entrySpan.serviceName as string} ${(entrySpan.displaySpanName as string) ?? ''}`.trim();
     }
 
     return '';

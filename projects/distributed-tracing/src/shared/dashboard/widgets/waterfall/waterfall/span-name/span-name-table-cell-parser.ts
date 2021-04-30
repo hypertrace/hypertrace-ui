@@ -11,7 +11,7 @@ export class SpanNameTableCellParser extends TableCellParserBase<SpanNameCellDat
   }
 
   public parseTooltip(cellData: SpanNameCellData): string {
-    return `${cellData.serviceName} ${cellData.protocolName} ${cellData.name}`;
+    return `${cellData.serviceName} ${cellData.protocolName ?? ''} ${cellData.apiName ?? ''}`.trim();
   }
 
   public parseFilterValue(): undefined {
