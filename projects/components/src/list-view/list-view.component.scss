@@ -1,4 +1,17 @@
+@import 'font';
 @import 'color-palette';
+
+$key-width: 40%;
+$value-width: 60%;
+$margin-left: 12px;
+
+@mixin grid-view {
+  width: 100%;
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: $key-width $value-width;
+  align-content: center;
+}
 
 .list-view {
   height: 100%;
@@ -7,67 +20,38 @@
   display: flex;
   flex-direction: column;
 
-  .header {
-    flex: 0 0 auto;
+  .header-row {
+    @include grid-view();
     height: 32px;
-    width: 100%;
-    padding: 8px 0;
     background: $gray-1;
     box-shadow: inset 0px -1px 0px $gray-2;
     border-radius: 6px 6px 0px 0px;
-    display: flex;
-    align-items: center;
 
-    .header-key {
-      flex: 1 1 auto;
-      font-weight: 600;
-      font-size: 12px;
-      line-height: 14px;
-      margin-left: 12px;
-      text-transform: uppercase;
-    }
-    .header-key:nth-child(1) {
-      width: 40%;
-    }
-    .header-key:nth-child(2) {
-      width: 60%;
+    .header-key-label,
+    .header-value-label {
+      @include overline;
+      margin-left: $margin-left;
+      width: 100%;
     }
   }
 
   .data-row {
-    flex: 0 0 auto;
+    @include grid-view();
+    @include font-placeholder();
+    color: $gray-9;
     min-height: 40px;
-    width: 100%;
     word-break: break-word;
-    padding: 8px 0;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 15px;
-    font-style: normal;
-    line-height: 18px;
-
-    .key {
-      flex: 1 1 auto;
-      height: 100%;
-      width: 40%;
-      display: flex;
-      align-items: center;
-      margin-left: 12px;
-      font-weight: 500;
-    }
-
+    .key,
     .value {
-      flex: 1 1 auto;
       height: 100%;
-      width: 60%;
+      width: 100%;
       display: flex;
       align-items: center;
-      margin-left: 12px;
-
-      /* identical to box height, or 120% */
-      letter-spacing: -0.01em;
+      margin-left: $margin-left;
+    }
+    .key {
+      font-weight: 500;
     }
   }
 

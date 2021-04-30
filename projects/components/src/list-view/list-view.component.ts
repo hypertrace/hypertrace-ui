@@ -6,9 +6,12 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="list-view">
-      <div *ngIf="this.headerKeys && this.headerKeys.length === 2" class="header">
-        <div class="header-key" *ngFor="let headerKey of this.headerKeys">
-          <span>{{ this.headerKey }}</span>
+      <div *ngIf="this.header" class="header-row">
+        <div class="header-key-label">
+          <span>{{ this.header.keyLabel }}</span>
+        </div>
+        <div class="header-value-label">
+          <span>{{ this.header.valueLabel }}</span>
         </div>
       </div>
       <div class="data-row" *ngFor="let record of this.records">
@@ -24,10 +27,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class ListViewComponent {
   @Input()
-  public headerKeys?: [string, string];
+  public header?: ListViewHeader;
 
   @Input()
   public records?: ListViewRecord[];
+}
+
+export interface ListViewHeader {
+  keyLabel: string;
+  valueLabel: string;
 }
 
 export interface ListViewRecord {
