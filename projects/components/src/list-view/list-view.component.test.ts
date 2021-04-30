@@ -6,7 +6,7 @@ import { ListViewComponent, ListViewRecord } from './list-view.component';
 describe('List View Component', () => {
   @Component({
     selector: 'ht-test-host-component',
-    template: ` <ht-list-view [records]="this.records"></ht-list-view> `
+    template: ` <ht-list-view [records]="this.records" [headerKeys]="this.headerKeys"></ht-list-view> `
   })
   class TestHostComponent {
     public records: ListViewRecord[] = [
@@ -19,6 +19,8 @@ describe('List View Component', () => {
         value: 'Response 2'
       }
     ];
+
+    public headerKeys: [string, string] = ['key1', 'key2'];
   }
 
   let fixture: ComponentFixture<TestHostComponent>;
@@ -34,10 +36,19 @@ describe('List View Component', () => {
     hostComp = fixture.componentInstance;
   });
 
-  test('should display rows for each data', () => {
+  test('should display rows for each data and should display header', () => {
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
+
+    const headerElement = element.querySelector<HTMLElement>('.header');
+    expect(headerElement).not.toBeNull();
+
+    const headerKeyElements = element.querySelectorAll<HTMLElement>('.header-key');
+    expect(headerKeyElements).not.toBeNull();
+    expect(headerKeyElements.length).toBe(2);
+    expect(headerKeyElements[0].textContent).toEqual(hostComp.headerKeys[0]);
+    expect(headerKeyElements[1].textContent).toEqual(hostComp.headerKeys[1]);
 
     const rowElements = element.querySelectorAll<HTMLElement>('.data-row');
     expect(rowElements).not.toBeNull();
