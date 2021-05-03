@@ -42,10 +42,8 @@ export const isInactiveEntity = (row: TableRow): boolean | undefined => {
   return !hasValidMaxEndTimeTimestamp(maxEndTimeAggregation.value);
 };
 
-const includesMaxEndTimeAggregation = (maxEndTimeAggregation?: unknown): maxEndTimeAggregation is MetricAggregation => {
-  return maxEndTimeAggregation !== undefined;
-};
+const includesMaxEndTimeAggregation = (maxEndTimeAggregation?: unknown): maxEndTimeAggregation is MetricAggregation =>
+  maxEndTimeAggregation !== undefined;
 
-const hasValidMaxEndTimeTimestamp = (maxEndTime?: unknown): maxEndTime is number => {
-  return maxEndTime !== undefined && isNumber(maxEndTime);
-};
+const hasValidMaxEndTimeTimestamp = (maxEndTime?: unknown): maxEndTime is number =>
+  maxEndTime !== undefined && isNumber(maxEndTime);
