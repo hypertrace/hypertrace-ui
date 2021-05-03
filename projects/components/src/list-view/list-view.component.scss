@@ -20,8 +20,11 @@ $margin-left: 12px;
   display: flex;
   flex-direction: column;
 
-  .header-row {
+  & > * {
     @include grid-view();
+  }
+
+  .header-row {
     height: 32px;
     background: $gray-1;
     box-shadow: inset 0px -1px 0px $gray-2;
@@ -36,7 +39,6 @@ $margin-left: 12px;
   }
 
   .data-row {
-    @include grid-view();
     @include font-placeholder();
     color: $gray-9;
     min-height: 40px;
