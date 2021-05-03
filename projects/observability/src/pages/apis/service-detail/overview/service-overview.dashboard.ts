@@ -527,7 +527,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             title: 'Dependency Graph',
             data: {
               type: 'topology-data-source',
-              'downstream-entities': ['API', 'BACKEND'],
+              'downstream-entities': ['SERVICE', 'BACKEND'],
               entity: 'SERVICE',
               'node-metrics': [
                 {
