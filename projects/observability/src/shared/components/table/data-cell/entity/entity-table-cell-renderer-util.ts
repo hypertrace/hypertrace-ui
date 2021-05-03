@@ -1,4 +1,7 @@
 import { Dictionary } from '@hypertrace/common';
+import { TableRow } from '@hypertrace/components';
+import { MetricAggregation } from '@hypertrace/distributed-tracing';
+import { isNumber } from 'lodash-es';
 import { Entity, Interaction } from '../../../../graphql/model/schema/entity';
 import { EntitySpecificationBuilder } from '../../../../graphql/request/builders/specification/entity/entity-specification-builder';
 
@@ -27,3 +30,22 @@ export const parseEntityFromTableRow = (cell: Entity | undefined, row: Dictionar
 };
 
 const isInteraction = (neighbor: unknown): neighbor is Interaction => typeof neighbor === 'object';
+
+export const isInactiveEntity = (row: TableRow): boolean | undefined => {
+  const maxEndTimeAggregation = row['max(endTime)']; // Ew.
+
+  if (!includesMaxEndTimeAggregation(maxEndTimeAggregation)) {
+    // If the aggregation wasn't fetched, we have no way of knowing if this Entity is inactive.
+    return undefined;
+  }
+
+  return !hasValidMaxEndTimeTimestamp(maxEndTimeAggregation.value);
+};
+
+const includesMaxEndTimeAggregation = (maxEndTimeAggregation?: unknown): maxEndTimeAggregation is MetricAggregation => {
+  return maxEndTimeAggregation !== undefined;
+};
+
+const hasValidMaxEndTimeTimestamp = (maxEndTime?: unknown): maxEndTime is number => {
+  return maxEndTime !== undefined && isNumber(maxEndTime);
+};
