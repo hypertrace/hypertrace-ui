@@ -78,6 +78,7 @@ import { TableWidgetModel } from './table-widget.model';
           [filters]="this.combinedFilters$ | async"
           [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"
+          [resizable]="this.api.model.isResizable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
           (selectionsChange)="this.onRowSelection($event)"

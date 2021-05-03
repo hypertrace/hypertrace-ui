@@ -81,13 +81,15 @@ $header-height: 32px;
   .header-column-resize-handle {
     padding: 6px 2px;
     height: 100%;
-    cursor: col-resize;
 
-    &:hover {
-      padding: 0 2px;
+    &.resizable {
+      cursor: col-resize;
+      &:hover {
+        padding: 0 2px;
 
-      .header-column-divider {
-        background-color: $gray-9;
+        .header-column-divider {
+          background-color: $gray-9;
+        }
       }
     }
 
