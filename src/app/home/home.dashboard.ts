@@ -406,7 +406,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             type: 'cartesian-widget',
             title: 'Latency',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
@@ -482,7 +482,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             type: 'cartesian-widget',
             title: 'Calls',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
@@ -559,7 +559,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             type: 'cartesian-widget',
             title: 'Errors',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
