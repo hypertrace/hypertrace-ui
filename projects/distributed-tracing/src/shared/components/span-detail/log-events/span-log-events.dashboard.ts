@@ -1,5 +1,5 @@
 import { TableMode, TableStyle } from '@hypertrace/components';
-import { ObservabilityTableCellType } from '@hypertrace/observability';
+import { ObservabilityTableCellType } from '../../../../../../observability/src/shared/components/table/observability-table-cell-type';
 
 export const spanLogEventsDashboard = {
   location: 'SPAN_LOG_EVENTS',
