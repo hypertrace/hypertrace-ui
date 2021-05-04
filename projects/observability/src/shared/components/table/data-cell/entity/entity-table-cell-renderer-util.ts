@@ -39,7 +39,7 @@ export const isInactiveEntity = (row: TableRow): boolean | undefined => {
     return undefined;
   }
 
-  return metricAggregations.some(metricAggregation => !isValidMetricAggregation(metricAggregation));
+  return metricAggregations.every(metricAggregation => !isValidMetricAggregation(metricAggregation));
 };
 
 const filterMetricAggregations = (row: TableRow): MetricAggregation[] => Object.values(row).filter(isMetricAggregation);
