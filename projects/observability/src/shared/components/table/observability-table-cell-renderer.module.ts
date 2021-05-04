@@ -8,6 +8,7 @@ import { EntityTableCellParser } from './data-cell/entity/entity-table-cell-pars
 import { EntityTableCellRendererComponent } from './data-cell/entity/entity-table-cell-renderer.component';
 import { EntityTableCellRendererModule } from './data-cell/entity/entity-table-cell-renderer.module';
 import { ExitCallsTableCellRendererComponent } from './data-cell/exit-calls/exit-calls-table-cell-renderer.component';
+import { LogTimestampTableCellRendererComponent } from './data-cell/log-timestamp/log-timestamp-table-cell-renderer.component';
 
 @NgModule({
   imports: [
@@ -16,13 +17,14 @@ import { ExitCallsTableCellRendererComponent } from './data-cell/exit-calls/exit
     TableModule.withCellRenderers([
       EntityTableCellRendererComponent,
       BackendIconTableCellRendererComponent,
-      ExitCallsTableCellRendererComponent
+      ExitCallsTableCellRendererComponent,
+      LogTimestampTableCellRendererComponent
     ]),
     EntityTableCellRendererModule,
     BackendIconTableCellRendererModule,
     TooltipModule
   ],
-  declarations: [ExitCallsTableCellRendererComponent],
+  declarations: [ExitCallsTableCellRendererComponent, LogTimestampTableCellRendererComponent],
   exports: [ExitCallsTableCellRendererComponent]
 })
 export class ObservabilityTableCellRendererModule {}

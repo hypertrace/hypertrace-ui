@@ -1,0 +1,7 @@
+@import 'font';
+
+.content {
+  @include body-2-regular();
+  margin-left: 175px;
+  margin-top: 15px;
+}
