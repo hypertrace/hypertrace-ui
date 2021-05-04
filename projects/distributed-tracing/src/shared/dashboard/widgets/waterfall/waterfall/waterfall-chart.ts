@@ -41,9 +41,9 @@ export interface WaterfallChartState {
 
 export interface LogEvent {
   [key: string]: unknown;
-  traceId?: string;
-  spanId?: string;
-  attributes?: Dictionary<unknown>;
-  timestamp?: string;
-  summary?: string;
+  traceId: string;
+  spanId: string;
+  attributes: Dictionary<unknown>;
+  timestamp: string;
+  summary: string;
 }
