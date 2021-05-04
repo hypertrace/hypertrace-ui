@@ -80,6 +80,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               <div
                 *ngIf="index !== 0"
                 class="header-column-resize-handle"
+                [ngClass]="{ resizable: this.resizable }"
                 (mousedown)="this.onResizeMouseDown($event, index)"
               >
                 <div class="header-column-divider"></div>
@@ -246,6 +247,9 @@ export class TableComponent
 
   @Input()
   public pageable?: boolean = true;
+
+  @Input()
+  public resizable?: boolean = true;
 
   @Input()
   public detailContent?: TemplateRef<{ row: StatefulTableRow }>;
@@ -426,15 +430,17 @@ export class TableComponent
   }
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
-    this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
+    if (this.resizable) {
+      this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
 
-    this.resizeColumns = {
-      left: this.buildColumnInfo(index - 1),
-      right: this.buildColumnInfo(index)
-    };
+      this.resizeColumns = {
+        left: this.buildColumnInfo(index - 1),
+        right: this.buildColumnInfo(index)
+      };
 
-    this.resizeStartX = event.clientX;
-    event.preventDefault();
+      this.resizeStartX = event.clientX;
+      event.preventDefault();
+    }
   }
 
   @HostListener('mousemove', ['$event'])
