@@ -49,7 +49,7 @@ import { SpanDetailLayoutStyle } from './span-detail-layout-style';
         <ht-tab *ngIf="this.showLogEventstab" label="Logs" [badge]="this.totalLogEvents">
           <ht-span-log-events
             [logEvents]="this.spanData?.logEvents"
-            [startTime]="this.spanData?.startTime"
+            [startTime]="this.spanData?.traceStartTime"
           ></ht-span-log-events>
         </ht-tab>
       </ht-tab-group>
