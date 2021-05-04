@@ -13,7 +13,7 @@ import {
   TRACE_GQL_REQUEST
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
-import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
+import { LogEvent, WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 @Model({
@@ -60,6 +60,14 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
     this.specificationBuilder.attributeSpecificationForKey('errorCount')
   ];
 
+  protected readonly logEventSpecifications: Specification[] = [
+    this.specificationBuilder.attributeSpecificationForKey('traceId'),
+    this.specificationBuilder.attributeSpecificationForKey('attributes'),
+    this.specificationBuilder.attributeSpecificationForKey('timestamp'),
+    this.specificationBuilder.attributeSpecificationForKey('spanId'),
+    this.specificationBuilder.attributeSpecificationForKey('summary')
+  ];
+
   public getData(): Observable<WaterfallData[]> {
     return combineLatest([this.getTraceData(), this.getDurationAttribute()]).pipe(
       map(combinedData => this.mapResponseObject(combinedData[0], combinedData[1]))
@@ -73,7 +81,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanLimit: 1000,
       timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
-      spanProperties: this.spanSpecifications
+      spanProperties: this.spanSpecifications,
+      logEventProperties: this.logEventSpecifications
     });
   }
 
@@ -102,7 +111,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       apiName: span.displaySpanName as string,
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
-      errorCount: span.errorCount as number
+      errorCount: span.errorCount as number,
+      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results
     }));
   }
 }

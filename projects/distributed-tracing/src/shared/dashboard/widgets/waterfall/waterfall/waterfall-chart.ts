@@ -23,6 +23,7 @@ export interface WaterfallData {
   responseBody?: string;
   tags: Dictionary<unknown>;
   errorCount: number;
+  logEvents?: LogEvent[];
 }
 
 export interface WaterfallDataNode extends WaterfallData, Omit<StatefulPrefetchedTreeTableRow, '$$state'> {
@@ -36,4 +37,13 @@ export interface WaterfallChartState {
   parent?: WaterfallDataNode;
   children: WaterfallDataNode[];
   expanded: boolean;
+}
+
+export interface LogEvent {
+  [key: string]: unknown;
+  traceId?: string;
+  spanId?: string;
+  attributes?: Dictionary<unknown>;
+  timestamp?: string;
+  summary?: string;
 }

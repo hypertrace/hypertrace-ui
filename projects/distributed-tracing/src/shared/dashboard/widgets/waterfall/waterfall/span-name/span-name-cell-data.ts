@@ -4,4 +4,5 @@ export interface SpanNameCellData {
   apiName?: string;
   color?: string;
   hasError?: boolean;
+  hasLogs?: boolean;
 }

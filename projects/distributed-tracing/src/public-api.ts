@@ -102,6 +102,7 @@ export { WaterfallData } from './shared/dashboard/widgets/waterfall/waterfall/wa
 export { TraceWaterfallDataSourceModel } from './shared/dashboard/data/graphql/waterfall/trace-waterfall-data-source.model';
 export { traceDetailDashboard } from './pages/trace-detail/trace-detail.dashboard';
 export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page.component';
+export { LogEvent } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 
 // Datasources
 export * from './shared/dashboard/widgets/trace-detail/data/trace-detail-data-source.model';
