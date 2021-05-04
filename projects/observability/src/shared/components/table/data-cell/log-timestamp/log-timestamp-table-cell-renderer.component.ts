@@ -33,7 +33,7 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   parser: CoreTableCellParserType.NoOp
 })
 export class LogTimestampTableCellRendererComponent extends TableCellRendererBase<string> implements OnInit {
-  public readonly traceStartTime: number;
+  public readonly spanStartTime: number;
   public readonly timestamp?: string;
   public readonly duration?: string;
   public readonly readableDateTime?: string;
@@ -49,7 +49,7 @@ export class LogTimestampTableCellRendererComponent extends TableCellRendererBas
     @Inject(TABLE_ROW_DATA) rowData: LogEvent
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    this.traceStartTime = rowData.traceStartTime as number;
+    this.spanStartTime = rowData.spanStartTime as number;
     this.timestamp = rowData.timestamp;
     this.readableDateTime =
       this.timestamp
@@ -60,7 +60,7 @@ export class LogTimestampTableCellRendererComponent extends TableCellRendererBas
 
     const date: Date = this.dateCoercer.coerce(this.timestamp) ?? new Date();
     const decimalMilliseconds: string = this.getDecimalMilliSeconds(this.timestamp, 2);
-    this.duration = date.getTime() - this.traceStartTime + decimalMilliseconds + ' ms';
+    this.duration = date.getTime() - this.spanStartTime + decimalMilliseconds + ' ms';
   }
 
   private getDecimalMilliSeconds(timestamp: string = '', precision: number): string {
