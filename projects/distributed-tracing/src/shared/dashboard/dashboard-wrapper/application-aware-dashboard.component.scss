@@ -1,7 +1,7 @@
 @import 'layout';
 
 .application-aware-dashboard {
-  @include scrollable-container(24px, 24px, 4px);
+  @include scrollable-container(24px, 4px, 4px);
 
   .model-editor {
     padding: 12px;
