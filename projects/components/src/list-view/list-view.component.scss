@@ -20,7 +20,8 @@ $margin-left: 12px;
   display: flex;
   flex-direction: column;
 
-  & > * {
+  .header-row,
+  .data-row {
     @include grid-view();
   }
 
