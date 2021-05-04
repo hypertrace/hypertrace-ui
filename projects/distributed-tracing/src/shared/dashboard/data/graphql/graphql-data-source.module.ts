@@ -14,6 +14,7 @@ import { EnrichedAttributeSpecificationModel } from './specifiers/enriched-attri
 import { FieldSpecificationModel } from './specifiers/field-specification.model';
 import { MappedAttributeSpecificationModel } from './specifiers/mapped-attribute-specification.model';
 import { TraceStatusSpecificationModel } from './specifiers/trace-status-specification.model';
+import { LogEventsDataSourceModel } from './table/log-events/log-events-data-source.model';
 import { SpansTableDataSourceModel } from './table/spans/spans-table-data-source.model';
 import { TracesTableDataSourceModel } from './table/traces/traces-table-data-source.model';
 import { TraceDataSourceModel } from './trace/trace-data-source.model';
@@ -32,6 +33,7 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         GraphqlIdScopeFilterModel,
         SpansTableDataSourceModel,
         TracesTableDataSourceModel,
+        LogEventsDataSourceModel,
         SpanDataSourceModel,
         TableWidgetColumnModel,
         TraceDataSourceModel,
