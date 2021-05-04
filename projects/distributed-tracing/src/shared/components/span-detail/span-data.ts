@@ -14,6 +14,5 @@ export interface SpanData {
   requestUrl: string;
   exitCallsBreakup?: Dictionary<string>;
   startTime?: number;
-  traceStartTime?: number;
   logEvents?: LogEvent[];
 }
