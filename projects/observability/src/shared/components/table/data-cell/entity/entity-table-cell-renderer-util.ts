@@ -1,7 +1,7 @@
 import { Dictionary } from '@hypertrace/common';
 import { TableRow } from '@hypertrace/components';
-import { MetricAggregation } from '@hypertrace/distributed-tracing';
-import { isNumber } from 'lodash-es';
+import { isMetricAggregation, MetricAggregation } from '@hypertrace/distributed-tracing';
+import { isNull } from 'lodash-es';
 import { Entity, Interaction } from '../../../../graphql/model/schema/entity';
 import { EntitySpecificationBuilder } from '../../../../graphql/request/builders/specification/entity/entity-specification-builder';
 
@@ -32,18 +32,17 @@ export const parseEntityFromTableRow = (cell: Entity | undefined, row: Dictionar
 const isInteraction = (neighbor: unknown): neighbor is Interaction => typeof neighbor === 'object';
 
 export const isInactiveEntity = (row: TableRow): boolean | undefined => {
-  const maxEndTimeAggregation = row['max(endTime)']; // Ew.
+  const metricAggregations = filterMetricAggregations(row);
 
-  if (!includesMaxEndTimeAggregation(maxEndTimeAggregation)) {
-    // If the aggregation wasn't fetched, we have no way of knowing if this Entity is inactive.
+  if (metricAggregations.length === 0) {
+    // If an aggregation wasn't fetched, we have no way of knowing if this Entity is inactive.
     return undefined;
   }
 
-  return !hasValidMaxEndTimeTimestamp(maxEndTimeAggregation.value);
+  return metricAggregations.some(metricAggregation => !isValidMetricAggregation(metricAggregation));
 };
 
-const includesMaxEndTimeAggregation = (maxEndTimeAggregation?: unknown): maxEndTimeAggregation is MetricAggregation =>
-  maxEndTimeAggregation !== undefined;
+const filterMetricAggregations = (row: TableRow): MetricAggregation[] =>
+  Object.values(row).filter(value => isMetricAggregation(value)) as MetricAggregation[];
 
-const hasValidMaxEndTimeTimestamp = (maxEndTime?: unknown): maxEndTime is number =>
-  maxEndTime !== undefined && isNumber(maxEndTime);
+const isValidMetricAggregation = (metricAggregation: MetricAggregation): boolean => !isNull(metricAggregation.value);
