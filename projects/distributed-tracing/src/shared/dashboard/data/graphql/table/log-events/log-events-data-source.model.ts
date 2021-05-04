@@ -1,5 +1,5 @@
 import { TableDataResponse, TableDataSource, TableRow } from '@hypertrace/components';
-import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
 import { LogEvent } from '../../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
@@ -18,9 +18,9 @@ export class LogEventsDataSourceModel extends GraphQlDataSourceModel<TableDataSo
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: STRING_PROPERTY.type
+    type: NUMBER_PROPERTY.type
   })
-  public startTime?: string;
+  public startTime?: number;
 
   public getData(): Observable<TableDataSource<TableRow>> {
     return of({
