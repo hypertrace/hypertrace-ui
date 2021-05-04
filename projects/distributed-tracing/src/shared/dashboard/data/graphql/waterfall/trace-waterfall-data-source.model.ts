@@ -112,6 +112,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
+      traceStartTime: this.startTime as number,
       logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results
     }));
   }
