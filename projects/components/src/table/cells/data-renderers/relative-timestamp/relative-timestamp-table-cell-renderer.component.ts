@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { DateCoercer, DateFormatMode, DateFormatOptions } from '@hypertrace/common';
+import { DateCoercer, DateFormatMode, DateFormatOptions, Dictionary } from '@hypertrace/common';
 import { TableColumnConfig } from '../../../table-api';
 import {
   TABLE_CELL_DATA,
@@ -15,8 +15,7 @@ import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type
 import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-type';
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
-export interface RowData {
-  [key: string]: unknown;
+export interface RowData extends Dictionary<unknown> {
   baseTimestamp: DateOrNumber;
 }
 

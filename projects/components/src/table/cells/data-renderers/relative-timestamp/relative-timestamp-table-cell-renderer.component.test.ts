@@ -1,3 +1,4 @@
+import { DisplayDatePipe } from '@hypertrace/common';
 import {
   TableCellNoOpParser,
   tableCellProviders,
@@ -5,14 +6,14 @@ import {
   TooltipDirective
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { MockComponent } from 'ng-mocks';
+import { MockComponent, MockPipe } from 'ng-mocks';
 import { tableCellDataProvider } from '../../test/cell-providers';
 import {
   RelativeTimestampTableCellRendererComponent,
   RowData
 } from './relative-timestamp-table-cell-renderer.component';
 
-describe('log timestamp table cell renderer component', () => {
+describe('relative timestamp table cell renderer component', () => {
   const buildComponent = createComponentFactory({
     component: RelativeTimestampTableCellRendererComponent,
     providers: [
@@ -23,7 +24,7 @@ describe('log timestamp table cell renderer component', () => {
         new TableCellNoOpParser(undefined!)
       )
     ],
-    declarations: [MockComponent(TooltipDirective)],
+    declarations: [MockComponent(TooltipDirective), MockPipe(DisplayDatePipe)],
     shallow: true
   });
 
