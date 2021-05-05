@@ -45,7 +45,7 @@ export class RelativeTimestampTableCellRendererComponent extends TableCellRender
     mode: DateFormatMode.DateAndTimeWithSeconds
   };
   public readonly duration: number;
-  private dateCoercer: DateCoercer = new DateCoercer();
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
