@@ -1,6 +1,6 @@
 @import 'font';
 
-.log-timestamp {
+.relative-timestamp {
   @include ellipsis-overflow();
 
   &.first-column {
