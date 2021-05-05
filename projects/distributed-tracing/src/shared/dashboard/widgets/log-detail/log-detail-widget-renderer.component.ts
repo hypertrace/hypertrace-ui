@@ -3,6 +3,7 @@ import { Dictionary } from '@hypertrace/common';
 import { ListViewHeader, ListViewRecord } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
+import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { LogDetailWidgetModel } from './log-detail-widget.model';
 
@@ -29,7 +30,7 @@ export class LogDetailWidgetRendererComponent extends WidgetRenderer<LogDetailWi
   }
 
   public getLogEventAttributeRecords(attributes: Dictionary<unknown>): ListViewRecord[] {
-    if (Boolean(attributes)) {
+    if (!isEmpty(attributes)) {
       return Object.entries(attributes).map((attribute: [string, unknown]) => ({
         key: attribute[0],
         value: attribute[1] as string | number
