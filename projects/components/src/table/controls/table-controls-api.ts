@@ -10,23 +10,23 @@ export const enum TableControlOptionType {
 
 export type TableControlOption = TableUnsetControlOption | TableFilterControlOption | TablePropertyControlOption;
 
-export type TableFilterControlOption = {
+export interface TableFilterControlOption {
   type: TableControlOptionType.Filter;
   label: string;
   metaValue: TableFilter;
-};
+}
 
-export type TableUnsetControlOption = {
+export interface TableUnsetControlOption {
   type: TableControlOptionType.Unset;
   label: string;
   metaValue: string;
-};
+}
 
-export type TablePropertyControlOption = {
+export interface TablePropertyControlOption {
   type: TableControlOptionType.Property;
   label: string;
   metaValue: Dictionary<unknown>;
-};
+}
 
 /*
  * Select Control

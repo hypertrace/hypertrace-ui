@@ -93,6 +93,7 @@ import {
 })
 export class TableControlsComponent implements OnChanges {
   public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
+
   @Input()
   public searchEnabled?: boolean;
 
