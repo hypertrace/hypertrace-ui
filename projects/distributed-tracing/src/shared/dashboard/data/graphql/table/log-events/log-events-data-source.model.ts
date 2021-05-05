@@ -31,7 +31,7 @@ export class LogEventsDataSourceModel extends GraphQlDataSourceModel<TableDataSo
 
   private tableDataResponse(logEventData: LogEvent[]): TableDataResponse<TableRow> {
     return {
-      data: logEventData.map((logEvent: LogEvent) => ({ ...logEvent, spanStartTime: this.startTime })) as TableRow[],
+      data: logEventData.map((logEvent: LogEvent) => ({ ...logEvent, baseTimestamp: this.startTime })) as TableRow[],
       totalCount: logEventData.length
     };
   }

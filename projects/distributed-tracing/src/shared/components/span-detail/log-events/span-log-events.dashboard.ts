@@ -1,5 +1,4 @@
-import { TableMode, TableStyle } from '@hypertrace/components';
-import { ObservabilityTableCellType } from '@hypertrace/observability';
+import { CoreTableCellRendererType, TableMode, TableStyle } from '@hypertrace/components';
 
 export const spanLogEventsDashboard = {
   location: 'SPAN_LOG_EVENTS',
@@ -13,7 +12,7 @@ export const spanLogEventsDashboard = {
         type: 'table-widget-column',
         title: 'Timestamp',
         width: '150px',
-        display: ObservabilityTableCellType.LogTimestamp,
+        display: CoreTableCellRendererType.RelativeTimestamp,
         filterable: false,
         sortable: false,
         value: {
