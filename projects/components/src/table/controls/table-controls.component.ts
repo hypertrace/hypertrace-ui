@@ -14,9 +14,15 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
-import { TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
+import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
-import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableControlOption } from './table-controls-api';
+import {
+  CheckboxChange,
+  CheckboxControl,
+  SelectChange,
+  SelectControl,
+  TableSelectControlOption
+} from './table-controls-api';
 
 @Component({
   selector: 'ht-table-controls',
@@ -36,19 +42,20 @@ import { CheckboxChange, CheckboxControl, SelectChange, SelectControl, TableCont
         ></ht-search-box>
 
         <!-- Selects -->
-        <ht-select
+        <ht-multi-select
           *ngFor="let selectControl of this.selectControls"
           [placeholder]="selectControl.placeholder"
-          [selected]="selectControl.default?.value"
           class="control select"
-          (selectedChange)="this.onSelectChange(selectControl, $event)"
+          showBorder="true"
+          searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+          (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
         >
           <ht-select-option
             *ngFor="let option of selectControl.options"
             [label]="option.label"
-            [value]="option.value"
+            [value]="option"
           ></ht-select-option>
-        </ht-select>
+        </ht-multi-select>
       </div>
 
       <!-- Right -->
@@ -179,15 +186,15 @@ export class TableControlsComponent implements OnChanges {
     this.searchDebounceSubject.next(text);
   }
 
-  public onSelectChange(select: SelectControl, value: TableControlOption): void {
+  public onMultiSelectChange(select: SelectControl, selections: TableSelectControlOption[]): void {
     this.selectChange.emit({
       select: select,
-      value: value
+      values: selections
     });
   }
 
-  public onCheckboxChange(checks: string[]): void {
-    const diff = this.checkboxDiffer?.diff(checks);
+  public onCheckboxChange(checked: string[]): void {
+    const diff = this.checkboxDiffer?.diff(checked);
     if (!diff) {
       return;
     }
@@ -216,7 +223,7 @@ export class TableControlsComponent implements OnChanges {
       }
     });
 
-    this.checkboxSelections = checks;
+    this.checkboxSelections = checked;
     this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 

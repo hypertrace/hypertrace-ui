@@ -16,13 +16,16 @@ import {
   SelectControl,
   StatefulTableRow,
   TableColumnConfig,
+  TableControlOption,
   TableControlOptionType,
   TableDataSource,
   TableFilter,
+  TableFilterControlOption,
   TableRow,
   TableSelectionMode,
   TableStyle,
-  ToggleItem
+  ToggleItem,
+  toInFilter
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
@@ -35,7 +38,6 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
-import { LabeledTableControlOption } from './table-widget-control.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -171,17 +173,10 @@ export class TableWidgetRendererComponent
           // Fetch the values for the selectFilter dropdown
           selectControlModel.getOptions().pipe(
             take(1),
-            map(options => {
-              const selectOptions = options.map(option => ({
-                label: option.label,
-                value: option
-              }));
-
-              return {
-                placeholder: selectControlModel.placeholder,
-                options: selectOptions
-              };
-            })
+            map(options => ({
+              placeholder: selectControlModel.placeholder,
+              options: options
+            }))
           )
         )
     );
@@ -277,21 +272,15 @@ export class TableWidgetRendererComponent
   }
 
   public onSelectChange(changed: SelectChange): void {
-    switch (changed.value.type) {
-      case TableControlOptionType.UnsetFilter:
-        this.selectFilterSubject.next(
-          this.selectFilterSubject.getValue().filter(existingFilter => existingFilter.field !== changed.value.metaValue)
-        );
-        break;
-      case TableControlOptionType.Filter:
-        this.selectFilterSubject.next(this.mergeFilters(changed.value.metaValue));
-        break;
-      case TableControlOptionType.Property:
-        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.value.metaValue));
-        break;
-      default:
-        assertUnreachable(changed.value);
+    if (changed.values.length === 0) {
+      // tslint:disable-next-line: no-void-expression
+      return this.selectFilterSubject.next(this.removeFilters(changed.select.options[0].metaValue.field));
     }
+
+    const tableFilters: TableFilter[] = changed.values.map((option: TableFilterControlOption) => option.metaValue);
+
+    // tslint:disable-next-line: no-void-expression
+    return this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
   }
 
   public onCheckboxChange(changed: CheckboxChange): void {
@@ -302,7 +291,7 @@ export class TableWidgetRendererComponent
       case TableControlOptionType.Filter:
         this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue));
         break;
-      case TableControlOptionType.UnsetFilter:
+      case TableControlOptionType.Unset:
         this.selectFilterSubject.next(this.removeFilters(changed.option.metaValue));
         break;
       default:
@@ -317,8 +306,8 @@ export class TableWidgetRendererComponent
           take(1),
           map(options => {
             options.forEach(option => {
-              if (this.isLabeledOptionMatch(option, changed.option as LabeledTableControlOption)) {
-                checkboxControlModel.checked = changed.option.value === true;
+              if (this.isLabeledOptionMatch(option, changed.option)) {
+                checkboxControlModel.checked = changed.option.value;
               }
             });
 
@@ -333,8 +322,8 @@ export class TableWidgetRendererComponent
     );
   }
 
-  private isLabeledOptionMatch(option1: LabeledTableControlOption, option2: LabeledTableControlOption): boolean {
-    return option1.label === option2.label && option1.value === option2.value;
+  private isLabeledOptionMatch(option1: TableControlOption, option2: TableControlOption): boolean {
+    return option1.label === option2.label;
   }
 
   public onSearchChange(text: string): void {

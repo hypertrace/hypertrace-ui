@@ -1,17 +1,52 @@
 import { Dictionary } from '@hypertrace/common';
-import { SelectOption } from '../../select/select-option';
+import { FilterOperator } from '../../filtering/filter/filter-operators';
 import { TableFilter } from '../table-api';
 
+export const enum TableControlOptionType {
+  Filter = 'filter',
+  Property = 'property',
+  Unset = 'unset'
+}
+
+export type TableControlOption = TableUnsetControlOption | TableFilterControlOption | TablePropertyControlOption;
+
+export type TableFilterControlOption = {
+  type: TableControlOptionType.Filter;
+  label: string;
+  metaValue: TableFilter;
+};
+
+export type TableUnsetControlOption = {
+  type: TableControlOptionType.Unset;
+  label: string;
+  metaValue: string;
+};
+
+export type TablePropertyControlOption = {
+  type: TableControlOptionType.Property;
+  label: string;
+  metaValue: Dictionary<unknown>;
+};
+
+/*
+ * Select Control
+ */
+
 export interface SelectControl {
-  placeholder?: string;
-  default?: SelectOption<TableControlOption>;
-  options: SelectOption<TableControlOption>[];
+  placeholder: string;
+  options: TableSelectControlOption[];
 }
 
 export interface SelectChange {
   select: SelectControl;
-  value: TableControlOption;
+  values: TableSelectControlOption[];
 }
+
+export type TableSelectControlOption = TableFilterControlOption;
+
+/*
+ * Checkbox Control
+ */
 
 export interface CheckboxControl {
   label: string;
@@ -21,38 +56,22 @@ export interface CheckboxControl {
 
 export interface CheckboxChange {
   checkbox: CheckboxControl;
-  option: TableControlOption<boolean>;
+  option: TableCheckboxControlOption;
 }
 
-export const enum TableControlOptionType {
-  Filter = 'filter',
-  Property = 'property',
-  UnsetFilter = 'unset-filter'
-}
-
-export type TableControlOption<T = unknown> =
-  | TableUnsetFilterControlOption<T>
-  | TableFilterControlOption<T>
-  | TablePropertyControlOption<T>;
-
-interface TableControlOptionBase<T> {
-  value?: T;
-}
-export interface TableUnsetFilterControlOption<T = unknown> extends TableControlOptionBase<T> {
-  type: TableControlOptionType.UnsetFilter;
-  metaValue: string;
-}
-
-export interface TableFilterControlOption<T = unknown> extends TableControlOptionBase<T> {
-  type: TableControlOptionType.Filter;
-  metaValue: TableFilter;
-}
-
-export interface TablePropertyControlOption<T = unknown> extends TableControlOptionBase<T> {
-  type: TableControlOptionType.Property;
-  metaValue: Dictionary<unknown>;
-}
-
-export type TableCheckboxControlOption<T extends boolean> = TableControlOption<T> & { label: string };
+export type TableCheckboxControlOption<T extends boolean = boolean> = TableControlOption & {
+  value: T;
+};
 
 export type TableCheckboxOptions = [TableCheckboxControlOption<true>, TableCheckboxControlOption<false>];
+
+/*
+ * Util
+ */
+
+export const toInFilter = (tableFilters: TableFilter[]): TableFilter =>
+  tableFilters.reduce((previousValue, currentValue) => ({
+    field: previousValue.field,
+    operator: FilterOperator.In,
+    value: [...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]), currentValue.value]
+  }));
