@@ -11,18 +11,18 @@ export class EntityNavigationService {
     @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap
   ) {
     Array.from(this.entityMetadata.values()).forEach(item => {
-      this.registerEntityNavigationAction(item.entityType, (id, sourceRoute) =>
-        this.navigationService.navigateWithinApp(item.detailPath(id, sourceRoute))
+      this.registerEntityNavigationAction(item.entityType, (id, sourceRoute, inactive) =>
+        this.navigationService.navigateWithinApp(item.detailPath(id, sourceRoute, inactive))
       );
     });
   }
 
   private readonly entityNavigationMap: Map<
     EntityType,
-    (id: string, sourceRoute?: string) => Observable<boolean>
+    (id: string, sourceRoute?: string, inactive?: boolean) => Observable<boolean>
   > = new Map();
 
-  public navigateToEntity(entity: Entity): Observable<boolean> {
+  public navigateToEntity(entity: Entity, isInactive?: boolean): Observable<boolean> {
     const entityType = entity[entityTypeKey];
     const entityId = entity[entityIdKey];
     const navigationFunction = this.entityNavigationMap.get(entityType);
@@ -35,13 +35,13 @@ export class EntityNavigationService {
     );
 
     return navigationFunction
-      ? navigationFunction(entityId, sourceRoute)
+      ? navigationFunction(entityId, sourceRoute, isInactive)
       : throwError(`Requested entity type not registered for navigation: ${entityType}`);
   }
 
   public registerEntityNavigationAction(
     entityType: EntityType,
-    action: (id: string, sourceRoute?: string) => Observable<boolean>
+    action: (id: string, sourceRoute?: string, inactive?: boolean) => Observable<boolean>
   ): void {
     this.entityNavigationMap.set(entityType, action);
   }

@@ -33,6 +33,9 @@ export class EntityRendererComponent implements OnChanges {
   public entity?: Entity;
 
   @Input()
+  public inactive: boolean = false;
+
+  @Input()
   public navigable: boolean = true;
 
   @Input()
@@ -59,8 +62,9 @@ export class EntityRendererComponent implements OnChanges {
       this.setIconType();
     }
   }
+
   public onClickNavigate(): void {
-    this.navigable && this.entity && this.entityNavService.navigateToEntity(this.entity);
+    this.navigable && this.entity && this.entityNavService.navigateToEntity(this.entity, this.inactive);
   }
 
   private setName(): void {
