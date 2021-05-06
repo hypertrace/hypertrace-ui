@@ -1,4 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
+import { LogEvent } from '../../dashboard/widgets/waterfall/waterfall/waterfall-chart';
 
 export interface SpanData {
   id: string;
@@ -12,4 +13,6 @@ export interface SpanData {
   tags: Dictionary<unknown>;
   requestUrl: string;
   exitCallsBreakup?: Dictionary<string>;
+  startTime: number;
+  logEvents?: LogEvent[];
 }
