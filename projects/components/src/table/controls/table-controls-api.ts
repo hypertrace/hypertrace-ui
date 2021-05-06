@@ -59,7 +59,7 @@ export interface TableCheckboxChange {
   option: TableCheckboxControlOption;
 }
 
-export type TableCheckboxControlOption<T extends boolean = boolean> = TableControlOption & {
+export type TableCheckboxControlOption<T = boolean> = TableControlOption & {
   value: T;
 };
 
@@ -79,5 +79,5 @@ export const toInFilter = (tableFilters: TableFilter[]): TableFilter =>
       field: previousValue.field,
       operator: FilterOperator.In,
       value: [...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]), currentValue.value]
-    }
+    };
   });

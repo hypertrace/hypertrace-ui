@@ -8,13 +8,11 @@ import {
   PreferenceService
 } from '@hypertrace/common';
 import {
-  TableCheckboxChange,
-  TableCheckboxControl,
   FilterAttribute,
   FilterOperator,
-  TableSelectChange,
-  TableSelectControl,
   StatefulTableRow,
+  TableCheckboxChange,
+  TableCheckboxControl,
   TableColumnConfig,
   TableControlOption,
   TableControlOptionType,
@@ -22,6 +20,8 @@ import {
   TableFilter,
   TableFilterControlOption,
   TableRow,
+  TableSelectChange,
+  TableSelectControl,
   TableSelectionMode,
   TableStyle,
   ToggleItem,
