@@ -134,4 +134,32 @@ describe('Entity Renderer Component', () => {
     });
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Add);
   });
+
+  test('should inherit text color when enabled', () => {
+    const entity = {
+      [entityIdKey]: 'test-id',
+      [entityTypeKey]: ObservabilityEntityType.Api,
+      name: 'test api'
+    };
+
+    spectator = createHost(
+      `<ht-entity-renderer [entity]="entity" [inheritTextColor]="inheritTextColor">
+      </ht-entity-renderer>`,
+      {
+        hostProps: {
+          entity: entity,
+          inheritTextColor: false
+        }
+      }
+    );
+
+    expect(spectator.query('.inherit-text-color')).not.toExist();
+
+    spectator.setHostInput({
+      inheritTextColor: true
+    });
+    expect(spectator.query('.inherit-text-color')).toExist();
+
+    expect(spectator.query('.ht-entity-renderer')).toEqual(spectator.query('.inherit-text-color'));
+  });
 });
