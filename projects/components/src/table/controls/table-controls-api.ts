@@ -70,8 +70,14 @@ export type TableCheckboxOptions = [TableCheckboxControlOption<true>, TableCheck
  */
 
 export const toInFilter = (tableFilters: TableFilter[]): TableFilter =>
-  tableFilters.reduce((previousValue, currentValue) => ({
-    field: previousValue.field,
-    operator: FilterOperator.In,
-    value: [...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]), currentValue.value]
-  }));
+  tableFilters.reduce((previousValue, currentValue) => {
+    if (currentValue.operator !== FilterOperator.Equals || previousValue.field !== currentValue.field) {
+      throw Error('Filters must all contain same field and use = operator');
+    }
+
+    return {
+      field: previousValue.field,
+      operator: FilterOperator.In,
+      value: [...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]), currentValue.value]
+    }
+  });
