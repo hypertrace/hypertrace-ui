@@ -43,7 +43,7 @@ export class WaterfallChartService {
           serviceName: datum.serviceName,
           protocolName: datum.protocolName,
           hasError: datum.errorCount > 0,
-          hasLogs: datum.logEvents && datum.logEvents.length > 0
+          hasLogs: datum.logEvents.length > 0
         },
         $$iconType: this.iconLookupService.forSpanType(datum.spanType)!,
         getChildren: () => of([]),
