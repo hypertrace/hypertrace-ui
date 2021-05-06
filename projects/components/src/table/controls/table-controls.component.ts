@@ -17,10 +17,10 @@ import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import {
-  CheckboxChange,
-  CheckboxControl,
-  SelectChange,
-  SelectControl,
+  TableCheckboxChange,
+  TableCheckboxControl,
+  TableSelectChange,
+  TableSelectControl,
   TableSelectControlOption
 } from './table-controls-api';
 
@@ -101,10 +101,10 @@ export class TableControlsComponent implements OnChanges {
   public searchPlaceholder?: string;
 
   @Input()
-  public selectControls?: SelectControl[] = [];
+  public selectControls?: TableSelectControl[] = [];
 
   @Input()
-  public checkboxControls?: CheckboxControl[] = [];
+  public checkboxControls?: TableCheckboxControl[] = [];
 
   @Input()
   public activeFilterItem?: ToggleItem;
@@ -119,10 +119,10 @@ export class TableControlsComponent implements OnChanges {
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output()
-  public readonly selectChange: EventEmitter<SelectChange> = new EventEmitter<SelectChange>();
+  public readonly selectChange: EventEmitter<TableSelectChange> = new EventEmitter<TableSelectChange>();
 
   @Output()
-  public readonly checkboxChange: EventEmitter<CheckboxChange> = new EventEmitter<CheckboxChange>();
+  public readonly checkboxChange: EventEmitter<TableCheckboxChange> = new EventEmitter<TableCheckboxChange>();
 
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
@@ -187,7 +187,7 @@ export class TableControlsComponent implements OnChanges {
     this.searchDebounceSubject.next(text);
   }
 
-  public onMultiSelectChange(select: SelectControl, selections: TableSelectControlOption[]): void {
+  public onMultiSelectChange(select: TableSelectControl, selections: TableSelectControlOption[]): void {
     this.selectChange.emit({
       select: select,
       values: selections
@@ -201,7 +201,7 @@ export class TableControlsComponent implements OnChanges {
     }
 
     diff.forEachAddedItem(addedItem => {
-      const found: CheckboxControl | undefined = this.checkboxControls?.find(
+      const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
         control => control.label === addedItem.item
       );
       if (found) {
@@ -213,7 +213,7 @@ export class TableControlsComponent implements OnChanges {
     });
 
     diff.forEachRemovedItem(removedItem => {
-      const found: CheckboxControl | undefined = this.checkboxControls?.find(
+      const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
         control => control.label === removedItem.item
       );
       if (found) {

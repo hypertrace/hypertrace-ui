@@ -32,13 +32,13 @@ export interface TablePropertyControlOption {
  * Select Control
  */
 
-export interface SelectControl {
+export interface TableSelectControl {
   placeholder: string;
   options: TableSelectControlOption[];
 }
 
-export interface SelectChange {
-  select: SelectControl;
+export interface TableSelectChange {
+  select: TableSelectControl;
   values: TableSelectControlOption[];
 }
 
@@ -48,14 +48,14 @@ export type TableSelectControlOption = TableFilterControlOption;
  * Checkbox Control
  */
 
-export interface CheckboxControl {
+export interface TableCheckboxControl {
   label: string;
   value: boolean;
   options: TableCheckboxOptions;
 }
 
-export interface CheckboxChange {
-  checkbox: CheckboxControl;
+export interface TableCheckboxChange {
+  checkbox: TableCheckboxControl;
   option: TableCheckboxControlOption;
 }
 

@@ -8,12 +8,12 @@ import {
   PreferenceService
 } from '@hypertrace/common';
 import {
-  CheckboxChange,
-  CheckboxControl,
+  TableCheckboxChange,
+  TableCheckboxControl,
   FilterAttribute,
   FilterOperator,
-  SelectChange,
-  SelectControl,
+  TableSelectChange,
+  TableSelectControl,
   StatefulTableRow,
   TableColumnConfig,
   TableControlOption,
@@ -100,8 +100,8 @@ export class TableWidgetRendererComponent
   implements OnInit {
   public viewItems: ToggleItem<string>[] = [];
 
-  public selectControls$!: Observable<SelectControl[]>;
-  public checkboxControls$!: Observable<CheckboxControl[]>;
+  public selectControls$!: Observable<TableSelectControl[]>;
+  public checkboxControls$!: Observable<TableCheckboxControl[]>;
 
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
@@ -198,7 +198,7 @@ export class TableWidgetRendererComponent
           )
         )
     ).pipe(
-      tap((checkboxControls: CheckboxControl[]) => {
+      tap((checkboxControls: TableCheckboxControl[]) => {
         // Apply initial values for checkboxes
         checkboxControls.forEach(checkboxControl => {
           this.onCheckboxChange({
@@ -271,7 +271,7 @@ export class TableWidgetRendererComponent
     );
   }
 
-  public onSelectChange(changed: SelectChange): void {
+  public onSelectChange(changed: TableSelectChange): void {
     if (changed.values.length === 0) {
       // tslint:disable-next-line: no-void-expression
       return this.selectFilterSubject.next(this.removeFilters(changed.select.options[0].metaValue.field));
@@ -283,7 +283,7 @@ export class TableWidgetRendererComponent
     return this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
   }
 
-  public onCheckboxChange(changed: CheckboxChange): void {
+  public onCheckboxChange(changed: TableCheckboxChange): void {
     switch (changed.option.type) {
       case TableControlOptionType.Property:
         this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.option.metaValue));
