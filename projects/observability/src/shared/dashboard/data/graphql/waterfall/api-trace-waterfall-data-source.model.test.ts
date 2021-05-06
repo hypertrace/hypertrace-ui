@@ -102,6 +102,17 @@ describe('Api Trace Waterfall data source model', () => {
             expect.objectContaining({
               name: 'errorCount'
             })
+          ],
+          logEventProperties: [
+            expect.objectContaining({
+              name: 'attributes'
+            }),
+            expect.objectContaining({
+              name: 'timestamp'
+            }),
+            expect.objectContaining({
+              name: 'summary'
+            })
           ]
         }
       });
@@ -163,6 +174,17 @@ describe('Api Trace Waterfall data source model', () => {
             expect.objectContaining({
               name: 'errorCount'
             })
+          ],
+          logEventProperties: [
+            expect.objectContaining({
+              name: 'attributes'
+            }),
+            expect.objectContaining({
+              name: 'timestamp'
+            }),
+            expect.objectContaining({
+              name: 'summary'
+            })
           ]
         }
       });
@@ -195,7 +217,8 @@ describe('Api Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 1',
               protocolName: 'Protocol Name 1',
               type: SpanType.Entry,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             },
             {
               [spanIdKey]: 'second-id',
@@ -207,7 +230,8 @@ describe('Api Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 2',
               protocolName: 'Protocol Name 2',
               type: SpanType.Exit,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             }
           ]
         })
@@ -227,7 +251,8 @@ describe('Api Trace Waterfall data source model', () => {
             apiName: 'Span Name 1',
             protocolName: 'Protocol Name 1',
             spanType: SpanType.Entry,
-            tags: {}
+            tags: {},
+            logEvents: []
           },
           {
             id: 'second-id',
@@ -243,7 +268,8 @@ describe('Api Trace Waterfall data source model', () => {
             apiName: 'Span Name 2',
             protocolName: 'Protocol Name 2',
             spanType: SpanType.Exit,
-            tags: {}
+            tags: {},
+            logEvents: []
           }
         ]
       });
