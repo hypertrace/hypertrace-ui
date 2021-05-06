@@ -28,7 +28,8 @@ describe('Span detail component', () => {
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
-      requestUrl: 'test-url'
+      requestUrl: 'test-url',
+      startTime: 1604567825671
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
@@ -52,7 +53,8 @@ describe('Span detail component', () => {
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
-      requestUrl: 'test-url'
+      requestUrl: 'test-url',
+      startTime: 1604567825671
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
@@ -77,7 +79,8 @@ describe('Span detail component', () => {
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
-      requestUrl: 'test-url'
+      requestUrl: 'test-url',
+      startTime: 1604567825671
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
@@ -101,7 +104,8 @@ describe('Span detail component', () => {
       responseHeaders: {},
       responseBody: '',
       tags: { tag1: 'value1', tag2: 'value2' },
-      requestUrl: 'test-url'
+      requestUrl: 'test-url',
+      startTime: 1604567825671
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
