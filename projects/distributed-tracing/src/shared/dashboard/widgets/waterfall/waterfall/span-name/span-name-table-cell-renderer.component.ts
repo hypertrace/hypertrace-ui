@@ -28,6 +28,13 @@ import { WaterfallTableCellType } from './span-name-cell-type';
         size="${IconSize.Medium}"
         color="${Color.Red5}"
       ></ht-icon>
+      <ht-icon
+        *ngIf="this.value.hasLogs"
+        class="log-icon"
+        icon="${IconType.Note}"
+        size="${IconSize.Small}"
+        color="${Color.Gray4}"
+      ></ht-icon>
     </div>
   `
 })
