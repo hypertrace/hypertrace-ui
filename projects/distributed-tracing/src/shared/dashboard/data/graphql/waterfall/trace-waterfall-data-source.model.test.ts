@@ -99,16 +99,10 @@ describe('Trace Waterfall data source model', () => {
           ],
           logEventProperties: [
             expect.objectContaining({
-              name: 'traceId'
-            }),
-            expect.objectContaining({
               name: 'attributes'
             }),
             expect.objectContaining({
               name: 'timestamp'
-            }),
-            expect.objectContaining({
-              name: 'spanId'
             }),
             expect.objectContaining({
               name: 'summary'
@@ -176,16 +170,10 @@ describe('Trace Waterfall data source model', () => {
           ],
           logEventProperties: [
             expect.objectContaining({
-              name: 'traceId'
-            }),
-            expect.objectContaining({
               name: 'attributes'
             }),
             expect.objectContaining({
               name: 'timestamp'
-            }),
-            expect.objectContaining({
-              name: 'spanId'
             }),
             expect.objectContaining({
               name: 'summary'

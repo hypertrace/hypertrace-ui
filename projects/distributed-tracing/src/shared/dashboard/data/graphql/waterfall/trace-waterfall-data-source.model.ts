@@ -61,10 +61,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
   ];
 
   protected readonly logEventSpecifications: Specification[] = [
-    this.specificationBuilder.attributeSpecificationForKey('traceId'),
     this.specificationBuilder.attributeSpecificationForKey('attributes'),
     this.specificationBuilder.attributeSpecificationForKey('timestamp'),
-    this.specificationBuilder.attributeSpecificationForKey('spanId'),
     this.specificationBuilder.attributeSpecificationForKey('summary')
   ];
 

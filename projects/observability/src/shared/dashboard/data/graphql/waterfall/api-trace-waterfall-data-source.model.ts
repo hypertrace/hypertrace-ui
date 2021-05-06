@@ -67,7 +67,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   }
 
   private getLogEventAttributes(): string[] {
-    return ['traceId', 'attributes', 'timestamp', 'spanId', 'summary'];
+    return ['attributes', 'timestamp', 'summary'];
   }
 
   private getTraceData(): Observable<Trace | undefined> {
@@ -117,7 +117,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results
+      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results ?? []
     };
   }
 }

@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core';
 export interface EntityMetadata {
   entityType: string;
   icon: string;
-  detailPath(id: string, sourceRoute?: string): string[];
+  detailPath(id: string, sourceRoute?: string, inactive?: boolean): string[];
   listPath?: string[];
   apisListPath?(id: string): string[];
   sourceRoutes?: string[];
