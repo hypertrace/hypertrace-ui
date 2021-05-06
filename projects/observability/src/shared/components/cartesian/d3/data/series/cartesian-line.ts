@@ -1,7 +1,7 @@
 import { BaseType, select, Selection } from 'd3-selection';
 import { curveMonotoneX, line, Line } from 'd3-shape';
 import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
-import { Series } from '../../../chart';
+import { Series, SeriesSymbol } from '../../../chart';
 import { QuadtreeDataLookupStrategy } from '../../interactivity/data-strategy/quadtree-data-lookup-strategy';
 import { CartesianPoints } from './cartesian-points';
 import { CartesianSeries } from './cartesian-series';
@@ -50,13 +50,14 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
   private buildLine(): Line<TData> {
     return line<TData>()
       .x(d => this.xScale.transformData(d))
-      .y(d => this.yScale.transformData(d))
-      .curve(curveMonotoneX);
+      .y(d => this.yScale.transformData(d) )
+      .curve(curveMonotoneX)
+      .defined(d => !isNaN(this.yScale.transformData(d)));
   }
 
   protected drawSvgPointsIfRequested(seriesGroup: SVGGElement): void {
     if (this.series.symbol === undefined) {
-      return;
+      this.series.symbol == SeriesSymbol.Circle;
     }
 
     new CartesianPoints(this.series, this.scaleBuilder).drawSvg(seriesGroup);
@@ -64,7 +65,8 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
 
   private drawCanvasPointsIfRequested(context: CanvasRenderingContext2D): void {
     if (this.series.symbol === undefined) {
-      return;
+      this.series.symbol == SeriesSymbol.Circle;
+     //  return;
     }
 
     new CartesianPoints(this.series, this.scaleBuilder).drawCanvas(context);

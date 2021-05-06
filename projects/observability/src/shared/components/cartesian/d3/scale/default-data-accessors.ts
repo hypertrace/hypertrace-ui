@@ -16,9 +16,9 @@ const xCoercer = new NoopCoercer<unknown>({
 
 export const defaultYDataAccessor = <TDomain>(data: unknown): TDomain => {
   const coerced = yCoercer.coerce(data);
-  if (coerced === undefined) {
-    throw Error('Data is unknown shape');
-  }
+  // if (coerced === undefined) {
+  //   throw Error('Data is unknown shape');
+  // }
 
   return coerced as TDomain;
 };
