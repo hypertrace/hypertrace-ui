@@ -73,7 +73,23 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         children: [
           {
             path: 'results',
-            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties!)]
+            children: [
+              { path: 'id' },
+              ...(!isEmpty(request.logEventProperties)
+                ? [
+                    {
+                      path: 'logEvents',
+                      children: [
+                        {
+                          path: 'results',
+                          children: this.selectionBuilder.fromSpecifications(request.logEventProperties!)
+                        }
+                      ]
+                    }
+                  ]
+                : []),
+              ...this.selectionBuilder.fromSpecifications(request.spanProperties!)
+            ]
           }
         ]
       };
@@ -121,7 +137,8 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
     rawResult.results.forEach(spanRawResult => {
       const span: Span = {
-        [spanIdKey]: spanRawResult.id as string
+        [spanIdKey]: spanRawResult.id as string,
+        ...(!isEmpty(spanRawResult.logEvents) && { logEvents: spanRawResult.logEvents })
       };
 
       (request.spanProperties || []).forEach(property => {
@@ -175,6 +192,7 @@ export interface GraphQlTraceRequest {
   spanLimit: number;
   spanId?: string;
   spanProperties?: Specification[];
+  logEventProperties?: Specification[];
 }
 
 interface TraceServerResponse {
