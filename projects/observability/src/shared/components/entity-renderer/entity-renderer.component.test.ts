@@ -83,7 +83,7 @@ describe('Entity Renderer Component', () => {
 
     expect(rendererElement).toHaveClass('navigable');
     spectator.dispatchFakeEvent(rendererElement, 'click');
-    expect(entityNavService.navigateToEntity).toHaveBeenCalledWith(entity);
+    expect(entityNavService.navigateToEntity).toHaveBeenCalledWith(entity, false);
   });
 
   test('renders an entity without icon by default', () => {
