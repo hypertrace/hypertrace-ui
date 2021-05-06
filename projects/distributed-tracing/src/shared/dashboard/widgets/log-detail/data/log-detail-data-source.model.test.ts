@@ -15,9 +15,7 @@ describe('Log Detail data source model', () => {
     key2: 'value2'
   };
   const logEvent: LogEvent = {
-    traceId: 'id1',
     attributes: attributes,
-    spanId: 's-id1',
     timestamp: '2021-05-05T00:00:00Z',
     summary: 'test log event'
   };
