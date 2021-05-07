@@ -1,5 +1,9 @@
 @import 'font';
 
+.log-events-table {
+  margin-top: 25px;
+}
+
 .content {
   @include body-2-regular();
   margin-left: 175px;

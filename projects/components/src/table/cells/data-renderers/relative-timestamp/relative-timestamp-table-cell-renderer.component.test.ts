@@ -30,13 +30,13 @@ describe('relative timestamp table cell renderer component', () => {
 
   test('testing component properties', () => {
     const logEvent: RowData = {
-      baseTimestamp: 1619785437887
+      baseTimestamp: new Date(1619785437887)
     };
     const spectator = buildComponent({
-      providers: [tableCellRowDataProvider(logEvent), tableCellDataProvider('2021-04-30T12:23:57.889149Z')]
+      providers: [tableCellRowDataProvider(logEvent), tableCellDataProvider(new Date(1619785437887))]
     });
 
-    expect(spectator.queryAll('.relative-timestamp')[0]).toContainText('2 ms');
-    expect(spectator.component.duration).toBe(2);
+    expect(spectator.queryAll('.relative-timestamp')[0]).toContainText('0 ms');
+    expect(spectator.component.duration).toBe(0);
   });
 });

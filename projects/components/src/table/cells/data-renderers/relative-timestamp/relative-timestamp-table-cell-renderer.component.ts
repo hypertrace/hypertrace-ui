@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { DateCoercer, DateFormatMode, DateFormatOptions, Dictionary } from '@hypertrace/common';
+import { DateFormatMode, DateFormatOptions, Dictionary } from '@hypertrace/common';
 import { TableColumnConfig } from '../../../table-api';
 import {
   TABLE_CELL_DATA,
@@ -16,10 +16,8 @@ import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
 export interface RowData extends Dictionary<unknown> {
-  baseTimestamp: DateOrNumber;
+  baseTimestamp: Date;
 }
-
-type DateOrNumber = Date | number;
 @Component({
   selector: 'ht-relative-timestamp-table-cell-renderer',
   styleUrls: ['./relative-timestamp-table-cell-renderer.component.scss'],
@@ -39,24 +37,21 @@ type DateOrNumber = Date | number;
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
-export class RelativeTimestampTableCellRendererComponent extends TableCellRendererBase<DateOrNumber> implements OnInit {
+export class RelativeTimestampTableCellRendererComponent extends TableCellRendererBase<Date> implements OnInit {
   public readonly dateFormat: DateFormatOptions = {
     mode: DateFormatMode.DateAndTimeWithSeconds
   };
   public readonly duration: number;
-  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER)
-    parser: TableCellParserBase<DateOrNumber, DateOrNumber, unknown>,
-    @Inject(TABLE_CELL_DATA) cellData: DateOrNumber,
+    parser: TableCellParserBase<Date, Date, unknown>,
+    @Inject(TABLE_CELL_DATA) cellData: Date,
     @Inject(TABLE_ROW_DATA) rowData: RowData
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    this.duration =
-      (this.dateCoercer.coerce(cellData)?.getTime() ?? NaN) -
-      (this.dateCoercer.coerce(rowData.baseTimestamp)?.getTime() ?? NaN);
+    this.duration = cellData.getTime() - rowData.baseTimestamp.getTime();
   }
 }
