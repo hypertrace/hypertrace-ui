@@ -13,7 +13,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
     <div
       *ngIf="this.name"
       class="ht-entity-renderer"
-      [ngClass]="{ navigable: this.navigable }"
+      [ngClass]="{ navigable: this.navigable, 'inherit-text-color': this.inheritTextColor }"
       [htTooltip]="this.name"
       (click)="this.navigable && this.onClickNavigate()"
     >
@@ -43,6 +43,9 @@ export class EntityRendererComponent implements OnChanges {
 
   @Input()
   public showIcon: boolean = false;
+
+  @Input()
+  public inheritTextColor: boolean = false;
 
   public name?: string;
   public entityIconType?: string;
