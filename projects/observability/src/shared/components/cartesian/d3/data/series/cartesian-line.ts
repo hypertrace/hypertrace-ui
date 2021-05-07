@@ -36,6 +36,11 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
   }
 
   protected drawSvgLine(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
+    // const line = this.buildLine();
+    // const discretePoints =  this.series.data
+    //   .map(datum => ([!isNaN(this.yScale.transformData(datum)), datum]))
+    //   .reduce((previous, current, index, allPoints) => {},)
+
     seriesGroupSelection.append('path').attr('d', this.buildLine()(this.series.data)!);
   }
 
