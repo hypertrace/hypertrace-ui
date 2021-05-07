@@ -13,6 +13,6 @@ export interface SpanData {
   tags: Dictionary<unknown>;
   requestUrl: string;
   exitCallsBreakup?: Dictionary<string>;
-  startTime: number;
+  startTime?: number;
   logEvents?: LogEvent[];
 }
