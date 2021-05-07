@@ -66,7 +66,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
     ];
   }
 
-  private getLogEventAttributes(): string[] {
+  protected getLogEventAttributes(): string[] {
     return ['attributes', 'timestamp', 'summary'];
   }
 
