@@ -26,10 +26,9 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
           {
             type: 'table-widget-select-option',
             'unique-values': true,
-            placeholder: 'All Services',
+            placeholder: 'Services',
             data: {
               type: 'entities-attribute-options-data-source',
-              'unset-label': 'All Services',
               // Use API so we can inherit API filters
               entity: ObservabilityEntityType.Api,
               attribute: {
