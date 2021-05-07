@@ -1,4 +1,4 @@
-import { TimeDuration } from './../../../../../../../common/src/time/time-duration';
+import { TimeDuration } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { groupBy } from 'lodash-es';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -48,8 +48,6 @@ export class ExploreResult {
       Object.entries(groupedResults).map(([concatenatedGroupNames, results]) => [
         concatenatedGroupNames.split(','),
         this.resultsToTimeseriesIntervals(results, spec)
-
-        // results.map(result => this.resultToTimeseriesInterval(result, spec))
       ])
     );
   }
@@ -60,7 +58,6 @@ export class ExploreResult {
 
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
     return this.resultsToTimeseriesIntervals(this.resultsContainingSpec(spec), spec);
-    //  return this.resultsContainingSpec(spec).map(result => this.resultToTimeseriesInterval(result, spec));
   }
 
   private resultToGroupData(
@@ -103,14 +100,14 @@ export class ExploreResult {
           .map(metric => [metric.timestamp.getTime(), metric])
       );
 
-      const metrics = buckets.map(timestamp => {
-        return resultBucketMap.has(timestamp)
+      const metrics = buckets.map(timestamp =>
+        resultBucketMap.has(timestamp)
           ? resultBucketMap.get(timestamp)!
           : {
-              value: undefined,
+              value: 0, // Todo: Zero filling missing buckets.
               timestamp: new Date(timestamp)
-            };
-      });
+            }
+      );
 
       return metrics;
     }

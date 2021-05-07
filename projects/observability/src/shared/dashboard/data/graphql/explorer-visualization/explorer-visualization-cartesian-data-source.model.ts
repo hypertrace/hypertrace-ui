@@ -27,12 +27,15 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
     return this.request.exploreQuery$.pipe(
       switchMap(exploreRequest => {
         const timeRange = this.getTimeRangeOrThrow();
+
         return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
           this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange)
-        ).pipe(mergeMap(response => this.mapResponseData(this.request!, response, this.request!.interval as TimeDuration, timeRange)));
-      }
-
-      )
+        ).pipe(
+          mergeMap(response =>
+            this.mapResponseData(this.request!, response, this.request!.interval as TimeDuration, timeRange)
+          )
+        );
+      })
     );
   }
 
