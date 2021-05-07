@@ -11,6 +11,7 @@ import {
   ToggleButtonModule,
   TooltipModule
 } from '@hypertrace/components';
+import { LogEventsTableModule } from '../log-events/log-events-table.module';
 import { SpanExitCallsModule } from './exit-calls/span-exit-calls.module';
 import { SpanDetailTitleHeaderModule } from './headers/title/span-detail-title-header.module';
 import { SpanLogEventsModule } from './log-events/span-log-events.module';
@@ -36,7 +37,8 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     ListViewModule,
     SpanDetailTitleHeaderModule,
     SpanExitCallsModule,
-    SpanLogEventsModule
+    SpanLogEventsModule,
+    LogEventsTableModule
   ],
   declarations: [SpanDetailComponent],
   exports: [SpanDetailComponent]
