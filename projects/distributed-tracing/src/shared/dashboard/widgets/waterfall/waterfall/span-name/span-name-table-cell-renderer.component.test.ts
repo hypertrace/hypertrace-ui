@@ -61,4 +61,15 @@ describe('Span name table cell renderer component', () => {
     expect(spectator.query('.color-bar')).toExist();
     expect(spectator.query('.error-icon')).toExist();
   });
+
+  test('should render log icon ', () => {
+    const spanNameDataWithColor = {
+      ...spanNameData,
+      hasLogs: true
+    };
+    const spectator = buildComponent({
+      providers: [tableCellDataProvider(spanNameDataWithColor)]
+    });
+    expect(spectator.query('.log-icon')).toExist();
+  });
 });

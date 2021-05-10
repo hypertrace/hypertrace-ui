@@ -2,11 +2,12 @@
 @import 'font';
 
 .ht-entity-renderer {
+  @include body-1-regular(currentColor);
   display: flex;
   flex-direction: row;
   align-items: center;
   font-weight: inherit;
-  @include body-1-regular();
+  color: $gray-9;
 
   .icon {
     padding-right: 12px;
@@ -19,4 +20,8 @@
 
 .navigable {
   @include link-hover();
+}
+
+.inherit-text-color {
+  @include body-1-regular(inherit);
 }

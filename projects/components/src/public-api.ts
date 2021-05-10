@@ -152,7 +152,7 @@ export * from './link/link.component';
 export * from './link/link.module';
 
 // List View
-export { ListViewComponent, ListViewRecord } from './list-view/list-view.component';
+export { ListViewComponent, ListViewHeader, ListViewRecord } from './list-view/list-view.component';
 export { ListViewModule } from './list-view/list-view.module';
 
 // Load Async

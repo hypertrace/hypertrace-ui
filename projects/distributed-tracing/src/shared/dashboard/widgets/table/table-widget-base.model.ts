@@ -104,6 +104,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public pageable: boolean = true;
 
+  @ModelProperty({
+    key: 'resizable',
+    displayName: 'Resizable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public resizable: boolean = true;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
@@ -156,5 +163,9 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public isPageable(): boolean {
     return this.pageable;
+  }
+
+  public isResizable(): boolean {
+    return this.resizable;
   }
 }

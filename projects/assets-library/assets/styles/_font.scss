@@ -205,6 +205,15 @@ $font-family: 'Work Sans', sans-serif;
   letter-spacing: -0.01em;
 }
 
+@mixin header-5($color: $gray-9) {
+  @extend %semibold;
+  @extend %fontfamily;
+  color: $color;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+
 @mixin subtitle-1($color: $gray-5) {
   @extend %medium;
   @extend %fontfamily;
