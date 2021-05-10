@@ -273,14 +273,14 @@ export class TableWidgetRendererComponent
 
   public onSelectChange(changed: TableSelectChange): void {
     if (changed.values.length === 0) {
-      // tslint:disable-next-line: no-void-expression
-      return this.selectFilterSubject.next(this.removeFilters(changed.select.options[0].metaValue.field));
+      this.selectFilterSubject.next(this.removeFilters(changed.select.options[0].metaValue.field));
+
+      return;
     }
 
     const tableFilters: TableFilter[] = changed.values.map((option: TableFilterControlOption) => option.metaValue);
 
-    // tslint:disable-next-line: no-void-expression
-    return this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
+    this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
   }
 
   public onCheckboxChange(changed: TableCheckboxChange): void {
