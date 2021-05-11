@@ -1,9 +1,8 @@
-import { ColorService, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import {
   AttributeMetadataType,
   GraphQlQueryEventService,
-  GraphQlTimeRange,
   MetadataService,
   MetricAggregationType
 } from '@hypertrace/distributed-tracing';
@@ -27,6 +26,8 @@ import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visual
 
 describe('Explorer Visualization cartesian data source model', () => {
   const testInterval = new TimeDuration(5, TimeUnit.Minute);
+  const endTime = new Date('2021-05-11T00:35:00.000Z');
+  const startTime = new Date(endTime.getTime() - 2 * testInterval.toMillis());
 
   const modelFactory = createModelFactory({
     providers: [
@@ -90,14 +91,14 @@ describe('Explorer Visualization cartesian data source model', () => {
   beforeEach(() => {
     model = modelFactory(ExplorerVisualizationCartesianDataSourceModel, {
       api: {
-        getTimeRange: jest.fn().mockReturnValue(new GraphQlTimeRange(2, 3))
+        getTimeRange: () => new FixedTimeRange(startTime, endTime)
       }
     }).model;
   });
 
   test('can build timeseries data', () => {
     model.request = buildVisualizationRequest({
-      interval: 'AUTO',
+      interval: new TimeDuration(5, TimeUnit.Minute),
       groupBy: undefined,
       series: [
         {
@@ -119,14 +120,14 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 10,
                   type: AttributeMetadataType.Number
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
                 'sum(foo)': {
                   value: 15,
                   type: AttributeMetadataType.Number
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
               }
             ]
           },
@@ -141,11 +142,15 @@ describe('Explorer Visualization cartesian data source model', () => {
               type: CartesianSeriesVisualizationType.Line,
               data: [
                 {
-                  timestamp: new Date(0),
+                  timestamp: startTime,
                   value: 10
                 },
                 {
-                  timestamp: new Date(1),
+                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  value: 0
+                },
+                {
+                  timestamp: endTime,
                   value: 15
                 }
               ]
@@ -224,7 +229,7 @@ describe('Explorer Visualization cartesian data source model', () => {
 
   test('can build grouped timeseries data', () => {
     model.request = buildVisualizationRequest({
-      interval: 'AUTO',
+      interval: new TimeDuration(5, TimeUnit.Minute),
       groupBy: {
         keys: ['baz'],
         limit: 5
@@ -253,7 +258,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'first',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
                 'sum(foo)': {
@@ -264,7 +269,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'first',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
               },
               {
                 'sum(foo)': {
@@ -275,7 +280,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'second',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
                 'sum(foo)': {
@@ -286,7 +291,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'second',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
               }
             ]
           },
@@ -301,11 +306,15 @@ describe('Explorer Visualization cartesian data source model', () => {
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
-                  timestamp: new Date(0),
+                  timestamp: startTime,
                   value: 10
                 },
                 {
-                  timestamp: new Date(1),
+                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  value: 0
+                },
+                {
+                  timestamp: endTime,
                   value: 15
                 }
               ]
@@ -316,11 +325,15 @@ describe('Explorer Visualization cartesian data source model', () => {
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
-                  timestamp: new Date(0),
+                  timestamp: startTime,
                   value: 20
                 },
                 {
-                  timestamp: new Date(1),
+                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  value: 0
+                },
+                {
+                  timestamp: endTime,
                   value: 25
                 }
               ]
