@@ -215,7 +215,7 @@ export class TableWidgetRendererComponent
   }
 
   private getScope(): Observable<string | undefined> {
-    return this.data$!.pipe(map(data => data?.getScope()));
+    return this.data$!.pipe(map(data => data?.getScope?.()));
   }
 
   private getColumnConfigs(persistedColumns: TableColumnConfig[] = []): Observable<TableColumnConfig[]> {
