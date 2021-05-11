@@ -52,6 +52,6 @@ export class RelativeTimestampTableCellRendererComponent extends TableCellRender
     @Inject(TABLE_ROW_DATA) rowData: RowData
   ) {
     super(columnConfig, index, parser, cellData, rowData);
-    this.duration = cellData.getTime() - rowData.baseTimestamp.getTime();
+    this.duration = cellData?.getTime() - rowData?.baseTimestamp?.getTime();
   }
 }

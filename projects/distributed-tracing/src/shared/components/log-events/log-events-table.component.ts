@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
@@ -10,12 +10,13 @@ import {
   TableMode,
   TableRow
 } from '@hypertrace/components';
+import { LogEvent } from '@hypertrace/distributed-tracing';
 import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 
 export const enum LogEventsTableViewType {
-  Sheet = 'sheet',
-  Page = 'page'
+  Condensed = 'condensed',
+  Detailed = 'detailed'
 }
 
 @Component({
@@ -44,12 +45,12 @@ export const enum LogEventsTableViewType {
     </ng-template>
   `
 })
-export class LogEventsTableComponent implements OnInit {
+export class LogEventsTableComponent implements OnChanges {
   @Input()
-  public logEvents: Dictionary<unknown>[] = [];
+  public logEvents: LogEvent[] = [];
 
   @Input()
-  public logEventsTableViewType: LogEventsTableViewType = LogEventsTableViewType.Sheet;
+  public logEventsTableViewType: LogEventsTableViewType = LogEventsTableViewType.Condensed;
 
   @Input()
   public spanStartTime?: number;
@@ -60,16 +61,16 @@ export class LogEventsTableComponent implements OnInit {
   public dataSource?: TableDataSource<TableRow>;
   public columnConfigs: TableColumnConfig[] = [];
 
-  public ngOnInit(): void {
+  public ngOnChanges(): void {
     this.buildDataSource();
     this.columnConfigs = this.getTableColumnConfigs();
   }
 
   public getLogEventAttributeRecords(attributes: Dictionary<unknown>): ListViewRecord[] {
     if (!isEmpty(attributes)) {
-      return Object.entries(attributes).map((attribute: [string, unknown]) => ({
-        key: attribute[0],
-        value: attribute[1] as string | number
+      return Object.entries(attributes).map(([key, value]) => ({
+        key: key,
+        value: value as string | number
       }));
     }
 
@@ -80,7 +81,7 @@ export class LogEventsTableComponent implements OnInit {
     this.dataSource = {
       getData: (): Observable<TableDataResponse<TableRow>> =>
         of({
-          data: this.logEvents.map((logEvent: Dictionary<unknown>) => ({
+          data: this.logEvents.map((logEvent: LogEvent) => ({
             ...logEvent,
             timestamp: this.dateCoercer.coerce(logEvent.timestamp),
             baseTimestamp: this.dateCoercer.coerce(this.spanStartTime)
@@ -92,7 +93,7 @@ export class LogEventsTableComponent implements OnInit {
   }
 
   private getTableColumnConfigs(): TableColumnConfig[] {
-    if (this.logEventsTableViewType === LogEventsTableViewType.Sheet) {
+    if (this.logEventsTableViewType === LogEventsTableViewType.Condensed) {
       return [
         {
           id: 'timestamp',

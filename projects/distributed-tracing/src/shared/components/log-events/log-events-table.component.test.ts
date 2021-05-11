@@ -35,7 +35,7 @@ describe('LogEventsTableComponent', () => {
           logEvents: [
             { attributes: { attr1: 1, attr2: 2 }, summary: 'test', timestamp: '2021-04-30T12:23:57.889149Z' }
           ],
-          logEventsTableViewType: LogEventsTableViewType.Sheet,
+          logEventsTableViewType: LogEventsTableViewType.Condensed,
           spanStartTime: 1619785437887
         }
       }
