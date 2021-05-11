@@ -100,13 +100,12 @@ export class ExploreResult {
           .map(metric => [metric.timestamp.getTime(), metric])
       );
 
-      const metrics = buckets.map(timestamp =>
-        resultBucketMap.has(timestamp)
-          ? resultBucketMap.get(timestamp)!
-          : {
-              value: 0, // Todo: Zero filling missing buckets.
-              timestamp: new Date(timestamp)
-            }
+      const metrics = buckets.map(
+        timestamp =>
+          resultBucketMap.get(timestamp) ?? {
+            value: 0,
+            timestamp: new Date(timestamp)
+          }
       );
 
       return metrics;
@@ -120,7 +119,7 @@ export class ExploreResult {
     spec: ExploreSpecification
   ): MetricTimeseriesInterval {
     return {
-      value: result[spec.resultAlias()]?.value as number | undefined,
+      value: result[spec.resultAlias()].value as number,
       timestamp: result[GQL_EXPLORE_RESULT_INTERVAL_KEY]!
     };
   }
