@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { SelectComponent } from '@hypertrace/components';
+import { MultiSelectComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
@@ -14,7 +14,7 @@ describe('Table Controls component', () => {
     providers: [mockProvider(SubscriptionLifecycle)],
     declarations: [
       MockComponent(SearchBoxComponent),
-      MockComponent(SelectComponent),
+      MockComponent(MultiSelectComponent),
       MockComponent(ToggleGroupComponent)
     ],
     template: `
@@ -67,11 +67,11 @@ describe('Table Controls component', () => {
             options: [
               {
                 label: 'first1',
-                value: 'first-1'
+                metaValue: 'first-1'
               },
               {
                 label: 'second1',
-                value: 'second-1'
+                metaValue: 'second-1'
               }
             ]
           }
@@ -79,7 +79,7 @@ describe('Table Controls component', () => {
       }
     });
 
-    expect(spectator.query(SelectComponent)?.placeholder).toEqual('test1');
+    expect(spectator.query(MultiSelectComponent)?.placeholder).toEqual('test1');
   });
 
   test('should emit selection when selected', () => {
@@ -106,10 +106,12 @@ describe('Table Controls component', () => {
       }
     });
 
-    spectator.triggerEventHandler(SelectComponent, 'selectedChange', {
-      label: 'first1',
-      value: 'first-1'
-    });
+    spectator.triggerEventHandler(MultiSelectComponent, 'selectedChange', [
+      {
+        label: 'first1',
+        value: 'first-1'
+      }
+    ]);
 
     expect(onChangeSpy).toHaveBeenCalled();
   });
