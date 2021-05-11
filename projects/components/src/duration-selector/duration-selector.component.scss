@@ -1,0 +1,51 @@
+@import 'font';
+@import 'color-palette';
+
+.duration-selection {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+
+  & > * {
+    margin-bottom: 4px;
+  }
+
+  .title {
+    @include body-2-medium($gray-7);
+  }
+
+  .duration-config {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .indefinite-duration-checkbox {
+      margin-top: 16px;
+      @include body-2-regular($gray-7);
+    }
+
+    .duration-input {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 10px;
+
+      & > * {
+        margin-right: 10px;
+      }
+
+      .time-value {
+        width: 64px;
+      }
+
+      .time-unit {
+        width: 112px;
+        height: 44px;
+      }
+    }
+  }
+}
+
+.error-message {
+  @include footnote($red-6);
+}

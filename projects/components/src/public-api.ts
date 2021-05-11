@@ -322,3 +322,7 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
+
+// Duration Selector
+export * from './duration-selector/duration-selector.component';
+export * from './duration-selector/duration-selector.module';
