@@ -32,7 +32,7 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
           this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange)
         ).pipe(
           mergeMap(response =>
-            this.mapResponseData(this.request!, response, this.request!.interval as TimeDuration, timeRange)
+            this.mapResponseData(this.request!, response, exploreRequest.interval as TimeDuration, timeRange)
           )
         );
       })
