@@ -5,7 +5,7 @@ import { displayStringEnum } from './display-string-enum';
   name: 'htDisplayStringEnum'
 })
 export class DisplayStringEnumPipe implements PipeTransform {
-  public transform(value: string): string {
-    return displayStringEnum(value);
+  public transform(value?: string, unknown: string = '-', separator: string = ' '): string {
+    return displayStringEnum(value, unknown, separator);
   }
 }
