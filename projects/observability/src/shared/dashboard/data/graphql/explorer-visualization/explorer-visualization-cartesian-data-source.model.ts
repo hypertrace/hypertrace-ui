@@ -1,4 +1,5 @@
-import { GraphQlFilter } from '@hypertrace/distributed-tracing';
+import { TimeDuration } from '@hypertrace/common';
+import { GraphQlFilter, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { NEVER, Observable } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
@@ -24,21 +25,28 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
     }
 
     return this.request.exploreQuery$.pipe(
-      switchMap(exploreRequest =>
-        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters))
-        ).pipe(mergeMap(response => this.mapResponseData(this.request!, response)))
-      )
+      switchMap(exploreRequest => {
+        const timeRange = this.getTimeRangeOrThrow();
+
+        return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange)
+        ).pipe(
+          mergeMap(response =>
+            this.mapResponseData(this.request!, response, exploreRequest.interval as TimeDuration, timeRange)
+          )
+        );
+      })
     );
   }
 
   protected appendFilters(
     request: Omit<GraphQlExploreRequest, 'timeRange'>,
-    filters: GraphQlFilter[]
+    filters: GraphQlFilter[],
+    timeRange: GraphQlTimeRange
   ): GraphQlExploreRequest {
     return {
       ...request,
-      timeRange: this.getTimeRangeOrThrow(),
+      timeRange: timeRange,
       filters: [...(request.filters ?? []), ...filters]
     };
   }
