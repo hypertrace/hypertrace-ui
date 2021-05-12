@@ -1,8 +1,8 @@
 import { isNil, startCase } from 'lodash-es';
 
-export const displayStringEnum = (provided?: string, unknown: string = '-', separator: string = ' '): string => {
+export const displayStringEnum = (provided?: string, defaultValue: string = '-', separator: string = ' '): string => {
   if (isNil(provided)) {
-    return unknown;
+    return defaultValue;
   }
 
   // This removes dashes and underscores and gives all words initial caps
