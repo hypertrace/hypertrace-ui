@@ -3,7 +3,7 @@
 
 $key-width: 40%;
 $value-width: 60%;
-$margin-left: 12px;
+$horizontal-offset: 12px;
 
 @mixin grid-view {
   width: 100%;
@@ -34,7 +34,7 @@ $margin-left: 12px;
     .header-key-label,
     .header-value-label {
       @include overline;
-      margin-left: $margin-left;
+      padding: 0 $horizontal-offset;
       width: 100%;
     }
   }
@@ -51,7 +51,7 @@ $margin-left: 12px;
       width: 100%;
       display: flex;
       align-items: center;
-      margin-left: $margin-left;
+      padding: 0 $horizontal-offset;
     }
     .key {
       font-weight: 500;
