@@ -21,6 +21,7 @@ import { CodeTableCellRendererComponent } from './data-renderers/code/code-table
 import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
+import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
 import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
 import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
@@ -72,7 +73,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     CodeTableCellRendererComponent,
     StringArrayTableCellRendererComponent,
     StringEnumTableCellRendererComponent,
-    TextWithCopyActionTableCellRendererComponent
+    TextWithCopyActionTableCellRendererComponent,
+    RelativeTimestampTableCellRendererComponent
   ],
   providers: [
     {
@@ -88,7 +90,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         CodeTableCellRendererComponent,
         StringArrayTableCellRendererComponent,
         StringEnumTableCellRendererComponent,
-        TextWithCopyActionTableCellRendererComponent
+        TextWithCopyActionTableCellRendererComponent,
+        RelativeTimestampTableCellRendererComponent
       ],
       multi: true
     },
