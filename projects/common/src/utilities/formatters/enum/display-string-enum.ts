@@ -1,13 +1,9 @@
-import { isNil, startCase } from 'lodash-es';
+import { capitalize, isNil, lowerCase } from 'lodash-es';
 
-export const displayStringEnum = (provided?: string): string => {
+export const displayStringEnum = (provided?: string, defaultValue: string = '-', separator: string = ' '): string => {
   if (isNil(provided)) {
-    return '-';
+    return defaultValue;
   }
 
-  // This removes dashes and underscores and gives all words initial caps
-  const startCased = startCase(provided);
-
-  // We only want the first word capitalized.
-  return `${startCased[0]}${startCased.substr(1).toLowerCase()}`;
+  return capitalize(lowerCase(provided)).replace(' ', separator);
 };
