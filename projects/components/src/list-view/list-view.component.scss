@@ -34,7 +34,7 @@ $horizontal-offset: 12px;
     .header-key-label,
     .header-value-label {
       @include overline;
-      padding: 0px $horizontal-offset;
+      padding: 0 $horizontal-offset;
       width: 100%;
     }
   }
@@ -51,7 +51,7 @@ $horizontal-offset: 12px;
       width: 100%;
       display: flex;
       align-items: center;
-      padding: 0px $horizontal-offset;
+      padding: 0 $horizontal-offset;
     }
     .key {
       font-weight: 500;
