@@ -30,7 +30,7 @@ describe('Span Trace Navigation Handler Model', () => {
 
     expect(navService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['trace', 'test-trace-id', { spanId: 'test-id' }]
+      path: ['/trace', 'test-trace-id', { spanId: 'test-id' }]
     });
   });
 });
