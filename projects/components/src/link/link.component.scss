@@ -4,6 +4,6 @@
 .ht-link {
   text-decoration-line: none;
   text-decoration: none;
-  color: $gray-9;
+  color: inherit;
   @include link-hover;
 }

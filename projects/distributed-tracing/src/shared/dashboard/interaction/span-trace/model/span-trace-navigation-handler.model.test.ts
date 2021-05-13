@@ -1,4 +1,4 @@
-import { NavigationService } from '@hypertrace/common';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Span, spanIdKey } from '../../../../graphql/model/schema/span';
@@ -12,7 +12,7 @@ describe('Span Trace Navigation Handler Model', () => {
   const buildModel = createModelFactory({
     providers: [
       mockProvider(NavigationService, {
-        navigateWithinApp: jest.fn()
+        navigate: jest.fn()
       })
     ]
   });
@@ -23,11 +23,14 @@ describe('Span Trace Navigation Handler Model', () => {
 
     spectator.model.execute(span);
 
-    expect(navService.navigateWithinApp).not.toHaveBeenCalled();
+    expect(navService.navigate).not.toHaveBeenCalled();
 
     span.traceId = 'test-trace-id';
     spectator.model.execute(span);
 
-    expect(navService.navigateWithinApp).toHaveBeenLastCalledWith(['trace', 'test-trace-id', { spanId: 'test-id' }]);
+    expect(navService.navigate).toHaveBeenLastCalledWith({
+      navType: NavigationParamsType.InApp,
+      path: ['/trace', 'test-trace-id', { spanId: 'test-id' }]
+    });
   });
 });

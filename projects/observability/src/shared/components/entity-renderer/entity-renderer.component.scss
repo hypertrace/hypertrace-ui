@@ -2,26 +2,23 @@
 @import 'font';
 
 .ht-entity-renderer {
-  @include body-1-regular(currentColor);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: inherit;
+  .name-with-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: inherit;
+
+    .icon {
+      padding-right: 12px;
+    }
+
+    .name {
+      @include ellipsis-overflow();
+    }
+  }
+}
+
+.default-text-style {
   color: $gray-9;
-
-  .icon {
-    padding-right: 12px;
-  }
-
-  .name {
-    @include ellipsis-overflow();
-  }
-}
-
-.navigable {
-  @include link-hover();
-}
-
-.inherit-text-color {
-  @include body-1-regular(inherit);
+  @include body-1-regular(currentColor);
 }
