@@ -1,4 +1,4 @@
-import { NavigationService, NavigationParamsType } from '@hypertrace/common';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Span, spanIdKey } from '../../../../graphql/model/schema/span';
