@@ -14,9 +14,8 @@ import {
   ViewChildren
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { DomElementScrollIntoViewService, TypedSimpleChanges } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { DomElementScrollIntoViewService } from '../../../common/src/utilities/dom/dom-element-scroll-into-view.service';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';

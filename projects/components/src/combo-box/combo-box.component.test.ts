@@ -1,10 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { DomElementScrollIntoViewService, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
-import { DomElementScrollIntoViewService } from '../../../common/src/utilities/dom/dom-element-scroll-into-view.service';
 import { ComboBoxOption } from './combo-box-api';
 import { ComboBoxComponent } from './combo-box.component';
 import { ComboBoxModule } from './combo-box.module';
