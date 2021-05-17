@@ -29,6 +29,7 @@ export * from './custom-error/custom-error';
 
 // DOM
 export { DomElementMeasurerService } from './utilities/dom/dom-element-measurer.service';
+export { DomElementScrollIntoViewService } from './utilities/dom/dom-element-scroll-into-view.service';
 export * from './utilities/dom/dom-utilities';
 
 // External
