@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Dictionary } from 'lodash';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
@@ -30,13 +31,19 @@ export class TimeRangeService {
   }
 
   public getShareableCurrentUrl(): string {
-    const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
-    const timeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${timeRangeParamValue}`;
+    const timeRangeParam = Object.entries(this.getTimeRangeParams()).map((key, value) => `${key}=${value}`).join('&');
     const timeRange = this.getCurrentTimeRange();
     const fixedTimeRange: FixedTimeRange = TimeRangeService.toFixedTimeRange(timeRange.startTime, timeRange.endTime);
     const newTimeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${fixedTimeRange.toUrlString()}`;
 
     return this.navigationService.getAbsoluteCurrentUrl().replace(timeRangeParam, newTimeRangeParam);
+  }
+
+  public getTimeRangeParams(): Dictionary<string> {
+    const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
+    return {
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRangeParamValue
+    };
   }
 
   public getTimeRangeAndChanges(): ReplayObservable<TimeRange> {
