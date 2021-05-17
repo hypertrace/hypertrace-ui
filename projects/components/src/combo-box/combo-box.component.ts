@@ -9,10 +9,14 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
+import { DomElementScrollIntoViewService } from '../../../common/src/utilities/dom/dom-element-scroll-into-view.service';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';
@@ -80,15 +84,30 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
           [style.min-width.px]="trigger.offsetWidth"
           class="popover-content"
         >
-          <!-- Simple string list when user does not provide a template (User option templates coming soon!) -->
+          <div class="option-list" *ngIf="this.isFilteredOptionAvailable()">
+            <!-- Simple string list when user does not provide a template (User option templates coming soon!) -->
+            <div
+              #optionElement
+              *ngFor="let option of this.filteredOptions; index as i"
+              [class.selected]="this.highlightedOptionIndex === i"
+              (click)="this.onOptionClick(option)"
+              [htTooltip]="option.tooltip"
+              class="popover-item"
+            >
+              <ht-icon class="option-icon" [icon]="option.icon" *ngIf="option.icon"></ht-icon>
+              <div [innerHtml]="option.text | htHighlight: { text: this.text!, highlightType: 'mark' }"></div>
+            </div>
+          </div>
           <div
-            *ngFor="let option of this.filteredOptions; index as i"
-            [class.selected]="this.highlightedOptionIndex === i"
-            (click)="this.onOptionClick(option)"
-            [htTooltip]="option.tooltip"
-            class="popover-item"
+            *ngIf="this.isCreateOptionAvailable()"
+            [class.selected]="this.highlightedOptionIndex === -1"
+            (click)="this.onEnter()"
+            [htTooltip]="this.createOption?.tooltip"
+            class="popover-item create-option"
+            [class.option-divider]="this.filteredOptions.length > 0"
           >
-            <div [innerHtml]="option.text | htHighlight: { text: this.text!, highlightType: 'mark' }"></div>
+            <ht-icon class="option-icon" [icon]="this.createOption?.icon" *ngIf="this.createOption?.icon"></ht-icon>
+            <span>{{ this.createOption?.text }}</span>
           </div>
         </div>
       </ht-popover-content>
@@ -113,6 +132,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   @Input()
   public autoSize: boolean = false;
+
+  @Input()
+  public provideCreateOption: boolean = false;
 
   @Input()
   public text?: string = '';
@@ -144,21 +166,29 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   @ViewChild('invisibleText', { read: ElementRef })
   public readonly invisibleText!: ElementRef;
 
+  @ViewChildren('optionElement', { read: ElementRef })
+  public readonly optionElements!: QueryList<ElementRef>;
+
   private popoverRef: PopoverRef | undefined;
 
   public highlightedOptionIndex: number = 0;
   public filteredOptions: ComboBoxOption<TValue>[] = [];
   public width: string = '100%';
 
-  public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  public createOption?: ComboBoxOption<TValue>;
+
+  public constructor(
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly scrollIntoViewService: DomElementScrollIntoViewService
+  ) {}
 
   public ngAfterViewInit(): void {
     this.measureText();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.options) {
-      this.setFilteredOptions();
+    if (changes.options || changes.text) {
+      this.setFilteredOptions(this.text);
     }
   }
 
@@ -166,8 +196,19 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
     this.popoverRef?.close();
   }
 
+  private buildCreateOption(text: string): ComboBoxOption<TValue> {
+    return {
+      text: `Create "${text}"`,
+      tooltip: text,
+      icon: IconType.AddCircleOutline
+    };
+  }
+
   private setFilteredOptions(text?: string): void {
-    this.filteredOptions = (this.options ?? []).filter(option => text === undefined || option.text.includes(text));
+    this.filteredOptions = (this.options ?? []).filter(
+      option => text === undefined || option.text.toLowerCase().includes(text.toLowerCase())
+    );
+    this.createOption = this.provideCreateOption ? this.buildCreateOption(text ?? '') : undefined;
     this.setHighlightedOptionIndex();
   }
 
@@ -182,10 +223,12 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   private setHighlightedOptionIndex(): void {
-    this.highlightedOptionIndex = Math.max(
-      this.filteredOptions.findIndex(o => o.text === this.text),
-      0
-    );
+    this.highlightedOptionIndex = this.provideCreateOption
+      ? this.filteredOptions.findIndex(option => option.text === this.text)
+      : Math.max(
+          this.filteredOptions.findIndex(option => option.text === this.text),
+          0
+        );
   }
 
   public onInputChange(text: string): void {
@@ -210,25 +253,63 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public onEnter(): void {
     if (this.arePopoverOptionsAvailable()) {
-      this.setText(this.filteredOptions[this.highlightedOptionIndex].text);
+      if (this.highlightedOptionIndex >= 0) {
+        this.setText(this.filteredOptions[this.highlightedOptionIndex].text);
+      } else {
+        this.setText(this.text);
+      }
       this.hidePopover();
     }
     this.enter.emit(this.buildResult());
   }
 
   public onNextOption(event: KeyboardEvent): void {
-    if (this.arePopoverOptionsAvailable()) {
-      this.highlightedOptionIndex = ++this.highlightedOptionIndex % this.filteredOptions.length;
-      event.preventDefault(); // Prevent tabbing to next control on page
+    event.preventDefault(); // Prevent tabbing to next control on page
+
+    if (!this.arePopoverOptionsAvailable()) {
+      return;
     }
+
+    if (this.isCreateOptionAvailable() && this.isNextOptionBoundaryIndex()) {
+      if (this.highlightedOptionIndex < 0) {
+        this.highlightedOptionIndex = 0;
+      } else if (this.highlightedOptionIndex >= this.filteredOptions.length - 1) {
+        this.highlightedOptionIndex = -1;
+      }
+    } else {
+      this.highlightedOptionIndex = ++this.highlightedOptionIndex % this.filteredOptions.length;
+    }
+
+    this.scrollIntoViewService.scrollIntoView(this.optionElements.get(this.highlightedOptionIndex)?.nativeElement);
+  }
+
+  private isNextOptionBoundaryIndex(): boolean {
+    return this.highlightedOptionIndex < 0 || this.highlightedOptionIndex >= this.filteredOptions.length - 1;
   }
 
   public onPrevOption(event: KeyboardEvent): void {
-    if (this.arePopoverOptionsAvailable()) {
+    event.preventDefault(); // Prevent tabbing to prev control on page
+
+    if (!this.arePopoverOptionsAvailable()) {
+      return;
+    }
+
+    if (this.isCreateOptionAvailable() && this.isPrevOptionBoundaryIndex()) {
+      if (this.highlightedOptionIndex < 0) {
+        this.highlightedOptionIndex = this.filteredOptions.length - 1;
+      } else if (this.highlightedOptionIndex === 0) {
+        this.highlightedOptionIndex = -1;
+      }
+    } else {
       this.highlightedOptionIndex =
         (--this.highlightedOptionIndex + this.filteredOptions.length) % this.filteredOptions.length;
-      event.preventDefault(); // Prevent tabbing to prev control on page
     }
+
+    this.scrollIntoViewService.scrollIntoView(this.optionElements.get(this.highlightedOptionIndex)?.nativeElement);
+  }
+
+  private isPrevOptionBoundaryIndex(): boolean {
+    return this.highlightedOptionIndex <= 0;
   }
 
   public onSelect(): void {
@@ -248,7 +329,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
-    this.setFilteredOptions();
+    this.setFilteredOptions(this.text);
     this.popoverRef = popoverRef;
   }
 
@@ -269,7 +350,15 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   public arePopoverOptionsAvailable(): boolean {
-    return !!this.popoverRef?.visible && this.filteredOptions.length > 0;
+    return !!this.popoverRef?.visible && (this.isFilteredOptionAvailable() || this.isCreateOptionAvailable());
+  }
+
+  public isFilteredOptionAvailable(): boolean {
+    return this.filteredOptions.length > 0;
+  }
+
+  public isCreateOptionAvailable(): boolean {
+    return this.createOption !== undefined && !isNil(this.text);
   }
 
   private buildResult(): ComboBoxResult<TValue> {

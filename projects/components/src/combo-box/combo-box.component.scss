@@ -1,8 +1,16 @@
 @import 'mixins';
 
+.combo-box {
+  display: flex;
+  height: inherit;
+  width: inherit;
+}
+
 .popover-trigger {
   display: flex;
-  height: 24px;
+  align-items: center;
+  height: inherit;
+  width: inherit;
   border: 1px solid $color-border;
   border-radius: 6px;
 
@@ -54,7 +62,7 @@
     background: inherit;
     width: 100%;
     border: none;
-    margin-left: 2px; // Need this so that the border radius of container isn't cut off when no icons
+    margin-left: 12px; // Need this so that the border radius of container isn't cut off when no icons
     outline: none;
   }
 
@@ -70,6 +78,7 @@
     color: $gray-3;
     cursor: pointer;
     visibility: hidden;
+    margin-right: 8px;
 
     &.has-text {
       visibility: visible;
@@ -91,15 +100,28 @@
 
 .popover-content {
   @include dropdown();
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
   max-height: 400px;
+
+  .option-list {
+    overflow-y: auto;
+    height: 100%;
+  }
 
   .popover-item {
     height: 36px;
-    padding: 2px 8px;
+    padding: 2px 12px;
     cursor: pointer;
 
     display: flex;
     align-items: center;
+
+    .option-icon {
+      padding-right: 10px;
+    }
 
     &:hover {
       background: $gray-1;
@@ -108,5 +130,14 @@
     &.selected {
       background: $blue-1;
     }
+  }
+
+  .option-divider {
+    border-top: 1px solid $gray-2;
+    margin: 0 12px;
+  }
+
+  .create-option {
+    min-height: 36px;
   }
 }
