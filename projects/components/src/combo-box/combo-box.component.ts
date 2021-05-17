@@ -203,11 +203,12 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
     };
   }
 
-  private setFilteredOptions(text?: string): void {
-    this.filteredOptions = (this.options ?? []).filter(
-      option => text === undefined || option.text.toLowerCase().includes(text.toLowerCase())
-    );
-    this.createOption = this.provideCreateOption ? this.buildCreateOption(text ?? '') : undefined;
+  private setFilteredOptions(searchText?: string): void {
+    this.filteredOptions =
+      searchText === undefined
+        ? this.options ?? []
+        : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText.toLowerCase()));
+    this.createOption = this.provideCreateOption ? this.buildCreateOption(searchText ?? '') : undefined;
     this.setHighlightedOptionIndex();
   }
 
