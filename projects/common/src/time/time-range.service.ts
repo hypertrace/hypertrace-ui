@@ -5,7 +5,7 @@ import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
-import { getQueryParamStringFromObject } from '../utilities/url/url.utilities';
+import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 import { FixedTimeRange } from './fixed-time-range';
 import { RelativeTimeRange } from './relative-time-range';
 import { TimeDuration } from './time-duration';

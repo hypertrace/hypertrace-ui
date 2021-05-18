@@ -7,7 +7,7 @@ import {
 	NavigationService
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
-import { getQueryParamStringFromObject } from '../utilities/url/url.utilities';
+import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 
 @Injectable({ providedIn: 'root' })
 export class ExternalUrlNavigator implements CanActivate {

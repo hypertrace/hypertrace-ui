@@ -2,9 +2,12 @@ import { Dictionary, isEmpty } from "lodash"
 
 export const getQueryParamStringFromObject = (params: Dictionary<string | number>): string => {
 	try {
-		const paramString: string = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+		const paramString: string = Object.entries(params)
+			.map(([key, value]) => value !== undefined ? `${key}=${value}` : '')
+			.filter(item => item)
+			.join('&');
 		return isEmpty(paramString) ? '' : paramString;
-	} catch(error) {
+	} catch (error) {
 		return ``;
 	}
 };
