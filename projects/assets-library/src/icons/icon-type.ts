@@ -37,6 +37,7 @@ export const enum IconType {
   Delete = 'delete',
   Device = 'svg:device',
   Done = 'done',
+  Download = 'download',
   Edge = 'edge',
   Error = 'error_outline',
   Empty = 'panorama_fish_eye',
