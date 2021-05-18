@@ -5,6 +5,7 @@ import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
+import { getQueryParamStringFromObject } from '../utilities/url/url.utilities';
 import { FixedTimeRange } from './fixed-time-range';
 import { RelativeTimeRange } from './relative-time-range';
 import { TimeDuration } from './time-duration';
@@ -31,7 +32,7 @@ export class TimeRangeService {
   }
 
   public getShareableCurrentUrl(): string {
-    const timeRangeParam = Object.entries(this.getTimeRangeParams()).map((key, value) => `${key}=${value}`).join('&');
+    const timeRangeParam = getQueryParamStringFromObject(this.getTimeRangeParams());
     const timeRange = this.getCurrentTimeRange();
     const fixedTimeRange: FixedTimeRange = TimeRangeService.toFixedTimeRange(timeRange.startTime, timeRange.endTime);
     const newTimeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${fixedTimeRange.toUrlString()}`;

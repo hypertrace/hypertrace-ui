@@ -89,7 +89,8 @@ export class NavigationService {
           }
         ],
         extras: {
-          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
+          skipLocationChange: true, // Don't bother showing the updated location, we're going external anyway
+          queryParams: params.queryParams
         }
       };
     }
