@@ -42,6 +42,7 @@ export class TimeRangeService {
 
   public getTimeRangeParams(): Dictionary<string> {
     const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
+
     return {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRangeParamValue
     };

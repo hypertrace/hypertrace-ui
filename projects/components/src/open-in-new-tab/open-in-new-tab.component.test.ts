@@ -1,12 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
-import {
-  NavigationService,
-  TimeRangeService
-} from '@hypertrace/common';
+import { NavigationService, TimeRangeService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { IconComponent } from '../icon/icon.component';
 import { IconSize } from '../icon/icon-size';
+import { IconComponent } from '../icon/icon.component';
 import { LinkComponent } from '../link/link.component';
 import { OpenInNewTabComponent } from './open-in-new-tab.component';
 
@@ -33,7 +30,7 @@ describe('Open in new tab component', () => {
           extras: { skipLocationChange: true }
         })
       })
-    ],
+    ]
   });
 
   test('Open in new tab component should not be displayed if paramsOrUrl is undefined', () => {
@@ -53,22 +50,23 @@ describe('Open in new tab component', () => {
     });
     expect(spectator.query('.open-in-new-tab')).toExist();
     expect(spectator.query('ht-link')).toExist();
-    // default value of icon size
+    // Default value of icon size
     expect(spectator.component.iconSize).toBe(IconSize.Medium);
   }));
 
-  
   test(`Open in new tab component should contain icon of passed size`, fakeAsync(() => {
-    spectator = createHost(`<ht-open-in-new-tab [paramsOrUrl]="paramsOrUrl" [iconSize]="iconSize" ></ht-open-in-new-tab>`, {
-      hostProps: {
-        paramsOrUrl: {},
-        iconSize: IconSize.Small
+    spectator = createHost(
+      `<ht-open-in-new-tab [paramsOrUrl]="paramsOrUrl" [iconSize]="iconSize" ></ht-open-in-new-tab>`,
+      {
+        hostProps: {
+          paramsOrUrl: {},
+          iconSize: IconSize.Small
+        }
       }
-    });
+    );
     expect(spectator.query('.open-in-new-tab')).toExist();
     expect(spectator.query('ht-link')).toExist();
-    // expected value of icon size if passed
+    // Expected value of icon size if passed
     expect(spectator.component.iconSize).toBe(IconSize.Small);
   }));
-
 });

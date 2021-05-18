@@ -1,8 +1,5 @@
 import { Params } from '@angular/router';
-import {
-  getQueryParamStringFromObject,
-  getQueryParamObjectFromString
-} from './url-utilities';
+import { getQueryParamObjectFromString, getQueryParamStringFromObject } from './url-utilities';
 
 describe('getQueryParamStringFromObject', () => {
   it('should return string from a string dictionary', () => {
@@ -10,8 +7,6 @@ describe('getQueryParamStringFromObject', () => {
     expect(getQueryParamStringFromObject(params)).toBe('');
     params.a = undefined;
     expect(getQueryParamStringFromObject(params)).toBe('');
-    params.a = null;
-    expect(getQueryParamStringFromObject(params)).toBe(`a=null`);
     params.a = true;
     expect(getQueryParamStringFromObject(params)).toBe(`a=true`);
     params.a = false;
@@ -29,7 +24,7 @@ describe('getQueryParamObjectFromString', () => {
     let queryParam = '?queryparam1=value';
     expect(getQueryParamObjectFromString(queryParam)).toHaveProperty('queryparam1');
     expect(getQueryParamObjectFromString(queryParam).queryparam1).toBe('value');
-    
+
     queryParam = '?queryparam1=';
     expect(getQueryParamObjectFromString(queryParam)).toHaveProperty('queryparam1');
     expect(getQueryParamObjectFromString(queryParam).queryparam1).toBe('');

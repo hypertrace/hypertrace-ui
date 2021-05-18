@@ -22,7 +22,7 @@ describe('External URL navigator', () => {
   test('goes back when unable to detect a url on navigation', () => {
     // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
-      paramMap: convertToParamMap({}),
+      paramMap: convertToParamMap({})
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(1);
@@ -66,14 +66,12 @@ describe('External URL navigator', () => {
     spectator.service.canActivate({
       paramMap: convertToParamMap({
         [ExternalNavigationPathParams.Url]: 'https://www.bing.com',
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow,
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
       }),
-      queryParams
+      queryParams: queryParams
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenCalledWith('https://www.bing.com?time=1h', undefined);
     expect(spectator.inject(NavigationService).navigateBack).not.toHaveBeenCalled();
   });
-
-
 });
