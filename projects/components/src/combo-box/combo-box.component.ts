@@ -14,7 +14,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { DomElementScrollIntoViewService, TypedSimpleChanges } from '@hypertrace/common';
+import { DomElementScrollIntoViewService, isNonEmptyString, TypedSimpleChanges } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
@@ -208,8 +208,16 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
       searchText === undefined
         ? this.options ?? []
         : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText.toLowerCase()));
-    this.createOption = this.provideCreateOption ? this.buildCreateOption(searchText ?? '') : undefined;
+    this.createOption = this.isShowCreateOption(searchText) ? this.buildCreateOption(searchText) : undefined;
     this.setHighlightedOptionIndex();
+  }
+
+  private isShowCreateOption(searchText?: string): searchText is string {
+    return (
+      this.provideCreateOption &&
+      isNonEmptyString(searchText) &&
+      this.filteredOptions.find(option => option.text === searchText) === undefined
+    );
   }
 
   private setText(text: string = ''): void {
