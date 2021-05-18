@@ -12,7 +12,10 @@ export class HighlightPipe implements PipeTransform {
     return snippetsToHighlight.reduce((highlightedText, highlightConfig) => {
       const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
 
-      return highlightedText.replace(highlightConfig.text, `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`);
+      return highlightedText.replace(
+        new RegExp(highlightConfig.text, 'ig'),
+        `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`
+      );
     }, fullText);
   }
 }
