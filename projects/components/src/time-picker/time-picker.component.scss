@@ -1,4 +1,4 @@
-@import 'mixins';
+@import "mixins";
 
 .time-picker {
   display: flex;
@@ -22,7 +22,10 @@
 
   .trigger-icon {
     padding: 0 8px;
-    margin-left: auto;
+  }
+
+  .trigger-caret {
+    padding: 0 8px;
   }
 
   .trigger-label {
