@@ -17,15 +17,19 @@
   display: flex;
   align-items: center;
   height: 32px;
-  padding: 12px;
+  padding: 0 8px;
   cursor: pointer;
 
   .trigger-icon {
-    padding-left: 8px;
+    padding: 0 8px;
+  }
+
+  .trigger-caret {
+    padding: 0 8px;
   }
 
   .trigger-label {
-    padding: 0 8px;
+    padding-left: 8px;
     flex: 1 1 auto;
   }
 }
