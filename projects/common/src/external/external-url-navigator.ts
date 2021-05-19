@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import {
   ExternalNavigationPathParams,
@@ -22,7 +21,7 @@ export class ExternalUrlNavigator implements CanActivate {
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
       : undefined;
     if (encodedUrl !== null && encodedUrl.length > 0) {
-      this.navigateToUrl(`${encodedUrl}${isEmpty(queryParamString) ? `?${queryParamString}` : ``}`, windowHandling);
+      this.navigateToUrl(`${encodedUrl}${queryParamString !== '' ? `?${queryParamString}` : ``}`, windowHandling);
     } else {
       this.navService.navigateBack();
     }
