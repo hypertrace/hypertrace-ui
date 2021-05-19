@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, convertToParamMap, Params } from '@angular/router';
+import { ActivatedRouteSnapshot, convertToParamMap } from '@angular/router';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import {
   ExternalNavigationPathParams,
@@ -55,23 +55,6 @@ describe('External URL navigator', () => {
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(2, 'https://www.bing.com', undefined);
-    expect(spectator.inject(NavigationService).navigateBack).not.toHaveBeenCalled();
-  });
-
-  test('navigates when a url is provided with query params', () => {
-    const queryParams: Params = {
-      time: '1h'
-    };
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    spectator.service.canActivate({
-      paramMap: convertToParamMap({
-        [ExternalNavigationPathParams.Url]: 'https://www.bing.com',
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
-      }),
-      queryParams: queryParams
-    } as ActivatedRouteSnapshot);
-
-    expect(window.open).toHaveBeenCalledWith('https://www.bing.com?time=1h', undefined);
     expect(spectator.inject(NavigationService).navigateBack).not.toHaveBeenCalled();
   });
 });

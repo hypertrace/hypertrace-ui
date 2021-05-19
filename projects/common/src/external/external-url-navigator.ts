@@ -7,7 +7,6 @@ import {
   NavigationService
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
-import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 
 @Injectable({ providedIn: 'root' })
 export class ExternalUrlNavigator implements CanActivate {
@@ -15,13 +14,11 @@ export class ExternalUrlNavigator implements CanActivate {
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url);
-    const queryParamString = getQueryParamStringFromObject(route.queryParams ?? {});
-
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
       : undefined;
     if (encodedUrl !== null && encodedUrl.length > 0) {
-      this.navigateToUrl(`${encodedUrl}${queryParamString !== '' ? `?${queryParamString}` : ``}`, windowHandling);
+      this.navigateToUrl(encodedUrl, windowHandling);
     } else {
       this.navService.navigateBack();
     }

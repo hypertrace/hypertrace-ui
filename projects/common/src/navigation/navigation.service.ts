@@ -13,10 +13,12 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { isEmpty } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { filter, map, share, skip, take } from 'rxjs/operators';
 import { throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
+import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 import { TraceRoute } from './trace-route';
 
 @Injectable({ providedIn: 'root' })
@@ -80,17 +82,21 @@ export class NavigationService {
 
     if (params.navType === NavigationParamsType.External) {
       // External
+      const queryParamString = getQueryParamStringFromObject(params.queryParams ?? {});
+      const url = isEmpty(params.url)
+        ? params.url
+        : `${params.url}${queryParamString !== '' ? `?${queryParamString}` : ``}`;
+
       return {
         path: [
           '/external',
           {
-            [ExternalNavigationPathParams.Url]: params.url,
+            [ExternalNavigationPathParams.Url]: url,
             [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
           }
         ],
         extras: {
-          skipLocationChange: true, // Don't bother showing the updated location, we're going external anyway
-          queryParams: params.queryParams
+          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
         }
       };
     }
