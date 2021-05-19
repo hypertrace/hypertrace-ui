@@ -1,29 +1,10 @@
-import { Dictionary, isEmpty } from 'lodash';
+import { Params } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
 
-export const getQueryParamStringFromObject = (params: Dictionary<string | number>): string => {
-  try {
-    const paramString: string = Object.entries(params)
-      .map(([key, value]) => `${key}=${value}`)
-      .filter(item => item)
-      .join('&');
-
-    return isEmpty(paramString) ? '' : paramString;
-  } catch (error) {
-    return ``;
-  }
-};
-
-export const getQueryParamObjectFromString = (query: string): Dictionary<string> => {
-  try {
-    const queryString = query[0] === '?' ? query.substring(1) : query;
-
-    return queryString.split('&').reduce((acc: Dictionary<string>, item: string): Dictionary<string> => {
-      const [key, value] = item.split('=');
-      acc[key] = value;
-
-      return acc;
-    }, {});
-  } catch (error) {
-    return {};
-  }
+export const getQueryParamStringFromObject = (params: Params): string => {
+  let urlParams = new HttpParams();
+  Object.entries(params).forEach(([key, value]) => {
+    urlParams = urlParams.set(key, value);
+  });
+  return urlParams.toString();
 };
