@@ -15,15 +15,14 @@ export class ExternalUrlNavigator implements CanActivate {
   public constructor(private readonly navService: NavigationService) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const url = route.paramMap.get(ExternalNavigationPathParams.Url);
+    const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url);
     const queryParamString = getQueryParamStringFromObject(route.queryParams ?? {});
-    const encodedUrl = isEmpty(url) ? url : `${url}${queryParamString ? `?${queryParamString}` : ``}`;
 
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
       : undefined;
     if (encodedUrl !== null && encodedUrl.length > 0) {
-      this.navigateToUrl(encodedUrl, windowHandling);
+      this.navigateToUrl(`${encodedUrl}${isEmpty(queryParamString) ? `?${queryParamString}` : ``}`, windowHandling);
     } else {
       this.navService.navigateBack();
     }

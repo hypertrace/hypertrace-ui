@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Dictionary } from 'lodash';
+import { Params } from '@angular/router';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
@@ -40,7 +40,7 @@ export class TimeRangeService {
     return this.navigationService.getAbsoluteCurrentUrl().replace(timeRangeParam, newTimeRangeParam);
   }
 
-  public getTimeRangeParams(): Dictionary<string> {
+  public getTimeRangeParams(): Params {
     const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
 
     return {
