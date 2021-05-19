@@ -23,6 +23,7 @@ export interface Series<TInterval> {
   units?: string;
   summary?: Summary;
   color: string;
+  getColor?(datum?: TInterval): string;
   name: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
