@@ -85,6 +85,7 @@ export class NavigationService {
     });
 
     inputUrlTree.queryParams = { ...inputUrlTree.queryParams, ...globalQueryParams };
+
     return this.router.serializeUrl(inputUrlTree);
   }
 
@@ -99,7 +100,9 @@ export class NavigationService {
         path: [
           '/external',
           {
-            [ExternalNavigationPathParams.Url]: params.useGlobalParams ? this.constructExternalUrl(params.url) : params.url,
+            [ExternalNavigationPathParams.Url]: params.useGlobalParams
+              ? this.constructExternalUrl(params.url)
+              : params.url,
             [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
           }
         ],
