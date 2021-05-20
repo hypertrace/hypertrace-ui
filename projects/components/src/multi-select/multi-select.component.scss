@@ -58,16 +58,17 @@
       .trigger-label {
         @include body-2-medium();
         padding-left: 8px;
-        width: calc(100% - 32px - 52px);
+        width: calc(100% - 32px - 38px);
         flex-grow: 1;
       }
 
       .trigger-more-items {
-        padding: 0 6px;
+        padding: 0 4px;
         background-color: $gray-2;
         border-radius: 4px;
-        margin-left: 5px;
-        max-width: 52px;
+        margin-left: 8px;
+        max-width: 38px;
+        font-size: 12px;
       }
 
       .trigger-icon {
