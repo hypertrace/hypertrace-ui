@@ -62,6 +62,10 @@ export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 
+// Download JSON
+export * from './download-json/download-json.component';
+export * from './download-json/download-json.module';
+
 // Dynamic label
 export * from './highlighted-label/highlighted-label.component';
 export * from './highlighted-label/highlighted-label.module';
