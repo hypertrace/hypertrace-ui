@@ -5,6 +5,7 @@ import { FormattingModule, TraceRoute } from '@hypertrace/common';
 import {
   ButtonModule,
   CopyShareableLinkToClipboardModule,
+  DownloadJsonModule,
   IconModule,
   LabelModule,
   LoadAsyncModule,
@@ -32,7 +33,8 @@ const ROUTE_CONFIG: TraceRoute[] = [
     LoadAsyncModule,
     FormattingModule,
     ButtonModule,
-    CopyShareableLinkToClipboardModule
+    CopyShareableLinkToClipboardModule,
+    DownloadJsonModule
   ]
 })
 export class ApiTraceDetailPageModule {}

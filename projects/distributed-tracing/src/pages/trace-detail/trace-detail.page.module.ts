@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormattingModule, TraceRoute } from '@hypertrace/common';
 import {
   CopyShareableLinkToClipboardModule,
+  DownloadJsonModule,
   IconModule,
   LabelModule,
   LoadAsyncModule,
@@ -33,6 +34,7 @@ const ROUTE_CONFIG: TraceRoute[] = [
     LoadAsyncModule,
     FormattingModule,
     CopyShareableLinkToClipboardModule,
+    DownloadJsonModule,
     NavigableDashboardModule.withDefaultDashboards(traceDetailDashboard)
   ]
 })

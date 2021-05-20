@@ -43,6 +43,13 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
           <div class="separation"></div>
 
           <ht-copy-shareable-link-to-clipboard class="share"></ht-copy-shareable-link-to-clipboard>
+
+          <ht-download-json
+            class="download"
+            [dataSource]="this.exportSpans$"
+            [fileName]="traceDetails.id"
+            [tooltip]="'Download Trace as Json'"
+          ></ht-download-json>
         </div>
       </div>
 
@@ -60,6 +67,7 @@ export class TraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
 
   public readonly traceDetails$: Observable<TraceDetails>;
+  public readonly exportSpans$: Observable<string>;
 
   public constructor(
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
@@ -67,6 +75,7 @@ export class TraceDetailPageComponent {
     private readonly traceDetailService: TraceDetailService
   ) {
     this.traceDetails$ = this.traceDetailService.fetchTraceDetails();
+    this.exportSpans$ = this.traceDetailService.fetchExportSpans();
   }
 
   public onDashboardReady(dashboard: Dashboard): void {
