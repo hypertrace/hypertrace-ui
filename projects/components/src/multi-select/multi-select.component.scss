@@ -54,12 +54,10 @@
       display: flex;
       width: 100%;
       align-items: center;
-      padding-left: 8px;
 
       .trigger-label {
         @include body-2-medium();
         padding-left: 8px;
-        max-width: 200px;
       }
 
       .trigger-more-items {
