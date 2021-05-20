@@ -50,6 +50,9 @@ import { MultiSelectJustify } from './multi-select-justify';
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
             <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
               <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
+              <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
+                >+{{ this.selectedItemsCount - 1 }}</span
+              >
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
           </div>
@@ -159,6 +162,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   public popoverOpen: boolean = false;
   public triggerLabel?: string;
+  public selectedItemsCount: number = 0;
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
@@ -236,10 +240,13 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     );
     if (selectedItems === undefined || selectedItems.length === 0) {
       this.triggerLabel = this.placeholder;
+      this.selectedItemsCount = 0;
     } else if (selectedItems.length === 1) {
       this.triggerLabel = selectedItems[0].label;
+      this.selectedItemsCount = 1;
     } else {
-      this.triggerLabel = `${selectedItems[0].label} and ${selectedItems.length - 1} more`;
+      this.triggerLabel = selectedItems[0].label;
+      this.selectedItemsCount = selectedItems.length;
     }
   }
 }

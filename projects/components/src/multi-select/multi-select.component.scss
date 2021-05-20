@@ -59,6 +59,14 @@
       .trigger-label {
         @include body-2-medium();
         padding-left: 8px;
+        max-width: 200px;
+      }
+
+      .trigger-more-items {
+        padding: 0 6px;
+        background-color: $gray-2;
+        border-radius: 4px;
+        margin-left: 5px;
       }
 
       .trigger-icon {
