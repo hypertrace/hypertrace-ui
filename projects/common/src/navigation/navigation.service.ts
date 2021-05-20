@@ -13,12 +13,10 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
-import { isEmpty } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { filter, map, share, skip, take } from 'rxjs/operators';
 import { throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
-import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 import { TraceRoute } from './trace-route';
 
 @Injectable({ providedIn: 'root' })
@@ -75,6 +73,21 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
+  public constructExternalUrl(urlString: string): string {
+    const inputUrlTree: UrlTree = this.router.parseUrl(urlString);
+    const globalQueryParams: Params = {};
+
+    this.globalQueryParams.forEach(key => {
+      const paramValue = this.getQueryParameter(key, '');
+      if (paramValue !== '') {
+        globalQueryParams[key] = paramValue;
+      }
+    });
+
+    inputUrlTree.queryParams = { ...inputUrlTree.queryParams, ...globalQueryParams };
+    return this.router.serializeUrl(inputUrlTree);
+  }
+
   public buildNavigationParams(
     paramsOrUrl: NavigationParams | string
   ): { path: NavigationPath; extras?: NavigationExtras } {
@@ -82,16 +95,11 @@ export class NavigationService {
 
     if (params.navType === NavigationParamsType.External) {
       // External
-      const queryParamString = getQueryParamStringFromObject(params.queryParams ?? {});
-      const url = isEmpty(params.url)
-        ? params.url
-        : `${params.url}${queryParamString !== '' ? `?${queryParamString}` : ``}`;
-
       return {
         path: [
           '/external',
           {
-            [ExternalNavigationPathParams.Url]: url,
+            [ExternalNavigationPathParams.Url]: params.useGlobalParams ? this.constructExternalUrl(params.url) : params.url,
             [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
           }
         ],
@@ -311,7 +319,7 @@ export interface QueryParamObject extends Params {
 
 export type NavigationPath = string | (string | Dictionary<string>)[];
 
-export type NavigationParams = InAppNavigationParams | ExternalNavigationParamsNew;
+export type NavigationParams = InAppNavigationParams | ExternalNavigationParams;
 export interface InAppNavigationParams {
   navType: NavigationParamsType.InApp;
   path: NavigationPath;
@@ -321,11 +329,11 @@ export interface InAppNavigationParams {
   relativeTo?: ActivatedRoute;
 }
 
-export interface ExternalNavigationParamsNew {
+export interface ExternalNavigationParams {
   navType: NavigationParamsType.External;
   url: string;
   windowHandling: ExternalNavigationWindowHandling; // Currently an enum called NavigationType
-  queryParams?: QueryParamObject;
+  useGlobalParams?: boolean;
 }
 
 export const enum ExternalNavigationPathParams {

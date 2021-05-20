@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ExternalNavigationParamsNew } from '@hypertrace/common';
+import { ExternalNavigationParams } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -16,7 +16,7 @@ import { IconSize } from '../icon/icon-size';
 })
 export class OpenInNewTabComponent {
   @Input()
-  public paramsOrUrl?: ExternalNavigationParamsNew | string;
+  public paramsOrUrl?: ExternalNavigationParams | string;
 
   @Input()
   public iconSize: IconSize = IconSize.Medium;
