@@ -66,7 +66,7 @@ describe('Open in new tab component', () => {
     );
     expect(spectator.query('.open-in-new-tab')).toExist();
     expect(spectator.query('ht-link')).toExist();
-    // Expected value of icon size if passed
+    // Expected value of icon size if pass
     expect(spectator.component.iconSize).toBe(IconSize.Small);
   }));
 });
