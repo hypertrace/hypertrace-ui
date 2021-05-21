@@ -72,6 +72,20 @@
       border-radius: 6px;
     }
 
+    &.menu-with-background {
+      background-color: $gray-1;
+      padding-top: 1px;
+      border-radius: 4px;
+
+      .trigger-label {
+        @include body-1-medium($gray-9);
+      }
+
+      .trigger-icon {
+        padding-top: 1px;
+      }
+    }
+
     &.justify-left {
       justify-content: flex-start;
     }

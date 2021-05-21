@@ -75,6 +75,15 @@ import { SelectSize } from './select-size';
               >
               </ht-icon>
             </div>
+            <div
+              *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBackground}'"
+              class="trigger-content menu-with-background"
+              [ngClass]="[this.justifyClass]"
+            >
+              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
+              </ht-label>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
+            </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -240,5 +249,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
 export const enum SelectTriggerDisplayMode {
   MenuWithBorder = 'menu-with-border',
+  MenuWithBackground = 'menu-with-background',
   Icon = 'icon'
 }
