@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Params } from '@angular/router';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
-import { getQueryParamStringFromObject } from '../utilities/url/url-utilities';
 import { FixedTimeRange } from './fixed-time-range';
 import { RelativeTimeRange } from './relative-time-range';
 import { TimeDuration } from './time-duration';
@@ -32,20 +30,13 @@ export class TimeRangeService {
   }
 
   public getShareableCurrentUrl(): string {
-    const timeRangeParam = getQueryParamStringFromObject(this.getTimeRangeParams());
+    const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
+    const timeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${timeRangeParamValue}`;
     const timeRange = this.getCurrentTimeRange();
     const fixedTimeRange: FixedTimeRange = TimeRangeService.toFixedTimeRange(timeRange.startTime, timeRange.endTime);
     const newTimeRangeParam = `${TimeRangeService.TIME_RANGE_QUERY_PARAM}=${fixedTimeRange.toUrlString()}`;
 
     return this.navigationService.getAbsoluteCurrentUrl().replace(timeRangeParam, newTimeRangeParam);
-  }
-
-  public getTimeRangeParams(): Params {
-    const timeRangeParamValue = this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '');
-
-    return {
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRangeParamValue
-    };
   }
 
   public getTimeRangeAndChanges(): ReplayObservable<TimeRange> {
