@@ -12,15 +12,13 @@ import { NotificationService } from '../notification/notification.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./download-json.component.scss'],
   template: `
-    <div class="download-json">
+    <div class="download-json" [htTooltip]="this.tooltip" (click)="this.triggerDownload()">
       <ht-button
         *ngIf="!this.dataLoading"
         class="download-button"
         icon="${IconType.Download}"
         display="${ButtonStyle.Text}"
         size="${ButtonSize.Large}"
-        [htTooltip]="this.tooltip"
-        (click)="this.triggerDownload()"
       ></ht-button>
       <ht-icon *ngIf="this.dataLoading" icon="${IconType.Loading}" size="${IconSize.Large}"></ht-icon>
     </div>
