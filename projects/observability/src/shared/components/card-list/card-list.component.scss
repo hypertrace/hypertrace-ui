@@ -22,9 +22,7 @@
     border: 1px solid $gray-2;
     margin-bottom: 8px;
 
-    &:hover {
-      @include box-shadow-2dp();
-    }
+    @include card-hover();
 
     &.selected-card {
       background: $blue-1;

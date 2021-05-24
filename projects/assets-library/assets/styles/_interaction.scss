@@ -9,7 +9,7 @@
 
 @mixin card-hover {
   &:hover {
-    @include dropdown-box-shadow();
+    @include box-shadow-2dp();
     cursor: pointer;
   }
 }
