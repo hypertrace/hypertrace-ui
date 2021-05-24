@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, R
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, take } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { NotificationService } from '../notification/notification.service';
 
@@ -37,18 +37,22 @@ export class DownloadJsonComponent {
   public tooltip: string = 'Download Json';
 
   public dataLoading: boolean = false;
+  private readonly dlJsonAnchorElement: HTMLAnchorElement;
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly notificationService: NotificationService
-  ) {}
+  ) {
+    this.dlJsonAnchorElement = this.document.createElement('a');
+  }
 
   public triggerDownload(): void {
     this.dataLoading = true;
     this.dataSource
       .pipe(
+        take(1),
         catchError(() => this.notificationService.createFailureToast('Download failed')),
         finalize(() => {
           this.dataLoading = false;
@@ -65,10 +69,13 @@ export class DownloadJsonComponent {
   }
 
   private downloadData(data: string): void {
-    const dlJsonAnchorElement: HTMLAnchorElement = this.document.createElement('a');
-    this.renderer.setAttribute(dlJsonAnchorElement, 'href', `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
-    this.renderer.setAttribute(dlJsonAnchorElement, 'download', `${this.fileName}.json`);
-    dlJsonAnchorElement.click();
-    dlJsonAnchorElement.remove();
+    this.renderer.setAttribute(
+      this.dlJsonAnchorElement,
+      'href',
+      `data:text/json;charset=utf-8,${encodeURIComponent(data)}`
+    );
+    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', `${this.fileName}.json`);
+    this.renderer.setAttribute(this.dlJsonAnchorElement, 'display', 'none');
+    this.dlJsonAnchorElement.click();
   }
 }
