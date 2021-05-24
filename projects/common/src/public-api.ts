@@ -112,6 +112,3 @@ export * from './time/time';
 
 // Validators
 export * from './utilities/validators/email-validator';
-
-// URL Utilities
-export * from './utilities/url/url-utilities';
