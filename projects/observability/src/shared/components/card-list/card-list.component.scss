@@ -21,7 +21,10 @@
     border-radius: 8px;
     border: 1px solid $gray-2;
     margin-bottom: 8px;
-    @include card-hover;
+
+    &:hover {
+      @include box-shadow-2dp();
+    }
 
     &.selected-card {
       background: $blue-1;
@@ -33,19 +36,11 @@
       }
 
       &:hover {
-        background: $blue-2;
-        border: 1px solid $blue-5;
-
         &.grouped-style {
           margin-bottom: 8px;
           @include grouped-style($blue-2);
         }
       }
-    }
-
-    &:hover {
-      background: $gray-1;
-      border: 1px solid $gray-2;
     }
 
     &.grouped-style {
