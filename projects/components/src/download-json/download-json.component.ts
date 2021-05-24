@@ -29,7 +29,7 @@ export class DownloadJsonComponent {
   public dataSource!: Observable<unknown>;
 
   @Input()
-  public fileName: string = 'download';
+  public fileName: string = 'download.json';
 
   public dataLoading: boolean = false;
   private readonly dlJsonAnchorElement: HTMLAnchorElement;
@@ -69,7 +69,7 @@ export class DownloadJsonComponent {
       'href',
       `data:text/json;charset=utf-8,${encodeURIComponent(data)}`
     );
-    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', `${this.fileName}.json`);
+    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', this.fileName);
     this.renderer.setAttribute(this.dlJsonAnchorElement, 'display', 'none');
     this.dlJsonAnchorElement.click();
   }
