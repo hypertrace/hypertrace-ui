@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, Renderer2 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle } from '../button/button';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'ht-download-json',
@@ -12,7 +15,7 @@ import { ButtonSize, ButtonStyle } from '../button/button';
     <div class="download-json">
       <ht-button
         *ngIf="!this.dataLoading"
-        class="download-json"
+        class="download-button"
         icon="${IconType.Download}"
         display="${ButtonStyle.Text}"
         size="${ButtonSize.Large}"
@@ -35,24 +38,36 @@ export class DownloadJsonComponent {
 
   public dataLoading: boolean = false;
 
+  constructor(
+    @Inject(DOCUMENT) private readonly document: Document,
+    private readonly renderer: Renderer2,
+    private readonly changeDetector: ChangeDetectorRef,
+    private readonly notificationService: NotificationService
+  ) {}
+
   public triggerDownload(): void {
     this.dataLoading = true;
-    this.dataSource.subscribe((data: unknown) => {
-      this.dataLoading = false;
-      if (typeof data === 'string') {
-        this.downloadData(data);
-      } else {
-        this.downloadData(JSON.stringify(data));
-      }
-    });
+    this.dataSource
+      .pipe(
+        catchError(() => this.notificationService.createFailureToast('Download failed')),
+        finalize(() => {
+          this.dataLoading = false;
+          this.changeDetector.detectChanges();
+        })
+      )
+      .subscribe((data: unknown) => {
+        if (typeof data === 'string') {
+          this.downloadData(data);
+        } else {
+          this.downloadData(JSON.stringify(data));
+        }
+      });
   }
 
   private downloadData(data: string): void {
-    const dlJsonAnchorElement: HTMLAnchorElement = document.createElement('a');
-    const downloadURL = `data:text/json;charset=utf-8,${encodeURIComponent(data)}`;
-    dlJsonAnchorElement?.setAttribute('href', downloadURL);
-    dlJsonAnchorElement?.setAttribute('href', downloadURL);
-    dlJsonAnchorElement?.setAttribute('download', `${this.fileName}.json`);
+    const dlJsonAnchorElement: HTMLAnchorElement = this.document.createElement('a');
+    this.renderer.setAttribute(dlJsonAnchorElement, 'href', `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
+    this.renderer.setAttribute(dlJsonAnchorElement, 'download', `${this.fileName}.json`);
     dlJsonAnchorElement.click();
     dlJsonAnchorElement.remove();
   }
