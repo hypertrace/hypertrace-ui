@@ -38,6 +38,7 @@ export * from './shared/dashboard/widgets/table/table-widget-view-toggle.model';
 export * from './shared/services/filter-builder/graphql-filter-builder.service';
 
 // Handlers
+export * from './shared/graphql/request/handlers/traces/export-spans-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/spans/span-graphql-query-handler.service';

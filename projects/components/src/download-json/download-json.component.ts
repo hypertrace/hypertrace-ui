@@ -12,7 +12,7 @@ import { NotificationService } from '../notification/notification.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./download-json.component.scss'],
   template: `
-    <div class="download-json" [htTooltip]="this.tooltip" (click)="this.triggerDownload()">
+    <div class="download-json" (click)="this.triggerDownload()">
       <ht-button
         *ngIf="!this.dataLoading"
         class="download-button"
@@ -29,10 +29,7 @@ export class DownloadJsonComponent {
   public dataSource!: Observable<unknown>;
 
   @Input()
-  public fileName: string = 'download';
-
-  @Input()
-  public tooltip: string = 'Download Json';
+  public fileName: string = 'download.json';
 
   public dataLoading: boolean = false;
   private readonly dlJsonAnchorElement: HTMLAnchorElement;
@@ -72,7 +69,7 @@ export class DownloadJsonComponent {
       'href',
       `data:text/json;charset=utf-8,${encodeURIComponent(data)}`
     );
-    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', `${this.fileName}.json`);
+    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', this.fileName);
     this.renderer.setAttribute(this.dlJsonAnchorElement, 'display', 'none');
     this.dlJsonAnchorElement.click();
   }

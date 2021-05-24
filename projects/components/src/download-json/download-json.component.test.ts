@@ -9,7 +9,7 @@ import { IconComponent } from '../icon/icon.component';
 import { DownloadJsonComponent } from './download-json.component';
 import { DownloadJsonModule } from './download-json.module';
 
-describe('Button Component', () => {
+describe('Download Json Component', () => {
   let spectator: Spectator<DownloadJsonComponent>;
   const mockElement = document.createElement('a');
   const createElementSpy = jest.fn().mockReturnValue(mockElement);
@@ -53,8 +53,7 @@ describe('Button Component', () => {
     spyOn(spectator.component, 'triggerDownload');
 
     expect(spectator.component.dataLoading).toBe(false);
-    expect(spectator.component.fileName).toBe('download');
-    expect(spectator.component.tooltip).toBe('Download Json');
+    expect(spectator.component.fileName).toBe('download.json');
     const element = spectator.query('.download-json');
     expect(element).toExist();
 
