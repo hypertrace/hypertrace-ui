@@ -58,18 +58,12 @@ export class ExportSpansGraphQlQueryHandlerService
   }
 
   protected buildTimeRange(timestamp?: Date): GraphQlTimeRange {
-    let timeRange;
     if (timestamp) {
       const duration = new TimeDuration(30, TimeUnit.Minute);
-      timeRange = {
-        startTime: timestamp.getTime() - duration.toMillis(),
-        endTime: timestamp.getTime() + duration.toMillis()
-      };
-    } else {
-      timeRange = this.timeRangeService.getCurrentTimeRange();
+      return new GraphQlTimeRange(timestamp.getTime() - duration.toMillis(), timestamp.getTime() + duration.toMillis());
     }
 
-    return new GraphQlTimeRange(timeRange.startTime, timeRange.endTime);
+    return GraphQlTimeRange.fromTimeRange(this.timeRangeService.getCurrentTimeRange());
   }
 }
 

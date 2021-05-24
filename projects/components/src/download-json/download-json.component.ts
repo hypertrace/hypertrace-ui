@@ -12,7 +12,7 @@ import { NotificationService } from '../notification/notification.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./download-json.component.scss'],
   template: `
-    <div class="download-json" [htTooltip]="this.tooltip" (click)="this.triggerDownload()">
+    <div class="download-json" (click)="this.triggerDownload()">
       <ht-button
         *ngIf="!this.dataLoading"
         class="download-button"
@@ -30,9 +30,6 @@ export class DownloadJsonComponent {
 
   @Input()
   public fileName: string = 'download';
-
-  @Input()
-  public tooltip: string = 'Download Json';
 
   public dataLoading: boolean = false;
   private readonly dlJsonAnchorElement: HTMLAnchorElement;

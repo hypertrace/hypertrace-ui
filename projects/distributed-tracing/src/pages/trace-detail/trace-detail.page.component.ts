@@ -48,7 +48,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             class="download"
             [dataSource]="this.exportSpans$"
             [fileName]="traceDetails.id"
-            [tooltip]="'Download Trace as Json'"
+            htTooltip="Download Trace as Json"
           ></ht-download-json>
         </div>
       </div>
