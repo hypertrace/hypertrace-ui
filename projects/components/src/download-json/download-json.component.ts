@@ -37,7 +37,7 @@ export class DownloadJsonComponent {
   public dataLoading: boolean = false;
   private readonly dlJsonAnchorElement: HTMLAnchorElement;
 
-  constructor(
+  public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
     private readonly changeDetector: ChangeDetectorRef,
