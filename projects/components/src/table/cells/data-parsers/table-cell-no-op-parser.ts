@@ -11,7 +11,8 @@ export class TableCellNoOpParser<T = unknown> extends TableCellParserBase<T, T, 
   }
 
   public parseFilterValue(cellData: T | { filterValue?: string }): string | undefined {
-    if ('filterValue' in cellData) {
+    // tslint:disable-next-line: no-unused-expression
+    if (typeof cellData === 'object' && cellData !== null && 'filterValue' in cellData) {
       return cellData.filterValue;
     }
 
