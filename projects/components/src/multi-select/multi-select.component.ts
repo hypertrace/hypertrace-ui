@@ -238,16 +238,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     const selectedItems: SelectOptionComponent<V>[] | undefined = this.allOptionsList?.filter(item =>
       this.isSelectedItem(item)
     );
-    if (selectedItems === undefined || selectedItems.length === 0) {
-      this.triggerLabel = this.placeholder;
-      this.selectedItemsCount = 0;
-    } else if (selectedItems.length === 1) {
-      this.triggerLabel = selectedItems[0].label;
-      this.selectedItemsCount = 1;
-    } else {
-      this.triggerLabel = selectedItems[0].label;
-      this.selectedItemsCount = selectedItems.length;
-    }
+    
+    this.selectedItemsCount = selectedItems?.length ?? 0;
+    this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems || [])[0]?.label;
   }
 }
 

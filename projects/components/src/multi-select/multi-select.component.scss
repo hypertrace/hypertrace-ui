@@ -63,12 +63,12 @@
       }
 
       .trigger-more-items {
+        @include font-label($gray-9);
         padding: 0 4px;
         background-color: $gray-2;
         border-radius: 4px;
         margin-left: 8px;
         max-width: 38px;
-        font-size: 12px;
         font-weight: 600;
       }
 
