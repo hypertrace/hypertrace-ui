@@ -4,10 +4,12 @@ import { RouterModule } from '@angular/router';
 import { FormattingModule, TraceRoute } from '@hypertrace/common';
 import {
   CopyShareableLinkToClipboardModule,
+  DownloadJsonModule,
   IconModule,
   LabelModule,
   LoadAsyncModule,
-  SummaryValueModule
+  SummaryValueModule,
+  TooltipModule
 } from '@hypertrace/components';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { TracingDashboardModule } from '../../shared/dashboard/tracing-dashboard.module';
@@ -30,9 +32,11 @@ const ROUTE_CONFIG: TraceRoute[] = [
     TracingDashboardModule,
     IconModule,
     SummaryValueModule,
+    TooltipModule,
     LoadAsyncModule,
     FormattingModule,
     CopyShareableLinkToClipboardModule,
+    DownloadJsonModule,
     NavigableDashboardModule.withDefaultDashboards(traceDetailDashboard)
   ]
 })
