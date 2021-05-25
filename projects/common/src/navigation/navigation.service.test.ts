@@ -3,7 +3,13 @@ import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationParamsType, NavigationService } from './navigation.service';
+import {
+  ExternalNavigationPathParams,
+  ExternalNavigationWindowHandling,
+  NavigationParams,
+  NavigationParamsType,
+  NavigationService
+} from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
@@ -233,5 +239,50 @@ describe('Navigation Service', () => {
       expect.objectContaining({ path: 'child' })
     ]);
     expect(spectator.service.getCurrentActivatedRoute().snapshot.queryParams).toEqual({ global: 'foo' });
+  });
+
+  test('construct external url in case useGlobalParams is set to true', () => {
+    const externalNavigationParams: NavigationParams = {
+      navType: NavigationParamsType.External,
+      useGlobalParams: true,
+      url: '/some/internal/path/of/app',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    };
+
+    spectator.service.addQueryParametersToUrl({ time: '1h', environment: 'development' });
+    spectator.service.registerGlobalQueryParamKey('time');
+    spectator.service.registerGlobalQueryParamKey('environment');
+
+    externalNavigationParams.useGlobalParams = true;
+
+    expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
+    expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
+      ExternalNavigationPathParams.Url
+    );
+
+    let pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
+    expect(typeof pathParam).not.toBe('string');
+
+    if (typeof pathParam !== 'string') {
+      expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
+        `${externalNavigationParams.url}?time=1h&environment=development`
+      );
+    }
+
+    externalNavigationParams.url = '/some/internal/path/of/app?type=json';
+
+    expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
+    expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
+      ExternalNavigationPathParams.Url
+    );
+
+    pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
+    expect(typeof pathParam).not.toBe('string');
+
+    if (typeof pathParam !== 'string') {
+      expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
+        `/some/internal/path/of/app?type=json&time=1h&environment=development`
+      );
+    }
   });
 });
