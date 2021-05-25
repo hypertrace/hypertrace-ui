@@ -286,8 +286,7 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
     expect(spectator.query(LabelComponent)?.label).toEqual('first');
 
-    expect(spectator.component.selectedItemsCount).toBe(6);
-    expect(spectator.query('.trigger-more-items')?.innerHTML).toBe('+5');
+    expect(spectator.query('.trigger-more-items')).toHaveText('+5');
 
     spectator.setHostInput({
       searchMode: MultiSelectSearchMode.Disabled
