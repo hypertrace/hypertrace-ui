@@ -10,6 +10,7 @@ import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace
     <a
       *ngIf="this.navigationPath"
       class="ht-link"
+      [ngClass]="{ disabled: this.disabled }"
       [routerLink]="this.navigationPath"
       [queryParams]="this.navigationOptions?.queryParams"
       [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"
@@ -23,6 +24,9 @@ import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace
 export class LinkComponent implements OnChanges {
   @Input()
   public paramsOrUrl?: NavigationParams | string;
+
+  @Input()
+  public disabled?: boolean;
 
   public navigationPath?: NavigationPath;
   public navigationOptions?: NavigationExtras;
