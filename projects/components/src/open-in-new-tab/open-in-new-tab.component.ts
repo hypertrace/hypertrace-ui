@@ -1,46 +1,23 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import {
-  ExternalNavigationWindowHandling,
-  NavigationParamsType,
-  NavigationService,
-  TimeRangeService
-} from '@hypertrace/common';
-import { ButtonSize, ButtonStyle } from '../button/button';
+import { ExternalNavigationParams } from '@hypertrace/common';
+import { IconSize } from '../icon/icon-size';
 
 @Component({
   selector: 'ht-open-in-new-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="open-in-new-tab" htTooltip="Open in a new tab">
-      <ht-button
-        class="open-in-new-tab-button"
-        display="${ButtonStyle.Outlined}"
-        [size]="this.size"
-        icon="${IconType.OpenInNewTab}"
-        (click)="this.openInNewTab()"
-      ></ht-button>
+    <div *ngIf="this.paramsOrUrl" class="open-in-new-tab" htTooltip="Open in a new tab">
+      <ht-link [paramsOrUrl]="this.paramsOrUrl">
+        <ht-icon icon="${IconType.OpenInNewTab}" [size]="this.iconSize"></ht-icon>
+      </ht-link>
     </div>
   `
 })
 export class OpenInNewTabComponent {
   @Input()
-  public size?: ButtonSize = ButtonSize.Small;
+  public paramsOrUrl?: ExternalNavigationParams | string;
 
   @Input()
-  public url?: string;
-
-  public constructor(
-    private readonly navigationService: NavigationService,
-    private readonly timeRangeService: TimeRangeService
-  ) {}
-
-  public openInNewTab(): void {
-    this.navigationService.navigate({
-      navType: NavigationParamsType.External,
-      windowHandling: ExternalNavigationWindowHandling.NewWindow,
-      // Use input url if available. Else construct a shareable URL for the page
-      url: this.url ?? this.timeRangeService.getShareableCurrentUrl()
-    });
-  }
+  public iconSize: IconSize = IconSize.Medium;
 }
