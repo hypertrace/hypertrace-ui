@@ -14,7 +14,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { from, Observable, of } from 'rxjs';
-import { filter, map, share, skip, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, share, skip, startWith, take } from 'rxjs/operators';
 import { throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';
@@ -183,6 +183,20 @@ export class NavigationService {
     }
 
     return route;
+  }
+
+  public isPathActiveAndChanges(path: string[]): Observable<boolean> {
+    const urlTree = this.router.createUrlTree(path);
+
+    return this.router.events.pipe(
+      startWith(),
+      map(() => this.router.isActive(urlTree, false)),
+      distinctUntilChanged()
+    );
+  }
+
+  public isPathActive(path: string[]): boolean {
+    return this.router.isActive(this.router.createUrlTree(path), false);
   }
 
   public isRelativePathActive(path: string[], relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()): boolean {

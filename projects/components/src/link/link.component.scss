@@ -5,5 +5,12 @@
   text-decoration-line: none;
   text-decoration: none;
   color: inherit;
-  @include link-hover;
+
+  &:not(.disabled) {
+    @include link-hover;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
 }

@@ -44,7 +44,9 @@ describe('Link component', () => {
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();
@@ -73,7 +75,9 @@ describe('Link component', () => {
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();
@@ -96,7 +100,35 @@ describe('Link component', () => {
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
+    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+
+    expect(routerLinkDirective).toBeDefined();
+    expect(routerLinkDirective?.routerLink).toEqual(['/test']);
+    expect(routerLinkDirective?.skipLocationChange).toBeUndefined();
+    expect(routerLinkDirective?.queryParams).toBeUndefined();
+    expect(routerLinkDirective?.queryParamsHandling).toBeUndefined();
+    expect(routerLinkDirective?.replaceUrl).toBeUndefined();
+  });
+
+  test('should apply disabled style when disabled', () => {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl" [disabled]="true"></ht-link>`, {
+      hostProps: {
+        paramsOrUrl: '/test'
+      },
+      providers: [
+        mockProvider(NavigationService, {
+          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extras: {} })
+        })
+      ]
+    });
+
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).toHaveClass('ht-link disabled');
+
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();
