@@ -81,6 +81,9 @@ export * from './shared/graphql/model/schema/specifier/specification';
 export * from './shared/graphql/model/schema/span';
 export * from './shared/graphql/model/schema/trace';
 
+// Services
+export * from './pages/trace-detail/trace-detail.service';
+
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';
 export { SpanTitle } from './shared/components/span-detail/span-title';
