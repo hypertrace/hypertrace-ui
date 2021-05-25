@@ -72,6 +72,10 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.trigger-label-container')).toExist();
     expect(spectator.query('.trigger-label')).toExist();
     expect(spectator.query('.trigger-icon')).toExist();
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+
+    // Selected element is 1 as set in hostProps
+    expect(spectator.component.selectedItemsCount).toBe(1);
 
     const popoverComponent = spectator.query(PopoverComponent);
     expect(popoverComponent?.closeOnClick).toEqual(false);
@@ -94,6 +98,8 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(spectator.query('.trigger-more-items')).toExist();
+    expect(spectator.component.selectedItemsCount).toBe(2);
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
@@ -127,6 +133,8 @@ describe('Multi Select Component', () => {
     expect(optionElements.length).toBe(6);
 
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(spectator.query('.trigger-more-items')).toExist();
+    expect(spectator.component.selectedItemsCount).toBe(2);
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
@@ -193,7 +201,9 @@ describe('Multi Select Component', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
-    expect(spectator.query(LabelComponent)?.label).toEqual('second and 1 more');
+    expect(spectator.query('.trigger-more-items')).toExist();
+    expect(spectator.component.selectedItemsCount).toBe(2);
+    expect(spectator.query(LabelComponent)?.label).toEqual('second');
     flush();
   }));
 
@@ -260,6 +270,8 @@ describe('Multi Select Component', () => {
     ).toBe(0);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+
     expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
 
     const allOptionElement = spectator.query('.select-all', { root: true });
@@ -268,10 +280,13 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(spectator.query('.trigger-more-items')).toExist();
     expect(selectedCheckboxElements.length).toBe(6);
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
-    expect(spectator.query(LabelComponent)?.label).toEqual('first and 5 more');
+    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+
+    expect(spectator.query('.trigger-more-items')).toHaveText('+5');
 
     spectator.setHostInput({
       searchMode: MultiSelectSearchMode.Disabled
@@ -314,6 +329,8 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+    expect(spectator.component.selectedItemsCount).toBe(0);
     flush();
   }));
 
