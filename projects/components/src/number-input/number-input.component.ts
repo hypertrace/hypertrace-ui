@@ -47,11 +47,11 @@ export class NumberInputComponent {
       this.value = this.minValue;
     }
 
-    this.valueChange.emit(this.numberCoercer.coerce(this.value));
+    this.valueChange.emit(this.value);
   }
 
   public onValueChange(value?: number): void {
-    this.value = value;
+    this.value = this.numberCoercer.coerce(value);
 
     this.enforceMinMaxAndEmit();
   }
