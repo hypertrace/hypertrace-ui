@@ -38,8 +38,7 @@ export class NumberInputComponent {
 
   private readonly numberCoercer: NumberCoercer = new NumberCoercer();
 
-  public constructor(private readonly cdr: ChangeDetectorRef) {}
-  public enforceMinMaxAndEmit(): void {
+  private enforceMinMaxAndEmit(): void {
     if (this.value !== undefined && this.maxValue !== undefined && this.value > this.maxValue) {
       this.value = this.maxValue;
     }
@@ -48,7 +47,6 @@ export class NumberInputComponent {
       this.value = this.minValue;
     }
 
-    this.cdr.detectChanges();
     this.valueChange.emit(this.numberCoercer.coerce(this.value));
   }
 
