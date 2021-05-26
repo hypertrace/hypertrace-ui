@@ -124,6 +124,11 @@ export { InputAppearance } from './input/input-appearance';
 export * from './input/input.component';
 export * from './input/input.module';
 
+// Number Input
+export { NumberInputAppearance } from './number-input/number-input-appearance';
+export * from './number-input/number-input.component';
+export * from './number-input/number-input.module';
+
 // Json Tree
 export { JsonViewerComponent } from './viewer/json-viewer/json-viewer.component';
 export { JsonViewerModule } from './viewer/json-viewer/json-viewer.module';
