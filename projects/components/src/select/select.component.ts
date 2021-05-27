@@ -226,7 +226,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public getPrefixIconColor(selectedOption: SelectOptionComponent<V>): string | undefined {
-    return selectedOption !== undefined && selectedOption?.iconColor ? selectedOption.iconColor : undefined;
+    return selectedOption !== undefined && selectedOption?.iconColor !== undefined
+      ? selectedOption.iconColor
+      : undefined;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
