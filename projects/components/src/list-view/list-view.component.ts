@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'ht-list-view',
@@ -19,7 +19,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
           <span>{{ record.key }}</span>
         </div>
         <div class="value">
-          <span>{{ record.value }}</span>
+          <span *ngIf="!this.isValueTemplate(record.value); else record.value">{{ record.value }}</span>
         </div>
       </div>
     </div>
@@ -31,6 +31,12 @@ export class ListViewComponent {
 
   @Input()
   public records?: ListViewRecord[];
+
+  public isValueTemplate(value: string | number | TemplateRef<unknown>) {
+    const ret = value instanceof TemplateRef;
+
+    return ret;
+  }
 }
 
 export interface ListViewHeader {
@@ -40,5 +46,5 @@ export interface ListViewHeader {
 
 export interface ListViewRecord {
   key: string;
-  value: string | number;
+  value: string | number | TemplateRef<unknown>;
 }

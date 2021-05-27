@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Color, Dictionary } from '@hypertrace/common';
 import { ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -16,6 +16,9 @@ import { EMPTY, Observable, of } from 'rxjs';
           <ht-list-view [records]="headerRecords"></ht-list-view>
         </ng-container>
       </div>
+      <ng-template #redactedTagTemplate>
+        <ht-label-tag backgroundColor=${Color.Gray9} labelColor=${Color.White} label="Redacted"></ht-label-tag>
+      </ng-template>
     </div>
   `
 })
@@ -29,6 +32,9 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
     this.buildHeaderRecords();
   }
 
+  @ViewChild('redactedTagTemplate', { static: true })
+  public readonly redactedTagTemplate!: TemplateRef<unknown>;
+
   private buildHeaderRecords(): void {
     if (isNil(this.headers)) {
       this.headerRecords$ = EMPTY;
@@ -36,10 +42,13 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
       this.headerRecords$ = of(
         Object.keys(this.headers)
           .sort((key1, key2) => key1.localeCompare(key2))
-          .map(key => ({
-            key: key,
-            value: this.headers![key] as string | number
-          }))
+          .map(key => {
+            const value = this.headers![key] as string | number;
+            return {
+              key: key,
+              value: value === '***' ? this.redactedTagTemplate : value
+            };
+          })
       );
     }
   }
