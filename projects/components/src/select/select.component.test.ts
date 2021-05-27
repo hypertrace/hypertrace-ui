@@ -1,8 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { MemoizeModule, NavigationService } from '@hypertrace/common';
+import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { EMPTY } from 'rxjs';
 import { SelectControlOptionPosition } from './select-control-option.component';
 import { SelectJustify } from './select-justify';
@@ -12,8 +15,9 @@ import { SelectModule } from './select.module';
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
     component: SelectComponent,
-    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule, MemoizeModule],
     declareComponent: false,
+    declarations: [MockComponent(IconComponent)],
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
@@ -27,7 +31,7 @@ describe('Select Component', () => {
   const selectionOptions = [
     { label: 'first', value: 'first-value' },
     { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!' }
+    { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!', icon: 'test-icon', iconColor: 'red' }
   ];
 
   test('should display initial selection', fakeAsync(() => {
@@ -146,9 +150,49 @@ describe('Select Component', () => {
     const optionElements = spectator.queryAll('.select-option', { root: true });
     spectator.click(optionElements[2]);
 
-    expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(selectionOptions[2].value);
     expect(spectator.query('.trigger-content')).toHaveText(selectionOptions[2].selectedLabel!);
+    flush();
+  }));
+
+  test('should set trigger-prefix-icon correctly', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-select [icon]="icon">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [icon]="option.icon" [iconColor]="option.iconColor">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          icon: 'select-level-icon'
+        }
+      }
+    );
+    spectator.tick();
+
+    // No selection -> select component level icon and no color
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
+      'select-level-icon'
+    );
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(undefined);
+
+    // Selection with no icon -> no icon and no color
+    spectator.click('.trigger-content');
+    let optionElements = spectator.queryAll('.select-option', { root: true });
+    spectator.click(optionElements[1]);
+    spectator.tick();
+    expect(spectator.query('.trigger-prefix-icon')).not.toExist();
+
+    // Selection with icon and color
+    spectator.click('.trigger-content');
+    optionElements = spectator.queryAll('.select-option', { root: true });
+    spectator.click(optionElements[2]);
+    spectator.tick();
+
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe('test-icon');
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe('red');
+
     flush();
   }));
 

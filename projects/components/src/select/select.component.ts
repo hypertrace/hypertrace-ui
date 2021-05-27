@@ -55,7 +55,13 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-border"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
+              <ht-icon
+                *ngIf="this.getPrefixIcon | htMemoize: selected:this.icon"
+                class="trigger-prefix-icon"
+                [icon]="this.getPrefixIcon | htMemoize: selected:this.icon"
+                [size]="this.iconSize"
+                [color]="this.getPrefixIconColor | htMemoize: selected"
+              >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
               </ht-label>
@@ -202,6 +208,25 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
         map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
       );
     }
+  }
+
+  public getPrefixIcon(
+    selectedOption: SelectOptionComponent<V> | undefined,
+    triggerIcon: string | undefined
+  ): string | undefined {
+    if (selectedOption !== undefined && selectedOption?.icon !== undefined) {
+      return selectedOption.icon;
+    }
+
+    if (selectedOption !== undefined) {
+      return undefined;
+    }
+
+    return triggerIcon;
+  }
+
+  public getPrefixIconColor(selectedOption: SelectOptionComponent<V>): string | undefined {
+    return selectedOption !== undefined && selectedOption?.iconColor ? selectedOption.iconColor : undefined;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
