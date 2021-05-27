@@ -225,7 +225,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     return triggerIcon;
   }
 
-  public getPrefixIconColor(selectedOption: SelectOptionComponent<V>): string | undefined {
+  public getPrefixIconColor(selectedOption: SelectOptionComponent<V> | undefined): string | undefined {
     return selectedOption !== undefined && selectedOption?.iconColor !== undefined
       ? selectedOption.iconColor
       : undefined;
