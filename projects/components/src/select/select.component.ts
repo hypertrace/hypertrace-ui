@@ -60,7 +60,7 @@ import { SelectSize } from './select-size';
                 class="trigger-prefix-icon"
                 [icon]="this.getPrefixIcon(selected)"
                 [size]="this.iconSize"
-                [color]="this.getPrefixIconColor(selected)"
+                [color]="selected?.iconColor"
               >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
@@ -212,12 +212,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
     return selectedOption !== undefined ? selectedOption.icon : this.icon;
-  }
-
-  public getPrefixIconColor(selectedOption: SelectOption<V> | undefined): string | undefined {
-    return selectedOption !== undefined && selectedOption?.iconColor !== undefined
-      ? selectedOption.iconColor
-      : undefined;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
