@@ -56,11 +56,11 @@ import { SelectSize } from './select-size';
               [ngClass]="[this.justifyClass]"
             >
               <ht-icon
-                *ngIf="this.getPrefixIcon | htMemoize: selected:this.icon"
+                *ngIf="this.getPrefixIcon(selected)"
                 class="trigger-prefix-icon"
-                [icon]="this.getPrefixIcon | htMemoize: selected:this.icon"
+                [icon]="this.getPrefixIcon(selected)"
                 [size]="this.iconSize"
-                [color]="this.getPrefixIconColor | htMemoize: selected"
+                [color]="this.getPrefixIconColor(selected)"
               >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
@@ -210,22 +210,11 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     }
   }
 
-  public getPrefixIcon(
-    selectedOption: SelectOptionComponent<V> | undefined,
-    triggerIcon: string | undefined
-  ): string | undefined {
-    if (selectedOption !== undefined && selectedOption?.icon !== undefined) {
-      return selectedOption.icon;
-    }
-
-    if (selectedOption !== undefined) {
-      return undefined;
-    }
-
-    return triggerIcon;
+  public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
+    return selectedOption !== undefined ? selectedOption.icon : this.icon;
   }
 
-  public getPrefixIconColor(selectedOption: SelectOptionComponent<V> | undefined): string | undefined {
+  public getPrefixIconColor(selectedOption: SelectOption<V> | undefined): string | undefined {
     return selectedOption !== undefined && selectedOption?.iconColor !== undefined
       ? selectedOption.iconColor
       : undefined;
