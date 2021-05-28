@@ -55,7 +55,13 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-border"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
+              <ht-icon
+                *ngIf="this.getPrefixIcon(selected)"
+                class="trigger-prefix-icon"
+                [icon]="this.getPrefixIcon(selected)"
+                [size]="this.iconSize"
+                [color]="selected?.iconColor"
+              >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
               </ht-label>
@@ -202,6 +208,10 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
         map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
       );
     }
+  }
+
+  public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
+    return selectedOption?.icon ?? this.icon;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
