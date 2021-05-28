@@ -178,12 +178,15 @@ describe('Select Component', () => {
     // tslint:disable-next-line:no-null-keyword
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(null);
 
-    // Selection with no icon -> no icon and no color
+    // Selection with no icon -> default icon and no color
     spectator.click('.trigger-content');
     let optionElements = spectator.queryAll('.select-option', { root: true });
     spectator.click(optionElements[1]);
     spectator.tick();
-    expect(spectator.query('.trigger-prefix-icon')).not.toExist();
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
+      'select-level-icon'
+    );
+    expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(undefined);
 
     // Selection with icon and color
     spectator.click('.trigger-content');

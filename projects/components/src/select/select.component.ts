@@ -211,7 +211,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
-    return selectedOption !== undefined ? selectedOption.icon : this.icon;
+    return selectedOption?.icon ?? this.icon;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
