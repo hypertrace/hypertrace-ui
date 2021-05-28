@@ -1,6 +1,6 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationService } from '@hypertrace/common';
+import { FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
@@ -14,15 +14,17 @@ import { NavigableTabComponent } from './navigable-tab.component';
       <nav mat-tab-nav-bar *htLetAsync="this.activeTab$ as activeTab" disableRipple>
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
-            <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
-              <a mat-tab-link (click)="this.onTabClick(tab)" class="tab-link" [active]="activeTab === tab">
-                <ng-container *ngTemplateOutlet="tab.content"></ng-container>
-                <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
-                  <span class="soon">SOON</span>
-                </span>
-              </a>
-              <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
-            </div>
+            <ht-link [paramsOrUrl]="buildNavigationParam | htMemoize: tab">
+              <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
+                <a mat-tab-link (click)="this.onTabClick(tab)" class="tab-link" [active]="activeTab === tab">
+                  <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+                  <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
+                    <span class="soon">SOON</span>
+                  </span>
+                </a>
+                <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
+              </div>
+            </ht-link>
           </ng-container>
         </ng-container>
       </nav>
@@ -47,6 +49,12 @@ export class NavigableTabGroupComponent implements AfterContentInit {
       map(() => this.findActiveTab())
     );
   }
+
+  public buildNavigationParam = (tab: NavigableTabComponent): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: [tab.path],
+    relativeTo: this.activatedRoute
+  });
 
   public onTabClick(tab: NavigableTabComponent): void {
     this.navigationService.navigateWithinApp([tab.path], this.activatedRoute);
