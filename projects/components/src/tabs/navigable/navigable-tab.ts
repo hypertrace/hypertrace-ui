@@ -3,4 +3,5 @@ export interface NavigableTab {
   label: string;
   hidden?: boolean;
   features?: string[];
+  replaceHistory?: boolean;
 }

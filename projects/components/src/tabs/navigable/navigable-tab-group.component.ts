@@ -49,7 +49,7 @@ export class NavigableTabGroupComponent implements AfterContentInit {
   }
 
   public onTabClick(tab: NavigableTabComponent): void {
-    this.navigationService.navigateWithinApp([tab.path], this.activatedRoute);
+    this.navigationService.navigateWithinApp([tab.path], this.activatedRoute, [], tab.replaceHistory);
   }
 
   private findActiveTab(): NavigableTabComponent | undefined {

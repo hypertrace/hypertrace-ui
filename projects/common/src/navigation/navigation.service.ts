@@ -131,13 +131,15 @@ export class NavigationService {
   public navigateWithinApp(
     path: NavigationPath,
     relativeTo?: ActivatedRoute,
-    preserveParameters?: string[]
+    preserveParameters?: string[],
+    replaceCurrentHistory?: boolean
   ): Observable<boolean> {
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: path,
       queryParams: this.buildQueryParam(preserveParameters ?? []),
-      relativeTo: relativeTo
+      relativeTo: relativeTo,
+      replaceCurrentHistory: replaceCurrentHistory
     });
   }
 
