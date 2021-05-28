@@ -25,13 +25,7 @@ import { IconSize } from '../icon/icon-size';
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item
-                [config]="item"
-                [active]="item === activeItem"
-                [collapsed]="this.collapsed"
-                (click)="this.navigate(item)"
-              >
-              </ht-nav-item>
+              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"> </ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
