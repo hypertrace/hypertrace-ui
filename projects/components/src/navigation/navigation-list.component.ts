@@ -76,15 +76,6 @@ export class NavigationListComponent {
     );
   }
 
-  public navigate(item: NavItemLinkConfig): void {
-    this.navigationService.navigate({
-      navType: NavigationParamsType.InApp,
-      path: item.matchPaths[0],
-      relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.replaceCurrentHistory
-    });
-  }
-
   public toggleView(): void {
     if (this.resizable) {
       this.collapsed = !this.collapsed;
