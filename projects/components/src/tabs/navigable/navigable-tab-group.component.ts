@@ -14,17 +14,15 @@ import { NavigableTabComponent } from './navigable-tab.component';
       <nav mat-tab-nav-bar *htLetAsync="this.activeTab$ as activeTab" disableRipple>
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
-            <ht-link [paramsOrUrl]="buildNavigationParam | htMemoize: tab">
-              <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
-                <a mat-tab-link (click)="this.onTabClick(tab)" class="tab-link" [active]="activeTab === tab">
-                  <ng-container *ngTemplateOutlet="tab.content"></ng-container>
-                  <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
-                    <span class="soon">SOON</span>
-                  </span>
-                </a>
-                <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
-              </div>
-            </ht-link>
+            <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
+              <ht-link mat-tab-link [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab" class="tab-link">
+                <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+                <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
+                  <span class="soon">SOON</span>
+                </span>
+              </ht-link>
+              <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
+            </div>
           </ng-container>
         </ng-container>
       </nav>
@@ -50,15 +48,12 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     );
   }
 
-  public buildNavigationParam = (tab: NavigableTabComponent): NavigationParams => ({
+  public buildNavParamsForTab = (tab: NavigableTabComponent): NavigationParams => ({
     navType: NavigationParamsType.InApp,
-    path: [tab.path],
-    relativeTo: this.activatedRoute
+    path: tab.path,
+    relativeTo: this.activatedRoute,
+    replaceCurrentHistory: tab.replaceHistory
   });
-
-  public onTabClick(tab: NavigableTabComponent): void {
-    this.navigationService.navigateWithinApp([tab.path], this.activatedRoute);
-  }
 
   private findActiveTab(): NavigableTabComponent | undefined {
     return this.tabs.find(tab => this.navigationService.isRelativePathActive([tab.path], this.activatedRoute));
