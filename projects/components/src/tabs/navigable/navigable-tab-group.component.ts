@@ -15,7 +15,7 @@ import { NavigableTabComponent } from './navigable-tab.component';
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
             <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
-              <ht-link mat-tab-link [paramsOrUrl]="this.buildNavParamsForTab(tab)" class="tab-link">
+              <ht-link mat-tab-link [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab" class="tab-link">
                 <ng-container *ngTemplateOutlet="tab.content"></ng-container>
                 <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
                   <span class="soon">SOON</span>
@@ -48,13 +48,12 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     );
   }
 
-  public buildNavParamsForTab = (tab: NavigableTabComponent): NavigationParams =>
-    ({
-      navType: NavigationParamsType.InApp,
-      path: tab.path,
-      relativeTo: this.activatedRoute,
-      replaceCurrentHistory: tab.replaceHistory
-    })
+  public buildNavParamsForTab = (tab: NavigableTabComponent): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: tab.path,
+    relativeTo: this.activatedRoute,
+    replaceCurrentHistory: tab.replaceHistory
+  });
 
   private findActiveTab(): NavigableTabComponent | undefined {
     return this.tabs.find(tab => this.navigationService.isRelativePathActive([tab.path], this.activatedRoute));
