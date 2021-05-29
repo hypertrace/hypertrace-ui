@@ -48,14 +48,13 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     );
   }
 
-  public buildNavParamsForTab(tab: NavigableTabComponent): NavigationParams {
-    return {
+  public buildNavParamsForTab = (tab: NavigableTabComponent): NavigationParams =>
+    ({
       navType: NavigationParamsType.InApp,
       path: tab.path,
       relativeTo: this.activatedRoute,
       replaceCurrentHistory: tab.replaceHistory
-    };
-  }
+    })
 
   private findActiveTab(): NavigableTabComponent | undefined {
     return this.tabs.find(tab => this.navigationService.isRelativePathActive([tab.path], this.activatedRoute));
