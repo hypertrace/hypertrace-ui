@@ -15,7 +15,12 @@ import { NavigableTabComponent } from './navigable-tab.component';
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
             <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
-              <ht-link mat-tab-link [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab" class="tab-link">
+              <ht-link
+                mat-tab-link
+                [active]="activeTab === tab"
+                [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab"
+                class="tab-link"
+              >
                 <ng-container *ngTemplateOutlet="tab.content"></ng-container>
                 <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
                   <span class="soon">SOON</span>
