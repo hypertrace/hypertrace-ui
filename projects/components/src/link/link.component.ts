@@ -41,7 +41,7 @@ export class LinkComponent implements OnChanges {
   private setNavigationParams(): void {
     if (isNil(this.paramsOrUrl)) {
       this.navigationPath = undefined;
-      this.navigationPath = undefined;
+      this.navigationOptions = undefined;
     } else {
       const { path, extras } = this.navigationService.buildNavigationParams(this.paramsOrUrl);
       this.navigationPath = path;
