@@ -17,13 +17,13 @@ describe('Form Field Component', () => {
   test('should show mandatory form field data', () => {
     const spectator = hostFactory(
       `
-    <ht-form-field [infoLabel]="infoLabel" [icon]="icon" [infoIconTooltip]="infoIconTooltip" [errorLabel]="errorLabel">
+    <ht-form-field [label]="label" [icon]="icon" [iconTooltip]="iconTooltip" [errorLabel]="errorLabel">
     </ht-form-field>`,
       {
         hostProps: {
-          infoLabel: 'Label',
+          label: 'Label',
           icon: IconType.Info,
-          infoIconTooltip: 'Add or update a text',
+          iconTooltip: 'Add or update a text',
           errorLabel: 'Error message'
         }
       }
@@ -39,14 +39,14 @@ describe('Form Field Component', () => {
   test('should show optional form field data', () => {
     const spectator = hostFactory(
       `
-    <ht-form-field [infoLabel]="infoLabel" [optional]="optional" [infoIconTooltip]="infoIconTooltip">
+    <ht-form-field [label]="label" [isOptional]="isOptional" [iconTooltip]="iconTooltip">
     </ht-form-field>`,
       {
         hostProps: {
-          infoLabel: 'Label',
+          label: 'Label',
           icon: IconType.Info,
-          infoIconTooltip: 'Add or update a text',
-          optional: true
+          iconTooltip: 'Add or update a text',
+          isOptional: true
         }
       }
     );
