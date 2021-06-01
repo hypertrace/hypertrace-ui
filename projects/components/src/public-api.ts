@@ -104,6 +104,10 @@ export * from './filtering/filter-modal/in-filter-modal.component';
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
 
+// Form Section
+export * from './form-field/form-field.component';
+export * from './form-field/form-field.module';
+
 // Greeting label
 export { GreetingLabelModule } from './greeting-label/greeting-label.module';
 export { GreetingLabelComponent } from './greeting-label/greeting-label.component';
