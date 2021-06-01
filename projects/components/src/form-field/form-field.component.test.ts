@@ -17,8 +17,8 @@ describe('Form Field Component', () => {
   test('should show mandatory form field data', () => {
     const spectator = hostFactory(
       `
-    <ht-form-section [infoLabel]="infoLabel" [icon]="icon" [infoIconTooltip]="infoIconTooltip" [errorLabel]="errorLabel">
-    </ht-form-section>`,
+    <ht-form-field [infoLabel]="infoLabel" [icon]="icon" [infoIconTooltip]="infoIconTooltip" [errorLabel]="errorLabel">
+    </ht-form-field>`,
       {
         hostProps: {
           infoLabel: 'Label',
@@ -39,8 +39,8 @@ describe('Form Field Component', () => {
   test('should show optional form field data', () => {
     const spectator = hostFactory(
       `
-    <ht-form-section [infoLabel]="infoLabel" [optional]="optional" [infoIconTooltip]="infoIconTooltip">
-    </ht-form-section>`,
+    <ht-form-field [infoLabel]="infoLabel" [optional]="optional" [infoIconTooltip]="infoIconTooltip">
+    </ht-form-field>`,
       {
         hostProps: {
           infoLabel: 'Label',
