@@ -15,7 +15,12 @@ import { RadioOption } from './radio-option';
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
-      <mat-radio-button *ngFor="let option of options" class="radio-button" [value]="option.value">
+      <mat-radio-button
+        *ngFor="let option of options"
+        class="radio-button"
+        [ngClass]="{ disabled: this.disabled }"
+        [value]="option.value"
+      >
         <ht-label class="radio-button-label" [label]="option.label"></ht-label>
       </mat-radio-button>
     </mat-radio-group>
