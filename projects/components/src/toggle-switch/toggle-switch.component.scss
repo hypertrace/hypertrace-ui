@@ -4,7 +4,17 @@
 :host {
   ::ng-deep {
     .mat-slide-toggle {
-      &.small-slide-toogle {
+      &.disabled {
+        .mat-slide-toggle-thumb {
+          background: $gray-7;
+        }
+
+        .mat-slide-toggle-bar {
+          background: $gray-3;
+        }
+      }
+
+      &.small-slide-toggle {
         height: 20px;
         line-height: 20px;
 
