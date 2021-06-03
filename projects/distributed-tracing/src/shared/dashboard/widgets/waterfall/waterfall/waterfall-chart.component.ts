@@ -1,6 +1,23 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
+import { DateCoercer, TypedSimpleChanges } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
+  Marker,
+  MarkerDatum,
+  PopoverBackdrop,
+  PopoverPositionType,
+  PopoverRef,
+  PopoverRelativePositionLocation,
+  PopoverService,
   SequenceSegment,
   StatefulTableRow,
   TableColumnConfig,
@@ -9,11 +26,10 @@ import {
   TableMode,
   TableStyle
 } from '@hypertrace/components';
-import { of } from 'rxjs';
-
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { Observable, of } from 'rxjs';
+import { MarkerTooltipData } from './marker-tooltip/marker-tooltip.component';
 import { WaterfallTableCellType } from './span-name/span-name-cell-type';
-import { WaterfallData, WaterfallDataNode } from './waterfall-chart';
+import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
 import { WaterfallChartService } from './waterfall-chart.service';
 
 @Component({
@@ -49,9 +65,13 @@ import { WaterfallChartService } from './waterfall-chart.service';
           (selectionChange)="this.onSelection($event ? [$event] : [])"
           [hovered]="this.hoveredNode"
           (hoveredChange)="this.onHover($event)"
+          (markerHoveredChange)="this.onMarkerHover($event)"
         >
         </ht-sequence-chart>
       </div>
+      <ng-template #markerTooltipTemplate>
+        <ht-marker-tooltip [data]="this.markerTooltipData" (viewAll)="this.viewAll()"></ht-marker-tooltip>
+      </ng-template>
     </div>
   `
 })
@@ -62,8 +82,14 @@ export class WaterfallChartComponent implements OnChanges {
   @Output()
   public readonly selectionChange: EventEmitter<WaterfallData> = new EventEmitter();
 
+  @Output()
+  public readonly markerSelection: EventEmitter<MarkerSelection> = new EventEmitter();
+
   @ViewChild('table')
   private readonly table!: TableComponent;
+
+  @ViewChild('markerTooltipTemplate')
+  private readonly markerTooltipTemplate!: TemplateRef<unknown>;
 
   public datasource?: TableDataSource<WaterfallDataNode>;
   public readonly columnDefs: TableColumnConfig[] = [
@@ -91,7 +117,15 @@ export class WaterfallChartComponent implements OnChanges {
   public selectedNode?: WaterfallDataNode;
   public hoveredNode?: WaterfallDataNode;
 
-  public constructor(private readonly waterfallChartService: WaterfallChartService) {}
+  public markerTooltipData?: Observable<MarkerTooltipData>;
+  private marker?: Marker;
+  private popover?: PopoverRef;
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
+
+  public constructor(
+    private readonly waterfallChartService: WaterfallChartService,
+    private readonly popoverService: PopoverService
+  ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -129,6 +163,58 @@ export class WaterfallChartComponent implements OnChanges {
 
   public onHover(datum?: { id: string }): void {
     this.hoveredNode = datum?.id !== undefined ? this.dataNodeMap.get(datum.id) : undefined;
+  }
+
+  public viewAll(): void {
+    this.markerSelection.emit({
+      selectedData: this.marker?.nodeId !== undefined ? this.dataNodeMap.get(this.marker?.nodeId) : undefined,
+      timestamps: this.marker?.timestamps ?? []
+    });
+    this.closePopover();
+  }
+
+  public onMarkerHover(datum?: MarkerDatum): void {
+    if (datum && datum.marker && datum.origin) {
+      this.closePopover();
+      this.marker = datum.marker;
+      this.markerTooltipData = this.buildMarkerDataSource(datum.marker);
+      this.popover = this.popoverService.drawPopover({
+        componentOrTemplate: this.markerTooltipTemplate,
+        data: this.markerTooltipTemplate,
+        position: {
+          type: PopoverPositionType.Relative,
+          origin: datum.origin,
+          locationPreferences: [PopoverRelativePositionLocation.AboveRightAligned]
+        },
+        backdrop: PopoverBackdrop.Transparent
+      });
+      this.popover.closeOnBackdropClick();
+    }
+  }
+
+  private closePopover(): void {
+    this.popover?.close();
+    this.popover = undefined;
+  }
+
+  private buildMarkerDataSource(marker: Marker): Observable<MarkerTooltipData> {
+    const spanWaterfallData: WaterfallDataNode = this.dataNodeMap.get(marker.nodeId)!;
+
+    let markerData: MarkerTooltipData = {
+      relativeTimes: [],
+      attributes: []
+    };
+    spanWaterfallData.logEvents.forEach((logEvent: LogEvent) => {
+      if (marker.timestamps.includes(logEvent.timestamp)) {
+        const logEventTime = this.dateCoercer.coerce(logEvent.timestamp)!.getTime();
+        markerData = {
+          relativeTimes: [...markerData.relativeTimes, logEventTime - spanWaterfallData.startTime],
+          attributes: [...markerData.attributes, ...Object.entries(logEvent.attributes)]
+        };
+      }
+    });
+
+    return of(markerData);
   }
 
   private buildDatasource(sequenceData: WaterfallData[]): TableDataSource<WaterfallDataNode> {
@@ -193,4 +279,9 @@ export class WaterfallChartComponent implements OnChanges {
   private areChildrenVisible(dataNode: WaterfallDataNode): boolean {
     return dataNode.$$state.children.every(child => child.$$state.expanded);
   }
+}
+
+export interface MarkerSelection {
+  selectedData: WaterfallDataNode | undefined;
+  timestamps: string[];
 }

@@ -12,11 +12,13 @@ import { ButtonStyle, OverlayService, SheetRef, SheetSize } from '@hypertrace/co
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { SpanDetailLayoutStyle } from '../../../components/span-detail/span-detail-layout-style';
+import { SpanDetailTab } from '../../../components/span-detail/span-detail-tab';
 import { WaterfallWidgetModel } from './waterfall-widget.model';
 import { WaterfallData } from './waterfall/waterfall-chart';
-import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
+import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-chart.component';
 
 @Renderer({ modelClass: WaterfallWidgetModel })
 @Component({
@@ -50,6 +52,7 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
           class="waterfall-widget"
           [data]="data"
           (selectionChange)="this.onTableRowSelection($event)"
+          (markerSelection)="this.onMarkerSelection($event)"
         ></ht-waterfall-chart>
       </div>
     </div>
@@ -61,6 +64,7 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
           [spanData]="this.selectedData"
           [showTitleHeader]="true"
           layout="${SpanDetailLayoutStyle.Vertical}"
+          [activeLabel]="this.activeLabel"
           (closed)="this.closeSheet()"
         >
           <ht-summary-value
@@ -85,6 +89,7 @@ export class WaterfallWidgetRendererComponent
 
   private sheet?: SheetRef;
   public selectedData?: WaterfallData;
+  public activeLabel?: SpanDetailTab;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<WaterfallWidgetModel>,
@@ -95,11 +100,17 @@ export class WaterfallWidgetRendererComponent
   }
 
   public onTableRowSelection(selectedData: WaterfallData): void {
-    if (selectedData === this.selectedData) {
+    this.activeLabel = undefined;
+    if (selectedData === this.selectedData || isEmpty(selectedData)) {
       this.closeSheet();
     } else {
       this.openSheet(selectedData);
     }
+  }
+
+  public onMarkerSelection(selectedMarker: MarkerSelection): void {
+    this.activeLabel = SpanDetailTab.Logs;
+    this.openSheet(selectedMarker.selectedData!);
   }
 
   public onExpandAll(): void {

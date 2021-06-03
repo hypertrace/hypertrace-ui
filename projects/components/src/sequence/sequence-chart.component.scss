@@ -54,6 +54,10 @@
       }
     }
 
+    .marker {
+      cursor: pointer;
+    }
+
     .hovered-row {
       .backdrop {
         fill-opacity: 100;

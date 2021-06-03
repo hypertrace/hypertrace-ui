@@ -1,4 +1,5 @@
 import { ElementRef, InjectionToken, Injector, TemplateRef, Type } from '@angular/core';
+import { Point } from '@hypertrace/common';
 
 export interface PopoverOptions<TData = never> {
   componentOrTemplate: Type<unknown> | TemplateRef<TData>;
@@ -27,7 +28,7 @@ export interface PopoverHiddenPosition {
 
 export interface PopoverRelativePosition {
   type: PopoverPositionType.Relative;
-  origin: ElementRef;
+  origin: ElementRef | Element | Point;
   locationPreferences: PopoverRelativePositionLocation[];
 }
 

@@ -101,6 +101,9 @@ export class SequenceChartService {
       },
       onSegmentHovered: () => {
         /** NOOP */
+      },
+      onMarkerHovered: () => {
+        /** NOOP */
       }
     };
   }

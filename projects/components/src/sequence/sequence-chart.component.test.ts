@@ -24,28 +24,32 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       },
       {
         id: '2',
         start: 1569357461346,
         end: 1569357465346,
         label: 'Segment 2',
-        color: 'green'
+        color: 'green',
+        markers: []
       },
       {
         id: '3',
         start: 1569357462346,
         end: 1569357465346,
         label: 'Segment 3',
-        color: 'green'
+        color: 'green',
+        markers: []
       },
       {
         id: '4',
         start: 1569357463346,
         end: 1569357465346,
         label: 'Segment 4',
-        color: 'green'
+        color: 'green',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data"></ht-sequence-chart>`, {
@@ -91,7 +95,8 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [unit]="unit"></ht-sequence-chart>`, {
@@ -117,7 +122,8 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [rowHeight]="rowHeight"></ht-sequence-chart>`, {
@@ -132,6 +138,37 @@ describe('Sequence Chart component', () => {
     expect(dataRow!.getAttribute('height')).toEqual('50');
   });
 
+  test('should render marker with correct width and height', () => {
+    const segmentsData = [
+      {
+        id: '1',
+        start: 1569357460346,
+        end: 1569357465346,
+        label: 'Segment 1',
+        color: 'blue',
+        markers: [
+          {
+            nodeId: '1',
+            markerTime: 1569357460347,
+            timestamps: ['1569357460347']
+          }
+        ]
+      }
+    ];
+    const chart = createHost(`<ht-sequence-chart [data]="data"></ht-sequence-chart>`, {
+      hostProps: {
+        data: segmentsData,
+        rowHeight: 50
+      }
+    });
+
+    const markers = chart.queryAll('.marker', { root: true });
+    expect(markers.length).toBe(1);
+    const markerRect = select(markers[0].querySelector('rect'));
+    expect(markerRect.attr('width')).toBe('2');
+    expect(markerRect.attr('height')).toBe('12');
+  });
+
   test('should render with correct bar height', () => {
     const segmentsData = [
       {
@@ -139,7 +176,8 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [barHeight]="barHeight"></ht-sequence-chart>`, {
@@ -164,7 +202,8 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [headerHeight]="headerHeight"></ht-sequence-chart>`, {
@@ -186,14 +225,16 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       },
       {
         id: '2',
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 2',
-        color: 'green'
+        color: 'green',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [hovered]="hovered"></ht-sequence-chart>`, {
@@ -230,14 +271,16 @@ describe('Sequence Chart component', () => {
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 1',
-        color: 'blue'
+        color: 'blue',
+        markers: []
       },
       {
         id: '2',
         start: 1569357460346,
         end: 1569357465346,
         label: 'Segment 2',
-        color: 'green'
+        color: 'green',
+        markers: []
       }
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [selection]="selection"></ht-sequence-chart>`, {
