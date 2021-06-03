@@ -15,7 +15,12 @@ import { RadioOption } from './radio-option';
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
-      <mat-radio-button *ngFor="let option of options" class="radio-button" [ngClass]="{'disabled': this.disabled}" [value]="option.value">
+      <mat-radio-button
+        *ngFor="let option of options"
+        class="radio-button"
+        [ngClass]="{ disabled: this.disabled }"
+        [value]="option.value"
+      >
         <ht-label class="radio-button-label" [label]="option.label"></ht-label>
       </mat-radio-button>
     </mat-radio-group>
@@ -37,7 +42,7 @@ export class RadioGroupComponent implements OnInit {
   @Output()
   public readonly selectedChange: EventEmitter<string> = new EventEmitter();
 
-  public constructor(private readonly loggerService: LoggerService) { }
+  public constructor(private readonly loggerService: LoggerService) {}
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates

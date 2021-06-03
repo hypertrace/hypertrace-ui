@@ -1,5 +1,5 @@
-@import "color-palette";
-@import "font";
+@import 'color-palette';
+@import 'font';
 
 .title {
   @include body-2-medium($gray-7);
