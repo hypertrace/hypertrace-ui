@@ -43,7 +43,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   }
 
   private getColorForDatum(datum: TData): string {
-    return this.series.getColor ? this.series.getColor(datum) : this.series.color;
+    return this.series.getColor?.(datum) ?? this.series.color;
   }
 
   protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Series<TData>> {

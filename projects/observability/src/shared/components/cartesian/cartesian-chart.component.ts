@@ -175,10 +175,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
         units: singleValue.context.units,
-        color:
-          singleValue.context.getColor !== undefined
-            ? singleValue.context.getColor(singleValue.dataPoint)
-            : singleValue.context.color
+        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
       }))
     };
   }
