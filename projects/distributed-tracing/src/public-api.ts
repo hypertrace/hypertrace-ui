@@ -38,6 +38,7 @@ export * from './shared/dashboard/widgets/table/table-widget-view-toggle.model';
 export * from './shared/services/filter-builder/graphql-filter-builder.service';
 
 // Handlers
+export * from './shared/graphql/request/handlers/traces/export-spans-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/spans/span-graphql-query-handler.service';
@@ -79,6 +80,9 @@ export * from './shared/graphql/model/schema/timerange/graphql-time-range';
 export * from './shared/graphql/model/schema/specifier/specification';
 export * from './shared/graphql/model/schema/span';
 export * from './shared/graphql/model/schema/trace';
+
+// Services
+export * from './pages/trace-detail/trace-detail.service';
 
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';

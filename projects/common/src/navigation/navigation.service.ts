@@ -14,7 +14,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { from, Observable, of } from 'rxjs';
-import { filter, map, share, skip, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, share, skip, startWith, take } from 'rxjs/operators';
 import { throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';
@@ -73,6 +73,22 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
+  public constructExternalUrl(urlString: string): string {
+    const inputUrlTree: UrlTree = this.router.parseUrl(urlString);
+    const globalQueryParams: Params = {};
+
+    this.globalQueryParams.forEach(key => {
+      const paramValue = this.getQueryParameter(key, '');
+      if (paramValue !== '') {
+        globalQueryParams[key] = paramValue;
+      }
+    });
+
+    inputUrlTree.queryParams = { ...inputUrlTree.queryParams, ...globalQueryParams };
+
+    return this.router.serializeUrl(inputUrlTree);
+  }
+
   public buildNavigationParams(
     paramsOrUrl: NavigationParams | string
   ): { path: NavigationPath; extras?: NavigationExtras } {
@@ -84,7 +100,9 @@ export class NavigationService {
         path: [
           '/external',
           {
-            [ExternalNavigationPathParams.Url]: params.url,
+            [ExternalNavigationPathParams.Url]: params.useGlobalParams
+              ? this.constructExternalUrl(params.url)
+              : params.url,
             [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
           }
         ],
@@ -165,6 +183,20 @@ export class NavigationService {
     }
 
     return route;
+  }
+
+  public isPathActiveAndChanges(path: string[]): Observable<boolean> {
+    const urlTree = this.router.createUrlTree(path);
+
+    return this.router.events.pipe(
+      startWith(),
+      map(() => this.router.isActive(urlTree, false)),
+      distinctUntilChanged()
+    );
+  }
+
+  public isPathActive(path: string[]): boolean {
+    return this.router.isActive(this.router.createUrlTree(path), false);
   }
 
   public isRelativePathActive(path: string[], relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()): boolean {
@@ -304,7 +336,7 @@ export interface QueryParamObject extends Params {
 
 export type NavigationPath = string | (string | Dictionary<string>)[];
 
-export type NavigationParams = InAppNavigationParams | ExternalNavigationParamsNew;
+export type NavigationParams = InAppNavigationParams | ExternalNavigationParams;
 export interface InAppNavigationParams {
   navType: NavigationParamsType.InApp;
   path: NavigationPath;
@@ -314,11 +346,11 @@ export interface InAppNavigationParams {
   relativeTo?: ActivatedRoute;
 }
 
-export interface ExternalNavigationParamsNew {
+export interface ExternalNavigationParams {
   navType: NavigationParamsType.External;
   url: string;
   windowHandling: ExternalNavigationWindowHandling; // Currently an enum called NavigationType
-  queryParams?: QueryParamObject;
+  useGlobalParams?: boolean;
 }
 
 export const enum ExternalNavigationPathParams {
