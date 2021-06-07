@@ -39,13 +39,17 @@
   }
 
   .attribute {
-    display: flex;
-    align-items: center;
-    @include ellipsis-overflow();
+    display: grid;
+    gap: 4px;
+    grid-template-columns: 20% 80%;
+
+    .key,
+    .value {
+      @include ellipsis-overflow();
+    }
 
     .key {
       font-weight: 600;
-      margin-right: 4px;
     }
   }
 
