@@ -47,10 +47,10 @@ export class TabGroupComponent implements OnChanges, AfterViewInit {
   public tabs!: QueryList<TabComponent>;
 
   @Input()
-  public activeLabel?: string;
+  public activeTabLabel?: string;
 
   @Output()
-  public readonly activeLabelChange: EventEmitter<string> = new EventEmitter();
+  public readonly activeTabLabelChange: EventEmitter<string> = new EventEmitter();
 
   public activeTabIndex: number = 0;
 
@@ -64,13 +64,13 @@ export class TabGroupComponent implements OnChanges, AfterViewInit {
 
   public onSelectedTabChange(index: number): void {
     this.activeTabIndex = index;
-    this.activeLabelChange.emit(this.tabs?.get(index)?.label);
+    this.activeTabLabelChange.emit(this.tabs?.get(index)?.label);
   }
 
   private setActiveTabIndexBasedOnLabel(): void {
-    if (!isEmpty(this.tabs) && !isEmpty(this.activeLabel)) {
+    if (!isEmpty(this.tabs) && !isEmpty(this.activeTabLabel)) {
       this.tabs.forEach((tab: TabComponent, index: number) => {
-        if (tab.label === this.activeLabel) {
+        if (tab.label === this.activeTabLabel) {
           this.activeTabIndex = index;
         }
       });

@@ -35,7 +35,7 @@ import { Observable } from 'rxjs';
         *ngIf="!!data.attributes && data.attributes.length > ${MarkerTooltipComponent.MAX_ATTRIBUTES_TO_DISPLAY}"
       >
         <div class="ellipsis">...</div>
-        <div (click)="this.viewAll.emit(true)" class="view-all-text">View all ></div>
+        <div (click)="this.viewAll.emit()" class="view-all-text">View all ></div>
       </div>
     </div>
   `
@@ -47,7 +47,7 @@ export class MarkerTooltipComponent {
   public data?: Observable<MarkerTooltipData | undefined>;
 
   @Output()
-  public readonly viewAll: EventEmitter<boolean> = new EventEmitter();
+  public readonly viewAll: EventEmitter<void> = new EventEmitter();
 }
 
 export interface MarkerTooltipData {

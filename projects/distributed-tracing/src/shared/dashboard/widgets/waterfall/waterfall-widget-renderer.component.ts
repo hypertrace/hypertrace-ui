@@ -64,7 +64,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [spanData]="this.selectedData"
           [showTitleHeader]="true"
           layout="${SpanDetailLayoutStyle.Vertical}"
-          [activeLabel]="this.activeLabel"
+          [activeTabLabel]="this.activeTabLabel"
           (closed)="this.closeSheet()"
         >
           <ht-summary-value
@@ -89,7 +89,7 @@ export class WaterfallWidgetRendererComponent
 
   private sheet?: SheetRef;
   public selectedData?: WaterfallData;
-  public activeLabel?: SpanDetailTab;
+  public activeTabLabel?: SpanDetailTab;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<WaterfallWidgetModel>,
@@ -100,7 +100,7 @@ export class WaterfallWidgetRendererComponent
   }
 
   public onTableRowSelection(selectedData: WaterfallData): void {
-    this.activeLabel = undefined;
+    this.activeTabLabel = undefined;
     if (selectedData === this.selectedData || isEmpty(selectedData)) {
       this.closeSheet();
     } else {
@@ -109,7 +109,7 @@ export class WaterfallWidgetRendererComponent
   }
 
   public onMarkerSelection(selectedMarker: MarkerSelection): void {
-    this.activeLabel = SpanDetailTab.Logs;
+    this.activeTabLabel = SpanDetailTab.Logs;
     this.openSheet(selectedMarker.selectedData!);
   }
 

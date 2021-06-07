@@ -24,7 +24,7 @@ import { SpanDetailTab } from './span-detail-tab';
         <ng-content></ng-content>
       </div>
 
-      <ht-tab-group class="tabs-group" [activeLabel]="this.activeLabel">
+      <ht-tab-group class="tabs-group" [activeTabLabel]="this.activeTabLabel">
         <ht-tab label="${SpanDetailTab.Request}" *ngIf="this.showRequestTab">
           <ht-span-request-detail
             class="request"
@@ -47,7 +47,7 @@ import { SpanDetailTab } from './span-detail-tab';
         <ht-tab label="${SpanDetailTab.ExitCalls}" *ngIf="this.showExitCallsTab">
           <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
         </ht-tab>
-        <ht-tab *ngIf="this.showLogEventstab" label="${SpanDetailTab.Logs}" [badge]="this.totalLogEvents">
+        <ht-tab *ngIf="this.showLogEventsTab" label="${SpanDetailTab.Logs}" [badge]="this.totalLogEvents">
           <ht-log-events-table
             [logEvents]="this.spanData?.logEvents"
             [spanStartTime]="this.spanData?.startTime"
@@ -68,7 +68,7 @@ export class SpanDetailComponent implements OnChanges {
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
 
   @Input()
-  public activeLabel?: SpanDetailTab;
+  public activeTabLabel?: SpanDetailTab;
 
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
@@ -76,7 +76,7 @@ export class SpanDetailComponent implements OnChanges {
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
   public showExitCallsTab?: boolean;
-  public showLogEventstab?: boolean;
+  public showLogEventsTab?: boolean;
   public totalLogEvents?: number;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -84,7 +84,7 @@ export class SpanDetailComponent implements OnChanges {
       this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
       this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
       this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
-      this.showLogEventstab = !isEmpty(this.spanData?.logEvents);
+      this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
     }
   }

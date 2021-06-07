@@ -119,8 +119,7 @@ export class SequenceBarRendererService {
     xScale: ScaleLinear<number, number>,
     options: SequenceOptions
   ): void {
-    let index = 0;
-    for (const segment of options.data) {
+    options.data.forEach((segment, index) => {
       plotSelection
         .selectAll(`g.${SequenceBarRendererService.MARKERS_CLASS}`)
         .data(this.getGroupedMarkers(segment, xScale))
@@ -138,8 +137,7 @@ export class SequenceBarRendererService {
         .attr('width', this.markerWidth)
         .attr('height', 12)
         .style('fill', 'white');
-      index++;
-    }
+    });
   }
 
   private drawBarValueText(
