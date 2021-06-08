@@ -1,5 +1,9 @@
 @import 'mixins';
 
+@mixin grouped-style($color) {
+  box-shadow: 0 3px 0 -1px $color, 0 4px 0 -1px $gray-2;
+}
+
 .ht-card-list {
   display: flex;
   flex-direction: column;
@@ -17,21 +21,29 @@
     border-radius: 8px;
     border: 1px solid $gray-2;
     margin-bottom: 8px;
-    @include card-hover;
+
+    @include card-hover();
 
     &.selected-card {
       background: $blue-1;
       border: 1px solid $blue-2;
 
+      &.grouped-style {
+        margin-bottom: 8px;
+        @include grouped-style($blue-1);
+      }
+
       &:hover {
-        background: $blue-2;
-        border: 1px solid $blue-5;
+        &.grouped-style {
+          margin-bottom: 8px;
+          @include grouped-style($blue-2);
+        }
       }
     }
 
-    &:hover {
-      background: $gray-1;
-      border: 1px solid $gray-2;
+    &.grouped-style {
+      margin-bottom: 8px;
+      @include grouped-style($gray-1);
     }
   }
 

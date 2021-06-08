@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { Observable } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
@@ -19,7 +19,7 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="paginator" *ngIf="this.totalItems">
+    <div class="paginator" *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]">
       <ht-label
         class="label"
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
@@ -90,16 +90,25 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
   private _totalItems: number = 0;
 
+  private readonly pageSizeInputSubject: Subject<PageEvent> = new Subject();
+
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter();
 
-  public readonly pageEvent$: Observable<PageEvent> = this.pageChange.asObservable();
+  // Caused either by a change in the provided page, or user change being emitted
+  public readonly pageEvent$: Observable<PageEvent> = merge(this.pageChange, this.pageSizeInputSubject);
 
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.totalItems) {
       this.gotoFirstPage();
+    }
+    if (changes.pageIndex || changes.pageSize) {
+      this.pageSizeInputSubject.next({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex
+      });
     }
   }
 

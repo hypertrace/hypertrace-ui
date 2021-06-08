@@ -174,9 +174,9 @@ describe('Explore query editor', () => {
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         series: [defaultSeries],
-        groupByLimit: 5, // Default group by limit
         groupBy: {
-          keys: ['first groupable']
+          keys: ['first groupable'],
+          limit: 5 // Default group by limit
         }
       })
     );
@@ -213,9 +213,9 @@ describe('Explore query editor', () => {
     expect(onQueryChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         series: [defaultSeries],
-        groupByLimit: 6,
         groupBy: {
-          keys: ['first groupable']
+          keys: ['first groupable'],
+          limit: 6
         }
       })
     );

@@ -35,7 +35,8 @@ import { SelectSize } from './select-size';
         this.groupPosition,
         selected ? selected.style.toString() : '',
         this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : ''
+        this.disabled ? 'disabled' : '',
+        this.popoverOpen ? 'open' : ''
       ]"
       *htLetAsync="this.selected$ as selected"
     >
@@ -43,6 +44,8 @@ import { SelectSize } from './select-size';
         [disabled]="this.disabled"
         [closeOnClick]="true"
         class="select-container"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.popoverOpen = false"
         [ngSwitch]="this.triggerDisplayMode"
       >
         <ht-popover-trigger>
@@ -52,7 +55,13 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-border"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" [size]="this.iconSize">
+              <ht-icon
+                *ngIf="this.getPrefixIcon(selected)"
+                class="trigger-prefix-icon"
+                [icon]="this.getPrefixIcon(selected)"
+                [size]="this.iconSize"
+                [color]="selected?.iconColor"
+              >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
               </ht-label>
@@ -61,7 +70,7 @@ import { SelectSize } from './select-size';
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
               class="trigger-content icon-only"
-              [ngClass]="this.selected !== undefined ? 'selected' : ''"
+              [ngClass]="{ selected: this.selected !== undefined, open: this.popoverOpen }"
             >
               <ht-icon
                 class="icon"
@@ -71,6 +80,15 @@ import { SelectSize } from './select-size';
                 [htTooltip]="this.selected?.label || this.placeholder"
               >
               </ht-icon>
+            </div>
+            <div
+              *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBackground}'"
+              class="trigger-content menu-with-background"
+              [ngClass]="[this.justifyClass]"
+            >
+              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
+              </ht-label>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
@@ -168,6 +186,8 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
 
+  public popoverOpen: boolean = false;
+
   public get justifyClass(): string {
     if (this.justify !== undefined) {
       return this.justify;
@@ -188,6 +208,10 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
         map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
       );
     }
+  }
+
+  public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
+    return selectedOption?.icon ?? this.icon;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -235,5 +259,6 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
 export const enum SelectTriggerDisplayMode {
   MenuWithBorder = 'menu-with-border',
+  MenuWithBackground = 'menu-with-background',
   Icon = 'icon'
 }

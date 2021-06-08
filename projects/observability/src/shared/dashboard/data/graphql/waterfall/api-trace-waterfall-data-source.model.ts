@@ -2,6 +2,7 @@ import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   AttributeMetadata,
   GraphQlDataSourceModel,
+  LogEvent,
   MetadataService,
   Span,
   spanIdKey,
@@ -60,8 +61,13 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       'protocolName',
       'spanTags',
       'startTime',
-      'type'
+      'type',
+      'errorCount'
     ];
+  }
+
+  protected getLogEventAttributes(): string[] {
+    return ['attributes', 'timestamp', 'summary'];
   }
 
   private getTraceData(): Observable<Trace | undefined> {
@@ -73,6 +79,9 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.getSpanAttributes().map(attribute =>
+        this.specificationBuilder.attributeSpecificationForKey(attribute)
+      ),
+      logEventProperties: this.getLogEventAttributes().map(attribute =>
         this.specificationBuilder.attributeSpecificationForKey(attribute)
       )
     });
@@ -103,10 +112,12 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
         units: duration.units
       },
       serviceName: span.displayEntityName as string,
-      name: span.displaySpanName as string,
       protocolName: span.protocolName as string,
+      apiName: span.displaySpanName as string,
       spanType: span.type as SpanType,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
+      errorCount: span.errorCount as number,
+      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results ?? []
     };
   }
 }

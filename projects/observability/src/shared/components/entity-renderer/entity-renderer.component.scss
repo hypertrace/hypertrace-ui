@@ -2,21 +2,23 @@
 @import 'font';
 
 .ht-entity-renderer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: inherit;
-  @include body-1-regular();
+  .name-with-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: inherit;
 
-  .icon {
-    padding-right: 12px;
-  }
+    .icon {
+      padding-right: 12px;
+    }
 
-  .name {
-    @include ellipsis-overflow();
+    .name {
+      @include ellipsis-overflow();
+    }
   }
 }
 
-.navigable {
-  @include link-hover();
+.default-text-style {
+  color: $gray-9;
+  @include body-1-regular(currentColor);
 }

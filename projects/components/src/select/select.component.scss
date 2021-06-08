@@ -2,7 +2,6 @@
 
 :host {
   width: 100%;
-  max-width: 240px;
 
   .select {
     .trigger-label {
@@ -30,6 +29,11 @@
   .select-container {
     width: 100%;
     height: 100%;
+  }
+
+  &.open {
+    background-color: $gray-2;
+    border-radius: 6px;
   }
 
   &.border {
@@ -68,6 +72,20 @@
       border-radius: 6px;
     }
 
+    &.menu-with-background {
+      background-color: $gray-1;
+      padding-top: 1px;
+      border-radius: 4px;
+
+      .trigger-label {
+        @include body-1-medium($gray-9);
+      }
+
+      .trigger-icon {
+        padding-top: 1px;
+      }
+    }
+
     &.justify-left {
       justify-content: flex-start;
     }
@@ -94,6 +112,11 @@
       margin-left: auto;
       color: $gray-7;
     }
+
+    &:hover {
+      background-color: $gray-1;
+      border-radius: 6px;
+    }
   }
 
   .icon-only {
@@ -108,6 +131,16 @@
       &:hover {
         background: $blue-1;
         border: 1px solid $blue-2;
+        border-radius: 50%;
+      }
+    }
+
+    &.open {
+      background-color: white;
+
+      .icon {
+        background: $blue-2;
+        border: 1px solid $blue-3;
         border-radius: 50%;
       }
     }
@@ -130,6 +163,7 @@
     font-size: 14px;
     align-items: center;
     justify-content: space-between;
+    white-space: nowrap;
 
     .select-option-info {
       display: flex;

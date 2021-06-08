@@ -1,0 +1,32 @@
+@import 'mixins';
+
+.form-field {
+  &.optional {
+    margin-bottom: 18px;
+  }
+
+  .info-label {
+    display: flex;
+    padding-bottom: 4px;
+
+    .label {
+      @include body-2-medium($gray-7);
+      display: block;
+    }
+
+    .optional-label {
+      @include body-2-regular($gray-4);
+      padding-left: 4px;
+    }
+
+    .infobox {
+      cursor: pointer;
+      color: $gray-5;
+      padding-left: 6px;
+    }
+  }
+
+  .error-message {
+    @include footnote($red-6);
+  }
+}

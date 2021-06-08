@@ -1,6 +1,7 @@
 @import 'mixins';
 @import 'layout';
 
+$header-height: 32px;
 .table {
   position: relative;
   display: flex;
@@ -28,7 +29,7 @@
   flex-direction: row;
   position: sticky;
   top: 0;
-  height: 32px;
+  height: $header-height;
   background: $gray-1;
   border-bottom: 1px solid $gray-2;
   border-top-left-radius: 3px;
@@ -41,7 +42,10 @@
   flex-direction: row;
   height: 44px;
   min-height: 44px;
-  cursor: pointer;
+
+  &.selectable {
+    cursor: pointer;
+  }
 
   &.selected-row {
     background: $blue-1;
@@ -67,19 +71,25 @@
 
   .header-cell-renderer {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 12px 10px 7px;
+  }
+
+  .header-cell-renderer:first-child {
+    padding-left: 12px;
   }
 
   .header-column-resize-handle {
     padding: 6px 2px;
     height: 100%;
-    cursor: col-resize;
 
-    &:hover {
-      padding: 0 2px;
+    &.resizable {
+      cursor: col-resize;
+      &:hover {
+        padding: 0 2px;
 
-      .header-column-divider {
-        background-color: $gray-9;
+        .header-column-divider {
+          background-color: $gray-9;
+        }
       }
     }
 
@@ -107,7 +117,8 @@
 }
 
 .state-watcher {
-  height: calc(100% - #{$paginator-height});
+  top: $header-height;
+  height: calc(100% - #{$header-height});
   width: 100%;
   position: absolute;
   background: transparent;

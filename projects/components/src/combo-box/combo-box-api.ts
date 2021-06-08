@@ -1,6 +1,7 @@
 export interface ComboBoxOption<TValue = string> {
   text: string;
-  value: TValue;
+  value?: TValue;
+  icon?: string;
   tooltip?: string;
 }
 

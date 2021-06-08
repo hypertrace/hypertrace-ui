@@ -15,7 +15,7 @@ import { IconSize } from '../../icon/icon-size';
         size="${IconSize.Small}"
         [color]="this.iconColor"
       ></ht-icon>
-      <span class="label">{{ this.label }}</span>
+      <span class="label" [ngStyle]="{ color: this.labelColor ? this.labelColor : '' }">{{ this.label }}</span>
     </div></ht-event-blocker
   >`
 })
@@ -28,6 +28,9 @@ export class MenuItemComponent {
 
   @Input()
   public iconColor?: string;
+
+  @Input()
+  public labelColor?: string;
 
   @Input()
   public disabled?: boolean;

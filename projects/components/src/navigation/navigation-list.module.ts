@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MemoizeModule } from '@hypertrace/common';
 import { BetaTagModule } from '../beta-tag/beta-tag.module';
 import { ButtonModule } from '../button/button.module';
 import { FeatureConfigCheckModule } from '../feature-check/feature-config-check.module';
@@ -23,7 +24,9 @@ import { NavigationListComponent } from './navigation-list.component';
     ButtonModule,
     LinkModule,
     LabelModule,
-    BetaTagModule
+    BetaTagModule,
+    MemoizeModule,
+    LinkModule
   ],
   declarations: [NavigationListComponent, NavItemComponent],
   exports: [NavigationListComponent]

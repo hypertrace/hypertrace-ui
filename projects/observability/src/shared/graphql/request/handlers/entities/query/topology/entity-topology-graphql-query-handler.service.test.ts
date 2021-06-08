@@ -242,7 +242,7 @@ describe('Entity topology graphql query handler', () => {
     expect(spectator.service.convertRequest(request)).toEqual({
       path: 'entities',
       arguments: [
-        { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Service) },
+        { name: 'scope', value: ObservabilityEntityType.Service },
         { name: 'limit', value: 100 },
         {
           name: 'between',

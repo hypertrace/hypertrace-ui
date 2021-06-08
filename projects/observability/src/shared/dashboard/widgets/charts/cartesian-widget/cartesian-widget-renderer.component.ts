@@ -58,13 +58,14 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     return this.model.getDataFetcher().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
+        const defaultInterval = this.model.defaultInterval?.getDuration();
+        const intervalOptions = this.buildIntervalOptions();
 
         if (this.intervalSupported()) {
-          this.intervalOptions = this.buildIntervalOptions();
-          this.selectedInterval = this.getBestIntervalMatch(this.intervalOptions, this.selectedInterval);
+          this.selectedInterval = this.getBestIntervalMatch(intervalOptions, this.selectedInterval ?? defaultInterval);
+          this.intervalOptions = intervalOptions; // The only thing this flag controls is whether options are available (and thus, the selector)
         } else {
-          this.intervalOptions = undefined;
-          this.selectedInterval = undefined;
+          this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
         }
       }),
       switchMap(() => this.buildDataObservable())

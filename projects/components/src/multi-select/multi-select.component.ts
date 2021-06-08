@@ -10,12 +10,12 @@ import {
   QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
-import { EMPTY, merge, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { queryListAndChanges$ } from '@hypertrace/common';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
-import { SelectOption } from '../select/select-option';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { MultiSelectJustify } from './multi-select-justify';
@@ -33,7 +33,6 @@ import { MultiSelectJustify } from './multi-select-justify';
         this.disabled ? 'disabled' : '',
         this.popoverOpen ? 'open' : ''
       ]"
-      *htLetAsync="this.selected$ as selected"
     >
       <ht-popover
         [disabled]="this.disabled"
@@ -45,44 +44,71 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="this.triggerLabelDisplayMode"
+            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
             <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
               <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
+              <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
+                >+{{ this.selectedItemsCount - 1 }}</span
+              >
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.enableSearch">
-              <ht-search-box
-                class="search-bar"
-                (valueChange)="this.searchOptions($event)"
-                displayMode="${SearchBoxDisplayMode.NoBorder}"
-              ></ht-search-box>
+            <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
+              <ng-container *ngIf="this.allOptions$ | async as allOptions">
+                <ht-search-box
+                  class="search-bar"
+                  (valueChange)="this.searchOptions($event)"
+                  [debounceTime]="200"
+                  displayMode="${SearchBoxDisplayMode.NoBorder}"
+                ></ht-search-box>
+                <ht-divider class="divider"></ht-divider>
+
+                <ht-button
+                  class="clear-selected"
+                  *ngIf="this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Clear Selected"
+                  (click)="this.onClearSelected()"
+                ></ht-button>
+
+                <ht-button
+                  class="select-all"
+                  *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
+                  role="${ButtonRole.Primary}"
+                  display="${ButtonStyle.Text}"
+                  label="Select All"
+                  (click)="this.onSelectAll()"
+                ></ht-button>
+              </ng-container>
             </ng-container>
-            <ng-container *ngIf="this.showAllOptionControl">
-              <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
-                <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
-                <span class="label">Select All</span>
+
+            <div class="multi-select-options" *htLoadAsync="this.filteredOptions$ as filteredOptions">
+              <div
+                *ngFor="let item of filteredOptions"
+                (click)="this.onSelectionChange(item)"
+                class="multi-select-option"
+              >
+                <ht-checkbox
+                  class="checkbox"
+                  (click)="this.preventClickDefault($event)"
+                  [checked]="this.isSelectedItem(item)"
+                ></ht-checkbox>
+                <ht-icon
+                  class="icon"
+                  *ngIf="item.icon"
+                  [icon]="item.icon"
+                  size="${IconSize.ExtraSmall}"
+                  [color]="item.iconColor"
+                ></ht-icon>
+                <span class="label">{{ item.label }}</span>
               </div>
-            </ng-container>
-
-            <ht-divider *ngIf="this.showAllOptionControl || this.enableSearch"></ht-divider>
-
-            <div *ngFor="let item of filteredItems" (click)="this.onSelectionChange(item)" class="multi-select-option">
-              <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
-              <ht-icon
-                class="icon"
-                *ngIf="item.icon"
-                [icon]="item.icon"
-                size="${IconSize.ExtraSmall}"
-                [color]="item.iconColor"
-              ></ht-icon>
-              <span class="label">{{ item.label }}</span>
             </div>
           </div>
         </ht-popover-content>
@@ -113,13 +139,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public showBorder: boolean = false;
 
   @Input()
-  public enableSearch: boolean = false;
+  public searchMode: MultiSelectSearchMode = MultiSelectSearchMode.Disabled;
 
   @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
-
-  @Input()
-  public showAllOptionControl?: boolean = false;
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
@@ -127,61 +150,81 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
+  @Output()
+  public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
+
   @ContentChildren(SelectOptionComponent)
-  public items?: QueryList<SelectOptionComponent<V>>;
+  private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
+  public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
+
+  public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
+  private readonly searchSubject: Subject<string> = new BehaviorSubject('');
 
   public popoverOpen: boolean = false;
-  public selected$?: Observable<SelectOption<V>[]>;
   public triggerLabel?: string;
-  public filteredItems?: SelectOptionComponent<V>[];
-
-  public constructor(private readonly loggerService: LoggerService) {}
+  public selectedItemsCount: number = 0;
 
   public ngAfterContentInit(): void {
-    this.selected$ = this.buildObservableOfSelected();
+    this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
+      map(([options, searchText]) =>
+        options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
     this.setTriggerLabel();
-    this.filteredItems = this.items?.toArray();
   }
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (this.items !== undefined && changes.selected !== undefined) {
-      this.selected$ = this.buildObservableOfSelected();
-    }
+  public ngOnChanges(): void {
     this.setTriggerLabel();
   }
 
   public searchOptions(searchText: string): void {
-    this.filteredItems = this.items?.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase()));
+    if (this.searchMode === MultiSelectSearchMode.Disabled) {
+      return;
+    }
+
+    if (this.searchMode === MultiSelectSearchMode.CaseInsensitive) {
+      this.searchSubject.next(searchText);
+    }
+
+    this.searchValueChange.emit(searchText);
   }
 
-  public onAllSelectionChange(): void {
-    this.selected = this.areAllOptionsSelected() ? [] : this.items!.map(item => item.value); // Select All or none
-    this.setSelection();
+  public onSelectAll(): void {
+    this.setSelection(this.allOptionsList!.map(item => item.value));
+  }
+
+  public onClearSelected(): void {
+    this.setSelection([]);
   }
 
   public isIconOnlyMode(): boolean {
     return this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Icon;
   }
 
-  public areAllOptionsSelected(): boolean {
-    return this.selected !== undefined && this.items !== undefined && this.selected.length === this.items.length;
+  public isAnyOptionSelected(): boolean {
+    return this.selected !== undefined && this.allOptionsList !== undefined && this.selected.length > 0;
   }
 
   public onSelectionChange(item: SelectOptionComponent<V>): void {
-    this.selected = this.isSelectedItem(item)
+    const selected = this.isSelectedItem(item)
       ? this.selected?.filter(value => value !== item.value)
       : (this.selected ?? []).concat(item.value);
 
-    this.setSelection();
+    this.setSelection(selected ?? []);
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
     return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
   }
 
-  private setSelection(): void {
+  public preventClickDefault(event: Event): void {
+    event.preventDefault();
+  }
+
+  private setSelection(selected: V[]): void {
+    this.selected = selected;
     this.setTriggerLabel();
-    this.selected$ = this.buildObservableOfSelected();
     this.selectedChange.emit(this.selected);
   }
 
@@ -192,36 +235,14 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
       return;
     }
 
-    const selectedItems: SelectOptionComponent<V>[] | undefined = this.items?.filter(item => this.isSelectedItem(item));
-    if (selectedItems === undefined || selectedItems.length === 0) {
-      this.triggerLabel = this.placeholder;
-    } else if (selectedItems.length === 1) {
-      this.triggerLabel = selectedItems[0].label;
-    } else {
-      this.triggerLabel = `${selectedItems[0].label} and ${selectedItems.length - 1} more`;
-    }
-  }
-
-  private buildObservableOfSelected(): Observable<SelectOption<V>[]> {
-    if (!this.items) {
-      return EMPTY;
-    }
-
-    return queryListAndChanges$(this.items).pipe(
-      switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
-      map(() => this.findItems(this.selected) ?? [])
+    const selectedItems: SelectOptionComponent<V>[] | undefined = this.allOptionsList?.filter(item =>
+      this.isSelectedItem(item)
     );
-  }
 
-  // Find the select option object for a value
-  private findItems(value: V[] | undefined): SelectOption<V>[] | undefined {
-    if (this.items === undefined) {
-      this.loggerService.warn(`Invalid items for select option '${String(value)}'`);
+    this.selectedItemsCount = selectedItems?.length ?? 0;
 
-      return undefined;
-    }
-
-    return this.items.filter(item => this.isSelectedItem(item));
+    // Trigger label is placeholder in case there is element selected on multiselect
+    this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems || [])[0]?.label;
   }
 }
 
@@ -230,4 +251,10 @@ export const enum TriggerLabelDisplayMode {
   Placeholder = 'placeholder-mode',
   Selection = 'selection-mode',
   Icon = 'icon-mode'
+}
+
+export const enum MultiSelectSearchMode {
+  Disabled = 'disabled', // Search is not available
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
+  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }

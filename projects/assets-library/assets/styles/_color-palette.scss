@@ -78,9 +78,9 @@ $gray-7: #272c2e;
 $gray-8: #171a1c;
 $gray-9: #080909;
 
-$cloud-1: #a1c5e0;
+$cloud-1: #edf4f9;
 $cloud-2: #c7ddec;
-$cloud-3: #edf4f9;
+$cloud-3: #a1c5e0;
 
 $brown-1: #9e4c41;
 
@@ -98,6 +98,7 @@ $color-health-red: $red-5;
 $color-health-unknown: $gray-7;
 
 // Risk
+$color-risk-critical: $purple-6;
 $color-risk-high: $red-5;
 $color-risk-medium: $brown-1;
 $color-risk-low: $gray-6;
@@ -111,7 +112,7 @@ $color-text: $gray-7;
 $color-text-label: $gray-4;
 $color-text-body: $gray-9;
 $color-text-disabled: $gray-5;
-$color-text-highlight: $cloud-1;
+$color-text-highlight: $cloud-3;
 $color-text-emphasis: $blue-5;
 
 // Elements

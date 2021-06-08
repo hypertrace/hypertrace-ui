@@ -73,7 +73,7 @@ describe('Interactions graphql query handler', () => {
     expect(spectator.service.convertRequest(buildRequest())).toEqual({
       path: 'entities',
       arguments: [
-        { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Backend) },
+        { name: 'scope', value: ObservabilityEntityType.Backend },
         { name: 'limit', value: 1 },
         {
           name: 'between',

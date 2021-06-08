@@ -43,6 +43,15 @@ import { SpanDetailLayoutStyle } from './span-detail-layout-style';
         <ht-tab label="Attributes" class="attributes">
           <ht-span-tags-detail [tags]="this.spanData.tags"></ht-span-tags-detail>
         </ht-tab>
+        <ht-tab label="Exit Calls" *ngIf="this.showExitCallsTab">
+          <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
+        </ht-tab>
+        <ht-tab *ngIf="this.showLogEventstab" label="Logs" [badge]="this.totalLogEvents">
+          <ht-log-events-table
+            [logEvents]="this.spanData?.logEvents"
+            [spanStartTime]="this.spanData?.startTime"
+          ></ht-log-events-table>
+        </ht-tab>
       </ht-tab-group>
     </div>
   `
@@ -62,11 +71,17 @@ export class SpanDetailComponent implements OnChanges {
 
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
+  public showExitCallsTab?: boolean;
+  public showLogEventstab?: boolean;
+  public totalLogEvents?: number;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
       this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
       this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
+      this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
+      this.showLogEventstab = !isEmpty(this.spanData?.logEvents);
+      this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
     }
   }
 }

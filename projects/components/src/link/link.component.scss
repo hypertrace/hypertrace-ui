@@ -4,6 +4,13 @@
 .ht-link {
   text-decoration-line: none;
   text-decoration: none;
-  color: $gray-9;
-  @include link-hover;
+  color: inherit;
+
+  &:not(.disabled) {
+    @include link-hover;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
 }

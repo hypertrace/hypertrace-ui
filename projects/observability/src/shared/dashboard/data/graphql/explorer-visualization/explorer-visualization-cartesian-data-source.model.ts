@@ -1,5 +1,5 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlFilter } from '@hypertrace/distributed-tracing';
+import { GraphQlFilter, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { NEVER, Observable } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
@@ -19,44 +19,40 @@ import { ExploreCartesianDataSourceModel, ExplorerData } from '../explore/explor
 export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
   public request?: ExploreVisualizationRequest;
 
-  protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
-    const requestState = this.buildRequestState(interval);
-
-    if (this.request === undefined || requestState === undefined) {
+  protected fetchResults(): Observable<CartesianResult<ExplorerData>> {
+    if (this.request === undefined) {
       return NEVER;
     }
 
     return this.request.exploreQuery$.pipe(
-      switchMap(exploreRequest =>
-        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters))
-        ).pipe(mergeMap(response => this.mapResponseData(requestState, response)))
-      )
+      switchMap(exploreRequest => {
+        const timeRange = this.getTimeRangeOrThrow();
+
+        return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange)
+        ).pipe(
+          mergeMap(response =>
+            this.mapResponseData(this.request!, response, exploreRequest.interval as TimeDuration, timeRange)
+          )
+        );
+      })
     );
   }
 
   protected appendFilters(
     request: Omit<GraphQlExploreRequest, 'timeRange'>,
-    filters: GraphQlFilter[]
+    filters: GraphQlFilter[],
+    timeRange: GraphQlTimeRange
   ): GraphQlExploreRequest {
     return {
       ...request,
-      timeRange: this.getTimeRangeOrThrow(),
+      timeRange: timeRange,
       filters: [...(request.filters ?? []), ...filters]
     };
   }
 
-  protected buildRequestState(interval: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
-    if (this.request?.series.length === 0 || this.request?.context === undefined) {
-      return undefined;
-    }
-
-    return {
-      series: this.request.series,
-      context: this.request.context,
-      interval: interval,
-      groupBy: this.request.groupBy,
-      groupByLimit: this.request.groupByLimit
-    };
+  protected buildRequestState(): ExploreRequestState | undefined {
+    // Unused since fetchResults is overriden, but abstract so requires a def
+    return undefined;
   }
 }

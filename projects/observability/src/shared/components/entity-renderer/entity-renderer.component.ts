@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { InAppNavigationParams, TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
 import { Entity } from '../../graphql/model/schema/entity';
 import { EntityIconLookupService } from '../../services/entity/entity-icon-lookup.service';
@@ -13,24 +13,37 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
     <div
       *ngIf="this.name"
       class="ht-entity-renderer"
-      [ngClass]="{ navigable: this.navigable }"
+      [ngClass]="{ 'default-text-style': !this.inheritTextStyle }"
       [htTooltip]="this.name"
-      (click)="this.navigable && this.onClickNavigate()"
     >
-      <ht-icon
-        [icon]="this.entityIconType"
-        class="icon"
-        *ngIf="this.showIcon && this.entityIconType"
-        size="${IconSize.Large}"
-      ></ht-icon>
-      <div class="name" *ngIf="this.name" data-sensitive-pii>{{ this.name }}</div>
+      <div *ngIf="this.navigationParams; then nameWithLinkTemplate; else nameTemplate"></div>
     </div>
-    <div *ngIf="!this.name">-</div>
+
+    <ng-template #nameWithLinkTemplate>
+      <ht-link [paramsOrUrl]="this.navigationParams">
+        <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+      </ht-link>
+    </ng-template>
+
+    <ng-template #nameTemplate>
+      <div class="name-with-icon">
+        <ht-icon
+          [icon]="this.entityIconType"
+          class="icon"
+          *ngIf="this.showIcon && this.entityIconType"
+          size="${IconSize.Large}"
+        ></ht-icon>
+        <div class="name" data-sensitive-pii>{{ this.name | htDisplayString }}</div>
+      </div>
+    </ng-template>
   `
 })
 export class EntityRendererComponent implements OnChanges {
   @Input()
   public entity?: Entity;
+
+  @Input()
+  public inactive: boolean = false;
 
   @Input()
   public navigable: boolean = true;
@@ -41,8 +54,12 @@ export class EntityRendererComponent implements OnChanges {
   @Input()
   public showIcon: boolean = false;
 
+  @Input()
+  public inheritTextStyle: boolean = false;
+
   public name?: string;
   public entityIconType?: string;
+  public navigationParams?: InAppNavigationParams;
 
   public constructor(
     private readonly iconLookupService: EntityIconLookupService,
@@ -53,14 +70,12 @@ export class EntityRendererComponent implements OnChanges {
     if (changes.entity) {
       this.setName();
       this.setIconType();
+      this.setNavigationParams();
     }
 
     if (changes.icon) {
       this.setIconType();
     }
-  }
-  public onClickNavigate(): void {
-    this.navigable && this.entity && this.entityNavService.navigateToEntity(this.entity);
   }
 
   private setName(): void {
@@ -70,5 +85,12 @@ export class EntityRendererComponent implements OnChanges {
   private setIconType(): void {
     this.entityIconType =
       this.icon ?? (this.entity !== undefined ? this.iconLookupService.forEntity(this.entity) : undefined);
+  }
+
+  private setNavigationParams(): void {
+    this.navigationParams =
+      this.navigable && this.entity !== undefined
+        ? this.entityNavService.buildEntityDetailNavigationParams(this.entity, this.inactive)
+        : undefined;
   }
 }

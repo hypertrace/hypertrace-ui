@@ -1,6 +1,6 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { of, throwError } from 'rxjs';
+import { EMPTY, of, throwError } from 'rxjs';
 import { NotificationComponent, NotificationMode } from './notification.component';
 import { NotificationService } from './notification.service';
 
@@ -87,10 +87,11 @@ describe('NotificationService', () => {
 
   test('withNotification operator should work correctly', () => {
     spectator = createService();
+    const matSnackBar = spectator.inject(MatSnackBar);
 
     of(true).pipe(spectator.service.withNotification('success', 'failure')).subscribe();
 
-    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+    expect(matSnackBar.openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
         horizontalPosition: 'left',
@@ -102,7 +103,7 @@ describe('NotificationService', () => {
 
     throwError('error').pipe(spectator.service.withNotification('success', 'failure')).subscribe();
 
-    expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
+    expect(matSnackBar.openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
         horizontalPosition: 'left',
@@ -111,5 +112,10 @@ describe('NotificationService', () => {
         data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
       })
     );
+
+    // Completing the source observable without emitting a value should not show any message
+    matSnackBar.openFromComponent.mockClear();
+    EMPTY.pipe(spectator.service.withNotification('success', 'failure')).subscribe();
+    expect(matSnackBar.openFromComponent).not.toHaveBeenCalled();
   });
 });

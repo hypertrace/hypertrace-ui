@@ -13,15 +13,17 @@ export interface WaterfallData {
     value: number;
     units?: string;
   };
-  name: string;
   serviceName: string;
-  protocolName: string;
+  protocolName?: string;
+  apiName?: string;
   spanType: SpanType;
   requestHeaders?: Dictionary<unknown>;
   requestBody?: string;
   responseHeaders?: Dictionary<unknown>;
   responseBody?: string;
   tags: Dictionary<unknown>;
+  errorCount: number;
+  logEvents: LogEvent[];
 }
 
 export interface WaterfallDataNode extends WaterfallData, Omit<StatefulPrefetchedTreeTableRow, '$$state'> {
@@ -35,4 +37,10 @@ export interface WaterfallChartState {
   parent?: WaterfallDataNode;
   children: WaterfallDataNode[];
   expanded: boolean;
+}
+
+export interface LogEvent {
+  attributes: Dictionary<unknown>;
+  timestamp: string;
+  summary: string;
 }

@@ -1,6 +1,6 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationService } from '@hypertrace/common';
+import { FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
@@ -15,12 +15,17 @@ import { NavigableTabComponent } from './navigable-tab.component';
         <ng-container *ngFor="let tab of this.tabs">
           <ng-container *ngIf="!tab.hidden">
             <div class="tab-button" *htIfFeature="tab.featureFlags | htFeature as featureState">
-              <a mat-tab-link (click)="this.onTabClick(tab)" class="tab-link" [active]="activeTab === tab">
+              <ht-link
+                mat-tab-link
+                [active]="activeTab === tab"
+                [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab"
+                class="tab-link"
+              >
                 <ng-container *ngTemplateOutlet="tab.content"></ng-container>
                 <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
                   <span class="soon">SOON</span>
                 </span>
-              </a>
+              </ht-link>
               <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
             </div>
           </ng-container>
@@ -48,9 +53,12 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     );
   }
 
-  public onTabClick(tab: NavigableTabComponent): void {
-    this.navigationService.navigateWithinApp([tab.path], this.activatedRoute);
-  }
+  public buildNavParamsForTab = (tab: NavigableTabComponent): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: tab.path,
+    relativeTo: this.activatedRoute,
+    replaceCurrentHistory: tab.replaceHistory
+  });
 
   private findActiveTab(): NavigableTabComponent | undefined {
     return this.tabs.find(tab => this.navigationService.isRelativePathActive([tab.path], this.activatedRoute));

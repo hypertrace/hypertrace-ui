@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
 import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
+import { CopyToClipboardModule } from '../../copy-to-clipboard/copy-to-clipboard.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
 import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
@@ -17,10 +18,13 @@ import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
 import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
+import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
+import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
 import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
+import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
 import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
 import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
@@ -47,7 +51,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TraceCheckboxModule,
     FilterButtonModule,
     FilterModalModule,
-    PopoverModule
+    PopoverModule,
+    CopyToClipboardModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
@@ -66,7 +71,10 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TimestampTableCellRendererComponent,
     TimeAgoTableCellRendererComponent,
     CodeTableCellRendererComponent,
-    StringArrayTableCellRendererComponent
+    StringArrayTableCellRendererComponent,
+    StringEnumTableCellRendererComponent,
+    TextWithCopyActionTableCellRendererComponent,
+    RelativeTimestampTableCellRendererComponent
   ],
   providers: [
     {
@@ -80,7 +88,10 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TimestampTableCellRendererComponent,
         TimeAgoTableCellRendererComponent,
         CodeTableCellRendererComponent,
-        StringArrayTableCellRendererComponent
+        StringArrayTableCellRendererComponent,
+        StringEnumTableCellRendererComponent,
+        TextWithCopyActionTableCellRendererComponent,
+        RelativeTimestampTableCellRendererComponent
       ],
       multi: true
     },

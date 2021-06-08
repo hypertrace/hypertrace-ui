@@ -24,14 +24,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
-    key: 'title',
-    displayName: 'Title',
-    type: STRING_PROPERTY.type
-  })
-  // @deprecated
-  public title?: string;
-
-  @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
@@ -47,6 +39,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     type: STRING_PROPERTY.type
   })
   public searchAttribute?: string;
+
+  @ModelProperty({
+    key: 'search-placeholder',
+    displayName: 'Search Placeholder',
+    type: STRING_PROPERTY.type
+  })
+  public searchPlaceholder?: string;
 
   @ModelProperty({
     key: 'select-control-options',
@@ -105,6 +104,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public pageable: boolean = true;
 
+  @ModelProperty({
+    key: 'resizable',
+    displayName: 'Resizable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public resizable: boolean = true;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
@@ -139,6 +145,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return this.searchAttribute;
   }
 
+  public getSearchPlaceholder(): string | undefined {
+    return this.searchPlaceholder;
+  }
+
   public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {
     return this.selectOptions;
   }
@@ -153,5 +163,9 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public isPageable(): boolean {
     return this.pageable;
+  }
+
+  public isResizable(): boolean {
+    return this.resizable;
   }
 }

@@ -1,5 +1,6 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
 import { TracingTableCellType } from '@hypertrace/distributed-tracing';
+import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
 import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 
 export const serviceTraceListDashboard = {
@@ -50,10 +51,21 @@ export const serviceTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Exit Calls',
-        filterable: true,
+        filterable: false,
+        display: ObservabilityTableCellType.ExitCalls,
         value: {
-          type: 'attribute-specification',
-          attribute: 'apiExitCalls'
+          type: 'composite-specification',
+          specifications: [
+            {
+              type: 'attribute-specification',
+              attribute: 'apiExitCalls'
+            },
+            {
+              type: 'attribute-specification',
+              attribute: 'apiCalleeNameCount'
+            }
+          ],
+          'order-by': 'apiExitCalls'
         },
         'click-handler': {
           type: 'api-trace-navigation-handler'
@@ -67,6 +79,19 @@ export const serviceTraceListDashboard = {
         filterable: true,
         value: {
           type: 'trace-status-specification'
+        },
+        'click-handler': {
+          type: 'api-trace-navigation-handler'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Errors',
+        width: '80px',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'apiTraceErrorSpanCount'
         },
         'click-handler': {
           type: 'api-trace-navigation-handler'

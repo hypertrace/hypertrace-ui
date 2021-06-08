@@ -87,6 +87,7 @@ describe('Explorer dashboard builder', () => {
       const mockRequest: ExploreVisualizationRequest = {
         context: ObservabilityTraceType.Api,
         series: [series],
+        resultLimit: 1000,
         exploreQuery$: EMPTY,
         resultsQuery$: of({
           requestType: TRACES_GQL_REQUEST,
@@ -124,6 +125,7 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Endpoint' }),
               expect.objectContaining({ title: 'Exit Calls' }),
               expect.objectContaining({ title: 'Status' }),
+              expect.objectContaining({ title: 'Errors' }),
               expect.objectContaining({ title: 'Duration' }),
               expect.objectContaining({ title: 'Start Time' }),
               expect.objectContaining({ title: 'API Boundary Type' }),

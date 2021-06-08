@@ -31,6 +31,26 @@ export const backendTraceListDashboard = {
       },
       {
         type: 'table-widget-column',
+        title: 'Operation',
+        width: '10%',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'operation'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Destination',
+        width: '30%',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'destination'
+        }
+      },
+      {
+        type: 'table-widget-column',
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,

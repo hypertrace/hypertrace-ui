@@ -39,9 +39,11 @@ export class WaterfallChartService {
           children: []
         },
         $$spanName: {
-          name: datum.name,
+          apiName: datum.apiName,
           serviceName: datum.serviceName,
-          protocolName: datum.protocolName
+          protocolName: datum.protocolName,
+          hasError: datum.errorCount > 0,
+          hasLogs: datum.logEvents.length > 0
         },
         $$iconType: this.iconLookupService.forSpanType(datum.spanType)!,
         getChildren: () => of([]),
@@ -82,13 +84,11 @@ export class WaterfallChartService {
     // Do DFS
     while (sequenceNodes.length !== 0) {
       const node = sequenceNodes.shift()!;
-
       if (node.$$state.expanded) {
         segments.push({
           id: node.id,
           start: node.startTime,
           end: node.endTime,
-          label: node.name,
           color: node.color!
         });
 
@@ -123,7 +123,10 @@ export class WaterfallChartService {
       const node = nodes.shift()!;
       let color;
 
-      if (colorMap.has(node.serviceName)) {
+      if (node.$$spanName.hasError) {
+        // If span contains an error
+        color = Color.Red5;
+      } else if (colorMap.has(node.serviceName)) {
         // ServiceName seen before. Use existing service color
         color = colorMap.get(node.serviceName)!;
       } else {

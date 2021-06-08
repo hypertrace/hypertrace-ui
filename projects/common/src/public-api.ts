@@ -29,6 +29,7 @@ export * from './custom-error/custom-error';
 
 // DOM
 export { DomElementMeasurerService } from './utilities/dom/dom-element-measurer.service';
+export { DomElementScrollIntoViewService } from './utilities/dom/dom-element-scroll-into-view.service';
 export * from './utilities/dom/dom-utilities';
 
 // External
@@ -51,6 +52,8 @@ export * from './utilities/formatters/numeric/display-number.pipe';
 export * from './utilities/formatters/numeric/numeric-formatter';
 export * from './utilities/formatters/string/string-formatter';
 export * from './utilities/formatters/string/highlight.pipe';
+export * from './utilities/formatters/enum/display-string-enum.pipe';
+export * from './utilities/formatters/enum/display-string-enum';
 
 // Http Param Encoder
 export { HttpParamEncoder } from './utilities/http/http-param-encoder';

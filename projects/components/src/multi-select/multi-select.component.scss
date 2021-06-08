@@ -29,10 +29,19 @@
     cursor: pointer;
     height: 34px;
 
+    &.open {
+      background-color: $gray-2;
+    }
+
     &.icon-mode {
       border: 1px solid transparent;
       border-radius: 64px;
       padding: 0 4px;
+
+      &.open {
+        background: $blue-2;
+        border-color: $blue-3;
+      }
 
       &:hover {
         color: $blue-5;
@@ -45,11 +54,22 @@
       display: flex;
       width: 100%;
       align-items: center;
-      padding-left: 8px;
 
       .trigger-label {
         @include body-2-medium();
         padding-left: 8px;
+        width: calc(100% - 32px - 38px);
+        flex-grow: 1;
+      }
+
+      .trigger-more-items {
+        @include semi-bold();
+        @include font-label($gray-9);
+        background-color: $gray-2;
+        padding: 0 4px;
+        border-radius: 4px;
+        margin-left: 8px;
+        max-width: 38px;
       }
 
       .trigger-icon {
@@ -57,23 +77,43 @@
         margin-left: auto;
       }
     }
+
+    &:hover {
+      background-color: $gray-1;
+    }
   }
 }
 
 .multi-select-content {
   @include dropdown(6px);
   min-width: 120px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+  .divider {
+    padding: 0px 16px 4px 16px;
+  }
+
+  .multi-select-options {
+    overflow: auto;
+  }
 
   .multi-select-option {
     display: flex;
     height: 34px;
     padding: 4px 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     align-items: center;
 
     .checkbox {
       margin: 0px;
+      color: $gray-3;
+
+      ::ng-deep .mat-ripple {
+        display: none;
+      }
     }
 
     .icon {

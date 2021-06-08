@@ -24,7 +24,7 @@ import {
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { PageEvent } from '../paginator/page.event';
@@ -80,6 +80,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               <div
                 *ngIf="index !== 0"
                 class="header-column-resize-handle"
+                [ngClass]="{ resizable: this.resizable }"
                 (mousedown)="this.onResizeMouseDown($event, index)"
               >
                 <div class="header-column-divider"></div>
@@ -144,7 +145,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
-          [ngClass]="{ 'selected-row': this.shouldHighlightRowAsSelection(row), 'hovered-row': this.isHoveredRow(row) }"
+          [ngClass]="{
+            'selected-row': this.shouldHighlightRowAsSelection(row),
+            'hovered-row': this.isHoveredRow(row),
+            selectable: this.supportsRowSelection()
+          }"
           class="data-row"
         ></cdk-row>
 
@@ -168,7 +173,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
       >
         <ht-paginator
-          *htLetAsync="this.pagination$ as pagination"
+          *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
           [pageSize]="pagination?.pageSize"
@@ -194,7 +199,7 @@ export class TableComponent
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
 
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
-    id: '$$state',
+    id: '$$expanded',
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.RowExpander,
@@ -202,7 +207,7 @@ export class TableComponent
   };
 
   private readonly multiSelectRowColumnConfig: TableColumnConfig = {
-    id: '$$state',
+    id: '$$selected',
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.Checkbox,
@@ -242,6 +247,9 @@ export class TableComponent
 
   @Input()
   public pageable?: boolean = true;
+
+  @Input()
+  public resizable?: boolean = true;
 
   @Input()
   public detailContent?: TemplateRef<{ row: StatefulTableRow }>;
@@ -335,9 +343,15 @@ export class TableComponent
   /*
    * Pagination
    */
-  public readonly pagination$: Observable<Partial<PageEvent> | undefined> = this.activatedRoute.queryParamMap.pipe(
-    map(params => this.getPagination(params))
-  );
+  // For pushing changes to the page explicitly
+  private readonly pageSubject: Subject<Partial<PageEvent>> = new Subject();
+  // When route, sort or filters change, reset pagination
+  public readonly paginationReset$: Observable<Partial<PageEvent>> = combineLatest([
+    this.activatedRoute.queryParamMap,
+    this.columnState$,
+    this.filters$
+  ]).pipe(map(([params]) => this.calculateDefaultPagination(params)));
+  public readonly currentPage$: Observable<Partial<PageEvent>> = merge(this.pageSubject, this.paginationReset$);
 
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
@@ -416,15 +430,17 @@ export class TableComponent
   }
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
-    this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
+    if (this.resizable) {
+      this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
 
-    this.resizeColumns = {
-      left: this.buildColumnInfo(index - 1),
-      right: this.buildColumnInfo(index)
-    };
+      this.resizeColumns = {
+        left: this.buildColumnInfo(index - 1),
+        right: this.buildColumnInfo(index)
+      };
 
-    this.resizeStartX = event.clientX;
-    event.preventDefault();
+      this.resizeStartX = event.clientX;
+      event.preventDefault();
+    }
   }
 
   @HostListener('mousemove', ['$event'])
@@ -569,11 +585,15 @@ export class TableComponent
   }
 
   private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
-    const stateColumns = this.hasExpandableRows()
-      ? [this.expandableToggleColumnConfig]
-      : this.hasMultiSelect()
-      ? [this.multiSelectRowColumnConfig]
-      : [];
+    const stateColumns = [];
+
+    if (this.hasExpandableRows()) {
+      stateColumns.push(this.expandableToggleColumnConfig);
+    }
+
+    if (this.hasMultiSelect()) {
+      stateColumns.push(this.multiSelectRowColumnConfig);
+    }
 
     return this.tableService.buildExtendedColumnConfigs(
       [...stateColumns, ...columnConfigs],
@@ -687,11 +707,16 @@ export class TableComponent
     return this.selectionMode === TableSelectionMode.Multiple;
   }
 
+  public supportsRowSelection(): boolean {
+    return this.hasMultiSelect() || this.hasSingleSelect();
+  }
+
   public isRowExpanded(row: StatefulTableRow): boolean {
     return this.hasExpandableRows() && row.$$state.expanded;
   }
 
   public onPageChange(pageEvent: PageEvent): void {
+    this.pageSubject.next(pageEvent);
     if (this.syncWithUrl) {
       this.navigationService.addQueryParametersToUrl({
         [TableComponent.PAGE_INDEX_URL_PARAM]: pageEvent.pageIndex,
@@ -707,7 +732,7 @@ export class TableComponent
     this.pageChange.emit(pageEvent);
   }
 
-  private getPagination(params: ParamMap): Partial<PageEvent> {
+  private calculateDefaultPagination(params: ParamMap): Partial<PageEvent> {
     return this.syncWithUrl
       ? {
           pageSize: new NumberCoercer({ defaultValue: this.pageSize }).coerce(

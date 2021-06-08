@@ -13,13 +13,6 @@ import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-inte
 import { convertToGraphQlIntervalUnit } from '../specification/metric/metric-interval-unit-converter';
 
 export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder {
-  public forEntityType(type: EntityType): GraphQlArgument {
-    return {
-      name: 'type',
-      value: new GraphQlEnumArgument(type)
-    };
-  }
-
   public forIncludeInactive(includeInactive?: boolean): GraphQlArgument[] {
     return includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : [];
   }
@@ -142,10 +135,12 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
           // Remove includeRest key if undefined
           groupBy.includeRest === undefined
             ? {
-                keys: groupBy.keys
+                keys: groupBy.keys,
+                groupLimit: groupBy.limit
               }
             : {
                 keys: groupBy.keys,
+                groupLimit: groupBy.limit,
                 includeRest: groupBy.includeRest
               }
       }

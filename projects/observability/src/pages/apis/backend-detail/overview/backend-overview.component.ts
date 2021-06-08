@@ -214,7 +214,7 @@ export class BackendOverviewComponent {
           {
             type: 'cartesian-widget',
             title: 'Latency',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -291,7 +291,7 @@ export class BackendOverviewComponent {
           {
             type: 'cartesian-widget',
             title: 'Errors',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -369,7 +369,7 @@ export class BackendOverviewComponent {
           {
             type: 'cartesian-widget',
             title: 'Calls',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -452,8 +452,7 @@ export class BackendOverviewComponent {
         style: TableStyle.Embedded,
         header: {
           type: 'widget-header',
-          title: 'Services',
-          'top-margin': true
+          title: 'Services'
         },
         pageable: false,
         columns: [

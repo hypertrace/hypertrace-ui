@@ -1,0 +1,17 @@
+@import 'font';
+
+.log-events-table {
+  padding-top: 24px;
+  width: 100%;
+  height: 100%;
+
+  ht-table {
+    max-height: 100%;
+  }
+}
+
+.content {
+  @include body-2-regular();
+  margin-left: 175px;
+  margin-top: 15px;
+}

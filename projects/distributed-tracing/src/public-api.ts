@@ -38,6 +38,7 @@ export * from './shared/dashboard/widgets/table/table-widget-view-toggle.model';
 export * from './shared/services/filter-builder/graphql-filter-builder.service';
 
 // Handlers
+export * from './shared/graphql/request/handlers/traces/export-spans-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/spans/span-graphql-query-handler.service';
@@ -73,11 +74,15 @@ export {
 } from './shared/graphql/model/schema/metrics/graphql-metric-aggregation-type';
 export * from './shared/graphql/model/schema/sort/graphql-sort-argument';
 export * from './shared/graphql/model/schema/sort/graphql-sort-direction';
+export * from './shared/graphql/model/schema/sort/graphql-sort-without-direction';
 export * from './shared/graphql/model/schema/sort/graphql-sort-by-specification';
 export * from './shared/graphql/model/schema/timerange/graphql-time-range';
 export * from './shared/graphql/model/schema/specifier/specification';
 export * from './shared/graphql/model/schema/span';
 export * from './shared/graphql/model/schema/trace';
+
+// Services
+export * from './pages/trace-detail/trace-detail.service';
 
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';
@@ -101,6 +106,7 @@ export { WaterfallData } from './shared/dashboard/widgets/waterfall/waterfall/wa
 export { TraceWaterfallDataSourceModel } from './shared/dashboard/data/graphql/waterfall/trace-waterfall-data-source.model';
 export { traceDetailDashboard } from './pages/trace-detail/trace-detail.dashboard';
 export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page.component';
+export { LogEvent } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 
 // Datasources
 export * from './shared/dashboard/widgets/trace-detail/data/trace-detail-data-source.model';

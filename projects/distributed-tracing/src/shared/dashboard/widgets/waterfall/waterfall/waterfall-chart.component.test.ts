@@ -22,7 +22,7 @@ describe('Waterfall Chart component', () => {
         value: 1,
         units: 'ms'
       },
-      name: 'Span Name 1',
+      apiName: 'Span Name 1',
       serviceName: 'Service Name 1',
       protocolName: 'Protocol Name 1',
       spanType: SpanType.Entry,
@@ -30,7 +30,9 @@ describe('Waterfall Chart component', () => {
       requestBody: 'Request Body',
       responseHeaders: {},
       responseBody: 'Response Body',
-      tags: {}
+      tags: {},
+      errorCount: 0,
+      logEvents: []
     },
     {
       id: 'second-id',
@@ -42,7 +44,7 @@ describe('Waterfall Chart component', () => {
         value: 2,
         units: 'ms'
       },
-      name: 'Span Name 2',
+      apiName: 'Span Name 2',
       serviceName: 'Service Name 2',
       protocolName: 'Protocol Name 2',
       spanType: SpanType.Exit,
@@ -50,7 +52,9 @@ describe('Waterfall Chart component', () => {
       requestBody: '',
       responseHeaders: {},
       responseBody: '',
-      tags: {}
+      tags: {},
+      errorCount: 0,
+      logEvents: []
     },
     {
       id: 'third-id',
@@ -62,7 +66,7 @@ describe('Waterfall Chart component', () => {
         value: 2,
         units: 'ms'
       },
-      name: 'Span Name 3',
+      apiName: 'Span Name 3',
       serviceName: 'Service Name 1',
       protocolName: 'Protocol Name 3',
       spanType: SpanType.Exit,
@@ -70,7 +74,9 @@ describe('Waterfall Chart component', () => {
       requestBody: '',
       responseHeaders: {},
       responseBody: '',
-      tags: {}
+      tags: {},
+      errorCount: 0,
+      logEvents: []
     }
   ];
 

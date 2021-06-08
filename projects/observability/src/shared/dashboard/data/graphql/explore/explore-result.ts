@@ -1,4 +1,5 @@
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { TimeDuration } from '@hypertrace/common';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { groupBy } from 'lodash-es';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -15,7 +16,11 @@ export class ExploreResult {
 
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 
-  public constructor(private readonly response: GraphQlExploreResponse) {}
+  public constructor(
+    private readonly response: GraphQlExploreResponse,
+    private readonly interval?: TimeDuration,
+    private readonly timeRange?: GraphQlTimeRange
+  ) {}
 
   public getTimeSeriesData(metricKey: string, aggregation: MetricAggregationType): MetricTimeseriesInterval[] {
     return this.extractTimeseriesForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
@@ -42,7 +47,7 @@ export class ExploreResult {
     return new Map(
       Object.entries(groupedResults).map(([concatenatedGroupNames, results]) => [
         concatenatedGroupNames.split(','),
-        results.map(result => this.resultToTimeseriesInterval(result, spec))
+        this.resultsToTimeseriesIntervals(results, spec)
       ])
     );
   }
@@ -52,7 +57,7 @@ export class ExploreResult {
   }
 
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
-    return this.resultsContainingSpec(spec).map(result => this.resultToTimeseriesInterval(result, spec));
+    return this.resultsToTimeseriesIntervals(this.resultsContainingSpec(spec), spec);
   }
 
   private resultToGroupData(
@@ -70,6 +75,43 @@ export class ExploreResult {
     return groupBySpecs
       .map(spec => result[spec.resultAlias()].value as string)
       .map(name => (name === ExploreResult.OTHER_SERVER_GROUP_NAME ? ExploreResult.OTHER_UI_GROUP_NAME : name));
+  }
+
+  private resultsToTimeseriesIntervals(
+    results: GraphQlExploreResult[],
+    spec: ExploreSpecification
+  ): MetricTimeseriesInterval[] {
+    if (this.interval !== undefined && this.timeRange !== undefined) {
+      // This should add missing data to array
+
+      // Add all intervals
+      const buckets = [];
+      const intervalDuration = this.interval.toMillis();
+      const startTime = Math.floor(this.timeRange.from.valueOf() / intervalDuration) * intervalDuration;
+      const endTime = Math.ceil(this.timeRange.to.valueOf() / intervalDuration) * intervalDuration;
+
+      for (let timestamp = startTime; timestamp <= endTime; timestamp = timestamp + intervalDuration) {
+        buckets.push(timestamp);
+      }
+
+      const resultBucketMap: Map<number, MetricTimeseriesInterval> = new Map(
+        results
+          .map(result => this.resultToTimeseriesInterval(result, spec))
+          .map(metric => [metric.timestamp.getTime(), metric])
+      );
+
+      const metrics = buckets.map(
+        timestamp =>
+          resultBucketMap.get(timestamp) ?? {
+            value: 0,
+            timestamp: new Date(timestamp)
+          }
+      );
+
+      return metrics;
+    }
+
+    return results.map(result => this.resultToTimeseriesInterval(result, spec));
   }
 
   private resultToTimeseriesInterval(

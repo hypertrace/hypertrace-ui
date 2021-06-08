@@ -5,6 +5,7 @@
 // Schema
 
 export * from './shared/graphql/model/schema/entity';
+export * from './shared/graphql/model/schema/explore';
 export * from './shared/graphql/model/schema/filter/entity/graphql-entity-filter';
 export * from './shared/graphql/model/schema/neighbor';
 export * from './shared/graphql/model/schema/specifications/entity-specification';
@@ -195,6 +196,10 @@ export * from './shared/components/card-list/card-list.module';
 export * from './shared/components/timeline-card-list/timeline-card-list.component';
 export * from './shared/components/timeline-card-list/container/timeline-card-container.component';
 export * from './shared/components/timeline-card-list/timeline-card-list.module';
+
+// Explore Filter link
+export * from './shared/components/explore-filter-link/explore-filter-link.component';
+export * from './shared/components/explore-filter-link/explore-filter-link.module';
 
 // Interval Select
 export * from './shared/components/interval-select/interval-select.component';

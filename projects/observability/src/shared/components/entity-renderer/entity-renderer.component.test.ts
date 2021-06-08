@@ -1,6 +1,6 @@
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
-import { IconComponent } from '@hypertrace/components';
+import { FormattingModule, NavigationParamsType, NavigationService } from '@hypertrace/common';
+import { IconComponent, LinkComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../graphql/model/schema/entity';
@@ -14,9 +14,13 @@ describe('Entity Renderer Component', () => {
 
   const createHost = createHostFactory({
     component: EntityRendererComponent,
+    imports: [FormattingModule],
     providers: [
       mockProvider(EntityNavigationService, {
-        navigateToEntity: jest.fn()
+        buildEntityDetailNavigationParams: jest.fn().mockReturnValue({
+          navType: NavigationParamsType.InApp,
+          path: ['/endpoint', 'test-id']
+        })
       }),
       mockProvider(NavigationService),
       mockProvider(EntityIconLookupService, {
@@ -24,7 +28,7 @@ describe('Entity Renderer Component', () => {
       })
     ],
     shallow: true,
-    declarations: [MockComponent(IconComponent)]
+    declarations: [MockComponent(IconComponent), MockComponent(LinkComponent)]
   });
 
   test('renders a basic entity without navigation', () => {
@@ -49,12 +53,12 @@ describe('Entity Renderer Component', () => {
     const entityNavService = spectator.inject(EntityNavigationService);
     const rendererElement = spectator.query('.ht-entity-renderer')!;
 
+    expect(rendererElement).toExist();
+
     expect(spectator.query('.name')).toHaveText('test api');
     expect(spectator.query(IconComponent)!.icon).toBe(ObservabilityIconType.Api);
 
-    expect(rendererElement).not.toHaveClass('navigable');
-    spectator.dispatchFakeEvent(rendererElement, 'click');
-    expect(entityNavService.navigateToEntity).toHaveBeenCalledTimes(0);
+    expect(entityNavService.buildEntityDetailNavigationParams).not.toHaveBeenCalled();
   });
 
   test('renders a basic entity with navigation', () => {
@@ -75,15 +79,19 @@ describe('Entity Renderer Component', () => {
         }
       }
     );
-    const entityNavService = spectator.inject(EntityNavigationService);
-    const rendererElement = spectator.query('.ht-entity-renderer')!;
 
     expect(spectator.query('.name')).toHaveText('test api');
     expect(spectator.query(IconComponent)!.icon).toBe(ObservabilityIconType.Api);
 
-    expect(rendererElement).toHaveClass('navigable');
-    spectator.dispatchFakeEvent(rendererElement, 'click');
-    expect(entityNavService.navigateToEntity).toHaveBeenCalledWith(entity);
+    expect(spectator.inject(EntityNavigationService).buildEntityDetailNavigationParams).toHaveBeenCalledWith(
+      entity,
+      false
+    );
+
+    expect(spectator.query(LinkComponent)?.paramsOrUrl).toEqual({
+      navType: NavigationParamsType.InApp,
+      path: ['/endpoint', 'test-id']
+    });
   });
 
   test('renders an entity without icon by default', () => {
@@ -133,5 +141,34 @@ describe('Entity Renderer Component', () => {
       showIcon: true
     });
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Add);
+  });
+
+  test('should inherit text color when enabled', () => {
+    const entity = {
+      [entityIdKey]: 'test-id',
+      [entityTypeKey]: ObservabilityEntityType.Api,
+      name: 'test api'
+    };
+
+    spectator = createHost(
+      `<ht-entity-renderer [entity]="entity" [inheritTextStyle]="inheritTextStyle">
+      </ht-entity-renderer>`,
+      {
+        hostProps: {
+          entity: entity,
+          inheritTextStyle: false
+        }
+      }
+    );
+
+    expect(spectator.query('.default-text-style')).toExist();
+    expect(spectator.query('.ht-entity-renderer')).toBe(spectator.query('.default-text-style'));
+
+    spectator.setHostInput({
+      inheritTextStyle: true
+    });
+    expect(spectator.query('.default-text-style')).not.toExist();
+
+    expect(spectator.query('.ht-entity-renderer')).not.toBe(spectator.query('.default-text-style'));
   });
 });

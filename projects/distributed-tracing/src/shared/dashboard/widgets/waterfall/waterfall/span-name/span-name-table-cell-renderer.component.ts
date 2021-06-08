@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TableCellAlignmentType, TableCellRenderer, TableCellRendererBase } from '@hypertrace/components';
+import { IconType } from '@hypertrace/assets-library';
+import { Color } from '@hypertrace/common';
+import { IconSize, TableCellAlignmentType, TableCellRenderer, TableCellRendererBase } from '@hypertrace/components';
 import { SpanNameCellData } from './span-name-cell-data';
 import { WaterfallTableCellType } from './span-name-cell-type';
 
@@ -17,8 +19,22 @@ import { WaterfallTableCellType } from './span-name-cell-type';
         <span class="text" data-sensitive-pii>{{ this.value.protocolName }}</span>
       </div>
       <div class="span-name">
-        <span class="text" data-sensitive-pii>{{ this.value.name }}</span>
+        <span class="text" data-sensitive-pii>{{ this.value.apiName }}</span>
       </div>
+      <ht-icon
+        *ngIf="this.value.hasError"
+        class="error-icon"
+        icon="${IconType.Error}"
+        size="${IconSize.Medium}"
+        color="${Color.Red5}"
+      ></ht-icon>
+      <ht-icon
+        *ngIf="this.value.hasLogs"
+        class="log-icon"
+        icon="${IconType.Note}"
+        size="${IconSize.Small}"
+        color="${Color.Gray4}"
+      ></ht-icon>
     </div>
   `
 })

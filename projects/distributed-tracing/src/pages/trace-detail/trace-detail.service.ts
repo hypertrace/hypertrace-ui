@@ -8,6 +8,10 @@ import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
+  ExportSpansGraphQlQueryHandlerService,
+  EXPORT_SPANS_GQL_REQUEST
+} from '../../shared/graphql/request/handlers/traces/export-spans-graphql-query-handler.service';
+import {
   TraceGraphQlQueryHandlerService,
   TRACE_GQL_REQUEST
 } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
@@ -82,6 +86,21 @@ export class TraceDetailService implements OnDestroy {
     );
   }
 
+  public fetchExportSpans(): Observable<string> {
+    return this.routeIds$.pipe(
+      switchMap(routeIds =>
+        this.graphQlQueryService.query<ExportSpansGraphQlQueryHandlerService, string>({
+          requestType: EXPORT_SPANS_GQL_REQUEST,
+          traceId: routeIds.traceId,
+          timestamp: this.dateCoercer.coerce(routeIds.startTime),
+          limit: 1000
+        })
+      ),
+      takeUntil(this.destroyed$),
+      shareReplay(1)
+    );
+  }
+
   private fetchTrace(traceId: string, spanId?: string, startTime?: string | number): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
@@ -103,14 +122,14 @@ export class TraceDetailService implements OnDestroy {
   private buildTimeString(trace: Trace, units: string): string {
     return `${new DateFormatter({ mode: DateFormatMode.DateAndTimeWithSeconds }).format(
       trace.startTime as number
-    )} for ${trace.duration as string} ${units}`;
+    )} for ${trace.duration as string} ${units ?? ''}`.trim();
   }
 
   private buildTitleString(trace: Trace): string {
     if (trace.spans?.length === 1) {
       const entrySpan = trace.spans[0];
 
-      return `${entrySpan.serviceName as string} ${entrySpan.displaySpanName as string}`;
+      return `${entrySpan.serviceName as string} ${(entrySpan.displaySpanName as string) ?? ''}`.trim();
     }
 
     return '';

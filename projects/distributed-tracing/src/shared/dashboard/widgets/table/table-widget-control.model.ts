@@ -5,7 +5,7 @@ import { uniqWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export abstract class TableWidgetControlModel {
+export abstract class TableWidgetControlModel<T extends TableControlOption> {
   @ModelProperty({
     key: 'sort',
     type: BOOLEAN_PROPERTY.type
@@ -29,24 +29,24 @@ export abstract class TableWidgetControlModel {
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
-  public getOptions(): Observable<LabeledTableControlOption[]> {
-    return this.api.getData<LabeledTableControlOption[]>().pipe(
-      map(options => (this.uniqueValues ? this.filterUniqueValues(options) : options)),
+  public getOptions(): Observable<T[]> {
+    return this.api.getData<T[]>().pipe(
+      map(options => (this.uniqueValues ? this.filterUnique(options) : options)),
       map(options => (this.sort ? this.applySort(options) : options))
     );
   }
 
-  private filterUniqueValues(options: LabeledTableControlOption[]): LabeledTableControlOption[] {
-    return uniqWith(options, (a, b) => a.value === b.value);
+  protected filterUnique(options: T[]): T[] {
+    return uniqWith(options, (a, b) => a.label === b.label);
   }
 
-  private applySort(options: LabeledTableControlOption[]): LabeledTableControlOption[] {
+  protected applySort(options: T[]): T[] {
     return options.sort((a, b) => {
       // Unset option always at the top
-      if (a.type === TableControlOptionType.UnsetFilter) {
+      if (a.type === TableControlOptionType.Unset) {
         return -1;
       }
-      if (b.type === TableControlOptionType.UnsetFilter) {
+      if (b.type === TableControlOptionType.Unset) {
         return 1;
       }
 
@@ -54,7 +54,3 @@ export abstract class TableWidgetControlModel {
     });
   }
 }
-
-export type LabeledTableControlOption = TableControlOption & {
-  label: string;
-};

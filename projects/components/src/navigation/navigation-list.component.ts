@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationParamsType, NavigationService } from '@hypertrace/common';
+import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -25,13 +25,7 @@ import { IconSize } from '../icon/icon-size';
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item
-                [config]="item"
-                [active]="item === activeItem"
-                [collapsed]="this.collapsed"
-                (click)="this.navigate(item)"
-              >
-              </ht-nav-item>
+              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"> </ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -82,15 +76,6 @@ export class NavigationListComponent {
     );
   }
 
-  public navigate(item: NavItemLinkConfig): void {
-    this.navigationService.navigate({
-      navType: NavigationParamsType.InApp,
-      path: item.matchPaths[0],
-      relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.replaceCurrentHistory
-    });
-  }
-
   public toggleView(): void {
     if (this.resizable) {
       this.collapsed = !this.collapsed;
@@ -122,6 +107,7 @@ export interface NavItemLinkConfig {
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
   replaceCurrentHistory?: boolean;
+  isBeta?: boolean;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;

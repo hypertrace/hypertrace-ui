@@ -376,7 +376,7 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'text-widget',
-        text: 'Calls per minute'
+        text: 'Calls'
       },
       {
         type: 'cartesian-widget',

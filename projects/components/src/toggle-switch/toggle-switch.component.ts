@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ToggleSwitchSize } from './toggle-switch-size';
 
 @Component({
   selector: 'ht-toggle-switch',
@@ -9,6 +10,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
     <mat-slide-toggle
       color="primary"
       [(ngModel)]="this.checked"
+      [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.disabled }"
       [disabled]="this.disabled"
       (change)="this.onToggle($event)"
     >
@@ -25,6 +27,9 @@ export class ToggleSwitchComponent {
 
   @Input()
   public disabled?: boolean;
+
+  @Input()
+  public size: ToggleSwitchSize = ToggleSwitchSize.Small;
 
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();

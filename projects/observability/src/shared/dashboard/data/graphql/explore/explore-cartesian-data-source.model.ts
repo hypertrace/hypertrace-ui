@@ -1,5 +1,10 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlFilter, MetadataService } from '@hypertrace/distributed-tracing';
+import {
+  GraphQlDataSourceModel,
+  GraphQlFilter,
+  GraphQlTimeRange,
+  MetadataService
+} from '@hypertrace/distributed-tracing';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
@@ -36,21 +41,27 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
 
   protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
     const requestState = this.buildRequestState(interval);
-
+    const timeRange = this.getTimeRangeOrThrow();
     if (requestState === undefined) {
       return NEVER;
     }
 
     return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters))
-    ).pipe(mergeMap(response => this.mapResponseData(requestState, response)));
+      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters), timeRange)
+    ).pipe(
+      mergeMap(response =>
+        this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange)
+      )
+    );
   }
 
   protected mapResponseData(
     requestState: ExploreRequestState,
-    response: GraphQlExploreResponse
+    response: GraphQlExploreResponse,
+    interval: TimeDuration,
+    timeRange: GraphQlTimeRange
   ): Observable<CartesianResult<ExplorerData>> {
-    return this.getAllData(requestState, response).pipe(
+    return this.getAllData(requestState, response, interval, timeRange).pipe(
       map(explorerResults => ({
         series: explorerResults,
         bands: []
@@ -58,21 +69,30 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     );
   }
 
-  protected buildExploreRequest(requestState: ExploreRequestState, filters: GraphQlFilter[]): GraphQlExploreRequest {
+  protected buildExploreRequest(
+    requestState: ExploreRequestState,
+    filters: GraphQlFilter[],
+    timeRange: GraphQlTimeRange
+  ): GraphQlExploreRequest {
     return {
       requestType: EXPLORE_GQL_REQUEST,
       selections: requestState.series.map(series => series.specification),
       context: requestState.context,
-      limit: requestState.groupByLimit ?? 100,
-      timeRange: this.getTimeRangeOrThrow(),
+      limit: requestState.resultLimit,
+      timeRange: timeRange,
       interval: requestState.interval as TimeDuration,
       filters: filters,
       groupBy: requestState.groupBy
     };
   }
 
-  private getAllData(request: ExploreRequestState, response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
-    return this.buildAllSeries(request, new ExploreResult(response));
+  private getAllData(
+    request: ExploreRequestState,
+    response: GraphQlExploreResponse,
+    interval?: TimeDuration,
+    timeRange?: GraphQlTimeRange
+  ): Observable<ExplorerSeries[]> {
+    return this.buildAllSeries(request, new ExploreResult(response, interval, timeRange));
   }
 
   protected buildAllSeries(request: ExploreRequestState, result: ExploreResult): Observable<ExplorerSeries[]> {
