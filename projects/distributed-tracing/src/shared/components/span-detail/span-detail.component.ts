@@ -46,7 +46,7 @@ import { SpanDetailLayoutStyle } from './span-detail-layout-style';
         <ht-tab label="Exit Calls" *ngIf="this.showExitCallsTab">
           <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
         </ht-tab>
-        <ht-tab *ngIf="this.showLogEventstab" label="Logs" [badge]="this.totalLogEvents">
+        <ht-tab *ngIf="this.showLogEventstab" label="Logs" [labelTag]="this.totalLogEvents">
           <ht-log-events-table
             [logEvents]="this.spanData?.logEvents"
             [spanStartTime]="this.spanData?.startTime"
