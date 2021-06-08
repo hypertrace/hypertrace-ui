@@ -78,21 +78,8 @@
   flex-direction: row;
   align-items: center;
 
-  .tab-badge {
-    @include font-label($gray-5);
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    margin-left: 6px;
-    padding: 0 6px;
-    height: 16px;
-    background-color: $gray-2;
-    border-radius: 8px;
-
-    &.active {
-      background-color: $gray-9;
-      color: white;
-    }
+  .tab-label-tag {
+    margin-left: 4px;
   }
 }
 
