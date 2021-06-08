@@ -13,14 +13,16 @@ describe('Link component', () => {
     declarations: [MockDirective(RouterLinkWithHref)]
   });
 
-  test('Link should not be displayed if url is undefined', () => {
+  test('Link contents should be displayed if params/url is undefined', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       props: {
         paramsOrUrl: undefined
       }
     });
 
-    expect(spectator.query('.ht-link')).not.toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).toHaveClass('ht-link disabled');
   });
 
   test('Link should navigate correctly to external URLs', () => {

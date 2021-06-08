@@ -9,9 +9,8 @@ import { isNil } from 'lodash-es';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
-      *ngIf="this.navigationPath"
       class="ht-link"
-      [ngClass]="{ disabled: this.disabled }"
+      [ngClass]="{ disabled: (this.disabled || this.navigationPath)}"
       [routerLink]="this.navigationPath"
       [queryParams]="this.navigationOptions?.queryParams"
       [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"

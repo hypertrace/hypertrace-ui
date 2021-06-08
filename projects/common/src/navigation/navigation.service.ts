@@ -14,7 +14,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { from, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, share, skip, startWith, take } from 'rxjs/operators';
+import { filter, map, share, skip, startWith, take } from 'rxjs/operators';
 import { throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';
@@ -190,8 +190,7 @@ export class NavigationService {
 
     return this.router.events.pipe(
       startWith(),
-      map(() => this.router.isActive(urlTree, false)),
-      distinctUntilChanged()
+      map(() => this.router.isActive(urlTree, false))
     );
   }
 
