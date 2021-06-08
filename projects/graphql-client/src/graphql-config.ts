@@ -30,6 +30,7 @@ export interface GraphQlQueryHandler<TRequest, TResponse> extends GraphQlHandler
 
 export interface GraphQlMutationHandler<TRequest, TResponse> extends GraphQlHandler<TRequest, TResponse> {
   readonly type: GraphQlHandlerType.Mutation;
+  reportMutation?(request: TRequest): void;
 }
 
 export interface GraphQlRequestOptions {

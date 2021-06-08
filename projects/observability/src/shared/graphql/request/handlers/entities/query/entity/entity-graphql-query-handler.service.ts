@@ -3,8 +3,10 @@ import { GraphQlTimeRange, Specification } from '@hypertrace/distributed-tracing
 import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
+  GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
+  MutationTrackerService
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
@@ -14,6 +16,7 @@ import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-bu
 import {
   EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
+  EntityMutationType,
   GraphQlEntitiesQueryRequest
 } from '../entities-graphql-query-handler.service';
 
@@ -23,7 +26,8 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
 
   public constructor(
     private readonly entitiesGraphQlQueryHandler: EntitiesGraphQlQueryHandlerService,
-    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService
+    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService,
+    private readonly mutationTrackerService: MutationTrackerService
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlEntityRequest {
@@ -39,6 +43,8 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   }
 
   public convertResponse(response: unknown, request: GraphQlEntityRequest): Observable<Entity | undefined> {
+    this.mutationTrackerService.markMutationAsConsumed(EntityMutationType, request.id);
+
     return this.entitiesGraphQlQueryHandler.convertResponse(response, this.asEntitiesRequest(request)).pipe(
       map(results => results.results[0]),
       throwIfEmpty(() => new Error('No Entity found'))
@@ -46,6 +52,10 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   }
 
   public getRequestOptions(request: GraphQlEntityRequest): GraphQlRequestOptions {
+    if (this.mutationTrackerService.isAffectedByMutation(EntityMutationType, request.id)) {
+      return { cacheability: GraphQlRequestCacheability.RefreshCache };
+    }
+
     return this.entityGraphQlQueryBuilder.getRequestOptions(request);
   }
 
