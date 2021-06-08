@@ -19,6 +19,9 @@ export class NavigableTabComponent extends ContentHolder {
   public hidden: boolean = false;
 
   @Input()
+  public labelTag?: string;
+
+  @Input()
   public replaceHistory?: boolean;
 
   @Input()
