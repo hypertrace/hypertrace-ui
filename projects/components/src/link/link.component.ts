@@ -10,7 +10,7 @@ import { isNil } from 'lodash-es';
   template: `
     <a
       class="ht-link"
-      [ngClass]="{ disabled: (this.disabled || !this.navigationPath)}"
+      [ngClass]="{ disabled: this.disabled || !this.navigationPath }"
       [routerLink]="this.navigationPath"
       [queryParams]="this.navigationOptions?.queryParams"
       [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"
