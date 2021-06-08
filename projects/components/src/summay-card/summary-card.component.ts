@@ -8,10 +8,10 @@ import { SummaryCardColor, SummaryValue } from './summary-card';
   template: `
     <div class="card grow" *ngIf="this.name">
       <div class="indicator">
-        <div class="dot" [ngClass]="this.color"></div>
+        <div class="dot" [ngClass]="this.indicatorColor"></div>
       </div>
       <div class="data">
-        <div class="header" [ngClass]="this.color">
+        <div class="header" [ngClass]="this.headerColor">
           {{ this.name }}
         </div>
         <div class="footer">
@@ -33,7 +33,10 @@ export class SummaryCardComponent {
   public name?: string;
 
   @Input()
-  public color?: SummaryCardColor;
+  public indicatorColor?: SummaryCardColor;
+
+  @Input()
+  public headerColor?: SummaryCardColor;
 
   @Input()
   public summaries: SummaryValue[] = [];
