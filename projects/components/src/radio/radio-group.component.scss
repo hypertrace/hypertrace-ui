@@ -58,6 +58,20 @@
     .radio-button-label {
       @include body-2-regular($gray-7);
     }
+
+    &.disabled {
+      &.mat-radio-checked .mat-radio-container .mat-radio-outer-circle {
+        background: $gray-3;
+      }
+
+      .mat-radio-container .mat-radio-outer-circle {
+        background: $gray-1;
+      }
+
+      .radio-button-label {
+        color: $gray-5;
+      }
+    }
   }
 
   .radio-button:last-child {

@@ -10,6 +10,7 @@ import {
   QueryList
 } from '@angular/core';
 import { isEmpty } from 'lodash-es';
+import { Color } from '@hypertrace/common';
 import { TabComponent } from './tab/tab.component';
 
 @Component({
@@ -28,9 +29,14 @@ import { TabComponent } from './tab/tab.component';
           <ng-template mat-tab-label>
             <div class="tab-label">
               {{ tab.label }}
-              <div *ngIf="tab.badge" [ngClass]="{ active: this.activeTabIndex === i }" class="tab-badge">
-                {{ tab.badge }}
-              </div>
+              <ng-container *ngIf="tab.labelTag">
+                <ht-label-tag
+                  class="tab-label-tag"
+                  [label]="tab.labelTag"
+                  [backgroundColor]="this.getBackgroundColor(i)"
+                  [labelColor]="this.getLabelColor(i)"
+                ></ht-label-tag>
+              </ng-container>
             </div>
             <div class="ink-bar" [ngClass]="{ active: this.activeTabIndex === i }"></div>
           </ng-template>
@@ -75,5 +81,13 @@ export class TabGroupComponent implements OnChanges, AfterViewInit {
         }
       });
     }
+  }
+
+  public getBackgroundColor(index: number): Color {
+    return this.activeTabIndex === index ? Color.Gray9 : Color.Gray2;
+  }
+
+  public getLabelColor(index: number): Color {
+    return this.activeTabIndex === index ? Color.White : Color.Gray5;
   }
 }

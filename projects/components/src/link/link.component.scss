@@ -2,6 +2,8 @@
 @import 'color-palette';
 
 .ht-link {
+  display: flex;
+  align-items: center;
   text-decoration-line: none;
   text-decoration: none;
   color: inherit;

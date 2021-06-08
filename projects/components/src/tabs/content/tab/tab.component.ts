@@ -12,5 +12,5 @@ export class TabComponent extends ContentHolder {
   public label!: string;
 
   @Input()
-  public badge?: string;
+  public labelTag?: string;
 }
