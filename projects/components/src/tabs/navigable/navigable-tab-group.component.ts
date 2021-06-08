@@ -1,6 +1,6 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
+import { Color, FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
@@ -22,6 +22,14 @@ import { NavigableTabComponent } from './navigable-tab.component';
                 class="tab-link"
               >
                 <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+                <ng-container *ngIf="tab.labelTag">
+                  <ht-label-tag
+                    class="tab-label-tag"
+                    [label]="tab.labelTag"
+                    [backgroundColor]="this.getBackgroundColor(activeTab, tab)"
+                    [labelColor]="this.getLabelColor(activeTab, tab)"
+                  ></ht-label-tag>
+                </ng-container>
                 <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
                   <span class="soon">SOON</span>
                 </span>
@@ -59,6 +67,14 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     relativeTo: this.activatedRoute,
     replaceCurrentHistory: tab.replaceHistory
   });
+
+  public getBackgroundColor(activeTab: NavigableTabComponent | undefined, tab: NavigableTabComponent): Color {
+    return activeTab === tab ? Color.Gray9 : Color.Gray2;
+  }
+
+  public getLabelColor(activeTab: NavigableTabComponent | undefined, tab: NavigableTabComponent): Color {
+    return activeTab === tab ? Color.White : Color.Gray5;
+  }
 
   private findActiveTab(): NavigableTabComponent | undefined {
     return this.tabs.find(tab => this.navigationService.isRelativePathActive([tab.path], this.activatedRoute));

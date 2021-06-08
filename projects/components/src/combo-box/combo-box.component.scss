@@ -113,6 +113,7 @@
   }
 
   .popover-item {
+    @include body-1-regular($gray-7);
     height: 36px;
     padding: 2px 12px;
     cursor: pointer;
