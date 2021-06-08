@@ -7,8 +7,8 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="form-field" [ngClass]="{ optional: this.isOptional }">
-      <div class="info-label">
-        <ht-label *ngIf="this.label" class="label" [label]="this.label"></ht-label>
+      <div *ngIf="this.label" class="info-label">
+        <ht-label class="label" [label]="this.label"></ht-label>
         <ht-label *ngIf="this.isOptional" class="optional-label" label="(Optional)"></ht-label>
         <ht-icon
           *ngIf="this.icon"
