@@ -1,6 +1,7 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../../graphql/model/metadata/attribute-metadata';
@@ -88,6 +89,17 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
     return this.metadataService.getAttribute(SPAN_SCOPE, 'duration');
   }
 
+  private mapepdLogEvents(logEventsObject: Dictionary<LogEvent[]>, startTime: number): LogEvent[] {
+    if (isEmpty(logEventsObject) || isEmpty(logEventsObject.results)) {
+      return [];
+    }
+
+    return logEventsObject.results.map(logEvent => ({
+      ...logEvent,
+      spanStartTime: startTime
+    }));
+  }
+
   protected mapResponseObject(trace: Trace | undefined, duration: AttributeMetadata): WaterfallData[] {
     if (trace === undefined || trace.spans === undefined || trace.spans.length === 0) {
       return [];
@@ -110,7 +122,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results
+      logEvents: this.mapepdLogEvents(span.logEvents as Dictionary<LogEvent[]>, span.startTime as number)
     }));
   }
 }

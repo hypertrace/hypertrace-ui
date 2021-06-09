@@ -16,14 +16,12 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ApiTraceDetailService } from './api-trace-detail.service';
 
 describe('Api TraceDetailService', () => {
-  let spectator: SpectatorService<ApiTraceDetailService>;
-
   const createService = createServiceFactory({
     service: ApiTraceDetailService,
     providers: [
@@ -65,11 +63,8 @@ describe('Api TraceDetailService', () => {
     ]
   });
 
-  beforeEach(() => {
-    spectator = createService();
-  });
-
   test('should map fetch and map trace details', () => {
+    const spectator = createService();
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.service.fetchTraceDetails()).toBe('(x|)', {
         x: {
@@ -87,6 +82,7 @@ describe('Api TraceDetailService', () => {
   });
 
   test('should build correct query request with timestamp', () => {
+    const spectator = createService();
     const graphqlService = spectator.inject(GraphQlRequestService);
     graphqlService.query.mockClear();
 
@@ -119,6 +115,59 @@ describe('Api TraceDetailService', () => {
       ],
       spanProperties: [],
       spanLimit: 1
+    });
+  });
+
+  test('should fetch and map logEvents', () => {
+    const spectator = createService({
+      providers: [
+        mockProvider(ActivatedRoute, {
+          paramMap: of({
+            get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792')
+          })
+        }),
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValue(
+            of({
+              spans: [
+                {
+                  logEvents: {
+                    results: [
+                      {
+                        timestamp: 'time',
+                        attributes: undefined,
+                        summary: 'summary'
+                      }
+                    ]
+                  },
+                  displayEntityName: 'service',
+                  displaySpanName: 'span',
+                  protocolName: 'protocol',
+                  startTime: 1608151401295
+                }
+              ]
+            })
+          )
+        })
+      ]
+    });
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.fetchLogEvents()).toBe('(x|)', {
+        x: [
+          {
+            timestamp: 'time',
+            attributes: undefined,
+            summary: 'summary',
+            $$spanName: {
+              serviceName: 'service',
+              protocolName: 'protocol',
+              apiName: 'span'
+            },
+            spanStartTime: 1608151401295
+          }
+        ]
+      });
     });
   });
 });

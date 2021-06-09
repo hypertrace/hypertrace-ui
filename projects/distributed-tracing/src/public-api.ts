@@ -51,6 +51,10 @@ export * from './shared/icons/tracing-icon-library.module';
 // Interaction Handler - Deprecated
 export { InteractionHandler } from './shared/dashboard/interaction/interaction-handler';
 
+// Log Events Table
+export * from './shared/components/log-events/log-events-table.component';
+export * from './shared/components/log-events/log-events-table.module';
+
 // Metadata
 export * from './shared/services/metadata/metadata.service';
 export * from './shared/services/metadata/metadata.service.module';

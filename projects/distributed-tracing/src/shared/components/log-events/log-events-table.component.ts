@@ -13,6 +13,7 @@ import {
 import { LogEvent } from '@hypertrace/distributed-tracing';
 import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
+import { WaterfallTableCellType } from '../../dashboard/widgets/waterfall/waterfall/span-name/span-name-cell-type';
 
 export const enum LogEventsTableViewType {
   Condensed = 'condensed',
@@ -28,7 +29,7 @@ export const enum LogEventsTableViewType {
       <ht-table
         [columnConfigs]="this.columnConfigs"
         [data]="this.dataSource"
-        [pageable]="false"
+        [pageable]="true"
         [resizable]="false"
         mode=${TableMode.Detail}
         [detailContent]="detailContent"
@@ -51,9 +52,6 @@ export class LogEventsTableComponent implements OnChanges {
 
   @Input()
   public logEventsTableViewType: LogEventsTableViewType = LogEventsTableViewType.Condensed;
-
-  @Input()
-  public spanStartTime?: number;
 
   public readonly header: ListViewHeader = { keyLabel: 'key', valueLabel: 'value' };
   private readonly dateCoercer: DateCoercer = new DateCoercer();
@@ -84,7 +82,7 @@ export class LogEventsTableComponent implements OnChanges {
           data: this.logEvents.map((logEvent: LogEvent) => ({
             ...logEvent,
             timestamp: this.dateCoercer.coerce(logEvent.timestamp),
-            baseTimestamp: this.dateCoercer.coerce(this.spanStartTime)
+            baseTimestamp: this.dateCoercer.coerce(logEvent.spanStartTime)
           })),
           totalCount: this.logEvents.length
         }),
@@ -93,29 +91,58 @@ export class LogEventsTableComponent implements OnChanges {
   }
 
   private getTableColumnConfigs(): TableColumnConfig[] {
-    if (this.logEventsTableViewType === LogEventsTableViewType.Condensed) {
-      return [
-        {
-          id: 'timestamp',
-          name: 'timestamp',
-          title: 'Timestamp',
-          display: CoreTableCellRendererType.RelativeTimestamp,
-          visible: true,
-          width: '150px',
-          sortable: false,
-          filterable: false
-        },
-        {
-          id: 'summary',
-          name: 'summary',
-          title: 'Summary',
-          visible: true,
-          sortable: false,
-          filterable: false
-        }
-      ];
+    switch (this.logEventsTableViewType) {
+      case LogEventsTableViewType.Condensed:
+        return [
+          {
+            id: 'timestamp',
+            name: 'timestamp',
+            title: 'Timestamp',
+            display: CoreTableCellRendererType.RelativeTimestamp,
+            visible: true,
+            width: '150px',
+            sortable: false,
+            filterable: false
+          },
+          {
+            id: 'summary',
+            name: 'summary',
+            title: 'Summary',
+            visible: true,
+            sortable: false,
+            filterable: false
+          }
+        ];
+      case LogEventsTableViewType.Detailed:
+        return [
+          {
+            id: 'timestamp',
+            title: 'Timestamp',
+            display: CoreTableCellRendererType.RelativeTimestamp,
+            visible: true,
+            width: '150px',
+            sortable: false,
+            filterable: false
+          },
+          {
+            id: 'summary',
+            title: 'Summary',
+            visible: true,
+            sortable: false,
+            filterable: false
+          },
+          {
+            id: '$$spanName',
+            title: 'Span',
+            display: WaterfallTableCellType.SpanName,
+            visible: true,
+            width: '30%',
+            sortable: false,
+            filterable: false
+          }
+        ];
+      default:
+        return [];
     }
-
-    return [];
   }
 }

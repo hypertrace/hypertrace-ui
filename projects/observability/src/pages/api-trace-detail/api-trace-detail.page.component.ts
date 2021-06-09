@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
 import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
-
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+import { LogEvent } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
@@ -53,13 +52,15 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
         </div>
       </div>
 
+      <ht-navigable-tab-group class="tabs">
+        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+        <ng-container *ngIf="this.logEvents$ | async as logEvents">
+          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+        </ng-container>
+      </ht-navigable-tab-group>
+
       <div class="scrollable-container">
-        <ht-application-aware-dashboard
-          [json]="this.defaultJson"
-          [padding]="0"
-          (dashboardReady)="this.onDashboardReady($event)"
-        >
-        </ht-application-aware-dashboard>
+        <router-outlet></router-outlet>
       </div>
     </div>
   `
@@ -68,45 +69,14 @@ export class ApiTraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
 
   public readonly traceDetails$: Observable<ApiTraceDetails>;
-
-  public readonly defaultJson: ModelJson = {
-    type: 'container-widget',
-    layout: {
-      type: 'auto-container-layout',
-      'enable-style': false
-    },
-    children: [
-      {
-        type: 'waterfall-widget',
-        title: 'Sequence Diagram',
-        data: {
-          type: 'api-trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'start-time': '${startTime}'
-        }
-      }
-    ]
-  };
+  public readonly logEvents$: Observable<LogEvent[]>;
 
   public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
     protected readonly navigationService: NavigationService,
     private readonly apiTraceDetailService: ApiTraceDetailService
   ) {
     this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
-  }
-
-  public onDashboardReady(dashboard: Dashboard): void {
-    this.subscriptionLifecycle.add(
-      this.traceDetails$.subscribe(traceDetails => {
-        dashboard.setVariable('traceId', traceDetails.id);
-        dashboard.setVariable('traceType', traceDetails.type);
-        dashboard.setVariable('startTime', traceDetails.startTime);
-        dashboard.refresh();
-      })
-    );
+    this.logEvents$ = this.apiTraceDetailService.fetchLogEvents();
   }
 
   public onClickBack(): void {

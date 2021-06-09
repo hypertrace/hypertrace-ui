@@ -210,7 +210,8 @@ describe('Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 1',
               serviceName: 'Service Name 1',
               type: SpanType.Entry,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             },
             {
               [spanIdKey]: 'second-id',
@@ -221,7 +222,8 @@ describe('Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 2',
               serviceName: 'Service Name 2',
               type: SpanType.Exit,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             }
           ]
         })
@@ -241,7 +243,8 @@ describe('Trace Waterfall data source model', () => {
             serviceName: 'Service Name 1',
             protocolName: undefined,
             spanType: SpanType.Entry,
-            tags: {}
+            tags: {},
+            logEvents: []
           },
           {
             id: 'second-id',
@@ -257,7 +260,8 @@ describe('Trace Waterfall data source model', () => {
             serviceName: 'Service Name 2',
             protocolName: undefined,
             spanType: SpanType.Exit,
-            tags: {}
+            tags: {},
+            logEvents: []
           }
         ]
       });

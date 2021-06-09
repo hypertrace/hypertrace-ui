@@ -2,11 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
-
-import { Dashboard } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-
-import { traceDetailDashboard } from './trace-detail.dashboard';
+import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { TraceDetails, TraceDetailService } from './trace-detail.service';
 @Component({
   styleUrls: ['./trace-detail.page.component.scss'],
@@ -53,13 +50,16 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
         </div>
       </div>
 
-      <ht-navigable-dashboard
-        class="scrollable-container"
-        [padding]="0"
-        navLocation="${traceDetailDashboard.location}"
-        (dashboardReady)="this.onDashboardReady($event)"
-      >
-      </ht-navigable-dashboard>
+      <ht-navigable-tab-group class="tabs">
+        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+        <ng-container *ngIf="this.logEvents$ | async as logEvents">
+          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+        </ng-container>
+      </ht-navigable-tab-group>
+
+      <div class="scrollable-container">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   `
 })
@@ -68,25 +68,15 @@ export class TraceDetailPageComponent {
 
   public readonly traceDetails$: Observable<TraceDetails>;
   public readonly exportSpans$: Observable<string>;
+  public readonly logEvents$: Observable<LogEvent[]>;
 
   public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
     private readonly navigationService: NavigationService,
     private readonly traceDetailService: TraceDetailService
   ) {
     this.traceDetails$ = this.traceDetailService.fetchTraceDetails();
     this.exportSpans$ = this.traceDetailService.fetchExportSpans();
-  }
-
-  public onDashboardReady(dashboard: Dashboard): void {
-    this.subscriptionLifecycle.add(
-      this.traceDetails$.subscribe(traceDetails => {
-        dashboard.setVariable('traceId', traceDetails.id);
-        dashboard.setVariable('spanId', traceDetails.entrySpanId);
-        dashboard.setVariable('startTime', traceDetails.startTime);
-        dashboard.refresh();
-      })
-    );
+    this.logEvents$ = this.traceDetailService.fetchLogEvents();
   }
 
   public onClickBack(): void {

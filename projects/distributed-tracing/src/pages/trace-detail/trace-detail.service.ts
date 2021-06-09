@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
+import { DateCoercer, DateFormatMode, DateFormatter, Dictionary, ReplayObservable } from '@hypertrace/common';
 
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
+import { Span } from '../../shared/graphql/model/schema/span';
 import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
@@ -99,6 +101,57 @@ export class TraceDetailService implements OnDestroy {
       takeUntil(this.destroyed$),
       shareReplay(1)
     );
+  }
+
+  public fetchLogEvents(): Observable<LogEvent[]> {
+    return this.routeIds$.pipe(
+      switchMap(routeIds =>
+        this.getLogEventsGqlResponse(routeIds.traceId, routeIds.startTime).pipe(
+          map((trace: Trace) => {
+            let logEvents: LogEvent[] = [];
+            trace.spans?.forEach((span: Span) => {
+              logEvents = [
+                ...logEvents,
+                ...(span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
+                  ...logEvent,
+                  $$spanName: {
+                    serviceName: span.serviceName,
+                    protocolName: span.protocolName,
+                    apiName: span.displaySpanName
+                  },
+                  spanStartTime: span.startTime as number
+                }))
+              ];
+            });
+
+            return logEvents;
+          })
+        )
+      ),
+      takeUntil(this.destroyed$),
+      shareReplay(1)
+    );
+  }
+
+  protected getLogEventsGqlResponse(traceId: string, startTime?: string): Observable<Trace> {
+    return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
+      requestType: TRACE_GQL_REQUEST,
+      traceId: traceId,
+      timestamp: this.dateCoercer.coerce(startTime),
+      traceProperties: [],
+      spanProperties: [
+        this.specificationBuilder.attributeSpecificationForKey('startTime'),
+        this.specificationBuilder.attributeSpecificationForKey('serviceName'),
+        this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
+        this.specificationBuilder.attributeSpecificationForKey('protocolName')
+      ],
+      logEventProperties: [
+        this.specificationBuilder.attributeSpecificationForKey('attributes'),
+        this.specificationBuilder.attributeSpecificationForKey('timestamp'),
+        this.specificationBuilder.attributeSpecificationForKey('summary')
+      ],
+      spanLimit: 1000
+    });
   }
 
   private fetchTrace(traceId: string, spanId?: string, startTime?: string | number): Observable<Trace> {

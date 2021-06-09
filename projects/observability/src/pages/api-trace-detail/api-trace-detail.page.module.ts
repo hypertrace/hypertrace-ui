@@ -8,20 +8,39 @@ import {
   IconModule,
   LabelModule,
   LoadAsyncModule,
+  NavigableTabModule,
   SummaryValueModule
 } from '@hypertrace/components';
+import { LogEventsTableModule } from '@hypertrace/distributed-tracing';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { ApiTraceDetailPageComponent } from './api-trace-detail.page.component';
+import { ApiTraceLogsComponent } from './logs/api-trace-logs.component';
+import { ApiTraceSequenceComponent } from './sequence/api-trace-sequence.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
   {
     path: `:${ApiTraceDetailPageComponent.TRACE_ID_PARAM_NAME}`,
-    component: ApiTraceDetailPageComponent
+    component: ApiTraceDetailPageComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'sequence',
+        pathMatch: 'full'
+      },
+      {
+        path: 'sequence',
+        component: ApiTraceSequenceComponent
+      },
+      {
+        path: 'logs',
+        component: ApiTraceLogsComponent
+      }
+    ]
   }
 ];
 
 @NgModule({
-  declarations: [ApiTraceDetailPageComponent],
+  declarations: [ApiTraceDetailPageComponent, ApiTraceSequenceComponent, ApiTraceLogsComponent],
   imports: [
     RouterModule.forChild(ROUTE_CONFIG),
     CommonModule,
@@ -32,7 +51,9 @@ const ROUTE_CONFIG: TraceRoute[] = [
     LoadAsyncModule,
     FormattingModule,
     ButtonModule,
-    CopyShareableLinkToClipboardModule
+    CopyShareableLinkToClipboardModule,
+    NavigableTabModule,
+    LogEventsTableModule
   ]
 })
 export class ApiTraceDetailPageModule {}

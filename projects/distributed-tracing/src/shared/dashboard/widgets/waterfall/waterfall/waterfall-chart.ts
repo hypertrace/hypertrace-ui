@@ -40,6 +40,7 @@ export interface WaterfallChartState {
 }
 
 export interface LogEvent {
+  spanStartTime?: number;
   attributes: Dictionary<unknown>;
   timestamp: string;
   summary: string;
