@@ -11,6 +11,7 @@ import { RadioOption } from './radio-option';
     <ht-label class="title" [label]="this.title"></ht-label>
     <mat-radio-group
       class="radio-group"
+      [ngClass]="this.optionsDirection"
       [ngModel]="this.selected!.value"
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
@@ -39,6 +40,9 @@ export class RadioGroupComponent implements OnInit {
   @Input()
   public disabled: boolean | undefined;
 
+  @Input()
+  public optionsDirection: OptionsDirection = OptionsDirection.Row;
+
   @Output()
   public readonly selectedChange: EventEmitter<string> = new EventEmitter();
 
@@ -62,4 +66,9 @@ export class RadioGroupComponent implements OnInit {
     this.selected = this.options.find(option => option.value === event.value);
     this.selectedChange.emit(event.value);
   }
+}
+
+export const enum OptionsDirection {
+  Row = 'row',
+  Column = 'column'
 }
