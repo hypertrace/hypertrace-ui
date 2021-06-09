@@ -15,11 +15,12 @@ describe('Summary Card Component', () => {
 
   test('should render card', () => {
     spectator = createHost(
-      `<ht-summary-card [name]="name" [color]="color" [summaries]="summaries"></ht-summary-card>`,
+      `<ht-summary-card [name]="name" [headerColor]="headerColor" [summaries]="summaries" [indicatorColor]="indicatorColor"></ht-summary-card>`,
       {
         hostProps: {
           name: 'I am Card',
-          color: SummaryCardColor.Red,
+          indicatorColor: SummaryCardColor.Red,
+          headerColor: SummaryCardColor.Gray,
           summaries: [
             {
               value: 'Summary #1',
@@ -40,7 +41,7 @@ describe('Summary Card Component', () => {
     expect(spectator.query('.dot')).toHaveClass(SummaryCardColor.Red);
 
     expect(spectator.query('.header')).toContainText('I am Card');
-    expect(spectator.query('.header')).toHaveClass(SummaryCardColor.Red);
+    expect(spectator.query('.header')).toHaveClass(SummaryCardColor.Gray);
 
     const summaries = spectator.queryAll(SummaryValueComponent);
     expect(summaries.length).toEqual(2);
