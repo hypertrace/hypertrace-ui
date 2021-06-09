@@ -91,15 +91,11 @@ export class WaterfallChartService {
           start: node.startTime,
           end: node.endTime,
           color: node.color!,
-          markers: node.logEvents.map((logEvent: LogEvent) => {
-            const timeInMs = this.dateCoercer.coerce(logEvent.timestamp)!.getTime();
-
-            return {
-              nodeId: node.id,
-              markerTime: timeInMs,
-              timestamps: [logEvent.timestamp]
-            };
-          })
+          markers: node.logEvents.map((logEvent: LogEvent) => ({
+            id: node.id,
+            markerTime: this.dateCoercer.coerce(logEvent.timestamp)!.getTime(),
+            timestamps: [logEvent.timestamp]
+          }))
         });
 
         sequenceNodes.unshift(...node.$$state.children);

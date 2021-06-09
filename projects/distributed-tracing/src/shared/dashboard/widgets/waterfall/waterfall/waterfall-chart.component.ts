@@ -167,7 +167,7 @@ export class WaterfallChartComponent implements OnChanges {
 
   public viewAll(): void {
     this.markerSelection.emit({
-      selectedData: this.marker?.nodeId !== undefined ? this.dataNodeMap.get(this.marker?.nodeId) : undefined,
+      selectedData: this.marker?.id !== undefined ? this.dataNodeMap.get(this.marker?.id) : undefined,
       timestamps: this.marker?.timestamps ?? []
     });
     this.closePopover();
@@ -198,7 +198,7 @@ export class WaterfallChartComponent implements OnChanges {
   }
 
   private buildMarkerDataSource(marker: Marker): Observable<MarkerTooltipData> {
-    const spanWaterfallData: WaterfallDataNode = this.dataNodeMap.get(marker.nodeId)!;
+    const spanWaterfallData: WaterfallDataNode = this.dataNodeMap.get(marker.id)!;
 
     let markerData: MarkerTooltipData = {
       relativeTimes: [],

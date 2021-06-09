@@ -11,7 +11,7 @@ export interface SequenceSegment {
 }
 
 export interface Marker {
-  nodeId: string;
+  id: string;
   markerTime: number;
   timestamps: string[];
 }

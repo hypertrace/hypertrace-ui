@@ -148,7 +148,7 @@ describe('Sequence Chart component', () => {
         color: 'blue',
         markers: [
           {
-            nodeId: '1',
+            id: '1',
             markerTime: 1569357460347,
             timestamps: ['1569357460347']
           }
