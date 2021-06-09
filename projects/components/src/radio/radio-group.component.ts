@@ -41,7 +41,7 @@ export class RadioGroupComponent implements OnInit {
   public disabled: boolean | undefined;
 
   @Input()
-  public optionsDirection: OptionsDirection = OptionsDirection.Row;
+  public optionsDirection: OptionsDirection = OptionsDirection.Column;
 
   @Output()
   public readonly selectedChange: EventEmitter<string> = new EventEmitter();
