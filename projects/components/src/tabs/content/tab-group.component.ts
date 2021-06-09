@@ -9,8 +9,8 @@ import {
   Output,
   QueryList
 } from '@angular/core';
-import { isEmpty } from 'lodash-es';
 import { Color } from '@hypertrace/common';
+import { isEmpty } from 'lodash-es';
 import { TabComponent } from './tab/tab.component';
 
 @Component({
