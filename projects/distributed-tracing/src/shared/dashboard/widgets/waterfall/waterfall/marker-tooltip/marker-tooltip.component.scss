@@ -38,21 +38,6 @@
     border: 1px solid $gray-6;
   }
 
-  .attribute {
-    display: grid;
-    gap: 4px;
-    grid-template-columns: 20% 80%;
-
-    .key,
-    .value {
-      @include ellipsis-overflow();
-    }
-
-    .key {
-      font-weight: 600;
-    }
-  }
-
   .view-all-text {
     cursor: pointer;
     width: max-content;

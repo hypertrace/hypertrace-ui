@@ -202,14 +202,14 @@ export class WaterfallChartComponent implements OnChanges {
 
     let markerData: MarkerTooltipData = {
       relativeTimes: [],
-      attributes: []
+      summary: spanWaterfallData.logEvents[0].summary
     };
     spanWaterfallData.logEvents.forEach((logEvent: LogEvent) => {
       if (marker.timestamps.includes(logEvent.timestamp)) {
         const logEventTime = this.dateCoercer.coerce(logEvent.timestamp)!.getTime();
         markerData = {
-          relativeTimes: [...markerData.relativeTimes, logEventTime - spanWaterfallData.startTime],
-          attributes: [...markerData.attributes, ...Object.entries(logEvent.attributes)]
+          ...markerData,
+          relativeTimes: [...markerData.relativeTimes, logEventTime - spanWaterfallData.startTime]
         };
       }
     });

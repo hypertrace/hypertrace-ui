@@ -23,17 +23,10 @@ import { Observable } from 'rxjs';
         </div>
       </div>
       <div class="divider"></div>
-      <div
-        class="attribute"
-        *ngFor="let attribute of data.attributes | slice: 0:${MarkerTooltipComponent.MAX_ATTRIBUTES_TO_DISPLAY}"
-      >
-        <div class="key">{{ attribute[0] }}:</div>
-        <div class="value">{{ attribute[1] }}</div>
+      <div class="summary">
+        {{ data.summary }}
       </div>
-      <div
-        class="view-all"
-        *ngIf="!!data.attributes && data.attributes.length > ${MarkerTooltipComponent.MAX_ATTRIBUTES_TO_DISPLAY}"
-      >
+      <div class="view-all">
         <div class="ellipsis">...</div>
         <div (click)="this.viewAll.emit()" class="view-all-text">View all ></div>
       </div>
@@ -41,8 +34,6 @@ import { Observable } from 'rxjs';
   `
 })
 export class MarkerTooltipComponent {
-  public static readonly MAX_ATTRIBUTES_TO_DISPLAY: number = 5;
-
   @Input()
   public data?: Observable<MarkerTooltipData | undefined>;
 
@@ -52,5 +43,5 @@ export class MarkerTooltipComponent {
 
 export interface MarkerTooltipData {
   relativeTimes: number[];
-  attributes: [string, unknown][];
+  summary: string;
 }

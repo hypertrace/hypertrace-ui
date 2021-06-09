@@ -13,13 +13,10 @@ describe('Marker Tooltip Component', () => {
     shallow: true
   });
 
-  test('should have log attributes without view all', () => {
+  test('should have single time with summary', () => {
     const data: Observable<MarkerTooltipData> = of({
       relativeTimes: [2],
-      attributes: [
-        ['id', 'test-id'],
-        ['error', 'test-error']
-      ]
+      summary: 'test-summary'
     });
     spectator = createHost(`<ht-marker-tooltip [data]="data"></ht-marker-tooltip>`, {
       hostProps: {
@@ -31,24 +28,14 @@ describe('Marker Tooltip Component', () => {
     expect(spectator.query('.count')).toHaveText('1');
     expect(spectator.query('.time-range')).toHaveText('2ms');
     expect(spectator.query('.divider')).toExist();
-    expect(spectator.queryAll('.key')[0]).toHaveText('id');
-    expect(spectator.queryAll('.key')[1]).toHaveText('error');
-    expect(spectator.queryAll('.value')[0]).toHaveText('test-id');
-    expect(spectator.queryAll('.value')[1]).toHaveText('test-error');
-    expect(spectator.query('.view-all')).not.toExist();
+    expect(spectator.query('.summary')).toHaveText('test-summary');
+    expect(spectator.query('.view-all')).toExist();
   });
 
-  test('should have view all', () => {
+  test('should have time range', () => {
     const data: Observable<MarkerTooltipData> = of({
       relativeTimes: [2, 3],
-      attributes: [
-        ['id', 'test-id'],
-        ['error', 'test-error'],
-        ['name', 'test-name'],
-        ['class', 'test-class'],
-        ['reason', 'test-reason'],
-        ['summary', 'test-summary']
-      ]
+      summary: 'test-summary'
     });
     spectator = createHost(`<ht-marker-tooltip [data]="data" (viewAll)="viewAll"></ht-marker-tooltip>`, {
       hostProps: {
@@ -60,7 +47,6 @@ describe('Marker Tooltip Component', () => {
     });
 
     expect(spectator.query('.time-range')).toHaveText('2ms - 3ms');
-    expect(spectator.query('.view-all')).toExist();
     const viewAllTextElement = spectator.query('.view-all-text');
     expect(viewAllTextElement).toExist();
     spectator.click(viewAllTextElement!);
