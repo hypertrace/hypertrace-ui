@@ -1,4 +1,4 @@
-import { Point } from '@hypertrace/common';
+import { ElementRef } from '@angular/core';
 import { Selection } from 'd3-selection';
 import { SequenceObject } from './sequence-object';
 
@@ -18,7 +18,7 @@ export interface Marker {
 
 export interface MarkerDatum {
   marker: Marker;
-  origin: Point;
+  origin: ElementRef;
 }
 
 /* Internal Types */

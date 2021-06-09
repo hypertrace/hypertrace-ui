@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { ScaleLinear } from 'd3-scale';
 import { BaseType, select, Selection } from 'd3-selection';
 import { SequenceChartAxisService } from '../axis/sequence-chart-axis.service';
@@ -212,7 +212,7 @@ export class SequenceBarRendererService {
     plotSelection
       .selectAll<SVGGElement, Marker>(`g.${SequenceBarRendererService.MARKER_CLASS}`)
       .on('mouseenter', (dataRow, index, nodes) => {
-        options.onMarkerHovered({ marker: dataRow, origin: nodes[index].getBoundingClientRect() });
+        options.onMarkerHovered({ marker: dataRow, origin: new ElementRef(nodes[index]) });
       });
   }
 
