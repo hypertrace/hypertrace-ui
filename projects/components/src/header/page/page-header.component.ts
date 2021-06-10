@@ -35,7 +35,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       <ng-content></ng-content>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs">
-        <ht-navigable-tab *ngFor="let tab of this.tabs" [path]="tab.path" [hidden]="tab.hidden">
+        <ht-navigable-tab *ngFor="let tab of this.tabs" [path]="tab.path" [hidden]="tab.hidden" [features]="tab.features">
           {{ tab.label }}
         </ht-navigable-tab>
       </ht-navigable-tab-group>

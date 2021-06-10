@@ -25,10 +25,10 @@ export class NavigableTabComponent extends ContentHolder {
   public replaceHistory?: boolean;
 
   @Input()
-  public features: string[] = [];
+  public features?: string[];
 
   public get featureFlags(): string[] {
-    return [...this.routeFeatures(), ...this.features];
+    return [...this.routeFeatures(), ...this.features ?? []];
   }
 
   private routeFeatures(): string[] {
