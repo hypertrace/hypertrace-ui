@@ -13,6 +13,7 @@
 
     &.mat-checkbox-checked .mat-checkbox-background,
     .mat-checkbox-indeterminate {
+      background-color: $gray-5;
       opacity: 0.4;
       cursor: not-allowed;
     }
