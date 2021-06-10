@@ -43,11 +43,11 @@ export class SequenceBarRendererService {
 
     this.drawBackdropRect(transformedBars, options, plotWidth);
     this.drawBarValueRect(transformedBars, xScale, options);
-    this.drawBarMarkers(plotSelection, xScale, options);
+    this.drawBarMarkers(transformedBars, xScale, options);
     this.drawBarValueText(transformedBars, xScale, options);
     this.setupHoverListener(transformedBars, options);
     this.setupClickListener(transformedBars, options);
-    this.setupMarkerHoverListener(plotSelection, options);
+    this.setupMarkerHoverListener(transformedBars, options);
     this.updateDataRowHover(chartSelection, options);
     this.updateDataRowSelection(chartSelection, options);
   }
@@ -115,29 +115,20 @@ export class SequenceBarRendererService {
   }
 
   private drawBarMarkers(
-    plotSelection: SequenceSVGSelection,
+    transformedBars: TransformedBarSelection,
     xScale: ScaleLinear<number, number>,
     options: SequenceOptions
   ): void {
-    options.data.forEach((segment, index) => {
-      plotSelection
-        .selectAll(`g.${SequenceBarRendererService.MARKERS_CLASS}`)
-        .data(this.getGroupedMarkers(segment, xScale))
-        .enter()
-        .append('g')
-        .classed(`${SequenceBarRendererService.MARKER_CLASS}`, true)
-        .append('rect')
-        .attr(
-          'transform',
-          dataRow =>
-            `translate(${dataRow.markerTime},${
-              (options.rowHeight - options.barHeight) / 2 + options.rowHeight * index
-            })`
-        )
-        .attr('width', this.markerWidth)
-        .attr('height', 12)
-        .style('fill', 'white');
-    });
+    transformedBars
+      .selectAll(`g.${SequenceBarRendererService.MARKERS_CLASS}`)
+      .data(segment => this.getGroupedMarkers(segment, xScale))
+      .enter()
+      .append('rect')
+      .classed(`${SequenceBarRendererService.MARKER_CLASS}`, true)
+      .attr('transform', dataRow => `translate(${dataRow.markerTime},${(options.rowHeight - options.barHeight) / 2})`)
+      .attr('width', this.markerWidth)
+      .attr('height', 12)
+      .style('fill', 'white');
   }
 
   private drawBarValueText(
@@ -208,9 +199,9 @@ export class SequenceBarRendererService {
     options.onSegmentSelected(dataRow);
   }
 
-  private setupMarkerHoverListener(plotSelection: SequenceSVGSelection, options: SequenceOptions): void {
-    plotSelection
-      .selectAll<SVGGElement, Marker>(`g.${SequenceBarRendererService.MARKER_CLASS}`)
+  private setupMarkerHoverListener(transformedBars: TransformedBarSelection, options: SequenceOptions): void {
+    transformedBars
+      .selectAll<SVGRectElement, Marker>(`rect.${SequenceBarRendererService.MARKER_CLASS}`)
       .on('mouseenter', (dataRow, index, nodes) => {
         options.onMarkerHovered({ marker: dataRow, origin: new ElementRef(nodes[index]) });
       });
