@@ -164,7 +164,7 @@ describe('Sequence Chart component', () => {
 
     const markers = chart.queryAll('.marker', { root: true });
     expect(markers.length).toBe(1);
-    const markerRect = select(markers[0].querySelector('rect'));
+    const markerRect = select(markers[0]);
     expect(markerRect.attr('width')).toBe('2');
     expect(markerRect.attr('height')).toBe('12');
   });
