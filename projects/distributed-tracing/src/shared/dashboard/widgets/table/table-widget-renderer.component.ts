@@ -29,7 +29,7 @@ import {
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, pairwise, share, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -189,13 +189,13 @@ export class TableWidgetRendererComponent
   private isFilterApplied(filterOption: TableFilter, appliedFilters: TableFilter[]): boolean {
     // This gets just a little tricky because multiple options for a single select could be IN filtered together
     return (
-      appliedFilters.find(filter => {
-        if (isEqual(filter, filterOption)) {
+      appliedFilters.find(f => {
+        if (isEqual(f, filterOption)) {
           return true;
         }
 
-        if (filter.field === filterOption.field && filter.operator === FilterOperator.In) {
-          return Array.isArray(filter.value) && filter.value.find(value => value === filterOption.value);
+        if (f.field === filterOption.field && f.operator === FilterOperator.In) {
+          return Array.isArray(f.value) && f.value.find(value => value === filterOption.value);
         }
       }) !== undefined
     );
