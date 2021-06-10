@@ -39,7 +39,8 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           *ngFor="let tab of this.tabs"
           [path]="tab.path"
           [hidden]="tab.hidden"
-          [features]="tab.features">
+          [features]="tab.features"
+        >
           {{ tab.label }}
         </ht-navigable-tab>
       </ht-navigable-tab-group>

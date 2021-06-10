@@ -28,7 +28,7 @@ export class NavigableTabComponent extends ContentHolder {
   public features?: string[];
 
   public get featureFlags(): string[] {
-    return [...this.routeFeatures(), ...this.features ?? []];
+    return [...this.routeFeatures(), ...(this.features ?? [])];
   }
 
   private routeFeatures(): string[] {
