@@ -44,6 +44,7 @@ import {
         <!-- Selects -->
         <ht-multi-select
           *ngFor="let selectControl of this.selectControls"
+          [selected]="this.appliedFilters(selectControl)"
           [placeholder]="selectControl.placeholder"
           class="control select"
           showBorder="true"
@@ -127,6 +128,11 @@ export class TableControlsComponent implements OnChanges {
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
 
+  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<
+    TableSelectControl,
+    TableSelectControlOption[]
+  >();
+
   public checkboxSelections: string[] = [];
   private readonly checkboxDiffer?: IterableDiffer<string>;
 
@@ -160,6 +166,10 @@ export class TableControlsComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.selectControls) {
+      this.diffSelections();
+    }
+
     if (changes.checkboxControls) {
       this.diffCheckboxes();
     }
@@ -169,12 +179,26 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
+  private diffSelections(): void {
+    this.selectSelections.clear();
+    this.selectControls?.forEach(selectControl => {
+      this.selectSelections.set(
+        selectControl,
+        selectControl.options.filter(option => option.applied)
+      );
+    });
+  }
+
   private diffCheckboxes(): void {
     this.checkboxSelections = this.checkboxControls
       ? this.checkboxControls.filter(control => control.value).map(control => control.label)
       : [];
 
     this.checkboxDiffer?.diff(this.checkboxSelections);
+  }
+
+  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] | undefined {
+    return this.selectSelections.get(selectControl);
   }
 
   private setActiveViewItem(): void {
