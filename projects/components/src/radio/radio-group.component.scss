@@ -8,6 +8,16 @@
 }
 
 .radio-group {
+  display: flex;
+
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
   ::ng-deep .radio-button {
     line-height: 18px;
     padding-right: 10px;
