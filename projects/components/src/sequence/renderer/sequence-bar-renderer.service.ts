@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { ScaleLinear } from 'd3-scale';
 import { BaseType, select, Selection } from 'd3-selection';
 import { SequenceChartAxisService } from '../axis/sequence-chart-axis.service';
-import { SequenceLayoutStyleClass, SequenceOptions, SequenceSegment, SequenceSVGSelection } from '../sequence';
+import { Marker, SequenceLayoutStyleClass, SequenceOptions, SequenceSegment, SequenceSVGSelection } from '../sequence';
 import { SequenceObject } from '../sequence-object';
 
 @Injectable()
@@ -10,9 +10,13 @@ export class SequenceBarRendererService {
   private static readonly DATA_ROW_CLASS: string = 'data-row';
   private static readonly HOVERED_ROW_CLASS: string = 'hovered-row';
   private static readonly SELECTED_ROW_CLASS: string = 'selected-row';
+  private static readonly MARKER_CLASS: string = 'marker';
+  private static readonly MARKERS_CLASS: string = 'markers';
   private static readonly BACKDROP_CLASS: string = 'backdrop';
   private static readonly BACKDROP_BORDER_TOP_CLASS: string = 'backdrop-border-top';
   private static readonly BACKDROP_BORDER_BOTTOM_CLASS: string = 'backdrop-border-bottom';
+
+  private readonly markerWidth: number = 2;
 
   public constructor(private readonly sequenceChartAxisService: SequenceChartAxisService) {}
 
@@ -39,9 +43,11 @@ export class SequenceBarRendererService {
 
     this.drawBackdropRect(transformedBars, options, plotWidth);
     this.drawBarValueRect(transformedBars, xScale, options);
+    this.drawBarMarkers(transformedBars, xScale, options);
     this.drawBarValueText(transformedBars, xScale, options);
     this.setupHoverListener(transformedBars, options);
     this.setupClickListener(transformedBars, options);
+    this.setupMarkerHoverListener(transformedBars, options);
     this.updateDataRowHover(chartSelection, options);
     this.updateDataRowSelection(chartSelection, options);
   }
@@ -106,6 +112,23 @@ export class SequenceBarRendererService {
       .attr('rx', '3')
       .attr('ry', '3')
       .classed('bar-value', true);
+  }
+
+  private drawBarMarkers(
+    transformedBars: TransformedBarSelection,
+    xScale: ScaleLinear<number, number>,
+    options: SequenceOptions
+  ): void {
+    transformedBars
+      .selectAll(`g.${SequenceBarRendererService.MARKERS_CLASS}`)
+      .data(segment => this.getGroupedMarkers(segment, xScale))
+      .enter()
+      .append('rect')
+      .classed(`${SequenceBarRendererService.MARKER_CLASS}`, true)
+      .attr('transform', dataRow => `translate(${dataRow.markerTime},${(options.rowHeight - options.barHeight) / 2})`)
+      .attr('width', this.markerWidth)
+      .attr('height', 12)
+      .style('fill', 'white');
   }
 
   private drawBarValueText(
@@ -174,6 +197,49 @@ export class SequenceBarRendererService {
   private onSegmentClicked(options: SequenceOptions, dataRow?: SequenceSegment): void {
     options.selected = options.selected === dataRow ? undefined : dataRow;
     options.onSegmentSelected(dataRow);
+  }
+
+  private setupMarkerHoverListener(transformedBars: TransformedBarSelection, options: SequenceOptions): void {
+    transformedBars
+      .selectAll<SVGRectElement, Marker>(`rect.${SequenceBarRendererService.MARKER_CLASS}`)
+      .on('mouseenter', (dataRow, index, nodes) => {
+        options.onMarkerHovered({ marker: dataRow, origin: new ElementRef(nodes[index]) });
+      });
+  }
+
+  private getGroupedMarkers(segment: SequenceSegment, xScale: ScaleLinear<number, number>): Marker[] {
+    const scaledStart: number = Math.floor(xScale(segment.start)!);
+    const scaledEnd: number = Math.floor(xScale(segment.end)!);
+    const pixelScaledMarkers: Marker[] = segment.markers.map((marker: Marker) => ({
+      ...marker,
+      markerTime: Math.floor(xScale(marker.markerTime)!)
+    }));
+    const scaledNormalizedMarkers: Marker[] = [];
+    let markerTime = -1 * Infinity;
+    let index = -1;
+    pixelScaledMarkers.forEach((marker: Marker) => {
+      // For 1px gap
+      if (marker.markerTime >= markerTime + this.markerWidth + 1) {
+        index++;
+        scaledNormalizedMarkers.push({
+          ...marker,
+          markerTime:
+            marker.markerTime <= scaledStart + this.markerWidth // Grouping - closest to start
+              ? scaledStart + this.markerWidth + 1
+              : marker.markerTime >= scaledEnd - this.markerWidth // Grouping - closest to end
+              ? scaledEnd - this.markerWidth - 2
+              : marker.markerTime
+        });
+        markerTime = scaledNormalizedMarkers[index].markerTime;
+      } else {
+        scaledNormalizedMarkers[index] = {
+          ...scaledNormalizedMarkers[index],
+          timestamps: [...scaledNormalizedMarkers[index].timestamps, ...marker.timestamps]
+        };
+      }
+    });
+
+    return scaledNormalizedMarkers;
   }
 }
 
