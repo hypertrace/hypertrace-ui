@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 import { Selection } from 'd3-selection';
 import { SequenceObject } from './sequence-object';
 
@@ -6,6 +7,18 @@ export interface SequenceSegment {
   start: number;
   end: number;
   color: string;
+  markers: Marker[];
+}
+
+export interface Marker {
+  id: string;
+  markerTime: number;
+  timestamps: string[];
+}
+
+export interface MarkerDatum {
+  marker: Marker;
+  origin: ElementRef;
 }
 
 /* Internal Types */
@@ -20,6 +33,7 @@ export interface SequenceOptions {
   unit: string | undefined;
   onSegmentSelected(row?: SequenceSegment): void;
   onSegmentHovered(row?: SequenceSegment): void;
+  onMarkerHovered(datum?: MarkerDatum): void;
 }
 
 export interface MarginOptions {

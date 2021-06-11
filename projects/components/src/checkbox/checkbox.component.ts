@@ -12,6 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
       [disabled]="this.disabled"
       (change)="onCheckboxChange($event)"
       class="ht-checkbox"
+      [ngClass]="{ disabled: this.disabled }"
     >
       <ht-label class="label" *ngIf="this.label !== undefined && this.label !== ''" [label]="this.label"></ht-label>
     </mat-checkbox>

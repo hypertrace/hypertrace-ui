@@ -9,7 +9,7 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { MetadataService } from '@hypertrace/distributed-tracing';
+import { GraphQlQueryEventService, MetadataService } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { DashboardManagerService, LoggerService, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -33,6 +33,7 @@ export const isValidModelJson = (
 
 export const mockDashboardProviders = [
   mockProvider(GraphQlRequestService),
+  mockProvider(GraphQlQueryEventService),
   mockProvider(ColorService),
   mockProvider(LayoutChangeService, {
     layout$: of()
