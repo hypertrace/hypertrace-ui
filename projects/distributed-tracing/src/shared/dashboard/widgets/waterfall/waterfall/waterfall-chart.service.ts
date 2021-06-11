@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Color, ColorService } from '@hypertrace/common';
+import { Color, ColorService, DateCoercer } from '@hypertrace/common';
 import { SequenceSegment } from '@hypertrace/components';
 import { isNil, sortBy } from 'lodash-es';
 import { of } from 'rxjs';
 import { TracingIconLookupService } from '../../../../services/icon-lookup/tracing-icon-lookup.service';
-import { WaterfallData, WaterfallDataNode } from './waterfall-chart';
+import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WaterfallChartService {
   private static readonly SEQUENCE_COLORS: symbol = Symbol('Sequence colors');
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
   public constructor(
     private readonly colorService: ColorService,
     private readonly iconLookupService: TracingIconLookupService
@@ -89,7 +90,12 @@ export class WaterfallChartService {
           id: node.id,
           start: node.startTime,
           end: node.endTime,
-          color: node.color!
+          color: node.color!,
+          markers: node.logEvents.map((logEvent: LogEvent) => ({
+            id: node.id,
+            markerTime: this.dateCoercer.coerce(logEvent.timestamp)!.getTime(),
+            timestamps: [logEvent.timestamp]
+          }))
         });
 
         sequenceNodes.unshift(...node.$$state.children);
