@@ -7,7 +7,6 @@ import { ApiTraceDetails, ApiTraceDetailService } from './../api-trace-detail.se
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
   template: `
     <ht-application-aware-dashboard
       [json]="this.defaultJson"

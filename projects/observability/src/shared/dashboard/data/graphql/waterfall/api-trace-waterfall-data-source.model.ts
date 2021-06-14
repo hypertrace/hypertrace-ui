@@ -101,7 +101,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
     return spans.map(span => this.constructWaterfallData(span, trace, duration));
   }
 
-  private mapepdLogEvents(logEventsObject: Dictionary<LogEvent[]>, startTime: number): LogEvent[] {
+  private getLogEventsWithSpanStartTime(logEventsObject: Dictionary<LogEvent[]>, startTime: number): LogEvent[] {
     if (isEmpty(logEventsObject) || isEmpty(logEventsObject.results)) {
       return [];
     }
@@ -129,7 +129,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: this.mapepdLogEvents(span.logEvents as Dictionary<LogEvent[]>, span.startTime as number)
+      logEvents: this.getLogEventsWithSpanStartTime(span.logEvents as Dictionary<LogEvent[]>, span.startTime as number)
     };
   }
 }

@@ -8,7 +8,6 @@ import { TraceDetails, TraceDetailService } from './../trace-detail.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
   template: `
     <ht-navigable-dashboard
       class="scrollable-container"

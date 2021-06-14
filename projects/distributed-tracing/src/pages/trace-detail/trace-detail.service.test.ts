@@ -19,11 +19,10 @@ import { TraceDetailService } from './trace-detail.service';
 
 describe('TraceDetailService', () => {
   const createService = createServiceFactory({
-    service: TraceDetailService,
-    providers: []
+    service: TraceDetailService
   });
 
-  test('should map fetch and map trace details', () => {
+  test('should fetch and map trace details', () => {
     const spectator = createService({
       providers: [
         mockProvider(ActivatedRoute, {

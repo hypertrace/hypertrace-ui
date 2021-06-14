@@ -105,29 +105,25 @@ export class TraceDetailService implements OnDestroy {
 
   public fetchLogEvents(): Observable<LogEvent[]> {
     return this.routeIds$.pipe(
-      switchMap(routeIds =>
-        this.getLogEventsGqlResponse(routeIds.traceId, routeIds.startTime).pipe(
-          map((trace: Trace) => {
-            let logEvents: LogEvent[] = [];
-            trace.spans?.forEach((span: Span) => {
-              logEvents = [
-                ...logEvents,
-                ...(span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
-                  ...logEvent,
-                  $$spanName: {
-                    serviceName: span.serviceName,
-                    protocolName: span.protocolName,
-                    apiName: span.displaySpanName
-                  },
-                  spanStartTime: span.startTime as number
-                }))
-              ];
-            });
+      switchMap(routeIds => this.getLogEventsGqlResponse(routeIds.traceId, routeIds.startTime)),
+      map((trace: Trace) => {
+        const logEvents: LogEvent[] = [];
+        trace.spans?.forEach((span: Span) => {
+          logEvents.push(
+            ...(span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
+              ...logEvent,
+              $$spanName: {
+                serviceName: span.serviceName,
+                protocolName: span.protocolName,
+                apiName: span.displaySpanName
+              },
+              spanStartTime: span.startTime as number
+            }))
+          );
+        });
 
-            return logEvents;
-          })
-        )
-      ),
+        return logEvents;
+      }),
       takeUntil(this.destroyed$),
       shareReplay(1)
     );
