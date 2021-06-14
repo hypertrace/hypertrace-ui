@@ -2,6 +2,7 @@ export const enum ObservabilityIconType {
   // These values come from Material. We will replace these with our own icon library in the future.
   Api = 'svg:api',
   Apigee = 'svg:apigee',
+  ApiDashboard = 'svg:api-dashboard',
   Application = 'device_hub',
   ApplicationFlow = 'svg:application-flow',
   AWS = 'svg:aws',

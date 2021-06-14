@@ -82,6 +82,8 @@ export * from './pages/apis/services/service-list.dashboard';
 export * from './pages/apis/services/service-list.module';
 export * from './pages/apis/topology/application-flow.component';
 export * from './pages/apis/topology/application-flow.module';
+export * from './pages/apis/dashboard/api-dashboard.component';
+export * from './pages/apis/dashboard/api-dashboard.module';
 
 export * from './pages/apis/api-detail/api-detail.module';
 export * from './pages/apis/api-detail/api-detail.component';

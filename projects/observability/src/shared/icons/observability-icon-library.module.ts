@@ -11,6 +11,7 @@ const iconsRootPath = 'assets/icons';
     IconLibraryModule.withIcons([
       { key: ObservabilityIconType.Api, url: `${iconsRootPath}/api.svg` },
       { key: ObservabilityIconType.Apigee, url: `${iconsRootPath}/apigee.svg` },
+      { key: ObservabilityIconType.ApiDashboard, url: `${iconsRootPath}/api-dashboard.svg` },
       { key: ObservabilityIconType.ApplicationFlow, url: `${iconsRootPath}/application-flow.svg` },
       { key: ObservabilityIconType.AWS, url: `${iconsRootPath}/aws.svg` },
       { key: ObservabilityIconType.AWSRDS, url: `${iconsRootPath}/aws-rds.svg` },
