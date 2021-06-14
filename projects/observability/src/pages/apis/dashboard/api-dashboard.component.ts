@@ -65,7 +65,7 @@ export class ApiDashboardComponent {
         {
           type: 'cell-span-model',
           'col-start': 0,
-          'col-end': 2,
+          'col-end': 1,
           'row-start': 2,
           'row-end': 3
         },
@@ -96,9 +96,14 @@ export class ApiDashboardComponent {
       {
         type: 'container-widget',
         layout: {
-          type: 'auto-container-layout',
+          type: 'custom-container-layout',
           'enable-style': false,
           'column-dimensions': [
+            {
+              type: 'dimension-model',
+              dimension: 1,
+              unit: 'FR'
+            },
             {
               type: 'dimension-model',
               dimension: 1,
@@ -109,7 +114,7 @@ export class ApiDashboardComponent {
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'PX'
+              unit: 'FR'
             }
           ],
           'cell-spans': [
