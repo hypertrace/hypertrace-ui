@@ -30,7 +30,6 @@ export const enum IconType {
   Compare = 'svg:compare',
   CompareArrows = 'compare_arrows',
   ContentCopy = 'content_copy',
-  CopyToClipboard = 'svg:copy-to-clipboard',
   Code = 'svg:code',
   Custom = 'svg:custom',
   CustomWebhook = 'svg:custom-webhook',
