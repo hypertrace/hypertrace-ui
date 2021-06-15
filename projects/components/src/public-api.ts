@@ -238,7 +238,7 @@ export * from './select/select.component';
 export * from './select/select.module';
 
 // Sequence
-export { SequenceSegment } from './sequence/sequence';
+export { Marker, MarkerDatum, SequenceSegment } from './sequence/sequence';
 export * from './sequence/sequence-chart.component';
 export * from './sequence/sequence-chart.module';
 

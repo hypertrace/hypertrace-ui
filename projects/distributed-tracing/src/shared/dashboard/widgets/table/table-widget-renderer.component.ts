@@ -30,9 +30,9 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, pick } from 'lodash-es';
+import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, pairwise, share, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -173,12 +173,31 @@ export class TableWidgetRendererComponent
           // Fetch the values for the selectFilter dropdown
           selectControlModel.getOptions().pipe(
             take(1),
-            map(options => ({
+            withLatestFrom(this.selectFilterSubject),
+            map(([options, filters]) => ({
               placeholder: selectControlModel.placeholder,
-              options: options
+              options: options.map(option => ({
+                ...option,
+                applied: this.isFilterApplied(option.metaValue, filters)
+              }))
             }))
           )
         )
+    );
+  }
+
+  private isFilterApplied(filterOption: TableFilter, appliedFilters: TableFilter[]): boolean {
+    // This gets just a little tricky because multiple options for a single select could be IN filtered together
+    return (
+      appliedFilters.find(f => {
+        if (isEqual(f, filterOption)) {
+          return true;
+        }
+
+        if (f.field === filterOption.field && f.operator === FilterOperator.In) {
+          return Array.isArray(f.value) && f.value.find(value => value === filterOption.value);
+        }
+      }) !== undefined
     );
   }
 

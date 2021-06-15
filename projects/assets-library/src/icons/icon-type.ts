@@ -16,6 +16,7 @@ export const enum IconType {
   ArrowUpRight = 'svg:arrow-up-right',
   Cancel = 'cancel',
   CheckCircle = 'svg:check-circle',
+  CheckCircleFill = 'svg:check-circle-fill',
   Checkmark = 'checkmark',
   ChevronDown = 'svg:chevron-down',
   ChevronLeft = 'svg:chevron-left',

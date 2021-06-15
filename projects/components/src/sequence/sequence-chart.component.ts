@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { RecursivePartial, TypedSimpleChanges } from '@hypertrace/common';
 import { minBy } from 'lodash-es';
-import { SequenceOptions, SequenceSegment } from './sequence';
+import { Marker, MarkerDatum, SequenceOptions, SequenceSegment } from './sequence';
 import { SequenceChartService } from './sequence-chart.service';
 import { SequenceObject } from './sequence-object';
 
@@ -51,6 +51,9 @@ export class SequenceChartComponent implements OnChanges {
   public readonly hoveredChange: EventEmitter<SequenceSegment | undefined> = new EventEmitter<
     SequenceSegment | undefined
   >();
+
+  @Output()
+  public readonly markerHoveredChange: EventEmitter<MarkerDatum> = new EventEmitter<MarkerDatum>();
 
   @ViewChild('chartContainer', { static: true })
   private readonly chartContainer!: ElementRef;
@@ -100,7 +103,8 @@ export class SequenceChartComponent implements OnChanges {
       barHeight: this.barHeight,
       unit: this.unit,
       onSegmentSelected: (segment?: SequenceSegment) => this.onSegmentSelected(segment),
-      onSegmentHovered: (segment?: SequenceSegment) => this.onSegmentHovered(segment)
+      onSegmentHovered: (segment?: SequenceSegment) => this.onSegmentHovered(segment),
+      onMarkerHovered: (datum?: MarkerDatum) => this.onMarkerHovered(datum)
     };
   }
 
@@ -115,7 +119,10 @@ export class SequenceChartComponent implements OnChanges {
       id: segment.id,
       start: segment.start - minStart,
       end: segment.end - minStart,
-      color: segment.color
+      color: segment.color,
+      markers: segment.markers
+        .map((marker: Marker) => ({ ...marker, markerTime: marker.markerTime - minStart }))
+        .sort((marker1, marker2) => marker1.markerTime - marker2.markerTime)
     }));
   }
 
@@ -127,5 +134,9 @@ export class SequenceChartComponent implements OnChanges {
   private onSegmentHovered(segment?: SequenceSegment): void {
     this.hovered = segment;
     this.hoveredChange.emit(segment);
+  }
+
+  private onMarkerHovered(datum?: MarkerDatum): void {
+    this.markerHoveredChange.emit(datum);
   }
 }

@@ -14,18 +14,21 @@ export interface TableFilterControlOption {
   type: TableControlOptionType.Filter;
   label: string;
   metaValue: TableFilter;
+  applied?: boolean;
 }
 
 export interface TableUnsetControlOption {
   type: TableControlOptionType.Unset;
   label: string;
   metaValue: string;
+  applied?: boolean;
 }
 
 export interface TablePropertyControlOption {
   type: TableControlOptionType.Property;
   label: string;
   metaValue: Dictionary<unknown>;
+  applied?: boolean;
 }
 
 /*
