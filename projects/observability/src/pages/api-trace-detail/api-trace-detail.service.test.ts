@@ -129,6 +129,7 @@ describe('Api TraceDetailService', () => {
         mockProvider(GraphQlRequestService, {
           query: jest.fn().mockReturnValue(
             of({
+              [traceTypeKey]: 'API_TRACE',
               spans: [
                 {
                   logEvents: {

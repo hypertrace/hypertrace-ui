@@ -1,6 +1,7 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Trace, traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
@@ -21,7 +22,10 @@ describe('Trace Waterfall data source model', () => {
           })
         )
       }),
-      mockProvider(GraphQlQueryEventService)
+      mockProvider(GraphQlQueryEventService),
+      mockProvider(LogEventsService, {
+        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([])
+      })
     ]
   });
 
