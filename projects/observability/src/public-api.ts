@@ -10,6 +10,7 @@ export * from './shared/graphql/model/schema/filter/entity/graphql-entity-filter
 export * from './shared/graphql/model/schema/neighbor';
 export * from './shared/graphql/model/schema/specifications/entity-specification';
 export * from './shared/graphql/model/schema/specifications/explore-specification';
+export * from './shared/graphql/model/schema/observability-traces';
 
 // Builders
 export * from './shared/graphql/request/builders/argument/graphql-observability-argument-builder';

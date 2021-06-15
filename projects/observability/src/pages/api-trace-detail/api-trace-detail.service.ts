@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateCoercer, DateFormatMode, DateFormatter, Dictionary, ReplayObservable } from '@hypertrace/common';
+import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
 import {
   AttributeMetadata,
   LogEvent,
+  LogEventsService,
   MetadataService,
-  Span,
   SpecificationBuilder,
   Trace,
   TraceGraphQlQueryHandlerService,
@@ -34,7 +34,8 @@ export class ApiTraceDetailService implements OnDestroy {
   public constructor(
     route: ActivatedRoute,
     private readonly metadataService: MetadataService,
-    private readonly graphQlQueryService: GraphQlRequestService
+    private readonly graphQlQueryService: GraphQlRequestService,
+    private readonly logEventsService: LogEventsService
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
@@ -70,25 +71,14 @@ export class ApiTraceDetailService implements OnDestroy {
 
   public fetchLogEvents(): Observable<LogEvent[]> {
     return this.routeIds$.pipe(
-      switchMap(routeIds => this.getLogEventsGqlResponse(routeIds.traceId, routeIds.startTime)),
-      map((trace: Trace) => {
-        const logEvents: LogEvent[] = [];
-        trace.spans?.forEach((span: Span) => {
-          logEvents.push(
-            ...(span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
-              ...logEvent,
-              $$spanName: {
-                serviceName: span.displayEntityName,
-                protocolName: span.protocolName,
-                apiName: span.displaySpanName
-              },
-              spanStartTime: span.startTime as number
-            }))
-          );
-        });
-
-        return logEvents;
-      }),
+      switchMap(routeIds =>
+        this.logEventsService.getLogEventsGqlResponseForTrace(
+          routeIds.traceId,
+          routeIds.startTime,
+          ObservabilityTraceType.Api
+        )
+      ),
+      map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
       shareReplay(1)
     );
@@ -114,28 +104,6 @@ export class ApiTraceDetailService implements OnDestroy {
       traceProperties: this.getAttributes().map(key => this.specificationBuilder.attributeSpecificationForKey(key)),
       spanProperties: [],
       spanLimit: 1
-    });
-  }
-
-  protected getLogEventsGqlResponse(traceId: string, startTime?: string): Observable<Trace> {
-    return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
-      requestType: TRACE_GQL_REQUEST,
-      traceType: ObservabilityTraceType.Api,
-      traceId: traceId,
-      timestamp: this.dateCoercer.coerce(startTime),
-      traceProperties: [],
-      spanProperties: [
-        this.specificationBuilder.attributeSpecificationForKey('startTime'),
-        this.specificationBuilder.attributeSpecificationForKey('displayEntityName'),
-        this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
-        this.specificationBuilder.attributeSpecificationForKey('protocolName')
-      ],
-      logEventProperties: [
-        this.specificationBuilder.attributeSpecificationForKey('attributes'),
-        this.specificationBuilder.attributeSpecificationForKey('timestamp'),
-        this.specificationBuilder.attributeSpecificationForKey('summary')
-      ],
-      spanLimit: 1000
     });
   }
 

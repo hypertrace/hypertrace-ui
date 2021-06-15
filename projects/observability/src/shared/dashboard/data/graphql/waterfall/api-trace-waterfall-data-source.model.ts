@@ -3,6 +3,7 @@ import {
   AttributeMetadata,
   GraphQlDataSourceModel,
   LogEvent,
+  LogEventsService,
   MetadataService,
   Span,
   spanIdKey,
@@ -17,7 +18,6 @@ import {
 } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
@@ -42,6 +42,9 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
+
+  @ModelInject(LogEventsService)
+  private readonly logEventsService!: LogEventsService;
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
@@ -101,17 +104,6 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
     return spans.map(span => this.constructWaterfallData(span, trace, duration));
   }
 
-  private getLogEventsWithSpanStartTime(logEventsObject: Dictionary<LogEvent[]>, startTime: number): LogEvent[] {
-    if (isEmpty(logEventsObject) || isEmpty(logEventsObject.results)) {
-      return [];
-    }
-
-    return logEventsObject.results.map(logEvent => ({
-      ...logEvent,
-      spanStartTime: startTime
-    }));
-  }
-
   protected constructWaterfallData(span: Span, trace: Trace, duration: AttributeMetadata): WaterfallData {
     return {
       id: span[spanIdKey],
@@ -129,7 +121,10 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: this.getLogEventsWithSpanStartTime(span.logEvents as Dictionary<LogEvent[]>, span.startTime as number)
+      logEvents: this.logEventsService.getLogEventsWithSpanStartTime(
+        span.logEvents as Dictionary<LogEvent[]>,
+        span.startTime as number
+      )
     };
   }
 }
