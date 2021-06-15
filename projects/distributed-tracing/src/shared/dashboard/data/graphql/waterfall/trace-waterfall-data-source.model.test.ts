@@ -1,10 +1,10 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Trace, traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlQueryEventService } from '../graphql-query-event.service';

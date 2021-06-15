@@ -26,7 +26,7 @@ export class LogEventsService {
     'protocolName'
   ];
 
-  constructor(private readonly graphQlQueryService: GraphQlRequestService) {}
+  public constructor(private readonly graphQlQueryService: GraphQlRequestService) {}
 
   public getLogEventsWithSpanStartTime(logEventsObject: Dictionary<LogEvent[]>, startTime: number): LogEvent[] {
     if (isEmpty(logEventsObject) || isEmpty(logEventsObject.results)) {
@@ -63,8 +63,8 @@ export class LogEventsService {
 
   public mapLogEvents(trace: Trace): LogEvent[] {
     return (trace.spans ?? [])
-      .map((span: Span) => {
-        return (span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
+      .map((span: Span) =>
+        (span.logEvents as Dictionary<LogEvent[]>).results.map(logEvent => ({
           ...logEvent,
           $$spanName: {
             serviceName: trace[traceTypeKey] === ObservabilityTraceType.Api ? span.displayEntityName : span.serviceName,
@@ -72,8 +72,8 @@ export class LogEventsService {
             apiName: span.displaySpanName
           },
           spanStartTime: span.startTime as number
-        }));
-      })
+        }))
+      )
       .flat();
   }
 }

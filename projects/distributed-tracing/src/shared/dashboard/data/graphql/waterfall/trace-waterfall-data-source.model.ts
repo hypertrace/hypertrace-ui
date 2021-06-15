@@ -1,7 +1,6 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../../graphql/model/metadata/attribute-metadata';
@@ -13,6 +12,7 @@ import {
   TraceGraphQlQueryHandlerService,
   TRACE_GQL_REQUEST
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { LogEvent, WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
