@@ -109,7 +109,7 @@ export * from './shared/components/table/tracing-table-cell-type';
 // Waterfall
 export { WaterfallData } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 export { TraceWaterfallDataSourceModel } from './shared/dashboard/data/graphql/waterfall/trace-waterfall-data-source.model';
-export { traceDetailDashboard } from './pages/trace-detail/trace-detail.dashboard';
+export { traceSequenceDashboard } from './pages/trace-detail/sequence/trace-sequence.dashboard';
 export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page.component';
 export { LogEvent } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 

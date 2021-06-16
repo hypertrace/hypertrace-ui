@@ -11,11 +11,12 @@ import {
   NavigableTabModule,
   SummaryValueModule
 } from '@hypertrace/components';
-import { LogEventsTableModule } from '@hypertrace/distributed-tracing';
+import { LogEventsTableModule, NavigableDashboardModule } from '@hypertrace/distributed-tracing';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { ApiTraceDetailPageComponent } from './api-trace-detail.page.component';
 import { ApiTraceLogsComponent } from './logs/api-trace-logs.component';
 import { ApiTraceSequenceComponent } from './sequence/api-trace-sequence.component';
+import { apiTraceSequenceDashboard } from './sequence/api-trace-sequence.dashboard';
 
 const ROUTE_CONFIG: TraceRoute[] = [
   {
@@ -53,7 +54,8 @@ const ROUTE_CONFIG: TraceRoute[] = [
     ButtonModule,
     CopyShareableLinkToClipboardModule,
     NavigableTabModule,
-    LogEventsTableModule
+    LogEventsTableModule,
+    NavigableDashboardModule.withDefaultDashboards(apiTraceSequenceDashboard)
   ]
 })
 export class ApiTraceDetailPageModule {}
