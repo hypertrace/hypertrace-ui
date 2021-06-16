@@ -23,7 +23,6 @@ export class ApiTraceSequenceComponent {
     this.traceVariables$ = this.apiTraceDetailService.fetchTraceDetails().pipe(
       map(details => ({
         traceId: details.id,
-        traceType: details.type,
         startTime: details.startTime
       }))
     );
@@ -32,6 +31,5 @@ export class ApiTraceSequenceComponent {
 
 interface ApiTraceDetailVariables {
   traceId: string;
-  traceType: string;
   startTime?: string | number;
 }
