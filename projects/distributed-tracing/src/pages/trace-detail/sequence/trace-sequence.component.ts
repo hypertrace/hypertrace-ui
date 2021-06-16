@@ -1,41 +1,38 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SubscriptionLifecycle } from '@hypertrace/common';
-
-import { Dashboard } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { traceDetailDashboard } from '../trace-detail.dashboard';
-import { TraceDetails, TraceDetailService } from './../trace-detail.service';
+import { map } from 'rxjs/operators';
+import { TraceDetailService } from './../trace-detail.service';
+import { traceSequenceDashboard } from './trace-sequence.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-navigable-dashboard
+      *htLoadAsync="this.traceVariables$ as traceVariables"
       class="scrollable-container"
       [padding]="0"
-      navLocation="${traceDetailDashboard.location}"
-      (dashboardReady)="this.onDashboardReady($event)"
+      [variables]="traceVariables"
+      navLocation="${traceSequenceDashboard.location}"
     >
     </ht-navigable-dashboard>
   `
 })
 export class TraceSequenceComponent {
-  public readonly traceDetails$: Observable<TraceDetails>;
+  public readonly traceVariables$: Observable<TraceDetailVariables>;
 
-  public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
-    private readonly traceDetailService: TraceDetailService
-  ) {
-    this.traceDetails$ = this.traceDetailService.fetchTraceDetails();
-  }
-
-  public onDashboardReady(dashboard: Dashboard): void {
-    this.subscriptionLifecycle.add(
-      this.traceDetails$.subscribe(traceDetails => {
-        dashboard.setVariable('traceId', traceDetails.id);
-        dashboard.setVariable('spanId', traceDetails.entrySpanId);
-        dashboard.setVariable('startTime', traceDetails.startTime);
-        dashboard.refresh();
-      })
+  public constructor(private readonly traceDetailService: TraceDetailService) {
+    this.traceVariables$ = this.traceDetailService.fetchTraceDetails().pipe(
+      map(details => ({
+        traceId: details.id,
+        startTime: details.startTime,
+        spanId: details.entrySpanId
+      }))
     );
   }
+}
+
+interface TraceDetailVariables {
+  traceId: string;
+  startTime?: string | number;
+  spanId?: string;
 }

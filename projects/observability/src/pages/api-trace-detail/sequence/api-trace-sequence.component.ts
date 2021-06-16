@@ -1,60 +1,35 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SubscriptionLifecycle } from '@hypertrace/common';
-
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
-import { ApiTraceDetails, ApiTraceDetailService } from './../api-trace-detail.service';
+import { map } from 'rxjs/operators';
+import { ApiTraceDetailService } from './../api-trace-detail.service';
+import { apiTraceSequenceDashboard } from './api-trace-sequence.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-application-aware-dashboard
-      [json]="this.defaultJson"
+    <ht-navigable-dashboard
+      *htLoadAsync="this.traceVariables$ as traceVariables"
+      navLocation="${apiTraceSequenceDashboard.location}"
       [padding]="0"
-      (dashboardReady)="this.onDashboardReady($event)"
+      [variables]="traceVariables"
     >
-    </ht-application-aware-dashboard>
+    </ht-navigable-dashboard>
   `
 })
 export class ApiTraceSequenceComponent {
-  public readonly traceDetails$: Observable<ApiTraceDetails>;
+  public readonly traceVariables$: Observable<ApiTraceDetailVariables>;
 
-  public readonly defaultJson: ModelJson = {
-    type: 'container-widget',
-    layout: {
-      type: 'auto-container-layout',
-      'enable-style': false
-    },
-    children: [
-      {
-        type: 'waterfall-widget',
-        title: 'Sequence Diagram',
-        data: {
-          type: 'api-trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'start-time': '${startTime}'
-        }
-      }
-    ]
-  };
-
-  public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
-    private readonly apiTraceDetailService: ApiTraceDetailService
-  ) {
-    this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
-  }
-
-  public onDashboardReady(dashboard: Dashboard): void {
-    this.subscriptionLifecycle.add(
-      this.traceDetails$.subscribe(traceDetails => {
-        dashboard.setVariable('traceId', traceDetails.id);
-        dashboard.setVariable('traceType', traceDetails.type);
-        dashboard.setVariable('startTime', traceDetails.startTime);
-        dashboard.refresh();
-      })
+  public constructor(private readonly apiTraceDetailService: ApiTraceDetailService) {
+    this.traceVariables$ = this.apiTraceDetailService.fetchTraceDetails().pipe(
+      map(details => ({
+        traceId: details.id,
+        startTime: details.startTime
+      }))
     );
   }
+}
+
+interface ApiTraceDetailVariables {
+  traceId: string;
+  startTime?: string | number;
 }

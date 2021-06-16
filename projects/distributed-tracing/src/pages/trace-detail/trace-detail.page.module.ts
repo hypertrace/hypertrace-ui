@@ -17,7 +17,7 @@ import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapp
 import { TracingDashboardModule } from '../../shared/dashboard/tracing-dashboard.module';
 import { TraceLogsComponent } from './logs/trace-logs.component';
 import { TraceSequenceComponent } from './sequence/trace-sequence.component';
-import { traceDetailDashboard } from './trace-detail.dashboard';
+import { traceSequenceDashboard } from './sequence/trace-sequence.dashboard';
 import { TraceDetailPageComponent } from './trace-detail.page.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
@@ -56,7 +56,7 @@ const ROUTE_CONFIG: TraceRoute[] = [
     FormattingModule,
     CopyShareableLinkToClipboardModule,
     DownloadJsonModule,
-    NavigableDashboardModule.withDefaultDashboards(traceDetailDashboard),
+    NavigableDashboardModule.withDefaultDashboards(traceSequenceDashboard),
     NavigableTabModule,
     LogEventsTableModule
   ]
