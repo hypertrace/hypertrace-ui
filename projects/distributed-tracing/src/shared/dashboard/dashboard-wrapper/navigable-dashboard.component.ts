@@ -29,6 +29,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
         class="dashboard"
         [json]="dashboardJson"
         [padding]="this.padding"
+        [variables]="this.variables"
         (dashboardReady)="this.onDashboardReady($event)"
       >
       </ht-application-aware-dashboard>
@@ -94,7 +95,6 @@ export class NavigableDashboardComponent implements OnChanges {
 
   public onDashboardReady(dashboard: Dashboard): void {
     this.dashboard = dashboard;
-    this.applyVariablesToDashboard(this.dashboard, this.variables);
     this.applyFiltersToDashboard(dashboard, this.explicitFilters);
     this.dashboardReady.emit(dashboard);
   }
@@ -103,12 +103,6 @@ export class NavigableDashboardComponent implements OnChanges {
     this.explicitFilters = explicitFilters;
     if (this.dashboard) {
       this.applyFiltersToDashboard(this.dashboard, explicitFilters);
-    }
-  }
-
-  public applyVariablesToDashboard(dashboard: Dashboard, variables: Dictionary<unknown> = {}): void {
-    for (const key of Object.keys(variables)) {
-      dashboard.setVariable(key, variables[key]);
     }
   }
 
