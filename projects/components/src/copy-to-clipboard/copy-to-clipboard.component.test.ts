@@ -32,10 +32,11 @@ describe('Copy to Clipboard component', () => {
 
   test('correctly copies the text to clipboard', fakeAsync(() => {
     spectator = createHost(
-      `<ht-copy-to-clipboard [text]="textToBeCopied" label="Copy to Clipboard"></ht-copy-to-clipboard>`,
+      `<ht-copy-to-clipboard [tooltipDuration]="tooltipDuration" [text]="textToBeCopied" label="Copy to Clipboard"></ht-copy-to-clipboard>`,
       {
         hostProps: {
-          textToBeCopied: 'Text to be copied'
+          textToBeCopied: 'Text to be copied',
+          tooltipDuration: 1000
         }
       }
     );
@@ -62,7 +63,7 @@ describe('Copy to Clipboard component', () => {
 
     spectator.tick();
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
-    spectator.tick(4000);
+    spectator.tick(1001);
     expect(mockPopoverRef.close).toHaveBeenCalled();
   }));
 });

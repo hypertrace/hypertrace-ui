@@ -37,7 +37,6 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.CollapseAll, url: `${iconsRootPath}/collapse-all.svg` },
         { key: IconType.Collapsed, url: `${iconsRootPath}/plus-square.svg` },
         { key: IconType.Compare, url: `${iconsRootPath}/compare.svg` },
-        { key: IconType.CopyToClipboard, url: `${iconsRootPath}/copy-to-clipboard.svg` },
         { key: IconType.Custom, url: `${iconsRootPath}/custom.svg` },
         { key: IconType.Dashboard, url: `${iconsRootPath}/dashboard.svg` },
         { key: IconType.Device, url: `${iconsRootPath}/device.svg` },
