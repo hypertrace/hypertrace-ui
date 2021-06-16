@@ -14,6 +14,14 @@
   }
 }
 
+@mixin raised-shadow-hover {
+  &:hover {
+    border: none;
+    box-shadow: 0 8px 20px rgba(63, 71, 74, 0.16), 0 2px 12px rgba(63, 71, 74, 0.08), 0 1px 8px rgba(63, 71, 74, 0.08);
+    transform: scale(1.02, 1.02);
+  }
+}
+
 @mixin filter-box-shadow {
   @include box-shadow-2dp();
 }

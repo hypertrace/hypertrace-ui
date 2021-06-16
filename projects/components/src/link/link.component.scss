@@ -7,6 +7,8 @@
   text-decoration-line: none;
   text-decoration: none;
   color: inherit;
+  width: inherit;
+  height: inherit;
 
   &:not(.disabled) {
     @include link-hover;
