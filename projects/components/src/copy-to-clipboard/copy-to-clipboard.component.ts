@@ -52,7 +52,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   public size?: ButtonSize = ButtonSize.Small;
 
   @Input()
-  public icon?: IconType = IconType.CopyToClipboard;
+  public icon?: IconType = IconType.ContentCopy;
 
   @Input()
   public label?: string = 'Copy to Clipboard';
@@ -62,6 +62,9 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
 
   @Input()
   public text?: string;
+
+  @Input()
+  public tooltipDuration: number = 3000;
 
   @Output()
   public readonly copiedChanges: EventEmitter<boolean> = new EventEmitter();
@@ -133,7 +136,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
     });
 
     return of(popoverRef).pipe(
-      delay(3000),
+      delay(this.tooltipDuration ?? 0),
       finalize(() => popoverRef.close())
     );
   }
