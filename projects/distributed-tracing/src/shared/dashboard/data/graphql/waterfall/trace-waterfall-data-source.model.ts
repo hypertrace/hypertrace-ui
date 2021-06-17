@@ -12,6 +12,7 @@ import {
   TraceGraphQlQueryHandlerService,
   TRACE_GQL_REQUEST
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { LogEvent, WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
@@ -43,6 +44,9 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
+
+  @ModelInject(LogEventsService)
+  private readonly logEventsService!: LogEventsService;
 
   protected readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
@@ -110,7 +114,10 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results
+      logEvents: this.logEventsService.getLogEventsWithSpanStartTime(
+        span.logEvents as Dictionary<LogEvent[]>,
+        span.startTime as number
+      )
     }));
   }
 }

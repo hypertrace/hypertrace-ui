@@ -1,7 +1,7 @@
-import { DashboardDefaultConfiguration } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { DashboardDefaultConfiguration } from '@hypertrace/distributed-tracing';
 
-export const traceDetailDashboard: DashboardDefaultConfiguration = {
-  location: 'TRACE_DETAIL',
+export const apiTraceSequenceDashboard: DashboardDefaultConfiguration = {
+  location: 'API_TRACE_SEQUENCE',
   json: {
     type: 'container-widget',
     layout: {
@@ -13,11 +13,9 @@ export const traceDetailDashboard: DashboardDefaultConfiguration = {
         type: 'waterfall-widget',
         title: 'Sequence Diagram',
         data: {
-          type: 'trace-waterfall-data-source',
+          type: 'api-trace-waterfall-data-source',
           // tslint:disable-next-line: no-invalid-template-strings
           'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'entry-span-id': '${spanId}',
           // tslint:disable-next-line: no-invalid-template-strings
           'start-time': '${startTime}'
         }

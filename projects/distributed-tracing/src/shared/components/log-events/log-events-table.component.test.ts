@@ -29,14 +29,14 @@ describe('LogEventsTableComponent', () => {
 
   test('should render data correctly for sheet view', fakeAsync(() => {
     spectator = createHost(
-      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType" [spanStartTime]="spanStartTime"></ht-log-events-table>`,
+      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType" [startTime]="startTime"></ht-log-events-table>`,
       {
         hostProps: {
           logEvents: [
             { attributes: { attr1: 1, attr2: 2 }, summary: 'test', timestamp: '2021-04-30T12:23:57.889149Z' }
           ],
           logEventsTableViewType: LogEventsTableViewType.Condensed,
-          spanStartTime: 1619785437887
+          startTime: 1619785437887
         }
       }
     );
@@ -52,7 +52,7 @@ describe('LogEventsTableComponent', () => {
         id: 'summary'
       })
     ]);
-    expect(spectator.query(TableComponent)!.pageable).toBe(false);
+    expect(spectator.query(TableComponent)!.pageable).toBe(true);
     expect(spectator.query(TableComponent)!.detailContent).not.toBeNull();
 
     runFakeRxjs(({ expectObservable }) => {

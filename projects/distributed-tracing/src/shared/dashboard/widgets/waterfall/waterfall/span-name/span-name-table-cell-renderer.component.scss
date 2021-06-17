@@ -7,12 +7,12 @@
 
 .span-title {
   display: grid;
-  grid-template-columns: 3px min-content min-content min-content min-content auto;
+  grid-template-columns: repeat(5, min-content) auto;
   grid-template-rows: 1fr;
   column-gap: 4px;
 
   .color-bar {
-    width: 100%;
+    width: 3px;
     height: 16px;
     border-radius: 3px;
     align-self: center;

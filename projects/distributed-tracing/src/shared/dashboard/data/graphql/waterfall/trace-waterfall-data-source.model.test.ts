@@ -4,6 +4,7 @@ import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Trace, traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
 import { GraphQlQueryEventService } from '../graphql-query-event.service';
@@ -21,7 +22,10 @@ describe('Trace Waterfall data source model', () => {
           })
         )
       }),
-      mockProvider(GraphQlQueryEventService)
+      mockProvider(GraphQlQueryEventService),
+      mockProvider(LogEventsService, {
+        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([])
+      })
     ]
   });
 
@@ -210,7 +214,8 @@ describe('Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 1',
               serviceName: 'Service Name 1',
               type: SpanType.Entry,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             },
             {
               [spanIdKey]: 'second-id',
@@ -221,7 +226,8 @@ describe('Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 2',
               serviceName: 'Service Name 2',
               type: SpanType.Exit,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             }
           ]
         })
@@ -241,7 +247,8 @@ describe('Trace Waterfall data source model', () => {
             serviceName: 'Service Name 1',
             protocolName: undefined,
             spanType: SpanType.Entry,
-            tags: {}
+            tags: {},
+            logEvents: []
           },
           {
             id: 'second-id',
@@ -257,7 +264,8 @@ describe('Trace Waterfall data source model', () => {
             serviceName: 'Service Name 2',
             protocolName: undefined,
             spanType: SpanType.Exit,
-            tags: {}
+            tags: {},
+            logEvents: []
           }
         ]
       });

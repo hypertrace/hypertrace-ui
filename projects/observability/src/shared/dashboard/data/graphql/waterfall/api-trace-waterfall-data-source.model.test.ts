@@ -1,6 +1,7 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import {
   GraphQlQueryEventService,
+  LogEventsService,
   MetadataService,
   spanIdKey,
   SpanType,
@@ -27,7 +28,10 @@ describe('Api Trace Waterfall data source model', () => {
           })
         )
       }),
-      mockProvider(GraphQlQueryEventService)
+      mockProvider(GraphQlQueryEventService),
+      mockProvider(LogEventsService, {
+        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([])
+      })
     ]
   });
 

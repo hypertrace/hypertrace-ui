@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
-
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
@@ -15,6 +15,7 @@ import {
   TraceGraphQlQueryHandlerService,
   TRACE_GQL_REQUEST
 } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../shared/services/log-events/log-events.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 
 @Injectable()
@@ -32,7 +33,8 @@ export class TraceDetailService implements OnDestroy {
   public constructor(
     route: ActivatedRoute,
     private readonly metadataService: MetadataService,
-    private readonly graphQlQueryService: GraphQlRequestService
+    private readonly graphQlQueryService: GraphQlRequestService,
+    private readonly logEventsService: LogEventsService
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
@@ -96,6 +98,17 @@ export class TraceDetailService implements OnDestroy {
           limit: 1000
         })
       ),
+      takeUntil(this.destroyed$),
+      shareReplay(1)
+    );
+  }
+
+  public fetchLogEvents(): Observable<LogEvent[]> {
+    return this.routeIds$.pipe(
+      switchMap(routeIds =>
+        this.logEventsService.getLogEventsGqlResponseForTrace(routeIds.traceId, routeIds.startTime)
+      ),
+      map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
       shareReplay(1)
     );

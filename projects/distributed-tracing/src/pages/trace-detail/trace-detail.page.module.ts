@@ -8,23 +8,42 @@ import {
   IconModule,
   LabelModule,
   LoadAsyncModule,
+  NavigableTabModule,
   SummaryValueModule,
   TooltipModule
 } from '@hypertrace/components';
+import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { TracingDashboardModule } from '../../shared/dashboard/tracing-dashboard.module';
-import { traceDetailDashboard } from './trace-detail.dashboard';
+import { TraceLogsComponent } from './logs/trace-logs.component';
+import { TraceSequenceComponent } from './sequence/trace-sequence.component';
+import { traceSequenceDashboard } from './sequence/trace-sequence.dashboard';
 import { TraceDetailPageComponent } from './trace-detail.page.component';
 
 const ROUTE_CONFIG: TraceRoute[] = [
   {
     path: `:${TraceDetailPageComponent.TRACE_ID_PARAM_NAME}`,
-    component: TraceDetailPageComponent
+    component: TraceDetailPageComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'sequence',
+        pathMatch: 'full'
+      },
+      {
+        path: 'sequence',
+        component: TraceSequenceComponent
+      },
+      {
+        path: 'logs',
+        component: TraceLogsComponent
+      }
+    ]
   }
 ];
 
 @NgModule({
-  declarations: [TraceDetailPageComponent],
+  declarations: [TraceDetailPageComponent, TraceSequenceComponent, TraceLogsComponent],
   imports: [
     RouterModule.forChild(ROUTE_CONFIG),
     CommonModule,
@@ -37,7 +56,9 @@ const ROUTE_CONFIG: TraceRoute[] = [
     FormattingModule,
     CopyShareableLinkToClipboardModule,
     DownloadJsonModule,
-    NavigableDashboardModule.withDefaultDashboards(traceDetailDashboard)
+    NavigableDashboardModule.withDefaultDashboards(traceSequenceDashboard),
+    NavigableTabModule,
+    LogEventsTableModule
   ]
 })
 export class TraceDetailPageModule {}

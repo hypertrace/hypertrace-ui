@@ -7,6 +7,8 @@ export * from './shared/graphql/model/schema/enriched-attribute';
 
 // Pages
 export * from './pages/trace-detail/trace-detail.page.module';
+export * from './pages/trace-detail/logs/trace-logs.component';
+export * from './pages/trace-detail/sequence/trace-sequence.component';
 export * from './pages/spans/span-list.page.module';
 
 // Builders
@@ -51,6 +53,10 @@ export * from './shared/icons/tracing-icon-library.module';
 // Interaction Handler - Deprecated
 export { InteractionHandler } from './shared/dashboard/interaction/interaction-handler';
 
+// Log Events Table
+export * from './shared/components/log-events/log-events-table.component';
+export * from './shared/components/log-events/log-events-table.module';
+
 // Metadata
 export * from './shared/services/metadata/metadata.service';
 export * from './shared/services/metadata/metadata.service.module';
@@ -83,6 +89,7 @@ export * from './shared/graphql/model/schema/trace';
 
 // Services
 export * from './pages/trace-detail/trace-detail.service';
+export * from './shared/services/log-events/log-events.service';
 
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';
@@ -104,7 +111,7 @@ export * from './shared/components/table/tracing-table-cell-type';
 // Waterfall
 export { WaterfallData } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 export { TraceWaterfallDataSourceModel } from './shared/dashboard/data/graphql/waterfall/trace-waterfall-data-source.model';
-export { traceDetailDashboard } from './pages/trace-detail/trace-detail.dashboard';
+export { traceSequenceDashboard } from './pages/trace-detail/sequence/trace-sequence.dashboard';
 export { TraceDetailPageComponent } from './pages/trace-detail/trace-detail.page.component';
 export { LogEvent } from './shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 

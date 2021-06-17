@@ -3,6 +3,7 @@ import {
   AttributeMetadata,
   GraphQlDataSourceModel,
   LogEvent,
+  LogEventsService,
   MetadataService,
   Span,
   spanIdKey,
@@ -41,6 +42,9 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
+
+  @ModelInject(LogEventsService)
+  private readonly logEventsService!: LogEventsService;
 
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
@@ -117,7 +121,10 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       spanType: span.type as SpanType,
       tags: span.spanTags as Dictionary<unknown>,
       errorCount: span.errorCount as number,
-      logEvents: ((span.logEvents as Dictionary<LogEvent[]>) ?? {}).results ?? []
+      logEvents: this.logEventsService.getLogEventsWithSpanStartTime(
+        span.logEvents as Dictionary<LogEvent[]>,
+        span.startTime as number
+      )
     };
   }
 }

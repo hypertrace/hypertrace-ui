@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
 import {
   AttributeMetadata,
+  LogEvent,
+  LogEventsService,
   MetadataService,
   SpecificationBuilder,
   Trace,
@@ -32,7 +34,8 @@ export class ApiTraceDetailService implements OnDestroy {
   public constructor(
     route: ActivatedRoute,
     private readonly metadataService: MetadataService,
-    private readonly graphQlQueryService: GraphQlRequestService
+    private readonly graphQlQueryService: GraphQlRequestService,
+    private readonly logEventsService: LogEventsService
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
@@ -61,6 +64,21 @@ export class ApiTraceDetailService implements OnDestroy {
           .getAttribute(trace[traceTypeKey], 'duration')
           .pipe(map(durationAttribute => this.constructTraceDetails(trace, durationAttribute)))
       ),
+      takeUntil(this.destroyed$),
+      shareReplay(1)
+    );
+  }
+
+  public fetchLogEvents(): Observable<LogEvent[]> {
+    return this.routeIds$.pipe(
+      switchMap(routeIds =>
+        this.logEventsService.getLogEventsGqlResponseForTrace(
+          routeIds.traceId,
+          routeIds.startTime,
+          ObservabilityTraceType.Api
+        )
+      ),
+      map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
       shareReplay(1)
     );
