@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { TimeRangeService } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Dictionary, TimeRangeService } from '@hypertrace/common';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+import { TypedSimpleChanges } from '@hypertrace/hyperdash-angular/util/angular-change-object';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
@@ -28,7 +29,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
     </div>
   `
 })
-export class ApplicationAwareDashboardComponent implements OnDestroy {
+export class ApplicationAwareDashboardComponent implements OnDestroy, OnChanges {
   @Input()
   public json?: ModelJson;
 
@@ -37,6 +38,9 @@ export class ApplicationAwareDashboardComponent implements OnDestroy {
 
   @Input()
   public padding?: number;
+
+  @Input()
+  public variables?: Dictionary<unknown>;
 
   @Output()
   public readonly dashboardReady: EventEmitter<Dashboard> = new EventEmitter();
@@ -50,11 +54,11 @@ export class ApplicationAwareDashboardComponent implements OnDestroy {
 
   public constructor(private readonly timeRangeService: TimeRangeService) {}
 
-  /* Dashboards */
   public onDashboardReady(dashboard: Dashboard): void {
     this.destroyDashboard$.next();
 
     dashboard.createAndSetRootDataFromModelClass(GraphQlFilterDataSourceModel);
+    this.applyVariablesToDashboard(dashboard, this.variables ?? undefined);
     this.dashboard = dashboard;
     this.widgetSelection = dashboard.root;
 
@@ -71,11 +75,24 @@ export class ApplicationAwareDashboardComponent implements OnDestroy {
     this.destroyDashboard$.complete();
   }
 
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.variables && this.dashboard) {
+      this.applyVariablesToDashboard(this.dashboard, this.variables ?? undefined);
+    }
+  }
+
   public onWidgetSelectionChange(newSelection: object): void {
     this.widgetSelection = newSelection;
   }
 
   public onDashboardUpdated(): void {
     this.jsonChange.emit(this.dashboard!.serialize() as ModelJson);
+  }
+
+  private applyVariablesToDashboard(dashboard: Dashboard, variables: Dictionary<unknown> = {}): void {
+    for (const key of Object.keys(variables)) {
+      dashboard.setVariable(key, variables[key]);
+    }
+    dashboard.refresh();
   }
 }
