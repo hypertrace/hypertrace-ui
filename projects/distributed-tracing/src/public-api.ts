@@ -7,6 +7,8 @@ export * from './shared/graphql/model/schema/enriched-attribute';
 
 // Pages
 export * from './pages/trace-detail/trace-detail.page.module';
+export * from './pages/trace-detail/logs/trace-logs.component';
+export * from './pages/trace-detail/sequence/trace-sequence.component';
 export * from './pages/spans/span-list.page.module';
 
 // Builders
