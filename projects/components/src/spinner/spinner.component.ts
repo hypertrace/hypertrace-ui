@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { NEVER, Observable, of } from 'rxjs';
@@ -34,7 +34,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class SpinnerComponent implements OnChanges, OnInit {
+export class SpinnerComponent implements OnChanges {
   @Input()
   public data$?: Observable<unknown>;
 
@@ -50,11 +50,7 @@ export class SpinnerComponent implements OnChanges, OnInit {
   @Input()
   public theme: SpinnerTheme = SpinnerTheme.Light;
 
-  public state$?: Observable<SpinnerAsyncState>;
-
-  public ngOnInit(): void {
-    this.state$ = this.mapObservableState(this.data$ ?? NEVER);
-  }
+  public state$: Observable<SpinnerAsyncState> = of(SpinnerAsyncState.Loading);
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data$) {
