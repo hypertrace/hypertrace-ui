@@ -45,6 +45,16 @@ export interface TopologyConfiguration {
   zoomable: boolean;
 
   /**
+   * If true, brush will be shown
+   */
+  showBrush?: boolean;
+
+  /**
+   * If true, it will be automatic zoom to fit
+   */
+  autoZoomToFit?: boolean;
+
+  /**
    * A list of specifiers for node data. Up to one will be selectable to the user,
    * and provided to the node renderer.
    */

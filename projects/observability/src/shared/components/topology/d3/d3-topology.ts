@@ -182,7 +182,7 @@ export class D3Topology implements Topology {
       target: data,
       scroll: this.config.zoomable ? zoomScrollConfig : undefined,
       pan: this.config.zoomable ? zoomPanConfig : undefined,
-      showBrush: true
+      showBrush: this.config.showBrush
     });
 
     this.onDestroy(() => {
