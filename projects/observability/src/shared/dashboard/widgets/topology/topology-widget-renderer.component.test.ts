@@ -83,7 +83,8 @@ describe('Topology Widget renderer', () => {
         edgeSpecification: edgeSpec,
         nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey]))
       })
-    )
+    ),
+    showLegend: true
   };
 
   const createComponent = createComponentFactory<TopologyWidgetRendererComponent>({
