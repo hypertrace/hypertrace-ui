@@ -60,7 +60,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
           [nodeDataSpecifiers]="data.nodeSpecs"
           [edgeDataSpecifiers]="data.edgeSpecs"
           [showBrush]="this.model.showBrush"
-          [autoZoomToFit]="this.model.autoZoomToFit"
+          [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
         >
         </ht-topology>
       </div>

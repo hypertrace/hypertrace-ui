@@ -52,7 +52,7 @@ export interface TopologyConfiguration {
   /**
    * If true, it will be automatic zoom to fit
    */
-  autoZoomToFit?: boolean;
+  shouldAutoZoomToFit?: boolean;
 
   /**
    * A list of specifiers for node data. Up to one will be selectable to the user,

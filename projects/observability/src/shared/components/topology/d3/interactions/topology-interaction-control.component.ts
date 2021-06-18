@@ -112,7 +112,7 @@ export class TopologyInteractionControlComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.interactionControlData.topologyConfig.autoZoomToFit) {
+    if (this.interactionControlData.topologyConfig.shouldAutoZoomToFit) {
       this.zoomToFit();
     }
   }

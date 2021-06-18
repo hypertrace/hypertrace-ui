@@ -33,12 +33,12 @@ export class TopologyWidgetModel {
   public showBrush?: boolean = true;
 
   @ModelProperty({
-    key: 'autoZoomToFit',
-    displayName: 'Auto Zoom To Fit',
+    key: 'shouldAutoZoomToFit',
+    displayName: 'Should Auto Zoom To Fit',
     type: BOOLEAN_PROPERTY.type,
     required: false
   })
-  public autoZoomToFit?: boolean = false;
+  public shouldAutoZoomToFit?: boolean = false;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
