@@ -35,7 +35,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
   template: `
     <ht-titled-content [title]="this.model.title | htDisplayTitle">
       <div class="visualization" *htLoadAsync="this.data$ as data">
-        <div class="legend">
+        <div *ngIf="this.model.showLegend" class="legend">
           <div class="latency">
             <div class="label">P99 Latency:</div>
             <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
@@ -59,6 +59,8 @@ import { TopologyWidgetModel } from './topology-widget.model';
           [tooltipRenderer]="this.tooltipRenderer"
           [nodeDataSpecifiers]="data.nodeSpecs"
           [edgeDataSpecifiers]="data.edgeSpecs"
+          [showBrush]="this.model.showBrush"
+          [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
         >
         </ht-topology>
       </div>

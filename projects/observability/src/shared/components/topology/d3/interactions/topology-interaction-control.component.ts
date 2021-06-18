@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { SubscriptionLifecycle, throwIfNil } from '@hypertrace/common';
 
@@ -69,7 +69,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
     </div>
   `
 })
-export class TopologyInteractionControlComponent {
+export class TopologyInteractionControlComponent implements OnInit {
   public currentZoomPercentage: string = '100';
   public canIncrement: boolean = true;
   public canDecrement: boolean = true;
@@ -109,6 +109,12 @@ export class TopologyInteractionControlComponent {
 
     this.edgeDataSpecifiers = interactionControlData.topologyConfig.edgeDataSpecifiers;
     this.nodeDataSpecifiers = interactionControlData.topologyConfig.nodeDataSpecifiers;
+  }
+
+  public ngOnInit(): void {
+    if (this.interactionControlData.topologyConfig.shouldAutoZoomToFit) {
+      this.zoomToFit();
+    }
   }
 
   // TODO should make the increments logarithmic
