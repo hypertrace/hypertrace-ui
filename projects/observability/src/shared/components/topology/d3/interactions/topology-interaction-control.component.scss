@@ -1,5 +1,6 @@
 @import 'color-palette';
 @import 'font';
+@import 'layout';
 
 .topology-control {
   border-radius: 6px;
@@ -21,7 +22,7 @@
   flex-direction: row;
   align-items: center;
   position: relative;
-  bottom: 24px;
+  bottom: 20px;
 }
 
 button {
@@ -38,7 +39,7 @@ button {
   align-items: center;
 
   .zoom-percentage {
-    @include body-1-medium($gray-7);
+    @include body-2-medium($gray-7);
     width: 60px;
     text-align: center;
     color: $gray-7;
@@ -60,6 +61,7 @@ button {
 }
 
 .topology-button {
-  height: 36px;
-  width: 36px;
+  @include center-contents();
+  height: 24px;
+  width: 24px;
 }
