@@ -8,7 +8,7 @@ import { RadioOption } from './radio-option';
   styleUrls: ['./radio-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-label class="title" [label]="this.title"></ht-label>
+    <ht-label *ngIf="this.title" class="title" [label]="this.title"></ht-label>
     <mat-radio-group
       class="radio-group"
       [ngClass]="this.optionsDirection"
@@ -16,14 +16,18 @@ import { RadioOption } from './radio-option';
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
+
       <mat-radio-button
-        *ngFor="let option of options"
         class="radio-button"
-        [ngClass]="{ disabled: this.disabled }"
+        *ngFor="let option of options"
+        [ngClass]="[this.optionsDirection, this.disabled ? 'disabled' : '']"
         [value]="option.value"
       >
         <ht-label class="radio-button-label" [label]="option.label"></ht-label>
+        <span *ngIf="option.description" class="radio-button-description">{{ option.description}}</span>
       </mat-radio-button>
+
+
     </mat-radio-group>
   `
 })

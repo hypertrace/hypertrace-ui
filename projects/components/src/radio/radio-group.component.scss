@@ -35,7 +35,7 @@
         }
 
         .mat-radio-outer-circle {
-          border-width: 0px;
+          border-width: 0;
         }
 
         .mat-radio-inner-circle {
@@ -69,6 +69,11 @@
       @include body-2-regular($gray-7);
     }
 
+    .radio-button-description {
+      margin-top: 4px;
+      @include body-1-regular($gray-5);
+    }
+
     &.disabled {
       &.mat-radio-checked .mat-radio-container .mat-radio-outer-circle {
         background: $gray-3;
@@ -82,9 +87,32 @@
         color: $gray-5;
       }
     }
+
+    &.column {
+      .mat-radio-label-content {
+        display: flex;
+        flex-direction: column;
+
+        .radio-button-description {
+          white-space: break-spaces;
+        }
+      }
+    }
+
+    &.row {
+      max-width: 50%;
+      .mat-radio-label-content {
+        display: flex;
+        flex-direction: column;
+
+        .radio-button-description {
+          white-space: break-spaces;
+        }
+      }
+    }
   }
 
   .radio-button:last-child {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 }
