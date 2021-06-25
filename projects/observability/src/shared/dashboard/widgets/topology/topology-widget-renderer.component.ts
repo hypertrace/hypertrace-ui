@@ -33,36 +33,40 @@ import { TopologyWidgetModel } from './topology-widget.model';
   providers: [TopologyNodeRendererService, TopologyEdgeRendererService, TopologyTooltipRendererService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content [title]="this.model.title | htDisplayTitle">
-      <div class="visualization" *htLoadAsync="this.data$ as data">
-        <div class="legend">
-          <div class="latency">
-            <div class="label">P99 Latency:</div>
-            <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
-              <div [ngClass]="entry.categoryClass" class="symbol"></div>
-              <span class="label">{{ entry.label }}</span>
+    <div class="topology-container" [ngClass]="{ 'box-style': this.model.enableBoxStyle }">
+      <ht-titled-content [title]="this.model.title | htDisplayTitle">
+        <div class="visualization" *htLoadAsync="this.data$ as data">
+          <div *ngIf="this.model.showLegend" class="legend">
+            <div class="latency">
+              <div class="label">P99 Latency:</div>
+              <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
+                <div [ngClass]="entry.categoryClass" class="symbol"></div>
+                <span class="label">{{ entry.label }}</span>
+              </div>
+            </div>
+            <div class="error-percentage">
+              <div class="label">Errors:</div>
+              <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
+                <div [ngClass]="entry.categoryClass" class="symbol"></div>
+                <span class="label">{{ entry.label }}</span>
+              </div>
             </div>
           </div>
-          <div class="error-percentage">
-            <div class="label">Errors:</div>
-            <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
-              <div [ngClass]="entry.categoryClass" class="symbol"></div>
-              <span class="label">{{ entry.label }}</span>
-            </div>
-          </div>
+          <ht-topology
+            class="topology"
+            [nodes]="data.nodes"
+            [nodeRenderer]="this.nodeRenderer"
+            [edgeRenderer]="this.edgeRenderer"
+            [tooltipRenderer]="this.tooltipRenderer"
+            [nodeDataSpecifiers]="data.nodeSpecs"
+            [edgeDataSpecifiers]="data.edgeSpecs"
+            [showBrush]="this.model.showBrush"
+            [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
+          >
+          </ht-topology>
         </div>
-        <ht-topology
-          class="topology"
-          [nodes]="data.nodes"
-          [nodeRenderer]="this.nodeRenderer"
-          [edgeRenderer]="this.edgeRenderer"
-          [tooltipRenderer]="this.tooltipRenderer"
-          [nodeDataSpecifiers]="data.nodeSpecs"
-          [edgeDataSpecifiers]="data.edgeSpecs"
-        >
-        </ht-topology>
-      </div>
-    </ht-titled-content>
+      </ht-titled-content>
+    </div>
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {

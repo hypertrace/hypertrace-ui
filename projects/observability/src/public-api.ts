@@ -117,6 +117,9 @@ export * from './pages/apis/backend-detail/traces/backend-trace-list.module';
 
 export * from './pages/explorer/explorer.module';
 
+export * from './pages/api-trace-detail/logs/api-trace-logs.component';
+export * from './pages/api-trace-detail/sequence/api-trace-sequence.component';
+export * from './pages/api-trace-detail/sequence/api-trace-sequence.dashboard';
 export * from './pages/api-trace-detail/api-trace-detail.page.module';
 
 // Icon Types
