@@ -4,12 +4,13 @@ import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { SubscriptionLifecycle2 } from './subscription-lifeycle2.service';
 
 @Component({
   selector: 'ht-search-box',
   styleUrls: ['./search-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SubscriptionLifecycle],
+  providers: [SubscriptionLifecycle, SubscriptionLifecycle2],
   template: `
     <div class="ht-search-box" [ngClass]="this.displayMode" [class.focused]="this.isFocused">
       <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="onSubmit()"></ht-icon>
@@ -53,7 +54,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   // tslint:disable-next-line:no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
-  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+  public constructor(public readonly subscriptionLifecycle: SubscriptionLifecycle, public readonly s2: SubscriptionLifecycle2) {
+
+  }
 
   public isFocused: boolean = false;
   private readonly debouncedValueSubject: Subject<string> = new Subject();
@@ -86,8 +89,8 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   private setDebouncedSubscription(): void {
-    this.subscriptionLifecycle.unsubscribe();
-    this.subscriptionLifecycle.add(
+    this.s2.unsubscribe();
+    this.s2.add(
       this.debouncedValueSubject
         .pipe(debounceTime(this.debounceTime ?? 0))
         .subscribe(value => this.valueChange.emit(value))
