@@ -73,7 +73,7 @@ export class TopologyInteractionControlComponent implements OnInit {
   public currentZoomPercentage: string = '100';
   public canIncrement: boolean = true;
   public canDecrement: boolean = true;
-  public readonly iconSize: IconSize = IconSize.Medium;
+  public readonly iconSize: IconSize = IconSize.Small;
   public readonly edgeDataSpecifiers: TopologyDataSpecifier[];
   public readonly nodeDataSpecifiers: TopologyDataSpecifier[];
   public get selectedEdgeDataSpecifier(): TopologyDataSpecifier | undefined {
