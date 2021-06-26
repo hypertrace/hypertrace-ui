@@ -128,6 +128,7 @@ export class NavigationService {
     paramsOrUrl: NavigationParams | string
   ): Observable<{ path: NavigationPath; extras?: NavigationExtras }> {
     return this.navigation$.pipe(
+      startWith(this.getCurrentActivatedRoute()),
       switchMap(route => route.queryParams),
       map(() => this.buildNavigationParams(paramsOrUrl)),
       distinctUntilChanged(isEqualIgnoreFunctions)
