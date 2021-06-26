@@ -14,8 +14,8 @@ import {
   UrlTree
 } from '@angular/router';
 import { from, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, share, skip, startWith, take } from 'rxjs/operators';
-import { throwIfNil } from '../utilities/lang/lang-utils';
+import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take } from 'rxjs/operators';
+import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';
 
@@ -122,6 +122,16 @@ export class NavigationService {
         relativeTo: params?.relativeTo
       }
     };
+  }
+
+  public buildNavigationParams$(
+    paramsOrUrl: NavigationParams | string
+  ): Observable<{ path: NavigationPath; extras?: NavigationExtras }> {
+    return this.navigation$.pipe(
+      switchMap(route => route.queryParams),
+      map(() => this.buildNavigationParams(paramsOrUrl)),
+      distinctUntilChanged(isEqualIgnoreFunctions)
+    );
   }
 
   /**
