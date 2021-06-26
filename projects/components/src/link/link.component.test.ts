@@ -2,6 +2,8 @@ import { RouterLinkWithHref } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
+import { of } from 'rxjs';
+import { LetAsyncModule } from '../let-async/let-async.module';
 import { LinkComponent } from './link.component';
 
 describe('Link component', () => {
@@ -9,6 +11,7 @@ describe('Link component', () => {
 
   const createHost = createHostFactory({
     component: LinkComponent,
+    imports: [LetAsyncModule],
     providers: [mockProvider(NavigationService)],
     declarations: [MockDirective(RouterLinkWithHref)]
   });
@@ -32,16 +35,18 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({
-            path: [
-              '/external',
-              {
-                url: 'http://test.hypertrace.ai',
-                navType: 'same_window'
-              }
-            ],
-            extras: { skipLocationChange: true }
-          })
+          buildNavigationParams$: jest.fn().mockReturnValue(
+            of({
+              path: [
+                '/external',
+                {
+                  url: 'http://test.hypertrace.ai',
+                  navType: 'same_window'
+                }
+              ],
+              extras: { skipLocationChange: true }
+            })
+          )
         })
       ]
     });
@@ -72,7 +77,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['test'], extras: {} })
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['test'], extras: {} }))
         })
       ]
     });
@@ -97,7 +102,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extras: {} })
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
         })
       ]
     });
@@ -122,7 +127,7 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extras: {} })
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
         })
       ]
     });
