@@ -7,7 +7,7 @@ import { maxBy } from 'lodash-es';
   styleUrls: ['./gauge-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="gauge-list" [ngClass]="{'with-label': this.showLabels}">
+    <div class="gauge-list" [ngClass]="{ 'with-label': this.showLabels }">
       <ng-container *ngFor="let item of this.itemOptions">
         <div class="border-top" *ngIf="this.showItemBorders"></div>
         <div
