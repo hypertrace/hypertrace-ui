@@ -16,6 +16,7 @@ import { MetricAggregationSpecification } from '../../../graphql/model/schema/sp
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
 import { TopologyData } from '../../data/graphql/topology/topology-data-source.model';
 import { EntityEdgeCurveRendererService } from './edge/curved/entity-edge-curve-renderer.service';
+import { MetricModelPropertiesService } from './metric/metric-model-properties.service';
 import { ApiNodeBoxRendererService } from './node/box/api-node-renderer/api-node-box-renderer.service';
 import { BackendNodeBoxRendererService } from './node/box/backend-node-renderer/backend-node-box-renderer.service';
 import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/service-node-box-renderer.service';
@@ -30,7 +31,16 @@ import { TopologyWidgetModel } from './topology-widget.model';
     './edge/curved/entity-edge-curve-renderer.scss',
     './topology-widget-renderer.component.scss'
   ],
-  providers: [TopologyNodeRendererService, TopologyEdgeRendererService, TopologyTooltipRendererService],
+  providers: [
+    TopologyNodeRendererService,
+    TopologyEdgeRendererService,
+    TopologyTooltipRendererService,
+    EntityEdgeCurveRendererService,
+    ApiNodeBoxRendererService,
+    BackendNodeBoxRendererService,
+    ServiceNodeBoxRendererService,
+    MetricModelPropertiesService
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-titled-content [title]="this.model.title | htDisplayTitle">

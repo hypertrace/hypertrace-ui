@@ -46,6 +46,11 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   public abstract matches(node: TopologyNode & Partial<EntityNode>): node is EntityNode;
 
+  public setPrimaryMetric(): void {}
+  public setSecondaryMetric(): void {}
+  public setOtherMetrics(): void {}
+
+
   public draw(
     nodeElement: SVGGElement,
     node: EntityNode,

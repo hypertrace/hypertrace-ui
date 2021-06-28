@@ -31,7 +31,7 @@ import {
 } from '../../metric/metric-category';
 import { VisibilityUpdater } from '../../visibility-updater';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegate<EntityEdge> {
   private readonly edgeClass: string = 'entity-edge';
   private readonly edgeLineClass: string = 'entity-edge-line';
@@ -50,6 +50,11 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   public matches(edge: TopologyEdge & Partial<EntityEdge>): edge is EntityEdge {
     return typeof edge.specification === 'object' && typeof edge.data === 'object';
   }
+
+  public setPrimaryMetric(): void {}
+  public setSecondaryMetric(): void {}
+  public setOtherMetrics(): void {}
+
 
   public draw(
     element: SVGGElement,
