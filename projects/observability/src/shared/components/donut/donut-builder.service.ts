@@ -126,7 +126,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   }
 
   protected decorateDimensions(calculatedDimensions: ChartDimensions): DonutDimensions {
-    let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
+    const diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;
