@@ -40,6 +40,14 @@ export class TopologyWidgetModel {
   })
   public shouldAutoZoomToFit?: boolean = false;
 
+  @ModelProperty({
+    key: 'enableBoxStyle',
+    displayName: 'Enable Box Style',
+    type: BOOLEAN_PROPERTY.type,
+    required: false
+  })
+  public enableBoxStyle?: boolean = false;
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 

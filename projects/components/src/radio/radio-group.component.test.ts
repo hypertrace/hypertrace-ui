@@ -34,6 +34,28 @@ describe('Radio component', () => {
     expect(logSpy).not.toHaveBeenCalled();
   });
 
+  test('should display description if provided', () => {
+    spectator = createHost(`<ht-radio-group [title]="title" [options]="options"></ht-radio-group>`, {
+      hostProps: {
+        title: 'test',
+        options: [
+          {
+            label: 'TEST1',
+            value: 'test1',
+            description: 'description-1'
+          },
+          {
+            label: 'TEST2',
+            value: 'test2'
+          }
+        ]
+      }
+    });
+
+    expect(spectator.queryAll('.radio-button-description').length).toBe(1);
+    expect(spectator.queryAll('.radio-button-description')[0]).toHaveText('description-1');
+  });
+
   test('should apply disabled attribute when disabled', () => {
     spectator = createHost(`<ht-radio-group [title]="title" [disabled]="disabled"></ht-radio-group>`, {
       hostProps: {
