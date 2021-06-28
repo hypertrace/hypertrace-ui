@@ -16,7 +16,6 @@ import { MetricAggregationSpecification } from '../../../graphql/model/schema/sp
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
 import { TopologyData } from '../../data/graphql/topology/topology-data-source.model';
 import { EntityEdgeCurveRendererService } from './edge/curved/entity-edge-curve-renderer.service';
-import { MetricModelPropertiesService } from './metric/metric-model-properties.service';
 import { ApiNodeBoxRendererService } from './node/box/api-node-renderer/api-node-box-renderer.service';
 import { BackendNodeBoxRendererService } from './node/box/backend-node-renderer/backend-node-box-renderer.service';
 import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/service-node-box-renderer.service';
@@ -38,45 +37,42 @@ import { TopologyWidgetModel } from './topology-widget.model';
     EntityEdgeCurveRendererService,
     ApiNodeBoxRendererService,
     BackendNodeBoxRendererService,
-    ServiceNodeBoxRendererService,
-    MetricModelPropertiesService
+    ServiceNodeBoxRendererService
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="topology-container" [ngClass]="{ 'box-style': this.model.enableBoxStyle }">
-      <ht-titled-content [title]="this.model.title | htDisplayTitle">
-        <div class="visualization" *htLoadAsync="this.data$ as data">
-          <div *ngIf="this.model.showLegend" class="legend">
-            <div class="latency">
-              <div class="label">P99 Latency:</div>
-              <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
-                <div [ngClass]="entry.categoryClass" class="symbol"></div>
-                <span class="label">{{ entry.label }}</span>
-              </div>
-            </div>
-            <div class="error-percentage">
-              <div class="label">Errors:</div>
-              <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
-                <div [ngClass]="entry.categoryClass" class="symbol"></div>
-                <span class="label">{{ entry.label }}</span>
-              </div>
+    <ht-titled-content [title]="this.model.title | htDisplayTitle">
+      <div class="visualization" *htLoadAsync="this.data$ as data">
+        <div *ngIf="this.model.showLegend" class="legend">
+          <div class="latency">
+            <div class="label">P99 Latency:</div>
+            <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
+              <div [ngClass]="entry.categoryClass" class="symbol"></div>
+              <span class="label">{{ entry.label }}</span>
             </div>
           </div>
-          <ht-topology
-            class="topology"
-            [nodes]="data.nodes"
-            [nodeRenderer]="this.nodeRenderer"
-            [edgeRenderer]="this.edgeRenderer"
-            [tooltipRenderer]="this.tooltipRenderer"
-            [nodeDataSpecifiers]="data.nodeSpecs"
-            [edgeDataSpecifiers]="data.edgeSpecs"
-            [showBrush]="this.model.showBrush"
-            [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
-          >
-          </ht-topology>
+          <div class="error-percentage">
+            <div class="label">Errors:</div>
+            <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
+              <div [ngClass]="entry.categoryClass" class="symbol"></div>
+              <span class="label">{{ entry.label }}</span>
+            </div>
+          </div>
         </div>
-      </ht-titled-content>
-    </div>
+        <ht-topology
+          class="topology"
+          [nodes]="data.nodes"
+          [nodeRenderer]="this.nodeRenderer"
+          [edgeRenderer]="this.edgeRenderer"
+          [tooltipRenderer]="this.tooltipRenderer"
+          [nodeDataSpecifiers]="data.nodeSpecs"
+          [edgeDataSpecifiers]="data.edgeSpecs"
+          [showBrush]="this.model.showBrush"
+          [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
+        >
+        </ht-topology>
+      </div>
+    </ht-titled-content>
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
@@ -90,7 +86,8 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
-    backendNodeRenderer: BackendNodeBoxRendererService
+    backendNodeRenderer: BackendNodeBoxRendererService,
+
   ) {
     super(api, changeDetector);
 
@@ -99,6 +96,8 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     tooltipRenderer.useTooltip({
       class: TopologyEntityTooltipComponent
     });
+
+
   }
 
   protected fetchData(): Observable<TopologyTemplateData> {
