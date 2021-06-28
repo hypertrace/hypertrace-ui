@@ -71,6 +71,8 @@ export { LegendPosition } from './shared/components/legend/legend.component';
 
 // Donut
 export * from './shared/components/donut/donut';
+export * from './shared/components/donut/donut.component';
+export * from './shared/components/donut/donut.module';
 
 // Pages
 export * from './pages/apis/backends/backend-list.module';
@@ -200,12 +202,6 @@ export * from './shared/components/card-list/card-list.module';
 export * from './shared/components/timeline-card-list/timeline-card-list.component';
 export * from './shared/components/timeline-card-list/container/timeline-card-container.component';
 export * from './shared/components/timeline-card-list/timeline-card-list.module';
-
-
-// Card List - Timeline
-export * from './shared/components/donut/donut.component';
-export * from './shared/components/donut/donut.module';
-
 
 // Explore Filter link
 export * from './shared/components/explore-filter-link/explore-filter-link.component';
