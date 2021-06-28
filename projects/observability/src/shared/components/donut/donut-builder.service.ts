@@ -128,18 +128,6 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   protected decorateDimensions(calculatedDimensions: ChartDimensions): DonutDimensions {
     let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
-    // Save available width before reducing width by adding padding
- //   const chartWidth = calculatedDimensions.visualizationWidth;
-
-    // // Legend takes up to width of donut or remaining available space (This needs more work to look good in all cases)
-    // calculatedDimensions.legendWidth = Math.min(
-    //   diameter * DonutBuilderService.LEGEND_SIZE_MULTIPLE,
-    //   chartWidth - diameter
-    // );
-
-    // // Reduce diameter by padding amount (don't need to do this with legend since it provides its own padding)
-    // diameter -= DonutBuilderService.DONUT_PADDING_PX * 2;
-
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;
     calculatedDimensions.visualizationHeight = diameter;
