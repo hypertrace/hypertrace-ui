@@ -201,6 +201,12 @@ export * from './shared/components/timeline-card-list/timeline-card-list.compone
 export * from './shared/components/timeline-card-list/container/timeline-card-container.component';
 export * from './shared/components/timeline-card-list/timeline-card-list.module';
 
+
+// Card List - Timeline
+export * from './shared/components/donut/donut.component';
+export * from './shared/components/donut/donut.module';
+
+
 // Explore Filter link
 export * from './shared/components/explore-filter-link/explore-filter-link.component';
 export * from './shared/components/explore-filter-link/explore-filter-link.module';

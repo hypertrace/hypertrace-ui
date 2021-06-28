@@ -6,10 +6,14 @@
   width: 100%;
   display: grid;
   margin-top: 16px;
-  grid-template-columns: minmax(60px, auto) minmax(80px, 160px) max-content;
+  grid-template-columns: minmax(80px, 1fr) max-content;
   grid-auto-rows: 20px;
   column-gap: 16px;
   align-items: center;
+
+  &.with-label {
+    grid-template-columns: minmax(60px, auto) minmax(80px, 1fr) max-content;
+  }
 
   .border-top {
     grid-column-start: 1;

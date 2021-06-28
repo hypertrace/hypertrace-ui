@@ -38,8 +38,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_VALUE_CLASS: string = 'donut-value';
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
-  private static readonly DONUT_PADDING_PX: number = 60;
-  private static readonly LEGEND_SIZE_MULTIPLE: number = 1.5;
+  public static readonly DONUT_PADDING_PX: number = 60;
+  public static readonly LEGEND_SIZE_MULTIPLE: number = 1.5;
 
   public constructor(
     d3: D3UtilService,
@@ -129,16 +129,16 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
     // Save available width before reducing width by adding padding
-    const chartWidth = calculatedDimensions.visualizationWidth;
+ //   const chartWidth = calculatedDimensions.visualizationWidth;
 
-    // Legend takes up to width of donut or remaining available space (This needs more work to look good in all cases)
-    calculatedDimensions.legendWidth = Math.min(
-      diameter * DonutBuilderService.LEGEND_SIZE_MULTIPLE,
-      chartWidth - diameter
-    );
+    // // Legend takes up to width of donut or remaining available space (This needs more work to look good in all cases)
+    // calculatedDimensions.legendWidth = Math.min(
+    //   diameter * DonutBuilderService.LEGEND_SIZE_MULTIPLE,
+    //   chartWidth - diameter
+    // );
 
-    // Reduce diameter by padding amount (don't need to do this with legend since it provides its own padding)
-    diameter -= DonutBuilderService.DONUT_PADDING_PX * 2;
+    // // Reduce diameter by padding amount (don't need to do this with legend since it provides its own padding)
+    // diameter -= DonutBuilderService.DONUT_PADDING_PX * 2;
 
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;

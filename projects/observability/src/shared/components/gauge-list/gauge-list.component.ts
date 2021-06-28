@@ -7,11 +7,12 @@ import { maxBy } from 'lodash-es';
   styleUrls: ['./gauge-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="gauge-list">
+    <div class="gauge-list" [ngClass]="{'with-label': this.showLabels}">
       <ng-container *ngFor="let item of this.itemOptions">
-        <div class="border-top"></div>
+        <div class="border-top" *ngIf="this.showItemBorders"></div>
         <div
           class="label"
+          *ngIf="this.showLabels"
           [htTooltip]="item.label"
           (click)="this.onItemClick(item)"
           [ngClass]="{ clickable: this.itemClickable }"
@@ -19,7 +20,7 @@ import { maxBy } from 'lodash-es';
         >
           {{ item.label }}
         </div>
-        <div class="progress">
+        <div class="progress" [htTooltip]="item.label">
           <div class="progress-value" [ngStyle]="{ width: item.width, backgroundColor: item.color }"></div>
         </div>
         <div class="value">
@@ -38,6 +39,12 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
 
   @Input()
   public determineColor?: (colorKey: string) => string;
+
+  @Input()
+  public showLabels: boolean = true;
+
+  @Input()
+  public showItemBorders: boolean = true;
 
   @Output()
   public readonly itemClick: EventEmitter<T> = new EventEmitter();

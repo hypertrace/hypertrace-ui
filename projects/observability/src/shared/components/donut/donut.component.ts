@@ -46,13 +46,16 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
   public ngOnChanges(): void {
     this.draw();
   }
-
   public ngOnDestroy(): void {
     this.donut && this.donut.destroy();
   }
 
   public ngAfterViewInit(): void {
     this.reflow();
+    setTimeout(() => {
+      this.draw();
+      console.log('drawn');
+    }, 8000)
   }
 
   private draw(): void {
