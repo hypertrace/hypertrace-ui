@@ -29,14 +29,13 @@ describe('LogEventsTableComponent', () => {
 
   test('should render data correctly for sheet view', fakeAsync(() => {
     spectator = createHost(
-      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType" [startTime]="startTime"></ht-log-events-table>`,
+      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType" ></ht-log-events-table>`,
       {
         hostProps: {
           logEvents: [
             { attributes: { attr1: 1, attr2: 2 }, summary: 'test', timestamp: '2021-04-30T12:23:57.889149Z' }
           ],
-          logEventsTableViewType: LogEventsTableViewType.Condensed,
-          startTime: 1619785437887
+          logEventsTableViewType: LogEventsTableViewType.Condensed
         }
       }
     );
