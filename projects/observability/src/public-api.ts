@@ -71,6 +71,8 @@ export { LegendPosition } from './shared/components/legend/legend.component';
 
 // Donut
 export * from './shared/components/donut/donut';
+export * from './shared/components/donut/donut.component';
+export * from './shared/components/donut/donut.module';
 
 // Pages
 export * from './pages/apis/backends/backend-list.module';
