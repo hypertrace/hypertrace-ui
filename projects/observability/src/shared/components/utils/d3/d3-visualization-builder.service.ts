@@ -220,15 +220,18 @@ export abstract class D3VisualizationBuilderService<
     // tslint:disable-next-line: no-null-keyword
     visualizationSelection.style('display', null);
 
+    const isLegendVisible = this.isLegendVisible(config);
     const isTopOrBottomLegend = this.isTopOrBottomLegend(config);
     const isSideLegend = config.legend === LegendPosition.Right;
-    const legendWidth = isSideLegend
+    let legendWidth = isLegendVisible ? 0
+      : isSideLegend
       ? Math.min(legendRect.width, this.getMaxLegendWidth())
       : isTopOrBottomLegend
       ? outerRect.width
       : 0;
 
-    const legendHeight = isTopOrBottomLegend
+      let legendHeight = isLegendVisible ? 0
+      : isTopOrBottomLegend
       ? Math.min(legendRect.height, this.getMaxLegendHeight())
       : isSideLegend
       ? outerRect.height
@@ -237,8 +240,19 @@ export abstract class D3VisualizationBuilderService<
     const legendWidthOffset = isSideLegend ? legendWidth : 0;
     const legendHeightOffset = isTopOrBottomLegend ? legendHeight : 0;
 
-    const vizWidth = outerRect.width - legendWidthOffset;
-    const vizHeight = outerRect.height - legendHeightOffset;
+    let vizWidth = outerRect.width - legendWidthOffset;
+    let vizHeight = outerRect.height - legendHeightOffset;
+
+    // Hide Legend if less space is available for the viz
+    if(vizWidth <= legendWidthOffset || legendWidth <= 60) {
+      vizWidth =  outerRect.width
+      legendWidth = 0;
+    }
+
+    if(vizHeight <= legendHeightOffset || legendHeight <= 12) {
+      vizHeight =  outerRect.height
+      legendHeight = 0;
+    }
 
     return this.decorateDimensions({
       visualizationWidth: vizWidth,
@@ -247,6 +261,10 @@ export abstract class D3VisualizationBuilderService<
       legendHeight: legendHeight
     });
   }
+
+  private isLegendVisible(config: ChartConfig): boolean {
+    return config.legend === LegendPosition.None;
+    }
 
   private isTopOrBottomLegend(config: ChartConfig): boolean {
     switch (config.legend) {
