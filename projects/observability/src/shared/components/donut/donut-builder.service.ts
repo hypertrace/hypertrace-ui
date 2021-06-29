@@ -38,8 +38,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_VALUE_CLASS: string = 'donut-value';
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
-  public static readonly DONUT_PADDING_PX: number = 10;
-  public static readonly LEGEND_SIZE_MULTIPLE: number = 1.5;
+  private static readonly DONUT_PADDING_PX: number = 10;
 
   public constructor(
     d3: D3UtilService,
@@ -128,7 +127,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   protected decorateDimensions(calculatedDimensions: ChartDimensions): DonutDimensions {
     let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
-     diameter -= DonutBuilderService.DONUT_PADDING_PX ;
+    diameter -= DonutBuilderService.DONUT_PADDING_PX;
 
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;

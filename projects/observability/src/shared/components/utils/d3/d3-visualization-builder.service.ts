@@ -223,14 +223,16 @@ export abstract class D3VisualizationBuilderService<
     const isLegendVisible = this.isLegendVisible(config);
     const isTopOrBottomLegend = this.isTopOrBottomLegend(config);
     const isSideLegend = config.legend === LegendPosition.Right;
-    let legendWidth = isLegendVisible ? 0
+    let legendWidth = isLegendVisible
+      ? 0
       : isSideLegend
       ? Math.min(legendRect.width, this.getMaxLegendWidth())
       : isTopOrBottomLegend
       ? outerRect.width
       : 0;
 
-      let legendHeight = isLegendVisible ? 0
+    let legendHeight = isLegendVisible
+      ? 0
       : isTopOrBottomLegend
       ? Math.min(legendRect.height, this.getMaxLegendHeight())
       : isSideLegend
@@ -244,13 +246,13 @@ export abstract class D3VisualizationBuilderService<
     let vizHeight = outerRect.height - legendHeightOffset;
 
     // Hide Legend if less space is available for the viz
-    if(vizWidth <= legendWidthOffset || legendWidth <= 60) {
-      vizWidth =  outerRect.width
+    if (vizWidth <= legendWidthOffset || legendWidth <= 60) {
+      vizWidth = outerRect.width;
       legendWidth = 0;
     }
 
-    if(vizHeight <= legendHeightOffset || legendHeight <= 12) {
-      vizHeight =  outerRect.height
+    if (vizHeight <= legendHeightOffset || legendHeight <= 12) {
+      vizHeight = outerRect.height;
       legendHeight = 0;
     }
 
@@ -264,7 +266,7 @@ export abstract class D3VisualizationBuilderService<
 
   private isLegendVisible(config: ChartConfig): boolean {
     return config.legend === LegendPosition.None;
-    }
+  }
 
   private isTopOrBottomLegend(config: ChartConfig): boolean {
     switch (config.legend) {
