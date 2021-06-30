@@ -1,17 +1,35 @@
 @import 'mixins';
 
 .bar-gauge {
-  .title {
-    @include overline($gray-7);
-    padding-bottom: 24px;
-  }
+  .header-data {
+    &.regular {
+      .title {
+        @include overline($gray-7);
+        padding-bottom: 24px;
+      }
 
-  .count {
-    @include subtitle-1($gray-9);
-    padding-bottom: 8px;
+      .count {
+        @include subtitle-1($gray-9);
+        padding-bottom: 8px;
 
-    .units {
-      @include body-small($gray-5);
+        .units {
+          @include body-small($gray-5);
+        }
+      }
+    }
+
+    &.compact {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .title {
+        @include body-2-medium($gray-7);
+      }
+
+      .count {
+        @include body-2-regular($gray-5);
+      }
     }
   }
 
