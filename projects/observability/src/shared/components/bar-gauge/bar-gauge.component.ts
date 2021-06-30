@@ -24,10 +24,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
-      <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
-      <div class="count">
-        {{ this.totalValue | number }} / {{ this.maxValue | number }}
-        <span class="units" *ngIf="this.units">{{ this.units }}</span>
+      <div class="header-data" [ngClass]="this.display">
+        <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
+        <div class="count">
+          {{ this.totalValue | number }} / {{ this.maxValue | number }}
+          <span class="units" *ngIf="this.units">{{ this.units }}</span>
+        </div>
       </div>
       <div class="bar">
         <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
@@ -45,7 +47,7 @@ import {
           </div>
         </div>
       </div>
-      <div class="legend">
+      <div *ngIf="this.display === '${BarGaugeStyle.Standard}'" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
           <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
@@ -78,6 +80,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public segments?: Segment[] = [];
+
+  @Input()
+  public display: BarGaugeStyle = BarGaugeStyle.Standard;
 
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
@@ -147,4 +152,9 @@ export interface Segment {
 
 interface BarSegment extends Segment {
   percentage: number;
+}
+
+export const enum BarGaugeStyle {
+  Standard = 'standard',
+  Compact = 'compact'
 }
