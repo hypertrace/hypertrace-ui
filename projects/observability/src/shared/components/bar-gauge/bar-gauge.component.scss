@@ -2,7 +2,7 @@
 
 .bar-gauge {
   .header-data {
-    &.standard {
+    &.regular {
       .title {
         @include overline($gray-7);
         padding-bottom: 24px;

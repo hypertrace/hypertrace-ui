@@ -47,7 +47,7 @@ import {
           </div>
         </div>
       </div>
-      <div *ngIf="this.display === '${BarGaugeStyle.Standard}'" class="legend">
+      <div *ngIf="this.display === '${BarGaugeStyle.Regular}'" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
           <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
@@ -82,7 +82,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   public segments?: Segment[] = [];
 
   @Input()
-  public display: BarGaugeStyle = BarGaugeStyle.Standard;
+  public display: BarGaugeStyle = BarGaugeStyle.Regular;
 
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
@@ -155,6 +155,6 @@ interface BarSegment extends Segment {
 }
 
 export const enum BarGaugeStyle {
-  Standard = 'standard',
+  Regular = 'regular',
   Compact = 'compact'
 }
