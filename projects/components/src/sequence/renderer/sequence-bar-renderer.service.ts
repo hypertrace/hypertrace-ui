@@ -230,7 +230,7 @@ export class SequenceBarRendererService {
               ? scaledEnd - this.markerWidth - 2
               : marker.markerTime
         });
-        markerTime = scaledNormalizedMarkers[index].markerTime;
+        markerTime = marker.markerTime;
       } else {
         scaledNormalizedMarkers[index] = {
           ...scaledNormalizedMarkers[index],
