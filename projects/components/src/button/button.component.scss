@@ -42,6 +42,10 @@
     color: inherit;
   }
 
+  .flipped {
+    transform: scaleX(-1);
+  }
+
   .conditional-padding {
     margin-left: 4px;
   }
@@ -117,7 +121,7 @@
   }
 }
 
-.text {
+.text, .plain-text {
   &.primary {
     @include button-style(inherit, inherit, $blue-5, $blue-4);
   }
@@ -147,7 +151,7 @@
   height: 40px;
   border-radius: 8px;
 
-  &:not(.icon-only) {
+  &:not(.icon-only, .plain-text) {
     padding: 0 20px;
   }
 
@@ -161,7 +165,7 @@
   height: 36px;
   border-radius: 6px;
 
-  &:not(.icon-only) {
+  &:not(.icon-only, .plain-text) {
     padding: 0 16px;
   }
 
@@ -189,7 +193,7 @@
   height: 24px;
   border-radius: 4px;
 
-  &:not(.icon-only) {
+  &:not(.icon-only, .plain-text) {
     padding: 0 12px;
   }
 
@@ -203,7 +207,7 @@
   height: 18px;
   border-radius: 4px;
 
-  &:not(.icon-only) {
+  &:not(.icon-only, .plain-text) {
     padding: 0 12px;
   }
 
