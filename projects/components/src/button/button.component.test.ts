@@ -169,7 +169,6 @@ describe('Button Component', () => {
     expect(spectator.query('.icon.leading')).toExist();
     expect(spectator.query('.icon.trailing')).not.toExist();
     expect(spectator.query('.label')).not.toExist();
-    expect(spectator.query('.flipped')).not.toExist();
 
     // Set Label
     spectator.setInput({
