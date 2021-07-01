@@ -34,7 +34,11 @@ import { TopologyWidgetModel } from './topology-widget.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="topology-container" [ngClass]="{ 'box-style': this.model.enableBoxStyle }">
-      <ht-titled-content [title]="this.model.title | htDisplayTitle">
+      <ht-titled-content
+        [title]="this.model.title | htDisplayTitle"
+        [link]="this.model.link?.url"
+        [linkLabel]="this.model.link?.displayText"
+      >
         <div class="visualization" *htLoadAsync="this.data$ as data">
           <div *ngIf="this.model.showLegend" class="legend">
             <div class="latency">
