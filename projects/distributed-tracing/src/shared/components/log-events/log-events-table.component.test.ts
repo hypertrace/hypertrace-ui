@@ -29,7 +29,7 @@ describe('LogEventsTableComponent', () => {
 
   test('should render data correctly for sheet view', fakeAsync(() => {
     spectator = createHost(
-      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType" ></ht-log-events-table>`,
+      `<ht-log-events-table [logEvents]="logEvents" [logEventsTableViewType]="logEventsTableViewType"></ht-log-events-table>`,
       {
         hostProps: {
           logEvents: [

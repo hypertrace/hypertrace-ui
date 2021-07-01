@@ -1,4 +1,13 @@
-import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { LinkWidgetModel } from '@hypertrace/dashboards';
+import {
+  BOOLEAN_PROPERTY,
+  Model,
+  ModelApi,
+  ModelModelPropertyTypeInstance,
+  ModelProperty,
+  ModelPropertyType,
+  STRING_PROPERTY
+} from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { TopologyData, TopologyDataSourceModel } from '../../data/graphql/topology/topology-data-source.model';
@@ -15,6 +24,17 @@ export class TopologyWidgetModel {
     required: false
   })
   public title?: string;
+
+  @ModelProperty({
+    key: 'link',
+    required: false,
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: LinkWidgetModel
+    } as ModelModelPropertyTypeInstance
+  })
+  public link?: LinkWidgetModel;
 
   @ModelProperty({
     key: 'showLegend',

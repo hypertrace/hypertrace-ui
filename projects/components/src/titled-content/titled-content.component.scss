@@ -26,7 +26,7 @@
     }
 
     .title {
-      @include widget-title($gray-9);
+      @include overline($gray-9);
       margin-top: 16px;
     }
   }
@@ -40,7 +40,7 @@
 
   .footer {
     .title {
-      @include widget-title($gray-4);
+      @include overline($gray-4);
       margin-top: 8px;
     }
   }

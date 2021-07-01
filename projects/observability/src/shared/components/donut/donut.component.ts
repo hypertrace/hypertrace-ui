@@ -46,7 +46,6 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
   public ngOnChanges(): void {
     this.draw();
   }
-
   public ngOnDestroy(): void {
     this.donut && this.donut.destroy();
   }
