@@ -171,13 +171,6 @@ describe('Button Component', () => {
     expect(spectator.query('.label')).not.toExist();
     expect(spectator.query('.flipped')).not.toExist();
 
-    // Set FlippingIcon
-    spectator.setInput({
-      flippingIcon: true
-    });
-
-    expect(spectator.query('.flipped')).toExist();
-
     // Set Label
     spectator.setInput({
       label: 'Button'
