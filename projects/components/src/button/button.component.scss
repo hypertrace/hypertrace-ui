@@ -121,7 +121,8 @@
   }
 }
 
-.text, .plain-text {
+.text,
+.plain-text {
   &.primary {
     @include button-style(inherit, inherit, $blue-5, $blue-4);
   }

@@ -17,7 +17,7 @@ import { ButtonRole, ButtonSize, ButtonStyle } from './button';
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon leading"
-          [ngClass]="{'flipped': this.flippingIcon}"
+          [ngClass]="{ flipped: this.flippingIcon }"
         ></ht-icon>
 
         <div class="conditional-padding leading" *ngIf="this.label && this.icon && !this.trailingIcon"></div>
@@ -31,7 +31,7 @@ import { ButtonRole, ButtonSize, ButtonStyle } from './button';
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon trailing"
-          [ngClass]="{'flipped': this.flippingIcon}"
+          [ngClass]="{ flipped: this.flippingIcon }"
         ></ht-icon>
       </button>
     </ht-event-blocker>
