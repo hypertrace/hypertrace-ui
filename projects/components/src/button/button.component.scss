@@ -176,7 +176,7 @@
   height: 32px;
   border-radius: 6px;
 
-  &:not(.icon-only) {
+  &:not(.icon-only, .plain-text) {
     padding: 0 16px;
   }
 
