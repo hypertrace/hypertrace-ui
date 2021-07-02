@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Color } from '@hypertrace/common';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelJson } from '@hypertrace/hyperdash';
+import { SecondaryNodeMetricCategoryValueType } from '../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,78 +28,113 @@ export class ApplicationFlowComponent {
           type: 'topology-data-source',
           entity: 'SERVICE',
           'downstream-entities': ['SERVICE', 'BACKEND'],
-          'node-metrics': [
-            {
-              type: 'percentile-latency-metric-aggregation',
-              'display-name': 'P99 Latency'
+          'node-metrics': {
+            primary: {
+              specification: {
+                type: 'percentile-latency-metric-aggregation',
+                'display-name': 'P99 Latency'
+              }
             },
-            {
-              type: 'metric-aggregation',
-              metric: 'duration',
-              aggregation: MetricAggregationType.P50,
-              'display-name': 'P50 Latency'
+            secondary: {
+              specification: {
+                type: 'error-percentage-metric-aggregation',
+                aggregation: MetricAggregationType.Average,
+                'display-name': 'Error %'
+              },
+              categories: [
+                {
+                  value: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
+                  color: Color.Orange3,
+                  secondaryColor: Color.Orange5,
+                  focusedColor: Color.Orange3,
+                  categoryClass: 'greater-than-or-equal-to-5-secondary-category'
+                }
+              ]
             },
-            {
-              type: 'error-percentage-metric-aggregation',
-              aggregation: MetricAggregationType.Average,
-              'display-name': 'Error %'
+            others: [
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'duration',
+                  aggregation: MetricAggregationType.P50,
+                  'display-name': 'P50 Latency'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Error Count'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Call Rate/sec'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Call Count'
+                }
+              }
+            ]
+          },
+          'edge-metrics': {
+            primary: {
+              specification: {
+                type: 'percentile-latency-metric-aggregation',
+                'display-name': 'P99 Latency'
+              }
             },
-
-            {
-              type: 'metric-aggregation',
-              metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Error Count'
+            secondary: {
+              specification: {
+                type: 'error-percentage-metric-aggregation',
+                aggregation: MetricAggregationType.Average,
+                'display-name': 'Error %'
+              }
             },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond,
-              'display-name': 'Call Rate/sec'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Call Count'
-            }
-          ],
-          'edge-metrics': [
-            {
-              type: 'percentile-latency-metric-aggregation',
-              'display-name': 'P99 Latency'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'duration',
-              aggregation: MetricAggregationType.P50,
-              'display-name': 'P50 Latency'
-            },
-            {
-              type: 'error-percentage-metric-aggregation',
-              aggregation: MetricAggregationType.Average,
-              'display-name': 'Error %'
-            },
-
-            {
-              type: 'metric-aggregation',
-              metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Error Count'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond,
-              'display-name': 'Call Rate/sec'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Call Count'
-            }
-          ]
+            others: [
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'duration',
+                  aggregation: MetricAggregationType.P50,
+                  'display-name': 'P50 Latency'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Error Count'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Call Rate/sec'
+                }
+              },
+              {
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Call Count'
+                }
+              }
+            ]
+          }
         }
       }
     ]
