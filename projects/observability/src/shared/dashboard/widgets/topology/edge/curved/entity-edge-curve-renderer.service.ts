@@ -294,7 +294,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   ): string {
     if (
       secondaryMetricCategory &&
-      (secondaryMetricCategory.categoryClass === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5 ||
+      (secondaryMetricCategory.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5 ||
         !primaryMetricCategory)
     ) {
       return this.formattedMetricValue(secondaryMetricAggregation!.value, secondaryMetricAggregation?.units);
