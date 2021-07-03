@@ -80,9 +80,7 @@ describe('Menu dropdown Component', () => {
   });
 
   test('should not show the dropdown if no items to show.', () => {
-    spectator = createHost(
-      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"></ht-menu-dropdown>`,
-    );
+    spectator = createHost(`<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"></ht-menu-dropdown>`);
 
     expect(spectator.query('ht-popover-trigger')).not.toExist();
   });
