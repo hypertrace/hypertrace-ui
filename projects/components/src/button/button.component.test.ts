@@ -146,6 +146,12 @@ describe('Button Component', () => {
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small text');
 
+    // Text
+    spectator.setInput({
+      display: ButtonStyle.PlainText
+    });
+    expect(spectator.query('.button')).toHaveClass('button secondary small plain-text');
+
     // Solid
     spectator.setInput({
       display: ButtonStyle.Solid
