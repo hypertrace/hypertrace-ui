@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormattingModule, TraceRoute } from '@hypertrace/common';
+import { FormattingModule, HtRoute } from '@hypertrace/common';
 import {
   CopyShareableLinkToClipboardModule,
   DownloadJsonModule,
@@ -20,7 +20,7 @@ import { TraceSequenceComponent } from './sequence/trace-sequence.component';
 import { traceSequenceDashboard } from './sequence/trace-sequence.dashboard';
 import { TraceDetailPageComponent } from './trace-detail.page.component';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: `:${TraceDetailPageComponent.TRACE_ID_PARAM_NAME}`,
     component: TraceDetailPageComponent,

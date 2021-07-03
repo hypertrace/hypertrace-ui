@@ -5,14 +5,14 @@ import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils'
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { HtRoute } from '../navigation/ht-route';
 import { NavigationService } from '../navigation/navigation.service';
-import { TraceRoute } from '../navigation/trace-route';
 import { FeatureGuard } from './feature.guard';
 import { FeatureStateResolver } from './state/feature-state.resolver';
 import { FeatureState } from './state/feature.state';
 
 describe('Feature Guard', () => {
-  const buildRouteForFeatures = (features: string[]): TraceRoute => ({
+  const buildRouteForFeatures = (features: string[]): HtRoute => ({
     data: {
       features: features
     }

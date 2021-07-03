@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, PreferenceService, TraceRoute } from '@hypertrace/common';
+import { HtRoute, NavigationService, PreferenceService } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { uniq } from 'lodash-es';
@@ -93,7 +93,7 @@ export class NavigationComponent {
     }
     const features = navItem.matchPaths
       .map(path => this.navigationService.getRouteConfig([path], this.activatedRoute))
-      .filter((maybeRoute): maybeRoute is TraceRoute => maybeRoute !== undefined)
+      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
       .flatMap(route => this.getFeaturesForRoute(route))
       .concat(navItem.features || []);
 
@@ -103,7 +103,7 @@ export class NavigationComponent {
     };
   }
 
-  private getFeaturesForRoute(route: TraceRoute): string[] {
+  private getFeaturesForRoute(route: HtRoute): string[] {
     return (route.data && route.data.features) || [];
   }
 }
