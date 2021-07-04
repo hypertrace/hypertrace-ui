@@ -26,9 +26,7 @@ describe('Menu dropdown Component', () => {
 
   test('should display trigger content as expected', () => {
     spectator = createHost(
-      `
-    <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
-        </ht-menu-dropdown>`
+      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"><ht-menu-item label="Option 1"></ht-menu-item></ht-menu-dropdown>`
     );
 
     expect(spectator.query('.trigger-content')).toExist();
