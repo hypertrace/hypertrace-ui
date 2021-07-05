@@ -296,7 +296,13 @@ describe('Select Component', () => {
           options: [
             { label: 'first', value: 'first-value' },
             { label: 'second', value: 'second-value', disabled: true },
-            { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!', icon: 'test-icon', iconColor: 'red' }
+            {
+              label: 'third',
+              value: 'third-value',
+              selectedLabel: 'Third Value!!!',
+              icon: 'test-icon',
+              iconColor: 'red'
+            }
           ],
           onChange: onChange
         }
