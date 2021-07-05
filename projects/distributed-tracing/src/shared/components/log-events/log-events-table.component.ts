@@ -120,7 +120,7 @@ export class LogEventsTableComponent implements OnChanges {
             title: 'Timestamp',
             display: CoreTableCellRendererType.RelativeTimestamp,
             visible: true,
-            width: '150px',
+            width: '120px',
             sortable: false,
             filterable: false
           },
@@ -136,7 +136,15 @@ export class LogEventsTableComponent implements OnChanges {
             title: 'Span',
             display: WaterfallTableCellType.SpanName,
             visible: true,
-            width: '30%',
+            width: '20%',
+            sortable: false,
+            filterable: false
+          },
+          {
+            id: 'spanId',
+            title: 'Span Id',
+            visible: true,
+            width: '15%',
             sortable: false,
             filterable: false
           }
