@@ -18,7 +18,8 @@ describe('NavigationComponent', () => {
           data: {
             features: ['example-feature']
           }
-        })
+        }),
+        decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))
       }),
       mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })

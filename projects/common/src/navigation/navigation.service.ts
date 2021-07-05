@@ -13,8 +13,10 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { uniq } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take } from 'rxjs/operators';
+import { NavItemConfig, NavItemType } from '../../../components/src/navigation/navigation-list.component';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';
@@ -227,6 +229,26 @@ export class NavigationService {
       relativeTo === this.rootRoute() ? this.router.config : relativeTo.routeConfig && relativeTo.routeConfig.children;
 
     return this.findRouteConfig(path, childRoutes ? childRoutes : []);
+  }
+
+  public decorateNavItem(navItem: NavItemConfig, activatedRoute: ActivatedRoute): NavItemConfig {
+    if (navItem.type !== NavItemType.Link) {
+      return { ...navItem };
+    }
+    const features = navItem.matchPaths
+      .map(path => this.getRouteConfig([path], activatedRoute))
+      .filter((maybeRoute): maybeRoute is TraceRoute => maybeRoute !== undefined)
+      .flatMap(route => this.getFeaturesForRoute(route))
+      .concat(navItem.features || []);
+
+    return {
+      ...navItem,
+      features: uniq(features)
+    };
+  }
+
+  private getFeaturesForRoute(route: TraceRoute): string[] {
+    return (route.data && route.data.features) || [];
   }
 
   public rootRoute(): ActivatedRoute {
