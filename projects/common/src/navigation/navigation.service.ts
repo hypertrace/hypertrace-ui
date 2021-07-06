@@ -13,10 +13,10 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { uniq } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take } from 'rxjs/operators';
-import { NavItemConfig, NavItemType } from '../../../components/src/navigation/navigation-list.component';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { TraceRoute } from './trace-route';

@@ -78,7 +78,9 @@ export class NavigationComponent {
     private readonly preferenceService: PreferenceService,
     private readonly activatedRoute: ActivatedRoute
   ) {
-    this.navItems = this.navItemDefinitions.map(definition => this.navigationService.decorateNavItem(definition, this.activatedRoute));
+    this.navItems = this.navItemDefinitions.map(definition =>
+      this.navigationService.decorateNavItem(definition, this.activatedRoute)
+    );
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }
 
