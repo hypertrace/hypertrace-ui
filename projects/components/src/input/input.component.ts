@@ -68,6 +68,6 @@ export class InputComponent<T extends string | number> implements OnChanges {
   }
 
   public getStyleClasses(): string[] {
-    return [this.appearance, this.disabled ? 'disabled' : '']
+    return [this.appearance, this.disabled ? 'disabled' : ''];
   }
 }
