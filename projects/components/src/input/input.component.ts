@@ -7,7 +7,7 @@ import { InputAppearance } from './input-appearance';
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-form-field [ngClass]="this.appearance" floatLabel="never">
+    <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
       <input
         matInput
         [type]="this.type"
@@ -65,5 +65,9 @@ export class InputComponent<T extends string | number> implements OnChanges {
       default:
         return value as T | undefined;
     }
+  }
+
+  public getStyleClasses(): string[] {
+    return [this.appearance, this.disabled ? 'disabled' : ''];
   }
 }

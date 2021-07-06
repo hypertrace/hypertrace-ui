@@ -18,6 +18,7 @@ describe('Input Component', () => {
 
     spectator.tick();
     expect(spectator.query(MatInput)!.disabled).toBe(true);
+    expect(spectator.query('mat-form-field')).toHaveClass('disabled');
   }));
 
   test('should emit number values for inputs of type number', () => {
