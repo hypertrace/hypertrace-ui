@@ -3,6 +3,11 @@
 
 :host {
   ::ng-deep {
+    &.disabled {
+      background-color: $gray-2;
+      cursor: not-allowed;
+    }
+
     .border {
       &.mat-form-field {
         height: inherit;
