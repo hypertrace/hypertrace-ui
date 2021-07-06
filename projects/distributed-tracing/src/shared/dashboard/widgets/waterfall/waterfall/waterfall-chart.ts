@@ -41,6 +41,7 @@ export interface WaterfallChartState {
 
 export interface LogEvent {
   spanStartTime?: number;
+  spanId: string;
   attributes: Dictionary<unknown>;
   timestamp: string;
   summary: string;

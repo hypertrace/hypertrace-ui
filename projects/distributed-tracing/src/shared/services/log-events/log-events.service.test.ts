@@ -65,7 +65,8 @@ describe('Log Events Service', () => {
         {
           timestamp: 'time',
           attributes: {},
-          summary: 'summary'
+          summary: 'summary',
+          spanId: 'test-id'
         }
       ]
     };
@@ -74,7 +75,8 @@ describe('Log Events Service', () => {
         timestamp: 'time',
         attributes: {},
         summary: 'summary',
-        spanStartTime: 1608151401295
+        spanStartTime: 1608151401295,
+        spanId: 'test-id'
       }
     ];
     expect(spectator.service.getLogEventsWithSpanStartTime(logEvents, 1608151401295)).toMatchObject(
