@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormattingModule, TraceRoute } from '@hypertrace/common';
+import { FormattingModule, HtRoute } from '@hypertrace/common';
 import {
   ButtonModule,
   CopyShareableLinkToClipboardModule,
@@ -18,7 +18,7 @@ import { ApiTraceLogsComponent } from './logs/api-trace-logs.component';
 import { ApiTraceSequenceComponent } from './sequence/api-trace-sequence.component';
 import { apiTraceSequenceDashboard } from './sequence/api-trace-sequence.dashboard';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: `:${ApiTraceDetailPageComponent.TRACE_ID_PARAM_NAME}`,
     component: ApiTraceDetailPageComponent,

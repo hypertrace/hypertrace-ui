@@ -81,8 +81,8 @@ export * from './utilities/memoize/memoize.pipe';
 // Navigation
 export * from './navigation/breadcrumb';
 export * from './navigation/navigation.service';
-export * from './navigation/route-data';
-export * from './navigation/trace-route';
+export * from './navigation/ht-route-data';
+export * from './navigation/ht-route';
 
 // Operations
 export * from './utilities/operations/operation-utilities';

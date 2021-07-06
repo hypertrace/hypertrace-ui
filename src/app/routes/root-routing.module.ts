@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { ExternalUrlNavigator, TraceRoute } from '@hypertrace/common';
+import { ExternalUrlNavigator, HtRoute } from '@hypertrace/common';
 import { NotFoundComponent, NotFoundModule } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { ApplicationFrameComponent } from '../application-frame/application-frame.component';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
     children: [
