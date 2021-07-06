@@ -9,7 +9,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-event-blocker event="click" [enabled]="true">
-      <ht-popover [closeOnClick]="true" [disabled]="this.disabled">
+      <ht-popover [closeOnClick]="true" [disabled]="this.disabled" *ngIf="this.items?.length > 0">
         <ht-popover-trigger>
           <div class="trigger-content" [ngClass]="{ disabled: this.disabled, labeled: !!this.label }">
             <ht-label *ngIf="this.label" class="trigger-label" [label]="this.label"> </ht-label>
