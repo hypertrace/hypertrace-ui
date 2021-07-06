@@ -26,9 +26,7 @@ describe('Menu dropdown Component', () => {
 
   test('should display trigger content as expected', () => {
     spectator = createHost(
-      `
-    <ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
-        </ht-menu-dropdown>`
+      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"><ht-menu-item label="Option 1"></ht-menu-item></ht-menu-dropdown>`
     );
 
     expect(spectator.query('.trigger-content')).toExist();
@@ -77,5 +75,11 @@ describe('Menu dropdown Component', () => {
     spectator.click('.trigger-content');
 
     expect(onClickSpy).not.toHaveBeenCalled();
+  });
+
+  test('should not show the dropdown if no items to show.', () => {
+    spectator = createHost(`<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"></ht-menu-dropdown>`);
+
+    expect(spectator.query('ht-popover-trigger')).not.toExist();
   });
 });
