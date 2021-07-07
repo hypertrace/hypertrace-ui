@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Breadcrumb } from './breadcrumb';
 
-export interface RouteData {
+export interface HtRouteData {
   breadcrumb?: Breadcrumb | Observable<Breadcrumb>;
   features?: string[];
 }

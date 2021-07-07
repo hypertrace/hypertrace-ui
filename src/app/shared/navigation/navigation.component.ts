@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, PreferenceService } from '@hypertrace/common';
+import { HtRoute, NavigationService, PreferenceService } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
@@ -86,5 +86,25 @@ export class NavigationComponent {
 
   public onViewToggle(collapsed: boolean): void {
     this.preferenceService.set(NavigationComponent.COLLAPSED_PREFERENCE, collapsed);
+  }
+
+  private decorateNavItem(navItem: NavItemConfig): NavItemConfig {
+    if (navItem.type !== NavItemType.Link) {
+      return { ...navItem };
+    }
+    const features = navItem.matchPaths
+      .map(path => this.navigationService.getRouteConfig([path], this.activatedRoute))
+      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
+      .flatMap(route => this.getFeaturesForRoute(route))
+      .concat(navItem.features || []);
+
+    return {
+      ...navItem,
+      features: uniq(features)
+    };
+  }
+
+  private getFeaturesForRoute(route: HtRoute): string[] {
+    return (route.data && route.data.features) || [];
   }
 }

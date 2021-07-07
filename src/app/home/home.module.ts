@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TraceRoute } from '@hypertrace/common';
+import { HtRoute } from '@hypertrace/common';
 import { NavigableDashboardModule } from '@hypertrace/distributed-tracing';
 import { ObservabilityDashboardModule } from '@hypertrace/observability';
 import { TotalErrorsLabelDataSourceModule } from './data/label/total-errors-label-data-source.module';
@@ -9,7 +9,7 @@ import { ObserveSystemRadarDataSourceModule } from './data/system/observe-system
 import { HomeComponent } from './home.component';
 import { homeDashboard } from './home.dashboard';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
     component: HomeComponent
