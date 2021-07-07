@@ -2,7 +2,6 @@ import { Location } from '@angular/common';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
-import { HtRoute } from '@hypertrace/common';
 import { NavItemType } from '@hypertrace/components';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -15,7 +14,7 @@ import {
 } from './navigation.service';
 
 describe('Navigation Service', () => {
-  const firstChildRouteConfig: HtRoute = {
+  const firstChildRouteConfig = {
     path: 'child',
     children: []
   };
