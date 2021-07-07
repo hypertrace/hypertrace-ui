@@ -114,7 +114,7 @@ import { SelectSize } from './select-size';
               *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
               class="select-option"
-              [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size: item"
+              [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
             >
               <div class="select-option-info">
                 <ht-icon
