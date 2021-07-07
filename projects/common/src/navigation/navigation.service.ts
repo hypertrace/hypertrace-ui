@@ -237,7 +237,7 @@ export class NavigationService {
     }
     const features = navItem.matchPaths
       .map(path => this.getRouteConfig([path], activatedRoute))
-      .filter((maybeRoute): maybeRoute is TraceRoute => maybeRoute !== undefined)
+      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
       .flatMap(route => this.getFeaturesForRoute(route))
       .concat(navItem.features || []);
 
@@ -247,7 +247,7 @@ export class NavigationService {
     };
   }
 
-  private getFeaturesForRoute(route: TraceRoute): string[] {
+  private getFeaturesForRoute(route: HtRoute): string[] {
     return (route.data && route.data.features) || [];
   }
 
