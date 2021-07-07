@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { HtRoute, NavigationService, PreferenceService } from '@hypertrace/common';
+import { NavigationService, PreferenceService } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
-import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -79,31 +78,13 @@ export class NavigationComponent {
     private readonly preferenceService: PreferenceService,
     private readonly activatedRoute: ActivatedRoute
   ) {
-    this.navItems = this.navItemDefinitions.map(definition => this.decorateNavItem(definition));
+    this.navItems = this.navItemDefinitions.map(definition =>
+      this.navigationService.decorateNavItem(definition, this.activatedRoute)
+    );
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }
 
   public onViewToggle(collapsed: boolean): void {
     this.preferenceService.set(NavigationComponent.COLLAPSED_PREFERENCE, collapsed);
-  }
-
-  private decorateNavItem(navItem: NavItemConfig): NavItemConfig {
-    if (navItem.type !== NavItemType.Link) {
-      return { ...navItem };
-    }
-    const features = navItem.matchPaths
-      .map(path => this.navigationService.getRouteConfig([path], this.activatedRoute))
-      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
-      .flatMap(route => this.getFeaturesForRoute(route))
-      .concat(navItem.features || []);
-
-    return {
-      ...navItem,
-      features: uniq(features)
-    };
-  }
-
-  private getFeaturesForRoute(route: HtRoute): string[] {
-    return (route.data && route.data.features) || [];
   }
 }
