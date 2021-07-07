@@ -17,7 +17,7 @@ import {
 export class LogEventsService {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
-  private readonly logEventProperties: string[] = ['attributes', 'timestamp', 'summary'];
+  private readonly logEventProperties: string[] = ['attributes', 'timestamp', 'summary', 'spanId'];
   private readonly spanPropertiesForTrace: string[] = ['startTime', 'serviceName', 'displaySpanName', 'protocolName'];
   private readonly spanPropertiesForApiTrace: string[] = [
     'startTime',
