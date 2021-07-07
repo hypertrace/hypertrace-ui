@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { MemoizeModule, NavigationService } from '@hypertrace/common';
 import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -15,7 +15,7 @@ import { SelectModule } from './select.module';
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
     component: SelectComponent,
-    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule, MemoizeModule],
     declareComponent: false,
     declarations: [MockComponent(IconComponent)],
     providers: [

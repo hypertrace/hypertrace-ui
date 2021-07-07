@@ -114,7 +114,7 @@ import { SelectSize } from './select-size';
               *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
               class="select-option"
-              [ngClass]="this.getStyleClassesForSelectItem(item)"
+              [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size: item"
             >
               <div class="select-option-info">
                 <ht-icon
@@ -260,8 +260,8 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     return this.items.find(item => item.value === value);
   }
 
-  public getStyleClassesForSelectItem(item: SelectOptionComponent<V>): string[] {
-    const styles: string[] = [this.size];
+  public getStyleClassesForSelectItem(size: SelectSize, item: SelectOptionComponent<V>): string[] {
+    const styles: string[] = [size];
 
     if (item.disabled) {
       styles.push('disabled');
