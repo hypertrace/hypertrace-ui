@@ -307,7 +307,7 @@ describe('Navigation Service', () => {
           type: NavItemType.Link,
           label: 'Label',
           icon: IconType.None,
-          matchPaths: ['root'],
+          matchPaths: ['root']
         },
         spectator.service.rootRoute()
       )
