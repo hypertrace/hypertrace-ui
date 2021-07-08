@@ -92,7 +92,7 @@
   flex-direction: column;
 
   .divider {
-    padding: 0px 16px 4px 16px;
+    padding: 0 16px 4px 16px;
   }
 
   .multi-select-options {
@@ -107,8 +107,13 @@
     font-size: 15px;
     align-items: center;
 
+    &.disabled {
+      color: $gray-5;
+      cursor: not-allowed;
+    }
+
     .checkbox {
-      margin: 0px;
+      margin: 0;
       color: $gray-3;
 
       ::ng-deep .mat-ripple {
