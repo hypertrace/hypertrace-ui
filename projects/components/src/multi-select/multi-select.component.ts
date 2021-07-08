@@ -209,6 +209,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public onSelectionChange(item: SelectOptionComponent<V>): void {
+    if (item.disabled) {
+      return;
+    }
+
     const selected = this.isSelectedItem(item)
       ? this.selected?.filter(value => value !== item.value)
       : (this.selected ?? []).concat(item.value);
