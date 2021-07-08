@@ -94,7 +94,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                 *ngFor="let item of filteredOptions"
                 (click)="this.onSelectionChange(item)"
                 class="multi-select-option"
-                [ngClass]="{ disabled: item.disabled}"
+                [ngClass]="{ disabled: item.disabled }"
               >
                 <ht-checkbox
                   class="checkbox"
