@@ -37,7 +37,7 @@ import { ExploreQueryEditorComponent } from '../../shared/components/explore-que
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { EntitiesGraphqlQueryBuilderService } from '../../shared/graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
-import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explore/explore-query';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';

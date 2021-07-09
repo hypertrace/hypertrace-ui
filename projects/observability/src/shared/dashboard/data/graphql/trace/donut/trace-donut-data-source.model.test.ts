@@ -15,7 +15,7 @@ import { ObservabilitySpecificationBuilder } from '../../../../../graphql/reques
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../../graphql/request/handlers/explore/explore-query';
 import { TraceDonutDataSourceModel } from './trace-donut-data-source.model';
 
 describe('Donut data source model', () => {

@@ -4,10 +4,7 @@ import { ModelApi } from '@hypertrace/hyperdash';
 import { mergeMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
-import {
-  EXPLORE_GQL_REQUEST,
-  GraphQlExploreRequest
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST, GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { TopNDataSourceModel } from './top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 

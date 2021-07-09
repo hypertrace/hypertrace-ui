@@ -22,10 +22,7 @@ import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
-import {
-  EXPLORE_GQL_REQUEST,
-  GraphQlExploreRequest
-} from '../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST, GraphQlExploreRequest } from '../../graphql/request/handlers/explore/explore-query';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 
 @Injectable()

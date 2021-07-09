@@ -8,7 +8,7 @@ import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse,
   GraphQlExploreResult
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
 
 export class ExploreResult {
   private static readonly OTHER_SERVER_GROUP_NAME: string = '__Other';

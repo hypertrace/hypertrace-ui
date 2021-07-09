@@ -13,12 +13,12 @@ import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
 

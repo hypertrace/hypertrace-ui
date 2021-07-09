@@ -7,11 +7,11 @@ import { map } from 'rxjs/operators';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 @Model({

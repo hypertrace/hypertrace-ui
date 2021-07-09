@@ -20,7 +20,7 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse
-} from './../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from './../../../../../graphql/request/handlers/explore/explore-query';
 
 @Model({
   type: 'explore-table-data-source'
