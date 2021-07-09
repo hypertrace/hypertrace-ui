@@ -79,6 +79,7 @@ export class ExploreGraphqlQueryBuilderService {
         [GQL_EXPLORE_RESULT_INTERVAL_KEY]: this.dateCoercer.coerce(row[INTERVAL_START_QUERY_KEY])
       };
     }
+
     return {};
   }
 

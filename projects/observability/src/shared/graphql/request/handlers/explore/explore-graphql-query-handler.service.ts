@@ -8,7 +8,7 @@ import {
   GraphQlExploreServerResponse
 } from './explore-graphql-query-builder.service';
 
-export * from './explore-graphql-query-builder.service'; // Added this, just to not affect all the imports from refactoring -- TODO: Remove this and update imports
+export * from './explore-graphql-query-builder.service'; // TODO: Remove this and update imports (Currently added to nullify impact on existing imports)
 @Injectable({ providedIn: 'root' })
 export class ExploreGraphQlQueryHandlerService
   implements GraphQlQueryHandler<GraphQlExploreRequest, GraphQlExploreResponse> {
@@ -26,6 +26,7 @@ export class ExploreGraphQlQueryHandlerService
 
   public convertRequest(request: GraphQlExploreRequest): GraphQlSelection {
     const totalSelection = request.includeTotal ? [{ path: 'total' }] : [];
+
     return {
       path: 'explore',
       arguments: this.exploreGraphQlQueryBuilderService.buildRequestArguments(request),
