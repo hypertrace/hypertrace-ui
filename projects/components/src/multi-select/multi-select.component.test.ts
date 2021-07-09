@@ -1,3 +1,5 @@
+// tslint:disable: max-file-line-count
+
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
@@ -474,6 +476,46 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.divider', { root: true })).toExist();
     expect(spectator.query('.clear-selected', { root: true })).not.toExist();
     expect(spectator.query('.select-all', { root: true })).toExist();
+    flush();
+  }));
+
+  test('should disable select options as expected', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [disabled]="option.disabled"></ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: [
+            { label: 'first', value: 'first-value' },
+            { label: 'second', value: 'second-value', disabled: true },
+            {
+              label: 'third',
+              value: 'third-value',
+              selectedLabel: 'Third Value!!!',
+              icon: 'test-icon',
+              iconColor: 'red'
+            }
+          ],
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    expect(optionElements.length).toBe(3);
+    expect(optionElements[0]).not.toHaveClass('disabled');
+    expect(optionElements[1]).toHaveClass('disabled');
+    expect(optionElements[2]).not.toHaveClass('disabled');
+    spectator.click(optionElements[1]);
+
+    expect(onChange).not.toHaveBeenCalled();
     flush();
   }));
 });
