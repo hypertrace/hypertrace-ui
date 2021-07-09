@@ -6,6 +6,10 @@
   height: 100%;
 
   ::ng-deep {
+    svg {
+      overflow: visible;
+    }
+
     .axis {
       line {
         stroke: $gray-1;
