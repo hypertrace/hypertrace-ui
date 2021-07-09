@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
+import { ExploreGraphqlQueryBuilderService } from './explore-graphql-query-builder.service';
 import {
-  ExploreGraphqlQueryBuilderService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse,
   GraphQlExploreServerResponse
-} from './explore-graphql-query-builder.service';
+} from './explore-query';
 
-export * from './explore-graphql-query-builder.service'; // TODO: Remove this and update imports (Currently added to nullify impact on existing imports)
 @Injectable({ providedIn: 'root' })
 export class ExploreGraphQlQueryHandlerService
   implements GraphQlQueryHandler<GraphQlExploreRequest, GraphQlExploreResponse> {

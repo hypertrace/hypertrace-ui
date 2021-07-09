@@ -12,11 +12,11 @@ import { DonutSeries, DonutSeriesResults } from '../../../../../components/donut
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { ExploreGraphQlQueryHandlerService } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from '../../explore/explore-result';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 

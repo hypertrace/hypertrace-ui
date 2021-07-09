@@ -10,7 +10,7 @@ import { ExploreSpecification } from '../../../../../graphql/model/schema/specif
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResult
-} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../../graphql/request/handlers/explore/explore-query';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-selection-specification.model';
 import { TraceSeriesValuesDataSourceModel } from '../trace-series-values-data-source.model';

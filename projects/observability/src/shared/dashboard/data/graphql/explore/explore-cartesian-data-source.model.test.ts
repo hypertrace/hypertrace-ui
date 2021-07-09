@@ -21,7 +21,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
