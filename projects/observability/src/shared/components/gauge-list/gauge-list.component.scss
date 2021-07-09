@@ -12,7 +12,7 @@
   align-items: center;
 
   &.with-label {
-    grid-template-columns: minmax(60px, auto) minmax(60px, 1fr) max-content;
+    grid-template-columns: minmax(60px, 1fr) minmax(60px, 1fr) max-content;
   }
 
   .border-top {
@@ -22,7 +22,7 @@
   }
 
   .label {
-    @include body-1-medium($gray-7);
+    @include body-1-medium($gray-5);
     @include ellipsis-overflow;
   }
 
