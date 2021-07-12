@@ -16,12 +16,8 @@ import { ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
 import { ObservabilityTraceType } from '../../../model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
-import {
-  ExploreGraphQlQueryHandlerService,
-  EXPLORE_GQL_REQUEST,
-  GQL_EXPLORE_RESULT_INTERVAL_KEY,
-  GraphQlExploreRequest
-} from './explore-graphql-query-handler.service';
+import { ExploreGraphQlQueryHandlerService } from './explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST, GQL_EXPLORE_RESULT_INTERVAL_KEY, GraphQlExploreRequest } from './explore-query';
 
 describe('Explore graphql query handler', () => {
   const createService = createServiceFactory({

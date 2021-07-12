@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { MemoizeModule, NavigationService } from '@hypertrace/common';
 import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -15,7 +15,7 @@ import { SelectModule } from './select.module';
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
     component: SelectComponent,
-    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule, MemoizeModule],
     declareComponent: false,
     declarations: [MockComponent(IconComponent)],
     providers: [
@@ -280,6 +280,46 @@ describe('Select Component', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('none-id');
+    flush();
+  }));
+
+  test('should disable select options as expected', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-select (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [disabled]="option.disabled"></ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: [
+            { label: 'first', value: 'first-value' },
+            { label: 'second', value: 'second-value', disabled: true },
+            {
+              label: 'third',
+              value: 'third-value',
+              selectedLabel: 'Third Value!!!',
+              icon: 'test-icon',
+              iconColor: 'red'
+            }
+          ],
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const optionElements = spectator.queryAll('.select-option', { root: true });
+    expect(optionElements.length).toBe(3);
+    expect(optionElements[0]).not.toHaveClass('disabled');
+    expect(optionElements[1]).toHaveClass('disabled');
+    expect(optionElements[2]).not.toHaveClass('disabled');
+    spectator.click(optionElements[1]);
+
+    expect(onChange).not.toHaveBeenCalled();
     flush();
   }));
 });

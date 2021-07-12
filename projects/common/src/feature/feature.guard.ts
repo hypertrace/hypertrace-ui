@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanLoad, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { HtRoute } from '../navigation/ht-route';
 import { NavigationService } from '../navigation/navigation.service';
-import { TraceRoute } from '../navigation/trace-route';
 import { FeatureStateResolver } from './state/feature-state.resolver';
 import { FeatureState } from './state/feature.state';
 
@@ -14,7 +14,7 @@ export class FeatureGuard implements CanLoad, CanActivate {
     private readonly featureStateResolver: FeatureStateResolver
   ) {}
 
-  public canLoad(route: TraceRoute, segments: UrlSegment[]): Observable<boolean> {
+  public canLoad(route: HtRoute, segments: UrlSegment[]): Observable<boolean> {
     // TODO as of ng8, canLoad has been pretty neglected. Doesn't have access to query params or returning a url tree
     // Https://github.com/angular/angular/issues/30633  https://github.com/angular/angular/issues/28306
     // For now, we'll work around by ignoring query params and doing a direct redirect
@@ -44,7 +44,7 @@ export class FeatureGuard implements CanLoad, CanActivate {
     );
   }
 
-  private checkRouteValidity(route: TraceRoute): Observable<boolean> {
+  private checkRouteValidity(route: HtRoute): Observable<boolean> {
     return this.getCombinedFeatureState(this.getFeaturesForRoute(route)).pipe(
       catchError(() => of(FeatureState.Disabled)),
       map(state => state !== FeatureState.Disabled)
@@ -55,7 +55,7 @@ export class FeatureGuard implements CanLoad, CanActivate {
     return this.featureStateResolver.getCombinedFeatureState(features);
   }
 
-  private getFeaturesForRoute(route: TraceRoute): string[] {
+  private getFeaturesForRoute(route: HtRoute): string[] {
     return (route.data && route.data.features) || [];
   }
 }

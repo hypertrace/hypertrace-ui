@@ -20,13 +20,13 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
     </div>
 
     <ng-template #nameWithLinkTemplate>
-      <ht-link [paramsOrUrl]="this.navigationParams">
+      <ht-link [paramsOrUrl]="this.navigationParams" class="fill-container">
         <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
       </ht-link>
     </ng-template>
 
     <ng-template #nameTemplate>
-      <div class="name-with-icon">
+      <div class="name-with-icon fill-container">
         <ht-icon
           [icon]="this.entityIconType"
           class="icon"

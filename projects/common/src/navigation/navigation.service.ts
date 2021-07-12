@@ -13,11 +13,13 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { NavItemConfig, NavItemType } from '@hypertrace/components';
+import { uniq } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
-import { TraceRoute } from './trace-route';
+import { HtRoute } from './ht-route';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -222,18 +224,38 @@ export class NavigationService {
   public getRouteConfig(
     path: string[],
     relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()
-  ): TraceRoute | undefined {
+  ): HtRoute | undefined {
     const childRoutes =
       relativeTo === this.rootRoute() ? this.router.config : relativeTo.routeConfig && relativeTo.routeConfig.children;
 
     return this.findRouteConfig(path, childRoutes ? childRoutes : []);
   }
 
+  public decorateNavItem(navItem: NavItemConfig, activatedRoute: ActivatedRoute): NavItemConfig {
+    if (navItem.type !== NavItemType.Link) {
+      return { ...navItem };
+    }
+    const features = navItem.matchPaths
+      .map(path => this.getRouteConfig([path], activatedRoute))
+      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
+      .flatMap(route => this.getFeaturesForRoute(route))
+      .concat(navItem.features || []);
+
+    return {
+      ...navItem,
+      features: uniq(features)
+    };
+  }
+
+  private getFeaturesForRoute(route: HtRoute): string[] {
+    return (route.data && route.data.features) || [];
+  }
+
   public rootRoute(): ActivatedRoute {
     return this.router.routerState.root;
   }
 
-  public currentRouteConfig(): TraceRoute {
+  public currentRouteConfig(): HtRoute {
     return throwIfNil(this.getCurrentActivatedRoute().routeConfig);
   }
 
@@ -303,7 +325,7 @@ export class NavigationService {
     });
   }
 
-  private findRouteConfig(path: string[], routes: TraceRoute[]): TraceRoute | undefined {
+  private findRouteConfig(path: string[], routes: HtRoute[]): HtRoute | undefined {
     if (path.length === 0) {
       return undefined;
     }
@@ -320,7 +342,7 @@ export class NavigationService {
     return this.router.routerState.snapshot.root.queryParamMap;
   }
 
-  private findMatchingRoute(pathSegment: string, routes: TraceRoute[]): TraceRoute | undefined {
+  private findMatchingRoute(pathSegment: string, routes: HtRoute[]): HtRoute | undefined {
     return routes
       .filter(
         // First, filter to anything that potentially matches

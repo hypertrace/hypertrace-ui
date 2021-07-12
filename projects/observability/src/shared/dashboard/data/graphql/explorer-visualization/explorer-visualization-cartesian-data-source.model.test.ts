@@ -19,7 +19,7 @@ import {
   EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExplorerData } from '../explore/explore-cartesian-data-source.model';
 import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization-cartesian-data-source.model';

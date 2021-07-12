@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TraceRoute } from '@hypertrace/common';
+import { HtRoute } from '@hypertrace/common';
 import { FilterBuilderLookupService } from '@hypertrace/components';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { ExplorerComponent, ExplorerDashboardBuilder, ExplorerModule } from '@hypertrace/observability';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
     component: ExplorerComponent

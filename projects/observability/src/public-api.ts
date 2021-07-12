@@ -25,6 +25,8 @@ export * from './shared/graphql/request/handlers/entities/query/entity/entity-gr
 export * from './shared/graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+export * from './shared/graphql/request/handlers/explore/explore-graphql-query-builder.service';
+export * from './shared/graphql/request/handlers/explore/explore-query';
 
 // Services
 export * from './shared/services/entity/entity-icon-lookup.service';

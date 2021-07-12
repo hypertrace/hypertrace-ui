@@ -27,6 +27,9 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   @Input()
   public iconColor?: string;
 
+  @Input()
+  public disabled?: boolean;
+
   private readonly optionChangeSubject$: Subject<V> = new Subject<V>();
   public readonly optionChange$: Observable<V> = this.optionChangeSubject$.asObservable();
 

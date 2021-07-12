@@ -4,4 +4,5 @@ export interface SelectOption<V> {
   selectedLabel?: string;
   icon?: string;
   iconColor?: string;
+  disabled?: boolean;
 }

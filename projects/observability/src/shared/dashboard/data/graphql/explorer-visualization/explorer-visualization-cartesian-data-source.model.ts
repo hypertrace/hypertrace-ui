@@ -7,10 +7,8 @@ import {
   ExploreRequestState,
   ExploreVisualizationRequest
 } from '../../../../components/explore-query-editor/explore-visualization-builder';
-import {
-  ExploreGraphQlQueryHandlerService,
-  GraphQlExploreRequest
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from '../explore/explore-cartesian-data-source.model';
 @Model({

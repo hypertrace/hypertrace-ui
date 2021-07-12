@@ -94,11 +94,13 @@ import { MultiSelectJustify } from './multi-select-justify';
                 *ngFor="let item of filteredOptions"
                 (click)="this.onSelectionChange(item)"
                 class="multi-select-option"
+                [ngClass]="{ disabled: item.disabled }"
               >
                 <ht-checkbox
                   class="checkbox"
                   (click)="this.preventClickDefault($event)"
                   [checked]="this.isSelectedItem(item)"
+                  [disabled]="item.disabled"
                 ></ht-checkbox>
                 <ht-icon
                   class="icon"
@@ -207,6 +209,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   }
 
   public onSelectionChange(item: SelectOptionComponent<V>): void {
+    if (item.disabled) {
+      return;
+    }
+
     const selected = this.isSelectedItem(item)
       ? this.selected?.filter(value => value !== item.value)
       : (this.selected ?? []).concat(item.value);
