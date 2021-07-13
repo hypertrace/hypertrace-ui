@@ -39,9 +39,6 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
   private static readonly DONUT_PADDING_PX: number = 10;
-  private static readonly MAX_DIAMETER_FOR_DONUT: number = 320;
-  private static readonly MAX_FONT_SIZE_FOR_TITLE: number = 15;
-  private static readonly MAX_FONT_SIZE_FOR_VALUE: number = 64;
 
   public constructor(
     d3: D3UtilService,
@@ -72,19 +69,11 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))
-      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`)
-      .style(
-        'font-size',
-        Math.min(Math.floor(dimensions.donutInnerRadius / 8), DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE)
-      );
+      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`);
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_CLASS))
-      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`)
-      .style(
-        'font-size',
-        Math.min(Math.floor(dimensions.donutInnerRadius / 2), DonutBuilderService.MAX_FONT_SIZE_FOR_VALUE)
-      );
+      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`);
   }
 
   protected drawVisualization(
@@ -138,13 +127,11 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   protected decorateDimensions(calculatedDimensions: ChartDimensions): DonutDimensions {
     let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
+    diameter -= DonutBuilderService.DONUT_PADDING_PX;
+
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;
     calculatedDimensions.visualizationHeight = diameter;
-
-    diameter -= DonutBuilderService.DONUT_PADDING_PX;
-    diameter =
-      diameter > DonutBuilderService.MAX_DIAMETER_FOR_DONUT ? DonutBuilderService.MAX_DIAMETER_FOR_DONUT : diameter;
 
     return {
       ...calculatedDimensions,
