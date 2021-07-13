@@ -9,12 +9,10 @@
 
   .donut-svg {
     .donut-value-title {
-      font-size: 15px;
       dominant-baseline: hanging;
     }
 
     .donut-value {
-      font-size: 64px;
       dominant-baseline: hanging;
     }
   }
@@ -22,7 +20,7 @@
 
 .donut-arc {
   stroke: white;
-  stroke-width: 2px;
+  stroke-width: 0.5px;
 }
 
 .donut-value-title {
