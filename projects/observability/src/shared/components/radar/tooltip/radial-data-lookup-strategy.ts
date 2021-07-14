@@ -15,7 +15,7 @@ export class RadialDataLookupStrategy {
 
   public constructor(private readonly allSeries: RadarSeries[], radialAxisData: RadarAxisData[]) {
     this.radialBisector = bisector(axisData => axisData.axisRadian);
-    this.radialAxisData = clone(radialAxisData);
+    this.radialAxisData = clone(radialAxisData.sort(axisData => axisData.axisRadian));
     this.addCyclicRedundancy();
   }
 
