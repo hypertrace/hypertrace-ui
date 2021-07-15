@@ -9,6 +9,7 @@ import { CartesianSeries } from './cartesian-series';
 export class CartesianLine<TData> extends CartesianSeries<TData> {
   private static readonly CSS_LINE_CLASS: string = 'line-data-series';
   private static readonly LINE_WIDTH: number = 2;
+  private static readonly ANIMATION_LENGTH_IN_MS = 750;
 
   public drawSvg(element: BaseType): void {
     if (this.series.hide) {
@@ -36,7 +37,19 @@ export class CartesianLine<TData> extends CartesianSeries<TData> {
   }
 
   protected drawSvgLine(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
-    seriesGroupSelection.append('path').attr('d', this.buildLine()(this.series.data)!);
+    if (seriesGroupSelection.classed('dashed-line-data-series')) {
+      seriesGroupSelection.append('path').attr('d', this.buildLine()(this.series.data)!);
+      return;
+    }
+    // Adding animation for non-dashed lines
+    seriesGroupSelection
+      .append('path')
+      .attr('d', this.buildLine()(this.series.data)!)
+      .attr('stroke-dasharray', (_, i, n) => `${n[i].getTotalLength()} ${n[i].getTotalLength()}`)
+      .attr('stroke-dashoffset', (_, i, n) => n[i].getTotalLength())
+      .transition('cartesian-line-animation')
+      .duration(CartesianLine.ANIMATION_LENGTH_IN_MS)
+      .attr('stroke-dashoffset', 0);
   }
 
   private drawCanvasLine(context: CanvasRenderingContext2D): void {

@@ -6,6 +6,7 @@ import {
   PartialBy,
   selector
 } from '@hypertrace/common';
+import { interpolate } from 'd3-interpolate';
 import { BaseType, Selection } from 'd3-selection';
 import { arc, pie, PieArcDatum } from 'd3-shape';
 import { isEmpty } from 'lodash-es';
@@ -39,6 +40,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
   private static readonly DONUT_PADDING_PX: number = 10;
+  private static readonly ANIMATION_TIME_IN_MS: number = 500;
 
   public constructor(
     d3: D3UtilService,
@@ -58,6 +60,9 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     visualizationContainer: DonutContainerSelection,
     dimensions: DonutDimensions
   ): void {
+    const arcPath = arc<DonutArcData>()
+      .innerRadius(dimensions.donutInnerRadius)
+      .outerRadius(dimensions.donutOuterRadius);
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_CHART_SVG_CLASS))
       .attr('width', dimensions.visualizationWidth)
@@ -65,7 +70,16 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       .select(selector(DonutBuilderService.DONUT_ARC_GROUP_CLASS))
       .attr('transform', `translate(${dimensions.visualizationWidth / 2},${dimensions.visualizationHeight / 2})`)
       .selectAll<BaseType, DonutArcData>(selector(DonutBuilderService.DONUT_ARC_CLASS))
-      .attr('d', arc<DonutArcData>().innerRadius(dimensions.donutInnerRadius).outerRadius(dimensions.donutOuterRadius));
+      .transition()
+      .duration(DonutBuilderService.ANIMATION_TIME_IN_MS)
+      .attrTween('d', datum => {
+        const newDatum = { ...datum };
+        const interpolation = interpolate(newDatum.startAngle, newDatum.endAngle);
+        return (t: number): string => {
+          newDatum.endAngle = interpolation(t);
+          return arcPath(newDatum) ?? '';
+        };
+      });
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))

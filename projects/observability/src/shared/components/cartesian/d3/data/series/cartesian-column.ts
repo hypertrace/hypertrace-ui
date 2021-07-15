@@ -1,3 +1,4 @@
+import { interpolate } from 'd3-interpolate';
 import { path, Path } from 'd3-path';
 import { BaseType, select, Selection } from 'd3-selection';
 import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
@@ -9,6 +10,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly MAX_COLUMN_WIDTH: number = 48;
   private static readonly MIN_COLUMN_HEIGHT: number = 1;
   private static readonly COLUMN_ROUNDING_RADIUS: number = 2;
+  private static readonly ANIMATION_LENGTH_IN_MS: number = 375;
 
   public drawSvg(element: BaseType): void {
     const seriesGroup = select(element).append('g').classed(CartesianColumn.CSS_CLASS, true);
@@ -53,6 +55,8 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private drawSvgColumns(seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const columnWidth = this.getColumnWidth();
     const columnXAdjustment = this.getOriginXAdjustment(columnWidth);
+    const seriesDataLength = this.series.data.length ?? 0;
+    const animationDelayPerBand = CartesianColumn.ANIMATION_LENGTH_IN_MS / (seriesDataLength ? seriesDataLength : 1);
 
     seriesGroupSelection
       .attr('transform', `translate(${this.xScale.getStartBandwidthAdjustment()}, 0)`)
@@ -61,13 +65,26 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       .enter()
       .append('path')
       .classed('column', true)
-      .attr('d', datum => this.generateColumnPathString(columnWidth, this.getDatumHeight(datum)))
       .style('fill', datum => this.getColorForDatum(datum))
       .attr(
         'transform',
         datum => `translate(${this.getBarOriginX(datum, columnXAdjustment)}, ${this.getBarOriginY(datum)})`
-      );
+      )
+      .transition()
+      .duration(CartesianColumn.ANIMATION_LENGTH_IN_MS)
+      .attrTween('d', datum => this.pathTween(columnWidth, datum))
+      .delay((_, i) => {
+        return animationDelayPerBand * i;
+      });
   }
+
+  private pathTween = (columnWidth: number, datum: TData): ((t: number) => string) => {
+    const datumHeight = this.getDatumHeight(datum);
+    const interpolation = interpolate(0, datumHeight);
+    return (t: number) => {
+      return this.generateColumnPathString(columnWidth, datumHeight, datumHeight - interpolation(t));
+    };
+  };
 
   private getDatumHeight(datum: TData): number {
     return Math.max(this.yScale.getRangeStart() - this.yScale.transformData(datum), CartesianColumn.MIN_COLUMN_HEIGHT);
@@ -101,9 +118,9 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
     return this.yScale.isShowColumnRounding(this.series);
   }
 
-  private generateColumnPathString(width: number, height: number): string {
+  private generateColumnPathString(width: number, height: number, startY?: number): string {
     const columnPath = path();
-    this.addColumnPath(columnPath, 0, 0, width, height, CartesianColumn.COLUMN_ROUNDING_RADIUS);
+    this.addColumnPath(columnPath, 0, startY ?? 0, width, height, CartesianColumn.COLUMN_ROUNDING_RADIUS);
 
     return columnPath.toString();
   }
