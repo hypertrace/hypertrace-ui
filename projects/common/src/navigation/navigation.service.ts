@@ -1,5 +1,6 @@
 import { Location, PlatformLocation } from '@angular/common';
-import { Injectable, Type } from '@angular/core';
+import { Inject, Injectable, Type } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
@@ -19,7 +20,7 @@ import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
-import { HtRoute } from './ht-route';
+import { APP_TITLE, HtRoute } from './ht-route';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -34,11 +35,20 @@ export class NavigationService {
   public constructor(
     private readonly router: Router,
     private readonly location: Location,
-    private readonly platformLocation: PlatformLocation
+    private readonly platformLocation: PlatformLocation,
+    private readonly titleService: Title,
+    @Inject(APP_TITLE) private readonly appTitle: string
   ) {
     this.event$(RoutesRecognized)
       .pipe(skip(1), take(1))
       .subscribe(() => (this.isFirstNavigation = false));
+
+    this.navigation$
+      .pipe(
+        switchMap(activatedRoute => this.getLeafRoute(activatedRoute).data),
+        map(routeData => this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle))
+      )
+      .subscribe()
   }
 
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
@@ -73,6 +83,10 @@ export class NavigationService {
 
   public getAllValuesForQueryParameter(parameterName: string): string[] {
     return this.currentParamMap.getAll(parameterName);
+  }
+
+  private getLeafRoute(activatedRoute: ActivatedRoute): ActivatedRoute {
+    return activatedRoute.firstChild ? this.getLeafRoute(activatedRoute.firstChild) : activatedRoute;
   }
 
   public constructExternalUrl(urlString: string): string {

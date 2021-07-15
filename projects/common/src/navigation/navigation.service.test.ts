@@ -1,7 +1,9 @@
 import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { APP_TITLE } from '@hypertrace/common';
 import { NavItemType } from '@hypertrace/components';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -16,7 +18,10 @@ import {
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
     path: 'child',
-    children: []
+    children: [],
+    data: {
+      title: 'child1'
+    }
   };
   const defaultChildRouteConfig = {
     path: '**',
@@ -36,7 +41,7 @@ describe('Navigation Service', () => {
   };
   const secondChildRouteConfig = {
     path: 'second',
-    children: [passThroughRouteConfig, secondSecondChildRouteConfig]
+    children: [passThroughRouteConfig, secondSecondChildRouteConfig],
   };
 
   let spectator: SpectatorService<NavigationService>;
@@ -44,7 +49,7 @@ describe('Navigation Service', () => {
 
   const buildService = createServiceFactory({
     service: NavigationService,
-    providers: [mockProvider(Location)],
+    providers: [mockProvider(Location), mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined)}), { provide: APP_TITLE, useValue : 'defaultAppTitle'}],
     imports: [
       RouterTestingModule.withRoutes([
         {
@@ -317,5 +322,13 @@ describe('Navigation Service', () => {
       matchPaths: ['root'],
       features: ['test-feature']
     });
+  });
+
+  test('setting title should work as expected', () => {
+    router.navigate(['root', 'child']);
+    expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle | child1');
+
+    router.navigate(['root']);
+    expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle');
   });
 });
