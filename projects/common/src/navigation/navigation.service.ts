@@ -1,5 +1,5 @@
 import { Location, PlatformLocation } from '@angular/common';
-import { Inject, Injectable, Type } from '@angular/core';
+import { Inject, Injectable, Optional, Type } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
@@ -37,7 +37,7 @@ export class NavigationService {
     private readonly location: Location,
     private readonly platformLocation: PlatformLocation,
     private readonly titleService: Title,
-    @Inject(APP_TITLE) private readonly appTitle: string
+    @Optional() @Inject(APP_TITLE) private readonly appTitle: string
   ) {
     this.event$(RoutesRecognized)
       .pipe(skip(1), take(1))
