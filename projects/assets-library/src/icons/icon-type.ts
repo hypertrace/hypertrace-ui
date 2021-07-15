@@ -111,6 +111,7 @@ export const enum IconType {
   Unavailable = 'remove_circle_outline',
   Unknown = 'device_unknown',
   Warning = 'svg:warning',
+  VirtualMachine = 'svg:virtual-machine',
   Yaml = 'svg:yaml',
   ZoomToFit = 'zoom_out_map'
 }
