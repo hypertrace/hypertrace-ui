@@ -41,7 +41,7 @@ describe('Navigation Service', () => {
   };
   const secondChildRouteConfig = {
     path: 'second',
-    children: [passThroughRouteConfig, secondSecondChildRouteConfig],
+    children: [passThroughRouteConfig, secondSecondChildRouteConfig]
   };
 
   let spectator: SpectatorService<NavigationService>;
@@ -49,7 +49,11 @@ describe('Navigation Service', () => {
 
   const buildService = createServiceFactory({
     service: NavigationService,
-    providers: [mockProvider(Location), mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined)}), { provide: APP_TITLE, useValue : 'defaultAppTitle'}],
+    providers: [
+      mockProvider(Location),
+      mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
+      { provide: APP_TITLE, useValue: 'defaultAppTitle' }
+    ],
     imports: [
       RouterTestingModule.withRoutes([
         {

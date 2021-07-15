@@ -46,9 +46,11 @@ export class NavigationService {
     this.navigation$
       .pipe(
         switchMap(() => this.getCurrentActivatedRoute().data),
-        tap(routeData => this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle))
+        tap(routeData =>
+          this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle)
+        )
       )
-      .subscribe()
+      .subscribe();
   }
 
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
