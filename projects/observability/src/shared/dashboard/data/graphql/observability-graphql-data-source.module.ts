@@ -28,6 +28,9 @@ import { PercentileLatencyAggregationSpecificationModel } from './specifiers/per
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
 import { ExploreTableDataSourceModel } from './table/explore/explore-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
+import { TopologyMetricCategoryModel } from './topology/metrics/topology-metric-category.model';
+import { TopologyMetricWithCategoryModel } from './topology/metrics/topology-metric-with-category.model';
+import { TopologyMetricsModel } from './topology/metrics/topology-metrics.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
@@ -53,6 +56,9 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntityMetricTimeseriesDataSourceModel,
         EntityMetricAggregationDataSourceModel,
         TopologyDataSourceModel,
+        TopologyMetricsModel,
+        TopologyMetricWithCategoryModel,
+        TopologyMetricCategoryModel,
         EntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,

@@ -81,7 +81,25 @@ describe('Topology Widget renderer', () => {
         nodes: mockResponse,
         nodeSpecification: nodeSpec,
         edgeSpecification: edgeSpec,
-        nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey]))
+        nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey])),
+        nodeMetrics: {
+          primary: {
+            specification: nodeSpec.metricSpecifications[0]
+          },
+          secondary: {
+            specification: nodeSpec.metricSpecifications[1]
+          },
+          others: [nodeSpec.metricSpecifications[2], nodeSpec.metricSpecifications[3]]
+        },
+        edgeMetrics: {
+          primary: {
+            specification: edgeSpec.metricSpecifications[0]
+          },
+          secondary: {
+            specification: edgeSpec.metricSpecifications[1]
+          },
+          others: [edgeSpec.metricSpecifications[2], edgeSpec.metricSpecifications[3]]
+        }
       })
     ),
     showLegend: true
