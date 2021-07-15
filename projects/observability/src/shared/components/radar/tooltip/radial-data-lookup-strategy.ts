@@ -15,8 +15,7 @@ export class RadialDataLookupStrategy {
 
   public constructor(private readonly allSeries: RadarSeries[], radialAxisData: RadarAxisData[]) {
     this.radialBisector = bisector(axisData => axisData.axisRadian);
-    this.radialAxisData = clone(radialAxisData);
-    this.radialAxisData = this.radialAxisData.sort(axisData => axisData.axisRadian);
+    this.radialAxisData = clone(radialAxisData).sort(axisData => axisData.axisRadian);
     this.addCyclicRedundancy();
   }
 
@@ -41,7 +40,6 @@ export class RadialDataLookupStrategy {
 
     const leftValue = this.radialAxisData[insertionIndex - 1] as RadarAxisData | undefined;
     const rightValue = this.radialAxisData[insertionIndex] as RadarAxisData | undefined;
-
 
     if (leftValue === undefined) {
       // No values to the left. Target is smallest value.
