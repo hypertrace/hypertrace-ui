@@ -1,8 +1,7 @@
-import { Dictionary } from '@hypertrace/common';
 import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
-import { ARRAY_PROPERTY, Model, ModelProperty, PLAIN_OBJECT_PROPERTY } from '@hypertrace/hyperdash';
+import { ARRAY_PROPERTY, Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -15,7 +14,7 @@ import {
   TopologyEdgeSpecification,
   TopologyNodeSpecification
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
-import { MetricData } from '../../../widgets/topology/metric/metric';
+import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
 
 @Model({
   type: 'topology-data-source'
@@ -58,17 +57,37 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   })
   public downstreamEntityTypes?: ObservabilityEntityType[];
 
+  // @ModelProperty({
+  //   key: 'node-metrics',
+  //   type: PLAIN_OBJECT_PROPERTY.type
+  // })
+  // public nodeMetrics!: MetricData;
+
+  // @ModelProperty({
+  //   key: 'edge-metrics',
+  //   type: PLAIN_OBJECT_PROPERTY.type
+  // })
+  // public edgeMetrics!: MetricData;
+
   @ModelProperty({
     key: 'node-metrics',
-    type: PLAIN_OBJECT_PROPERTY.type
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: TopologyMetricsModel
+    } as ModelModelPropertyTypeInstance
   })
-  public nodeMetrics!: MetricData;
+  public nodeMetricsModel!: TopologyMetricsModel;
 
   @ModelProperty({
     key: 'edge-metrics',
-    type: PLAIN_OBJECT_PROPERTY.type
+   // tslint:disable-next-line: no-object-literal-type-assertion
+   type: {
+    key: ModelPropertyType.TYPE,
+    defaultModelClass: TopologyMetricsModel
+  } as ModelModelPropertyTypeInstance
   })
-  public edgeMetrics!: MetricData;
+  public edgeMetricsModel!: TopologyMetricsModel;
 
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly requestOptions: GraphQlRequestOptions = {
@@ -78,7 +97,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   public getData(): Observable<TopologyData> {
     const rootEntitySpec = this.buildEntitySpec();
     const edgeSpec = {
-      metricSpecifications: this.getAllMetricSpecifications(this.edgeMetrics)
+      metricSpecifications: this.getAllMetricSpecifications(this.edgeMetricsModel)
     };
 
     return this.query<EntityTopologyGraphQlQueryHandlerService>(
@@ -104,10 +123,8 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
           ...this.defaultedEntityTypeArray(this.upstreamEntityTypes),
           ...this.defaultedEntityTypeArray(this.downstreamEntityTypes)
         ]),
-        modelProperties: {
-          nodeMetrics: this.nodeMetrics,
-          edgeMetrics: this.edgeMetrics
-        }
+        nodeMetrics: this.nodeMetricsModel,
+        edgeMetrics: this.edgeMetricsModel
       }))
     );
   }
@@ -125,7 +142,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   private buildEntitySpec(): TopologyNodeSpecification {
     // TODO support different specs for different node types
     return {
-      metricSpecifications: this.getAllMetricSpecifications(this.nodeMetrics),
+      metricSpecifications: this.getAllMetricSpecifications(this.nodeMetricsModel),
       titleSpecification: this.specBuilder.attributeSpecificationForKey('name')
     };
   }
@@ -136,7 +153,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return typeArray;
   }
 
-  private getAllMetricSpecifications(metrics: MetricData): MetricAggregationSpecification[] {
+  private getAllMetricSpecifications(metrics: TopologyMetricsModel): MetricAggregationSpecification[] {
     return [
       metrics.primary.specification,
       ...(metrics.secondary ? [metrics.secondary.specification] : []),
@@ -150,5 +167,6 @@ export interface TopologyData {
   nodeTypes: ObservabilityEntityType[];
   nodeSpecification: TopologyNodeSpecification;
   edgeSpecification: TopologyEdgeSpecification;
-  modelProperties: Dictionary<unknown>;
+  nodeMetrics: TopologyMetricsData;
+  edgeMetrics: TopologyMetricsData;
 }

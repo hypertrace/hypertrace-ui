@@ -4,7 +4,6 @@ import { WidgetRenderer } from '@hypertrace/dashboards';
 import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { isNull } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TopologyEdgeRendererService } from '../../../components/topology/renderers/edge/topology-edge-renderer.service';
@@ -115,9 +114,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
           return EMPTY;
         }
 
-        if (!isNull(data.modelProperties)) {
-          this.topologyDataSourceModelPropertiesService.setModelProperties(data.modelProperties);
-        }
+        this.topologyDataSourceModelPropertiesService.setModelProperties(data.nodeMetrics, data.edgeMetrics);
 
         return forkJoinSafeEmpty([of(data), this.buildNodeDataSpecifiers(data), this.buildEdgeDataSpecifiers(data)]);
       }),

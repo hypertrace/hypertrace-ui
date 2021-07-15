@@ -1,3 +1,6 @@
+import { TopologyMetricCategoryModel } from './topology/metrics/topology-metric-category.model';
+import { TopologyMetricWithCategoryModel } from './topology/metrics/topology-metric-with-category.model';
+import { TopologyMetricsModel } from './topology/metrics/topology-metrics.model';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { GraphQlModule } from '@hypertrace/graphql-client';
@@ -53,6 +56,9 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         EntityMetricTimeseriesDataSourceModel,
         EntityMetricAggregationDataSourceModel,
         TopologyDataSourceModel,
+        TopologyMetricsModel,
+        TopologyMetricWithCategoryModel,
+        TopologyMetricCategoryModel,
         EntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,

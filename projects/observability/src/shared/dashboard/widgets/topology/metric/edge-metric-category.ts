@@ -1,11 +1,5 @@
 import { Color } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
-
-export interface EdgeMetricCategory {
-  value: EdgeMetricCategoryValueType;
-  categoryClass?: string; // Can be used as selector class
-  color: string; // Color for edge, arrow and bubble
-}
+import { TopologyMetricCategoryData } from '../../../data/graphql/topology/metrics/topology-metric-category.model';
 
 export type EdgeMetricCategoryValueType = PrimaryEdgeMetricCategoryValueType | SecondaryEdgeMetricCategoryValueType;
 
@@ -24,106 +18,64 @@ export enum SecondaryEdgeMetricCategoryValueType {
   NotSpecified = 'not-specified'
 }
 
-export const defaultPrimaryEdgeMetricCategories: EdgeMetricCategory[] = [
+export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
   {
-    value: PrimaryEdgeMetricCategoryValueType.LessThan20,
-    color: Color.BlueGray1,
-    categoryClass: 'less-than-20-primary-category'
+    name: PrimaryEdgeMetricCategoryValueType.LessThan20,
+    minValue: 0,
+    maxValue: 20,
+    fillColor: Color.BlueGray1,
+    strokeColor: Color.BlueGray1,
+    focusColor: Color.BlueGray1
   },
   {
-    value: PrimaryEdgeMetricCategoryValueType.From20To100,
-    color: Color.BlueGray2,
-    categoryClass: 'from-20-to-100-primary-category'
+    name: PrimaryEdgeMetricCategoryValueType.From20To100,
+    minValue: 20,
+    maxValue: 100,
+    fillColor: Color.BlueGray2,
+    strokeColor: Color.BlueGray2,
+    focusColor: Color.BlueGray2
   },
   {
-    value: PrimaryEdgeMetricCategoryValueType.From100To500,
-    color: Color.BlueGray3,
-    categoryClass: 'from-100-to-500-primary-category'
+    name: PrimaryEdgeMetricCategoryValueType.From100To500,
+    minValue: 100,
+    maxValue: 500,
+    fillColor: Color.BlueGray3,
+    strokeColor: Color.BlueGray3,
+    focusColor: Color.BlueGray3
   },
   {
-    value: PrimaryEdgeMetricCategoryValueType.From500To1000,
-    color: Color.BlueGray4,
-    categoryClass: 'from-500-to-1000-primary-category'
+    name: PrimaryEdgeMetricCategoryValueType.From500To1000,
+    minValue: 500,
+    maxValue: 1000,
+    fillColor: Color.BlueGray4,
+    strokeColor: Color.BlueGray4,
+    focusColor: Color.BlueGray4
   },
   {
-    value: PrimaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo1000,
-    color: Color.BlueGray5,
-    categoryClass: 'greater-than-or-equal-to-1000-primary-category'
-  },
-  {
-    value: PrimaryEdgeMetricCategoryValueType.NotSpecified,
-    color: 'lightgray',
-    categoryClass: 'not-specified-primary-category'
+    name: PrimaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo1000,
+    minValue: 1000,
+    maxValue: undefined,
+    fillColor: Color.BlueGray4,
+    strokeColor: Color.BlueGray4,
+    focusColor: Color.BlueGray4
   }
 ];
 
-export const defaultSecondaryEdgeMetricCategories: EdgeMetricCategory[] = [
+export const defaultSecondaryEdgeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
   {
-    value: SecondaryEdgeMetricCategoryValueType.LessThan5,
-    color: Color.Gray2,
-    categoryClass: 'less-than-5-secondary-category'
+    name: SecondaryEdgeMetricCategoryValueType.LessThan5,
+    minValue: 0,
+    maxValue: 5,
+    fillColor: Color.Gray2,
+    strokeColor: Color.Gray2,
+    focusColor: Color.Gray2
   },
   {
-    value: SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5,
-    color: Color.Red5,
-    categoryClass: 'greater-than-or-equal-to-5-secondary-category'
-  },
-  {
-    value: SecondaryEdgeMetricCategoryValueType.NotSpecified,
-    color: Color.Gray2,
-    categoryClass: 'not-specified-secondary-category'
+    name: SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5,
+    minValue: 5,
+    maxValue: undefined,
+    fillColor: Color.Red5,
+    strokeColor: Color.Red5,
+    focusColor: Color.Red5
   }
-];
-
-export const getPrimaryEdgeMetricCategory = (
-  value?: number,
-  categories?: EdgeMetricCategory[]
-): EdgeMetricCategory | undefined => {
-  const primaryCategories = !isEmpty(categories) ? categories : defaultPrimaryEdgeMetricCategories;
-  if (value === undefined) {
-    return primaryCategories?.find(category => category.value === PrimaryEdgeMetricCategoryValueType.NotSpecified);
-  }
-
-  if (value < 20) {
-    return primaryCategories?.find(category => category.value === PrimaryEdgeMetricCategoryValueType.LessThan20);
-  }
-
-  if (value >= 20 && value < 100) {
-    return primaryCategories?.find(category => category.value === PrimaryEdgeMetricCategoryValueType.From20To100);
-  }
-
-  if (value >= 100 && value < 500) {
-    return primaryCategories?.find(category => category.value === PrimaryEdgeMetricCategoryValueType.From100To500);
-  }
-
-  if (value >= 500 && value < 1000) {
-    return primaryCategories?.find(category => category.value === PrimaryEdgeMetricCategoryValueType.From500To1000);
-  }
-
-  return primaryCategories?.find(
-    category => category.value === PrimaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo1000
-  );
-};
-
-export const getSecondaryEdgeMetricCategory = (value?: number, categories?: EdgeMetricCategory[]) => {
-  const secondaryCategories = !isEmpty(categories) ? categories : defaultSecondaryEdgeMetricCategories;
-  if (value === undefined) {
-    return secondaryCategories?.find(category => category.value === SecondaryEdgeMetricCategoryValueType.NotSpecified);
-  }
-
-  if (value < 5) {
-    return secondaryCategories?.find(category => category.value === SecondaryEdgeMetricCategoryValueType.LessThan5);
-  }
-
-  return secondaryCategories?.find(
-    category => category.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5
-  );
-};
-
-export const getAllCategories = (
-  primaryCategories?: EdgeMetricCategory[],
-  secondaryCategories?: EdgeMetricCategory[]
-): EdgeMetricCategory[] => [
-  ...(!isEmpty(primaryCategories) ? primaryCategories! : defaultPrimaryEdgeMetricCategories),
-  ...(!isEmpty(secondaryCategories) ? secondaryCategories! : defaultSecondaryEdgeMetricCategories)
 ];

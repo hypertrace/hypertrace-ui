@@ -5,12 +5,12 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { TopologyMetricWithCategoryModel } from './topology-metric-with-category.model';
+import { TopologyMetricWithCategoryData, TopologyMetricWithCategoryModel } from './topology-metric-with-category.model';
 
 @Model({
   type: 'topology-metrics'
 })
-export class TopologyMetricsModel {
+export class TopologyMetricsModel implements TopologyMetricsData {
   @ModelProperty({
     key: 'primary',
     required: true,
@@ -40,4 +40,10 @@ export class TopologyMetricsModel {
   })
   public others?: TopologyMetricWithCategoryModel[];
 
+}
+
+export interface TopologyMetricsData {
+  primary: TopologyMetricWithCategoryData;
+  secondary?: TopologyMetricWithCategoryData;
+  others?: TopologyMetricWithCategoryData[];
 }

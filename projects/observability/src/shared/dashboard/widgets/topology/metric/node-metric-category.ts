@@ -1,15 +1,5 @@
 import { Color } from '@hypertrace/common';
-import { resolveMetricCategories } from './metric-category';
-
-export interface NodeMetricCategory {
-  value: NodeMetricCategoryValueType;
-  categoryClass?: string; // Can be used as selector class
-  color: string; // Used for fill in node
-  focusedColor?: string; // Used for fill color when focus/emphasized in case of secondary node metrics
-  secondaryColor?: string; // Used for stroke in case of secondary node metrics
-}
-
-export type NodeMetricCategoryValueType = PrimaryNodeMetricCategoryValueType | SecondaryNodeMetricCategoryValueType;
+import { TopologyMetricCategoryData } from '../../../data/graphql/topology/metrics/topology-metric-category.model';
 
 export enum PrimaryNodeMetricCategoryValueType {
   LessThan20 = 'less-than-20',
@@ -26,106 +16,64 @@ export enum SecondaryNodeMetricCategoryValueType {
   NotSpecified = 'not-specified'
 }
 
-export const defaultPrimaryNodeMetricCategories: NodeMetricCategory[] = [
+export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
   {
-    value: PrimaryNodeMetricCategoryValueType.LessThan20,
-    color: Color.BlueGray1,
-    categoryClass: 'less-than-20-primary-category'
+    name: PrimaryNodeMetricCategoryValueType.LessThan20,
+    minValue: 0,
+    maxValue: 20,
+    fillColor: Color.BlueGray1,
+    strokeColor: Color.BlueGray1,
+    focusColor: Color.BlueGray1
   },
   {
-    value: PrimaryNodeMetricCategoryValueType.From20To100,
-    color: Color.BlueGray2,
-    categoryClass: 'from-20-to-100-primary-category'
+    name: PrimaryNodeMetricCategoryValueType.From20To100,
+    minValue: 20,
+    maxValue: 100,
+    fillColor: Color.BlueGray2,
+    strokeColor: Color.BlueGray2,
+    focusColor: Color.BlueGray2
   },
   {
-    value: PrimaryNodeMetricCategoryValueType.From100To500,
-    color: Color.BlueGray3,
-    categoryClass: 'from-100-to-500-primary-category'
+    name: PrimaryNodeMetricCategoryValueType.From100To500,
+    minValue: 100,
+    maxValue: 500,
+    fillColor: Color.BlueGray3,
+    strokeColor: Color.BlueGray3,
+    focusColor: Color.BlueGray3
   },
   {
-    value: PrimaryNodeMetricCategoryValueType.From500To1000,
-    color: Color.BlueGray4,
-    categoryClass: 'from-500-to-1000-primary-category'
+    name: PrimaryNodeMetricCategoryValueType.From500To1000,
+    minValue: 500,
+    maxValue: 1000,
+    fillColor: Color.BlueGray4,
+    strokeColor: Color.BlueGray4,
+    focusColor: Color.BlueGray4
   },
   {
-    value: PrimaryNodeMetricCategoryValueType.GreaterThanOrEqualTo1000,
-    color: Color.BlueGray5,
-    categoryClass: 'greater-than-or-equal-to-1000-primary-category'
-  },
-  {
-    value: PrimaryNodeMetricCategoryValueType.NotSpecified,
-    color: 'lightgray',
-    categoryClass: 'not-specified-primary-category'
+    name: PrimaryNodeMetricCategoryValueType.GreaterThanOrEqualTo1000,
+    minValue: 1000,
+    maxValue: undefined,
+    fillColor: Color.BlueGray4,
+    strokeColor: Color.BlueGray4,
+    focusColor: Color.BlueGray4
   }
 ];
 
-export const defaultSecondaryNodeMetricCategories: NodeMetricCategory[] = [
+export const defaultSecondaryNodeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
   {
-    value: SecondaryNodeMetricCategoryValueType.LessThan5,
-    color: Color.Gray2,
-    categoryClass: 'less-than-5-secondary-category'
+    name: SecondaryNodeMetricCategoryValueType.LessThan5,
+    minValue: 0,
+    maxValue: 5,
+    fillColor: Color.Gray2,
+    strokeColor: Color.Gray2,
+    focusColor: Color.Gray2
   },
   {
-    value: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
-    color: Color.Red1,
-    secondaryColor: Color.Red5,
-    focusedColor: Color.Red1,
-    categoryClass: 'greater-than-or-equal-to-5-secondary-category'
-  },
-  {
-    value: SecondaryNodeMetricCategoryValueType.NotSpecified,
-    color: Color.Gray2,
-    categoryClass: 'not-specified-secondary-category'
+    name: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
+    minValue: 5,
+    maxValue: undefined,
+    fillColor: Color.Red5,
+    strokeColor: Color.Red5,
+    focusColor: Color.Red5
   }
 ];
-
-export const getPrimaryNodeMetricCategory = (
-  value?: number,
-  categories?: NodeMetricCategory[]
-): NodeMetricCategory | undefined => {
-  const primaryCategories = resolveMetricCategories(
-    defaultPrimaryNodeMetricCategories,
-    categories
-  ) as NodeMetricCategory[];
-  if (value === undefined) {
-    return primaryCategories.find(category => category.value === PrimaryNodeMetricCategoryValueType.NotSpecified);
-  }
-
-  if (value < 20) {
-    return primaryCategories.find(category => category.value === PrimaryNodeMetricCategoryValueType.LessThan20);
-  }
-
-  if (value >= 20 && value < 100) {
-    return primaryCategories.find(category => category.value === PrimaryNodeMetricCategoryValueType.From20To100);
-  }
-
-  if (value >= 100 && value < 500) {
-    return primaryCategories.find(category => category.value === PrimaryNodeMetricCategoryValueType.From100To500);
-  }
-
-  if (value >= 500 && value < 1000) {
-    return primaryCategories.find(category => category.value === PrimaryNodeMetricCategoryValueType.From500To1000);
-  }
-
-  return primaryCategories.find(
-    category => category.value === PrimaryNodeMetricCategoryValueType.GreaterThanOrEqualTo1000
-  );
-};
-
-export const getSecondaryNodeMetricCategory = (value?: number, categories?: NodeMetricCategory[]) => {
-  const secondaryCategories = resolveMetricCategories(
-    defaultSecondaryNodeMetricCategories,
-    categories
-  ) as NodeMetricCategory[];
-  if (value === undefined) {
-    return secondaryCategories.find(category => category.value === SecondaryNodeMetricCategoryValueType.NotSpecified);
-  }
-
-  if (value < 5) {
-    return secondaryCategories.find(category => category.value === SecondaryNodeMetricCategoryValueType.LessThan5);
-  }
-
-  return secondaryCategories.find(
-    category => category.value === SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5
-  );
-};

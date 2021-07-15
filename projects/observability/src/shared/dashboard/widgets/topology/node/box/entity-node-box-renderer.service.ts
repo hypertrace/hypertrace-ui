@@ -18,12 +18,7 @@ import { MetricAggregationSpecification } from '../../../../../graphql/model/sch
 import { EntityNode } from '../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { EntityIconLookupService } from '../../../../../services/entity/entity-icon-lookup.service';
 import { EntityNavigationService } from '../../../../../services/navigation/entity/entity-navigation.service';
-import { getTopologyMetric } from '../../metric/metric-category';
-import {
-  getPrimaryNodeMetricCategory,
-  getSecondaryNodeMetricCategory,
-  NodeMetricCategory
-} from '../../metric/node-metric-category';
+import { TopologyMetricCategoryData } from '../../../../data/graphql/topology/metrics/topology-metric-category.model';
 import { TopologyDataSourceModelPropertiesService } from '../../topology-data-source-model-properties.service';
 import { VisibilityUpdater } from '../../visibility-updater';
 
@@ -107,19 +102,8 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     domElementRenderer: Renderer2
   ): void {
     const elementSelection = this.d3Utils.select(element, domElementRenderer);
-
-    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryNodeMetric();
-    const primaryMetricAggregation = getTopologyMetric(node.data, primaryMetric?.specification);
-    const primaryMetricCategory = getPrimaryNodeMetricCategory(
-      primaryMetricAggregation?.value,
-      primaryMetric?.categories
-    );
-    const secondaryMetric = this.topologyDataSourceModelPropertiesService.geSecondaryNodeMetric();
-    const secondaryMetricAggregation = getTopologyMetric(node.data, secondaryMetric?.specification);
-    const secondaryMetricCategory = getSecondaryNodeMetricCategory(
-      secondaryMetricAggregation?.value,
-      secondaryMetric?.categories
-    );
+    const primaryMetricCategory = this.topologyDataSourceModelPropertiesService.getPrimaryNodeMetric()?.extractAndGetDataCategoryForMetric(node.data);
+    const secondaryMetricCategory = this.topologyDataSourceModelPropertiesService.getSecondaryNodeMetric()?.extractAndGetDataCategoryForMetric(node.data);
 
     this.updateNodeMetric(elementSelection, state.visibility, primaryMetricCategory, secondaryMetricCategory);
     this.visibilityUpdater.updateVisibility(elementSelection, state.visibility);
@@ -142,33 +126,33 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   protected updateNodeMetric(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     visibility: TopologyElementVisibility,
-    primaryMetricCategory?: NodeMetricCategory,
-    secondaryMetricCategory?: NodeMetricCategory
+    primaryMetric?: TopologyMetricCategoryData,
+    secondaryMetric?: TopologyMetricCategoryData
   ): void {
     selection
-      .classed(primaryMetricCategory?.categoryClass ?? '', true)
-      .classed(secondaryMetricCategory?.categoryClass ?? '', true)
+      .classed(primaryMetric?.name ?? '', true)
+      .classed(secondaryMetric?.name ?? '', true)
       .select(selector(this.entityMetricClass));
 
     // For primary category
-    selection.select(selector(this.metricCategoryClass)).attr('fill', primaryMetricCategory?.color!);
+    selection.select(selector(this.metricCategoryClass)).attr('fill', primaryMetric?.fillColor!);
 
     // For secondary category
     selection
       .select(selector(this.entityOuterBandClass))
       .attr('fill', () => {
         if (visibility === TopologyElementVisibility.Focused || visibility === TopologyElementVisibility.Emphasized) {
-          return secondaryMetricCategory?.focusedColor ?? this.focusedOrEmphasizedColor();
+          return secondaryMetric?.focusColor ?? this.focusedOrEmphasizedColor();
         }
 
-        return secondaryMetricCategory?.color!;
+        return secondaryMetric?.fillColor!;
       })
       .attr('stroke', () => {
         if (visibility === TopologyElementVisibility.Focused) {
-          return secondaryMetricCategory?.secondaryColor ?? this.focusedBandColor();
+          return secondaryMetric?.strokeColor ?? this.focusedBandColor();
         }
 
-        return secondaryMetricCategory?.secondaryColor ?? '';
+        return secondaryMetric?.strokeColor ?? '';
       });
   }
 

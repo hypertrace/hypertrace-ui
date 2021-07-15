@@ -17,14 +17,7 @@ import { D3UtilService } from '../../../../../components/utils/d3/d3-util.servic
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { EntityEdge } from '../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
-import {
-  EdgeMetricCategory,
-  getAllCategories,
-  getPrimaryEdgeMetricCategory,
-  getSecondaryEdgeMetricCategory,
-  SecondaryEdgeMetricCategoryValueType
-} from '../../metric/edge-metric-category';
-import { getTopologyMetric } from '../../metric/metric-category';
+import { TopologyMetricCategoryData } from '../../../../data/graphql/topology/metrics/topology-metric-category.model';
 import { TopologyDataSourceModelPropertiesService } from '../../topology-data-source-model-properties.service';
 import { VisibilityUpdater } from '../../visibility-updater';
 
@@ -38,7 +31,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private readonly numberFormatter: NumericFormatter = new NumericFormatter();
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
 
-  private allEdgeCategories: EdgeMetricCategory[] = [];
+  //private allEdgeCategories: EdgeMetricCategory[] = [];
 
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
@@ -58,10 +51,6 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     state: TopologyEdgeState<MetricAggregationSpecification>,
     domRenderer: Renderer2
   ): void {
-    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
-    const secondaryMetric = this.topologyDataSourceModelPropertiesService.geSecondaryEdgeMetric();
-    this.allEdgeCategories = getAllCategories(primaryMetric?.categories, secondaryMetric?.categories);
-
     this.defineArrowMarkersIfNeeded(element, domRenderer);
     this.d3Utils
       .select(element, domRenderer)
@@ -96,25 +85,15 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     const selection = this.d3Utils.select(element, domRenderer);
 
     const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
-    const primaryMetricAggregation = getTopologyMetric(edge.data, primaryMetric?.specification);
-    const primaryMetricCategory = getPrimaryEdgeMetricCategory(
-      primaryMetricAggregation?.value,
-      primaryMetric?.categories
-    );
-    const secondaryMetric = this.topologyDataSourceModelPropertiesService.geSecondaryEdgeMetric();
-    const secondaryMetricAggregation = getTopologyMetric(edge.data, secondaryMetric?.specification);
-    const secondaryMetricCategory = getSecondaryEdgeMetricCategory(
-      secondaryMetricAggregation?.value,
-      secondaryMetric?.categories
-    );
+    const secondaryMetric = this.topologyDataSourceModelPropertiesService.getSecondaryEdgeMetric();
 
     this.updateEdgeMetric(
       selection,
       state.visibility,
-      primaryMetricCategory,
-      secondaryMetricCategory,
-      primaryMetricAggregation,
-      secondaryMetricAggregation
+      primaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
+      secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
+      primaryMetric?.extractDataForMetric(edge.data),
+      secondaryMetric?.extractDataForMetric(edge.data),
     );
     this.visibilityUpdater.updateVisibility(selection, state.visibility);
 
@@ -125,8 +104,8 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   protected updateEdgeMetric(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     visibility: TopologyElementVisibility,
-    primaryMetricCategory?: EdgeMetricCategory,
-    secondaryMetricCategory?: EdgeMetricCategory,
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData,
     primaryMetricAggregation?: MetricAggregation,
     secondaryMetricAggregation?: MetricAggregation
   ): void {
@@ -137,11 +116,11 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection
       .select(selector(this.edgeLineClass))
       .select('.edge-path')
-      .attr('stroke', edgeFocusedCategory?.color ?? Color.Gray3);
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray3);
     selection
       .select(selector(this.edgeMetricBubbleClass))
-      .attr('fill', edgeFocusedCategory?.color ?? '')
-      .attr('stroke', edgeFocusedCategory?.color ?? 'none');
+      .attr('fill', edgeFocusedCategory?.fillColor ?? '')
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? 'none');
 
     selection
       .select(selector(this.edgeMetricValueClass))
@@ -159,7 +138,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .attr(
         'marker-end',
         this.isEmphasizedOrFocused(visibility)
-          ? `url(#${this.getMarkerIdForCategory(edgeFocusedCategory?.categoryClass ?? '')})`
+          ? `url(#${this.getMarkerIdForCategory(edgeFocusedCategory?.getCategoryClassName() ?? '')})`
           : 'none'
       );
   }
@@ -180,24 +159,25 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 
   private defineArrowMarkersIfNeeded(edgeElement: SVGGElement, domRenderer: Renderer2): void {
+    const allEdgeCategories = this.topologyDataSourceModelPropertiesService.getAllEdgeCategories();
     this.d3Utils
       .select(this.svgUtils.addDefinitionDeclarationToSvgIfNotExists(edgeElement, domRenderer), domRenderer)
       .selectAll('marker')
-      .data(this.allEdgeCategories)
+      .data(allEdgeCategories)
       .enter()
       .append('marker')
-      .attr('id', category => this.getMarkerIdForCategory(category.categoryClass!))
+      .attr('id', category => this.getMarkerIdForCategory(category.getCategoryClassName()))
       .attr('viewBox', '0 0 10 10')
       .attr('refX', 5)
       .attr('refY', 5)
       .attr('markerWidth', 12)
       .attr('markerHeight', 12)
       .attr('orient', 'auto-start-reverse')
-      .attr('fill', category => category.color)
+      .attr('fill', category => category.fillColor)
       .append('path')
       .classed(this.edgeArrowClass, true)
       .each((category, index, elements) =>
-        this.d3Utils.select(elements[index], domRenderer).classed(category.categoryClass!, true)
+        this.d3Utils.select(elements[index], domRenderer).classed(category.getCategoryClassName(), true)
       )
       .attr('d', 'M2,2 L5,5 L2,8');
   }
@@ -272,36 +252,34 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 
   private getEdgeFocusedCategory(
-    primaryMetricCategory?: EdgeMetricCategory,
-    secondaryMetricCategory?: EdgeMetricCategory
-  ): EdgeMetricCategory | undefined {
-    if (secondaryMetricCategory?.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5) {
-      return secondaryMetricCategory;
-    }
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData
+  ): TopologyMetricCategoryData | undefined {
+    return primaryMetricCategory ?? secondaryMetricCategory;
 
-    if (primaryMetricCategory) {
-      return primaryMetricCategory;
-    }
+    // if (secondaryMetricCategory?.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5) {
+    //   return secondaryMetricCategory;
+    // }
 
-    return undefined;
+    // if (primaryMetricCategory) {
+    //   return primaryMetricCategory;
+    // }
+
+    // return undefined;
   }
 
   private getMetricValueString(
     primaryMetricAggregation?: MetricAggregation,
     secondaryMetricAggregation?: MetricAggregation,
-    primaryMetricCategory?: EdgeMetricCategory,
-    secondaryMetricCategory?: EdgeMetricCategory
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData
   ): string {
-    if (
-      secondaryMetricCategory &&
-      (secondaryMetricCategory.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5 ||
-        !primaryMetricCategory)
-    ) {
-      return this.formattedMetricValue(secondaryMetricAggregation!.value, secondaryMetricAggregation?.units);
-    }
-
     if (primaryMetricCategory) {
       return this.formattedMetricValue(primaryMetricAggregation!.value, primaryMetricAggregation?.units);
+    }
+
+    if (secondaryMetricCategory) {
+      return this.formattedMetricValue(secondaryMetricAggregation!.value, secondaryMetricAggregation?.units);
     }
 
     return '-';

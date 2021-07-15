@@ -1,8 +1,8 @@
+import { defaultPrimaryEdgeMetricCategories, defaultSecondaryEdgeMetricCategories } from './../../../shared/dashboard/widgets/topology/metric/edge-metric-category';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Color } from '@hypertrace/common';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { SecondaryNodeMetricCategoryValueType } from '../../../shared/dashboard/widgets/topology/metric/node-metric-category';
+import { defaultPrimaryNodeMetricCategories, defaultSecondaryNodeMetricCategories } from './../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,14 +28,39 @@ export class ApplicationFlowComponent {
           type: 'topology-data-source',
           entity: 'SERVICE',
           'downstream-entities': ['SERVICE', 'BACKEND'],
-          'node-metrics': {
+          'edge-metrics': {
+            type: 'topology-metrics',
             primary: {
+              type: 'topology-metric-with-category',
               specification: {
                 type: 'percentile-latency-metric-aggregation',
                 'display-name': 'P99 Latency'
-              }
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[1]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[2]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[3]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[4]
+                }
+              ]
             },
             secondary: {
+              type: 'topology-metric-with-category',
               specification: {
                 type: 'error-percentage-metric-aggregation',
                 aggregation: MetricAggregationType.Average,
@@ -43,16 +68,18 @@ export class ApplicationFlowComponent {
               },
               categories: [
                 {
-                  value: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
-                  color: Color.Orange3,
-                  secondaryColor: Color.Orange5,
-                  focusedColor: Color.Orange3,
-                  categoryClass: 'greater-than-or-equal-to-5-secondary-category'
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryEdgeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryEdgeMetricCategories[1]
                 }
               ]
             },
             others: [
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'duration',
@@ -61,6 +88,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'errorCount',
@@ -69,6 +97,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
@@ -77,6 +106,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
@@ -86,22 +116,58 @@ export class ApplicationFlowComponent {
               }
             ]
           },
-          'edge-metrics': {
+          'node-metrics': {
+            type: 'topology-metrics',
             primary: {
+              type: 'topology-metric-with-category',
               specification: {
                 type: 'percentile-latency-metric-aggregation',
                 'display-name': 'P99 Latency'
-              }
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[1]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[2]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[3]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[4]
+                }
+              ]
             },
             secondary: {
+              type: 'topology-metric-with-category',
               specification: {
                 type: 'error-percentage-metric-aggregation',
                 aggregation: MetricAggregationType.Average,
                 'display-name': 'Error %'
-              }
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryNodeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryNodeMetricCategories[1]
+                }
+              ]
             },
             others: [
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'duration',
@@ -110,6 +176,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'errorCount',
@@ -118,6 +185,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
@@ -126,6 +194,7 @@ export class ApplicationFlowComponent {
                 }
               },
               {
+                type: 'topology-metric-with-category',
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',

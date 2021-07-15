@@ -1,28 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Dictionary } from '@hypertrace/common';
-import { EdgeMetric, MetricData, NodeMetric } from './metric/metric';
+import { TopologyMetricWithCategoryData } from '../../data/graphql/topology/metrics/topology-metric-with-category.model';
+import { TopologyMetricsData } from '../../data/graphql/topology/metrics/topology-metrics.model';
+import { TopologyMetricCategoryData } from '../../data/graphql/topology/metrics/topology-metric-category.model';
 
 @Injectable()
 export class TopologyDataSourceModelPropertiesService {
-  private modelProperties: Dictionary<unknown> = {};
+  private nodeMetrics?: TopologyMetricsData;
+  private edgeMetrics?: TopologyMetricsData;
 
-  public setModelProperties(modelProperties: Dictionary<unknown>): void {
-    this.modelProperties = modelProperties;
+  public setModelProperties(nodeMetrics: TopologyMetricsData, edgeMetrics: TopologyMetricsData): void {
+    this.nodeMetrics = nodeMetrics;
+    this.edgeMetrics = edgeMetrics;
   }
 
-  public getPrimaryNodeMetric(): NodeMetric | undefined {
-    return (this.modelProperties.nodeMetrics as MetricData)?.primary as NodeMetric;
+  public getPrimaryNodeMetric(): TopologyMetricWithCategoryData | undefined {
+    return this.nodeMetrics?.primary
   }
 
-  public geSecondaryNodeMetric(): NodeMetric | undefined {
-    return (this.modelProperties.nodeMetrics as MetricData)?.secondary as NodeMetric;
+  public getSecondaryNodeMetric(): TopologyMetricWithCategoryData | undefined {
+    return this.nodeMetrics?.secondary
   }
 
-  public getPrimaryEdgeMetric(): EdgeMetric | undefined {
-    return (this.modelProperties.edgeMetrics as MetricData)?.primary as EdgeMetric;
+  public getPrimaryEdgeMetric(): TopologyMetricWithCategoryData | undefined {
+    return this.edgeMetrics?.primary
   }
 
-  public geSecondaryEdgeMetric(): EdgeMetric | undefined {
-    return (this.modelProperties.edgeMetrics as MetricData)?.secondary as EdgeMetric;
+  public getSecondaryEdgeMetric(): TopologyMetricWithCategoryData | undefined {
+    return this.edgeMetrics?.secondary
+  }
+
+  public getAllNodeCategories(): TopologyMetricCategoryData[] {
+    return [this.nodeMetrics?.primary, this.nodeMetrics?.secondary, this.nodeMetrics?.others].flat().map(categoryData => categoryData?.categories ?? []).flat();
+  }
+
+  public getAllEdgeCategories(): TopologyMetricCategoryData[] {
+    return [this.edgeMetrics?.primary, this.edgeMetrics?.secondary, this.edgeMetrics?.others].flat().map(categoryData => categoryData?.categories ?? []).flat();
   }
 }
