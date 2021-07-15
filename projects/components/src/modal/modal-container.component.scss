@@ -41,6 +41,11 @@
     width: 840px;
   }
 
+  &.modal-size-full-screen {
+    height: calc(100vh - 40px);
+    width: calc(100vw - 40px);
+  }
+
   .header {
     display: flex;
     flex-direction: column;

@@ -16,7 +16,8 @@ export const enum ModalSize {
   LargeShort = 'large-short',
   Large = 'large',
   LargeTall = 'large-tall',
-  MediumWide = 'medium-wide'
+  MediumWide = 'medium-wide',
+  FullScreen = 'full-screen'
 }
 
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');

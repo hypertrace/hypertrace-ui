@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { SubscriptionLifecycle, throwIfNil } from '@hypertrace/common';
-
-import { IconSize } from '@hypertrace/components';
+import { IconSize, ModalService, ModalSize } from '@hypertrace/components';
 import {
   RenderableTopology,
   TopologyConfiguration,
@@ -10,6 +9,7 @@ import {
   TopologyEdge,
   TopologyNode
 } from '../../topology';
+import { ApplicationFlowComponent } from '../../../../../pages/apis/topology/application-flow.component';
 import { TopologyStateManager } from './state/topology-state-manager';
 import { TopologyZoom } from './zoom/topology-zoom';
 
@@ -24,6 +24,15 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
   providers: [SubscriptionLifecycle],
   template: `
     <div class="control-container">
+      <button (click)="this.showFullFlow()" class="topology-control topology-button">
+        <ht-icon
+          icon="${IconType.Expand}"
+          [size]="this.iconSize"
+          label="Show Full Flow"
+          [showTooltip]="true"
+          class="control-icon"
+        ></ht-icon>
+      </button>
       <button (click)="this.runLayout()" class="topology-control topology-button">
         <ht-icon
           icon="${IconType.Refresh}"
@@ -93,7 +102,8 @@ export class TopologyInteractionControlComponent implements OnInit {
   public constructor(
     changeDetector: ChangeDetectorRef,
     subscriptionLifecycle: SubscriptionLifecycle,
-    @Inject(TOPOLOGY_INTERACTION_CONTROL_DATA) private readonly interactionControlData: TopologyInteractionControlData
+    @Inject(TOPOLOGY_INTERACTION_CONTROL_DATA) private readonly interactionControlData: TopologyInteractionControlData,
+    private readonly modalService: ModalService
   ) {
     if (this.interactionControlData.zoom) {
       const zoom = this.interactionControlData.zoom;
@@ -137,6 +147,15 @@ export class TopologyInteractionControlComponent implements OnInit {
 
   public canZoom(): boolean {
     return !!this.interactionControlData.zoom;
+  }
+
+  public showFullFlow(): void {
+    this.modalService.createModal({
+      size: ModalSize.FullScreen,
+      content: ApplicationFlowComponent,
+      title: undefined,
+      showControls: true
+    });
   }
 
   private getZoomOrThrow(): TopologyZoom {
