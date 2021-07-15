@@ -36,6 +36,7 @@
         @include transition;
         .entity-outer-band {
           filter: url(#entity-node-dropshadow-filter);
+          fill: white;
         }
       }
 
@@ -43,6 +44,7 @@
         @include transition;
         .entity-outer-band {
           filter: url(#entity-node-dropshadow-filter);
+          fill: white;
           stroke-width: 1px;
         }
 
@@ -67,6 +69,10 @@
       .entity-inner-band {
         fill: transparent;
         stroke: $gray-2;
+      }
+
+      .entity-outer-band {
+        fill: $gray-2;
       }
 
       .entity-metric-value {

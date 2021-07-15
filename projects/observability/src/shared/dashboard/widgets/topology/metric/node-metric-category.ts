@@ -23,7 +23,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 20,
     fillColor: Color.BlueGray1,
     strokeColor: Color.BlueGray1,
-    focusColor: Color.BlueGray1
+    focusColor: Color.Blue4
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From20To100,
@@ -31,7 +31,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 100,
     fillColor: Color.BlueGray2,
     strokeColor: Color.BlueGray2,
-    focusColor: Color.BlueGray2
+    focusColor: Color.Blue4
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From100To500,
@@ -39,7 +39,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 500,
     fillColor: Color.BlueGray3,
     strokeColor: Color.BlueGray3,
-    focusColor: Color.BlueGray3
+    focusColor: Color.Blue4
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From500To1000,
@@ -47,7 +47,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 1000,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.BlueGray4
+    focusColor: Color.Blue4
   },
   {
     name: PrimaryNodeMetricCategoryValueType.GreaterThanOrEqualTo1000,
@@ -55,7 +55,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: undefined,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.BlueGray4
+    focusColor: Color.Blue4
   }
 ];
 
@@ -66,14 +66,15 @@ export const defaultSecondaryNodeMetricCategories: Omit<TopologyMetricCategoryDa
     maxValue: 5,
     fillColor: Color.Gray2,
     strokeColor: Color.Gray2,
-    focusColor: Color.Gray2
+    focusColor: Color.Blue4
   },
   {
     name: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
     minValue: 5,
     maxValue: undefined,
-    fillColor: Color.Red5,
+    fillColor: Color.Red1,
     strokeColor: Color.Red5,
-    focusColor: Color.Red5
+    focusColor: Color.Red5,
+    highestPrecedence: true
   }
 ];

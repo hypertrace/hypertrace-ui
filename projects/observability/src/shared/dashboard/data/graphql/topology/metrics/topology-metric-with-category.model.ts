@@ -1,9 +1,9 @@
-import { Dictionary } from './../../../../../../../../common/src/utilities/types/types';
-import { MetricAggregationSpecification } from './../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
-import { ARRAY_PROPERTY, Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
-import { TopologyMetricCategoryModel, TopologyMetricCategoryData } from './topology-metric-category.model';
+import { Dictionary } from '@hypertrace/common';
 import { MetricAggregation } from '@hypertrace/distributed-tracing';
+import { ARRAY_PROPERTY, Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
+import { MetricAggregationSpecification } from './../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
+import { TopologyMetricCategoryData, TopologyMetricCategoryModel } from './topology-metric-category.model';
 
 @Model({
   type: 'topology-metric-with-category'
@@ -29,6 +29,7 @@ export class TopologyMetricWithCategoryModel implements TopologyMetricWithCatego
 
   public extractAndGetDataCategoryForMetric(data: Dictionary<unknown>): TopologyMetricCategoryData | undefined {
     const aggregation =  this.extractDataForMetric(data);
+
     return aggregation !== undefined ? this.getDataCategoryForMetric(aggregation.value) : undefined;
   }
 
@@ -37,7 +38,7 @@ export class TopologyMetricWithCategoryModel implements TopologyMetricWithCatego
   }
 
   private getDataCategoryForMetric(value: number): TopologyMetricCategoryData | undefined {
-    return this.categories.find(category => value >= category.minValue && (category.maxValue !== undefined && value < category.maxValue));
+    return this.categories.find(category => value >= category.minValue && (category.maxValue !== undefined ? value < category.maxValue: true));
   }
 }
 

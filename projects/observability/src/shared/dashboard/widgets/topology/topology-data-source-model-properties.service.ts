@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { TopologyMetricCategoryData } from '../../data/graphql/topology/metrics/topology-metric-category.model';
 import { TopologyMetricWithCategoryData } from '../../data/graphql/topology/metrics/topology-metric-with-category.model';
 import { TopologyMetricsData } from '../../data/graphql/topology/metrics/topology-metrics.model';
-import { TopologyMetricCategoryData } from '../../data/graphql/topology/metrics/topology-metric-category.model';
 
 @Injectable()
 export class TopologyDataSourceModelPropertiesService {

@@ -31,8 +31,6 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private readonly numberFormatter: NumericFormatter = new NumericFormatter();
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
 
-  //private allEdgeCategories: EdgeMetricCategory[] = [];
-
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly svgUtils: SvgUtilService,
@@ -117,6 +115,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .select(selector(this.edgeLineClass))
       .select('.edge-path')
       .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray3);
+
     selection
       .select(selector(this.edgeMetricBubbleClass))
       .attr('fill', edgeFocusedCategory?.fillColor ?? '')
@@ -255,17 +254,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     primaryMetricCategory?: TopologyMetricCategoryData,
     secondaryMetricCategory?: TopologyMetricCategoryData
   ): TopologyMetricCategoryData | undefined {
-    return primaryMetricCategory ?? secondaryMetricCategory;
-
-    // if (secondaryMetricCategory?.value === SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5) {
-    //   return secondaryMetricCategory;
-    // }
-
-    // if (primaryMetricCategory) {
-    //   return primaryMetricCategory;
-    // }
-
-    // return undefined;
+    return secondaryMetricCategory?.highestPrecedence ?  secondaryMetricCategory : primaryMetricCategory;
   }
 
   private getMetricValueString(
@@ -274,15 +263,12 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     primaryMetricCategory?: TopologyMetricCategoryData,
     secondaryMetricCategory?: TopologyMetricCategoryData
   ): string {
-    if (primaryMetricCategory) {
-      return this.formattedMetricValue(primaryMetricAggregation!.value, primaryMetricAggregation?.units);
-    }
-
-    if (secondaryMetricCategory) {
+    if (secondaryMetricCategory?.highestPrecedence === true || !primaryMetricCategory ) {
       return this.formattedMetricValue(secondaryMetricAggregation!.value, secondaryMetricAggregation?.units);
     }
 
-    return '-';
+    return this.formattedMetricValue(primaryMetricAggregation!.value, primaryMetricAggregation?.units);
+
   }
 
   private formattedMetricValue(valueToShow: number, unit?: string): string {

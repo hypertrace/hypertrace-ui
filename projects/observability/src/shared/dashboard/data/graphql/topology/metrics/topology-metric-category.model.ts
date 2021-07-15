@@ -1,6 +1,6 @@
-import { kebabCase, uniqueId } from 'lodash-es';
 import { Color } from '@hypertrace/common';
-import { Model, ModelProperty, STRING_PROPERTY, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { BOOLEAN_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { kebabCase, uniqueId } from 'lodash-es';
 
 @Model({
   type: 'topology-metric-category'
@@ -49,6 +49,13 @@ export class TopologyMetricCategoryModel implements TopologyMetricCategoryData {
   })
   public focusColor!: Color;
 
+  @ModelProperty({
+    key: 'highestPrecedence',
+    required: false,
+    type: BOOLEAN_PROPERTY.type
+  })
+  public highestPrecedence?: boolean = false;
+
   private readonly id: string = uniqueId();
 
   public getCategoryClassName(): string {
@@ -63,5 +70,6 @@ export interface TopologyMetricCategoryData {
   fillColor: string;
   strokeColor: string;
   focusColor: string;
+  highestPrecedence?: boolean;
   getCategoryClassName(): string;
 }

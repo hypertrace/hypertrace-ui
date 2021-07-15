@@ -57,18 +57,6 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   })
   public downstreamEntityTypes?: ObservabilityEntityType[];
 
-  // @ModelProperty({
-  //   key: 'node-metrics',
-  //   type: PLAIN_OBJECT_PROPERTY.type
-  // })
-  // public nodeMetrics!: MetricData;
-
-  // @ModelProperty({
-  //   key: 'edge-metrics',
-  //   type: PLAIN_OBJECT_PROPERTY.type
-  // })
-  // public edgeMetrics!: MetricData;
-
   @ModelProperty({
     key: 'node-metrics',
     // tslint:disable-next-line: no-object-literal-type-assertion

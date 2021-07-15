@@ -76,6 +76,7 @@ export const defaultSecondaryEdgeMetricCategories: Omit<TopologyMetricCategoryDa
     maxValue: undefined,
     fillColor: Color.Red5,
     strokeColor: Color.Red5,
-    focusColor: Color.Red5
+    focusColor: Color.Red5,
+    highestPrecedence: true
   }
 ];

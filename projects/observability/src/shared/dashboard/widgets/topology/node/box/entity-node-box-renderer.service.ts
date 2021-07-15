@@ -130,8 +130,8 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     secondaryMetric?: TopologyMetricCategoryData
   ): void {
     selection
-      .classed(primaryMetric?.name ?? '', true)
-      .classed(secondaryMetric?.name ?? '', true)
+      .classed(primaryMetric?.getCategoryClassName() ?? '', true)
+      .classed(secondaryMetric?.getCategoryClassName() ?? '', true)
       .select(selector(this.entityMetricClass));
 
     // For primary category
@@ -140,16 +140,16 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     // For secondary category
     selection
       .select(selector(this.entityOuterBandClass))
-      .attr('fill', () => {
+      .style('fill', () => {
         if (visibility === TopologyElementVisibility.Focused || visibility === TopologyElementVisibility.Emphasized) {
-          return secondaryMetric?.focusColor ?? this.focusedOrEmphasizedColor();
+          return this.focusedOrEmphasizedColor();
         }
 
-        return secondaryMetric?.fillColor!;
+        return secondaryMetric?.fillColor ?? '';
       })
-      .attr('stroke', () => {
+      .style('stroke', () => {
         if (visibility === TopologyElementVisibility.Focused) {
-          return secondaryMetric?.strokeColor ?? this.focusedBandColor();
+          return secondaryMetric?.highestPrecedence === true ? secondaryMetric?.focusColor : primaryMetric?.focusColor!;
         }
 
         return secondaryMetric?.strokeColor ?? '';

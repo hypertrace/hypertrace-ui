@@ -1,7 +1,7 @@
-import { defaultPrimaryEdgeMetricCategories, defaultSecondaryEdgeMetricCategories } from './../../../shared/dashboard/widgets/topology/metric/edge-metric-category';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelJson } from '@hypertrace/hyperdash';
+import { defaultPrimaryEdgeMetricCategories, defaultSecondaryEdgeMetricCategories } from './../../../shared/dashboard/widgets/topology/metric/edge-metric-category';
 import { defaultPrimaryNodeMetricCategories, defaultSecondaryNodeMetricCategories } from './../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 
 @Component({
