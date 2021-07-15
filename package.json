@@ -7,7 +7,6 @@
   },
   "license": "LicenseRef-LICENSE",
   "scripts": {
-    "prepare": "husky install",
     "postinstall": "ngcc --tsconfig './tsconfig.app.json' --use-program-dependencies && ngcc --source 'node_modules/@angular'",
     "ng": "ng",
     "start": "ng serve",

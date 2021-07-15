@@ -1,7 +1,7 @@
 import { Color } from '@hypertrace/common';
 import { TopologyMetricCategoryData } from '../../../data/graphql/topology/metrics/topology-metric-category.model';
 
-export enum PrimaryNodeMetricCategoryValueType {
+const enum PrimaryNodeMetricCategoryValueType {
   LessThan20 = 'less-than-20',
   From20To100 = 'from-20-to-100',
   From100To500 = 'from-100-to-500',
@@ -10,7 +10,7 @@ export enum PrimaryNodeMetricCategoryValueType {
   NotSpecified = 'not-specified'
 }
 
-export enum SecondaryNodeMetricCategoryValueType {
+const enum SecondaryNodeMetricCategoryValueType {
   LessThan5 = 'less-than-5',
   GreaterThanOrEqualTo5 = 'greater-than-or-equal-to-5',
   NotSpecified = 'not-specified'

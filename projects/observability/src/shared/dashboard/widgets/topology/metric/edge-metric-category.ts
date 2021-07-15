@@ -1,9 +1,7 @@
 import { Color } from '@hypertrace/common';
 import { TopologyMetricCategoryData } from '../../../data/graphql/topology/metrics/topology-metric-category.model';
 
-export type EdgeMetricCategoryValueType = PrimaryEdgeMetricCategoryValueType | SecondaryEdgeMetricCategoryValueType;
-
-export enum PrimaryEdgeMetricCategoryValueType {
+const enum PrimaryEdgeMetricCategoryValueType {
   LessThan20 = 'less-than-20',
   From20To100 = 'from-20-to-100',
   From100To500 = 'from-100-to-500',
@@ -12,7 +10,7 @@ export enum PrimaryEdgeMetricCategoryValueType {
   NotSpecified = 'not-specified'
 }
 
-export enum SecondaryEdgeMetricCategoryValueType {
+const enum SecondaryEdgeMetricCategoryValueType {
   LessThan5 = 'less-than-5',
   GreaterThanOrEqualTo5 = 'greater-than-or-equal-to-5',
   NotSpecified = 'not-specified'
