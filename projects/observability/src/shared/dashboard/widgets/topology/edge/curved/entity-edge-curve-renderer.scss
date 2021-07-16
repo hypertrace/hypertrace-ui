@@ -18,7 +18,7 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      stroke: currentColor;
+      stroke: $gray-3;
       fill: none;
 
       @include chart-small-regular;
@@ -34,7 +34,6 @@
       .edge-path {
         stroke-dasharray: 2, 2;
         stroke-width: 1px;
-        stroke: $gray-3;
       }
 
       &.background {
@@ -50,7 +49,6 @@
       &.focused {
         .entity-edge-metric-bubble {
           @include show;
-          fill: currentColor;
         }
 
         .entity-edge-metric-value {
@@ -65,35 +63,6 @@
         .edge-path {
           stroke-dasharray: none;
           stroke-width: 1.5px;
-          stroke: currentColor;
-        }
-
-        &.less-than-20-category {
-          color: $blue-gray-1;
-        }
-
-        &.from-20-to-100-category {
-          color: $blue-gray-2;
-        }
-
-        &.from-100-to-500-category {
-          color: $blue-gray-3;
-        }
-
-        &.from-500-to-1000-category {
-          color: $blue-gray-4;
-        }
-
-        &.greater-than-or-equal-to-1000-category {
-          color: $blue-gray-5;
-        }
-
-        &.not-specified-category {
-          color: lightgray;
-        }
-
-        &.greater-than-or-equal-to-5-error-category {
-          color: $red-5;
         }
       }
     }
@@ -101,35 +70,6 @@
     .entity-edge-arrow {
       stroke-linecap: round;
       stroke-linejoin: round;
-      fill: currentColor;
-
-      &.less-than-20-category {
-        color: $blue-gray-1;
-      }
-
-      &.from-20-to-100-category {
-        color: $blue-gray-2;
-      }
-
-      &.from-100-to-500-category {
-        color: $blue-gray-3;
-      }
-
-      &.from-500-to-1000-category {
-        color: $blue-gray-4;
-      }
-
-      &.greater-than-or-equal-to-1000-category {
-        color: $blue-gray-5;
-      }
-
-      &.not-specified-category {
-        color: lightgray;
-      }
-
-      &.greater-than-or-equal-to-5-error-category {
-        color: $red-5;
-      }
     }
   }
 }
