@@ -1,9 +1,8 @@
-import { Color, isEqualIgnoreFunctions } from '@hypertrace/common';
+import { Color } from '@hypertrace/common';
 import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
-import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   ENTITY_TOPOLOGY_GQL_REQUEST,
   TopologyNodeSpecification
@@ -15,7 +14,6 @@ import { TopologyMetricsModel } from './metrics/topology-metrics.model';
 import { TopologyDataSourceModel } from './topology-data-source.model';
 
 describe('topology data source model', () => {
-  const specBuilder = new ObservabilitySpecificationBuilder();
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model!: TopologyDataSourceModel;
   let lastEmittedQuery: unknown;
@@ -93,47 +91,55 @@ describe('topology data source model', () => {
 
   test('builds expected request', () => {
     model.getData();
-    expect(
-      isEqualIgnoreFunctions(lastEmittedQuery, {
-        requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
-        rootNodeType: ObservabilityEntityType.Service,
-        rootNodeSpecification: {
-          titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-          metricSpecifications: [specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Average)]
-        },
-        rootNodeFilters: [],
-        rootNodeLimit: 100,
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
-        downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
-          [
-            ObservabilityEntityType.Api,
-            {
-              titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-              metricSpecifications: [specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Average)]
-            }
-          ],
-          [
-            ObservabilityEntityType.Backend,
-            {
-              titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-              metricSpecifications: [specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Average)]
-            }
-          ]
-        ]),
-        upstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
-          [
-            ObservabilityEntityType.Service,
-            {
-              titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-              metricSpecifications: [specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Average)]
-            }
-          ]
-        ]),
-        edgeSpecification: {
-          metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)]
-        }
-      })
-    ).toBe(true);
+    expect(lastEmittedQuery).toEqual({
+      requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
+      rootNodeType: ObservabilityEntityType.Service,
+      rootNodeSpecification: {
+        titleSpecification: expect.objectContaining({ name: 'name' }),
+        metricSpecifications: [
+          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+        ]
+      },
+      rootNodeFilters: [],
+      rootNodeLimit: 100,
+      timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
+        [
+          ObservabilityEntityType.Api,
+          {
+            titleSpecification: expect.objectContaining({ name: 'name' }),
+            metricSpecifications: [
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+            ]
+          }
+        ],
+        [
+          ObservabilityEntityType.Backend,
+          {
+            titleSpecification: expect.objectContaining({ name: 'name' }),
+            metricSpecifications: [
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+            ]
+          }
+        ]
+      ]),
+      upstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
+        [
+          ObservabilityEntityType.Service,
+          {
+            titleSpecification: expect.objectContaining({ name: 'name' }),
+            metricSpecifications: [
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+            ]
+          }
+        ]
+      ]),
+      edgeSpecification: {
+        metricSpecifications: [
+          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average })
+        ]
+      }
+    });
 
     expect(lastEmittedQueryRequestOption).toEqual({
       cacheability: GraphQlRequestCacheability.Cacheable,
