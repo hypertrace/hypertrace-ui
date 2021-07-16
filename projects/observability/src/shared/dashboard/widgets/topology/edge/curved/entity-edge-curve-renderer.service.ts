@@ -263,11 +263,13 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     primaryMetricCategory?: TopologyMetricCategoryData,
     secondaryMetricCategory?: TopologyMetricCategoryData
   ): string {
-    if (secondaryMetricCategory?.highestPrecedence === true || !primaryMetricCategory) {
-      return this.formattedMetricValue(secondaryMetricAggregation!.value, secondaryMetricAggregation?.units);
+    if (secondaryMetricAggregation && (secondaryMetricCategory?.highestPrecedence === true || !primaryMetricCategory)) {
+      return this.formattedMetricValue(secondaryMetricAggregation.value, secondaryMetricAggregation?.units);
     }
 
-    return this.formattedMetricValue(primaryMetricAggregation!.value, primaryMetricAggregation?.units);
+    return primaryMetricAggregation
+      ? this.formattedMetricValue(primaryMetricAggregation.value, primaryMetricAggregation?.units)
+      : '-';
   }
 
   private formattedMetricValue(valueToShow: number, unit?: string): string {
