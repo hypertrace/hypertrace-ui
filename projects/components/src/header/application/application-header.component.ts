@@ -15,7 +15,7 @@ import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
         <div class="left-side-content">
           <ng-content select="[left]"></ng-content>
         </div>
-        <div class="time-range" *ngIf="!this.showTimeRange">
+        <div class="time-range" *ngIf="this.showTimeRange">
           <ht-time-range></ht-time-range>
         </div>
       </div>
