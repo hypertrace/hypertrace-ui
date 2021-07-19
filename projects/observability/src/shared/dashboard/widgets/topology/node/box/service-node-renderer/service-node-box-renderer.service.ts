@@ -5,7 +5,7 @@ import { entityTypeKey, ObservabilityEntityType } from '../../../../../../graphq
 import { EntityNode } from '../../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { EntityNodeBoxRendererService } from '../entity-node-box-renderer.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ServiceNodeBoxRendererService extends EntityNodeBoxRendererService {
   public matches(node: TopologyNode & Partial<EntityNode>): node is EntityNode {
     return this.isEntityNode(node) && node.data[entityTypeKey] === ObservabilityEntityType.Service;
