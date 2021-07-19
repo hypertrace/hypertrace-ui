@@ -576,8 +576,8 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
-                  aggregation: MetricAggregationType.AvgrateSecond,
-                  'display-name': 'Call Rate/sec'
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Calls'
                 }
               },
               {
@@ -585,8 +585,8 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
-                  aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Call Count'
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Calls/s'
                 }
               }
             ]
@@ -673,8 +673,8 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
-                  aggregation: MetricAggregationType.AvgrateSecond,
-                  'display-name': 'Call Rate/sec'
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Calls'
                 }
               },
               {
@@ -682,8 +682,8 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                 specification: {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
-                  aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Call Count'
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Calls/s'
                 }
               }
             ]
