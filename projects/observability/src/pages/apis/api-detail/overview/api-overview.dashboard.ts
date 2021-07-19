@@ -559,7 +559,16 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                   type: 'metric-aggregation',
                   metric: 'errorCount',
                   aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Error Count'
+                  'display-name': 'Errors'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Errors/s'
                 }
               },
               {
@@ -647,7 +656,16 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                   type: 'metric-aggregation',
                   metric: 'errorCount',
                   aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Error Count'
+                  'display-name': 'Errors'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Errors/s'
                 }
               },
               {
