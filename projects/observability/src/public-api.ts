@@ -157,6 +157,10 @@ export * from './shared/components/topology/renderers/tooltip/topology-tooltip-r
 export * from './shared/components/topology/topology.component';
 export * from './shared/components/topology/topology.module';
 
+// Topology Metric
+export * from './shared/dashboard/widgets/topology/metric/edge-metric-category';
+export * from './shared/dashboard/widgets/topology/metric/node-metric-category';
+
 // API Trace Waterfall Data Source
 export * from './shared/dashboard/data/graphql/waterfall/api-trace-waterfall-data-source.model';
 
