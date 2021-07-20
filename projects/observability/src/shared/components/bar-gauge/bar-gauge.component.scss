@@ -12,6 +12,13 @@
         @include subtitle-1($gray-9);
         padding-bottom: 8px;
 
+        .unlimited-symbol {
+          position: relative;
+          top: 3px;
+          font-size: 28px;
+          line-height: 0px;
+        }
+
         .units {
           @include body-small($gray-5);
         }
@@ -22,6 +29,7 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      padding: 0px 2px;
 
       .title {
         @include body-2-medium($gray-7);
@@ -29,6 +37,13 @@
 
       .count {
         @include body-2-regular($gray-5);
+
+        .unlimited-symbol {
+          font-size: 18px;
+          position: relative;
+          top: 2px;
+          line-height: 0px;
+        }
       }
     }
   }
@@ -42,7 +57,7 @@
       height: 100%;
       width: 100%;
       background: $gray-2;
-      border-radius: 4px;
+      border-radius: 16px;
       overflow: hidden;
 
       &.over-max-value {
