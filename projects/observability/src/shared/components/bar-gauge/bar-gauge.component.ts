@@ -29,7 +29,7 @@ import {
         <div class="count">
           <span>{{ this.totalValue | number }}</span>
           <span class="units" *ngIf="this.units && this.isUnlimited"> {{ this.units }}</span>
-          <span> / </span> 
+          <span> / </span>
           <span *ngIf="!this.isUnlimited">{{ this.maxValue | number }}</span>
           <span class="unlimited-symbol" *ngIf="this.isUnlimited">&#8734;</span>
           <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
