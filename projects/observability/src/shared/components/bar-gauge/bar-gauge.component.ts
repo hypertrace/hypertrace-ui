@@ -27,8 +27,12 @@ import {
       <div class="header-data" [ngClass]="this.display">
         <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
         <div class="count">
-          {{ this.totalValue | number }} / {{ this.maxValue | number }}
-          <span class="units" *ngIf="this.units">{{ this.units }}</span>
+          <span>{{ this.totalValue | number }}</span>
+          <span class="units" *ngIf="this.units && this.isUnlimited"> {{ this.units }}</span>
+          <span> / </span> 
+          <span *ngIf="!this.isUnlimited">{{ this.maxValue | number }}</span>
+          <span class="unlimited-symbol" *ngIf="this.isUnlimited">&#8734;</span>
+          <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
         </div>
       </div>
       <div class="bar">
@@ -83,6 +87,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
+
+  @Input()
+  public isUnlimited: boolean = false;
 
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
