@@ -16,7 +16,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "downlevelIteration": true,
-    "lib": ["es2015", "es2016", "es2017", "esnext.array", "esnext.asynciterable", "dom"],
+    "lib": ["es2015", "es2016", "es2017", "esnext.string","esnext.array", "esnext.asynciterable", "dom"],
     "paths": {
       "@hypertrace/assets-library": ["projects/assets-library/src/public-api.ts"],
       "@hypertrace/common": ["projects/common/src/public-api.ts"],
