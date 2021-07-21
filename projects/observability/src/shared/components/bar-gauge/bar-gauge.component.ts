@@ -27,11 +27,9 @@ import {
       <div class="header-data" [ngClass]="this.display">
         <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
         <div class="count">
-          <span>{{ !this.units ? (this.totalValue | htDisplayNumber) : (this.totalValue | number) }}</span>
+          <span>{{ this.totalValue | htDisplayNumber }}</span>
           <span> / </span>
-          <span *ngIf="!this.isUnlimited">{{
-            !this.units ? (this.maxValue | htDisplayNumber) : (this.maxValue | number)
-          }}</span>
+          <span *ngIf="!this.isUnlimited">{{ this.maxValue | htDisplayNumber }}</span>
           <span class="unlimited-symbol" *ngIf="this.isUnlimited">&#8734;</span>
           <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
         </div>
