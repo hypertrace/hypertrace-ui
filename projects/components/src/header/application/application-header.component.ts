@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
 
 @Component({
@@ -15,7 +15,7 @@ import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
         <div class="left-side-content">
           <ng-content select="[left]"></ng-content>
         </div>
-        <div class="time-range">
+        <div class="time-range" *ngIf="this.showTimeRange">
           <ht-time-range></ht-time-range>
         </div>
       </div>
@@ -27,6 +27,9 @@ import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
   `
 })
 export class ApplicationHeaderComponent {
+  @Input()
+  public showTimeRange: boolean = true;
+
   public constructor(
     @Inject(GLOBAL_HEADER_HEIGHT) public readonly height: string,
     private readonly navigationService: NavigationService

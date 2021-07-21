@@ -20,6 +20,7 @@ import { ApiNodeBoxRendererService } from './node/box/api-node-renderer/api-node
 import { BackendNodeBoxRendererService } from './node/box/backend-node-renderer/backend-node-box-renderer.service';
 import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/service-node-box-renderer.service';
 import { TopologyEntityTooltipComponent } from './tooltip/topology-entity-tooltip.component';
+import { TopologyDataSourceModelPropertiesService } from './topology-data-source-model-properties.service';
 import { TopologyWidgetModel } from './topology-widget.model';
 
 @Renderer({ modelClass: TopologyWidgetModel })
@@ -30,7 +31,16 @@ import { TopologyWidgetModel } from './topology-widget.model';
     './edge/curved/entity-edge-curve-renderer.scss',
     './topology-widget-renderer.component.scss'
   ],
-  providers: [TopologyNodeRendererService, TopologyEdgeRendererService, TopologyTooltipRendererService],
+  providers: [
+    TopologyNodeRendererService,
+    TopologyEdgeRendererService,
+    TopologyTooltipRendererService,
+    EntityEdgeCurveRendererService,
+    ApiNodeBoxRendererService,
+    BackendNodeBoxRendererService,
+    ServiceNodeBoxRendererService,
+    TopologyDataSourceModelPropertiesService
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="topology-container" [ngClass]="{ 'box-style': this.model.enableBoxStyle }">
@@ -81,6 +91,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     public readonly edgeRenderer: TopologyEdgeRendererService,
     public readonly tooltipRenderer: TopologyTooltipRendererService,
     private readonly metadataService: MetadataService,
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
@@ -102,6 +113,8 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
         if (data.nodes.length === 0) {
           return EMPTY;
         }
+
+        this.topologyDataSourceModelPropertiesService.setModelProperties(data.nodeMetrics, data.edgeMetrics);
 
         return forkJoinSafeEmpty([of(data), this.buildNodeDataSpecifiers(data), this.buildEdgeDataSpecifiers(data)]);
       }),
