@@ -12,7 +12,7 @@ import { EMPTY, Observable } from 'rxjs';
     <a
       *htLetAsync="this.navData$ as navData"
       class="ht-link"
-      target="{{this.openInNewTab ? '_blank' : ''}}"
+      target="{{ this.openInNewTab ? '_blank' : '' }}"
       rel="noopener noreferrer"
       [ngClass]="{ disabled: this.disabled || !navData }"
       [routerLink]="navData?.path"
