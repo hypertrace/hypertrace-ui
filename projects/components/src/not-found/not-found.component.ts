@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
-import { ButtonStyle, ButtonRole } from '../button/button';
+import { ButtonRole, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-not-found',
@@ -13,9 +13,7 @@ import { ButtonStyle, ButtonRole } from '../button/button';
         <div class="not-found-message-wrapper">
           <div class="not-found-text-wrapper">
             <div class="not-found-message">Page not found</div>
-            <div class="not-found-description">
-              The requested page is not available. This may be an unknown URL.
-            </div>
+            <div class="not-found-description">The requested page is not available. This may be an unknown URL.</div>
           </div>
           <ht-button
             class="navigate-home-button"
