@@ -3,16 +3,43 @@
 
 .not-found-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
-  .not-found-message {
-    @include header-3;
-    padding-bottom: 64px;
-  }
+  .not-found-content {
+    display: flex;
+    padding: 52px;
+    box-shadow: 0px 16px 48px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    max-width: 748px;
+    max-height: 348px;
 
-  .navigate-home-button {
-    height: 2em;
+    .not-found-message-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding-left: 40px;
+
+      .not-found-text-wrapper {
+        margin-bottom: 36px;
+      }
+
+      .not-found-message {
+        @include header-4;
+        margin-bottom: 16px;
+      }
+
+      .not-found-description {
+        @include body-2-medium();
+        color: #657277;
+
+        .contact-us-link {
+          @include body-2-medium($blue-5);
+          margin-left: 8px;
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
