@@ -86,7 +86,7 @@
     "@types/d3-quadtree": "^1.0.7",
     "@types/d3-scale": "^2.1.1",
     "@types/d3-selection": "^1.4.2",
-    "@types/d3-shape": "^2.1.0",
+    "@types/d3-shape": "^3.0.2",
     "@types/d3-zoom": "^1.7.5",
     "@types/jest": "^26.0.23",
     "@types/lodash-es": "^4.17.4",
