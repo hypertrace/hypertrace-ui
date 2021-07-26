@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { MemoizeModule, NavigationService } from '@hypertrace/common';
+import { FeatureStateResolver, MemoizeModule, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -21,6 +21,9 @@ describe('Navigation List Component', () => {
     imports: [LetAsyncModule, MemoizeModule],
     providers: [
       mockProvider(ActivatedRoute, activatedRoute),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(false))
+      }),
       mockProvider(NavigationService, {
         navigation$: EMPTY,
         navigateWithinApp: jest.fn(),
@@ -77,5 +80,37 @@ describe('Navigation List Component', () => {
     spectator.detectChanges();
     expect(spectator.query('.navigation-list')).not.toHaveClass('expanded');
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.TriangleRight);
+  });
+
+  test('should only show one header 1', () => {
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Header,
+        label: 'header 1'
+      },
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'label-1',
+        features: ['feature'],
+        matchPaths: ['']
+      },
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'label-2',
+        matchPaths: ['']
+      },
+      {
+        type: NavItemType.Header,
+        label: 'header 2'
+      }
+    ];
+
+    spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {
+      hostProps: { navItems: navItems }
+    });
+    expect(spectator.queryAll('.nav-header')).toHaveLength(1);
+    expect(spectator.queryAll('.nav-header .label')[0]).toHaveText('header 1');
   });
 });
