@@ -12,8 +12,6 @@ import { EMPTY, Observable } from 'rxjs';
     <a
       *htLetAsync="this.navData$ as navData"
       class="ht-link"
-      target="{{ this.openInNewTab ? '_blank' : '' }}"
-      rel="noopener noreferrer"
       [ngClass]="{ disabled: this.disabled || !navData }"
       [routerLink]="navData?.path"
       [queryParams]="navData?.extras?.queryParams"
@@ -28,9 +26,6 @@ import { EMPTY, Observable } from 'rxjs';
 export class LinkComponent implements OnChanges {
   @Input()
   public paramsOrUrl?: NavigationParams | string | null;
-
-  @Input()
-  public openInNewTab?: boolean;
 
   @Input()
   public disabled?: boolean;
