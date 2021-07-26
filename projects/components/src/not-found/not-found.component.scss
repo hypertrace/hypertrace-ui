@@ -32,13 +32,7 @@
 
       .not-found-description {
         @include body-2-medium();
-        color: #657277;
-
-        .contact-us-link {
-          @include body-2-medium($blue-5);
-          margin-left: 8px;
-          text-decoration: none;
-        }
+        color: $gray-5;
       }
     }
   }
