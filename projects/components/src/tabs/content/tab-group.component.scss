@@ -41,14 +41,14 @@
           background: $gray-3 radial-gradient(circle, transparent 1%, $gray-3 1%) center/12000%;
 
           &.active {
-            background-color: $blue-5;
+            background-color: $gray-9;
           }
         }
       }
 
       &:active {
         .ink-bar {
-          background-color: $blue-5;
+          background-color: $gray-9;
           background-size: 100%;
           transition: background 0s;
         }
@@ -77,6 +77,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: $gray-5;
+
+  &:hover {
+    color: $gray-9;
+  }
+
+  &.active {
+    color: $gray-9;
+  }
 
   .tab-label-tag {
     margin-left: 4px;
@@ -96,6 +105,6 @@
   }
 
   &.active {
-    background-color: $blue-5;
+    background-color: $gray-9;
   }
 }

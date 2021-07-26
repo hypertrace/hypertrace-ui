@@ -27,7 +27,7 @@ import { TabComponent } from './tab/tab.component';
       >
         <mat-tab *ngFor="let tab of this.tabs; index as i">
           <ng-template mat-tab-label>
-            <div class="tab-label">
+            <div class="tab-label" [ngClass]="{ active: this.activeTabIndex === i }">
               {{ tab.label }}
               <ng-container *ngIf="tab.labelTag">
                 <ht-label-tag
