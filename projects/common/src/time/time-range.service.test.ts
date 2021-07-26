@@ -1,4 +1,5 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { RelativeTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of } from 'rxjs';
@@ -28,9 +29,10 @@ describe('Time range service', () => {
     ]
   });
 
-  test('throws error when asking for time range before initialization', () => {
+  test('provides default when asking for time range before initialization', () => {
     const spectator = buildService();
-    expect(() => spectator.service.getCurrentTimeRange()).toThrow();
+    expect(spectator.service.getCurrentTimeRange().toDisplayString())
+      .toEqual(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)).toDisplayString());
   });
 
   test('returns time range when requested after init', () => {
@@ -49,7 +51,8 @@ describe('Time range service', () => {
       });
 
       const spectator = buildService();
-      expect(() => spectator.service.getCurrentTimeRange()).toThrow();
+      expect(spectator.service.getCurrentTimeRange().toDisplayString())
+        .toEqual(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)).toDisplayString());
 
       cold('5ms x').subscribe(() =>
         spectator.service.setFixedRange(lateArrivingTimeRange.startTime, lateArrivingTimeRange.endTime)

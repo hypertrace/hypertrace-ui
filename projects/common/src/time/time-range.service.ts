@@ -45,7 +45,7 @@ export class TimeRangeService {
 
   public getCurrentTimeRange(): TimeRange {
     if (!this.currentTimeRange) {
-      throw Error('Time range not yet initialized');
+      return this.defaultTimeRange;
     }
 
     return this.currentTimeRange;
