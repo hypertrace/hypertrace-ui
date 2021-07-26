@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
-import { Observable } from 'rxjs';
+import { FeatureState, FeatureStateResolver, NavigationService } from '@hypertrace/common';
+import { isEmpty } from 'lodash-es';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
@@ -13,13 +14,15 @@ import { IconSize } from '../icon/icon-size';
   template: `
     <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
-        <ng-container *ngFor="let item of this.navItems">
+        <ng-container *ngFor="let item of this.navItems; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
-              <div *ngSwitchCase="'${NavItemType.Header}'" class="nav-header">
-                <div class="label">{{ item.label }}</div>
-                <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
-              </div>
+              <ng-container *ngSwitchCase="'${NavItemType.Header}'">
+                <div *ngIf="this.shouldShowHeader(id) | async" class="nav-header">
+                  <div class="label">{{ item.label }}</div>
+                  <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
+                </div>
+              </ng-container>
             </div>
 
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
@@ -68,7 +71,8 @@ export class NavigationListComponent {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly featureStateResolver: FeatureStateResolver
   ) {
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
@@ -85,6 +89,26 @@ export class NavigationListComponent {
 
   public getResizeIcon(): IconType {
     return this.collapsed ? IconType.TriangleRight : IconType.TriangleLeft;
+  }
+
+  public shouldShowHeader(index: number): Observable<boolean> {
+    const features = [];
+    for (let i = index + 1; i < this.navItems.length; i++) {
+      if (this.navItems[i].type !== NavItemType.Link) {
+        break;
+      }
+
+      const navLinkItemFeatures = (this.navItems[i] as NavItemLinkConfig).features;
+      features.push(isEmpty(navLinkItemFeatures) ? 'None' : navLinkItemFeatures);
+    }
+
+    return isEmpty(features.flat())
+      ? of(false)
+      : combineLatest(
+          features
+            .flat()
+            .map(f => (f === 'None' ? of(FeatureState.Enabled) : this.featureStateResolver.getFeatureState(f!)))
+        ).pipe(map(states => states.some(state => state === FeatureState.Enabled)));
   }
 
   private findActiveItem(navItems: NavItemConfig[]): NavItemLinkConfig | undefined {
