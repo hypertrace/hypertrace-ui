@@ -18,7 +18,7 @@ import { NavItemLinkConfig } from '../navigation-list.component';
         <ht-icon
           class="icon"
           [icon]="this.config.icon"
-          size="{{(this.config.iconSize !== undefined ? this.config.iconSize: '${IconSize.Medium}')}}"
+          size="{{ this.config.iconSize !== undefined ? this.config.iconSize : '${IconSize.Medium}' }}"
           [label]="this.config.label"
           [showTooltip]="this.collapsed"
         >
@@ -34,8 +34,8 @@ import { NavItemLinkConfig } from '../navigation-list.component';
             class="trailing-icon"
             *ngIf="this.config.trailingIcon"
             [icon]="this.config.trailingIcon"
-            size="{{(this.config.iconSize !== undefined ? this.config.iconSize: '${IconSize.Medium}')}}"
-            [ngStyle]="{'color': this.config.trailingIconColor}"
+            size="{{ this.config.iconSize !== undefined ? this.config.iconSize : '${IconSize.Medium}' }}"
+            [ngStyle]="{ color: this.config.trailingIconColor }"
             [htTooltip]="this.config.trailingIconTooltip"
           >
           </ht-icon>

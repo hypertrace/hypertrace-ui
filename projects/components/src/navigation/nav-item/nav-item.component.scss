@@ -2,7 +2,6 @@
 
 .nav-item {
   @include font-left-nav-label;
-  //@include box-shadow-2dp();
   @include raised-shadow-hover();
   color: $gray-7;
   display: flex;
