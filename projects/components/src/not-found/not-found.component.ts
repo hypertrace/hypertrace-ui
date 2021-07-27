@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
-import { ButtonStyle } from '../button/button';
+import { ButtonRole, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-not-found',
@@ -8,13 +8,22 @@ import { ButtonStyle } from '../button/button';
   styleUrls: ['./not-found.component.scss'],
   template: `
     <div class="not-found-container fill-container">
-      <div class="not-found-message">The requested page is not available</div>
-      <ht-button
-        class="navigate-home-button"
-        label="Take me home"
-        (click)="this.goHome()"
-        display="${ButtonStyle.Bordered}"
-      ></ht-button>
+      <div class="not-found-content">
+        <img class="not-found-image" src="assets/images/error-page.svg" loading="lazy" alt="not found page" />
+        <div class="not-found-message-wrapper">
+          <div class="not-found-text-wrapper">
+            <div class="not-found-message">Page not found</div>
+            <div class="not-found-description">The requested page is not available. This may be an unknown URL.</div>
+          </div>
+          <ht-button
+            class="navigate-home-button"
+            label="Go to dashboard"
+            (click)="this.goHome()"
+            display="${ButtonStyle.Solid}"
+            role="${ButtonRole.Primary}"
+          ></ht-button>
+        </div>
+      </div>
     </div>
   `
 })
