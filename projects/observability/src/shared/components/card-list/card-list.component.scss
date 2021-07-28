@@ -25,12 +25,12 @@
     @include card-hover();
 
     &.selected-card {
-      background: $blue-1;
+      background: $gray-1;
       border: 1px solid $blue-2;
 
       &.grouped-style {
         margin-bottom: 8px;
-        @include grouped-style($blue-1);
+        @include grouped-style($gray-1);
       }
 
       &:hover {

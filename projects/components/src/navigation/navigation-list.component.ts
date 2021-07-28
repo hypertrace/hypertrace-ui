@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { Color, NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -25,7 +25,7 @@ import { IconSize } from '../icon/icon-size';
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"> </ht-nav-item>
+              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"></ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -48,7 +48,7 @@ import { IconSize } from '../icon/icon-size';
     </nav>
   `
 })
-export class NavigationListComponent {
+export class NavigationListComponent implements OnChanges {
   @Input()
   public navItems: NavItemConfig[] = [];
 
@@ -64,12 +64,14 @@ export class NavigationListComponent {
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
-  public readonly activeItem$: Observable<NavItemLinkConfig | undefined>;
+  public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute
-  ) {
+  ) {}
+
+  public ngOnChanges(): void {
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
       map(() => this.findActiveItem(this.navItems))
@@ -103,11 +105,15 @@ export type NavItemConfig = NavItemLinkConfig | NavItemHeaderConfig | NavItemDiv
 export interface NavItemLinkConfig {
   type: NavItemType.Link;
   icon: string;
+  iconSize?: IconSize;
   label: string;
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
   replaceCurrentHistory?: boolean;
   isBeta?: boolean;
+  trailingIcon?: string;
+  trailingIconTooltip?: string;
+  trailingIconColor?: Color;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;
