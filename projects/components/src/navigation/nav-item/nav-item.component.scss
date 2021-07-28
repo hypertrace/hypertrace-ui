@@ -1,8 +1,8 @@
-@import 'color-palette';
-@import 'font';
+@import 'mixins';
 
 .nav-item {
   @include font-left-nav-label;
+  @include raised-shadow-hover();
   color: $gray-7;
   display: flex;
   height: 36px;
