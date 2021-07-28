@@ -77,15 +77,15 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   public getAttachmentPoint(angle: number): TopologyCoordinates {
     if (this.isAnglePerpendicularlyAbove(angle)) {
       return {
-        x: 0,
-        y: this.boxHeight() / 2
+        x: this.boxWidth() / 2,
+        y: 0
       };
     }
 
     if (this.isAnglePerpendicularlyBelow(angle)) {
       return {
-        x: this.boxWidth(),
-        y: this.boxHeight() / 2
+        x: this.boxWidth() / 2,
+        y: this.boxHeight()
       };
     }
 
