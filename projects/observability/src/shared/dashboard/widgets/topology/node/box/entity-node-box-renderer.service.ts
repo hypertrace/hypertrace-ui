@@ -77,15 +77,15 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   public getAttachmentPoint(angle: number): TopologyCoordinates {
     if (this.isAnglePerpendicularlyAbove(angle)) {
       return {
-        x: this.boxWidth() / 2,
-        y: 0
+        x: 0,
+        y: this.boxHeight() / 2
       };
     }
 
     if (this.isAnglePerpendicularlyBelow(angle)) {
       return {
-        x: this.boxWidth() / 2,
-        y: this.boxHeight()
+        x: this.boxWidth(),
+        y: this.boxHeight() / 2
       };
     }
 
@@ -396,7 +396,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   private isAngleInIQuadrant(angle: number): boolean {
-    return angle > 0 && angle < Math.PI / 2;
+    return angle >= 0 && angle < Math.PI / 2;
   }
 
   private isAnglePerpendicularlyAbove(angle: number): boolean {

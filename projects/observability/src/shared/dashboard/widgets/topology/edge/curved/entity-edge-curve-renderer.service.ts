@@ -114,7 +114,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection
       .select(selector(this.edgeLineClass))
       .select('.edge-path')
-      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray3);
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray2);
 
     selection
       .select(selector(this.edgeMetricBubbleClass))
