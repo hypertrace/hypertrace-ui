@@ -154,6 +154,8 @@ export { LayoutChangeModule } from './layout/layout-change.module';
 export * from './navigation/navigation-list.component';
 export * from './navigation/navigation-list.module';
 export * from './navigation/nav-item/nav-item.component';
+export * from './navigation/navigation.config';
+export * from './navigation/navigation-list-component.service';
 
 // Let async
 export { LetAsyncDirective } from './let-async/let-async.directive';
