@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { Color, FeatureState, FeatureStateResolver, NavigationService } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
-import { combineLatest, Observable, of } from 'rxjs';
+import { NavigationService } from '@hypertrace/common';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { NavigationListComponentService } from './navigation-list-component.service';
+import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Component({
   selector: 'ht-navigation-list',
@@ -18,7 +19,7 @@ import { IconSize } from '../icon/icon-size';
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
               <ng-container *ngSwitchCase="'${NavItemType.Header}'">
-                <div *ngIf="this.shouldShowHeader(id) | async" class="nav-header">
+                <div *ngIf="item.isVisible$ | async" class="nav-header">
                   <div class="label">{{ item.label }}</div>
                   <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
                 </div>
@@ -72,10 +73,11 @@ export class NavigationListComponent implements OnChanges {
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly featureStateResolver: FeatureStateResolver
+    private readonly navListComponentService: NavigationListComponentService
   ) {}
 
   public ngOnChanges(): void {
+    this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
       map(() => this.findActiveItem(this.navItems))
@@ -93,26 +95,6 @@ export class NavigationListComponent implements OnChanges {
     return this.collapsed ? IconType.TriangleRight : IconType.TriangleLeft;
   }
 
-  public shouldShowHeader(index: number): Observable<boolean> {
-    const features = [];
-    for (let i = index + 1; i < this.navItems.length; i++) {
-      if (this.navItems[i].type !== NavItemType.Link) {
-        break;
-      }
-
-      const navLinkItemFeatures = (this.navItems[i] as NavItemLinkConfig).features;
-      features.push(isEmpty(navLinkItemFeatures) ? 'None' : navLinkItemFeatures);
-    }
-
-    return isEmpty(features.flat())
-      ? of(false)
-      : combineLatest(
-          features
-            .flat()
-            .map(f => (f === 'None' ? of(FeatureState.Enabled) : this.featureStateResolver.getFeatureState(f!)))
-        ).pipe(map(states => states.some(state => state === FeatureState.Enabled)));
-  }
-
   private findActiveItem(navItems: NavItemConfig[]): NavItemLinkConfig | undefined {
     return navItems
       .filter((item): item is NavItemLinkConfig => item.type === NavItemType.Link)
@@ -122,46 +104,4 @@ export class NavigationListComponent implements OnChanges {
         )
       );
   }
-}
-
-export type NavItemConfig = NavItemLinkConfig | NavItemHeaderConfig | NavItemDividerConfig;
-
-export interface NavItemLinkConfig {
-  type: NavItemType.Link;
-  icon: string;
-  iconSize?: IconSize;
-  label: string;
-  matchPaths: string[]; // For now, default path is index 0
-  features?: string[];
-  replaceCurrentHistory?: boolean;
-  isBeta?: boolean;
-  trailingIcon?: string;
-  trailingIconTooltip?: string;
-  trailingIconColor?: Color;
-}
-
-export type FooterItemConfig = FooterItemLinkConfig;
-
-export interface FooterItemLinkConfig {
-  url: string;
-  label: string;
-  icon: string;
-}
-
-export interface NavItemHeaderConfig {
-  type: NavItemType.Header;
-  label: string;
-  isBeta?: boolean;
-}
-
-export interface NavItemDividerConfig {
-  type: NavItemType.Divider;
-}
-
-// Must be exported to be used by AOT compiler in template
-export const enum NavItemType {
-  Header = 'header',
-  Link = 'link',
-  Divider = 'divider',
-  Footer = 'footer'
 }
