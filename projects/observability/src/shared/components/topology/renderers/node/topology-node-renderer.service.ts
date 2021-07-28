@@ -135,7 +135,7 @@ export interface TopologyNodeRendererDelegate<T extends TopologyNode = TopologyN
   updateState(parentElement: SVGGElement, node: T, state: TopologyNodeState, domElementRenderer: Renderer2): void;
   height(node: T): number;
   width(node: T): number;
-  getAttachmentPoint(angleRad: number, node: T): TopologyCoordinates;
+  getAttachmentPoint(angleRad: number, node: T, isSource?: boolean): TopologyCoordinates;
 }
 
 interface RenderedNodeInfo {
