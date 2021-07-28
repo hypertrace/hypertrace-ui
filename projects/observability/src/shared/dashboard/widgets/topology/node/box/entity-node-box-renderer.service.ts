@@ -396,7 +396,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   private isAngleInIQuadrant(angle: number): boolean {
-    return angle > 0 && angle < Math.PI / 2;
+    return angle >= 0 && angle < Math.PI / 2;
   }
 
   private isAnglePerpendicularlyAbove(angle: number): boolean {

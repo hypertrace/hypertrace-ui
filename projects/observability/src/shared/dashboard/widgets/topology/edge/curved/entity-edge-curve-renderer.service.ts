@@ -2,7 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color, DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
 import { MetricAggregation } from '@hypertrace/distributed-tracing';
 import { select, Selection } from 'd3-selection';
-import { linkHorizontal } from 'd3-shape';
+import { Link, linkHorizontal } from 'd3-shape';
 import {
   TopologyEdgePositionInformation,
   TopologyEdgeRenderDelegate
@@ -114,7 +114,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection
       .select(selector(this.edgeLineClass))
       .select('.edge-path')
-      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray3);
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray2);
 
     selection
       .select(selector(this.edgeMetricBubbleClass))
@@ -200,16 +200,14 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
     pathSelections.exit().remove();
 
-    pathSelections
-      .enter()
-      .append('path')
-      .merge(pathSelections)
-      .attr('d', data =>
-        linkHorizontal<TopologyEdgePositionInformation, Position>()
-          .x(datum => datum.x)
-          .y(datum => datum.y)(data)
-      )
-      .classed('edge-path', true);
+    const lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
+      TopologyEdgePositionInformation,
+      Position
+    >()
+      .x(datum => datum.x)
+      .y(datum => datum.y);
+
+    pathSelections.enter().append('path').merge(pathSelections).attr('d', lineGenerator).classed('edge-path', true);
   }
 
   private updateLabelPosition(
