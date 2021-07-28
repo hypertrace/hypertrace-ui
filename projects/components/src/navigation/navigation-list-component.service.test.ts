@@ -2,9 +2,9 @@ import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { NavItemHeaderConfig } from './navigation.config';
-import { NavigationListComponentService } from './navigation-list-component.service';
 import { of } from 'rxjs';
+import { NavigationListComponentService } from './navigation-list-component.service';
+import { NavItemHeaderConfig } from './navigation.config';
 
 describe('Navigation List Component Service', () => {
   const navItems: NavItemConfig[] = [
