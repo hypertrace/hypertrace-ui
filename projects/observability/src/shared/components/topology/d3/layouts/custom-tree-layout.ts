@@ -9,7 +9,7 @@ export class CustomTreeLayout extends TreeLayout {
     const nodeWidth = this.getNodeWidth(rootHierarchyNode);
     const nodeHeight = this.getNodeHeight(rootHierarchyNode);
 
-    this.updateLayout(rootHierarchyNode, 0, -1, nodeWidth * 1, nodeHeight);
+    this.updateLayout(rootHierarchyNode, 0, -1, nodeWidth * 1.2, nodeHeight * 1.2);
   }
 
   private updateLayout(
@@ -28,6 +28,6 @@ export class CustomTreeLayout extends TreeLayout {
       this.updateLayout(node, nodeRowIndex + index, nodeColumnIndex + 1, cellWidth, cellHeight);
     });
 
-    return (hierarchyNode.children?.length ?? 0) + 1;
+    return (hierarchyNode.children?.length ?? 1);
   }
 }
