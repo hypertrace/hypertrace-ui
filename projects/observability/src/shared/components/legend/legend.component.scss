@@ -4,6 +4,7 @@
 .legend-entries {
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
 
   &.legend-row {
     flex-direction: row;
@@ -45,14 +46,14 @@
     }
 
     .legend-label {
-      @include body-2-medium($gray-4);
+      @include chart-small-regular($gray-4);
       @include ellipsis-overflow();
       flex: 1;
       min-width: 24px;
     }
 
     .legend-value {
-      @include body-2-medium($gray-9);
+      @include chart-small-regular($gray-9);
       padding-left: 16px;
     }
   }
