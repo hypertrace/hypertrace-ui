@@ -53,6 +53,7 @@ describe('Bar Gauge component', () => {
         title="Test Title"
         [segments]="segments"
         [maxValue]="maxValue"
+        [isUnlimited]="isUnlimited"
       ></ht-bar-gauge>
     `
   });
@@ -72,7 +73,8 @@ describe('Bar Gauge component', () => {
             label: 'test-segment-yellow'
           }
         ],
-        maxValue: 100
+        maxValue: 100,
+        isUnlimited: false
       }
     });
     spectator.tick();
@@ -94,6 +96,7 @@ describe('Bar Gauge component', () => {
         value: 33
       }
     ]);
+    expect(spectator.component.isUnlimited).toEqual(false);
   }));
 
   test('assigns correct values when near full', fakeAsync(() => {
@@ -215,5 +218,38 @@ describe('Bar Gauge component', () => {
         value: 33
       }
     ]);
+    expect(spectator.query('.unlimited-symbol')).not.toExist();
+  }));
+
+  test('should display unlimited value', fakeAsync(() => {
+    spectator = createHost(undefined, {
+      providers: [
+        MockProvider(DomElementMeasurerService, {
+          measureHtmlElement: setMeasureHtmlElement(100)
+        })
+      ],
+      hostProps: {
+        segments: [
+          {
+            value: 100,
+            color: 'red',
+            label: 'test-segment-red'
+          }
+        ],
+        maxValue: 100,
+        isUnlimited: true
+      }
+    });
+    spectator.tick();
+    expect(spectator.component.totalValue).toEqual(100);
+    expect(spectator.component.barSegments).toEqual([
+      {
+        value: 100,
+        color: 'red',
+        percentage: 100,
+        label: 'test-segment-red'
+      }
+    ]);
+    expect(spectator.query('.unlimited-symbol')).toExist();
   }));
 });

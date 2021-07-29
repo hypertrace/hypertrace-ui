@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { NavigationListComponentService } from './navigation-list-component.service';
+import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Component({
   selector: 'ht-navigation-list',
@@ -13,19 +15,21 @@ import { IconSize } from '../icon/icon-size';
   template: `
     <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
-        <ng-container *ngFor="let item of this.navItems">
+        <ng-container *ngFor="let item of this.navItems; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
-              <div *ngSwitchCase="'${NavItemType.Header}'" class="nav-header">
-                <div class="label">{{ item.label }}</div>
-                <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
-              </div>
+              <ng-container *ngSwitchCase="'${NavItemType.Header}'">
+                <div *ngIf="item.isVisible$ | async" class="nav-header">
+                  <div class="label">{{ item.label }}</div>
+                  <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
+                </div>
+              </ng-container>
             </div>
 
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"> </ht-nav-item>
+              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"></ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -48,7 +52,7 @@ import { IconSize } from '../icon/icon-size';
     </nav>
   `
 })
-export class NavigationListComponent {
+export class NavigationListComponent implements OnChanges {
   @Input()
   public navItems: NavItemConfig[] = [];
 
@@ -64,12 +68,16 @@ export class NavigationListComponent {
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
-  public readonly activeItem$: Observable<NavItemLinkConfig | undefined>;
+  public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly activatedRoute: ActivatedRoute
-  ) {
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly navListComponentService: NavigationListComponentService
+  ) {}
+
+  public ngOnChanges(): void {
+    this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
       map(() => this.findActiveItem(this.navItems))
@@ -96,42 +104,4 @@ export class NavigationListComponent {
         )
       );
   }
-}
-
-export type NavItemConfig = NavItemLinkConfig | NavItemHeaderConfig | NavItemDividerConfig;
-
-export interface NavItemLinkConfig {
-  type: NavItemType.Link;
-  icon: string;
-  label: string;
-  matchPaths: string[]; // For now, default path is index 0
-  features?: string[];
-  replaceCurrentHistory?: boolean;
-  isBeta?: boolean;
-}
-
-export type FooterItemConfig = FooterItemLinkConfig;
-
-export interface FooterItemLinkConfig {
-  url: string;
-  label: string;
-  icon: string;
-}
-
-export interface NavItemHeaderConfig {
-  type: NavItemType.Header;
-  label: string;
-  isBeta?: boolean;
-}
-
-export interface NavItemDividerConfig {
-  type: NavItemType.Divider;
-}
-
-// Must be exported to be used by AOT compiler in template
-export const enum NavItemType {
-  Header = 'header',
-  Link = 'link',
-  Divider = 'divider',
-  Footer = 'footer'
 }

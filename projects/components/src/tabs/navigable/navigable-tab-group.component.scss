@@ -17,10 +17,14 @@
       color: $gray-9;
     }
 
+    ::ng-deep .ht-link:hover {
+      color: $gray-9;
+    }
+
     ::ng-deep .mat-ink-bar {
       // Required deep since added dynamically by material
       height: 4px;
-      background-color: $gray-7;
+      background-color: $gray-9;
     }
   }
 }
@@ -48,14 +52,14 @@
       background: $gray-3 radial-gradient(circle, transparent 1%, $gray-3 1%) center/12000%;
 
       &.active {
-        background-color: $gray-6;
+        background-color: $gray-9;
       }
     }
   }
 
   &:active {
     .ink-bar {
-      background-color: $gray-7;
+      background-color: $gray-9;
       background-size: 100%;
       transition: background 0s;
     }
@@ -68,7 +72,6 @@
   padding: 0;
   font-size: 16px;
   font-weight: 500;
-  color: $gray-5;
   opacity: 1;
   padding-bottom: 6px;
 }
@@ -85,7 +88,7 @@
   transition: background 0.6s;
 
   &.active {
-    background-color: $gray-7;
+    background-color: $gray-9;
   }
 }
 

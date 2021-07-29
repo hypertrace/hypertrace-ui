@@ -45,7 +45,6 @@
         .entity-outer-band {
           filter: url(#entity-node-dropshadow-filter);
           fill: white;
-          stroke: $blue-4;
           stroke-width: 1px;
         }
 
@@ -85,49 +84,6 @@
       .node-icon {
         color: $gray-4;
         fill: currentColor;
-      }
-
-      &.less-than-20-category {
-        .metric-category {
-          fill: $blue-gray-1;
-        }
-      }
-
-      &.from-20-to-100-category {
-        .metric-category {
-          fill: $blue-gray-2;
-        }
-      }
-
-      &.from-100-to-500-category {
-        .metric-category {
-          fill: $blue-gray-3;
-        }
-      }
-
-      &.from-500-to-1000-category {
-        .metric-category {
-          fill: $blue-gray-4;
-        }
-      }
-
-      &.greater-than-or-equal-to-1000-category {
-        .metric-category {
-          fill: $blue-gray-5;
-        }
-      }
-
-      &.not-specified-category {
-        .metric-category {
-          fill: lightgray;
-        }
-      }
-
-      &.greater-than-or-equal-to-5-error-category {
-        .entity-outer-band {
-          fill: $red-1;
-          stroke: $red-5;
-        }
       }
     }
   }

@@ -10,6 +10,7 @@ import { LabelModule } from '../label/label.module';
 import { LayoutChangeModule } from '../layout/layout-change.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { LinkModule } from '../link/link.module';
+import { TooltipModule } from './../tooltip/tooltip.module';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { NavigationListComponent } from './navigation-list.component';
 
@@ -26,7 +27,8 @@ import { NavigationListComponent } from './navigation-list.component';
     LabelModule,
     BetaTagModule,
     MemoizeModule,
-    LinkModule
+    LinkModule,
+    TooltipModule
   ],
   declarations: [NavigationListComponent, NavItemComponent],
   exports: [NavigationListComponent]

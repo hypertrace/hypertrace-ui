@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { IconType } from '@hypertrace/assets-library';
 import { PrimitiveValue } from '@hypertrace/common';
 import { startCase } from 'lodash-es';
+import { IconSize } from '../public-api';
 import { SummaryItem } from './summary-list-api';
 
 @Component({
@@ -11,8 +12,8 @@ import { SummaryItem } from './summary-list-api';
   template: `
     <div class="summary-list full-container">
       <div class="summary-header" *ngIf="this.title || this.icon">
-        <ht-icon class="summary-icon" [icon]="this.icon"></ht-icon>
-        <ht-label class="summary-title" [label]="this.title"></ht-label>
+        <ht-icon class="summary-icon" size="${IconSize.Small}" [icon]="this.icon"></ht-icon>
+        <ht-label class="summary-title" size="${IconSize.Small}" [label]="this.title"></ht-label>
       </div>
       <ng-container *ngFor="let item of this.items">
         <ht-label class="summary-value-title" [label]="this.getFormattedLabel(item.label)"></ht-label>

@@ -24,6 +24,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.ArrowUp, url: `${iconsRootPath}/arrow-up.svg` },
         { key: IconType.ArrowUpLeft, url: `${iconsRootPath}/arrow-up-left.svg` },
         { key: IconType.ArrowUpRight, url: `${iconsRootPath}/arrow-up-right.svg` },
+        { key: IconType.Calls, url: `${iconsRootPath}/calls.svg` },
         { key: IconType.CheckCircle, url: `${iconsRootPath}/check-circle.svg` },
         { key: IconType.CheckCircleFill, url: `${iconsRootPath}/check-circle-fill.svg` },
         { key: IconType.ChevronDown, url: `${iconsRootPath}/chevron-down.svg` },
@@ -46,6 +47,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Expanded, url: `${iconsRootPath}/minus-circle.svg` },
         { key: IconType.ExpandedReverse, url: `${iconsRootPath}/minus-circle-reverse.svg` },
         { key: IconType.External, url: `${iconsRootPath}/external.svg` },
+        { key: IconType.ExternalApi, url: `${iconsRootPath}/external-api.svg` },
         { key: IconType.Eye, url: `${iconsRootPath}/eye.svg` },
         { key: IconType.FileCode, url: `${iconsRootPath}/file-code.svg` },
         { key: IconType.Filter, url: `${iconsRootPath}/filter.svg` },
@@ -56,6 +58,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Info, url: `${iconsRootPath}/info.svg` },
         { key: IconType.Infrastructure, url: `${iconsRootPath}/infrastructure.svg` },
         { key: IconType.Internal, url: `${iconsRootPath}/internal.svg` },
+        { key: IconType.InternalApi, url: `${iconsRootPath}/internal-api.svg` },
         { key: IconType.Istio, url: `${iconsRootPath}/istio.svg` },
         { key: IconType.Java, url: `${iconsRootPath}/java.svg` },
         { key: IconType.KnowledgeGraph, url: `${iconsRootPath}/knowledge-graph.svg` },
@@ -69,6 +72,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Node, url: `${iconsRootPath}/node.svg` },
         { key: IconType.Note, url: `${iconsRootPath}/note.svg` },
         { key: IconType.OpenInNewTab, url: `${iconsRootPath}/open-in-new-tab.svg` },
+        { key: IconType.Protocol, url: `${iconsRootPath}/protocol.svg` },
         { key: IconType.Python, url: `${iconsRootPath}/python.svg` },
         { key: IconType.Search, url: `${iconsRootPath}/search.svg` },
         { key: IconType.SidebarCollapse, url: `${iconsRootPath}/sidebar-collapse.svg` },
@@ -83,6 +87,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.TriangleRight, url: `${iconsRootPath}/triangle-right.svg` },
         { key: IconType.TriangleUp, url: `${iconsRootPath}/triangle-up.svg` },
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
+        { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
         { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` }
       ]
     }
