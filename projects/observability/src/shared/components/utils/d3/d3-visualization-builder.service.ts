@@ -226,7 +226,7 @@ export abstract class D3VisualizationBuilderService<
     let legendWidth = isLegendVisible
       ? 0
       : isSideLegend
-      ? Math.min(legendRect.width, this.getMaxLegendWidth())
+      ? Math.min(this.getLegendWidth(outerRect.width), this.getMaxLegendWidth())
       : isTopOrBottomLegend
       ? outerRect.width
       : 0;
@@ -262,6 +262,10 @@ export abstract class D3VisualizationBuilderService<
       legendWidth: legendWidth,
       legendHeight: legendHeight
     });
+  }
+
+  private getLegendWidth(outerRectWidth: number): number {
+    return outerRectWidth >= 200 ? outerRectWidth * 0.35 : 0;
   }
 
   private isLegendVisible(config: ChartConfig): boolean {
