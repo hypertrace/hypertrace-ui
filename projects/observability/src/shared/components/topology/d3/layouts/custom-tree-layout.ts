@@ -28,6 +28,6 @@ export class CustomTreeLayout extends TreeLayout {
       this.updateLayout(node, nodeRowIndex + index, nodeColumnIndex + 1, cellWidth, cellHeight);
     });
 
-    return (hierarchyNode.children?.length ?? 1);
+    return hierarchyNode.children?.length ?? 1;
   }
 }
