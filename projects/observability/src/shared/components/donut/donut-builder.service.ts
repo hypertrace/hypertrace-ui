@@ -72,7 +72,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`)
-      .style(
+      .attr(
         'font-size',
         Math.min(Math.floor(dimensions.donutInnerRadius / 8), DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE)
       );
@@ -80,7 +80,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_CLASS))
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`)
-      .style(
+      .attr(
         'font-size',
         Math.min(Math.floor(dimensions.donutInnerRadius / 2), DonutBuilderService.MAX_FONT_SIZE_FOR_VALUE)
       );
