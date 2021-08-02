@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { TimeDuration, TimeUnit } from '@hypertrace/common';
+import { TimeDuration } from '@hypertrace/common';
+
+import {environment} from '../../../../src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,20 +14,7 @@ export class PredefinedTimeDurationService {
   }
 
   private createTimeDurations(): TimeDuration[] {
-    return [
-      new TimeDuration(15, TimeUnit.Minute),
-      new TimeDuration(30, TimeUnit.Minute),
-      new TimeDuration(1, TimeUnit.Hour),
-      new TimeDuration(2, TimeUnit.Hour),
-      new TimeDuration(3, TimeUnit.Hour),
-      new TimeDuration(6, TimeUnit.Hour),
-      new TimeDuration(12, TimeUnit.Hour),
-      new TimeDuration(1, TimeUnit.Day),
-      new TimeDuration(3, TimeUnit.Day),
-      new TimeDuration(1, TimeUnit.Week),
-      new TimeDuration(2, TimeUnit.Week),
-      new TimeDuration(1, TimeUnit.Month)
-    ];
+    return environment.timeDurations;
   }
 
   public getPredefinedTimeDurations(): TimeDuration[] {
