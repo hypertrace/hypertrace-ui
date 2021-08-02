@@ -1,5 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { distanceBetweenPoints, getVectorAngleRad } from '@hypertrace/common';
+import { distanceBetweenPoints, getVectorAngleRad, normalizeAngleRadians } from '@hypertrace/common';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
 import { RenderableTopologyEdge, TopologyEdge, TopologyEdgeRenderer, TopologyEdgeState } from '../../topology';
 
@@ -79,7 +79,7 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
     }
 
     const sourceRad = getVectorAngleRad(edge.source, edge.target);
-    const targetRad = sourceRad + Math.PI;
+    const targetRad = normalizeAngleRadians(sourceRad + Math.PI);
 
     const sourceAttachPoint = sourceNodeRenderedData.getAttachmentPoint(sourceRad);
     const targetAttachPoint = targetNodeRenderedData.getAttachmentPoint(targetRad);
@@ -88,13 +88,17 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
     if (distanceBetweenPoints(edge.source, sourceAttachPoint) > distanceBetweenPoints(edge.source, targetAttachPoint)) {
       return {
         source: targetAttachPoint,
-        target: sourceAttachPoint
+        sourceRad: targetRad,
+        target: sourceAttachPoint,
+        targetRad: sourceRad
       };
     }
 
     return {
       source: sourceAttachPoint,
-      target: targetAttachPoint
+      sourceRad: sourceRad,
+      target: targetAttachPoint,
+      targetRad: targetRad
     };
   }
 
@@ -112,6 +116,8 @@ export interface TopologyEdgePositionInformation {
     x: number;
     y: number;
   };
+  sourceRad: number;
+  targetRad: number;
 }
 
 export interface TopologyEdgeRenderDelegate<T extends TopologyEdge = TopologyEdge> {

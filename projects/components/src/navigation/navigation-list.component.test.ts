@@ -8,7 +8,9 @@ import { IconComponent } from '../icon/icon.component';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { LinkComponent } from './../link/link.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
-import { FooterItemConfig, NavigationListComponent, NavItemConfig, NavItemType } from './navigation-list.component';
+import { NavigationListComponentService } from './navigation-list-component.service';
+import { NavigationListComponent } from './navigation-list.component';
+import { FooterItemConfig, NavItemConfig, NavItemType } from './navigation.config';
 describe('Navigation List Component', () => {
   let spectator: SpectatorHost<NavigationListComponent>;
   const activatedRoute = {
@@ -21,6 +23,13 @@ describe('Navigation List Component', () => {
     imports: [LetAsyncModule, MemoizeModule],
     providers: [
       mockProvider(ActivatedRoute, activatedRoute),
+      mockProvider(NavigationListComponentService, {
+        resolveFeaturesAndUpdateVisibilityForNavItems: jest
+          .fn()
+          .mockImplementation((navItems: NavItemConfig[]) =>
+            navItems.map(item => (item.type !== NavItemType.Header ? item : { ...item, isVisible$: of(true) }))
+          )
+      }),
       mockProvider(NavigationService, {
         navigation$: EMPTY,
         navigateWithinApp: jest.fn(),
@@ -77,5 +86,43 @@ describe('Navigation List Component', () => {
     spectator.detectChanges();
     expect(spectator.query('.navigation-list')).not.toHaveClass('expanded');
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.TriangleRight);
+  });
+
+  test('should only show one header 1', () => {
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Header,
+        label: 'header 1',
+        isVisible$: of(true)
+      },
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'label-2',
+        matchPaths: ['']
+      },
+      {
+        type: NavItemType.Header,
+        label: 'header 2',
+        isVisible$: of(false)
+      }
+    ];
+
+    spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {
+      hostProps: { navItems: navItems },
+      providers: [
+        mockProvider(ActivatedRoute, activatedRoute),
+        mockProvider(NavigationListComponentService, {
+          resolveFeaturesAndUpdateVisibilityForNavItems: jest.fn().mockReturnValue(navItems)
+        }),
+        mockProvider(NavigationService, {
+          navigation$: EMPTY,
+          navigateWithinApp: jest.fn(),
+          getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute))
+        })
+      ]
+    });
+    expect(spectator.queryAll('.nav-header')).toHaveLength(1);
+    expect(spectator.queryAll('.nav-header .label')[0]).toHaveText('header 1');
   });
 });

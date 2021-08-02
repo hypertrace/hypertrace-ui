@@ -11,7 +11,7 @@ import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/comp
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { NavItemConfig, NavItemType } from '../navigation-list.component';
+import { NavItemConfig, NavItemType } from '../navigation.config';
 import { FeatureConfigCheckModule } from './../../feature-check/feature-config-check.module';
 import { NavItemComponent } from './nav-item.component';
 
@@ -43,7 +43,8 @@ describe('Navigation Item Component', () => {
       type: NavItemType.Link,
       icon: IconType.TriangleLeft,
       label: 'Foo Label',
-      matchPaths: ['foo', 'bar']
+      matchPaths: ['foo', 'bar'],
+      featureState$: of(FeatureState.Enabled)
     };
     spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
       hostProps: { navItem: navItem }

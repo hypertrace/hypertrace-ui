@@ -39,7 +39,7 @@ import {
   TOPOLOGY_INTERACTION_CONTROL_DATA
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
-import { TreeLayout } from './layouts/tree-layout';
+import { CustomTreeLayout } from './layouts/custom-tree-layout';
 
 export class D3Topology implements Topology {
   private static readonly CONTAINER_CLASS: string = 'topology-internal-container';
@@ -57,7 +57,7 @@ export class D3Topology implements Topology {
   protected readonly dataClearCallbacks: (() => void)[] = [];
   protected container?: HTMLDivElement;
   protected tooltip?: TopologyTooltip;
-  protected layout: TopologyLayout = new TreeLayout(); // TODO: Make this configurable with Node and edge renderers
+  protected layout: TopologyLayout = new CustomTreeLayout(); // TODO: Make this configurable with Node and edge renderers
 
   protected readonly userNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
