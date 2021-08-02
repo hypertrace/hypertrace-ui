@@ -1,5 +1,6 @@
 import { Axis as D3Axis, axisBottom, AxisDomain, axisLeft, axisRight, AxisScale, axisTop } from 'd3-axis';
 import { BaseType, select, Selection } from 'd3-selection';
+import { TimeInterval } from 'd3-time';
 import { defaultsDeep } from 'lodash-es';
 import { MouseLocationData } from '../../../utils/mouse-tracking/mouse-tracking';
 import { SvgUtilService } from '../../../utils/svg/svg-util.service';
@@ -187,7 +188,11 @@ export class CartesianAxis<TData = {}> {
     }
   }
 
-  private calculateAxisTickCount(): number {
+  private calculateAxisTickCount(): number | TimeInterval {
+    if (this.configuration?.tickCount !== undefined) {
+      return this.configuration.tickCount;
+    }
+
     return 6;
   }
 
@@ -235,4 +240,4 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max'>;
+type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount'>;

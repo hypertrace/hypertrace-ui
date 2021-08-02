@@ -29,7 +29,8 @@
     "d3-path": "^1.0.9",
     "d3-hierarchy": "^1.1.9",
     "d3-axis": "^1.0.12",
-    "d3-quadtree": "^1.0.6"
+    "d3-quadtree": "^1.0.6",
+    "d3-time": "^2.1.1"
   },
   "devDependencies": {
     "@hypertrace/test-utils": "^0.0.0"
