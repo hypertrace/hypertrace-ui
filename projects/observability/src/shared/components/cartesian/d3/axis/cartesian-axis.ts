@@ -189,7 +189,7 @@ export class CartesianAxis<TData = {}> {
   }
 
   private calculateAxisTickCount(): number | d3.TimeInterval | null {
-    if (this.configuration?.tickDaysDistance) {
+    if (this.configuration.tickDaysDistance !== undefined) {
       return d3.timeDay.every(this.configuration.tickDaysDistance);
     }
 
