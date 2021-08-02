@@ -122,6 +122,11 @@ export interface Axis {
    * Maximum value of the axis. If unset, defaults to maximum value of provided data.
    */
   max?: number;
+
+  /**
+   * Determine the distance in days between each tick.
+   */
+  tickDaysDistance?: number;
 }
 
 export interface AxisCrosshair {
