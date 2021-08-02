@@ -31,6 +31,7 @@ export interface Series<TInterval> {
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
+  getTooltipTitle?(datum: TInterval): string;
 }
 
 export interface Band<TInterval> {

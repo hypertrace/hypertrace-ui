@@ -90,7 +90,7 @@ export class ExploreResult {
       const startTime = Math.floor(this.timeRange.from.valueOf() / intervalDuration) * intervalDuration;
       const endTime = Math.ceil(this.timeRange.to.valueOf() / intervalDuration) * intervalDuration;
 
-      for (let timestamp = startTime; timestamp <= endTime; timestamp = timestamp + intervalDuration) {
+      for (let timestamp = startTime; timestamp < endTime; timestamp = timestamp + intervalDuration) {
         buckets.push(timestamp);
       }
 

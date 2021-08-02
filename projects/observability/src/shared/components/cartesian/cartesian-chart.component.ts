@@ -165,12 +165,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       return undefined;
     }
 
-    const firstXValue = defaultXDataAccessor<unknown>(data[0].dataPoint);
-    const xAsDate = this.dateCoercer.coerce(firstXValue);
-    const title = xAsDate ? this.dateFormatter.format(xAsDate) : String(firstXValue);
-
     return {
-      title: title,
+      title: this.resolveTooltipTitle(data[0]),
       labeledValues: data.map(singleValue => ({
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
@@ -178,5 +174,16 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
       }))
     };
+  }
+
+  private resolveTooltipTitle(location: MouseLocationData<TData, Series<TData>>): string {
+    const series = location.context;
+    if (series.getTooltipTitle) {
+      return series.getTooltipTitle(location.dataPoint);
+    }
+    const xValue = defaultXDataAccessor<unknown>(location.dataPoint);
+    const xAsDate = this.dateCoercer.coerce(xValue);
+
+    return xAsDate ? this.dateFormatter.format(xAsDate) : String(xValue);
   }
 }
