@@ -26,8 +26,10 @@ import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visual
 
 describe('Explorer Visualization cartesian data source model', () => {
   const testInterval = new TimeDuration(5, TimeUnit.Minute);
-  const endTime = new Date('2021-05-11T00:35:00.000Z');
-  const startTime = new Date(endTime.getTime() - 2 * testInterval.toMillis());
+  const startTime = new Date('2021-05-11T00:20:00.000Z');
+  const firstIntervalTime = new Date(startTime.getTime() + testInterval.toMillis());
+  const secondIntervalTime = new Date(startTime.getTime() + 2 * testInterval.toMillis());
+  const endTime = new Date(startTime.getTime() + 3 * testInterval.toMillis());
 
   const modelFactory = createModelFactory({
     providers: [
@@ -127,7 +129,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 15,
                   type: AttributeMetadataType.Number
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               }
             ]
           },
@@ -146,11 +148,11 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 10
                 },
                 {
-                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  timestamp: firstIntervalTime,
                   value: 0
                 },
                 {
-                  timestamp: endTime,
+                  timestamp: secondIntervalTime,
                   value: 15
                 }
               ]
@@ -269,7 +271,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'first',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               },
               {
                 'sum(foo)': {
@@ -291,7 +293,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 'second',
                   type: AttributeMetadataType.String
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: endTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               }
             ]
           },
@@ -310,11 +312,11 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 10
                 },
                 {
-                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  timestamp: firstIntervalTime,
                   value: 0
                 },
                 {
-                  timestamp: endTime,
+                  timestamp: secondIntervalTime,
                   value: 15
                 }
               ]
@@ -329,11 +331,11 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 20
                 },
                 {
-                  timestamp: new Date('2021-05-11T00:30:00.000Z'),
+                  timestamp: firstIntervalTime,
                   value: 0
                 },
                 {
-                  timestamp: endTime,
+                  timestamp: secondIntervalTime,
                   value: 25
                 }
               ]

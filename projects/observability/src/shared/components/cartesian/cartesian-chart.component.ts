@@ -183,6 +183,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
     const xValue = defaultXDataAccessor<unknown>(location.dataPoint);
     const xAsDate = this.dateCoercer.coerce(xValue);
+
     return xAsDate ? this.dateFormatter.format(xAsDate) : String(xValue);
   }
 }
