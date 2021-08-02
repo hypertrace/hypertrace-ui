@@ -1,4 +1,5 @@
 import { TimeRange } from '@hypertrace/common';
+import { TimeInterval } from 'd3-time';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
@@ -123,6 +124,11 @@ export interface Axis {
    * Maximum value of the axis. If unset, defaults to maximum value of provided data.
    */
   max?: number;
+
+  /**
+   * Determine the tick count labels (number or time interval)
+   */
+  tickCount?: number | TimeInterval;
 }
 
 export interface AxisCrosshair {
