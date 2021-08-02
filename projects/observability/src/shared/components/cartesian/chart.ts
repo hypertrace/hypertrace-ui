@@ -1,4 +1,5 @@
 import { TimeRange } from '@hypertrace/common';
+import { TimeInterval } from 'd3-time';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
@@ -124,9 +125,9 @@ export interface Axis {
   max?: number;
 
   /**
-   * Determine the distance in days between each tick.
+   * Determine the tick count or the interval of time between each tick.
    */
-  tickDaysDistance?: number;
+  tickCount?: number | TimeInterval;
 }
 
 export interface AxisCrosshair {

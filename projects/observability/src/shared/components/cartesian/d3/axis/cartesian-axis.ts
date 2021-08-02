@@ -188,9 +188,9 @@ export class CartesianAxis<TData = {}> {
     }
   }
 
-  private calculateAxisTickCount(): number | TimeInterval | null {
-    if (this.configuration.tickDaysDistance !== undefined) {
-      return timeDay.every(this.configuration.tickDaysDistance);
+  private calculateAxisTickCount(): number | TimeInterval {
+    if (this.configuration?.tickCount !== undefined) {
+      return this.configuration.tickCount;
     }
 
     return 6;
@@ -240,4 +240,4 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickDaysDistance'>;
+type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount'>;
