@@ -282,6 +282,21 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'End Time',
+            width: '220px',
+            display: CoreTableCellRendererType.Timestamp,
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'endTime'
+            },
+            sort: TableSortDirection.Descending,
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'API Boundary Type',
             width: '1',
             visible: false,
@@ -461,6 +476,21 @@ export class ExplorerDashboardBuilder {
             value: {
               type: 'attribute-specification',
               attribute: 'startTime'
+            },
+            sort: TableSortDirection.Descending,
+            'click-handler': {
+              type: 'span-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'End Time',
+            width: '220px',
+            display: CoreTableCellRendererType.Timestamp,
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'endTime'
             },
             sort: TableSortDirection.Descending,
             'click-handler': {
