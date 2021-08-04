@@ -128,6 +128,7 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Errors' }),
               expect.objectContaining({ title: 'Duration' }),
               expect.objectContaining({ title: 'Start Time' }),
+              expect.objectContaining({ title: 'End Time' }),
               expect.objectContaining({ title: 'API Boundary Type' }),
               expect.objectContaining({ title: 'API Discovery State' }),
               expect.objectContaining({ title: 'API ID' }),
