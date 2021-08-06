@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
+import { combineLatest } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -70,19 +71,35 @@ export class SpanDetailComponent implements OnChanges {
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
 
-  public showRequestTab?: boolean;
-  public showResponseTab?: boolean;
-  public showExitCallsTab?: boolean;
-  public showLogEventsTab?: boolean;
-  public totalLogEvents?: number;
+  public showRequestTab: boolean = false;
+  public showResponseTab: boolean = false;
+  public showExitCallsTab: boolean = false;
+  public showLogEventsTab: boolean = false;
+  public totalLogEvents: number = 0;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
-      this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody$);
-      this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody$);
-      this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
-      this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
-      this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
+      if (this.spanData === undefined) {
+        this.resetView();
+      } else {
+        combineLatest([this.spanData.requestBody$, this.spanData.responseBody$]).subscribe(
+          ([requestBody, responseBody]) => {
+            this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(requestBody);
+            this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(responseBody);
+            this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
+            this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
+            this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
+          }
+        );
+      }
     }
+  }
+
+  private resetView(): void {
+    this.showRequestTab = false;
+    this.showResponseTab = false;
+    this.showExitCallsTab = false;
+    this.showLogEventsTab = false;
+    this.totalLogEvents = 0;
   }
 }

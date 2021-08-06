@@ -12,8 +12,8 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
       <div class="section">
         <ht-span-detail-call-headers [headers]="this.responseHeaders"></ht-span-detail-call-headers>
       </div>
-      <div class="section" *htLoadAsync="this.responseBody$ as responseBody">
-        <ht-span-detail-call-body [body]="this.responseBody"></ht-span-detail-call-body>
+      <div class="section">
+        <ht-span-detail-call-body [body]="this.responseBody$ | async"></ht-span-detail-call-body>
       </div>
     </div>
   `

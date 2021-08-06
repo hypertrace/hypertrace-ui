@@ -4,7 +4,7 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { DEFAULT_COLOR_PALETTE, NavigationService } from '@hypertrace/common';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { SpanType } from '../../../../graphql/model/schema/span';
 import { WaterfallData } from './waterfall-chart';
 import { WaterfallChartComponent } from './waterfall-chart.component';
@@ -27,9 +27,9 @@ describe('Waterfall Chart component', () => {
       protocolName: 'Protocol Name 1',
       spanType: SpanType.Entry,
       requestHeaders: {},
-      requestBody: 'Request Body',
+      requestBody$: of('Request Body'),
       responseHeaders: {},
-      responseBody: 'Response Body',
+      responseBody$: of('Response Body'),
       tags: {},
       errorCount: 0,
       logEvents: []
@@ -49,9 +49,9 @@ describe('Waterfall Chart component', () => {
       protocolName: 'Protocol Name 2',
       spanType: SpanType.Exit,
       requestHeaders: {},
-      requestBody: '',
+      requestBody$: of(''),
       responseHeaders: {},
-      responseBody: '',
+      responseBody$: of(''),
       tags: {},
       errorCount: 0,
       logEvents: []
@@ -71,9 +71,9 @@ describe('Waterfall Chart component', () => {
       protocolName: 'Protocol Name 3',
       spanType: SpanType.Exit,
       requestHeaders: {},
-      requestBody: '',
+      requestBody$: of(''),
       responseHeaders: {},
-      responseBody: '',
+      responseBody$: of(''),
       tags: {},
       errorCount: 0,
       logEvents: []
