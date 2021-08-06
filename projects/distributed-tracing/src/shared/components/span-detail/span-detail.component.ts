@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
-import { combineLatest } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -79,27 +78,11 @@ export class SpanDetailComponent implements OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
-      if (this.spanData === undefined) {
-        this.resetView();
-      } else {
-        combineLatest([this.spanData.requestBody$, this.spanData.responseBody$]).subscribe(
-          ([requestBody, responseBody]) => {
-            this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(requestBody);
-            this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(responseBody);
-            this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
-            this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
-            this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
-          }
-        );
-      }
+      this.showRequestTab = !isEmpty(this.spanData?.requestHeaders);
+      this.showResponseTab = !isEmpty(this.spanData?.responseHeaders);
+      this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
+      this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
+      this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
     }
-  }
-
-  private resetView(): void {
-    this.showRequestTab = false;
-    this.showResponseTab = false;
-    this.showExitCallsTab = false;
-    this.showLogEventsTab = false;
-    this.totalLogEvents = 0;
   }
 }
