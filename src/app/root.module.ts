@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ObservabilityDashboardModule } from '@hypertrace/observability';
@@ -8,6 +8,12 @@ import { ConfigModule } from './config.module';
 import { RootComponent } from './root.component';
 import { RootRoutingModule } from './routes/root-routing.module';
 import { NavigationModule } from './shared/navigation/navigation.module';
+
+import {ConfigService} from  './shared/services/config.service'
+
+export const configFactory = (configService: ConfigService) => {
+  return () => configService.loadConfig();
+};
 
 @NgModule({
   imports: [
@@ -21,6 +27,12 @@ import { NavigationModule } from './shared/navigation/navigation.module';
     ObservabilityDashboardModule
   ],
   declarations: [RootComponent],
-  bootstrap: [RootComponent]
+  bootstrap: [RootComponent],
+  providers: [{
+    provide: APP_INITIALIZER,
+    useFactory: configFactory,
+    deps: [ConfigService],
+    multi: true
+  }]
 })
 export class RootModule {}

@@ -4,12 +4,15 @@ import { Filter } from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, map, } from 'rxjs/operators';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { GraphQlFilter } from '../../graphql/model/schema/filter/graphql-filter';
 import { GraphQlFilterBuilderService } from '../../services/filter-builder/graphql-filter-builder.service';
 import { MetadataService } from '../../services/metadata/metadata.service';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
+
+import {ConfigService} from 'src/app/shared/services/config.service';
+
 
 @Component({
   selector: 'ht-navigable-dashboard',
@@ -67,21 +70,28 @@ export class NavigableDashboardComponent implements OnChanges {
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly dashboardPersistenceService: DashboardPersistenceService,
-    private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService
+    private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
+    private configService: ConfigService
   ) {}
+
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.navLocation) {
       const persistedDashboard$ =
         this.navLocation !== undefined && this.navLocation !== null
-          ? this.dashboardPersistenceService.getForLocation(this.navLocation)
-          : EMPTY;
+        ? this.dashboardPersistenceService.getForLocation(this.navLocation)
+        : EMPTY;
 
-      this.dashboardJson$ = persistedDashboard$.pipe(
-        map(dashboard => dashboard.content),
-        catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultJson)
-      );
+          if(this.configService && this.configService.config) {
+            this.dashboardJson$ = of(this.configService.config[this.navLocation!]);
+          } else {
+            this.dashboardJson$ = persistedDashboard$.pipe(
+              map(dashboard => dashboard.content),
+              catchError(() => EMPTY),
+              defaultIfEmpty(this.defaultJson)
+            );
+          }
+
     }
 
     if (changeObject.filterConfig) {
