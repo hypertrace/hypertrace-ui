@@ -1,5 +1,4 @@
 import { TimeRange } from '@hypertrace/common';
-import { TimeInterval } from 'd3-time';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
@@ -31,6 +30,7 @@ export interface Series<TInterval> {
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
+  getTooltipTitle?(datum: TInterval): string;
 }
 
 export interface Band<TInterval> {
@@ -125,9 +125,9 @@ export interface Axis {
   max?: number;
 
   /**
-   * Determine the tick count labels (number or time interval)
+   * Determine the tick count labels
    */
-  tickCount?: number | TimeInterval;
+  tickCount?: number;
 }
 
 export interface AxisCrosshair {
