@@ -29,7 +29,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
   })
   public startTime?: unknown;
 
-  private readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
+  protected readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   protected getSpanAttributes(): string[] {

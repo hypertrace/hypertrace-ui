@@ -1,4 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
+import { Observable } from 'rxjs';
 import { LogEvent } from '../../dashboard/widgets/waterfall/waterfall/waterfall-chart';
 
 export interface SpanData {
@@ -7,9 +8,9 @@ export interface SpanData {
   apiName?: string;
   protocolName?: string;
   requestHeaders: Dictionary<unknown>;
-  requestBody: string;
+  requestBody$: Observable<string>;
   responseHeaders: Dictionary<unknown>;
-  responseBody: string;
+  responseBody$: Observable<string>;
   tags: Dictionary<unknown>;
   requestUrl: string;
   exitCallsBreakup?: Dictionary<string>;

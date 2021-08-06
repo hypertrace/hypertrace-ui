@@ -46,7 +46,7 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   @ModelInject(LogEventsService)
   private readonly logEventsService!: LogEventsService;
 
-  private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
+  protected readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public getData(): Observable<WaterfallData[]> {

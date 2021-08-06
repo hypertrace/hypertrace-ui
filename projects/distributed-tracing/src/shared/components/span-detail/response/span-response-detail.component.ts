@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
+import { Observable } from 'rxjs';
 import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
 
 @Component({
@@ -11,7 +12,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
       <div class="section">
         <ht-span-detail-call-headers [headers]="this.responseHeaders"></ht-span-detail-call-headers>
       </div>
-      <div class="section">
+      <div class="section" *htLoadAsync="this.responseBody$ as responseBody">
         <ht-span-detail-call-body [body]="this.responseBody"></ht-span-detail-call-body>
       </div>
     </div>
@@ -22,7 +23,7 @@ export class SpanResponseDetailComponent {
   public responseHeaders?: Dictionary<unknown>;
 
   @Input()
-  public responseBody?: string;
+  public responseBody$?: Observable<string>;
 
   @Input()
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;

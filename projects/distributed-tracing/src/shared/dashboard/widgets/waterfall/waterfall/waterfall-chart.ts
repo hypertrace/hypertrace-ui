@@ -1,5 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
 import { StatefulPrefetchedTreeTableRow } from '@hypertrace/components';
+import { Observable } from 'rxjs';
 import { SpanType } from '../../../../graphql/model/schema/span';
 import { SpanNameCellData } from './span-name/span-name-cell-data';
 
@@ -18,9 +19,9 @@ export interface WaterfallData {
   apiName?: string;
   spanType: SpanType;
   requestHeaders?: Dictionary<unknown>;
-  requestBody?: string;
   responseHeaders?: Dictionary<unknown>;
-  responseBody?: string;
+  requestBody$?: Observable<string>;
+  responseBody$?: Observable<string>;
   tags: Dictionary<unknown>;
   errorCount: number;
   logEvents: LogEvent[];

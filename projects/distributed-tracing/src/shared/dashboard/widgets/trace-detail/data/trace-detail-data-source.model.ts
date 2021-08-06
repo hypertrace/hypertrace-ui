@@ -34,8 +34,8 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
   })
   public attributes: string[] = [];
 
-  private readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
-  private readonly dateCoercer: DateCoercer = new DateCoercer();
+  protected readonly attributeSpecBuilder: SpecificationBuilder = new SpecificationBuilder();
+  protected readonly dateCoercer: DateCoercer = new DateCoercer();
 
   public getData(): Observable<TraceDetailData> {
     return this.query<TraceGraphQlQueryHandlerService>({
