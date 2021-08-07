@@ -27,6 +27,9 @@ import {
   TableStyle
 } from '@hypertrace/components';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Span } from '../../../../graphql/model/schema/span';
+import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import { MarkerTooltipData } from './marker-tooltip/marker-tooltip.component';
 import { WaterfallTableCellType } from './span-name/span-name-cell-type';
 import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
@@ -36,6 +39,7 @@ import { WaterfallChartService } from './waterfall-chart.service';
   selector: 'ht-waterfall-chart',
   styleUrls: ['./waterfall-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SpecificationBuilder],
   template: `
     <div class="waterfall-chart" *ngIf="this.datasource">
       <div class="table">
@@ -154,11 +158,30 @@ export class WaterfallChartComponent implements OnChanges {
     this.buildSegmentsData();
   }
 
-  public onSelection(datum: { id: string }[]): void {
+  public onSelection(datum: { id: string; startTime: number }[]): void {
     // Waterfall does not support multi selections
     const selected = datum.length > 0 ? datum[datum.length - 1] : undefined;
     this.selectedNode = selected?.id !== undefined ? this.dataNodeMap.get(selected?.id) : undefined;
-    this.selectionChange.emit(this.selectedNode);
+
+    if (this.selectedNode !== undefined) {
+      const spanId = selected?.id!;
+      const requestResponseBody$ = this.waterfallChartService.fetchRequestResponseBody(spanId, selected?.startTime!);
+      this.selectionChange.emit({
+        ...this.selectedNode,
+        requestBody$: this.extractRequestBodyObservable(requestResponseBody$),
+        responseBody$: this.extractResponseBodyObservable(requestResponseBody$)
+      });
+    } else {
+      this.selectionChange.emit(this.selectedNode);
+    }
+  }
+
+  private extractRequestBodyObservable(requestResponseBody$: Observable<Span>): Observable<string> {
+    return requestResponseBody$.pipe(map(span => span.spanRequestBody as string));
+  }
+
+  private extractResponseBodyObservable(requestResponseBody$: Observable<Span>): Observable<string> {
+    return requestResponseBody$.pipe(map(span => span.spanResponseBody as string));
   }
 
   public onHover(datum?: { id: string }): void {

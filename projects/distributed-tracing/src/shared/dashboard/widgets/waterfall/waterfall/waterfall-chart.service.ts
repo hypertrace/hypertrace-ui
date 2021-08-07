@@ -1,8 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Color, ColorService, DateCoercer } from '@hypertrace/common';
 import { SequenceSegment } from '@hypertrace/components';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isNil, sortBy } from 'lodash-es';
-import { of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
+import { mergeMap, shareReplay } from 'rxjs/operators';
+import { Span } from '../../../../graphql/model/schema/span';
+import { Specification } from '../../../../graphql/model/schema/specifier/specification';
+import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
+import {
+  SpanGraphQlQueryHandlerService,
+  SPAN_GQL_REQUEST
+} from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { TracingIconLookupService } from '../../../../services/icon-lookup/tracing-icon-lookup.service';
 import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
 
@@ -12,9 +21,11 @@ import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
 export class WaterfallChartService {
   private static readonly SEQUENCE_COLORS: symbol = Symbol('Sequence colors');
   private readonly dateCoercer: DateCoercer = new DateCoercer();
+  private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   public constructor(
     private readonly colorService: ColorService,
-    private readonly iconLookupService: TracingIconLookupService
+    private readonly iconLookupService: TracingIconLookupService,
+    private readonly graphQlQueryService: GraphQlRequestService
   ) {
     this.colorService.registerColorPalette(WaterfallChartService.SEQUENCE_COLORS, [
       Color.Blue5,
@@ -146,5 +157,24 @@ export class WaterfallChartService {
       node.$$spanName.color = color;
       nodes.unshift(...node.$$state.children);
     }
+  }
+
+  public fetchRequestResponseBody(spanId: string, spanStartTime: number): Observable<Span> {
+    const specifications: Specification[] = [
+      this.specificationBuilder.attributeSpecificationForKey('spanRequestBody'),
+      this.specificationBuilder.attributeSpecificationForKey('spanResponseBody')
+    ];
+
+    return this.graphQlQueryService
+      .query<SpanGraphQlQueryHandlerService, Span | undefined>({
+        requestType: SPAN_GQL_REQUEST,
+        id: spanId,
+        timestamp: new Date(spanStartTime),
+        properties: specifications
+      })
+      .pipe(
+        mergeMap(span => (span === undefined ? EMPTY : of(span))),
+        shareReplay()
+      );
   }
 }

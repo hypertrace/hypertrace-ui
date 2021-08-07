@@ -13,7 +13,10 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <ht-span-detail-call-headers [headers]="this.requestHeaders"></ht-span-detail-call-headers>
       </div>
       <div class="section">
-        <ht-span-detail-call-body [body]="this.requestBody$ | async"></ht-span-detail-call-body>
+        <ht-span-detail-call-body
+          *htLoadAsync="this.requestBody$ as requestBody"
+          [body]="requestBody"
+        ></ht-span-detail-call-body>
       </div>
     </div>
   `
