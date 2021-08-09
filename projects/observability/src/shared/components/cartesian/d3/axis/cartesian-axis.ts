@@ -188,6 +188,10 @@ export class CartesianAxis<TData = {}> {
   }
 
   private calculateAxisTickCount(): number {
+    if (this.configuration?.tickCount !== undefined) {
+      return this.configuration.tickCount;
+    }
+
     return 6;
   }
 
@@ -235,4 +239,4 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max'>;
+type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount'>;
