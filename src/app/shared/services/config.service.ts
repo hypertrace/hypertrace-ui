@@ -11,13 +11,15 @@ export class ConfigService {
       constructor(private http: HttpClient) {}
 
       loadConfig() {
+
         return this.http
           .get<any>('./assets/config.json')
           .toPromise()
           .then(config => {
             this.config = config;
           }).catch(err => {
-            throw new Error(err);
+          console.log("🚀 ~ file: config.service.ts ~ line 21 ~ ConfigService ~ loadConfig ~ err", err)
+
 
           });
       }

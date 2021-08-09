@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import {
   Filter,
   FilterAttributeType,
@@ -20,7 +21,7 @@ import { NavigableDashboardComponent } from './navigable-dashboard.component';
 describe('Navigable dashboard component', () => {
   const hostFactory = createHostFactory({
     component: NavigableDashboardComponent,
-    imports: [LoadAsyncModule],
+    imports: [LoadAsyncModule, HttpClientModule],
     declarations: [MockComponent(ApplicationAwareDashboardComponent), MockComponent(FilterBarComponent)],
     providers: [
       mockProvider(MetadataService, {
