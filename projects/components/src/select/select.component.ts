@@ -116,23 +116,25 @@ import { SelectSize } from './select-size';
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
             >
-              <div class="select-option-info">
+              <div class="select-option-content" [ngClass]="{'selected-option': showSelectionStatus && this.highlightSelected && this.isSelectedItem(item) && this.showSelectedItemBorder}">
+                <div class="select-option-info">
+                  <ht-icon
+                    *ngIf="item.icon"
+                    class="icon"
+                    [icon]="item.icon"
+                    size="${IconSize.Small}"
+                    [color]="item.iconColor"
+                  >
+                  </ht-icon>
+                  <span class="label">{{ item.label }}</span>
+                </div>
                 <ht-icon
-                  *ngIf="item.icon"
-                  class="icon"
-                  [icon]="item.icon"
+                  class="status-icon"
+                  *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
+                  icon="${IconType.Checkmark}"
                   size="${IconSize.Small}"
-                  [color]="item.iconColor"
-                >
-                </ht-icon>
-                <span class="label">{{ item.label }}</span>
+                ></ht-icon>
               </div>
-              <ht-icon
-                class="status-icon"
-                *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
-                icon="${IconType.Checkmark}"
-                size="${IconSize.Small}"
-              ></ht-icon>
             </div>
           </ng-template>
         </ht-popover-content>
@@ -164,6 +166,9 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public showBorder: boolean = false;
+
+  @Input()
+  public showSelectedItemBorder: boolean = false;
 
   @Input()
   public justify?: SelectJustify;
