@@ -173,7 +173,7 @@
       align-items: center;
       justify-content: space-between;
       white-space: nowrap;
-      padding: 4px inherit; 
+      padding: 4px inherit;
 
       &.selected-option {
         border-bottom: 1px solid $gray-2;
@@ -184,16 +184,16 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-  
+
         & > * {
           margin-right: 8px;
         }
       }
-  
+
       .label {
         padding-right: 8px;
       }
-  
+
       .status-icon {
         color: $green-5;
       }

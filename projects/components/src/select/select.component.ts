@@ -116,7 +116,16 @@ import { SelectSize } from './select-size';
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
             >
-              <div class="select-option-content" [ngClass]="{'selected-option': showSelectionStatus && this.highlightSelected && this.isSelectedItem(item) && this.showSelectedItemBorder}">
+              <div
+                class="select-option-content"
+                [ngClass]="{
+                  'selected-option':
+                    showSelectionStatus &&
+                    this.highlightSelected &&
+                    this.isSelectedItem(item) &&
+                    this.showSelectedItemBorder
+                }"
+              >
                 <div class="select-option-info">
                   <ht-icon
                     *ngIf="item.icon"
