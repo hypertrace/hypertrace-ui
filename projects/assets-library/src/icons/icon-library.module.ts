@@ -64,6 +64,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.KnowledgeGraph, url: `${iconsRootPath}/knowledge-graph.svg` },
         { key: IconType.Kong, url: `${iconsRootPath}/kong.svg` },
         { key: IconType.Kubernetes, url: `${iconsRootPath}/kubernetes.svg` },
+        { key: IconType.LightBulb, url: `${iconsRootPath}/light-bulb.svg` },
         { key: IconType.LinkUrl, url: `${iconsRootPath}/link-url.svg` },
         { key: IconType.Loading, url: `${iconsRootPath}/loading.svg` },
         { key: IconType.MoreHorizontal, url: `${iconsRootPath}/more-horizontal.svg` },

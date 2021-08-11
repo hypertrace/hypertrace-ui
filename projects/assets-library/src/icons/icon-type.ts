@@ -73,6 +73,7 @@ export const enum IconType {
   Label = 'label',
   Last = 'last_page',
   Layers = 'layers',
+  LightBulb = 'svg:light-bulb',
   LinkUrl = 'svg:link-url',
   List = 'format_list_bulleted',
   Loading = 'svg:loading',
