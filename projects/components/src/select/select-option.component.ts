@@ -28,6 +28,12 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   public iconColor?: string;
 
   @Input()
+  public iconBorder?: string;
+
+  @Input()
+  public iconBorderRadius?: string;
+
+  @Input()
   public disabled?: boolean;
 
   private readonly optionChangeSubject$: Subject<V> = new Subject<V>();

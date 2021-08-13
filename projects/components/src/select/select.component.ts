@@ -61,6 +61,8 @@ import { SelectSize } from './select-size';
                 [icon]="this.getPrefixIcon(selected)"
                 [size]="this.iconSize"
                 [color]="selected?.iconColor"
+                [border]="selected?.iconBorder"
+                [borderRadius]="selected?.iconBorderRadius"
               >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
@@ -123,6 +125,8 @@ import { SelectSize } from './select-size';
                   [icon]="item.icon"
                   size="${IconSize.Small}"
                   [color]="item.iconColor"
+                  [border]="item.iconBorder"
+                  [borderRadius]="item.iconBorderRadius"
                 >
                 </ht-icon>
                 <span class="label">{{ item.label }}</span>

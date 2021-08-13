@@ -11,7 +11,11 @@ import { IconSize } from './icon-size';
     <mat-icon
       class="ht-icon"
       [ngClass]="this.size"
-      [ngStyle]="{ color: this.color ? this.color : '' }"
+      [ngStyle]="{
+        color: this.color ? this.color : '',
+        border: this.border ? this.border : '',
+        borderRadius: this.borderRadius ? this.borderRadius : ''
+      }"
       [attr.aria-label]="this.labelToUse"
       [htTooltip]="this.showTooltip ? this.labelToUse : undefined"
       [fontSet]="this.fontSet"
@@ -26,6 +30,12 @@ export class IconComponent implements OnChanges {
 
   @Input()
   public size: IconSize = IconSize.Medium;
+
+  @Input()
+  public border?: string;
+
+  @Input()
+  public borderRadius?: string;
 
   @Input()
   public label?: string;
