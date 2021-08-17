@@ -175,7 +175,7 @@
       white-space: nowrap;
       padding: 4px inherit;
 
-      &.selected-option {
+      &.selected-option:last-child {
         border-bottom: 1px solid $gray-2;
         padding: 0px inherit;
       }
