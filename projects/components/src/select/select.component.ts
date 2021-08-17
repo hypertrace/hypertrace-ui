@@ -62,8 +62,8 @@ import { SelectSize } from './select-size';
                 [size]="this.iconSize"
                 [color]="selected?.iconColor"
                 [borderType]="selected.iconBorderType"
-                [borderColor]="selected?.iconBorderColor"
-                [borderRadius]="selected?.iconBorderRadius"
+                [borderColor]="selected.iconBorderColor"
+                [borderRadius]="selected.iconBorderRadius"
               >
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
