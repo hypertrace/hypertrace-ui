@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconRegistryService, IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
+import { IconBorder } from './icon-border';
 import { IconSize } from './icon-size';
 
 @Component({
@@ -10,10 +11,11 @@ import { IconSize } from './icon-size';
   template: `
     <mat-icon
       class="ht-icon"
-      [ngClass]="this.size"
+      [ngClass]="[this.size, this.borderType ? this.borderType : '']"
       [ngStyle]="{
         color: this.color ? this.color : '',
-        border: this.border ? this.border : '',
+        borderColor: this.borderType !== '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
+        background: this.borderType === '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
         borderRadius: this.borderRadius ? this.borderRadius : ''
       }"
       [attr.aria-label]="this.labelToUse"
@@ -32,7 +34,10 @@ export class IconComponent implements OnChanges {
   public size: IconSize = IconSize.Medium;
 
   @Input()
-  public border?: string;
+  public borderType: IconBorder = IconBorder.NoBorder;
+
+  @Input()
+  public borderColor?: string;
 
   @Input()
   public borderRadius?: string;

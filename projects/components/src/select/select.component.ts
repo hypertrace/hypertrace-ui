@@ -61,7 +61,8 @@ import { SelectSize } from './select-size';
                 [icon]="this.getPrefixIcon(selected)"
                 [size]="this.iconSize"
                 [color]="selected?.iconColor"
-                [border]="selected?.iconBorder"
+                [borderType]="selected.iconBorderType"
+                [borderColor]="selected?.iconBorderColor"
                 [borderRadius]="selected?.iconBorderRadius"
               >
               </ht-icon>
@@ -125,7 +126,8 @@ import { SelectSize } from './select-size';
                   [icon]="item.icon"
                   size="${IconSize.Small}"
                   [color]="item.iconColor"
-                  [border]="item.iconBorder"
+                  [borderType]="item.iconBorderType"
+                  [borderColor]="item.iconBorderColor"
                   [borderRadius]="item.iconBorderRadius"
                 >
                 </ht-icon>
