@@ -120,6 +120,7 @@ export * from './header/page/page-header.module';
 
 // Icon
 export * from './icon/icon-size';
+export * from './icon/icon-border';
 export * from './icon/icon.component';
 export * from './icon/icon.module';
 

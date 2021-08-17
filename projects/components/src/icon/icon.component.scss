@@ -52,4 +52,17 @@
     height: inherit;
     width: inherit;
   }
+
+  &.no-border {
+    border-style: none;
+  }
+
+  &.inset-border {
+    box-sizing: border-box;
+  }
+
+  &.outset-border {
+    border-width: 2px;
+    border-style: solid;
+  }
 }
