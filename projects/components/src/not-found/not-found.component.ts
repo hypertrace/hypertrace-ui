@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { ButtonRole, ButtonStyle } from '../button/button';
-import { ImagesAssetPath } from '@hypertrace/assets-library';
 @Component({
   selector: 'ht-not-found',
   changeDetection: ChangeDetectionStrategy.OnPush,
