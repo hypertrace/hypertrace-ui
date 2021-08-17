@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken, TemplateRef } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
+import { IconType, LoaderSize } from '@hypertrace/assets-library';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { LoadAsyncStateType } from '../load-async-state.type';
@@ -8,13 +8,12 @@ import { AsyncState, ErrorAsyncState, LoadAsyncContext } from '../load-async.ser
 export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters>>(
   'ASYNC_WRAPPER_PARAMETERS$'
 );
-
 @Component({
   selector: 'ht-load-async-wrapper',
   template: `
     <div *ngIf="this.state$ | async as state" class="fill-container" [ngSwitch]="state.type">
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Loading}'">
-        <ht-loader></ht-loader>
+        <ht-loader size="${LoaderSize.Medium}"></ht-loader>
       </ng-container>
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Success}'">
         <ng-container *ngTemplateOutlet="this.content; context: state.context"></ng-container>

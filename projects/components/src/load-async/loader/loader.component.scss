@@ -7,4 +7,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  .large {
+    height: 50px;
+    width: 50px;
+  }
+
+  .small {
+    height: 20px;
+    width: 20px;
+  }
+
+  .medium {
+    height: 20px;
+    width: auto;
+  }
 }
