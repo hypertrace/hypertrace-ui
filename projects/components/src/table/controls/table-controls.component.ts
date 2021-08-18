@@ -9,9 +9,7 @@ import {
   Output
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
@@ -27,7 +25,6 @@ import {
 @Component({
   selector: 'ht-table-controls',
   styleUrls: ['./table-controls.component.scss'],
-  providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="table-controls" *ngIf="this.anyControlsEnabled">
@@ -38,6 +35,7 @@ import {
           *ngIf="this.searchEnabled"
           class="control search-box"
           [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
+          [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
         ></ht-search-box>
 
@@ -152,17 +150,8 @@ export class TableControlsComponent implements OnChanges {
     return !!this.searchEnabled || this.viewToggleEnabled || this.selectControlsEnabled || this.checkboxControlsEnabled;
   }
 
-  private readonly searchDebounceSubject: Subject<string> = new Subject<string>();
-
-  public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
-    private readonly differFactory: IterableDiffers
-  ) {
+  public constructor(private readonly differFactory: IterableDiffers) {
     this.checkboxDiffer = this.differFactory.find([]).create();
-
-    this.subscriptionLifecycle.add(
-      this.searchDebounceSubject.pipe(debounceTime(400)).subscribe(text => this.searchChange.emit(text))
-    );
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -208,7 +197,7 @@ export class TableControlsComponent implements OnChanges {
   }
 
   public onSearchChange(text: string): void {
-    this.searchDebounceSubject.next(text);
+    this.searchChange.emit(text);
   }
 
   public onMultiSelectChange(select: TableSelectControl, selections: TableSelectControlOption[]): void {

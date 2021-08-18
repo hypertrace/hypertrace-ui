@@ -53,11 +53,6 @@ describe('Table Controls component', () => {
     });
 
     spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'testing');
-    spectator.tick(200);
-
-    expect(onChangeSpy).not.toHaveBeenCalledWith('testing');
-    // 400 ms debounce
-    spectator.tick(200);
     expect(onChangeSpy).toHaveBeenCalledWith('testing');
   }));
 
