@@ -161,7 +161,7 @@ export class TableControlsComponent implements OnChanges {
     this.checkboxDiffer = this.differFactory.find([]).create();
 
     this.subscriptionLifecycle.add(
-      this.searchDebounceSubject.pipe(debounceTime(200)).subscribe(text => this.searchChange.emit(text))
+      this.searchDebounceSubject.pipe(debounceTime(400)).subscribe(text => this.searchChange.emit(text))
     );
   }
 
