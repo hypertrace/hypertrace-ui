@@ -2,25 +2,25 @@
   "name": "@hypertrace/distributed-tracing",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^11.2.0",
-    "@angular/core": "^11.2.0",
-    "@angular/material": "^11.2.0",
-    "@angular/cdk": "^11.2.0",
-    "@angular/forms": "^11.2.0",
-    "rxjs": "~6.6.3",
-    "lodash-es": "^4.17.15",
-    "@angular/router": "^11.2.0",
+    "@angular/common": "^12.2.1",
+    "@angular/core": "^12.2.1",
+    "@angular/material": "^12.2.1",
+    "@angular/cdk": "^12.2.1",
+    "@angular/forms": "^12.2.1",
+    "rxjs": "~6.6.7",
+    "lodash-es": "^4.17.21",
+    "@angular/router": "^12.2.1",
     "@hypertrace/graphql-client": "^0.0.0",
     "@hypertrace/common": "^0.0.0",
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/dashboard": "^0.0.0",
-    "@hypertrace/hyperdash-angular": "^2.5.0",
+    "@hypertrace/hyperdash-angular": "^2.6.0",
     "@hypertrace/hyperdash": "^1.2.1"
   },
   "devDependencies": {
     "@hypertrace/test-utils": "^0.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.3"
+    "tslib": "^2.3.1"
   }
 }
