@@ -9,9 +9,11 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
+import { LoaderTypes } from '@hypertrace/assets-library';
 import { Observable, ReplaySubject } from 'rxjs';
 import { LoadAsyncContext, LoadAsyncService } from './load-async.service';
 import {
+  ASYNC_LOADER_TYPE,
   ASYNC_WRAPPER_PARAMETERS$,
   LoadAsyncWrapperComponent,
   LoadAsyncWrapperParameters
@@ -23,8 +25,11 @@ import {
 export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
   public data$?: Observable<unknown>;
+  @Input()
+  public htLoadAsyncLoaderType!: LoaderTypes;
+
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
-  private readonly wrapperInjector: Injector;
+  private wrapperInjector!: Injector;
   private wrapperView?: ComponentRef<LoadAsyncWrapperComponent>;
 
   public constructor(
@@ -32,17 +37,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     private readonly componentFactoryResolver: ComponentFactoryResolver,
     private readonly loadAsyncService: LoadAsyncService,
     public readonly templateRef: TemplateRef<LoadAsyncContext>
-  ) {
-    this.wrapperInjector = Injector.create({
-      providers: [
-        {
-          provide: ASYNC_WRAPPER_PARAMETERS$,
-          useValue: this.wrapperParamsSubject.asObservable()
-        }
-      ],
-      parent: this.viewContainer.injector
-    });
-  }
+  ) {}
 
   public ngOnChanges(): void {
     if (this.data$) {
@@ -64,6 +59,23 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
 
   private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent> {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LoadAsyncWrapperComponent);
+
+    // Second param for structural directive is undefined until this.data$ is defined
+    // So putting this assignment in constuctor will not work
+    // This will execute only once as this method is called only
+    this.wrapperInjector = Injector.create({
+      providers: [
+        {
+          provide: ASYNC_WRAPPER_PARAMETERS$,
+          useValue: this.wrapperParamsSubject.asObservable()
+        },
+        {
+          provide: ASYNC_LOADER_TYPE,
+          useValue: this.htLoadAsyncLoaderType
+        }
+      ],
+      parent: this.viewContainer.injector
+    });
 
     return this.viewContainer.createComponent(componentFactory, undefined, this.wrapperInjector);
   }

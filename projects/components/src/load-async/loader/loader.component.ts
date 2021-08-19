@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath, LoaderTypes } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
 
@@ -7,17 +7,19 @@ import { assertUnreachable } from '@hypertrace/common';
   styleUrls: ['./loader.component.scss'],
   template: `
     <div class="ht-loader">
-      <img [ngClass]="this.type" src="${ImagesAssetPath.LoaderHorizontal}" />
+      <img [ngClass]="[this.type]" [src]="this.imagePath" />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderComponent {
+export class LoaderComponent implements OnChanges {
   @Input()
   public type: LoaderTypes = LoaderTypes.Horizontal;
-  public imagePath: ImagesAssetPath;
+  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderHorizontal;
 
-  public constructor() {
+  public ngOnChanges(): void {
+    // Unfortunatly passing undefined is overwriting default value
+    this.type = this.type ?? LoaderTypes.Horizontal;
     this.imagePath = this.getImagePathFromType();
   }
 
