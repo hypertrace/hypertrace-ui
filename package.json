@@ -10,7 +10,7 @@
     "postinstall": "ngcc --tsconfig './tsconfig.app.json' --use-program-dependencies && ngcc --source 'node_modules/@angular'",
     "ng": "ng",
     "start": "NG_PERSISTENT_BUILD_CACHE=1 ng serve",
-    "build": "ng build --configuration production",
+    "build": "NG_PERSISTENT_BUILD_CACHE=1 ng build --configuration production",
     "build:common": "ng build common",
     "build:components": "ng build components",
     "build:dashboards": "ng build dashboards",
