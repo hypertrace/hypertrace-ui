@@ -9,7 +9,7 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
   'ASYNC_WRAPPER_PARAMETERS$'
 );
 
-export const ASYNC_LOADER_TYPE = new InjectionToken<Observable<LoadAsyncWrapperParameters>>('ASYNC_LOADER_TYPE');
+export const LOADER_TYPE = new InjectionToken<string>('LOADER_TYPE');
 @Component({
   selector: 'ht-load-async-wrapper',
   template: `
@@ -43,7 +43,7 @@ export class LoadAsyncWrapperComponent {
 
   public constructor(
     @Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>,
-    @Inject(ASYNC_LOADER_TYPE) loaderType: LoaderTypes
+    @Inject(LOADER_TYPE) loaderType: LoaderTypes
   ) {
     this.state$ = parameters$.pipe(
       tap(params => (this.content = params.content)),

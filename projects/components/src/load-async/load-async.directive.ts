@@ -13,7 +13,7 @@ import { LoaderTypes } from '@hypertrace/assets-library';
 import { Observable, ReplaySubject } from 'rxjs';
 import { LoadAsyncContext, LoadAsyncService } from './load-async.service';
 import {
-  ASYNC_LOADER_TYPE,
+  LOADER_TYPE,
   ASYNC_WRAPPER_PARAMETERS$,
   LoadAsyncWrapperComponent,
   LoadAsyncWrapperParameters
@@ -63,6 +63,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     // Second param for structural directive is undefined until this.data$ is defined
     // So putting this assignment in constuctor will not work
     // This will execute only once as this method is called only
+    console.log(this.htLoadAsyncLoaderType);
     this.wrapperInjector = Injector.create({
       providers: [
         {
@@ -70,7 +71,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
           useValue: this.wrapperParamsSubject.asObservable()
         },
         {
-          provide: ASYNC_LOADER_TYPE,
+          provide: LOADER_TYPE,
           useValue: this.htLoadAsyncLoaderType
         }
       ],
