@@ -63,7 +63,6 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     // Second param for structural directive is undefined until this.data$ is defined
     // So putting this assignment in constuctor will not work
     // This will execute only once as this method is called only
-    console.log(this.htLoadAsyncLoaderType);
     this.wrapperInjector = Injector.create({
       providers: [
         {
