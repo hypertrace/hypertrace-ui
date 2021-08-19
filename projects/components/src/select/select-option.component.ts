@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Observable, Subject } from 'rxjs';
+import { IconBorder } from '../icon/icon-border';
 import { SelectOption } from './select-option';
 
 @Component({
@@ -26,6 +27,15 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
 
   @Input()
   public iconColor?: string;
+
+  @Input()
+  public iconBorderType?: IconBorder;
+
+  @Input()
+  public iconBorderColor?: string;
+
+  @Input()
+  public iconBorderRadius?: string;
 
   @Input()
   public disabled?: boolean;

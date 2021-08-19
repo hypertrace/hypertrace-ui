@@ -39,6 +39,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
   private static readonly DONUT_PADDING_PX: number = 10;
+  private static readonly MIN_FONT_SIZE_FOR_TITLE: number = 12;
   private static readonly MAX_FONT_SIZE_FOR_TITLE: number = 15;
   private static readonly MAX_FONT_SIZE_FOR_VALUE: number = 64;
 
@@ -74,7 +75,10 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`)
       .attr(
         'font-size',
-        Math.min(Math.floor(dimensions.donutInnerRadius / 8), DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE)
+        Math.min(
+          Math.max(DonutBuilderService.MIN_FONT_SIZE_FOR_TITLE, Math.floor(dimensions.donutInnerRadius / 8)),
+          DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE
+        )
       );
 
     visualizationContainer
