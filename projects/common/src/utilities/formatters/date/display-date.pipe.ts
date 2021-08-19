@@ -9,6 +9,8 @@ import { DateFormatOptions, DateFormatter } from './date-formatter';
 export class DisplayDatePipe implements PipeTransform {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
   public transform(value?: string | Date | number | null, options: DateFormatOptions = {}): string {
-    return isNil(value) ? '-' : new DateFormatter(options).format(this.dateCoercer.coerce(value));
+    const coercedDate = this.dateCoercer.coerce(value);
+
+    return isNil(coercedDate) ? '-' : new DateFormatter(options).format(coercedDate);
   }
 }

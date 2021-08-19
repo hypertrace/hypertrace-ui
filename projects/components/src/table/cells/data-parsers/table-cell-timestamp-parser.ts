@@ -24,5 +24,5 @@ export class TableCellTimestampParser extends TableCellParserBase<CellData, Valu
   }
 }
 
-type CellData = Date | number | { value: Date | number };
+type CellData = Date | number | string | { value: Date | number };
 type Value = Date | number | undefined;
