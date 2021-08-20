@@ -1,19 +1,20 @@
+import { TimeDuration } from '../../time/time-duration';
+import { TimeUnit } from '../../time/time-unit.type';
 import { Coercer, CoercerOptions } from './coercer';
 
 export class DateCoercer extends Coercer<Date, DateCoercerOptions> {
+  private static readonly DEFAULT_TIME_WINDOW: DateCoercerOptions = {
+    earliestDate: new Date(Date.now() - new TimeDuration(10, TimeUnit.Year).toMillis()),
+    latestDate: new Date(Date.now() + new TimeDuration(10, TimeUnit.Year).toMillis())
+  };
+
   public constructor(options: DateCoercerOptions = {}) {
     super(options);
   }
 
   protected assignDefaults(options: DateCoercerOptions): DateCoercerOptions {
-    const tenYearsInMillis = 10 * 365 * 24 * 60 * 60 * 1000;
-    const now = Date.now();
-    const tenYearsAgo = new Date(now - tenYearsInMillis);
-    const tenYearsFuture = new Date(now + tenYearsInMillis);
-
     return {
-      earliestDate: tenYearsAgo,
-      latestDate: tenYearsFuture,
+      ...DateCoercer.DEFAULT_TIME_WINDOW,
       ...super.assignDefaults(options)
     };
   }

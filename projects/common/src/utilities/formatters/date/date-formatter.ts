@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { defaults } from 'lodash-es';
+import { DateCoercer } from '../../coercers/date-coercer';
 
 export const enum DateFormatMode {
   TimeOnly,
@@ -16,13 +17,14 @@ export class DateFormatter {
   };
 
   protected readonly options: Readonly<Required<DateFormatOptions>>;
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
 
   // Temporary placeholder, need to flesh this out
   public constructor(options: DateFormatOptions = {}) {
     this.options = this.applyOptionDefaults(options);
   }
 
-  public format(value: Date | number | undefined): string {
+  public format(value: Date | number | undefined | string): string {
     return this.convertDateToString(value);
   }
 
@@ -32,12 +34,13 @@ export class DateFormatter {
     return newOptions;
   }
 
-  protected convertDateToString(value: Date | number | undefined): string {
-    if (value === undefined) {
+  protected convertDateToString(value: Date | number | string | undefined): string {
+    const coercedValue = this.dateCoercer.coerce(value);
+    if (coercedValue === undefined) {
       return '-';
     }
 
-    return formatDate(value, this.getFormatString(), 'en_US');
+    return formatDate(coercedValue, this.getFormatString(), 'en_US');
   }
 
   private getFormatString(): string {
