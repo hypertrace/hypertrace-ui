@@ -88,7 +88,7 @@
     "@types/d3-selection": "^1.4.2",
     "@types/d3-shape": "^2.1.0",
     "@types/d3-zoom": "^1.7.5",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.1",
     "@types/lodash-es": "^4.17.4",
     "@types/node": "^15.12.5",
     "@types/uuid": "^8.3.1",
