@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NavigationService } from '@hypertrace/common';
+import { mockProvider } from '@ngneat/spectator/jest';
 import { ListViewComponent, ListViewHeader, ListViewRecord } from './list-view.component';
 
 describe('List View Component', () => {
@@ -32,7 +34,8 @@ describe('List View Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestHostComponent, ListViewComponent],
-      imports: [CommonModule]
+      imports: [CommonModule],
+      providers: [mockProvider(NavigationService)]
     });
 
     fixture = TestBed.createComponent(TestHostComponent);
