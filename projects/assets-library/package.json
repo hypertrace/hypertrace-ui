@@ -2,14 +2,14 @@
   "name": "@hypertrace/assets-library",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^11.2.0",
-    "@angular/core": "^11.2.0",
-    "@angular/platform-browser": "^11.2.0",
-    "@angular/material": "^11.2.0",
-    "rxjs": "~6.6.3",
-    "lodash-es": "^4.17.15"
+    "@angular/common": "^12.2.1",
+    "@angular/core": "^12.2.1",
+    "@angular/platform-browser": "^12.2.1",
+    "@angular/material": "^12.2.1",
+    "rxjs": "~6.6.7",
+    "lodash-es": "^4.17.21"
   },
   "dependencies": {
-    "tslib": "^2.0.3"
+    "tslib": "^2.3.1"
   }
 }
