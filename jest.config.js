@@ -4,6 +4,7 @@ process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependen
 
 module.exports = {
   rootDir: '.',
+  testRunner: 'jest-jasmine2',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
