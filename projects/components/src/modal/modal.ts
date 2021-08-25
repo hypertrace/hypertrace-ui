@@ -57,6 +57,11 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
         height: 600,
         width: 840
       };
+    default:
+      return {
+        height: 365,
+        width: 420
+      };
   }
 };
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
