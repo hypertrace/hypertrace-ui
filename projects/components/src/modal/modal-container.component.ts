@@ -14,6 +14,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA 
     <div
       *ngIf="this.visible"
       class="modal-container"
+      [ngClass]="'modal-size-' + this.size"
       [style.height]="this.dimension.height"
       [style.width]="this.dimension.width"
     >
