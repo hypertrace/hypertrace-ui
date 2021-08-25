@@ -14,9 +14,9 @@ import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA 
     <div
       *ngIf="this.visible"
       class="modal-container"
-      [ngClass]="'modal-size-' + this.size"
-      [style.height]="this.dimension.height"
-      [style.width]="this.dimension.width"
+      [ngClass]="'modal-size-' + this.modalSizeClass"
+      [style.height]="this.size.height"
+      [style.width]="this.size.width"
     >
       <div class="header">
         <ht-button
@@ -47,8 +47,8 @@ import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA 
 export class ModalContainerComponent {
   public readonly modalTitle: string;
   public readonly showControls: boolean;
-  public readonly size?: ModalSize;
-  public readonly dimension: ModalDimension;
+  public readonly size: ModalSize | ModalDimension;
+  public readonly modalSizeClass: string;
   public readonly isComponentModal: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
@@ -65,10 +65,10 @@ export class ModalContainerComponent {
     const config = constructionData.config;
     this.showControls = config.showControls ?? false;
     this.modalTitle = config.title ?? '';
-    this.size = config.size;
-    this.dimension = config.dimension
-      ? this.getDimensionsWithUnits(config.dimension)
-      : this.getDimensionsWithUnits(getModalDimensions(this.size));
+    this.modalSizeClass = this.isModalDimension(config.size) ? 'custom' : config.size;
+    this.size = this.isModalDimension(config.size)
+      ? this.getDimensionsWithUnits(config.size)
+      : this.getDimensionsWithUnits(getModalDimensions(config.size));
     this.isComponentModal = !(config.content instanceof TemplateRef);
     this.closeOnEscape = config.closeOnEscapeKey ?? true;
     this.renderer = config.content;
@@ -94,6 +94,10 @@ export class ModalContainerComponent {
   public close(): void {
     this.visible = false;
     this.popoverRef.close();
+  }
+
+  private isModalDimension(size: unknown): size is ModalDimension {
+    return typeof size === 'object' && size !== null && (size as ModalDimension).width !== undefined;
   }
 
   private getDimensionsWithUnits(dims: ModalDimension): ModalDimension {
