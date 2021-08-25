@@ -77,7 +77,7 @@ describe('Modal Container component', () => {
     expect(spectator.query('.header')).toHaveText('Create User');
   });
 
-  test('uses the requested size', () => {
+  test('uses the requested small size', () => {
     spectator = createConfiguredHost({
       showControls: true,
       title: 'Create User',
@@ -85,6 +85,56 @@ describe('Modal Container component', () => {
       size: ModalSize.Small
     });
     expect(spectator.query('.modal-container')).toHaveClass('modal-size-small');
+  });
+
+  test('uses the requested medium size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.Medium
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-medium');
+  });
+
+  test('uses the requested large-short size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.LargeShort
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large-short');
+  });
+
+  test('uses the requested large size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.Large
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large');
+  });
+
+  test('uses the requested large-tall size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.LargeTall
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large-tall');
+  });
+
+  test('uses the requested medium-wide size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.MediumWide
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-medium-wide');
   });
 
   test('custom size', () => {
