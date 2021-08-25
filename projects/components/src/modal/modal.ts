@@ -25,7 +25,7 @@ export interface ModalDimension {
   width: number | string;
 }
 
-export const getModalDimensions = (modalSize?: ModalSize): ModalDimension => {
+export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
   switch (modalSize) {
     case ModalSize.Small:
       return {
@@ -56,11 +56,6 @@ export const getModalDimensions = (modalSize?: ModalSize): ModalDimension => {
       return {
         height: 600,
         width: 840
-      };
-    default:
-      return {
-        height: 365,
-        width: 420
       };
   }
 };
