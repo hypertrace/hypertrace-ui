@@ -4,7 +4,7 @@ import { LayoutChangeService } from '@hypertrace/common';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { POPOVER_DATA } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
-import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA } from './modal';
+import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './modal';
 
 @Component({
   selector: 'ht-modal-container',
@@ -47,7 +47,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA 
 export class ModalContainerComponent {
   public readonly modalTitle: string;
   public readonly showControls: boolean;
-  public readonly size: ModalSize | ModalDimension;
+  public readonly size: ModalDimension;
   public readonly modalSizeClass: string;
   public readonly isComponentModal: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
