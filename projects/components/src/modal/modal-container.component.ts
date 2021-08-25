@@ -4,14 +4,19 @@ import { LayoutChangeService } from '@hypertrace/common';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { POPOVER_DATA } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
-import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
+import { getModalDimensions, ModalConfig, ModalDimension, ModalSize, MODAL_DATA } from './modal';
 
 @Component({
   selector: 'ht-modal-container',
   styleUrls: ['./modal-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div *ngIf="this.visible" class="modal-container" [ngClass]="'modal-size-' + this.size">
+    <div
+      *ngIf="this.visible"
+      class="modal-container"
+      [style.height]="this.dimension.height"
+      [style.width]="this.dimension.width"
+    >
       <div class="header">
         <ht-button
           *ngIf="this.showControls"
@@ -41,7 +46,8 @@ import { ModalConfig, ModalSize, MODAL_DATA } from './modal';
 export class ModalContainerComponent {
   public readonly modalTitle: string;
   public readonly showControls: boolean;
-  public readonly size: ModalSize;
+  public readonly size?: ModalSize;
+  public readonly dimension: ModalDimension;
   public readonly isComponentModal: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
@@ -59,6 +65,9 @@ export class ModalContainerComponent {
     this.showControls = config.showControls ?? false;
     this.modalTitle = config.title ?? '';
     this.size = config.size;
+    this.dimension = config.dimension
+      ? this.getDimensionsWithUnits(config.dimension)
+      : this.getDimensionsWithUnits(getModalDimensions(this.size));
     this.isComponentModal = !(config.content instanceof TemplateRef);
     this.closeOnEscape = config.closeOnEscapeKey ?? true;
     this.renderer = config.content;
@@ -84,6 +93,19 @@ export class ModalContainerComponent {
   public close(): void {
     this.visible = false;
     this.popoverRef.close();
+  }
+
+  private getDimensionsWithUnits(dims: ModalDimension): ModalDimension {
+    const dimsWithUnits: ModalDimension = { ...dims };
+    if (typeof dims.height === 'number') {
+      dimsWithUnits.height = `${dims.height}px`;
+    }
+
+    if (typeof dims.width === 'number') {
+      dimsWithUnits.width = `${dims.width}px`;
+    }
+
+    return dimsWithUnits;
   }
 }
 
