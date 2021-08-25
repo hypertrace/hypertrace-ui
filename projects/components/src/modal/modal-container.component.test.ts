@@ -87,6 +87,19 @@ describe('Modal Container component', () => {
     expect(spectator.query('.modal-container')).toHaveClass('modal-size-small');
   });
 
+  test('custom size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: {
+        width: 100,
+        height: 100
+      }
+    });
+    expect(spectator.query('.modal-container')).toHaveClass('modal-size-custom');
+  });
+
   test('closes on close button click', () => {
     const closeFn = jest.fn();
     spectator = createConfiguredHost(
