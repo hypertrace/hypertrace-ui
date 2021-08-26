@@ -10,3 +10,4 @@ import { LinkComponent } from './link.component';
   imports: [CommonModule, RouterModule, LetAsyncModule]
 })
 export class LinkModule {}
+//
