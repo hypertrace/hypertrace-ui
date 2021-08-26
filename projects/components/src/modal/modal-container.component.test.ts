@@ -22,6 +22,12 @@ class TestComponent {
 describe('Modal Container component', () => {
   let spectator: Spectator<ModalContainerComponent>;
 
+  const checkSyles = (width: string, height: string): void => {
+    const modalContainer = spectator.query('.modal-container') as HTMLElement;
+    expect(modalContainer.style.height).toBe(height);
+    expect(modalContainer.style.width).toBe(width);
+  };
+
   const createHost = createHostFactory({
     component: ModalContainerComponent,
     shallow: true,
@@ -84,7 +90,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.Small
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-small');
+    checkSyles('420px', '365px');
   });
 
   test('uses the requested medium size', () => {
@@ -94,7 +100,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.Medium
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-medium');
+    checkSyles('456px', '530px');
   });
 
   test('uses the requested large-short size', () => {
@@ -104,7 +110,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.LargeShort
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large-short');
+    checkSyles('640px', '540px');
   });
 
   test('uses the requested large size', () => {
@@ -114,7 +120,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.Large
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large');
+    checkSyles('640px', '720px');
   });
 
   test('uses the requested large-tall size', () => {
@@ -124,7 +130,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.LargeTall
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-large-tall');
+    checkSyles('640px', '800px');
   });
 
   test('uses the requested medium-wide size', () => {
@@ -134,7 +140,7 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.MediumWide
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-medium-wide');
+    checkSyles('840px', '600px');
   });
 
   test('custom size', () => {
@@ -147,7 +153,7 @@ describe('Modal Container component', () => {
         height: 100
       }
     });
-    expect(spectator.query('.modal-container')).toHaveClass('modal-size-custom');
+    checkSyles('100px', '100px');
   });
 
   test('closes on close button click', () => {
