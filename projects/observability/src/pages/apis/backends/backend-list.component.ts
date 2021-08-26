@@ -30,7 +30,8 @@ export class BackendListComponent {
         value: {
           type: 'entity-specification',
           'entity-type': ObservabilityEntityType.Backend
-        }
+        },
+        sort: TableSortDirection.Descending
       },
       {
         type: 'table-widget-column',
@@ -50,8 +51,7 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'duration',
           aggregation: 'p99'
-        },
-        sort: TableSortDirection.Descending
+        }
       },
       {
         type: 'table-widget-column',

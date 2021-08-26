@@ -25,7 +25,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             width: '30%',
             value: {
               type: 'entity-specification'
-            }
+            },
+            sort: TableSortDirection.Descending
           },
           {
             type: 'table-widget-column',
@@ -35,8 +36,7 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
               type: 'metric-aggregation',
               metric: 'duration',
               aggregation: 'p99'
-            },
-            sort: TableSortDirection.Descending
+            }
           },
           {
             type: 'table-widget-column',
