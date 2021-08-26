@@ -1,5 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
-import { MetricAggregation } from '@hypertrace/observability';
+import { MetricAggregation } from '../../metrics/metric-aggregation';
 import { GraphQlMetricAggregation } from '../metric/graphql-metric-aggregation';
 import { MetricAggregationSpecification } from './metric-aggregation-specification';
 

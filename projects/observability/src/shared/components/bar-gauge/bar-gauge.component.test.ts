@@ -1,9 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ColorService, DomElementMeasurerService, FormattingModule } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
-import { BarGaugeComponent } from '@hypertrace/observability';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockProvider } from 'ng-mocks';
+import { BarGaugeComponent } from './bar-gauge.component';
 
 describe('Bar Gauge component', () => {
   let spectator: Spectator<BarGaugeComponent>;

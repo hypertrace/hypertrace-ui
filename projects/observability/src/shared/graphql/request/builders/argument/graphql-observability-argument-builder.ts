@@ -1,16 +1,14 @@
 import { TimeDuration } from '@hypertrace/common';
 import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import {
-  convertToGraphQlMetricAggregationType,
-  GraphQlArgumentBuilder,
-  GraphQlSortBySpecification,
-  MetricAggregationType,
-  TraceType
-} from '@hypertrace/observability';
+import { MetricAggregationType } from '../../../model/metrics/metric-aggregation';
 import { EntityType } from '../../../model/schema/entity';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
+import { convertToGraphQlMetricAggregationType } from '../../../model/schema/metrics/graphql-metric-aggregation-type';
+import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
+import { TraceType } from '../../../model/schema/trace';
 import { convertToGraphQlIntervalUnit } from '../specification/metric/metric-interval-unit-converter';
+import { GraphQlArgumentBuilder } from './graphql-argument-builder';
 
 export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder {
   public forIncludeInactive(includeInactive?: boolean): GraphQlArgument[] {

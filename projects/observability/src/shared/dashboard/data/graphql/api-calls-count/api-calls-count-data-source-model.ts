@@ -1,12 +1,8 @@
 import { Model } from '@hypertrace/hyperdash';
-import {
-  GraphQlDataSourceModel,
-  MetricAggregation,
-  MetricAggregationType,
-  MetricHealth
-} from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MetricAggregation, MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../graphql/model/metrics/metric-health';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
@@ -14,6 +10,7 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-query';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 @Model({
   type: 'api-calls-count-data-source'

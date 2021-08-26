@@ -1,5 +1,5 @@
-import { Specification } from '@hypertrace/observability';
 import { ObservabilityEntityType } from './entity';
+import { Specification } from './specifier/specification';
 
 export const enum NeighborDirection {
   Upstream = 'upstream',

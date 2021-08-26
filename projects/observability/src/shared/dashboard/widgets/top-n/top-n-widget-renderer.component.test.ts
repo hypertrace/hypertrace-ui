@@ -1,11 +1,11 @@
 import { FormattingModule, NavigationService } from '@hypertrace/common';
 import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
+import { MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { EntityNavigationService } from '../../../services/navigation/entity/entity-navigation.service';

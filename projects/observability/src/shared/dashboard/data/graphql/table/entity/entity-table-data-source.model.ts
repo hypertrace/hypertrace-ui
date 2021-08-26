@@ -7,21 +7,19 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import {
-  GraphQlFilter,
-  Specification,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/observability';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
   ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
+import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
   type: 'entity-table-data-source'

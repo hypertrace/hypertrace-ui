@@ -1,7 +1,6 @@
 import { TableSortDirection } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { ARRAY_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
-import { GraphQlDataSourceModel } from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
@@ -12,6 +11,7 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-query';
+import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 @Model({

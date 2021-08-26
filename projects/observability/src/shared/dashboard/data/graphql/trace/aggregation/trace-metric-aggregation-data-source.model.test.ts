@@ -1,6 +1,8 @@
 import { ModelApi } from '@hypertrace/hyperdash';
-import { GraphQlFilter, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
+import { MetricAggregationType } from '../../../../../graphql/model/metrics/metric-aggregation';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { EXPLORE_GQL_REQUEST } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { TraceMetricAggregationDataSourceModel } from './trace-metric-aggregation-data-source.model';

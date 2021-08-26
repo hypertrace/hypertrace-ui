@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReplayObservable } from '@hypertrace/common';
-import { NavigableDashboardFilterConfig } from '@hypertrace/observability';
 import { map } from 'rxjs/operators';
+import { NavigableDashboardFilterConfig } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.component';
 import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 import { BackendDetailService } from '../backend-detail.service';
 import { backendTraceListDashboard } from './backend-trace-list.dashboard';

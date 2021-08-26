@@ -5,11 +5,12 @@ import {
   GraphQlRequestOptions,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
-import { GraphQlTimeRange, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../model/schema/filter/entity/graphql-entity-filter';
+import { Specification } from '../../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../../model/schema/timerange/graphql-time-range';
 import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-builder.service';
 import {
   EntitiesGraphQlQueryHandlerService,

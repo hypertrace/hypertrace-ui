@@ -5,7 +5,6 @@ import { discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/t
 import { IconLibraryTestingModule, IconRegistryService } from '@hypertrace/assets-library';
 import { Color, DomElementMeasurerService, selector } from '@hypertrace/common';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { MetricAggregationSpecificationModel, MetricAggregationType, MetricHealth } from '@hypertrace/observability';
 import { addWidthAndHeightToSvgElForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { uniq } from 'lodash-es';
@@ -13,6 +12,8 @@ import { of } from 'rxjs';
 import { TopologyNodeRendererService } from '../../../components/topology/renderers/node/topology-node-renderer.service';
 import { D3UtilService } from '../../../components/utils/d3/d3-util.service';
 import { EntityMetadata, ENTITY_METADATA } from '../../../constants/entity-metadata';
+import { MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../graphql/model/metrics/metric-health';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
@@ -23,6 +24,7 @@ import {
 } from '../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { ObservabilityIconLibraryModule } from '../../../icons/observability-icon-library.module';
 import { ObservabilityIconType } from '../../../icons/observability-icon-type';
+import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopologyMetricCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-category.model';
 import { TopologyMetricWithCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-with-category.model';
 import { TopologyMetricsModel } from './../../data/graphql/topology/metrics/topology-metrics.model';

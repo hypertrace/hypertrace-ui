@@ -1,14 +1,16 @@
 import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
-import { GraphQlDataSourceModel, GraphQlFilter, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityType } from '../../../../graphql/model/schema/entity';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
+import { Specification } from '../../../../graphql/model/schema/specifier/specification';
 import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
   EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceModel<unknown[]> {
   protected abstract specification: Specification;

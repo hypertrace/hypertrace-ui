@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import { IconSize, PopoverRef, POPOVER_DATA } from '@hypertrace/components';
-import { MetadataService, MetricAggregation } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
@@ -10,12 +9,14 @@ import {
   TopologyTooltipEdgeData,
   TopologyTooltipNodeData
 } from '../../../../components/topology/renderers/tooltip/topology-tooltip-renderer.service';
+import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggregation';
 import { entityTypeKey, INTERACTION_SCOPE } from '../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import {
   EntityEdge,
   EntityNode
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 
 @Component({
   selector: 'ht-topology-entity-tooltip',

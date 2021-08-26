@@ -1,6 +1,6 @@
 import { Color } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType } from '@hypertrace/observability';
+import { MetricAggregationType } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 import { TopologyMetricCategoryModel } from './topology-metric-category.model';
 import { TopologyMetricWithCategoryModel } from './topology-metric-with-category.model';

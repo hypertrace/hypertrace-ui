@@ -3,17 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { ReplayObservable, TimeRangeService } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Dashboard } from '@hypertrace/hyperdash';
-import {
-  GraphQlFilter,
-  GraphQlFilterDataSourceModel,
-  GraphQlTimeRange,
-  Specification,
-  SpecificationBuilder
-} from '@hypertrace/observability';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { concatMap, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { GraphQlFilterDataSourceModel } from '../../dashboard/data/graphql/filter/graphql-filter-data-source.model';
 import { Entity, EntityType } from '../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../graphql/model/schema/filter/graphql-filter';
+import { Specification } from '../../graphql/model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../graphql/model/schema/timerange/graphql-time-range';
+import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST

@@ -1,5 +1,5 @@
 import { ModelApi } from '@hypertrace/hyperdash';
-import { ObservabilityTraceType } from '@hypertrace/observability';
+import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
 import { spanIdKey } from '../../../../graphql/model/schema/span';
 import { traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import {

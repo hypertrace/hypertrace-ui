@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { ObservabilityTraceType } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../dashboard/widgets/waterfall/waterfall/waterfall-chart';
+import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { Span } from '../../graphql/model/schema/span';
 import { Trace, TraceType, traceTypeKey } from '../../graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';

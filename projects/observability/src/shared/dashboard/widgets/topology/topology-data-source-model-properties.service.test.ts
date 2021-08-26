@@ -1,6 +1,7 @@
 import { Color } from '@hypertrace/common';
-import { MetricAggregationSpecificationModel, MetricAggregationType } from '@hypertrace/observability';
 import { createServiceFactory } from '@ngneat/spectator/jest';
+import { MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
+import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
 import { TopologyMetricCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-category.model';
 import { TopologyMetricWithCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-with-category.model';
 import { TopologyMetricsData } from '../../data/graphql/topology/metrics/topology-metrics.model';

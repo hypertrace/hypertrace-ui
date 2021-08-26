@@ -1,20 +1,17 @@
 import { FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import {
-  AttributeMetadataType,
-  GraphQlFieldFilter,
-  GraphQlFilterType,
-  GraphQlMetricAggregationType,
-  GraphQlOperatorType,
-  GraphQlTimeRange,
-  MetadataService,
-  MetricAggregationType
-} from '@hypertrace/observability';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { AttributeMetadataType } from '../../../model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../model/schema/entity';
+import { GraphQlFieldFilter } from '../../../model/schema/filter/field/graphql-field-filter';
+import { GraphQlFilterType, GraphQlOperatorType } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
+import { GraphQlMetricAggregationType } from '../../../model/schema/metrics/graphql-metric-aggregation-type';
 import { ObservabilityTraceType } from '../../../model/schema/observability-traces';
+import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import { ExploreGraphQlQueryHandlerService } from './explore-graphql-query-handler.service';
 import { EXPLORE_GQL_REQUEST, GQL_EXPLORE_RESULT_INTERVAL_KEY, GraphQlExploreRequest } from './explore-query';

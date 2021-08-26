@@ -1,21 +1,16 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import {
-  GraphQlQueryEventService,
-  LogEventsService,
-  MetadataService,
-  spanIdKey,
-  SpanType,
-  Trace,
-  traceIdKey,
-  traceTypeKey,
-  TRACE_GQL_REQUEST,
-  WaterfallData
-} from '@hypertrace/observability';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import { spanIdKey, SpanType } from '../../../../graphql/model/schema/span';
+import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
+import { TRACE_GQL_REQUEST } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
+import { GraphQlQueryEventService } from '../graphql-query-event.service';
 import { ApiTraceWaterfallDataSourceModel } from './api-trace-waterfall-data-source.model';
 
 describe('Api Trace Waterfall data source model', () => {

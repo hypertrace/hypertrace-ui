@@ -1,12 +1,6 @@
 import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { Model } from '@hypertrace/hyperdash';
-import {
-  AttributeMetadataType,
-  GraphQlQueryEventService,
-  MetadataService,
-  MetricAggregationType
-} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
@@ -16,13 +10,17 @@ import {
   ExploreRequestState,
   ExploreSeries
 } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-query';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { GraphQlQueryEventService } from '../graphql-query-event.service';
 import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 

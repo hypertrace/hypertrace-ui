@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { GraphQlArgument, GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
-import { GlobalGraphQlFilterService, GraphQlSelectionBuilder } from '@hypertrace/observability';
 import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
+import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification } from '../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/graphql-observability-argument-builder';
+import { GraphQlSelectionBuilder } from '../../builders/selections/graphql-selection-builder';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,

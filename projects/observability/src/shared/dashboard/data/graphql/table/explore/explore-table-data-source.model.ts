@@ -10,7 +10,9 @@ import {
   NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
-import { GraphQlFilter, SpecificationBackedTableColumnDef, TableDataSourceModel } from '@hypertrace/observability';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
+import { TableDataSourceModel } from '../table-data-source.model';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';
 import {
   EXPLORE_GQL_REQUEST,

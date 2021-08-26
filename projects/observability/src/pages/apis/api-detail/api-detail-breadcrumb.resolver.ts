@@ -3,11 +3,12 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, NavigationService, TimeRangeService } from '@hypertrace/common';
 import { BreadcrumbsService } from '@hypertrace/components';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
-import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
+import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
+import { GraphQlTimeRange } from '../../../shared/graphql/model/schema/timerange/graphql-time-range';
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST

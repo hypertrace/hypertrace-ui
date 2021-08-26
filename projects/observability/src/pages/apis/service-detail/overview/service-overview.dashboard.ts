@@ -1,6 +1,6 @@
 import { Color } from '@hypertrace/common';
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/observability';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import {
   defaultPrimaryEdgeMetricCategories,
   defaultSecondaryEdgeMetricCategories
@@ -9,6 +9,7 @@ import {
   defaultPrimaryNodeMetricCategories,
   defaultSecondaryNodeMetricCategories
 } from '../../../../shared/dashboard/widgets/topology/metric/node-metric-category';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 
 // tslint:disable: max-file-line-count

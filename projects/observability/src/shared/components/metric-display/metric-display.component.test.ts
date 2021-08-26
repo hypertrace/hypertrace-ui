@@ -1,5 +1,5 @@
-import { MetricHealth } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MetricHealth } from '../../graphql/model/metrics/metric-health';
 import { MetricDisplayComponent } from './metric-display.component';
 import { MetricDisplayModule } from './metric-display.module';
 

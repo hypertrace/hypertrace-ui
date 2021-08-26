@@ -1,6 +1,7 @@
-import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { DashboardDefaultConfiguration, TracingTableCellType } from '@hypertrace/observability';
+import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';\
 import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../../../shared/components/table/tracing-table-cell-type';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 
 export const serviceApisListDashboard: DashboardDefaultConfiguration = {

@@ -1,9 +1,9 @@
 import { TimeDuration } from '@hypertrace/common';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
-import { MetricAggregation } from '@hypertrace/observability';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { MetricTimeseriesSpecificationModel } from '../../specifiers/metric-timeseries-specification.model';

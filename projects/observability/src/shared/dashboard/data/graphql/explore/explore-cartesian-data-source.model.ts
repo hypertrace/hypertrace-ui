@@ -1,9 +1,9 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { GraphQlDataSourceModel, GraphQlFilter, GraphQlTimeRange, MetadataService } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { GraphQlDataSourceModel, GraphQlFilter, GraphQlTimeRange } from '../../../../../public-api';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -14,6 +14,7 @@ import {
   GraphQlExploreRequest,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-query';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreResult } from './explore-result';
 

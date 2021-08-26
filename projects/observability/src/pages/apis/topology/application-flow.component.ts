@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { MetricAggregationType } from '@hypertrace/observability';
+import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
 import {
   defaultPrimaryEdgeMetricCategories,
   defaultSecondaryEdgeMetricCategories

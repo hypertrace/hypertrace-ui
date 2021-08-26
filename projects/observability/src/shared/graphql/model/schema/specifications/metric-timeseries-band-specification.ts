@@ -1,6 +1,6 @@
 import { Dictionary, TimeDuration } from '@hypertrace/common';
-import { MetricSpecification } from '@hypertrace/observability';
 import { MetricTimeseriesBandInterval } from '../../metric/metric-timeseries';
+import { MetricSpecification } from '../../specifications/metric-specification';
 import { GraphQlMetricTimeseriesBandContainer } from '../metric/graphql-metric-timeseries';
 
 export interface MetricTimeseriesBandSpecification extends MetricSpecification {

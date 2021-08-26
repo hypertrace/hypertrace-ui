@@ -2,16 +2,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ButtonStyle, SelectOption } from '@hypertrace/components';
-import {
-  AttributeMetadata,
-  getAggregationDisplayName,
-  MetadataService,
-  MetricAggregationType,
-  TraceType
-} from '@hypertrace/observability';
 import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
+import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
+import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
+import { TraceType } from '../../../graphql/model/schema/trace';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../../cartesian/chart';
 import { ExploreSeries } from '../explore-visualization-builder';
 

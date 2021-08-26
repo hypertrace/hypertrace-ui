@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Color, SubscriptionLifecycle } from '@hypertrace/common';
 import { CoreTableCellRendererType, TableStyle } from '@hypertrace/components';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
-import { MetricAggregationType, TracingTableCellType } from '@hypertrace/observability';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../../../shared/components/table/tracing-table-cell-type';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 import { BackendDetailService } from '../backend-detail.service';
 
 @Component({

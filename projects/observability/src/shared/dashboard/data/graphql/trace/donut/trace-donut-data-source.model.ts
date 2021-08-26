@@ -5,12 +5,12 @@ import {
   ModelPropertyType,
   NUMBER_PROPERTY
 } from '@hypertrace/hyperdash';
-import { AttributeSpecificationModel, GraphQlDataSourceModel, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DonutSeries, DonutSeriesResults } from '../../../../../components/donut/donut';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { ExploreGraphQlQueryHandlerService } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
@@ -18,6 +18,8 @@ import {
   GraphQlExploreResponse
 } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from '../../explore/explore-result';
+import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
+import { AttributeSpecificationModel } from '../../specifiers/attribute-specification.model';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 
 @Model({

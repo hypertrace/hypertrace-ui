@@ -1,13 +1,13 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import {
-  AttributeMetadataType,
-  convertToGraphQlMetricAggregationType,
-  GraphQlMetricAggregationType,
-  GraphQlSortWithoutDirection,
-  MetricAggregationType
-} from '@hypertrace/observability';
+import { AttributeMetadataType } from '../../../../model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../model/metrics/metric-aggregation';
 import { INTERVAL_START_QUERY_KEY } from '../../../../model/schema/explore';
+import {
+  convertToGraphQlMetricAggregationType,
+  GraphQlMetricAggregationType
+} from '../../../../model/schema/metrics/graphql-metric-aggregation-type';
+import { GraphQlSortWithoutDirection } from '../../../../model/schema/sort/graphql-sort-without-direction';
 import { ExploreSpecification } from '../../../../model/schema/specifications/explore-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../argument/graphql-observability-argument-builder';
 

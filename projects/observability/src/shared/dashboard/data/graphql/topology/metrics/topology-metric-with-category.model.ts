@@ -6,7 +6,7 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
-import { MetricAggregation } from '@hypertrace/observability';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 import { MetricAggregationSpecification } from './../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { TopologyMetricCategoryData, TopologyMetricCategoryModel } from './topology-metric-category.model';

@@ -1,12 +1,13 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
-import { MetadataService, MetricAggregationType } from '@hypertrace/observability';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 import { ExploreVisualizationBuilder, ExploreVisualizationRequest } from './explore-visualization-builder';
 

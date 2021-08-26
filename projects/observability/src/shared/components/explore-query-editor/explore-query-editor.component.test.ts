@@ -10,9 +10,10 @@ import {
   TimeUnit
 } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/observability';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
+import { AttributeMetadata, AttributeMetadataType } from '../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryEditorModule } from './explore-query-editor.module';

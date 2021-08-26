@@ -1,7 +1,6 @@
 import { forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { MetadataService } from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
@@ -11,6 +10,7 @@ import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResult
 } from '../../../../../graphql/request/handlers/explore/explore-query';
+import { MetadataService } from '../../../../../services/metadata/metadata.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-selection-specification.model';
 import { TraceSeriesValuesDataSourceModel } from '../trace-series-values-data-source.model';

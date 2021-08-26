@@ -1,18 +1,14 @@
 import { DateCoercer, Dictionary, TimeDuration } from '@hypertrace/common';
 import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
-import {
-  convertToGraphQlMetricAggregationType,
-  GraphQlMetricAggregationType,
-  MetricAggregation,
-  MetricAggregationType,
-  MetricHealth,
-  MetricSpecification,
-  Specification,
-  SpecificationBuilder
-} from '@hypertrace/observability';
 import { assignIn } from 'lodash-es';
+import { MetricAggregation, MetricAggregationType } from '../../../model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../model/metrics/metric-health';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlMetricBandInterval } from '../../../model/schema/metric/graphql-metric-timeseries';
+import {
+  convertToGraphQlMetricAggregationType,
+  GraphQlMetricAggregationType
+} from '../../../model/schema/metrics/graphql-metric-aggregation-type';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';
 import {
@@ -26,9 +22,12 @@ import {
   PercentileLatencyMetricAggregationSpecification,
   PercentileLatencyMetricValueCategory
 } from '../../../model/schema/specifications/percentile-latency-aggregation-specification';
+import { Specification } from '../../../model/schema/specifier/specification';
+import { MetricSpecification } from '../../../model/specifications/metric-specification';
 import { GraphQlObservabilityArgumentBuilder } from '../argument/graphql-observability-argument-builder';
 import { EntitySpecificationBuilder } from '../specification/entity/entity-specification-builder';
 import { convertToGraphQlMetricAggregationPath } from '../specification/metric/metric-aggregation-converters';
+import { SpecificationBuilder } from '../specification/specification-builder';
 
 export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
   protected readonly argBuilder: GraphQlObservabilityArgumentBuilder = new GraphQlObservabilityArgumentBuilder();

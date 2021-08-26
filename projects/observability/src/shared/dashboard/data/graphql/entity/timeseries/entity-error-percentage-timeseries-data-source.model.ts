@@ -1,21 +1,17 @@
 import { Dictionary, forkJoinSafeEmpty, getPercentage, LoggerService, TimeDuration } from '@hypertrace/common';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
-import {
-  GraphQlDataSourceModel,
-  GraphQlFilter,
-  MetricAggregation,
-  MetricAggregationType,
-  MetricSpecification,
-  Specification
-} from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Summary } from '../../../../../components/cartesian/chart';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
+import { MetricAggregation, MetricAggregationType } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { Entity } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
+import { MetricSpecification } from '../../../../../graphql/model/specifications/metric-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   EntityGraphQlQueryHandlerService,
@@ -23,6 +19,7 @@ import {
   GraphQlEntityRequest
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
+import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
 
 @Model({
   type: 'entity-error-percentage-timeseries-data-source'

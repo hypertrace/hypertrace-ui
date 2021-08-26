@@ -1,12 +1,13 @@
 import { Dictionary } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { Model, ModelProperty } from '@hypertrace/hyperdash';
-import { MetricAggregationType, SpecificationModel } from '@hypertrace/observability';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import {
   ErrorPercentageMetricAggregation,
   ErrorPercentageMetricAggregationSpecification
 } from '../../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
+import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'error-percentage-metric-aggregation',

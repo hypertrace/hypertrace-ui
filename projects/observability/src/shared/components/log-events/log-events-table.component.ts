@@ -10,10 +10,10 @@ import {
   TableMode,
   TableRow
 } from '@hypertrace/components';
-import { LogEvent } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { WaterfallTableCellType } from '../../dashboard/widgets/waterfall/waterfall/span-name/span-name-cell-type';
+import { LogEvent } from '../../dashboard/widgets/waterfall/waterfall/waterfall-chart';
 
 export const enum LogEventsTableViewType {
   Condensed = 'condensed',

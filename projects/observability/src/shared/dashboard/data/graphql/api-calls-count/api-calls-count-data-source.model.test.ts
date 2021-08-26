@@ -1,13 +1,15 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { AttributeMetadataType, MetricAggregationType, ObservedGraphQlRequest } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
 } from '../../../../graphql/request/handlers/explore/explore-query';
+import { ObservedGraphQlRequest } from '../graphql-query-event.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count-data-source-model';
 
 describe('API call count data source model', () => {

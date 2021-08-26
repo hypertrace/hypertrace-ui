@@ -8,17 +8,14 @@ import {
   TimeUnit
 } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import {
-  AttributeMetadataType,
-  MetadataService,
-  traceIdKey,
-  traceTypeKey,
-  TRACE_GQL_REQUEST
-} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { traceIdKey, traceTypeKey } from '../../shared/graphql/model/schema/trace';
+import { TRACE_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ApiTraceDetailService } from './api-trace-detail.service';
 
 describe('Api TraceDetailService', () => {

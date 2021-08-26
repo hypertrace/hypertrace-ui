@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PageHeaderModule } from '@hypertrace/components';
-import { NavigableDashboardModule } from '@hypertrace/observability';
+import { NavigableDashboardModule } from '../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { ObservabilityDashboardModule } from '../../../shared/dashboard/observability-dashboard.module';
 import { EndpointListComponent } from './endpoint-list.component';
 import { endpointListDashboard } from './endpoint-list.dashboard';

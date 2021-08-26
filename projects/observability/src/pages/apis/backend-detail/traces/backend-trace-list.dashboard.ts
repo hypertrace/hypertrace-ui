@@ -1,5 +1,5 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { TracingTableCellType } from '@hypertrace/observability';
+import { TracingTableCellType } from '../../../../shared/components/table/tracing-table-cell-type';
 import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 
 export const backendTraceListDashboard = {

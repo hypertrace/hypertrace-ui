@@ -1,19 +1,17 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model } from '@hypertrace/hyperdash';
-import {
-  GraphQlFilter,
-  Specification,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/observability';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { NeighborDirection, specificationDefinesNeighbor } from '../../../../../graphql/model/schema/neighbor';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import {
   GraphQlInteractionsRequest,
   InteractionsResponse,
   INTERACTIONS_GQL_REQUEST
 } from '../../../../../graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
+import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
   type: 'interactions-table-data-source'

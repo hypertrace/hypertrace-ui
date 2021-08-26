@@ -5,14 +5,12 @@ import { TimeDurationModel } from '@hypertrace/dashboards';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
-import {
-  ExploreSpecificationBuilder,
-  EXPLORE_GQL_REQUEST,
-  GraphQlTimeRange,
-  SpecificationBackedTableColumnDef
-} from '@hypertrace/observability';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
+import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { EXPLORE_GQL_REQUEST } from '../../../../../graphql/request/handlers/explore/explore-query';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreTableDataSourceModel } from './explore-table-data-source.model';
 

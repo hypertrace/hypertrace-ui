@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LogEvent, LogEventsTableViewType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
+import { LogEventsTableViewType } from '../../../shared/components/log-events/log-events-table.component';
+import { LogEvent } from '../../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ApiTraceDetailService } from './../api-trace-detail.service';
 
 @Component({

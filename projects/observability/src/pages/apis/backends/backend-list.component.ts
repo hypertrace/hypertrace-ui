@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { TracingTableCellType } from '@hypertrace/observability';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../../shared/components/table/tracing-table-cell-type';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 
 @Component({

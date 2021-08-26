@@ -1,6 +1,6 @@
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/observability';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 
 export const apiMetricsDashboard: DashboardDefaultConfiguration = {
   location: 'API_METRICS',

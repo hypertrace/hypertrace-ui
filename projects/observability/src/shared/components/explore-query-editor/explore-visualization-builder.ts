@@ -1,28 +1,30 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
-import {
-  AttributeMetadata,
-  GraphQlFilterBuilderService,
-  GraphQlSpansRequest,
-  GraphQlTracesRequest,
-  MetadataService,
-  MetricAggregationType,
-  SPANS_GQL_REQUEST,
-  SPAN_SCOPE,
-  Specification,
-  SpecificationBuilder,
-  TRACES_GQL_REQUEST,
-  TraceType
-} from '@hypertrace/observability';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { defaultIfEmpty, map, takeUntil } from 'rxjs/operators';
+import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../graphql/model/schema/span';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
+import { Specification } from '../../graphql/model/schema/specifier/specification';
+import { TraceType } from '../../graphql/model/schema/trace';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';
 import { EXPLORE_GQL_REQUEST, GraphQlExploreRequest } from '../../graphql/request/handlers/explore/explore-query';
+import {
+  GraphQlSpansRequest,
+  SPANS_GQL_REQUEST
+} from '../../graphql/request/handlers/spans/spans-graphql-query-handler.service';
+import {
+  GraphQlTracesRequest,
+  TRACES_GQL_REQUEST
+} from '../../graphql/request/handlers/traces/traces-graphql-query-handler.service';
+import { GraphQlFilterBuilderService } from '../../services/filter-builder/graphql-filter-builder.service';
+import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 
 @Injectable()

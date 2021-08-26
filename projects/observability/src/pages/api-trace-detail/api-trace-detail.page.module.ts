@@ -11,7 +11,8 @@ import {
   NavigableTabModule,
   SummaryValueModule
 } from '@hypertrace/components';
-import { LogEventsTableModule, NavigableDashboardModule } from '@hypertrace/observability';
+import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
+import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { ApiTraceDetailPageComponent } from './api-trace-detail.page.component';
 import { ApiTraceLogsComponent } from './logs/api-trace-logs.component';
