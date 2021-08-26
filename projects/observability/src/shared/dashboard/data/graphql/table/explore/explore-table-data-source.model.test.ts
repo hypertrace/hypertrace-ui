@@ -3,10 +3,14 @@ import { TimeDuration, TimeUnit } from '@hypertrace/common';
 import { TableDataSource, TableRow, TableSortDirection } from '@hypertrace/components';
 import { TimeDurationModel } from '@hypertrace/dashboards';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
-import { GraphQlTimeRange, SpecificationBackedTableColumnDef } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
-import { ExploreSpecificationBuilder, EXPLORE_GQL_REQUEST } from '@hypertrace/observability';
+import {
+  ExploreSpecificationBuilder,
+  EXPLORE_GQL_REQUEST,
+  GraphQlTimeRange,
+  SpecificationBackedTableColumnDef
+} from '@hypertrace/observability';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';

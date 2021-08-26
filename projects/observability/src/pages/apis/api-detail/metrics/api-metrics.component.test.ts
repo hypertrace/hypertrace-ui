@@ -1,6 +1,6 @@
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { mockDashboardProviders } from '@hypertrace/dashboards/testing';
-import { NavigableDashboardComponent } from '@hypertrace/distributed-tracing';
+import { NavigableDashboardComponent } from '@hypertrace/observability';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';

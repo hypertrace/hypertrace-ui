@@ -1,7 +1,7 @@
 import { FormattingModule, NavigationService } from '@hypertrace/common';
 import { LoadAsyncModule, TitledContentComponent } from '@hypertrace/components';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { MetricAggregationType } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';

@@ -1,5 +1,5 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { DashboardDefaultConfiguration, TracingTableCellType } from '@hypertrace/distributed-tracing';
+import { DashboardDefaultConfiguration, TracingTableCellType } from '@hypertrace/observability';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 
 export const serviceListDashboard: DashboardDefaultConfiguration = {

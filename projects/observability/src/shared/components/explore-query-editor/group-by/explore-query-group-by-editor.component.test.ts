@@ -3,7 +3,7 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { SelectComponent, SelectModule } from '@hypertrace/components';
-import { AttributeMetadata, MetadataService } from '@hypertrace/distributed-tracing';
+import { AttributeMetadata, MetadataService } from '@hypertrace/observability';
 import { byText, createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';

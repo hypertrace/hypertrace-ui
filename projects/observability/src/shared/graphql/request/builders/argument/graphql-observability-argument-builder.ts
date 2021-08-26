@@ -1,12 +1,12 @@
 import { TimeDuration } from '@hypertrace/common';
+import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import {
   convertToGraphQlMetricAggregationType,
   GraphQlArgumentBuilder,
   GraphQlSortBySpecification,
   MetricAggregationType,
   TraceType
-} from '@hypertrace/distributed-tracing';
-import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { EntityType } from '../../../model/schema/entity';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';

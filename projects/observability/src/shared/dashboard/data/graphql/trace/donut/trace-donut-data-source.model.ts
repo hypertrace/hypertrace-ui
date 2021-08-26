@@ -1,4 +1,3 @@
-import { AttributeSpecificationModel, GraphQlDataSourceModel, Specification } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelModelPropertyTypeInstance,
@@ -6,6 +5,7 @@ import {
   ModelPropertyType,
   NUMBER_PROPERTY
 } from '@hypertrace/hyperdash';
+import { AttributeSpecificationModel, GraphQlDataSourceModel, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DonutSeries, DonutSeriesResults } from '../../../../../components/donut/donut';

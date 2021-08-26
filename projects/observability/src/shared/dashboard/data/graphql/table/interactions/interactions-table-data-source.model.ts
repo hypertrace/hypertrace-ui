@@ -1,11 +1,11 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
+import { Model } from '@hypertrace/hyperdash';
 import {
   GraphQlFilter,
   Specification,
   SpecificationBackedTableColumnDef,
   TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { NeighborDirection, specificationDefinesNeighbor } from '../../../../../graphql/model/schema/neighbor';

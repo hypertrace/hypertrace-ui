@@ -1,5 +1,4 @@
 import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import {
   ARRAY_PROPERTY,
@@ -8,6 +7,7 @@ import {
   ModelProperty,
   ModelPropertyType
 } from '@hypertrace/hyperdash';
+import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/observability';
 import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

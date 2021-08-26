@@ -1,4 +1,5 @@
 import { FilterBuilderLookupService, TableMode, TableStyle } from '@hypertrace/components';
+import { Dashboard } from '@hypertrace/hyperdash';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -7,8 +8,7 @@ import {
   MetadataService,
   MetricAggregationType,
   TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
-import { Dashboard } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { capitalize } from 'lodash-es';
 import { MockService } from 'ng-mocks';

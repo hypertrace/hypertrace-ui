@@ -1,11 +1,6 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { TimeDurationModel } from '@hypertrace/dashboards';
 import {
-  GraphQlFilter,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
-import {
   ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   Model,
@@ -15,6 +10,7 @@ import {
   NUMBER_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { GraphQlFilter, SpecificationBackedTableColumnDef, TableDataSourceModel } from '@hypertrace/observability';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';
 import {
   EXPLORE_GQL_REQUEST,

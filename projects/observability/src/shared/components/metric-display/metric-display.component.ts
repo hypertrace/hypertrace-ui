@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MetricHealth } from '@hypertrace/distributed-tracing';
+import { MetricHealth } from '@hypertrace/observability';
 
 @Component({
   selector: 'ht-metric-display',

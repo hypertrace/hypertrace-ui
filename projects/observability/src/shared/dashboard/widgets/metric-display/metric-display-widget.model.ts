@@ -1,6 +1,6 @@
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { defaults } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';

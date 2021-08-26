@@ -1,5 +1,5 @@
 import { Dictionary, PartialBy } from '@hypertrace/common';
-import { AttributeMetadataType, MetricSpecification } from '@hypertrace/distributed-tracing';
+import { AttributeMetadataType, MetricSpecification } from '@hypertrace/observability';
 
 export interface ExploreSpecification extends PartialBy<MetricSpecification, 'aggregation'> {
   extractFromServerData(resultContainer: Dictionary<ExploreValue>): ExploreValue;

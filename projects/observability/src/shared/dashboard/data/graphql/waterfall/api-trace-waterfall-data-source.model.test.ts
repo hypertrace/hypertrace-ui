@@ -10,7 +10,7 @@ import {
   traceTypeKey,
   TRACE_GQL_REQUEST,
   WaterfallData
-} from '@hypertrace/distributed-tracing';
+} from '@hypertrace/observability';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';

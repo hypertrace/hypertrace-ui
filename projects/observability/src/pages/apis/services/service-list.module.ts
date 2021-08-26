@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PageHeaderModule } from '@hypertrace/components';
-import { NavigableDashboardModule } from '@hypertrace/distributed-tracing';
+import { NavigableDashboardModule } from '@hypertrace/observability';
 import { ObservabilityDashboardModule } from '../../../shared/dashboard/observability-dashboard.module';
 import { ServiceListComponent } from './service-list.component';
 import { serviceListDashboard } from './service-list.dashboard';

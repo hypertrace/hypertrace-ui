@@ -1,5 +1,5 @@
 import { Dictionary, TimeDuration } from '@hypertrace/common';
-import { MetricSpecification } from '@hypertrace/distributed-tracing';
+import { MetricSpecification } from '@hypertrace/observability';
 import { MetricTimeseriesBandInterval } from '../../metric/metric-timeseries';
 import { GraphQlMetricTimeseriesBandContainer } from '../metric/graphql-metric-timeseries';
 

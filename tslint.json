@@ -21,7 +21,6 @@
         "@hypertrace/common/testing",
         "@hypertrace/dashboards/testing",
         "@hypertrace/graphql-client",
-        "@hypertrace/distributed-tracing",
         "@hypertrace/test-utils",
         "@hypertrace/observability",
         "ng-mocks"

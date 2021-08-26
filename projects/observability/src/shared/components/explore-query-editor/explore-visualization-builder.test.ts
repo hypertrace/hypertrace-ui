@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
-import { MetadataService, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { MetadataService, MetricAggregationType } from '@hypertrace/observability';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';

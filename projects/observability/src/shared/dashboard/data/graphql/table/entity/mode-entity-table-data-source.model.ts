@@ -1,11 +1,7 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
 import { ModelTemplatePropertyType } from '@hypertrace/dashboards';
-import {
-  GraphQlFilter,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
+import { GraphQlFilter, SpecificationBackedTableColumnDef, TableDataSourceModel } from '@hypertrace/observability';
 import { Model, ModelJson, ModelProperty } from '@hypertrace/hyperdash';
 
 @Model({

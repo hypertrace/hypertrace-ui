@@ -9,8 +9,8 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/observability';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';

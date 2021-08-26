@@ -1,5 +1,5 @@
-import { AttributeSpecificationModel, Specification } from '@hypertrace/distributed-tracing';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
+import { AttributeSpecificationModel, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 

@@ -1,4 +1,5 @@
 import { FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import {
   AttributeMetadataType,
   GraphQlFieldFilter,
@@ -8,8 +9,7 @@ import {
   GraphQlTimeRange,
   MetadataService,
   MetricAggregationType
-} from '@hypertrace/distributed-tracing';
-import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../model/schema/entity';

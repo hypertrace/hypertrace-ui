@@ -1,7 +1,7 @@
 import { forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { MetadataService } from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';

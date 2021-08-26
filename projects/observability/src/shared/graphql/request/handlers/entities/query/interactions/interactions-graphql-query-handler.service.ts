@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeepReadonly, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
-import {
-  GraphQlSelectionBuilder,
-  GraphQlTimeRange,
-  MetadataService,
-  Specification
-} from '@hypertrace/distributed-tracing';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
+import { GraphQlSelectionBuilder, GraphQlTimeRange, MetadataService, Specification } from '@hypertrace/observability';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityType, Interaction, INTERACTION_SCOPE } from '../../../../../model/schema/entity';

@@ -18,6 +18,7 @@ import {
   FilterBuilderLookupService,
   FilterOperator
 } from '@hypertrace/components';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import {
   GraphQlFieldFilter,
   GraphQlOperatorType,
@@ -26,8 +27,7 @@ import {
   SPANS_GQL_REQUEST,
   SPAN_SCOPE,
   TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EMPTY, NEVER, of } from 'rxjs';

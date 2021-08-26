@@ -1,5 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Dictionary, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { GraphQlEnumArgument, GraphQlRequestCacheability, GraphQlSelection } from '@hypertrace/graphql-client';
 import {
   AttributeMetadataType,
   GraphQlTimeRange,
@@ -7,8 +8,7 @@ import {
   MetricAggregationType,
   MetricHealth,
   Specification
-} from '@hypertrace/distributed-tracing';
-import { GraphQlEnumArgument, GraphQlRequestCacheability, GraphQlSelection } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';

@@ -1,4 +1,3 @@
-import { AttributeSpecificationModel, Specification } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelModelPropertyTypeInstance,
@@ -6,6 +5,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { AttributeSpecificationModel, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { EntityType } from '../../../../../graphql/model/schema/entity';
 import { EntitiesValuesDataSourceModel } from '../entities-values-data-source.model';
