@@ -46,7 +46,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             width: '20%',
             value: {
               type: 'entity-specification'
-            }
+            },
+            sort: TableSortDirection.Descending
           },
           {
             type: 'table-widget-column',
@@ -64,7 +65,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'p99 Latency',
             display: TracingTableCellType.Metric,
-            sort: TableSortDirection.Descending,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
