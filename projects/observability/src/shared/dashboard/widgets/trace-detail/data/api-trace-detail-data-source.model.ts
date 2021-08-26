@@ -1,9 +1,8 @@
-import { Model } from '@hypertrace/hyperdash';
-import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
-
 import { Dictionary } from '@hypertrace/common';
-import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data-source.model';
+import { Model } from '@hypertrace/hyperdash';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
+import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data-source.model';
 
 @Model({
   type: 'api-trace-detail-data-source'

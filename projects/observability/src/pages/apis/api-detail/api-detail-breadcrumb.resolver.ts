@@ -6,9 +6,9 @@ import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/g
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
-import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import { GraphQlTimeRange } from '../../../shared/graphql/model/schema/timerange/graphql-time-range';
+import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST

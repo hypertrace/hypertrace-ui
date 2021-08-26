@@ -10,10 +10,10 @@ import {
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
+import { GraphQlTimeRange } from '../../../shared/graphql/model/schema/timerange/graphql-time-range';
+import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
 import { BackendEntity } from './backend-detail.service';
-import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
-import { GraphQlTimeRange } from '../../../shared/graphql/model/schema/timerange/graphql-time-range';
 
 @Injectable({ providedIn: 'root' })
 export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Breadcrumb>> {
