@@ -21,49 +21,31 @@ export const enum ModalSize {
 
 export interface ModalDimension {
   // Number => without unit (considered px) and String => with units (expression included)
-  height: number | string;
   width: number | string;
+  height: number | string;
 }
 
 export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
   switch (modalSize) {
     case ModalSize.Small:
-      return {
-        height: 365,
-        width: 420
-      };
+      return getModalDimensionObject(420, 365);
     case ModalSize.Medium:
-      return {
-        height: 530,
-        width: 456
-      };
+      return getModalDimensionObject(456, 530);
     case ModalSize.LargeShort:
-      return {
-        height: 540,
-        width: 640
-      };
+      return getModalDimensionObject(640, 540);
     case ModalSize.Large:
-      return {
-        height: 720,
-        width: 640
-      };
+      return getModalDimensionObject(640, 720);
     case ModalSize.LargeTall:
-      return {
-        height: 800,
-        width: 640
-      };
+      return getModalDimensionObject(640, 800);
     case ModalSize.MediumWide:
-      return {
-        height: 600,
-        width: 840
-      };
+      return getModalDimensionObject(840, 600);
     default:
-      return {
-        height: 365,
-        width: 420
-      };
+      return getModalDimensionObject(420, 365);
   }
 };
+
+const getModalDimensionObject = (width: number, height: number): ModalDimension => ({ width: width, height: height });
+
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
 
 export abstract class ModalRef<TResult> {
