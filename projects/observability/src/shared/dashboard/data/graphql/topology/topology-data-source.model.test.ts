@@ -1,7 +1,7 @@
 import { Color } from '@hypertrace/common';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import {
   ENTITY_TOPOLOGY_GQL_REQUEST,

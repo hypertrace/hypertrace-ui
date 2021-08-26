@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { TracingDashboardModule } from '@hypertrace/distributed-tracing';
+import { TracingDashboardModule } from '@hypertrace/observability';
 import { ObservabilityIconLibraryModule } from '../icons/observability-icon-library.module';
 import { ObservabilityGraphQlDataSourceModule } from './data/graphql/observability-graphql-data-source.module';
 import { ObservabilityDashboardInteractionsModule } from './interactions/observability-dashboard-interactions.module';

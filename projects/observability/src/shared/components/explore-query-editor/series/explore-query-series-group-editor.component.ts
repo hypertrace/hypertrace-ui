@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonRole, ButtonStyle } from '@hypertrace/components';
-import { TraceType } from '@hypertrace/distributed-tracing';
+import { TraceType } from '@hypertrace/observability';
 import { without } from 'lodash-es';
 import { ExploreSeries } from '../explore-visualization-builder';
 

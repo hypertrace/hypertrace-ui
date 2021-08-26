@@ -1,6 +1,6 @@
 import { TimeDuration } from '@hypertrace/common';
-import { MetricAggregation } from '@hypertrace/distributed-tracing';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
+import { MetricAggregation } from '@hypertrace/observability';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';

@@ -1,6 +1,6 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlFilter, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { GraphQlFilter, GraphQlTimeRange } from '@hypertrace/observability';
 import { NEVER, Observable } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import {

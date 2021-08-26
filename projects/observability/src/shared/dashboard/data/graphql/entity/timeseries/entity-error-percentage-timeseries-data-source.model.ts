@@ -1,4 +1,6 @@
 import { Dictionary, forkJoinSafeEmpty, getPercentage, LoggerService, TimeDuration } from '@hypertrace/common';
+import { Model } from '@hypertrace/hyperdash';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
 import {
   GraphQlDataSourceModel,
   GraphQlFilter,
@@ -6,9 +8,7 @@ import {
   MetricAggregationType,
   MetricSpecification,
   Specification
-} from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
-import { ModelInject } from '@hypertrace/hyperdash-angular';
+} from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Summary } from '../../../../../components/cartesian/chart';

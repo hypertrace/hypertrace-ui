@@ -1,4 +1,4 @@
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/observability';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
 

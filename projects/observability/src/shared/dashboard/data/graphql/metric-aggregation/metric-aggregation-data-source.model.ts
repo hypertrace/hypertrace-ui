@@ -1,4 +1,3 @@
-import { GraphQlDataSourceModel, MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelProperty,
@@ -6,6 +5,7 @@ import {
   ModelPropertyTypeInstance,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { GraphQlDataSourceModel, MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';

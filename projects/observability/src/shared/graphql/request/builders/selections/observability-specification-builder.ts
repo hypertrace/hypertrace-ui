@@ -1,4 +1,5 @@
 import { DateCoercer, Dictionary, TimeDuration } from '@hypertrace/common';
+import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import {
   convertToGraphQlMetricAggregationType,
   GraphQlMetricAggregationType,
@@ -8,8 +9,7 @@ import {
   MetricSpecification,
   Specification,
   SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
-import { GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { assignIn } from 'lodash-es';
 import { EntityType, ObservabilityEntityType } from '../../../model/schema/entity';
 import { GraphQlMetricBandInterval } from '../../../model/schema/metric/graphql-metric-timeseries';

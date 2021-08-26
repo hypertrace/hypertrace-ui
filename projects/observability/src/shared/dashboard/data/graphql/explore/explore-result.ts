@@ -1,5 +1,5 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
 import { groupBy } from 'lodash-es';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';

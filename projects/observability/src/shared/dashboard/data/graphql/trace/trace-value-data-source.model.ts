@@ -1,4 +1,4 @@
-import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
+import { GraphQlDataSourceModel } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
+import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
 import {
   GlobalGraphQlFilterService,
   GraphQlFilter,
@@ -7,8 +8,7 @@ import {
   GraphQlTimeRange,
   Specification,
   SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
-import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { fromPairs } from 'lodash-es';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
 import { GraphQlMetricAggregation } from '../../../../../model/schema/metric/graphql-metric-aggregation';

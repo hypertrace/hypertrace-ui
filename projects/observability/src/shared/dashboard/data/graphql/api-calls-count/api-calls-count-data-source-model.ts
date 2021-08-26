@@ -1,10 +1,10 @@
+import { Model } from '@hypertrace/hyperdash';
 import {
   GraphQlDataSourceModel,
   MetricAggregation,
   MetricAggregationType,
   MetricHealth
-} from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';

@@ -1,5 +1,5 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { Trace, traceIdKey, traceTypeKey, TracingNavigationService } from '@hypertrace/distributed-tracing';
+import { Trace, traceIdKey, traceTypeKey, TracingNavigationService } from '@hypertrace/observability';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
 import { ApiTraceNavigationHandlerModel } from './api-trace-navigation-handler.model';

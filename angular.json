@@ -31,11 +31,6 @@
               },
               {
                 "glob": "**/*",
-                "input": "./projects/distributed-tracing/assets",
-                "output": "./assets"
-              },
-              {
-                "glob": "**/*",
                 "input": "./projects/observability/assets",
                 "output": "./assets"
               }
@@ -172,40 +167,6 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": ["projects/graphql-client/tsconfig.lib.json", "projects/graphql-client/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "distributed-tracing": {
-      "root": "projects/distributed-tracing",
-      "sourceRoot": "projects/distributed-tracing",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/distributed-tracing/tsconfig.lib.json",
-            "project": "projects/distributed-tracing/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/distributed-tracing/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/distributed-tracing/tsconfig.lib.json",
-              "projects/distributed-tracing/tsconfig.spec.json"
-            ],
             "exclude": ["**/node_modules/**"]
           }
         }

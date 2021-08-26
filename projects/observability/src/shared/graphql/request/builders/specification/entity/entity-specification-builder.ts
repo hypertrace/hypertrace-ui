@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
-import { GraphQlArgumentBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlSelection } from '@hypertrace/graphql-client';
+import { GraphQlArgumentBuilder } from '@hypertrace/observability';
 import {
   Entity,
   entityIdKey,

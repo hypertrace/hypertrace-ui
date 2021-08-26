@@ -1,6 +1,6 @@
 import { forkJoinSafeEmpty, getPercentage } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, ModelPropertyType, ModelPropertyTypeInstance } from '@hypertrace/hyperdash';
+import { GraphQlDataSourceModel, MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-aggregation-data-source.model';

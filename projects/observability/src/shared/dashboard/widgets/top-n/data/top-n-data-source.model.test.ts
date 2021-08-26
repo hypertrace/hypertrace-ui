@@ -1,6 +1,6 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
 import { mergeMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';

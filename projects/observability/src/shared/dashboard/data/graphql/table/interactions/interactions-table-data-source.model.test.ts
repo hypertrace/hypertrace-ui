@@ -1,12 +1,8 @@
 import { fakeAsync, flush } from '@angular/core/testing';
 import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import { TableDataSource, TableRow } from '@hypertrace/components';
-import {
-  GraphQlTimeRange,
-  MetricAggregationType,
-  SpecificationBackedTableColumnDef
-} from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { GraphQlTimeRange, MetricAggregationType, SpecificationBackedTableColumnDef } from '@hypertrace/observability';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
 import { NeighborDirection } from '../../../../../graphql/model/schema/neighbor';

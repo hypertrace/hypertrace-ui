@@ -1,4 +1,6 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
 import {
   AttributeMetadata,
   GraphQlDataSourceModel,
@@ -15,9 +17,7 @@ import {
   traceIdKey,
   TRACE_GQL_REQUEST,
   WaterfallData
-} from '@hypertrace/distributed-tracing';
-import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
-import { ModelInject } from '@hypertrace/hyperdash-angular';
+} from '@hypertrace/observability';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';

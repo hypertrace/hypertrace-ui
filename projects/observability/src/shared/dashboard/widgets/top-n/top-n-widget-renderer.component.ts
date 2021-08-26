@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@
 import { forkJoinSafeEmpty, SubscriptionLifecycle } from '@hypertrace/common';
 import { SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { MetadataService } from '@hypertrace/observability';
 import { NEVER, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GaugeItem } from '../../../components/gauge-list/gauge-list.component';

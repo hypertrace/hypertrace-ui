@@ -14,7 +14,7 @@ import {
   SpecificationBuilder,
   TRACES_GQL_REQUEST,
   TraceType
-} from '@hypertrace/distributed-tracing';
+} from '@hypertrace/observability';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { defaultIfEmpty, map, takeUntil } from 'rxjs/operators';

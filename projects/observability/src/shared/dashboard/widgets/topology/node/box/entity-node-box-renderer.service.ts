@@ -1,6 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color, DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
+import { MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { select, Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';

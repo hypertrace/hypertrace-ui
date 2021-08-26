@@ -1,5 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlFilter, Specification } from '@hypertrace/distributed-tracing';
+import { GraphQlDataSourceModel, GraphQlFilter, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity } from '../../../../graphql/model/schema/entity';

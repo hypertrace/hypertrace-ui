@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReplayObservable, TimeRangeService } from '@hypertrace/common';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { Dashboard } from '@hypertrace/hyperdash';
 import {
   GraphQlFilter,
   GraphQlFilterDataSourceModel,
   GraphQlTimeRange,
   Specification,
   SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { Dashboard } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { concatMap, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { Entity, EntityType } from '../../graphql/model/schema/entity';

@@ -1,5 +1,5 @@
 import { forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
+import { GraphQlDataSourceModel, GraphQlTimeRange } from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { RadarPoint } from '../../../../components/radar/radar';

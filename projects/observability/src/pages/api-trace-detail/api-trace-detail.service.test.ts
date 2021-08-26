@@ -7,14 +7,14 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import {
   AttributeMetadataType,
   MetadataService,
   traceIdKey,
   traceTypeKey,
   TRACE_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';

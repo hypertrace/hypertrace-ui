@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
-import { AttributeMetadataType, MetricAggregationType, ObservedGraphQlRequest } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { AttributeMetadataType, MetricAggregationType, ObservedGraphQlRequest } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';

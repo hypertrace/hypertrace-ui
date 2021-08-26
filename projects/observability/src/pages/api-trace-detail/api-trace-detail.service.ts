@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DateCoercer, DateFormatMode, DateFormatter, ReplayObservable } from '@hypertrace/common';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import {
   AttributeMetadata,
   LogEvent,
@@ -13,8 +14,7 @@ import {
   TraceType,
   traceTypeKey,
   TRACE_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
