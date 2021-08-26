@@ -1,5 +1,5 @@
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
+import { MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { MetricDisplayWidgetModel } from './metric-display-widget.model';

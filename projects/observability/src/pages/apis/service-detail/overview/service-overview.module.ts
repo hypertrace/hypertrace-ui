@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { LoadAsyncModule } from '@hypertrace/components';
-import { NavigableDashboardModule } from '@hypertrace/distributed-tracing';
+import { NavigableDashboardModule } from '@hypertrace/observability';
 import { ObservabilityDashboardModule } from '../../../../shared/dashboard/observability-dashboard.module';
 import { ServiceOverviewComponent } from './service-overview.component';
 import { serviceOverviewDashboard } from './service-overview.dashboard';

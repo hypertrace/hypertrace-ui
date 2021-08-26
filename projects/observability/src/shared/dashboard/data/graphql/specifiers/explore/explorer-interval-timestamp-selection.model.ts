@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
-import { Specification, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { Specification, SpecificationModel } from '@hypertrace/observability';
 import {
   ExploreSpecification,
   ExploreValue

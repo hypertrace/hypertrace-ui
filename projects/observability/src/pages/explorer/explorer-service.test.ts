@@ -1,6 +1,6 @@
 import { NavigationParamsType } from '@hypertrace/common';
 import { FilterBuilderLookupService, FilterOperator, toUrlFilterOperator } from '@hypertrace/components';
-import { AttributeMetadata, AttributeMetadataType, MetadataService } from '@hypertrace/distributed-tracing';
+import { AttributeMetadata, AttributeMetadataType, MetadataService } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LogEvent, LogEventsTableViewType } from '@hypertrace/distributed-tracing';
+import { LogEvent, LogEventsTableViewType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { ApiTraceDetailService } from './../api-trace-detail.service';
 

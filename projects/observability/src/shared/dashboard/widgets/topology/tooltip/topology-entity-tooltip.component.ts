@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import { IconSize, PopoverRef, POPOVER_DATA } from '@hypertrace/components';
-import { MetadataService, MetricAggregation } from '@hypertrace/distributed-tracing';
+import { MetadataService, MetricAggregation } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {

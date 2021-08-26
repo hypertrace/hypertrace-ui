@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
 import { mergeMap } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';

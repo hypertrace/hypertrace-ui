@@ -1,5 +1,5 @@
-import { GraphQlFilter, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { GraphQlFilter, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/observability';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { EXPLORE_GQL_REQUEST } from '../../../../../graphql/request/handlers/explore/explore-query';

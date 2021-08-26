@@ -1,6 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
+  GraphQlArgument,
+  GraphQlRequestCacheability,
+  GraphQlRequestOptions,
+  GraphQlSelection
+} from '@hypertrace/graphql-client';
+import {
   GlobalGraphQlFilterService,
   GraphQlFilter,
   GraphQlSelectionBuilder,
@@ -8,13 +14,7 @@ import {
   GraphQlTimeRange,
   MetadataService,
   Specification
-} from '@hypertrace/distributed-tracing';
-import {
-  GraphQlArgument,
-  GraphQlRequestCacheability,
-  GraphQlRequestOptions,
-  GraphQlSelection
-} from '@hypertrace/graphql-client';
+} from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityMetadataMap, ENTITY_METADATA } from '../../../../../constants/entity-metadata';

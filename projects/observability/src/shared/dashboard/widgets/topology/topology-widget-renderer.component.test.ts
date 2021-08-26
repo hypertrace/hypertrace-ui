@@ -5,8 +5,7 @@ import { discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/t
 import { IconLibraryTestingModule, IconRegistryService } from '@hypertrace/assets-library';
 import { Color, DomElementMeasurerService, selector } from '@hypertrace/common';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType, MetricHealth } from '@hypertrace/distributed-tracing';
-import { MetricAggregationSpecificationModel } from '@hypertrace/observability';
+import { MetricAggregationSpecificationModel, MetricAggregationType, MetricHealth } from '@hypertrace/observability';
 import { addWidthAndHeightToSvgElForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { uniq } from 'lodash-es';

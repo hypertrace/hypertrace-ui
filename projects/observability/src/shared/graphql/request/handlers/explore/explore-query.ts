@@ -1,5 +1,5 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlFilter, GraphQlSortBySpecification, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
+import { GraphQlFilter, GraphQlSortBySpecification, GraphQlTimeRange } from '@hypertrace/observability';
 import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';

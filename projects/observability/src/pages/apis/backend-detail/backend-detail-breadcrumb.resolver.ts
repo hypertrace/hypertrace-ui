@@ -7,8 +7,8 @@ import {
   ENTITY_GQL_REQUEST
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
-import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';

@@ -50,7 +50,6 @@ module.exports = {
     '@hypertrace/dashboards/testing': '<rootDir>/projects/dashboards/src/test/public-api.ts',
     '@hypertrace/test-utils': '<rootDir>/projects/test-utils/src/public-api.ts',
     '@hypertrace/graphql-client': '<rootDir>/projects/graphql-client/src/public-api.ts',
-    '@hypertrace/distributed-tracing': '<rootDir>/projects/distributed-tracing/src/public-api.ts',
     '@hypertrace/observability': '<rootDir>/projects/observability/src/public-api.ts'
   }
 };

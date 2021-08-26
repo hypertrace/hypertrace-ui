@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReplayObservable } from '@hypertrace/common';
-import { NavigableDashboardFilterConfig } from '@hypertrace/distributed-tracing';
+import { NavigableDashboardFilterConfig } from '@hypertrace/observability';
 import { map } from 'rxjs/operators';
 import { ServiceDetailService } from '../service-detail.service';
 import { serviceOverviewDashboard } from './service-overview.dashboard';

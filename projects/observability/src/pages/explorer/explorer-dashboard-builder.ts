@@ -7,6 +7,7 @@ import {
   TableSortDirection,
   TableStyle
 } from '@hypertrace/components';
+import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import {
   AttributeMetadata,
   AttributeMetadataType,
@@ -16,8 +17,7 @@ import {
   SPAN_SCOPE,
   toFilterAttributeType,
   TracingTableCellType
-} from '@hypertrace/distributed-tracing';
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';

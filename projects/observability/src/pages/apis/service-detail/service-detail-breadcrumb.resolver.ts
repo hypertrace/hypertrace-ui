@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
-import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';

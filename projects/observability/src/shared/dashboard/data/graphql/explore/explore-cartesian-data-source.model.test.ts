@@ -1,12 +1,12 @@
 import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
+import { Model } from '@hypertrace/hyperdash';
 import {
   AttributeMetadataType,
   GraphQlQueryEventService,
   MetadataService,
   MetricAggregationType
-} from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';

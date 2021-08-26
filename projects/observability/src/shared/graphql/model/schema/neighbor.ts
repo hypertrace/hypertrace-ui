@@ -1,4 +1,4 @@
-import { Specification } from '@hypertrace/distributed-tracing';
+import { Specification } from '@hypertrace/observability';
 import { ObservabilityEntityType } from './entity';
 
 export const enum NeighborDirection {

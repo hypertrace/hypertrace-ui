@@ -8,7 +8,7 @@ import {
   getAggregationDisplayName,
   MetadataService,
   MetricAggregationType
-} from '@hypertrace/distributed-tracing';
+} from '@hypertrace/observability';
 import { byText, createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';

@@ -1,4 +1,4 @@
-import { MetricAggregation } from '@hypertrace/distributed-tracing';
+import { MetricAggregation } from '@hypertrace/observability';
 import { TableCellParser } from '../table-cell-parser';
 import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';

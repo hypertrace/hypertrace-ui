@@ -1,5 +1,5 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { MetricAggregationType } from '@hypertrace/observability';
 import { GraphQlMetricAggregationPath } from '../../../../model/schema/metric/graphql-metric-aggregation';
 
 export const convertToGraphQlMetricAggregationPath = (value: MetricAggregationType): GraphQlMetricAggregationPath => {

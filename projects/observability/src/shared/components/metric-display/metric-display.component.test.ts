@@ -1,4 +1,4 @@
-import { MetricHealth } from '@hypertrace/distributed-tracing';
+import { MetricHealth } from '@hypertrace/observability';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MetricDisplayComponent } from './metric-display.component';
 import { MetricDisplayModule } from './metric-display.module';

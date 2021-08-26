@@ -1,5 +1,5 @@
-import { GraphQlFilter, GraphQlTimeRange, MetricAggregation, Specification } from '@hypertrace/distributed-tracing';
 import { ARRAY_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
+import { GraphQlFilter, GraphQlTimeRange, MetricAggregation, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RadarPoint } from '../../../../../components/radar/radar';

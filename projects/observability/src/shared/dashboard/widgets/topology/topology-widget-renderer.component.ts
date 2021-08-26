@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { MetadataService } from '@hypertrace/observability';
 import { EMPTY, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TopologyEdgeRendererService } from '../../../components/topology/renderers/edge/topology-edge-renderer.service';

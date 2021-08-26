@@ -5,7 +5,7 @@ import {
   GraphQlQueryEventService,
   MetadataService,
   MetricAggregationType
-} from '@hypertrace/distributed-tracing';
+} from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, Observable, of } from 'rxjs';

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
-import { MetadataService, TraceType } from '@hypertrace/distributed-tracing';
+import { MetadataService, TraceType } from '@hypertrace/observability';
 import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 

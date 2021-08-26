@@ -8,7 +8,7 @@ import {
   MetadataService,
   MetricAggregationType,
   TraceType
-} from '@hypertrace/distributed-tracing';
+} from '@hypertrace/observability';
 import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';

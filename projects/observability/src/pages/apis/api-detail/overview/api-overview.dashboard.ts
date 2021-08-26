@@ -1,5 +1,5 @@
 import { Color } from '@hypertrace/common';
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/observability';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import {
   defaultPrimaryEdgeMetricCategories,

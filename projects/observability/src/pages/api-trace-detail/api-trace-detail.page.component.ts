@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
 import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
-import { LogEvent } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
+import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
 @Component({

@@ -1,11 +1,6 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
-import {
-  GraphQlDataSourceModel,
-  GraphQlFilter,
-  GraphQlTimeRange,
-  MetadataService
-} from '@hypertrace/distributed-tracing';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { GraphQlDataSourceModel, GraphQlFilter, GraphQlTimeRange, MetadataService } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';

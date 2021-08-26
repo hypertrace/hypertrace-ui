@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
-import { MetricAggregationType, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { MetricAggregationType, SpecificationModel } from '@hypertrace/observability';
 import { GraphQlMetricAggregation } from '../../../../graphql/model/schema/metric/graphql-metric-aggregation';
 import {
   PercentileLatencyMetricAggregation,

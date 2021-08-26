@@ -7,13 +7,13 @@ import {
   TableSortDirection
 } from '@hypertrace/components';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { ModelApi } from '@hypertrace/hyperdash';
 import {
   GraphQlFilterBuilderService,
   GraphQlTimeRange,
   SpecificationBackedTableColumnDef
-} from '@hypertrace/distributed-tracing';
-import { GraphQlRequestService } from '@hypertrace/graphql-client';
-import { ModelApi } from '@hypertrace/hyperdash';
+} from '@hypertrace/observability';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';

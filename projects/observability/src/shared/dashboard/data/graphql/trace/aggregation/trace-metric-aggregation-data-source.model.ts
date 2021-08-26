@@ -1,5 +1,5 @@
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
+import { MetricAggregation, MetricHealth } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ExploreSpecification } from '../../../../../graphql/model/schema/specifications/explore-specification';

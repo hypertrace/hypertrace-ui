@@ -13,7 +13,6 @@
     "@hypertrace/common": "^0.0.0",
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/dashboards": "^0.0.0",
-    "@hypertrace/distributed-tracing": "^0.0.0",
     "@hypertrace/hyperdash-angular": "^2.6.0",
     "@hypertrace/hyperdash": "^1.2.1",
     "d3-array": "^2.12.0",

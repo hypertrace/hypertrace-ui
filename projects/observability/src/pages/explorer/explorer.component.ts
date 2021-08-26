@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
 import { Filter, ToggleItem } from '@hypertrace/components';
-import { AttributeMetadata, MetadataService, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
+import { AttributeMetadata, MetadataService, SPAN_SCOPE } from '@hypertrace/observability';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';

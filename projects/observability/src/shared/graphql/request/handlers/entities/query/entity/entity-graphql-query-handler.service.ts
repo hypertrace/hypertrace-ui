@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { GraphQlTimeRange, Specification } from '@hypertrace/distributed-tracing';
 import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
   GraphQlRequestOptions,
   GraphQlSelection
 } from '@hypertrace/graphql-client';
+import { GraphQlTimeRange, Specification } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../model/schema/entity';

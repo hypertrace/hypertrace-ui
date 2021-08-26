@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
-import { SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { SpecificationModel } from '@hypertrace/observability';
 import { Entity, EntityType } from '../../../../graphql/model/schema/entity';
 import { EntitySpecification } from '../../../../graphql/model/schema/specifications/entity-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';

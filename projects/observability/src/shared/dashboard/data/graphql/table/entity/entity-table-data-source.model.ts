@@ -1,11 +1,5 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import {
-  GraphQlFilter,
-  Specification,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
-import {
   ARRAY_PROPERTY,
   Model,
   ModelModelPropertyTypeInstance,
@@ -13,6 +7,12 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import {
+  GraphQlFilter,
+  Specification,
+  SpecificationBackedTableColumnDef,
+  TableDataSourceModel
+} from '@hypertrace/observability';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';

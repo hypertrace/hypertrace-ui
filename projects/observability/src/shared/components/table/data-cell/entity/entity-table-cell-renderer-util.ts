@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
 import { TableRow } from '@hypertrace/components';
-import { isMetricAggregation, MetricAggregation } from '@hypertrace/distributed-tracing';
+import { isMetricAggregation, MetricAggregation } from '@hypertrace/observability';
 import { isNull } from 'lodash-es';
 import { Entity, Interaction } from '../../../../graphql/model/schema/entity';
 import { EntitySpecificationBuilder } from '../../../../graphql/request/builders/specification/entity/entity-specification-builder';

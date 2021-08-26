@@ -1,6 +1,6 @@
 import { FixedTimeRange, isEqualIgnoreFunctions } from '@hypertrace/common';
-import { GraphQlTimeRange, MetricAggregationType, MetricHealth } from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { GraphQlTimeRange, MetricAggregationType, MetricHealth } from '@hypertrace/observability';
 import { createServiceFactory } from '@ngneat/spectator/jest';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
 import { GraphQlIntervalUnit } from '../../../../../model/schema/interval/graphql-interval-unit';
