@@ -11,13 +11,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './m
   styleUrls: ['./modal-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      *ngIf="this.visible"
-      class="modal-container"
-      [ngClass]="'modal-size-' + this.modalSizeClass"
-      [style.height]="this.size.height"
-      [style.width]="this.size.width"
-    >
+    <div *ngIf="this.visible" class="modal-container" [style.height]="this.size.height" [style.width]="this.size.width">
       <div class="header">
         <ht-button
           *ngIf="this.showControls"
@@ -48,7 +42,6 @@ export class ModalContainerComponent {
   public readonly modalTitle: string;
   public readonly showControls: boolean;
   public readonly size: ModalDimension;
-  public readonly modalSizeClass: string;
   public readonly isComponentModal: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
@@ -65,7 +58,6 @@ export class ModalContainerComponent {
     const config = constructionData.config;
     this.showControls = config.showControls ?? false;
     this.modalTitle = config.title ?? '';
-    this.modalSizeClass = this.isModalDimension(config.size) ? 'custom' : config.size;
     this.size = this.isModalDimension(config.size)
       ? this.getDimensionsWithUnits(config.size)
       : this.getDimensionsWithUnits(getModalDimensions(config.size));
