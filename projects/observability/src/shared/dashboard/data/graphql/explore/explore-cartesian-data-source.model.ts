@@ -3,11 +3,12 @@ import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { GraphQlDataSourceModel, GraphQlFilter, GraphQlTimeRange } from '../../../../../public-api';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
+import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
@@ -16,6 +17,7 @@ import {
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { ExploreResult } from './explore-result';
 
 export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<
