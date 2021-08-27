@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { ListViewRecord } from '@hypertrace/components';
+import { ListViewActionType, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 
@@ -11,7 +11,11 @@ import { EMPTY, Observable, of } from 'rxjs';
   template: `
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
-        <ht-list-view [records]="tagRecords" data-sensitive-pii></ht-list-view>
+        <ht-list-view
+          [records]="tagRecords"
+          actionType="${ListViewActionType.AttributeSearch}"
+          data-sensitive-pii
+        ></ht-list-view>
       </ng-container>
     </div>
   `

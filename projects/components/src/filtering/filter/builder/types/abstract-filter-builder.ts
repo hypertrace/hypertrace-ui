@@ -36,6 +36,10 @@ export abstract class AbstractFilterBuilder<TValue> {
   }
 
   protected buildUrlFilterString(attribute: FilterAttribute, operator: FilterOperator, value: TValue): string {
-    return encodeURIComponent(`${attribute.name}${toUrlFilterOperator(operator)}${this.buildValueString(value)}`);
+    return this.buildEncodedUrlFilterString(attribute.name, operator, value);
+  }
+
+  public buildEncodedUrlFilterString(attributeName: string, operator: FilterOperator, value: TValue): string {
+    return encodeURIComponent(`${attributeName}${toUrlFilterOperator(operator)}${this.buildValueString(value)}`);
   }
 }
