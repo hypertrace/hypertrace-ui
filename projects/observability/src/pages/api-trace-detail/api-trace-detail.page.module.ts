@@ -9,7 +9,8 @@ import {
   LabelModule,
   LoadAsyncModule,
   NavigableTabModule,
-  SummaryValueModule
+  SummaryValueModule,
+  LinkModule
 } from '@hypertrace/components';
 import { LogEventsTableModule, NavigableDashboardModule } from '@hypertrace/distributed-tracing';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
@@ -49,6 +50,7 @@ const ROUTE_CONFIG: HtRoute[] = [
     ObservabilityDashboardModule,
     IconModule,
     SummaryValueModule,
+    LinkModule,
     LoadAsyncModule,
     FormattingModule,
     ButtonModule,

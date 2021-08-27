@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
+import { NavigationParams, NavigationParamsType, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
 import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
 import { LogEvent } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
+import { ScopeQueryParam } from '../explorer/explorer.component';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
 @Component({
@@ -31,12 +32,14 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
           ></ht-summary-value>
-          <ht-summary-value
-            class="summary-value"
-            icon="${IconType.TraceId}"
-            label="Trace ID"
-            [value]="traceDetails.traceId"
-          ></ht-summary-value>
+          <ht-link class="link" [paramsOrUrl]="buildNavParamsForExplorer(traceDetails.traceId)" class="session-id-link">
+            <ht-summary-value
+              class="summary-value"
+              icon="${IconType.TraceId}"
+              label="Trace ID"
+              [value]="traceDetails.traceId"
+            ></ht-summary-value>
+          </ht-link>
 
           <div class="separation"></div>
 
@@ -86,4 +89,15 @@ export class ApiTraceDetailPageComponent {
   public navigateToFullTrace(traceId: string, startTime: string): void {
     this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
+
+  public buildNavParamsForExplorer = (traceId: string): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: '/explorer',
+    relativeTo: undefined,
+    replaceCurrentHistory: false,
+    queryParams: {
+      filter: ['trace', `traceId_eq_${traceId}`],
+      scope: ScopeQueryParam.EndpointTraces
+    }
+  });
 }
