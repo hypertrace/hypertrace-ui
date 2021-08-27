@@ -1,12 +1,12 @@
 export const enum ImagesAssetPath {
   ErrorPage = 'assets/images/error-page.svg',
-  LoaderSmallCircle = 'assets/images/loader-small.gif',
-  LoaderLargeSquare = 'assets/images/loader-large.gif',
-  LoaderHorizontal = 'assets/images/loader-horizontal.gif'
+  LoaderSpinner = 'assets/images/loader-spinner.gif',
+  LoaderPage = 'assets/images/loader-page.gif',
+  LoaderExpandableRow = 'assets/images/loader-expandable-row.gif'
 }
 
-export const enum LoaderTypes {
-  SmallCircle = 'small-circle',
-  Horizontal = 'horizontal',
-  LargeSquare = 'large-square'
+export const enum LoaderType {
+  Spinner = 'small-circle',
+  ExpandableRow = 'horizontal',
+  Page = 'large-square'
 }

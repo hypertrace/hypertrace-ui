@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { ImagesAssetPath, LoaderTypes } from '@hypertrace/assets-library';
+import { ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
 
 @Component({
@@ -14,23 +14,21 @@ import { assertUnreachable } from '@hypertrace/common';
 })
 export class LoaderComponent implements OnChanges {
   @Input()
-  public type: LoaderTypes = LoaderTypes.Horizontal;
-  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderHorizontal;
+  public type: LoaderType = LoaderType.ExpandableRow;
+  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderExpandableRow;
 
   public ngOnChanges(): void {
-    // Unfortunatly passing undefined is overwriting default value
-    this.type = this.type ?? LoaderTypes.Horizontal;
     this.imagePath = this.getImagePathFromType();
   }
 
   private getImagePathFromType(): ImagesAssetPath {
     switch (this.type) {
-      case LoaderTypes.Horizontal:
-        return ImagesAssetPath.LoaderHorizontal;
-      case LoaderTypes.LargeSquare:
-        return ImagesAssetPath.LoaderLargeSquare;
-      case LoaderTypes.SmallCircle:
-        return ImagesAssetPath.LoaderSmallCircle;
+      case LoaderType.ExpandableRow:
+        return ImagesAssetPath.LoaderExpandableRow;
+      case LoaderType.Page:
+        return ImagesAssetPath.LoaderPage;
+      case LoaderType.Spinner:
+        return ImagesAssetPath.LoaderSpinner;
       default:
         return assertUnreachable(this.type);
     }

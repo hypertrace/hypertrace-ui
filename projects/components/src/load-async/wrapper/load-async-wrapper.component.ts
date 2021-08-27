@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken, TemplateRef } from '@angular/core';
-import { IconType, LoaderTypes } from '@hypertrace/assets-library';
-import { Observable } from 'rxjs';
+import { IconType, LoaderType } from '@hypertrace/assets-library';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { LoadAsyncStateType } from '../load-async-state.type';
 import { AsyncState, ErrorAsyncState, LoadAsyncContext } from '../load-async.service';
@@ -8,14 +8,14 @@ import { AsyncState, ErrorAsyncState, LoadAsyncContext } from '../load-async.ser
 export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters>>(
   'ASYNC_WRAPPER_PARAMETERS$'
 );
-
-export const LOADER_TYPE = new InjectionToken<string>('LOADER_TYPE');
 @Component({
   selector: 'ht-load-async-wrapper',
   template: `
     <div *ngIf="this.state$ | async as state" class="fill-container" [ngSwitch]="state.type">
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Loading}'">
-        <ht-loader [type]="this.loaderType"></ht-loader>
+        <ng-container *ngIf="this.loaderType$ | async as loaderType">
+          <ht-loader [type]="loaderType"></ht-loader>
+        </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Success}'">
         <ng-container *ngTemplateOutlet="this.content; context: state.context"></ng-container>
@@ -37,20 +37,19 @@ export class LoadAsyncWrapperComponent {
   public icon?: IconType;
   public title?: string;
   public description: string = '';
-  public loaderType: LoaderTypes;
 
   public content?: TemplateRef<LoadAsyncContext>;
 
-  public constructor(
-    @Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>,
-    @Inject(LOADER_TYPE) loaderType: LoaderTypes
-  ) {
+  private readonly loaderTypeSubject: BehaviorSubject<LoaderType> = new BehaviorSubject<LoaderType>(LoaderType.Spinner);
+  public readonly loaderType$: Observable<LoaderType> = this.loaderTypeSubject.asObservable();
+
+  public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>) {
     this.state$ = parameters$.pipe(
       tap(params => (this.content = params.content)),
+      tap(params => this.loaderTypeSubject.next(params.loaderType)),
       switchMap(parameter => parameter.state$),
       tap(state => this.updateMessage(state.type, (state as Partial<ErrorAsyncState>).description))
     );
-    this.loaderType = loaderType;
   }
 
   private updateMessage(stateType: LoadAsyncStateType, description: string = ''): void {
@@ -71,5 +70,6 @@ export class LoadAsyncWrapperComponent {
 
 export interface LoadAsyncWrapperParameters {
   state$: Observable<AsyncState>;
+  loaderType: LoaderType;
   content: TemplateRef<LoadAsyncContext>;
 }
