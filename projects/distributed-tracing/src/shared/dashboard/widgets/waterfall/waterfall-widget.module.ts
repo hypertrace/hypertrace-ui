@@ -8,7 +8,8 @@ import {
   OverlayModule,
   SummaryValueModule,
   TitledContentModule,
-  TooltipModule
+  TooltipModule,
+  LinkModule
 } from '@hypertrace/components';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { SpanDetailModule } from '../../../components/span-detail/span-detail.module';
@@ -33,7 +34,8 @@ import { WaterfallChartModule } from './waterfall/waterfall-chart.module';
     ButtonModule,
     IconModule,
     SummaryValueModule,
-    WaterfallChartModule
+    WaterfallChartModule,
+    LinkModule
   ]
 })
 export class WaterfallWidgetModule {}

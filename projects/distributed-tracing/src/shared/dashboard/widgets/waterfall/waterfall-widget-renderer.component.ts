@@ -13,6 +13,7 @@ import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
+import { NavigationParams, NavigationParamsType } from 'projects/common/src/navigation/navigation.service';
 import { Observable } from 'rxjs';
 import { SpanDetailLayoutStyle } from '../../../components/span-detail/span-detail-layout-style';
 import { SpanDetailTab } from '../../../components/span-detail/span-detail-tab';
@@ -67,12 +68,14 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [activeTabLabel]="this.activeTabLabel"
           (closed)="this.closeSheet()"
         >
-          <ht-summary-value
-            data-sensitive-pii
-            icon="${IconType.SpanId}"
-            label="Span ID"
-            [value]="this.selectedData!.id"
-          ></ht-summary-value>
+          <ht-link class="link" [paramsOrUrl]="buildNavParamsForExplorer(this.selectedData!.id)">
+            <ht-summary-value
+              data-sensitive-pii
+              icon="${IconType.SpanId}"
+              label="Span ID"
+              [value]="this.selectedData!.id"
+            ></ht-summary-value>
+          </ht-link>
         </ht-span-detail>
       </div>
     </ng-template>
@@ -141,4 +144,15 @@ export class WaterfallWidgetRendererComponent
   protected fetchData(): Observable<WaterfallData[]> {
     return this.model.getData();
   }
+
+  public buildNavParamsForExplorer = (spanId: string): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: '/explorer',
+    relativeTo: undefined,
+    replaceCurrentHistory: false,
+    queryParams: {
+      filter: ['trace', `id_eq_${spanId}`],
+      scope: 'spans'
+    }
+  });
 }
