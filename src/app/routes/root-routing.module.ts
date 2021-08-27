@@ -77,7 +77,7 @@ const ROUTE_CONFIG: HtRoute[] = [
           },
           {
             path: 'trace',
-            loadChildren: () => import('@hypertrace/distributed-tracing').then(module => module.TraceDetailPageModule)
+            loadChildren: () => import('@hypertrace/observability').then(module => module.TraceDetailPageModule)
           },
           {
             path: 'api-trace',

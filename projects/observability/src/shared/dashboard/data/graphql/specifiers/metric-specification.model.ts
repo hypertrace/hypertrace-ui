@@ -1,6 +1,8 @@
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { MetricAggregationType, MetricSpecification, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
+import { MetricSpecification } from '../../../../graphql/model/specifications/metric-specification';
+import { SpecificationModel } from './specification.model';
 
 export abstract class MetricSpecificationModel<TSpecification extends MetricSpecification>
   extends SpecificationModel<TSpecification>

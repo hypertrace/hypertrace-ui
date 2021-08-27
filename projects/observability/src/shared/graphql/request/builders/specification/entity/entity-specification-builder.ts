@@ -1,5 +1,4 @@
 import { Dictionary } from '@hypertrace/common';
-import { GraphQlArgumentBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlSelection } from '@hypertrace/graphql-client';
 import {
   Entity,
@@ -9,6 +8,7 @@ import {
   ObservabilityEntityType
 } from '../../../../model/schema/entity';
 import { EntitySpecification } from '../../../../model/schema/specifications/entity-specification';
+import { GraphQlArgumentBuilder } from '../../argument/graphql-argument-builder';
 
 export class EntitySpecificationBuilder {
   private static readonly DEFAULT_TYPE_FIELD: string = 'type';

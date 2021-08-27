@@ -1,5 +1,4 @@
 import { ArrayPropertyTypeInstance, EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { GraphQlDataSourceModel, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestCacheability, GraphQlRequestOptions } from '@hypertrace/graphql-client';
 import {
   ARRAY_PROPERTY,
@@ -13,6 +12,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
+import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import {
   EntityNode,
   EntityTopologyGraphQlQueryHandlerService,
@@ -20,6 +20,7 @@ import {
   TopologyEdgeSpecification,
   TopologyNodeSpecification
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
 
 @Model({

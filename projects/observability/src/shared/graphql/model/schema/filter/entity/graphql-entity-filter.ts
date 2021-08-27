@@ -1,6 +1,6 @@
-import { GraphQlFilter, GraphQlFilterType, GraphQlOperatorType } from '@hypertrace/distributed-tracing';
 import { GraphQlArgumentValue, GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { Entity, entityIdKey, EntityType, entityTypeKey } from '../../entity';
+import { GraphQlFilter, GraphQlFilterType, GraphQlOperatorType } from '../graphql-filter';
 
 export class GraphQlEntityFilter implements GraphQlFilter {
   public static forEntity(entity: Entity): GraphQlEntityFilter {

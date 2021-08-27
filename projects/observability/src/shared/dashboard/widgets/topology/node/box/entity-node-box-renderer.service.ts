@@ -1,6 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color, DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { select, Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -13,6 +12,8 @@ import {
 } from '../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../components/utils/d3/d3-util.service';
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../../graphql/model/metrics/metric-health';
 import { Entity } from '../../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { EntityNode } from '../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
