@@ -14,10 +14,9 @@ import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
         <ht-list-view [records]="tagRecords" [action]="tagAction" data-sensitive-pii></ht-list-view>
-        <ng-template #tagAction let-tag="record">
+        <ng-template #tagAction let-tag>
           <ht-explore-filter-link
             *ngIf="this.getExploreNavigationParams(tag) | async as exploreNavigationParams"
-            class="explore-filter"
             [paramsOrUrl]="exploreNavigationParams"
             htTooltip="See traces in Explorer"
           >

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
-import { Dictionary } from '@hypertrace/common';
 @Component({
   selector: 'ht-list-view',
   styleUrls: ['./list-view.component.scss'],
@@ -22,7 +21,7 @@ import { Dictionary } from '@hypertrace/common';
           <span>{{ record.value }}</span>
         </div>
         <div *ngIf="this.action" class="action">
-          <ng-container *ngTemplateOutlet="this.action; context: this.getContext(record)"></ng-container>
+          <ng-container *ngTemplateOutlet="this.action; context: { $implicit: record }"></ng-container>
         </div>
       </div>
     </div>
@@ -37,10 +36,6 @@ export class ListViewComponent {
 
   @Input()
   public action?: TemplateRef<unknown>;
-
-  public getContext(record: ListViewRecord): Dictionary<ListViewRecord> {
-    return { record: record };
-  }
 }
 
 export interface ListViewHeader {
