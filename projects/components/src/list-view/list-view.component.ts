@@ -1,10 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
-import { NavigationParamsType, NavigationService } from '@hypertrace/common';
-import { StringMapFilterBuilder } from '../filtering/filter/builder/types/string-map-filter-builder';
-import { FilterOperator } from '../filtering/filter/filter-operators';
-import { IconSize } from '../icon/icon-size';
-
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
+import { Dictionary } from '@hypertrace/common';
 @Component({
   selector: 'ht-list-view',
   styleUrls: ['./list-view.component.scss'],
@@ -26,15 +21,8 @@ import { IconSize } from '../icon/icon-size';
         <div class="value">
           <span>{{ record.value }}</span>
         </div>
-        <div *ngIf="this.actionType" class="action-item">
-          <ht-icon
-            *ngIf="this.actionType === '${ListViewActionType.AttributeSearch}'"
-            class="attribute-search icon"
-            icon="${IconType.ChevronRight}"
-            size="${IconSize.Small}"
-            htTooltip="Search in Explorer"
-            (click)="this.searchAttributes(record.key, record.value)"
-          ></ht-icon>
+        <div *ngIf="this.action" class="action">
+          <ng-container *ngTemplateOutlet="this.action; context: this.getContext(record)"></ng-container>
         </div>
       </div>
     </div>
@@ -48,22 +36,10 @@ export class ListViewComponent {
   public records?: ListViewRecord[];
 
   @Input()
-  public actionType?: ListViewActionType;
+  public action?: TemplateRef<unknown>;
 
-  private readonly scopeQueryParam: string = 'endpoint-traces';
-  private readonly filterBuilder: StringMapFilterBuilder = new StringMapFilterBuilder();
-
-  public constructor(private readonly navigationService: NavigationService) {}
-
-  public searchAttributes(key: string, value: string): void {
-    this.navigationService.navigate({
-      navType: NavigationParamsType.InApp,
-      path: '/explorer',
-      queryParams: {
-        scope: this.scopeQueryParam,
-        filter: this.filterBuilder.buildEncodedUrlFilterString('tags', FilterOperator.ContainsKeyValue, [key, value])
-      }
-    });
+  public getContext(record: ListViewRecord): Dictionary<ListViewRecord> {
+    return { record: record };
   }
 }
 
@@ -75,8 +51,4 @@ export interface ListViewHeader {
 export interface ListViewRecord {
   key: string;
   value: string | number;
-}
-
-export const enum ListViewActionType {
-  AttributeSearch = 'attribute-search'
 }
