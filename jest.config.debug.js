@@ -1,7 +1,10 @@
+require('jest-preset-angular/ngcc-jest-processor');
+
 process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependencies
 
 module.exports = {
   preset: 'jest-preset-angular',
+  testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',
@@ -9,7 +12,7 @@ module.exports = {
       astTransformers: [
         'jest-preset-angular/build/InlineFilesTransformer',
         'jest-preset-angular/build/StripStylesTransformer'
-      ]
+        ]
     }
   },
   setupFilesAfterEnv: ['<rootDir>/node_modules/@angular-builders/jest/dist/jest-config/setup.js'],
