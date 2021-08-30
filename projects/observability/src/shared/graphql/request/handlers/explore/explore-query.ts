@@ -1,8 +1,10 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlFilter, GraphQlSortBySpecification, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
+import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
+import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
 import { ExploreSpecification, ExploreValue } from '../../../model/schema/specifications/explore-specification';
+import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
 
 export const EXPLORE_GQL_REQUEST = Symbol('GraphQL Query Request');
 

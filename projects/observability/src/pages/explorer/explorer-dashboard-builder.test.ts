@@ -1,13 +1,4 @@
 import { FilterBuilderLookupService, TableMode, TableStyle } from '@hypertrace/components';
-import {
-  AttributeMetadataType,
-  GraphQlFieldFilter,
-  GraphQlFilterDataSourceModel,
-  GraphQlOperatorType,
-  MetadataService,
-  MetricAggregationType,
-  TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { capitalize } from 'lodash-es';
@@ -17,8 +8,15 @@ import { CartesianSeriesVisualizationType } from '../../shared/components/cartes
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
+import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
+import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
+import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 
 describe('Explorer dashboard builder', () => {

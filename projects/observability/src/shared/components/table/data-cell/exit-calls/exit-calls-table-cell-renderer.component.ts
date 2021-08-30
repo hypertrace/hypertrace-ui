@@ -13,7 +13,7 @@ import {
   TABLE_DATA_PARSER,
   TABLE_ROW_DATA
 } from '@hypertrace/components';
-import { Trace } from '@hypertrace/distributed-tracing';
+import { Trace } from '../../../../graphql/model/schema/trace';
 import { ObservabilityTableCellType } from '../../observability-table-cell-type';
 
 interface CellData {

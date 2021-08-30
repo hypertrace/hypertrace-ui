@@ -13,7 +13,6 @@
       "@hypertrace/common": ["projects/common/src/public-api.ts"],
       "@hypertrace/components": ["projects/components/src/public-api.ts"],
       "@hypertrace/dashboards": ["projects/dashboards/src/public-api.ts"],
-      "@hypertrace/distributed-tracing": ["projects/distributed-tracing/src/public-api.ts"],
       "@hypertrace/test-utils": ["projects/test-utils/src/public-api.ts"],
       "@hypertrace/dashboards/testing": ["projects/dashboards/src/test/public-api.ts"]
     }

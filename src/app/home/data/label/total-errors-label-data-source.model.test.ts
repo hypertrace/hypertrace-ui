@@ -1,20 +1,18 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { TimeDuration, TimeDurationService, TimeRange, TimeUnit } from '@hypertrace/common';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
-import {
-  AttributeMetadataType,
-  GraphQlQueryEventService,
-  GraphQlTimeRange,
-  MetricAggregationType,
-  ObservedGraphQlRequest
-} from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import {
+  AttributeMetadataType,
   ExploreGraphQlQueryHandlerService,
   ExploreSpecification,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  ObservabilityTraceType
+  GraphQlQueryEventService,
+  GraphQlTimeRange,
+  MetricAggregationType,
+  ObservabilityTraceType,
+  ObservedGraphQlRequest
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';

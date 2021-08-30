@@ -20,9 +20,6 @@
       "path": "./projects/graphql-client/tsconfig.lib.json"
     },
     {
-      "path": "./projects/distributed-tracing/tsconfig.lib.json"
-    },
-    {
       "path": "./projects/components/tsconfig.lib.json"
     },
     {

@@ -1,9 +1,10 @@
 import { NavigationParamsType } from '@hypertrace/common';
 import { FilterBuilderLookupService, FilterOperator, toUrlFilterOperator } from '@hypertrace/components';
-import { AttributeMetadata, AttributeMetadataType, MetadataService } from '@hypertrace/distributed-tracing';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { AttributeMetadata, AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerService } from './explorer-service';
 import { ScopeQueryParam } from './explorer.component';
 

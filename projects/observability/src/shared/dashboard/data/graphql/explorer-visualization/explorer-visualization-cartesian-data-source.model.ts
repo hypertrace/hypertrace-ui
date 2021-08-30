@@ -1,5 +1,4 @@
 import { TimeDuration } from '@hypertrace/common';
-import { GraphQlFilter, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { NEVER, Observable } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
@@ -7,6 +6,8 @@ import {
   ExploreRequestState,
   ExploreVisualizationRequest
 } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
+import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
