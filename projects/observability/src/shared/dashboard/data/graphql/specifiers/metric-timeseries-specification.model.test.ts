@@ -1,7 +1,7 @@
 import { IntervalDurationService, isEqualIgnoreFunctions, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { mockProvider } from '@ngneat/spectator/jest';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
 import { MetricTimeseriesSpecificationModel } from './metric-timeseries-specification.model';
 

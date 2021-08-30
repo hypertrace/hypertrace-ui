@@ -1,5 +1,4 @@
 import { forkJoinSafeEmpty } from '@hypertrace/common';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import {
   ExploreGraphQlQueryHandlerService,
@@ -8,6 +7,8 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse,
+  GraphQlTimeRange,
+  MetricAggregationType,
   ObservabilityTraceType,
   RadarDataSourceModel,
   RadarPoint

@@ -3,10 +3,11 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { SelectComponent, SelectModule } from '@hypertrace/components';
-import { AttributeMetadata, MetadataService } from '@hypertrace/distributed-tracing';
 import { byText, createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
+import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { ExploreQueryGroupByEditorComponent } from './explore-query-group-by-editor.component';
 
 describe('Explore Query Group by Editor component', () => {

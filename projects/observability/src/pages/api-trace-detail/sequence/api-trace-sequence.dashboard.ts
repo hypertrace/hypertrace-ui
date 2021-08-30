@@ -1,4 +1,4 @@
-import { DashboardDefaultConfiguration } from '@hypertrace/distributed-tracing';
+import { DashboardDefaultConfiguration } from '../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 
 export const apiTraceSequenceDashboard: DashboardDefaultConfiguration = {
   location: 'API_TRACE_SEQUENCE',

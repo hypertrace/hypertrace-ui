@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
-import { MetadataService, SPAN_SCOPE, toFilterAttributeType } from '@hypertrace/distributed-tracing';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ScopeQueryParam } from './explorer.component';
 
 @Injectable({ providedIn: 'root' })
