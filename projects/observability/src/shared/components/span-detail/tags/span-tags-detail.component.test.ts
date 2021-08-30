@@ -10,8 +10,8 @@ import {
   LoadAsyncModule,
   ToggleButtonModule
 } from '@hypertrace/components';
-import { SpanTagsDetailComponent } from './span-tags-detail.component';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { SpanTagsDetailComponent } from './span-tags-detail.component';
 
 describe('Span Tags Detail Component', () => {
   let spectator: Spectator<SpanTagsDetailComponent>;
