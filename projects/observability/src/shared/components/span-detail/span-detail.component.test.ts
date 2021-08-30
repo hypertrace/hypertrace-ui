@@ -3,6 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { ExplorerService } from '../../../pages/explorer/explorer-service';
 import { SpanData } from './span-data';
 import { SpanDetailComponent } from './span-detail.component';
 import { SpanDetailModule } from './span-detail.module';
@@ -14,7 +15,7 @@ describe('Span detail component', () => {
     component: SpanDetailComponent,
     imports: [SpanDetailModule, HttpClientTestingModule, IconLibraryTestingModule],
     declareComponent: false,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService), mockProvider(ExplorerService)]
   });
 
   test('should display child components', () => {

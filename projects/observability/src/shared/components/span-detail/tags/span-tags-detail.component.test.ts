@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 
 import {
   JsonViewerModule,
@@ -11,6 +11,7 @@ import {
   ToggleButtonModule
 } from '@hypertrace/components';
 import { SpanTagsDetailComponent } from './span-tags-detail.component';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
 
 describe('Span Tags Detail Component', () => {
   let spectator: Spectator<SpanTagsDetailComponent>;
@@ -25,7 +26,8 @@ describe('Span Tags Detail Component', () => {
       LabelModule,
       LoadAsyncModule,
       HttpClientTestingModule
-    ]
+    ],
+    providers: [mockProvider(ExplorerService)]
   });
 
   test('should display tag records', () => {
