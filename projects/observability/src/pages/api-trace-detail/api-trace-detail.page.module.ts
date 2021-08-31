@@ -9,7 +9,8 @@ import {
   LabelModule,
   LoadAsyncModule,
   NavigableTabModule,
-  SummaryValueModule
+  SummaryValueModule,
+  LinkModule
 } from '@hypertrace/components';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
@@ -53,6 +54,7 @@ const ROUTE_CONFIG: HtRoute[] = [
     LoadAsyncModule,
     FormattingModule,
     ButtonModule,
+    LinkModule,
     CopyShareableLinkToClipboardModule,
     NavigableTabModule,
     LogEventsTableModule,

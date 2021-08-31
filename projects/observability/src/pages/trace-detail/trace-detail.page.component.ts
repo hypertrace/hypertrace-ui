@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { IconSize } from '@hypertrace/components';
+import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
+import { FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
+import { ExplorerService } from '../explorer/explorer-service';
+import { ScopeQueryParam } from '../explorer/explorer.component';
 import { TraceDetails, TraceDetailService } from './trace-detail.service';
 @Component({
   styleUrls: ['./trace-detail.page.component.scss'],
@@ -30,12 +32,16 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
           ></ht-summary-value>
-          <ht-summary-value
-            class="summary-value"
-            icon="${IconType.TraceId}"
-            label="Trace ID"
-            [value]="traceDetails.id"
-          ></ht-summary-value>
+          <ng-container *ngIf="this.getExploreNavigationParams(traceDetails.id) | async as exploreNavigationParams">
+            <ht-link class="link" [paramsOrUrl]="exploreNavigationParams">
+              <ht-summary-value
+                class="summary-value"
+                icon="${IconType.TraceId}"
+                label="Trace ID"
+                [value]="traceDetails.id"
+              ></ht-summary-value>
+            </ht-link>
+          </ng-container>
 
           <div class="separation"></div>
 
@@ -72,7 +78,8 @@ export class TraceDetailPageComponent {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly traceDetailService: TraceDetailService
+    private readonly traceDetailService: TraceDetailService,
+    private readonly explorerService: ExplorerService
   ) {
     this.traceDetails$ = this.traceDetailService.fetchTraceDetails();
     this.exportSpans$ = this.traceDetailService.fetchExportSpans();
@@ -81,5 +88,11 @@ export class TraceDetailPageComponent {
 
   public onClickBack(): void {
     this.navigationService.navigateBack();
+  }
+
+  public getExploreNavigationParams(traceId: string): Observable<NavigationParams> {
+    return this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceId }
+    ]);
   }
 }
