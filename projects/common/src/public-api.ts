@@ -98,6 +98,11 @@ export * from './utilities/rxjs/subscription-lifeycle.service';
 export * from './utilities/types/angular-change-object';
 export * from './utilities/types/types';
 
+// Telemetry
+export * from './telemetry/user-telemetry.module';
+export * from './telemetry/user-telemetry.service';
+export * from './telemetry/telemetry';
+
 // Time
 export * from './time/fixed-time-range';
 export * from './time/interval-duration.service';
