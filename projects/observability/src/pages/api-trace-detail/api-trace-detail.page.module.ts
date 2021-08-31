@@ -7,10 +7,10 @@ import {
   CopyShareableLinkToClipboardModule,
   IconModule,
   LabelModule,
+  LinkModule,
   LoadAsyncModule,
   NavigableTabModule,
-  SummaryValueModule,
-  LinkModule
+  SummaryValueModule
 } from '@hypertrace/components';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';

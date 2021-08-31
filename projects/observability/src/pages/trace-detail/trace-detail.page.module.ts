@@ -7,11 +7,11 @@ import {
   DownloadJsonModule,
   IconModule,
   LabelModule,
+  LinkModule,
   LoadAsyncModule,
   NavigableTabModule,
   SummaryValueModule,
-  TooltipModule,
-  LinkModule
+  TooltipModule
 } from '@hypertrace/components';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
