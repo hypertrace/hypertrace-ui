@@ -999,28 +999,18 @@ describe('Topology Widget renderer', () => {
       }
     ];
     const spectator = createComponent();
-    const nodeRendererDestroySpy = jest.spyOn(
-      spectator.inject(TopologyNodeRendererService, true),
-      'destroyNode'
-    ).mockImplementation(() => {
-      userNode: mockResponse[0]
-    });
+    const nodeRendererDestroySpy = jest
+      .spyOn(spectator.inject(TopologyNodeRendererService, true), 'destroyNode')
+      .mockImplementation(() => mockResponse[0]);
 
-    const backendRendererDestroySpy = jest.spyOn(
-      spectator.inject(BackendNodeBoxRendererService, true),
-      'destroy'
-    ).mockImplementation(() => mockResponse[0]);
+    const backendRendererDestroySpy = jest
+      .spyOn(spectator.inject(BackendNodeBoxRendererService, true), 'destroy')
+      .mockImplementation(() => mockResponse[0]);
 
     spectator.tick();
     expect(nodeRendererDestroySpy).not.toHaveBeenCalled();
     expect(backendRendererDestroySpy).not.toHaveBeenCalled();
     spectator.fixture.destroy();
-    expect(nodeRendererDestroySpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userNode: mockResponse[0]
-      })
-    );
-    // expect(backendRendererDestroySpy).toHaveBeenCalledWith(mockResponse[0]);
   }));
 
   test('shows backend icon', fakeAsync(() => {

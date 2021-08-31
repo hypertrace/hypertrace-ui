@@ -12,7 +12,7 @@ module.exports = {
       astTransformers: [
         'jest-preset-angular/build/InlineFilesTransformer',
         'jest-preset-angular/build/StripStylesTransformer'
-        ]
+      ]
     }
   },
   setupFilesAfterEnv: ['<rootDir>/node_modules/@angular-builders/jest/dist/jest-config/setup.js'],

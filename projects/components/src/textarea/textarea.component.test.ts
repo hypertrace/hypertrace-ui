@@ -5,7 +5,7 @@ import { TraceTextareaModule } from './textarea.module';
 
 describe('Textarea Component', () => {
   let spectator: Spectator<TextareaComponent>;
-  let logSpy: jest.SpyInstance = jest.spyOn(console, 'warn');
+  const logSpy: jest.SpyInstance = jest.spyOn(console, 'warn');
 
   const createHost = createHostFactory({
     component: TextareaComponent,

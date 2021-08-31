@@ -7,7 +7,7 @@ import { TraceRadioModule } from './radio.module';
 
 describe('Radio component', () => {
   let spectator: Spectator<RadioGroupComponent>;
-  let logSpy: jest.SpyInstance = jest.spyOn(console, 'warn');
+  const logSpy: jest.SpyInstance = jest.spyOn(console, 'warn');
 
   const createHost = createHostFactory({
     component: RadioGroupComponent,

@@ -62,7 +62,7 @@ describe.skip('Modal service', () => {
     expect(subscription.closed).toBe(false);
 
     spectator.click(closeButton);
-    
+
     expect(spectator.query('.test-modal-content', { root: true })).not.toExist();
     expect(result).toBe('custom input');
     expect(subscription.closed).toBe(true);
