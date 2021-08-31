@@ -51,9 +51,15 @@ export const mockDashboardProviders = [
     getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
   }),
   mockProvider(LoggerService, {
-    warn: jest.fn().mockImplementation(fail),
-    info: jest.fn().mockImplementation(fail),
-    error: jest.fn().mockImplementation(fail)
+    warn: jest.fn().mockImplementation(() => {
+      throw new Error();
+    }),
+    info: jest.fn().mockImplementation(() => {
+      throw new Error();
+    }),
+    error: jest.fn().mockImplementation(() => {
+      throw new Error();
+    })
   }),
   mockProvider(ActivatedRoute, {
     queryParamMap: EMPTY

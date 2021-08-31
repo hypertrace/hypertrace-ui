@@ -50,7 +50,7 @@ describe('Download Json Component', () => {
       }
     });
 
-    spyOn(spectator.component, 'triggerDownload');
+    jest.spyOn(spectator.component, 'triggerDownload');
 
     expect(spectator.component.dataLoading).toBe(false);
     expect(spectator.component.fileName).toBe('download.json');

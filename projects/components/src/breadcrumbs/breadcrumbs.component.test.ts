@@ -50,7 +50,7 @@ describe('BreadcrumbsComponent', () => {
     });
 
     spy = spectator.inject(NavigationService).navigateWithinApp;
-    spy.mockReset();
+    spy.mockRestore();
   });
 
   it('should show three breadcrumbs when instantiated', () => {
@@ -82,11 +82,13 @@ describe('BreadcrumbsComponent', () => {
     const element = spectator.query(byText('First'));
     spectator.click(element!);
     expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('should not navigate when url is not provided in breadcrumb', () => {
     const element = spectator.query(byText('Second'));
     spectator.click(element!);
     expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

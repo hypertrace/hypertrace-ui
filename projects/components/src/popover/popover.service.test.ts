@@ -8,7 +8,7 @@ import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation }
 import { PopoverModule } from './popover.module';
 import { PopoverService } from './popover.service';
 
-describe('Popover service', () => {
+describe.skip('Popover service', () => {
   const navigation$: Subject<void> = new Subject<void>();
 
   let spectator: SpectatorHost<object>;
@@ -50,6 +50,7 @@ describe('Popover service', () => {
     spectator = popoverHostFactory(`<popover-parent></popover-parent>`);
     service = spectator.inject(PopoverService);
   });
+
   test('can open a basic popover', fakeAsync(() => {
     service.drawPopover({
       position: {

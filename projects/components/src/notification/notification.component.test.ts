@@ -18,7 +18,7 @@ describe('NotificationComponent', () => {
 
   test('should create success notification correctly', fakeAsync(() => {
     const closedObserver: Subject<void> = new Subject();
-    const nextSpy = spyOn(closedObserver, 'next');
+    const nextSpy = jest.spyOn(closedObserver, 'next');
     spectator = createHost('<ht-notification></ht-notification>', {
       providers: [
         {
@@ -42,7 +42,7 @@ describe('NotificationComponent', () => {
 
   test('should create failure notification correctly', fakeAsync(() => {
     const closedObserver: Subject<void> = new Subject();
-    const nextSpy = spyOn(closedObserver, 'next');
+    const nextSpy = jest.spyOn(closedObserver, 'next');
     spectator = createHost('<ht-notification></ht-notification>', {
       providers: [
         {
@@ -66,7 +66,7 @@ describe('NotificationComponent', () => {
 
   test('should create info notification correctly', fakeAsync(() => {
     const closedObserver: Subject<void> = new Subject();
-    const nextSpy = spyOn(closedObserver, 'next');
+    const nextSpy = jest.spyOn(closedObserver, 'next');
     spectator = createHost('<ht-notification></ht-notification>', {
       providers: [
         {

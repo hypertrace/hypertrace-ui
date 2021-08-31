@@ -26,14 +26,14 @@ describe('Waterfall widget renderer component', () => {
 
   test('gets callback when collapsing all', () => {
     const spectator = createComponent();
-    const spy = spyOn(spectator.component, 'onCollapseAll');
+    const spy = jest.spyOn(spectator.component, 'onCollapseAll');
     spectator.click('[label="Collapse All"]');
     expect(spy).toHaveBeenCalled();
   });
 
   test('gets callback when expanding all', () => {
     const spectator = createComponent();
-    const spy = spyOn(spectator.component, 'onExpandAll');
+    const spy = jest.spyOn(spectator.component, 'onExpandAll');
     spectator.click('[label="Expand All"]');
     expect(spy).toHaveBeenCalled();
   });

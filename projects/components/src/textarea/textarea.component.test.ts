@@ -5,7 +5,7 @@ import { TraceTextareaModule } from './textarea.module';
 
 describe('Textarea Component', () => {
   let spectator: Spectator<TextareaComponent>;
-  let logSpy: jasmine.Spy;
+  let logSpy: jest.SpyInstance = jest.spyOn(console, 'warn');
 
   const createHost = createHostFactory({
     component: TextareaComponent,
@@ -13,14 +13,11 @@ describe('Textarea Component', () => {
     declareComponent: false
   });
 
-  beforeEach(() => {
-    logSpy = spyOn(console, 'warn');
-  });
-
   test('should warn when placeholder is not provided', () => {
     spectator = createHost(`<ht-textarea></ht-textarea>`);
 
     expect(logSpy).toHaveBeenCalled();
+    logSpy.mockRestore();
   });
 
   test('should not warn when placeholder is provided', () => {
@@ -31,6 +28,7 @@ describe('Textarea Component', () => {
     });
 
     expect(logSpy).not.toHaveBeenCalled();
+    logSpy.mockRestore();
   });
 
   test('should apply disabled attribute when disabled', () => {

@@ -10,7 +10,7 @@ describe('Greeting Label component', () => {
   });
 
   test('should render interpolated string correctly for morning', () => {
-    spyOn(Date.prototype, 'getHours').and.returnValue(8);
+    jest.spyOn(Date.prototype, 'getHours').mockReturnValue(8);
     spectator = createHost(`<ht-greeting-label [suffixLabel]="templateString"></ht-greeting-label>`, {
       hostProps: {
         templateString: ", here's your report"
@@ -21,7 +21,7 @@ describe('Greeting Label component', () => {
   });
 
   test('should render interpolated string correctly for afternoon', () => {
-    spyOn(Date.prototype, 'getHours').and.returnValue(13);
+    jest.spyOn(Date.prototype, 'getHours').mockReturnValue(13);
     spectator = createHost(`<ht-greeting-label [suffixLabel]="templateString"></ht-greeting-label>`, {
       hostProps: {
         templateString: ", here's your report"
@@ -32,7 +32,7 @@ describe('Greeting Label component', () => {
   });
 
   test('should render interpolated string correctly for evening', () => {
-    spyOn(Date.prototype, 'getHours').and.returnValue(1);
+    jest.spyOn(Date.prototype, 'getHours').mockReturnValue(1);
     spectator = createHost(`<ht-greeting-label [suffixLabel]="templateString"></ht-greeting-label>`, {
       hostProps: {
         templateString: ", here's your report"

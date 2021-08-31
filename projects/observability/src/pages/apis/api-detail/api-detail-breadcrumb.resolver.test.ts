@@ -75,7 +75,7 @@ describe('Api detail breadcrumb resolver', () => {
 
   test('returns the service and api breadcrumb', fakeAsync(() => {
     const navigationService = spectator.inject(NavigationService);
-    spyOn(navigationService, 'isRelativePathActive').and.callFake(item => item[0] === 'services');
+    jest.spyOn(navigationService, 'isRelativePathActive').mockImplementation(item => item[0] === 'services');
 
     const resolverPromise = spectator.service.resolve(activatedRouteSnapshot);
 
@@ -114,7 +114,7 @@ describe('Api detail breadcrumb resolver', () => {
 
   test('returns the api breadcrumb for no previous navigation', fakeAsync(() => {
     const navigationService = spectator.inject(NavigationService);
-    spyOn(navigationService, 'isRelativePathActive').and.returnValue(false);
+    jest.spyOn(navigationService, 'isRelativePathActive').mockReturnValue(false);
 
     const resolverPromise = spectator.service.resolve(activatedRouteSnapshot);
 

@@ -18,7 +18,7 @@ describe('Greeting label widget renderer component', () => {
   });
 
   test('should render greeting label correctly', () => {
-    spyOn(Date.prototype, 'getHours').and.returnValue(18);
+    jest.spyOn(Date.prototype, 'getHours').mockReturnValue(18);
     spectator = createComponent();
     expect(spectator.query('ht-greeting-label')).toHaveText('Good Evening, test');
   });

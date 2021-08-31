@@ -423,7 +423,7 @@ describe('Table component', () => {
       }
     };
 
-    const spyToggleRowSelection = spyOn(spectator.component, 'toggleRowSelected');
+    const spyToggleRowSelection = jest.spyOn(spectator.component, 'toggleRowSelected');
     spectator.component.onDataCellClick(row);
     expect(spyToggleRowSelection).toHaveBeenCalledWith(row);
   });
@@ -488,7 +488,7 @@ describe('Table component', () => {
 
     // Change selections to just first stateful row
     const firstStatefulRow = statefulRows[0];
-    const spyUnselectRows = spyOn(spectator.component.dataSource!, 'unselectAllRows');
+    const spyUnselectRows = jest.spyOn(spectator.component.dataSource!, 'unselectAllRows');
     spectator.setHostInput('selections', [firstStatefulRow]);
     spectator.detectChanges();
     expect(spyUnselectRows).toHaveBeenCalled();

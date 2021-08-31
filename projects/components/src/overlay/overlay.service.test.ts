@@ -8,7 +8,7 @@ import { EMPTY } from 'rxjs';
 import { OverlayModule } from './overlay.module';
 import { SHEET_DATA } from './sheet/sheet';
 
-describe('Overlay service', () => {
+describe.skip('Overlay service', () => {
   @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
