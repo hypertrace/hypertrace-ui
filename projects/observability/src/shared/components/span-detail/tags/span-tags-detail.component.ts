@@ -13,15 +13,16 @@ import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
   template: `
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
-        <ht-list-view [records]="tagRecords" [action]="tagAction" data-sensitive-pii></ht-list-view>
-        <ng-template #tagAction let-tag>
-          <ht-explore-filter-link
-            *ngIf="this.getExploreNavigationParams(tag) | async as exploreNavigationParams"
-            [paramsOrUrl]="exploreNavigationParams"
-            htTooltip="See traces in Explorer"
-          >
-          </ht-explore-filter-link
-        ></ng-template>
+        <ht-list-view [records]="tagRecords" data-sensitive-pii
+          ><div class="tag-value" *htListViewValueRenderer="let record">
+            <div class="value">{{ record.value }}</div>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+              htTooltip="See traces in Explorer"
+            >
+            </ht-explore-filter-link></div
+        ></ht-list-view>
       </ng-container>
     </div>
   `
@@ -40,11 +41,10 @@ export class SpanTagsDetailComponent implements OnChanges {
     }
   }
 
-  public getExploreNavigationParams(tag: ListViewRecord): Observable<NavigationParams> {
-    return this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+  public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
       { field: 'tags', operator: FilterOperator.ContainsKeyValue, value: [tag.key, tag.value] }
     ]);
-  }
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {

@@ -7,4 +7,19 @@
   height: 100%;
   width: 100%;
   overflow: auto;
+
+  .tag-value {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto min-content;
+
+    .filter-link {
+      visibility: hidden;
+      margin-left: 12px;
+    }
+
+    &:hover .filter-link {
+      visibility: visible;
+    }
+  }
 }
