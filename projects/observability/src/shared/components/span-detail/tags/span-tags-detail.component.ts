@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { ListViewRecord } from '@hypertrace/components';
+import { Dictionary, NavigationParams, TypedSimpleChanges } from '@hypertrace/common';
+import { FilterOperator, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
 
 @Component({
   selector: 'ht-span-tags-detail',
@@ -11,7 +13,16 @@ import { EMPTY, Observable, of } from 'rxjs';
   template: `
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
-        <ht-list-view [records]="tagRecords" data-sensitive-pii></ht-list-view>
+        <ht-list-view [records]="tagRecords" data-sensitive-pii
+          ><div class="tag-value" *htListViewValueRenderer="let record">
+            <div class="value">{{ record.value }}</div>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+              htTooltip="See traces in Explorer"
+            >
+            </ht-explore-filter-link></div
+        ></ht-list-view>
       </ng-container>
     </div>
   `
@@ -22,11 +33,18 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   public tagRecords$?: Observable<ListViewRecord[]>;
 
+  public constructor(private readonly explorerService: ExplorerService) {}
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
       this.buildTagRecords();
     }
   }
+
+  public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: 'tags', operator: FilterOperator.ContainsKeyValue, value: [tag.key, tag.value] }
+    ]);
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {
