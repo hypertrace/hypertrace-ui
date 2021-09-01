@@ -5,6 +5,9 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
   styleUrls: ['./list-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <ng-template #defaultValueRenderer let-record
+      ><span>{{ record.value }}</span></ng-template
+    >
     <div class="list-view">
       <div *ngIf="this.header" class="header-row">
         <div class="header-key-label">
@@ -26,9 +29,6 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
             "
           ></ng-container>
         </div>
-        <ng-template #defaultValueRenderer let-record
-          ><span>{{ record.value }}</span></ng-template
-        >
       </div>
     </div>
   `

@@ -1,21 +1,14 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync } from '@angular/core/testing';
-import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { ExplorerService } from '../../../pages/explorer/explorer-service';
+import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { SpanData } from './span-data';
 import { SpanDetailComponent } from './span-detail.component';
-import { SpanDetailModule } from './span-detail.module';
 
 describe('Span detail component', () => {
   let spectator: Spectator<SpanDetailComponent>;
 
   const createHost = createHostFactory({
     component: SpanDetailComponent,
-    imports: [SpanDetailModule, HttpClientTestingModule, IconLibraryTestingModule],
-    declareComponent: false,
-    providers: [mockProvider(NavigationService), mockProvider(ExplorerService)]
+    shallow: true
   });
 
   test('should display child components', () => {
