@@ -70,18 +70,18 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [activeTabLabel]="this.activeTabLabel"
           (closed)="this.closeSheet()"
         >
-          <ng-container
-            *ngIf="this.getExploreNavigationParams(this.selectedData!.id) | async as exploreNavigationParams"
+          <ht-explore-filter-link
+            class="filter-link"
+            [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
+            htTooltip="See traces in Explorer"
           >
-            <ht-link class="link" [paramsOrUrl]="exploreNavigationParams">
-              <ht-summary-value
-                data-sensitive-pii
-                icon="${IconType.SpanId}"
-                label="Span ID"
-                [value]="this.selectedData!.id"
-              ></ht-summary-value>
-            </ht-link>
-          </ng-container>
+            <ht-summary-value
+              data-sensitive-pii
+              icon="${IconType.SpanId}"
+              label="Span ID"
+              [value]="this.selectedData!.id"
+            ></ht-summary-value>
+          </ht-explore-filter-link>
         </ht-span-detail>
       </div>
     </ng-template>
@@ -152,9 +152,8 @@ export class WaterfallWidgetRendererComponent
     return this.model.getData();
   }
 
-  public getExploreNavigationParams(spanId: string): Observable<NavigationParams> {
-    return this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.Spans, [
-      { field: 'id', operator: FilterOperator.Equals, value: spanId }
+  public getExploreNavigationParams = (selectedData: WaterfallData | undefined): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.Spans, [
+      { field: 'id', operator: FilterOperator.Equals, value: selectedData!.id }
     ]);
-  }
 }
