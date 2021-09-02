@@ -21,6 +21,13 @@ $font-family: 'Work Sans', sans-serif;
   letter-spacing: -0.02em;
 }
 
+@mixin font-section-heading($color: $gray-7) {
+  @extend %semibold;
+  color: $color;
+  font-size: 32px;
+  line-height: 40px;
+}
+
 @mixin font-heading($color: $gray-7) {
   color: $color;
   font-weight: 500;
