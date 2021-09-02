@@ -34,18 +34,18 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             [value]="traceDetails.timeString"
           ></ht-summary-value>
 
-          <ng-container
-            *ngIf="this.getExploreNavigationParams(traceDetails.traceId) | async as exploreNavigationParams"
+          <ht-explore-filter-link
+            class="filter-link"
+            [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+            htTooltip="See traces in Explorer"
           >
-            <ht-link class="link" [paramsOrUrl]="exploreNavigationParams">
-              <ht-summary-value
-                class="summary-value"
-                icon="${IconType.TraceId}"
-                label="Trace ID"
-                [value]="traceDetails.traceId"
-              ></ht-summary-value>
-            </ht-link>
-          </ng-container>
+            <ht-summary-value
+              class="summary-value"
+              icon="${IconType.TraceId}"
+              label="Trace ID"
+              [value]="traceDetails.traceId"
+            ></ht-summary-value>
+          </ht-explore-filter-link>
 
           <div class="separation"></div>
 
@@ -97,9 +97,8 @@ export class ApiTraceDetailPageComponent {
     this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
 
-  public getExploreNavigationParams(traceId: string): Observable<NavigationParams> {
-    return this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'traceId', operator: FilterOperator.Equals, value: traceId }
+  public getExplorerNavigationParams = (traceDetails: ApiTraceDetails | undefined): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails!.traceId }
     ]);
-  }
 }
