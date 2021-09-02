@@ -50,13 +50,4 @@
 .span-detail {
   height: 100%;
   width: 100%;
-
-  .filter-link {
-    visibility: hidden;
-    margin-left: 12px;
-  }
-
-  &:hover .filter-link {
-    visibility: visible;
-  }
 }
