@@ -5,7 +5,18 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+
+  &.center-alignment {
+    justify-content: center;
+  }
+
+  &.left-alignment {
+    justify-content: flex-start;
+  }
+
+  &.right-alignment {
+    justify-content: flex-end;
+  }
 
   .donut-svg {
     .donut-value-title {
