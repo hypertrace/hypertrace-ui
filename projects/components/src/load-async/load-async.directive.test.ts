@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { IconLibraryTestingModule, IconType, ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
 import { CustomError, NavigationService } from '@hypertrace/common';
 import { createDirectiveFactory, mockProvider, SpectatorDirective } from '@ngneat/spectator/jest';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
@@ -25,7 +25,7 @@ describe('Load Async directive', () => {
 
   beforeEach(() => {
     spectator = createDirective(`
-      <div *htLoadAsync="data$ as data">
+      <div *htLoadAsync="data$ as data; loaderType: '${LoaderType.Page}'">
         <span class="test-data">{{ data }}</span>
       </div>
     `);
@@ -35,7 +35,12 @@ describe('Load Async directive', () => {
     spectator.setHostInput({
       data$: of('content').pipe(delay(0))
     });
+
     expect(spectator.query(LoaderComponent)).toExist();
+    expect(spectator.query('.ht-loader img')).toExist();
+    expect(spectator.query('.ht-loader img')).toHaveClass(LoaderType.Page);
+    expect(spectator.query('.ht-loader img')).toHaveAttribute('src', ImagesAssetPath.LoaderPage);
+
     expect(spectator.query('.test-data')).not.toExist();
     tick();
     spectator.detectChanges();

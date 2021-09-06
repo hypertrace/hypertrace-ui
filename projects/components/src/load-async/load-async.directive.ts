@@ -25,10 +25,10 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
   public data$?: Observable<unknown>;
   @Input()
-  public htLoadAsyncLoaderType!: LoaderType;
+  public htLoadAsyncLoaderType: LoaderType = LoaderType.Spinner;
 
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
-  private wrapperInjector!: Injector;
+  private readonly wrapperInjector!: Injector;
   private wrapperView?: ComponentRef<LoadAsyncWrapperComponent>;
 
   public constructor(

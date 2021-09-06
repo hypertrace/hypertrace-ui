@@ -40,8 +40,10 @@ export class LoadAsyncWrapperComponent {
 
   public content?: TemplateRef<LoadAsyncContext>;
 
-  private readonly loaderTypeSubject: BehaviorSubject<LoaderType> = new BehaviorSubject<LoaderType>(LoaderType.Spinner);
-  public readonly loaderType$: Observable<LoaderType> = this.loaderTypeSubject.asObservable();
+  private readonly loaderTypeSubject: BehaviorSubject<LoaderType | undefined> = new BehaviorSubject<
+    LoaderType | undefined
+  >(undefined);
+  public readonly loaderType$: Observable<LoaderType | undefined> = this.loaderTypeSubject.asObservable();
 
   public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>) {
     this.state$ = parameters$.pipe(
