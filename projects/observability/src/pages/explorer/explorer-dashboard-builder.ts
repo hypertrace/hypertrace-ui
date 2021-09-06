@@ -7,24 +7,24 @@ import {
   TableSortDirection,
   TableStyle
 } from '@hypertrace/components';
-import {
-  AttributeMetadata,
-  AttributeMetadataType,
-  GraphQlFilter,
-  GraphQlFilterDataSourceModel,
-  MetadataService,
-  SPAN_SCOPE,
-  toFilterAttributeType,
-  TracingTableCellType
-} from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../shared/components/table/tracing-table-cell-type';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
+import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+import {
+  AttributeMetadata,
+  AttributeMetadataType,
+  toFilterAttributeType
+} from '../../shared/graphql/model/metadata/attribute-metadata';
+import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 
 // tslint:disable: max-file-line-count
 export class ExplorerDashboardBuilder {

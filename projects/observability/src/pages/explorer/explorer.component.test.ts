@@ -18,15 +18,6 @@ import {
   FilterBuilderLookupService,
   FilterOperator
 } from '@hypertrace/components';
-import {
-  GraphQlFieldFilter,
-  GraphQlOperatorType,
-  MetadataService,
-  MetricAggregationType,
-  SPANS_GQL_REQUEST,
-  SPAN_SCOPE,
-  TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
@@ -34,10 +25,17 @@ import { EMPTY, NEVER, of } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreQueryEditorComponent } from '../../shared/components/explore-query-editor/explore-query-editor.component';
+import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
+import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { EntitiesGraphqlQueryBuilderService } from '../../shared/graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explore/explore-query';
+import { SPANS_GQL_REQUEST } from '../../shared/graphql/request/handlers/spans/spans-graphql-query-handler.service';
+import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';

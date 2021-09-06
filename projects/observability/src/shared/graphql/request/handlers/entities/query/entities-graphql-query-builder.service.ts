@@ -1,15 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Dictionary, forkJoinSafeEmpty } from '@hypertrace/common';
 import {
-  GlobalGraphQlFilterService,
-  GraphQlFilter,
-  GraphQlSelectionBuilder,
-  GraphQlSortBySpecification,
-  GraphQlTimeRange,
-  MetadataService,
-  Specification
-} from '@hypertrace/distributed-tracing';
-import {
   GraphQlArgument,
   GraphQlRequestCacheability,
   GraphQlRequestOptions,
@@ -18,8 +9,15 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityMetadataMap, ENTITY_METADATA } from '../../../../../constants/entity-metadata';
+import { MetadataService } from '../../../../../services/metadata/metadata.service';
 import { Entity, entityIdKey, EntityType, entityTypeKey } from '../../../../model/schema/entity';
+import { GlobalGraphQlFilterService } from '../../../../model/schema/filter/global-graphql-filter.service';
+import { GraphQlFilter } from '../../../../model/schema/filter/graphql-filter';
+import { GraphQlSortBySpecification } from '../../../../model/schema/sort/graphql-sort-by-specification';
+import { Specification } from '../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../model/schema/timerange/graphql-time-range';
 import { GraphQlObservabilityArgumentBuilder } from '../../../builders/argument/graphql-observability-argument-builder';
+import { GraphQlSelectionBuilder } from '../../../builders/selections/graphql-selection-builder';
 
 @Injectable({ providedIn: 'root' })
 export class EntitiesGraphqlQueryBuilderService {

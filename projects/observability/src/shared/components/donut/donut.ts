@@ -34,3 +34,9 @@ export interface DonutResults {
   series: DonutSeries[];
   center?: DonutCenter;
 }
+
+export const enum DonutAlignmentStyle {
+  Left = 'left-alignment',
+  Center = 'center-alignment',
+  Right = 'right-alignment'
+}

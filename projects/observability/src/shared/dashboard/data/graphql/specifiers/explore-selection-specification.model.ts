@@ -1,12 +1,13 @@
 import { Dictionary } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { MetricAggregationType, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import {
   ExploreSpecification,
   ExploreValue
 } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'explore-selection',

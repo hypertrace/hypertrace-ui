@@ -1,6 +1,7 @@
 import { Dictionary } from '@hypertrace/common';
-import { Specification, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
+import { SpecificationModel } from '../specification.model';
 import {
   ExploreSpecification,
   ExploreValue

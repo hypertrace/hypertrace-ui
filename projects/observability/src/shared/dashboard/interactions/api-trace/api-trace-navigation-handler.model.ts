@@ -1,14 +1,10 @@
-import {
-  InteractionHandler,
-  Trace,
-  traceIdKey,
-  traceTypeKey,
-  TracingNavigationService
-} from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
+import { Trace, traceIdKey, traceTypeKey } from '../../../graphql/model/schema/trace';
+import { TracingNavigationService } from '../../../services/navigation/tracing-navigation.service';
+import { InteractionHandler } from '../../interaction/interaction-handler';
 
 @Model({
   type: 'api-trace-navigation-handler'

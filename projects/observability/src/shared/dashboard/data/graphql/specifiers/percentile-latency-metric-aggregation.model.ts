@@ -1,12 +1,13 @@
 import { Dictionary } from '@hypertrace/common';
-import { MetricAggregationType, SpecificationModel } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { GraphQlMetricAggregation } from '../../../../graphql/model/schema/metric/graphql-metric-aggregation';
 import {
   PercentileLatencyMetricAggregation,
   PercentileLatencyMetricAggregationSpecification
 } from '../../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
+import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'percentile-latency-metric-aggregation',

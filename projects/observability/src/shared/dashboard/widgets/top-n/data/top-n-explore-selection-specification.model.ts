@@ -1,4 +1,3 @@
-import { GraphQlFilter } from '@hypertrace/distributed-tracing';
 import {
   ARRAY_PROPERTY,
   Model,
@@ -7,6 +6,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSelectionSpecificationModel } from '../../../data/graphql/specifiers/explore-selection-specification.model';
 
