@@ -24,7 +24,7 @@ import { RadioOption } from './radio-option';
       >
         <ng-container
           *ngTemplateOutlet="
-            this.isLabelAsString(option.label) ? defaultLabel : option.label;
+            this.isLabelAString(option.label) ? defaultLabel : option.label;
             context: { $implicit: option.label }
           "
         ></ng-container>
@@ -74,7 +74,7 @@ export class RadioGroupComponent implements OnInit {
     this.selectedChange.emit(event.value);
   }
 
-  public isLabelAsString(label: string | TemplateRef<unknown>): boolean {
+  public isLabelAString(label: string | TemplateRef<unknown>): boolean {
     return typeof label === 'string';
   }
 }
