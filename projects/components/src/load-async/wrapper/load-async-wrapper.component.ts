@@ -72,6 +72,6 @@ export class LoadAsyncWrapperComponent {
 
 export interface LoadAsyncWrapperParameters {
   state$: Observable<AsyncState>;
-  loaderType: LoaderType;
+  loaderType?: LoaderType;
   content: TemplateRef<LoadAsyncContext>;
 }

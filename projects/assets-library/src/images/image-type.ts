@@ -6,7 +6,7 @@ export const enum ImagesAssetPath {
 }
 
 export const enum LoaderType {
-  Spinner = 'small-circle',
-  ExpandableRow = 'horizontal',
-  Page = 'large-square'
+  Spinner = 'spinner',
+  ExpandableRow = 'expandable-row',
+  Page = 'page'
 }

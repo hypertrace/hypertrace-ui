@@ -14,9 +14,9 @@ import { assertUnreachable } from '@hypertrace/common';
 })
 export class LoaderComponent implements OnChanges {
   @Input()
-  public type!: LoaderType;
+  public type: LoaderType = LoaderType.Spinner;
 
-  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderExpandableRow;
+  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
 
   public ngOnChanges(): void {
     this.imagePath = this.getImagePathFromType();
