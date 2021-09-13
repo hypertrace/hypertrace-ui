@@ -56,6 +56,10 @@
     @include button-style($blue-5, $blue-4, white, white);
   }
 
+  &.primary-reversed {
+    @include button-style($blue-1, $blue-2, $blue-4, $blue-4);
+  }
+
   &.secondary {
     @include button-style($gray-7, $gray-5, white, white);
   }
@@ -76,6 +80,10 @@
 .bordered {
   &.primary {
     @include button-style(inherit, $blue-1, $gray-7, $gray-7, $blue-5);
+  }
+
+  &.primary-reversed {
+    @include button-style(inherit, $blue-2, $gray-7, $gray-7, $blue-1);
   }
 
   &.secondary {
@@ -100,6 +108,10 @@
     @include button-style(inherit, $blue-1, $blue-5, $blue-5);
   }
 
+  &.primary-reversed {
+    @include button-style(inherit, $blue-2, $gray-7, $gray-7);
+  }
+
   &.secondary {
     @include button-style(inherit, $gray-1, $gray-7, $gray-7);
   }
@@ -121,6 +133,10 @@
 .plain-text {
   &.primary {
     @include button-style(inherit, inherit, $blue-5, $blue-4);
+  }
+
+  &.primary-reversed {
+    @include button-style(inherit, inherit, $blue-1, $blue-2);
   }
 
   &.secondary {

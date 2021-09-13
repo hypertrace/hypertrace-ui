@@ -1,6 +1,7 @@
 export const enum ButtonRole {
   // These values are used as css classes
   Primary = 'primary',
+  PrimaryReversed = 'primary-reversed',
   Secondary = 'secondary',
   Tertiary = 'tertiary',
   Destructive = 'destructive',
