@@ -1,7 +1,7 @@
+import { Injectable } from '@angular/core';
+import * as FullStory from '@fullstory/browser';
 import { Dictionary } from '../../../utilities/types/types';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from './../../telemetry';
-import * as FullStory from '@fullstory/browser';
-import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
@@ -15,7 +15,7 @@ export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
 
   public identify(userTraits: UserTraits): void {
     FullStory.setUserVars({
-      displayName: userTraits.name ?? `${userTraits.givenName} ${userTraits.familyName}`,
+      displayName: userTraits.name ?? `${userTraits.givenName as string} ${userTraits.familyName as string}`,
       email: userTraits.email,
       companyName: userTraits.companyName,
       licenseTier: userTraits.licenseTier,

@@ -1,7 +1,7 @@
+import { Injectable } from '@angular/core';
+import mixpanel from 'mixpanel-browser';
 import { Dictionary } from '../../../utilities/types/types';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
-import mixpanel from 'mixpanel-browser';
-import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class MixPanelTelemetry<InitConfig extends TelemetryProviderConfig>
@@ -13,7 +13,7 @@ export class MixPanelTelemetry<InitConfig extends TelemetryProviderConfig>
   public identify(userTraits: UserTraits): void {
     mixpanel.identify(userTraits.email);
     mixpanel.people.set({
-      displayName: userTraits.name ?? `${userTraits.givenName} ${userTraits.familyName}`,
+      displayName: userTraits.name ?? `${String(userTraits.givenName)} ${String(userTraits.familyName)}`,
       email: userTraits.email,
       companyName: userTraits.companyName,
       licenseTier: userTraits.licenseTier,

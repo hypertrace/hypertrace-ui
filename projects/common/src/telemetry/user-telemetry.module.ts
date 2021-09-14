@@ -1,4 +1,4 @@
-import { Inject, ModuleWithProviders, NgModule, ErrorHandler } from '@angular/core';
+import { ErrorHandler, Inject, ModuleWithProviders, NgModule } from '@angular/core';
 import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
 import { UserTelemetryRegistrationConfig, USER_TELEMETRY_PROVIDER_TOKENS } from './telemetry';
 import { TrackDirective } from './track/track.directive';

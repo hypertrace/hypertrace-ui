@@ -1,9 +1,9 @@
 import { Injectable, Injector, OnDestroy } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { Dictionary } from '../utilities/types/types';
 import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, takeUntil } from 'rxjs/operators';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserTelemetryInternalService implements OnDestroy {
@@ -43,7 +43,9 @@ export class UserTelemetryInternalService implements OnDestroy {
       const providers = configs.map(config => this.buildTelemetryProvider(config));
       this.telemetryProviders = [...this.telemetryProviders, ...providers];
     } catch (error) {
-      console.trace(error);
+      /**
+       * NoOp
+       */
     }
   }
 
