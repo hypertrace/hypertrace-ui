@@ -64,6 +64,10 @@
     @include button-style($gray-1, $gray-2, $gray-7, $gray-7);
   }
 
+  &.quaternary {
+    @include button-style($blue-1, $blue-2, $blue-4, $blue-4);
+  }
+
   &.destructive {
     @include button-style($red-5, $red-7, white, white);
   }
@@ -84,6 +88,10 @@
 
   &.tertiary {
     @include button-style(inherit, $gray-1, $gray-7, $gray-7, $gray-2);
+  }
+
+  &.quaternary {
+    @include button-style(inherit, $blue-2, $gray-7, $gray-7, $blue-1);
   }
 
   &.destructive {
@@ -108,6 +116,10 @@
     @include button-style(inherit, $gray-1, $gray-5, $gray-5);
   }
 
+  &.quaternary {
+    @include button-style(inherit, $blue-2, $gray-7, $gray-7);
+  }
+
   &.destructive {
     @include button-style(inherit, $red-1, $red-5, $red-5);
   }
@@ -123,12 +135,20 @@
     @include button-style(inherit, inherit, $blue-5, $blue-4);
   }
 
+  &.primary-reversed {
+    @include button-style(inherit, inherit, $blue-1, $blue-2);
+  }
+
   &.secondary {
     @include button-style(inherit, inherit, $gray-7, $gray-5);
   }
 
   &.tertiary {
     @include button-style(inherit, inherit, $gray-5, $gray-6);
+  }
+
+  &.quaternary {
+    @include button-style(inherit, $blue-2, $gray-7, $gray-7);
   }
 
   &.destructive {
