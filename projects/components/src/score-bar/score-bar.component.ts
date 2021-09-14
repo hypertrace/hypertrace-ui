@@ -10,26 +10,27 @@ import {
 import { Color } from '@hypertrace/common';
 
 @Component({
-  selector: 'trace-score-bar',
+  selector: 'ht-score-bar',
   styleUrls: ['./score-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="score-bar" #scoreBarContainer>
-      <div
-        *ngIf="this.isSingleBarDisplay; else pillScoreBar"
-        class="continuous"
-      >
+      <div *ngIf="this.isSingleBarDisplay; else pillScoreBar" class="continuous">
         <div class="fill" [ngStyle]="{ width: this.fillWidth, backgroundColor: this.fillColor }"></div>
       </div>
 
       <ng-template #pillScoreBar>
         <div class="pills">
-          <div *ngFor="let pill of this.pills; index as index" class="pill" [htTooltip]="pill.value"
-               [ngStyle]="{ backgroundColor: pill.color, width: this.pillWidth }"></div>
+          <div
+            *ngFor="let pill of this.pills; index as index"
+            class="pill"
+            [htTooltip]="pill.value"
+            [ngStyle]="{ backgroundColor: pill.color, width: this.pillWidth }"
+          ></div>
         </div>
       </ng-template>
     </div>
-  `,
+  `
 })
 export class ScoreBarComponent implements OnChanges, AfterViewInit {
   @Input()
@@ -59,7 +60,7 @@ export class ScoreBarComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(): void {
     this.isSingleBarDisplay = this.displayType === ScoreBarDisplayType.Single;
 
-    if(this.isSingleBarDisplay) {
+    if (this.isSingleBarDisplay) {
       this.fillWidth = this.computeWidth();
     } else {
       this.pills = this.createPills();
@@ -68,7 +69,9 @@ export class ScoreBarComponent implements OnChanges, AfterViewInit {
 
   public ngAfterViewInit(): void {
     if (this.displayType === ScoreBarDisplayType.Pill) {
-      this.pillWidth = `${(this.progressBarContainer.nativeElement.offsetWidth as number - ((this.max! -1) * 3)) / this.max!}px`;
+      this.pillWidth = `${
+        ((this.progressBarContainer.nativeElement.offsetWidth as number) - (this.max! - 1) * 3) / this.max!
+      }px`;
     }
   }
 
@@ -77,17 +80,20 @@ export class ScoreBarComponent implements OnChanges, AfterViewInit {
       return `${this.value}%`;
     }
 
-    return `${(this.value/this.max!) * 100}%`;
+    return `${(this.value / this.max!) * 100}%`;
   }
 
   private createPills(): PillData[] {
     // Pill view do not support percentage values yet.
-    return [...Array(this.max!).keys()].map(key => ({ color: key < this.value ? this.fillColor : Color.Gray1, value: key+1}));
+    return [...Array(this.max!).keys()].map(key => ({
+      color: key < this.value ? this.fillColor : Color.Gray1,
+      value: key + 1
+    }));
   }
 }
 
 export const enum ScoreBarValueType {
-  Percentage= 'percentage',
+  Percentage = 'percentage',
   // If type is absolute, max is required
   Absolute = 'absolute'
 }

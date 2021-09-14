@@ -4,18 +4,9 @@ import { MemoizeModule } from '@hypertrace/common';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { ScoreBarComponent } from './score-bar.component';
 
-
 @NgModule({
-  declarations: [
-    ScoreBarComponent
-  ],
-  imports: [
-    CommonModule,
-    MemoizeModule,
-    TooltipModule
-  ],
-  exports: [
-    ScoreBarComponent
-  ]
+  declarations: [ScoreBarComponent],
+  imports: [CommonModule, MemoizeModule, TooltipModule],
+  exports: [ScoreBarComponent]
 })
-export class ScoreBarModule { }
+export class ScoreBarModule {}
