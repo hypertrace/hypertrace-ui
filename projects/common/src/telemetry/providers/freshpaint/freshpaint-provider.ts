@@ -1,32 +1,29 @@
-import { Dictionary } from '../../../utilities/types/types';
-import { TelemetryProviderConfig, UserTelemetry, UserTelemetryConfig, UserTraits } from '../../telemetry';
-import { loadFreshPaint } from './load-snippet';
+import { Dictionary } from './../../../utilities/types/types';
+import { Injectable } from '@angular/core';
+import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
+import { FreshPaint, loadFreshPaint } from './load-snippet';
 
-export class FreshPaintTelemetry implements UserTelemetry {
-  public initialized: boolean = false;
+@Injectable({ providedIn: 'root' })
+export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
+  implements UserTelemetryProvider<InitConfig> {
+  private freshPaint?: FreshPaint;
 
-  public constructor(public readonly config: UserTelemetryConfig<TelemetryProviderConfig>) {}
-
-  public initialize(): void {
-    const freshPaint = loadFreshPaint();
-    freshPaint.init(this.config.telemetryProviderConfig.orgId);
-    freshPaint.page();
-
-    this.initialized = true;
+  public initialize(config: InitConfig): void {
+    this.freshPaint = loadFreshPaint();
+    this.freshPaint.init(config.orgId);
+    // this.freshPaint.page();
   }
 
-  public isInitialized(): boolean {
-    return this.initialized;
+  public identify(userTraits: UserTraits): void {
+    this.freshPaint?.identify(userTraits.email, userTraits);
+    this.freshPaint?.addEventProperties(userTraits);
   }
 
-  public identify(_userTraits: UserTraits): void {}
-
-  public trackEvent(_name: string, _eventData: Dictionary<unknown>): void {}
-
-  public trackPage(_url: string): void {
-    if (this.config.enablePageTracking) {
-    }
+  public trackEvent(name: string, properties: Dictionary<unknown>): void {
+    this.freshPaint!.track(name, properties);
   }
 
-  public shutdown(): void {}
+  public trackPage(name: string, eventData: Dictionary<unknown>): void {
+    this.freshPaint!.track(name, eventData);
+  }
 }

@@ -1,70 +1,142 @@
-import { FreshPaintTelemetry } from './providers/freshpaint/freshpaint-provider';
-import { FullStoryTelemetry } from './providers/fullstory/full-story-provider';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { Dictionary } from '../utilities/types/types';
-import { UserTelemetry, UserTelemetryConfig, UserTelemetryType, UserTraits } from './telemetry';
+import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class UserTelemetryInternalService {
-  private readonly registeredTelemetryProviderMap: Map<string, UserTelemetry> = new Map();
-  private initializedTelemetryProviders: UserTelemetry[] = [];
+export class UserTelemetryInternalService implements OnDestroy {
+  private telemetryProviders: UserTelemetryProvider[] = [];
+  private readonly telemetryActionSubject: Subject<TelemetryAction> = new ReplaySubject();
+  private readonly telemetryAction$: Observable<TelemetryAction> = this.telemetryActionSubject.pipe();
 
-  public constructor(private readonly router: Router) {}
+  private readonly destroyedSubject: ReplaySubject<void> = new ReplaySubject();
 
-  public register(config: UserTelemetryConfig): void {
-    this.registeredTelemetryProviderMap.set(config.telemetryProvider, this.buildTelemetryProvider(config));
+  public constructor(private readonly injector: Injector, private readonly router: Router) {
+    this.setupAutomaticPageTracking();
+    this.setupAutomaticErrorTracking();
+    this.setupTelemetryActionHandlers();
   }
 
-  public initialize(): void {
-    const allProviders = Array.from(this.registeredTelemetryProviderMap.values());
+  public ngOnDestroy(): void {
+    this.destroyedSubject.next();
+    this.destroyedSubject.complete();
+  }
 
-    allProviders
-      .filter(telemetryProvider => !telemetryProvider.initialized)
-      .forEach(telemetryProvider => telemetryProvider.initialize());
-
-    this.initializedTelemetryProviders = allProviders.filter(telemetryProvider => telemetryProvider.initialized);
-    this.maybeSetupPageTracking();
+  public register(...configs: UserTelemetryRegistrationConfig<unknown>[]): void {
+    try {
+      const providers = configs.map(config => this.buildTelemetryProvider(config));
+      this.telemetryProviders = [...this.telemetryProviders, ...providers];
+    } catch (error) {
+      console.trace(error);
+    }
   }
 
   public identify(userTraits: UserTraits): void {
-    this.initializedTelemetryProviders.forEach(telemetryProvider => telemetryProvider.identify(userTraits));
+    this.telemetryActionSubject.next({ type: TelemetryActionType.Identify, data: userTraits });
   }
 
   public shutdown(): void {
-    this.initializedTelemetryProviders.forEach(telemetryProvider => telemetryProvider.shutdown());
+    this.telemetryActionSubject.next({ type: TelemetryActionType.Shutdown });
   }
 
-  public trackEvent(_name: string, _data: Dictionary<unknown>): void {
-    this.initializedTelemetryProviders.forEach(telemetryProvider => telemetryProvider.shutdown());
+  public trackEvent(name: string, data: Dictionary<unknown>): void {
+    this.telemetryActionSubject.next({ type: TelemetryActionType.TrackEvent, name: name, data: data });
   }
 
-  public trackPageEvent(url: string): void {
-    this.initializedTelemetryProviders.forEach(telemetryProvider => telemetryProvider.trackPage(url));
+  public trackPageEvent(url: string, data: Dictionary<unknown>): void {
+    this.telemetryActionSubject.next({ type: TelemetryActionType.TrackPageView, name: url, data: data });
   }
 
-  private buildTelemetryProvider(config: UserTelemetryConfig): UserTelemetry {
-    switch (config.telemetryProvider) {
-      case UserTelemetryType.FreshPaint:
-        return new FreshPaintTelemetry(config);
-
-      case UserTelemetryType.FullStory:
-      default:
-        return new FullStoryTelemetry(config);
-    }
+  public trackErrorEvent(error: string, data: Dictionary<unknown>): void {
+    this.telemetryActionSubject.next({ type: TelemetryActionType.TrackError, name: error, data: data });
   }
 
-  private maybeSetupPageTracking(): void {
-    const enablePageTracking = this.initializedTelemetryProviders.some(provider => provider.config.enablePageTracking);
+  private buildTelemetryProvider(config: UserTelemetryRegistrationConfig<unknown>): UserTelemetryProvider {
+    const provider = this.injector.get(config.telemetryProvider);
+    provider.initialize(config.initConfig);
 
-    if (enablePageTracking) {
-      this.router.events
-        .pipe(
-          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-          map(route => this.trackPageEvent(route.url))
-        )
-        .subscribe();
-    }
+    return provider;
   }
+
+  private setupTelemetryActionHandlers(): void {
+    this.setupIdentifyHandler();
+    this.setupTrackEventHandler();
+    this.setupTrackPageHandler();
+    this.setupTrackErrorHandler();
+  }
+
+  private setupIdentifyHandler(): void {
+    this.telemetryAction$
+      .pipe(
+        filter(action => action.type === TelemetryActionType.Identify),
+        map(action => this.telemetryProviders.forEach(provider => provider.identify(action.data as UserTraits))),
+        takeUntil(this.destroyedSubject)
+      )
+      .subscribe();
+  }
+
+  private setupTrackEventHandler(): void {
+    this.telemetryAction$
+      .pipe(
+        filter(action => action.type === TelemetryActionType.TrackEvent),
+        map(action => this.telemetryProviders.forEach(provider => provider.trackEvent?.(action.name!, action.data!))),
+        takeUntil(this.destroyedSubject)
+      )
+      .subscribe();
+  }
+
+  private setupTrackPageHandler(): void {
+    this.telemetryAction$
+      .pipe(
+        filter(action => action.type === TelemetryActionType.TrackPageView),
+        map(action => this.telemetryProviders.forEach(provider => provider.trackPage?.(action.name!, action.data!))),
+        takeUntil(this.destroyedSubject)
+      )
+      .subscribe();
+  }
+
+  private setupTrackErrorHandler(): void {
+    this.telemetryAction$
+      .pipe(
+        filter(action => action.type === TelemetryActionType.TrackError),
+        map(action => this.telemetryProviders.forEach(provider => provider.trackError?.(action.name!, action.data!))),
+        takeUntil(this.destroyedSubject)
+      )
+      .subscribe();
+  }
+
+  private setupAutomaticPageTracking(): void {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        map(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url })),
+        takeUntil(this.destroyedSubject)
+      )
+      .subscribe();
+  }
+
+  private setupAutomaticErrorTracking(): void {
+    //   const trackError = this.trackErrorEvent;
+    //   window.onerror = function(msg, url, lineNo, columnNo, error){
+    //     console.log(`Error: ${msg}, url:${url}, lineNo: ${lineNo}, columnNo: ${columnNo}, error: ${error}`);
+    //     trackError(`Error: ${msg}, url:${url}, lineNo: ${lineNo}, columnNo: ${columnNo}, error: ${error}`, {msg, url, lineNo, columnNo, error, stack: error?.stack});
+    //     return false;
+    //   }
+  }
+}
+
+interface TelemetryAction {
+  type: TelemetryActionType;
+  name?: string;
+  data?: Dictionary<unknown>;
+}
+
+const enum TelemetryActionType {
+  Identify,
+  TrackPageView,
+  TrackEvent,
+  TrackError,
+  Shutdown
 }
