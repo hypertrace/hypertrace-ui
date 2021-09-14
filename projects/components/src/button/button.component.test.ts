@@ -39,12 +39,6 @@ describe('Button Component', () => {
     });
     expect(spectator.query('.button')).toHaveClass('button primary small solid');
 
-    // Primary Reversed
-    spectator.setInput({
-      role: ButtonRole.PrimaryReversed
-    });
-    expect(spectator.query('.button')).toHaveClass('button primary-reversed small solid');
-
     // Secondary
     spectator.setInput({
       role: ButtonRole.Secondary
@@ -56,6 +50,12 @@ describe('Button Component', () => {
       role: ButtonRole.Tertiary
     });
     expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
+
+    // Quaternary
+    spectator.setInput({
+      role: ButtonRole.Quaternary
+    });
+    expect(spectator.query('.button')).toHaveClass('button quaternary small solid');
 
     // Destructive
     spectator.setInput({
