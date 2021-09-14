@@ -337,3 +337,7 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
+
+// Score bar
+export * from './score-bar/score-bar.module';
+export * from './score-bar/score-bar.component';
