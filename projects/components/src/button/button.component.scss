@@ -135,10 +135,6 @@
     @include button-style(inherit, inherit, $blue-5, $blue-4);
   }
 
-  &.primary-reversed {
-    @include button-style(inherit, inherit, $blue-1, $blue-2);
-  }
-
   &.secondary {
     @include button-style(inherit, inherit, $gray-7, $gray-5);
   }
@@ -148,7 +144,7 @@
   }
 
   &.quaternary {
-    @include button-style(inherit, $blue-2, $gray-7, $gray-7);
+    @include button-style(inherit, inherit, $blue-1, $blue-2);
   }
 
   &.destructive {
