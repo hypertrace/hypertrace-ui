@@ -9,7 +9,7 @@ import { ButtonRole, ButtonSize, ButtonStyle } from './button';
   styleUrls: ['./button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-event-blocker class="button-container" [enabled]="this.disabled">
+    <ht-event-blocker event="click" class="button-container" [enabled]="this.disabled">
       <button class="button" [ngClass]="this.getStyleClasses()">
         <ht-icon
           *ngIf="this.icon && !this.trailingIcon"

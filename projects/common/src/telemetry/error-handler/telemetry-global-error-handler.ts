@@ -1,9 +1,9 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { UserTelemetryInternalService } from './user-telemetry-internal.service';
+import { UserTelemetryInternalService } from '../user-telemetry-internal.service';
 
 @Injectable()
-export class GlobalErrorHandler implements ErrorHandler {
+export class TelemetryGlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector) {}
 
   public handleError(error: Error) {
@@ -13,7 +13,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const message = error.message ? error.message : error.toString();
     const url = location instanceof PathLocationStrategy ? location.path() : '';
 
-    telemetryService.trackErrorEvent(message, { message, url, stack: error.stack, name: error.name });
+    telemetryService.trackErrorEvent(message, { message, url, stack: error.stack, name: error.name, isError: true });
 
     throw error;
   }

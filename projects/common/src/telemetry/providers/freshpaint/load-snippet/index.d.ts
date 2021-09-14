@@ -6,7 +6,7 @@ export interface FreshPaint {
   identify(userVars?: UserVars): void;
   track(eventName: string, properties?: {}): void;
   addEventProperties(userVars?: UserVars): void;
-  page(): void;
+  page(category?: string, name?: string, userVars?: UserVars): void;
 }
 
 interface UserVars {

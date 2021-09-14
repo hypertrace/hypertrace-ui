@@ -1,5 +1,5 @@
 import { Inject, ModuleWithProviders, NgModule, ErrorHandler } from '@angular/core';
-import { GlobalErrorHandler } from './global-error-handler';
+import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
 import { UserTelemetryRegistrationConfig, USER_TELEMETRY_PROVIDER_TOKENS } from './telemetry';
 import { TrackDirective } from './track/track.directive';
 import { UserTelemetryInternalService } from './user-telemetry-internal.service';
@@ -15,7 +15,7 @@ import { UserTelemetryInternalService } from './user-telemetry-internal.service'
     },
     {
       provide: ErrorHandler,
-      useClass: GlobalErrorHandler
+      useClass: TelemetryGlobalErrorHandler
     }
   ]
 })

@@ -11,7 +11,7 @@ export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
   public initialize(config: InitConfig): void {
     this.freshPaint = loadFreshPaint();
     this.freshPaint.init(config.orgId);
-    // this.freshPaint.page();
+    this.freshPaint.page();
   }
 
   public identify(userTraits: UserTraits): void {
@@ -20,10 +20,14 @@ export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
   }
 
   public trackEvent(name: string, properties: Dictionary<unknown>): void {
-    this.freshPaint!.track(name, properties);
+    this.freshPaint?.track(name, properties);
   }
 
   public trackPage(name: string, eventData: Dictionary<unknown>): void {
-    this.freshPaint!.track(name, eventData);
+    this.freshPaint?.page('', name, eventData);
+  }
+
+  public trackError(name: string, eventData: Dictionary<unknown>): void {
+    this.freshPaint?.track(name, eventData);
   }
 }

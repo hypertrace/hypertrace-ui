@@ -33,6 +33,10 @@ export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
     FullStory.event(name, eventData);
   }
 
+  public trackError(name: string, eventData: Dictionary<unknown>): void {
+    FullStory.event(name, eventData);
+  }
+
   public shutdown(): void {
     FullStory.shutdown();
   }

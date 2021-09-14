@@ -7,21 +7,35 @@ import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserTelemetryInternalService implements OnDestroy {
-  private telemetryProviders: UserTelemetryProvider[] = [];
-  private readonly telemetryActionSubject: Subject<TelemetryAction> = new ReplaySubject();
-  private readonly telemetryAction$: Observable<TelemetryAction> = this.telemetryActionSubject.pipe();
-
+  private telemetryProviders: UserTelemetryInternalConfig[] = [];
   private readonly destroyedSubject: ReplaySubject<void> = new ReplaySubject();
 
-  public constructor(private readonly injector: Injector, private readonly router: Router) {
-    this.setupAutomaticPageTracking();
-    this.setupAutomaticErrorTracking();
-    this.setupTelemetryActionHandlers();
-  }
+  private readonly telemetryActionSubject: Subject<TelemetryAction> = new ReplaySubject();
+  private readonly telemetryAction$: Observable<TelemetryAction>;
+  private readonly identifyAction$: Observable<TelemetryAction>;
+  private readonly trackEventAction$: Observable<TelemetryAction>;
+  private readonly trackPageAction$: Observable<TelemetryAction>;
+  private readonly trackErrorAction$: Observable<TelemetryAction>;
 
-  public ngOnDestroy(): void {
-    this.destroyedSubject.next();
-    this.destroyedSubject.complete();
+  public constructor(private readonly injector: Injector, private readonly router: Router) {
+    this.telemetryAction$ = this.telemetryActionSubject.pipe(takeUntil(this.destroyedSubject));
+
+    this.identifyAction$ = this.telemetryAction$.pipe(filter(action => action.type === TelemetryActionType.Identify));
+
+    this.trackEventAction$ = this.telemetryAction$.pipe(
+      filter(action => action.type === TelemetryActionType.TrackEvent)
+    );
+
+    this.trackPageAction$ = this.telemetryAction$.pipe(
+      filter(action => action.type === TelemetryActionType.TrackPageView)
+    );
+
+    this.trackErrorAction$ = this.telemetryAction$.pipe(
+      filter(action => action.type === TelemetryActionType.TrackError)
+    );
+
+    this.setupAutomaticPageTracking();
+    this.setupTelemetryActionHandlers();
   }
 
   public register(...configs: UserTelemetryRegistrationConfig<unknown>[]): void {
@@ -31,6 +45,11 @@ export class UserTelemetryInternalService implements OnDestroy {
     } catch (error) {
       console.trace(error);
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyedSubject.next();
+    this.destroyedSubject.complete();
   }
 
   public identify(userTraits: UserTraits): void {
@@ -53,11 +72,14 @@ export class UserTelemetryInternalService implements OnDestroy {
     this.telemetryActionSubject.next({ type: TelemetryActionType.TrackError, name: error, data: data });
   }
 
-  private buildTelemetryProvider(config: UserTelemetryRegistrationConfig<unknown>): UserTelemetryProvider {
-    const provider = this.injector.get(config.telemetryProvider);
-    provider.initialize(config.initConfig);
+  private buildTelemetryProvider(config: UserTelemetryRegistrationConfig<unknown>): UserTelemetryInternalConfig {
+    const providerInstance = this.injector.get(config.telemetryProvider);
+    providerInstance.initialize(config.initConfig);
 
-    return provider;
+    return {
+      ...config,
+      telemetryProvider: providerInstance
+    };
   }
 
   private setupTelemetryActionHandlers(): void {
@@ -68,43 +90,33 @@ export class UserTelemetryInternalService implements OnDestroy {
   }
 
   private setupIdentifyHandler(): void {
-    this.telemetryAction$
-      .pipe(
-        filter(action => action.type === TelemetryActionType.Identify),
-        map(action => this.telemetryProviders.forEach(provider => provider.identify(action.data as UserTraits))),
-        takeUntil(this.destroyedSubject)
-      )
-      .subscribe();
+    this.identifyAction$.subscribe(action =>
+      this.telemetryProviders.forEach(provider => provider.telemetryProvider.identify(action.data as UserTraits))
+    );
   }
 
   private setupTrackEventHandler(): void {
-    this.telemetryAction$
-      .pipe(
-        filter(action => action.type === TelemetryActionType.TrackEvent),
-        map(action => this.telemetryProviders.forEach(provider => provider.trackEvent?.(action.name!, action.data!))),
-        takeUntil(this.destroyedSubject)
-      )
-      .subscribe();
+    this.trackEventAction$.subscribe(action =>
+      this.telemetryProviders
+        .filter(provider => provider.enableEventTracking)
+        .forEach(provider => provider.telemetryProvider.trackEvent?.(action.name!, action.data!))
+    );
   }
 
   private setupTrackPageHandler(): void {
-    this.telemetryAction$
-      .pipe(
-        filter(action => action.type === TelemetryActionType.TrackPageView),
-        map(action => this.telemetryProviders.forEach(provider => provider.trackPage?.(action.name!, action.data!))),
-        takeUntil(this.destroyedSubject)
-      )
-      .subscribe();
+    this.trackPageAction$.subscribe(action =>
+      this.telemetryProviders
+        .filter(provider => provider.enablePageTracking)
+        .forEach(provider => provider.telemetryProvider.trackPage?.(action.name!, action.data!))
+    );
   }
 
   private setupTrackErrorHandler(): void {
-    this.telemetryAction$
-      .pipe(
-        filter(action => action.type === TelemetryActionType.TrackError),
-        map(action => this.telemetryProviders.forEach(provider => provider.trackError?.(action.name!, action.data!))),
-        takeUntil(this.destroyedSubject)
-      )
-      .subscribe();
+    this.trackErrorAction$.subscribe(action =>
+      this.telemetryProviders
+        .filter(provider => provider.enableErrorTracking)
+        .forEach(provider => provider.telemetryProvider.trackError?.(`Error: ${action.name!}`, action.data!))
+    );
   }
 
   private setupAutomaticPageTracking(): void {
@@ -116,15 +128,14 @@ export class UserTelemetryInternalService implements OnDestroy {
       )
       .subscribe();
   }
+}
 
-  private setupAutomaticErrorTracking(): void {
-    //   const trackError = this.trackErrorEvent;
-    //   window.onerror = function(msg, url, lineNo, columnNo, error){
-    //     console.log(`Error: ${msg}, url:${url}, lineNo: ${lineNo}, columnNo: ${columnNo}, error: ${error}`);
-    //     trackError(`Error: ${msg}, url:${url}, lineNo: ${lineNo}, columnNo: ${columnNo}, error: ${error}`, {msg, url, lineNo, columnNo, error, stack: error?.stack});
-    //     return false;
-    //   }
-  }
+interface UserTelemetryInternalConfig<InitConfig = unknown> {
+  telemetryProvider: UserTelemetryProvider<InitConfig>;
+  initConfig: InitConfig;
+  enablePageTracking: boolean;
+  enableEventTracking: boolean;
+  enableErrorTracking: boolean;
 }
 
 interface TelemetryAction {
