@@ -1,0 +1,33 @@
+import { InjectionToken, ProviderToken } from '@angular/core';
+import { Dictionary } from './../utilities/types/types';
+export interface UserTraits extends Dictionary<unknown> {
+  email?: string;
+  companyName?: string;
+  name?: string;
+  displayName?: string;
+}
+
+export interface UserTelemetryRegistrationConfig<InitConfig> {
+  telemetryProvider: ProviderToken<UserTelemetryProvider<InitConfig>>;
+  initConfig: InitConfig;
+  enablePageTracking: boolean;
+  enableEventTracking: boolean;
+  enableErrorTracking: boolean;
+}
+
+export interface UserTelemetryProvider<InitConfig = unknown> {
+  initialize(config: InitConfig): void;
+  identify(userTraits: UserTraits): void;
+  trackEvent?(name: string, eventData: Dictionary<unknown>): void;
+  trackPage?(url: string, eventData: Dictionary<unknown>): void;
+  trackError?(error: string, eventData: Dictionary<unknown>): void;
+  shutdown?(): void;
+}
+
+export interface TelemetryProviderConfig {
+  orgId: string;
+}
+
+export const USER_TELEMETRY_PROVIDER_TOKENS = new InjectionToken<UserTelemetryRegistrationConfig<unknown>[][]>(
+  'USER_TELEMETRY_PROVIDER_TOKENS'
+);
