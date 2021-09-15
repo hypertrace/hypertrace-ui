@@ -1,34 +1,17 @@
-import { ErrorHandler, Inject, ModuleWithProviders, NgModule } from '@angular/core';
-import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
+import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
 import { UserTelemetryRegistrationConfig, USER_TELEMETRY_PROVIDER_TOKENS } from './telemetry';
-import { TrackDirective } from './track/track.directive';
 import { UserTelemetryInternalService } from './user-telemetry-internal.service';
 
-@NgModule({
-  declarations: [TrackDirective],
-  exports: [TrackDirective],
-  providers: [
-    {
-      provide: USER_TELEMETRY_PROVIDER_TOKENS,
-      useValue: [],
-      multi: true
-    },
-    {
-      provide: ErrorHandler,
-      useClass: TelemetryGlobalErrorHandler
-    }
-  ]
-})
-// tslint:disable-next-line: no-unnecessary-class
+@NgModule()
 export class UserTelemetryModule {
   public constructor(
-    userTelemetryInternalService: UserTelemetryInternalService,
-    @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][]
+    @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][],
+    userTelemetryInternalService: UserTelemetryInternalService
   ) {
     userTelemetryInternalService.register(...providerConfigs.flat());
   }
 
-  public static withProviders(
+  public static forRoot(
     providerConfigs: UserTelemetryRegistrationConfig<unknown>[]
   ): ModuleWithProviders<UserTelemetryModule> {
     return {
@@ -36,8 +19,7 @@ export class UserTelemetryModule {
       providers: [
         {
           provide: USER_TELEMETRY_PROVIDER_TOKENS,
-          useValue: providerConfigs,
-          multi: true
+          useValue: providerConfigs
         }
       ]
     };

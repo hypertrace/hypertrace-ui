@@ -42,7 +42,7 @@ export class UserTelemetryInternalService {
       this.telemetryProviders = [...this.telemetryProviders, ...providers];
     } catch (error) {
       /**
-       * NoOp
+       * Fail silently
        */
     }
   }
