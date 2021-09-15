@@ -3,7 +3,7 @@ import { UserTraits } from './telemetry';
 import { UserTelemetryInternalService } from './user-telemetry-internal.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserTelemetryService2 {
+export class UserTelemetryService {
   public constructor(private readonly userTelemetryInternalService: UserTelemetryInternalService) {}
 
   public identify(userTraits: UserTraits): void {

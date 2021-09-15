@@ -1,15 +1,13 @@
-import { Injectable, Injector, OnDestroy } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Dictionary } from '../utilities/types/types';
 import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
 
 @Injectable({ providedIn: 'root' })
-export class UserTelemetryInternalService implements OnDestroy {
+export class UserTelemetryInternalService {
   private telemetryProviders: UserTelemetryInternalConfig[] = [];
-  private readonly destroyedSubject: ReplaySubject<void> = new ReplaySubject();
-
   private readonly telemetryActionSubject: Subject<TelemetryAction> = new ReplaySubject();
   private readonly telemetryAction$: Observable<TelemetryAction>;
   private readonly identifyAction$: Observable<TelemetryAction>;
@@ -18,7 +16,7 @@ export class UserTelemetryInternalService implements OnDestroy {
   private readonly trackErrorAction$: Observable<TelemetryAction>;
 
   public constructor(private readonly injector: Injector, private readonly router: Router) {
-    this.telemetryAction$ = this.telemetryActionSubject.pipe(takeUntil(this.destroyedSubject));
+    this.telemetryAction$ = this.telemetryActionSubject.asObservable();
 
     this.identifyAction$ = this.telemetryAction$.pipe(filter(action => action.type === TelemetryActionType.Identify));
 
@@ -47,11 +45,6 @@ export class UserTelemetryInternalService implements OnDestroy {
        * NoOp
        */
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.destroyedSubject.next();
-    this.destroyedSubject.complete();
   }
 
   public identify(userTraits: UserTraits): void {
@@ -123,12 +116,8 @@ export class UserTelemetryInternalService implements OnDestroy {
 
   private setupAutomaticPageTracking(): void {
     this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        map(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url })),
-        takeUntil(this.destroyedSubject)
-      )
-      .subscribe();
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url }));
   }
 }
 
