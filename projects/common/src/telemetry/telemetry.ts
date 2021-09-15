@@ -7,16 +7,16 @@ export interface UserTraits extends Dictionary<unknown> {
   displayName?: string;
 }
 
-export interface UserTelemetryRegistrationConfig<InitConfig> {
-  telemetryProvider: ProviderToken<UserTelemetryProvider<InitConfig>>;
-  initConfig: InitConfig;
+export interface UserTelemetryRegistrationConfig<TInitConfig> {
+  telemetryProvider: ProviderToken<UserTelemetryProvider<TInitConfig>>;
+  initConfig: TInitConfig;
   enablePageTracking: boolean;
   enableEventTracking: boolean;
   enableErrorTracking: boolean;
 }
 
-export interface UserTelemetryProvider<InitConfig = unknown> {
-  initialize(config: InitConfig): void;
+export interface UserTelemetryProvider<TInitConfig = unknown> {
+  initialize(config: TInitConfig): void;
   identify(userTraits: UserTraits): void;
   trackEvent?(name: string, eventData: Dictionary<unknown>): void;
   trackPage?(url: string, eventData: Dictionary<unknown>): void;
