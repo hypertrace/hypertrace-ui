@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { LoggerService } from '@hypertrace/common';
 import { RadioOption } from './radio-option';
@@ -22,10 +22,16 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled ? 'disabled' : '']"
         [value]="option.value"
       >
-        <ht-label class="radio-button-label" [label]="option.label"></ht-label>
+        <ng-container
+          *ngTemplateOutlet="
+            this.isLabelAString(option.label) ? defaultLabel : option.label;
+            context: { $implicit: option.label }
+          "
+        ></ng-container>
         <span *ngIf="option.description" class="radio-button-description">{{ option.description }}</span>
       </mat-radio-button>
     </mat-radio-group>
+    <ng-template #defaultLabel let-label><ht-label class="radio-button-label" [label]="label"></ht-label></ng-template>
   `
 })
 export class RadioGroupComponent implements OnInit {
@@ -66,6 +72,10 @@ export class RadioGroupComponent implements OnInit {
   public onRadioChange(event: MatRadioChange): void {
     this.selected = this.options.find(option => option.value === event.value);
     this.selectedChange.emit(event.value);
+  }
+
+  public isLabelAString(label: string | TemplateRef<unknown>): boolean {
+    return typeof label === 'string';
   }
 }
 

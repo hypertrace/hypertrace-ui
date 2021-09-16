@@ -1,8 +1,7 @@
-@import 'font';
-@import 'color-palette';
+@import 'mixins';
 
 $key-width: 40%;
-$value-width: 60%;
+$value-width: auto;
 $horizontal-offset: 12px;
 
 @mixin grid-view {

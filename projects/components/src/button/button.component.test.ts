@@ -51,6 +51,12 @@ describe('Button Component', () => {
     });
     expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
 
+    // Quaternary
+    spectator.setInput({
+      role: ButtonRole.Quaternary
+    });
+    expect(spectator.query('.button')).toHaveClass('button quaternary small solid');
+
     // Destructive
     spectator.setInput({
       role: ButtonRole.Destructive

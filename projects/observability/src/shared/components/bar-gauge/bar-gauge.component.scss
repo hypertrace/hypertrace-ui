@@ -46,6 +46,13 @@
         }
       }
     }
+
+    &.single-bar {
+      .title {
+        @include body-2-regular($gray-7);
+        margin-right: 12px;
+      }
+    }
   }
 
   .bar {
@@ -89,6 +96,11 @@
       height: 100%;
       width: 1px;
       background: white;
+    }
+
+    &.single-bar {
+      height: 6px;
+      width: 80px;
     }
   }
 
