@@ -47,6 +47,7 @@ describe('Popover service', () => {
   };
 
   beforeEach(() => {
+    document.body.innerHTML = '';
     spectator = popoverHostFactory(`<popover-parent></popover-parent>`);
     service = spectator.inject(PopoverService);
   });
@@ -83,7 +84,7 @@ describe('Popover service', () => {
     expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
   }));
 
-  test.skip('can open a basic popover with transparent backdrop', fakeAsync(() => {
+  test('can open a basic popover with transparent backdrop', fakeAsync(() => {
     service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -117,7 +118,7 @@ describe('Popover service', () => {
     expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
   }));
 
-  test.skip('can close a popover on navigation', fakeAsync(() => {
+  test('can close a popover on navigation', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -147,7 +148,7 @@ describe('Popover service', () => {
     flush(); // CDK cleans up overlay async
   }));
 
-  test.skip('can close a popover on backdrop click', fakeAsync(() => {
+  test('can close a popover on backdrop click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -173,7 +174,7 @@ describe('Popover service', () => {
     flush(); // CDK cleans up overlay async
   }));
 
-  test.skip('can hide a popover on backdrop click', fakeAsync(() => {
+  test('can hide a popover on backdrop click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -223,7 +224,7 @@ describe('Popover service', () => {
     flush();
   }));
 
-  test.skip('can close a popover on content click', fakeAsync(() => {
+  test('can close a popover on content click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,

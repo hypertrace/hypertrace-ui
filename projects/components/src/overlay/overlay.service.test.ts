@@ -41,7 +41,11 @@ describe('Overlay service', () => {
     template: `<host></host>`
   });
 
-  test.skip('can create a sheet with provided data', fakeAsync(() => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  test('can create a sheet with provided data', fakeAsync(() => {
     const spectator = createHost();
     spectator.inject(OverlayService).createSheet({
       content: TestComponent,

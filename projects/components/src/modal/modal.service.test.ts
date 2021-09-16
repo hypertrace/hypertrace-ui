@@ -32,6 +32,10 @@ describe('Modal service', () => {
     template: `<host></host>`
   });
 
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+  
   test('can create a modal with provided data', fakeAsync(() => {
     const spectator = createHost();
     spectator.inject(ModalService).createModal({
@@ -47,7 +51,7 @@ describe('Modal service', () => {
     );
   }));
 
-  test.skip('modal can be closed and return a result', fakeAsync(() => {
+  test('modal can be closed and return a result', fakeAsync(() => {
     const spectator = createHost();
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,
@@ -70,7 +74,7 @@ describe('Modal service', () => {
     flush(); // CDK timer to remove overlay
   }));
 
-  test.skip('modal can be closed on press ESC key', fakeAsync(() => {
+  test('modal can be closed on press ESC key', fakeAsync(() => {
     const spectator = createHost();
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,
