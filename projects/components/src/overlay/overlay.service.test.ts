@@ -8,7 +8,7 @@ import { EMPTY } from 'rxjs';
 import { OverlayModule } from './overlay.module';
 import { SHEET_DATA } from './sheet/sheet';
 
-describe.skip('Overlay service', () => {
+describe('Overlay service', () => {
   @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -41,7 +41,7 @@ describe.skip('Overlay service', () => {
     template: `<host></host>`
   });
 
-  test('can create a sheet with provided data', fakeAsync(() => {
+  test.skip('can create a sheet with provided data', fakeAsync(() => {
     const spectator = createHost();
     spectator.inject(OverlayService).createSheet({
       content: TestComponent,

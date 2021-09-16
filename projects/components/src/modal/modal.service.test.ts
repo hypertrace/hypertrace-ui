@@ -7,7 +7,7 @@ import { ModalRef, ModalSize, MODAL_DATA } from './modal';
 import { ModalModule } from './modal.module';
 import { ModalService } from './modal.service';
 
-describe.skip('Modal service', () => {
+describe('Modal service', () => {
   @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -47,7 +47,7 @@ describe.skip('Modal service', () => {
     );
   }));
 
-  test('modal can be closed and return a result', fakeAsync(() => {
+  test.skip('modal can be closed and return a result', fakeAsync(() => {
     const spectator = createHost();
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,
@@ -70,7 +70,7 @@ describe.skip('Modal service', () => {
     flush(); // CDK timer to remove overlay
   }));
 
-  test('modal can be closed on press ESC key', fakeAsync(() => {
+  test.skip('modal can be closed on press ESC key', fakeAsync(() => {
     const spectator = createHost();
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,

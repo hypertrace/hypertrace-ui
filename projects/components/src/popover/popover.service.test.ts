@@ -8,7 +8,7 @@ import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation }
 import { PopoverModule } from './popover.module';
 import { PopoverService } from './popover.service';
 
-describe.skip('Popover service', () => {
+describe('Popover service', () => {
   const navigation$: Subject<void> = new Subject<void>();
 
   let spectator: SpectatorHost<object>;
@@ -83,7 +83,7 @@ describe.skip('Popover service', () => {
     expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
   }));
 
-  test('can open a basic popover with transparent backdrop', fakeAsync(() => {
+  test.skip('can open a basic popover with transparent backdrop', fakeAsync(() => {
     service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -117,7 +117,7 @@ describe.skip('Popover service', () => {
     expect(popoverBackdrop(PopoverBackdrop.Transparent)).not.toExist();
   }));
 
-  test('can close a popover on navigation', fakeAsync(() => {
+  test.skip('can close a popover on navigation', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -147,7 +147,7 @@ describe.skip('Popover service', () => {
     flush(); // CDK cleans up overlay async
   }));
 
-  test('can close a popover on backdrop click', fakeAsync(() => {
+  test.skip('can close a popover on backdrop click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -173,7 +173,7 @@ describe.skip('Popover service', () => {
     flush(); // CDK cleans up overlay async
   }));
 
-  test('can hide a popover on backdrop click', fakeAsync(() => {
+  test.skip('can hide a popover on backdrop click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
@@ -223,7 +223,7 @@ describe.skip('Popover service', () => {
     flush();
   }));
 
-  test('can close a popover on content click', fakeAsync(() => {
+  test.skip('can close a popover on content click', fakeAsync(() => {
     const popover = service.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
