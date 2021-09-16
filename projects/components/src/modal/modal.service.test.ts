@@ -35,7 +35,7 @@ describe('Modal service', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
   });
-  
+
   test('can create a modal with provided data', fakeAsync(() => {
     const spectator = createHost();
     spectator.inject(ModalService).createModal({
