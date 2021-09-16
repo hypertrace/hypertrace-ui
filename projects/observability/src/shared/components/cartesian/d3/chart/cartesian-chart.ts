@@ -256,11 +256,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     eventContainer.on('mousemove', () => this.onMouseMove()).on('mouseleave', () => this.onMouseLeave());
 
-    this.eventListeners.forEach(listener =>
+    this.eventListeners.forEach(listener => {
       eventContainer.on(this.getNativeEventName(listener.event), () =>
         listener.onEvent(this.getMouseDataForCurrentEvent())
-      )
-    );
+      );
+    });
   }
 
   protected clear(): void {
@@ -418,6 +418,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private getNativeEventName(chartEvent: ChartEvent): string {
     switch (chartEvent) {
       case ChartEvent.Click:
+        console.log('click');
         return 'click';
       case ChartEvent.DoubleClick:
         return 'dblclick';

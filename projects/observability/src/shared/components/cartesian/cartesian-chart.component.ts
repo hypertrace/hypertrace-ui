@@ -10,8 +10,11 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
+import { DateCoercer, DateFormatter, NavigationService, TimeDuration, TimeRange, TimeUnit } from '@hypertrace/common';
 import { defaults } from 'lodash-es';
+import { FilterOperator } from '../../../../../components/src/filtering/filter/filter-operators';
+import { ExplorerService } from '../../../pages/explorer/explorer-service';
+import { ScopeQueryParam } from '../../../pages/explorer/explorer.component';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -19,6 +22,7 @@ import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/de
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
+import { ChartEvent } from './chart-interactivty';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
@@ -74,6 +78,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
+    private readonly explorerService: ExplorerService,
+    protected readonly navigationService: NavigationService,
     private readonly renderer: Renderer2
   ) {}
 
@@ -93,7 +99,36 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      );
+      )
+      .withEventListener(ChartEvent.Click, data => {
+        let closestPoint: any = data[0];
+
+        const curreDate = new Date(closestPoint.dataPoint.timestamp);
+        let refreshDuration = new TimeDuration(5, TimeUnit.Minute);
+
+        const startTime = curreDate.getTime() - refreshDuration.toMillis();
+
+        this.explorerService
+          .buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+            {
+              field: 'startTime',
+              operator: FilterOperator.GreaterThanOrEqualTo,
+              value: startTime
+            },
+            {
+              field: 'endTime',
+              operator: FilterOperator.LessThanOrEqualTo,
+              value: curreDate.getTime() + 300000
+            }
+          ])
+          .subscribe(data => {
+            console.log(
+              '🚀 ~ file: cartesian-chart.component.ts ~ line 112 ~ CartesianChartComponent<TData> ~ ]).subscribe ~ data',
+              data
+            );
+            this.navigationService.navigate(data);
+          });
+      });
 
     if (this.bands) {
       this.chart.withBands(...this.bands);
