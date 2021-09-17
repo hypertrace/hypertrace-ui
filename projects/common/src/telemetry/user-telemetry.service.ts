@@ -6,7 +6,8 @@ import { UserTelemetryInternalService } from './user-telemetry-internal.service'
 export class UserTelemetryService {
   public constructor(private readonly userTelemetryInternalService: UserTelemetryInternalService) {}
 
-  public identify(userTraits: UserTraits): void {
+  public initialize(userTraits: UserTraits): void {
+    this.userTelemetryInternalService.initialize();
     this.userTelemetryInternalService.identify(userTraits);
   }
 

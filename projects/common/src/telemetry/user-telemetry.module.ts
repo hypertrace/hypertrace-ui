@@ -1,5 +1,5 @@
-import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
-import { UserTelemetryRegistrationConfig, USER_TELEMETRY_PROVIDER_TOKENS } from './telemetry';
+import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { UserTelemetryRegistrationConfig } from './telemetry';
 import { UserTelemetryInternalService } from './user-telemetry-internal.service';
 
 @NgModule()
@@ -25,3 +25,7 @@ export class UserTelemetryModule {
     };
   }
 }
+
+const USER_TELEMETRY_PROVIDER_TOKENS = new InjectionToken<UserTelemetryRegistrationConfig<unknown>[][]>(
+  'USER_TELEMETRY_PROVIDER_TOKENS'
+);
