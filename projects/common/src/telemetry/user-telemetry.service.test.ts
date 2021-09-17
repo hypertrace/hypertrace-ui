@@ -1,7 +1,7 @@
-import { UserTelemetryService } from './user-telemetry.service';
 import { createServiceFactory } from '@ngneat/spectator/jest';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { UserTelemetryHelperService } from './user-telemetry-helper.service';
+import { UserTelemetryService } from './user-telemetry.service';
 
 describe('User Telemetry service', () => {
   const createService = createServiceFactory({
@@ -14,6 +14,7 @@ describe('User Telemetry service', () => {
       })
     ]
   });
+
   test('should delegate to helper service', () => {
     const spectator = createService();
     const helperService = spectator.inject(UserTelemetryHelperService);
