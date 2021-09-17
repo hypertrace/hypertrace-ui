@@ -20,6 +20,7 @@ export class UserTelemetryHelperService {
       /**
        * Fail silently
        */
+      console.error(error);
     }
   }
 
