@@ -73,7 +73,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           <ht-explore-filter-link
             class="filter-link"
             [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
-            htTooltip="See traces in Explorer"
+            htTooltip="See spans in Explorer"
           >
             <ht-summary-value
               data-sensitive-pii

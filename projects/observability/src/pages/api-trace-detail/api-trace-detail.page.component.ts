@@ -97,7 +97,7 @@ export class ApiTraceDetailPageComponent {
     this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
 
-  public getExplorerNavigationParams = (traceDetails: ApiTraceDetails | undefined): Observable<NavigationParams> =>
+  public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
       { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails!.traceId }
     ]);
