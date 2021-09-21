@@ -99,6 +99,6 @@ export class ApiTraceDetailPageComponent {
 
   public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails!.traceId }
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.traceId }
     ]);
 }
