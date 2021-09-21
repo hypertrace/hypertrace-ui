@@ -1,4 +1,4 @@
-import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
 import { UserTelemetryRegistrationConfig } from './telemetry';
 import { UserTelemetryHelperService } from './user-telemetry-helper.service';
 
@@ -6,9 +6,9 @@ import { UserTelemetryHelperService } from './user-telemetry-helper.service';
 export class UserTelemetryModule {
   public constructor(
     @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][],
-    userTelemetryHelperService: UserTelemetryHelperService
+    userTelemetryInternalService: UserTelemetryHelperService
   ) {
-    userTelemetryHelperService.register(...providerConfigs.flat());
+    userTelemetryInternalService.register(...providerConfigs.flat());
   }
 
   public static forRoot(
