@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTelemetryRegistrationConfig } from './telemetry';
-import { UserTelemetryHelperService } from './user-telemetry-helper.service';
+import { UserTelemetryImplService } from './user-telemetry-impl.service';
 
 describe('User Telemetry helper service', () => {
   const injectionToken = new InjectionToken('test-token');
@@ -11,7 +11,7 @@ describe('User Telemetry helper service', () => {
   let registrationConfig: UserTelemetryRegistrationConfig<TelemetryProviderConfig>;
 
   const createService = createServiceFactory({
-    service: UserTelemetryHelperService,
+    service: UserTelemetryImplService,
     providers: [
       mockProvider(Router, {
         events: of({})
