@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { UserTraits } from './telemetry';
-import { UserTelemetryInternalService } from './user-telemetry-internal.service';
+import { UserTelemetryHelperService } from './user-telemetry-helper.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserTelemetryService {
-  public constructor(private readonly userTelemetryInternalService: UserTelemetryInternalService) {}
+  public constructor(private readonly userTelemetryHelperService: UserTelemetryHelperService) {}
 
-  public identify(userTraits: UserTraits): void {
-    this.userTelemetryInternalService.identify(userTraits);
+  public initialize(userTraits: UserTraits): void {
+    this.userTelemetryHelperService.initialize();
+    this.userTelemetryHelperService.identify(userTraits);
   }
 
   public shutdown(): void {
-    this.userTelemetryInternalService.shutdown();
+    this.userTelemetryHelperService.shutdown();
   }
 }
