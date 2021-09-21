@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { MemoizeModule, NavigationService } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
-import { createComponentFactory, mockProvider } from '@ngneat/spectator';
+import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { ExploreFilterLinkComponent } from '../../shared/components/explore-filter-link/explore-filter-link.component';
