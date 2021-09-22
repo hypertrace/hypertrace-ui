@@ -24,8 +24,8 @@ import {
 export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
   public data$?: Observable<unknown>;
-  @Input()
-  public htLoadAsyncLoaderType?: LoaderType;
+  @Input('htLoadAsyncLoaderType')
+  public loaderType?: LoaderType;
 
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
   private readonly wrapperInjector!: Injector;
@@ -53,7 +53,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
       this.wrapperView = this.wrapperView || this.buildWrapperView();
       this.wrapperParamsSubject.next({
         state$: this.loadAsyncService.mapObservableState(this.data$),
-        loaderType: this.htLoadAsyncLoaderType,
+        loaderType: this.loaderType,
         content: this.templateRef
       });
     } else {

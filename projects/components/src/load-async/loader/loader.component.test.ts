@@ -3,7 +3,7 @@ import { ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { LoaderComponent } from './loader.component';
 
-describe('Link component', () => {
+describe('Loader component', () => {
   let spectator: SpectatorHost<LoaderComponent>;
 
   const createHost = createHostFactory({
