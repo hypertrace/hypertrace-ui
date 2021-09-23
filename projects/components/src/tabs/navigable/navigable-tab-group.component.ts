@@ -1,8 +1,15 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren, EventEmitter,
+  Output,
+  QueryList
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Color, FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
 
 @Component({
@@ -47,6 +54,9 @@ export class NavigableTabGroupComponent implements AfterContentInit {
   @ContentChildren(NavigableTabComponent)
   public tabs!: QueryList<NavigableTabComponent>;
 
+  @Output()
+  public readonly tabChange: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
+
   public activeTab$?: Observable<NavigableTabComponent | undefined>;
 
   public constructor(
@@ -57,7 +67,8 @@ export class NavigableTabGroupComponent implements AfterContentInit {
   public ngAfterContentInit(): void {
     this.activeTab$ = merge(this.navigationService.navigation$, this.tabs.changes).pipe(
       startWith(undefined),
-      map(() => this.findActiveTab())
+      map(() => this.findActiveTab()),
+      tap(activeTab => this.tabChange.emit(activeTab?.path))
     );
   }
 

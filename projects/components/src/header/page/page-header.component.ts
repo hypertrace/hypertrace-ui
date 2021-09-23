@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Breadcrumb } from '@hypertrace/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Breadcrumb, isNonEmptyString, NavigationService, PreferenceService } from '@hypertrace/common';
+import { Observable, of } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
@@ -34,7 +34,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
 
       <ng-content></ng-content>
 
-      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs">
+      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
         <ht-navigable-tab
           *ngFor="let tab of this.tabs"
           [path]="tab.path"
@@ -47,7 +47,10 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
     </div>
   `
 })
-export class PageHeaderComponent {
+export class PageHeaderComponent implements OnInit {
+  @Input()
+  public persistenceId?: string;
+
   @Input()
   public tabs?: NavigableTab[] = [];
 
@@ -62,5 +65,41 @@ export class PageHeaderComponent {
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : {}))
   );
 
-  public constructor(protected readonly breadcrumbsService: BreadcrumbsService) {}
+  public constructor(
+    protected readonly navigationService: NavigationService,
+    protected readonly preferenceService: PreferenceService,
+    protected readonly breadcrumbsService: BreadcrumbsService
+  ) {}
+
+  public ngOnInit(): void {
+    this.getPreferences().subscribe(preferences => {
+      if (isNonEmptyString(this.persistenceId) && isNonEmptyString(preferences.selectedTabPath)) {
+        this.navigationService.navigateWithinApp(preferences.selectedTabPath, this.navigationService.getCurrentActivatedRoute().parent!);
+      }
+    })
+  }
+
+  public onTabChange(path?: string): void {
+    this.setPreferences(path);
+  }
+
+  private getPreferences(): Observable<PageHeaderPreferences> {
+    return isNonEmptyString(this.persistenceId)
+      ? this.preferenceService.get<PageHeaderPreferences>(this.persistenceId, {}).pipe(
+        first()
+      )
+      : of({});
+  }
+
+  private setPreferences(selectedTabPath?: string): void {
+    if (isNonEmptyString(this.persistenceId)) {
+      this.preferenceService.set(this.persistenceId, {
+        selectedTabPath: selectedTabPath
+      });
+    }
+  }
+}
+
+interface PageHeaderPreferences {
+  selectedTabPath?: string;
 }
