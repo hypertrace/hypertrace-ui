@@ -74,9 +74,12 @@ export class PageHeaderComponent implements OnInit {
   public ngOnInit(): void {
     this.getPreferences().subscribe(preferences => {
       if (isNonEmptyString(this.persistenceId) && isNonEmptyString(preferences.selectedTabPath)) {
-        this.navigationService.navigateWithinApp(preferences.selectedTabPath, this.navigationService.getCurrentActivatedRoute().parent!);
+        this.navigationService.navigateWithinApp(
+          preferences.selectedTabPath,
+          this.navigationService.getCurrentActivatedRoute().parent!
+        );
       }
-    })
+    });
   }
 
   public onTabChange(path?: string): void {
@@ -85,9 +88,7 @@ export class PageHeaderComponent implements OnInit {
 
   private getPreferences(): Observable<PageHeaderPreferences> {
     return isNonEmptyString(this.persistenceId)
-      ? this.preferenceService.get<PageHeaderPreferences>(this.persistenceId, {}).pipe(
-        first()
-      )
+      ? this.preferenceService.get<PageHeaderPreferences>(this.persistenceId, {}).pipe(first())
       : of({});
   }
 

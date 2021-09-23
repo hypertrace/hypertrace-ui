@@ -2,7 +2,8 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren, EventEmitter,
+  ContentChildren,
+  EventEmitter,
   Output,
   QueryList
 } from '@angular/core';
