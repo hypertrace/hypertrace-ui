@@ -34,18 +34,20 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             [value]="traceDetails.timeString"
           ></ht-summary-value>
 
-          <ht-explore-filter-link
-            class="filter-link"
-            [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
-            htTooltip="See traces in Explorer"
-          >
+          <div class="filterable-summary-value">
             <ht-summary-value
               class="summary-value"
               icon="${IconType.TraceId}"
               label="Trace ID"
               [value]="traceDetails.traceId"
             ></ht-summary-value>
-          </ht-explore-filter-link>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+              htTooltip="See traces in Explorer"
+            >
+            </ht-explore-filter-link>
+          </div>
 
           <div class="separation"></div>
 
@@ -59,17 +61,17 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             (click)="this.navigateToFullTrace(traceDetails.traceId, traceDetails.startTime)"
           ></ht-button>
         </div>
-      </div>
 
-      <ht-navigable-tab-group class="tabs">
-        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
-        <ng-container *ngIf="this.logEvents$ | async as logEvents">
-          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
-        </ng-container>
-      </ht-navigable-tab-group>
+        <ht-navigable-tab-group class="tabs">
+          <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+          <ng-container *ngIf="this.logEvents$ | async as logEvents">
+            <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+          </ng-container>
+        </ht-navigable-tab-group>
 
-      <div class="scrollable-container">
-        <router-outlet></router-outlet>
+        <div class="scrollable-container">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   `

@@ -50,4 +50,13 @@
 .span-detail {
   height: 100%;
   width: 100%;
+
+  .summary-value {
+    margin-right: 8px;
+  }
+
+  .filterable-summary-value {
+    display: flex;
+    align-items: center;
+  }
 }

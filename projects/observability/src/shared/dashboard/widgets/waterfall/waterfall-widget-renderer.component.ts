@@ -70,18 +70,21 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [activeTabLabel]="this.activeTabLabel"
           (closed)="this.closeSheet()"
         >
-          <ht-explore-filter-link
-            class="filter-link"
-            [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
-            htTooltip="See spans in Explorer"
-          >
+          <div class="filterable-summary-value">
             <ht-summary-value
+              class="summary-value"
               data-sensitive-pii
               icon="${IconType.SpanId}"
               label="Span ID"
               [value]="this.selectedData!.id"
             ></ht-summary-value>
-          </ht-explore-filter-link>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
+              htTooltip="See spans in Explorer"
+            >
+            </ht-explore-filter-link>
+          </div>
         </ht-span-detail>
       </div>
     </ng-template>

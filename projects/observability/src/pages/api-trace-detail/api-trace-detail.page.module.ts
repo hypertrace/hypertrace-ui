@@ -9,7 +9,8 @@ import {
   LabelModule,
   LoadAsyncModule,
   NavigableTabModule,
-  SummaryValueModule
+  SummaryValueModule,
+  TooltipModule
 } from '@hypertrace/components';
 import { ExploreFilterLinkModule } from '../../shared/components/explore-filter-link/explore-filter-link.module';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
@@ -55,6 +56,7 @@ const ROUTE_CONFIG: HtRoute[] = [
     MemoizeModule,
     FormattingModule,
     ButtonModule,
+    TooltipModule,
     ExploreFilterLinkModule,
     CopyShareableLinkToClipboardModule,
     NavigableTabModule,
