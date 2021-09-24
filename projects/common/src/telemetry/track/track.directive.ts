@@ -1,5 +1,5 @@
 import { fromEvent, Subscription } from 'rxjs';
-import { Directive, ElementRef, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { TypedSimpleChanges } from '../../utilities/types/angular-change-object';
 import { TrackUserEventsType } from '../telemetry';
 import { UserTelemetryImplService } from '../user-telemetry-impl.service';
@@ -7,20 +7,24 @@ import { UserTelemetryImplService } from '../user-telemetry-impl.service';
 @Directive({
   selector: '[htTrack]'
 })
-export class TrackDirective implements OnChanges, OnDestroy {
+export class TrackDirective implements OnInit, OnChanges, OnDestroy {
   @Input('htTrack')
-  public userEvents: TrackUserEventsType[] = [TrackUserEventsType.Click];
+  public userEvents: string[] = [TrackUserEventsType.Click];
 
   @Input('htTrackLabel')
   public label?: string;
 
-  private readonly subscription: Subscription = new Subscription();
+  private activeSubscriptions: Subscription = new Subscription();
   private trackedEventLabel: string = '';
 
   public constructor(
     private readonly host: ElementRef,
     private readonly userTelemetryImplService: UserTelemetryImplService
   ) {}
+
+  public ngOnInit(): void {
+    this.setupListeners();
+  }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.userEvents) {
@@ -38,8 +42,10 @@ export class TrackDirective implements OnChanges, OnDestroy {
 
   private setupListeners(): void {
     this.clearListeners();
-    this.subscription.add(
-      ...this.userEvents.map(userEvent =>
+    this.activeSubscriptions = new Subscription();
+
+    this.activeSubscriptions.add(
+      ...this.userEvents?.map(userEvent =>
         fromEvent<MouseEvent>(this.host.nativeElement, userEvent).subscribe(eventObj =>
           this.trackUserEvent(userEvent, eventObj)
         )
@@ -48,12 +54,12 @@ export class TrackDirective implements OnChanges, OnDestroy {
   }
 
   private clearListeners(): void {
-    this.subscription.unsubscribe();
+    this.activeSubscriptions.unsubscribe();
   }
 
-  private trackUserEvent(userEvent: TrackUserEventsType, eventObj: MouseEvent): void {
+  private trackUserEvent(userEvent: string, eventObj: MouseEvent): void {
     this.userTelemetryImplService.trackEvent(`${userEvent}: ${this.trackedEventLabel}`, {
-      target: eventObj.target,
+      ...(eventObj.target as HTMLElement),
       type: userEvent
     });
   }

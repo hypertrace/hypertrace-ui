@@ -1,4 +1,5 @@
-import { Inject, ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
+import { Inject, ModuleWithProviders, NgModule, InjectionToken, ErrorHandler } from '@angular/core';
+import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
 import { UserTelemetryRegistrationConfig } from './telemetry';
 import { UserTelemetryImplService } from './user-telemetry-impl.service';
 import { UserTelemetryService } from './user-telemetry.service';
@@ -25,6 +26,10 @@ export class UserTelemetryModule {
         {
           provide: UserTelemetryService,
           useExisting: UserTelemetryImplService
+        },
+        {
+          provide: ErrorHandler,
+          useClass: TelemetryGlobalErrorHandler
         }
       ]
     };
