@@ -1,5 +1,6 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
+import { brushX } from 'd3-brush';
 import { ContainerElement, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
@@ -125,10 +126,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   public withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this {
-    this.eventListeners.push({
-      event: eventType,
-      onEvent: listener
-    });
+    if (eventType === ChartEvent.Select) {
+    } else {
+      this.eventListeners.push({
+        event: eventType,
+        onEvent: listener
+      });
+    }
 
     return this;
   }
@@ -190,6 +194,17 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       .each((seriesViz, index, elements) => seriesViz.drawSvg(elements[index]));
 
     seriesElements.exit().remove();
+  }
+
+  private attachBrush(): void {
+    var brush = brushX() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [200, 200]
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on('end', this.updateChart);
+
+    select(this.chartContainerElement!).append('g').attr('class', 'brush').call(brush);
   }
 
   protected drawDataCanvas(context: CanvasRenderingContext2D): void {
@@ -281,6 +296,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.moveDataOnTopOfAxes();
     this.drawMouseEventContainer();
     this.setupEventListeners();
+    this.attachBrush();
   }
 
   private moveDataOnTopOfAxes(): void {
@@ -304,6 +320,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       .style('width', `${width}px`)
       .style('height', `${height}px`)
       .node()!;
+  }
+  private updateChart(event: any) {
+    // What are the selected boundaries?
+    console.log(event);
+
+    // If no selection, back to initial coordinate. Otherwise, update X axis domain
   }
 
   private hasXAxis(): boolean {
@@ -418,7 +440,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private getNativeEventName(chartEvent: ChartEvent): string {
     switch (chartEvent) {
       case ChartEvent.Click:
-        console.log('click');
         return 'click';
       case ChartEvent.DoubleClick:
         return 'dblclick';

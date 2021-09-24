@@ -100,7 +100,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
           this.convertToDefaultTooltipRenderData(data)
         )
       )
-      .withEventListener(ChartEvent.Click, data => {
+      .withEventListener(ChartEvent.Select, data => {
         let closestPoint: any = data[0];
 
         const curreDate = new Date(closestPoint.dataPoint.timestamp);
