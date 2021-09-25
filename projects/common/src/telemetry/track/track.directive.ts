@@ -1,5 +1,5 @@
-import { fromEvent, Subscription } from 'rxjs';
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { fromEvent, Subscription } from 'rxjs';
 import { TypedSimpleChanges } from '../../utilities/types/angular-change-object';
 import { TrackUserEventsType } from '../telemetry';
 import { UserTelemetryImplService } from '../user-telemetry-impl.service';

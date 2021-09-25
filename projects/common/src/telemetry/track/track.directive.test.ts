@@ -1,8 +1,8 @@
-import { TrackDirective } from './track.directive';
-import { fakeAsync } from '@angular/core/testing';
-import { createDirectiveFactory, SpectatorDirective, mockProvider } from '@ngneat/spectator/jest';
-import { UserTelemetryImplService } from '../user-telemetry-impl.service';
 import { CommonModule } from '@angular/common';
+import { fakeAsync } from '@angular/core/testing';
+import { createDirectiveFactory, mockProvider, SpectatorDirective } from '@ngneat/spectator/jest';
+import { UserTelemetryImplService } from '../user-telemetry-impl.service';
+import { TrackDirective } from './track.directive';
 
 describe('Track directive', () => {
   let spectator: SpectatorDirective<TrackDirective>;
