@@ -100,6 +100,8 @@ export * from './utilities/types/types';
 
 // Telemetry
 export * from './telemetry/user-telemetry.module';
+export * from './telemetry/track/user-telemetry-tracking.module';
+export * from './telemetry/track/track.directive';
 export * from './telemetry/user-telemetry.service';
 export * from './telemetry/telemetry';
 export { FullStoryTelemetry } from './telemetry/providers/fullstory/full-story-provider';

@@ -9,7 +9,7 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./breadcrumbs.component.scss'],
   template: `
     <div class="breadcrumbs">
-      <div class="breadcrumb-section" *ngIf="this.breadcrumbs.length > 1">
+      <div class="breadcrumb-section" *ngIf="this.breadcrumbs.length > 1" htTrack [htTrackLabel]="breadcrumb.label">
         <div
           class="breadcrumb"
           [ngClass]="{ navigable: breadcrumb.url !== undefined }"

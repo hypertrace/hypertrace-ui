@@ -5,6 +5,7 @@ import { UserTelemetryImplService } from './user-telemetry-impl.service';
 import { UserTelemetryService } from './user-telemetry.service';
 
 @NgModule()
+// tslint:disable:no-unnecessary-class
 export class UserTelemetryModule {
   public constructor(
     @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][],
