@@ -1,34 +1,19 @@
-import { ErrorHandler, Inject, ModuleWithProviders, NgModule } from '@angular/core';
+import { ErrorHandler, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
-import { UserTelemetryRegistrationConfig, USER_TELEMETRY_PROVIDER_TOKENS } from './telemetry';
-import { TrackDirective } from './track/track.directive';
-import { UserTelemetryInternalService } from './user-telemetry-internal.service';
+import { UserTelemetryRegistrationConfig } from './telemetry';
+import { UserTelemetryImplService } from './user-telemetry-impl.service';
+import { UserTelemetryService } from './user-telemetry.service';
 
-@NgModule({
-  declarations: [TrackDirective],
-  exports: [TrackDirective],
-  providers: [
-    {
-      provide: USER_TELEMETRY_PROVIDER_TOKENS,
-      useValue: [],
-      multi: true
-    },
-    {
-      provide: ErrorHandler,
-      useClass: TelemetryGlobalErrorHandler
-    }
-  ]
-})
-// tslint:disable-next-line: no-unnecessary-class
+@NgModule()
 export class UserTelemetryModule {
   public constructor(
-    userTelemetryInternalService: UserTelemetryInternalService,
-    @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][]
+    @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][],
+    userTelemetryImplService: UserTelemetryImplService
   ) {
-    userTelemetryInternalService.register(...providerConfigs.flat());
+    userTelemetryImplService.register(...providerConfigs.flat());
   }
 
-  public static withProviders(
+  public static forRoot(
     providerConfigs: UserTelemetryRegistrationConfig<unknown>[]
   ): ModuleWithProviders<UserTelemetryModule> {
     return {
@@ -36,10 +21,21 @@ export class UserTelemetryModule {
       providers: [
         {
           provide: USER_TELEMETRY_PROVIDER_TOKENS,
-          useValue: providerConfigs,
-          multi: true
+          useValue: providerConfigs
+        },
+        {
+          provide: UserTelemetryService,
+          useExisting: UserTelemetryImplService
+        },
+        {
+          provide: ErrorHandler,
+          useClass: TelemetryGlobalErrorHandler
         }
       ]
     };
   }
 }
+
+const USER_TELEMETRY_PROVIDER_TOKENS = new InjectionToken<UserTelemetryRegistrationConfig<unknown>[][]>(
+  'USER_TELEMETRY_PROVIDER_TOKENS'
+);
