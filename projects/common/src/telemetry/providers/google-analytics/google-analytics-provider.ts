@@ -1,3 +1,4 @@
+import { Dictionary } from './../../../utilities/types/types';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
 import { loadGA } from './load-snippet';
 
@@ -9,5 +10,33 @@ export class GoogleAnalyticsTelemetry<InitConfig extends TelemetryProviderConfig
     ga('send', 'pageview');
   }
 
-  public identify(_userTraits: UserTraits): void {}
+  public identify(userTraits: UserTraits): void {
+    ga('set', 'userId', userTraits.email);
+  }
+
+  public trackEvent(name: string, eventData: Dictionary<unknown>): void {
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'user-actions',
+      eventAction: name,
+      ...eventData
+    });
+  }
+
+  public trackPage(name: string, eventData: Dictionary<unknown>): void {
+    ga('send', {
+      hitType: 'pageview',
+      page: name,
+      ...eventData
+    });
+  }
+
+  public trackError(name: string, eventData: Dictionary<unknown>): void {
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'error',
+      eventAction: name,
+      ...eventData
+    });
+  }
 }

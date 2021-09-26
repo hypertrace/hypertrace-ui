@@ -23,7 +23,7 @@ export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
   }
 
   public trackPage(name: string, eventData: Dictionary<unknown>): void {
-    this.freshPaint?.page('', name, eventData);
+    this.freshPaint?.page(name, name, eventData);
   }
 
   public trackError(name: string, eventData: Dictionary<unknown>): void {
