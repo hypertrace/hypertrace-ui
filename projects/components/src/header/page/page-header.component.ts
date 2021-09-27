@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Breadcrumb, isNonEmptyString, NavigationService, PreferenceService } from '@hypertrace/common';
+import {
+  Breadcrumb,
+  isNonEmptyString,
+  NavigationService,
+  PreferenceService,
+  SubscriptionLifecycle
+} from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
@@ -68,18 +74,23 @@ export class PageHeaderComponent implements OnInit {
   public constructor(
     protected readonly navigationService: NavigationService,
     protected readonly preferenceService: PreferenceService,
+    protected readonly subscriptionLifecycle: SubscriptionLifecycle,
     protected readonly breadcrumbsService: BreadcrumbsService
   ) {}
 
   public ngOnInit(): void {
-    this.getPreferences().subscribe(preferences => {
-      if (isNonEmptyString(this.persistenceId) && isNonEmptyString(preferences.selectedTabPath)) {
-        this.navigationService.navigateWithinApp(
-          preferences.selectedTabPath,
-          this.navigationService.getCurrentActivatedRoute().parent!
-        );
-      }
-    });
+    this.subscriptionLifecycle.add(
+      this.getPreferences().subscribe(preferences => this.navigateIfPersistedActiveTab(preferences))
+    );
+  }
+
+  private navigateIfPersistedActiveTab(preferences: PageHeaderPreferences): void {
+    if (isNonEmptyString(this.persistenceId) && isNonEmptyString(preferences.selectedTabPath)) {
+      this.navigationService.navigateWithinApp(
+        preferences.selectedTabPath,
+        this.navigationService.getCurrentActivatedRoute().parent!
+      );
+    }
   }
 
   public onTabChange(path?: string): void {

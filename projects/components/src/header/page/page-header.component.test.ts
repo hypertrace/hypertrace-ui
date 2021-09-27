@@ -1,4 +1,4 @@
-import { NavigationService, PreferenceService } from '@hypertrace/common';
+import { NavigationService, PreferenceService, SubscriptionLifecycle } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
@@ -13,6 +13,7 @@ describe('Page Header Component', () => {
     providers: [
       mockProvider(NavigationService),
       mockProvider(PreferenceService),
+      mockProvider(SubscriptionLifecycle),
       mockProvider(BreadcrumbsService, {
         breadcrumbs$: of([
           {
