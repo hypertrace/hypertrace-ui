@@ -19,6 +19,7 @@ import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/de
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
+import { ChartEvent } from './chart-interactivty';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
@@ -93,7 +94,13 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      );
+      )
+      .withEventListener(ChartEvent.Select, data => {
+        console.log(
+          '🚀 ~ file: cartesian-chart.component.ts ~ line 99 ~ CartesianChartComponent<TData> ~ .withEventListener ~ data',
+          data
+        );
+      });
 
     if (this.bands) {
       this.chart.withBands(...this.bands);
