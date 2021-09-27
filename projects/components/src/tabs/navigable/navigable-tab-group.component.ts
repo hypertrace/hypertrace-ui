@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Color, FeatureState, NavigationParams, NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { NavigableTabComponent } from './navigable-tab.component';
 
 @Component({
@@ -69,6 +69,7 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     this.activeTab$ = merge(this.navigationService.navigation$, this.tabs.changes).pipe(
       startWith(undefined),
       map(() => this.findActiveTab()),
+      distinctUntilChanged(),
       tap(activeTab => this.tabChange.emit(activeTab?.path))
     );
   }
