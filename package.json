@@ -34,7 +34,7 @@
     "@angular/forms": "^12.2.1",
     "@angular/material": "^12.2.1",
     "@angular/platform-browser": "^12.2.1",
-    "@angular/platform-browser-dynamic": "^12.2.1",
+    "@angular/platform-browser-dynamic": "^12.2.7",
     "@angular/router": "^12.2.1",
     "@apollo/client": "^3.4.13",
     "@hypertrace/hyperdash": "^1.2.1",
