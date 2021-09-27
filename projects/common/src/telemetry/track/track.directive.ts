@@ -58,8 +58,12 @@ export class TrackDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   private trackUserEvent(userEvent: string, eventObj: MouseEvent): void {
+    const targetElement = eventObj.target as HTMLElement;
     this.userTelemetryImplService.trackEvent(`${userEvent}: ${this.trackedEventLabel}`, {
-      ...(eventObj.target as HTMLElement),
+      tagName: targetElement.tagName,
+      innerHTML: targetElement.innerHTML,
+      textContent: targetElement.textContent,
+      className: targetElement.className,
       type: userEvent
     });
   }
