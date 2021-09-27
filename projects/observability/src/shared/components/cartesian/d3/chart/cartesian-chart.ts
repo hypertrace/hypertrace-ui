@@ -204,7 +204,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
       .on('end', this.updateChart);
 
-    select(this.chartContainerElement!).append('g').attr('class', 'brush').call(brush);
+    select(this.chartBackgroundSvgElement!).append('g').attr('class', 'brush').call(brush);
   }
 
   protected drawDataCanvas(context: CanvasRenderingContext2D): void {
