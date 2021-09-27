@@ -3,12 +3,14 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Dictionary } from '../utilities/types/types';
 import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
+import { UserTelemetryService } from './user-telemetry.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserTelemetryHelperService {
+export class UserTelemetryImplService extends UserTelemetryService {
   private telemetryProviders: UserTelemetryInternalConfig[] = [];
 
   public constructor(private readonly injector: Injector, private readonly router: Router) {
+    super();
     this.setupAutomaticPageTracking();
   }
 

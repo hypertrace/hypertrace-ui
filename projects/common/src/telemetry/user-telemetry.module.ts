@@ -1,14 +1,16 @@
-import { Inject, ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
+import { ErrorHandler, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { TelemetryGlobalErrorHandler } from './error-handler/telemetry-global-error-handler';
 import { UserTelemetryRegistrationConfig } from './telemetry';
-import { UserTelemetryHelperService } from './user-telemetry-helper.service';
+import { UserTelemetryImplService } from './user-telemetry-impl.service';
+import { UserTelemetryService } from './user-telemetry.service';
 
 @NgModule()
 export class UserTelemetryModule {
   public constructor(
     @Inject(USER_TELEMETRY_PROVIDER_TOKENS) providerConfigs: UserTelemetryRegistrationConfig<unknown>[][],
-    userTelemetryInternalService: UserTelemetryHelperService
+    userTelemetryImplService: UserTelemetryImplService
   ) {
-    userTelemetryInternalService.register(...providerConfigs.flat());
+    userTelemetryImplService.register(...providerConfigs.flat());
   }
 
   public static forRoot(
@@ -20,6 +22,14 @@ export class UserTelemetryModule {
         {
           provide: USER_TELEMETRY_PROVIDER_TOKENS,
           useValue: providerConfigs
+        },
+        {
+          provide: UserTelemetryService,
+          useExisting: UserTelemetryImplService
+        },
+        {
+          provide: ErrorHandler,
+          useClass: TelemetryGlobalErrorHandler
         }
       ]
     };
