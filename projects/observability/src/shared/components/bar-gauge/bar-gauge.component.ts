@@ -24,7 +24,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
-      <div class="header-data" [ngClass]="this.display">
+      <div *ngIf="this.display !== '${BarGaugeStyle.SingleBar}'" class="header-data" [ngClass]="this.display">
         <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
         <div class="count">
           <span>{{ this.totalValue | htDisplayNumber }}</span>
@@ -34,7 +34,7 @@ import {
           <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
         </div>
       </div>
-      <div class="bar">
+      <div class="bar" [ngClass]="this.display">
         <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
           <div class="segment-bars">
             <div
@@ -162,5 +162,6 @@ interface BarSegment extends Segment {
 
 export const enum BarGaugeStyle {
   Regular = 'regular',
-  Compact = 'compact'
+  Compact = 'compact',
+  SingleBar = 'single-bar'
 }

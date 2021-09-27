@@ -99,6 +99,7 @@ export const enum IconType {
   Share = 'share',
   SidebarCollapse = 'svg:sidebar-collapse',
   SidebarExpand = 'svg:sidebar-expand',
+  SidebarLeft = 'svg:sidebar-left',
   Slack = 'svg:slack',
   Sort = 'svg:sort',
   SpanId = 'bookmark_border',
