@@ -1,5 +1,6 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
+import { brushX } from 'd3-brush';
 import { ContainerElement, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
@@ -281,6 +282,22 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.moveDataOnTopOfAxes();
     this.drawMouseEventContainer();
     this.setupEventListeners();
+    this.attachBrush();
+  }
+
+  private attachBrush(): void {
+    var brush = brushX() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [200, 200]
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on('end', this.updateChart);
+
+    select(this.chartBackgroundSvgElement!).append('g').attr('class', 'brush').call(brush);
+  }
+
+  private updateChart(event: any): void {
+    console.log('🚀 ~ file: cartesian-chart.ts ~ line 299 ~ DefaultCartesianChart<TData> ~ updateChart ~ event', event);
   }
 
   private moveDataOnTopOfAxes(): void {
