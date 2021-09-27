@@ -37,13 +37,18 @@
     height: 18px;
     align-items: center;
 
+    .filterable-summary-value {
+      display: flex;
+      align-items: center;
+    }
+
     .separation {
       flex: 1 1 auto;
     }
   }
 
   .summary-value {
-    margin-right: 24px;
+    margin-right: 8px;
   }
 
   .tabs {

@@ -1,8 +1,11 @@
+import { MemoizeModule } from '@hypertrace/common';
 import { LoadAsyncModule, OverlayService } from '@hypertrace/components';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { ExploreFilterLinkComponent } from '../../../components/explore-filter-link/explore-filter-link.component';
 import { WaterfallWidgetRendererComponent } from './waterfall-widget-renderer.component';
 import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
 
@@ -14,9 +17,13 @@ describe('Waterfall widget renderer component', () => {
   const createComponent = createComponentFactory<WaterfallWidgetRendererComponent>({
     component: WaterfallWidgetRendererComponent,
     shallow: true,
-    imports: [LoadAsyncModule],
-    providers: [...mockDashboardWidgetProviders(mockModel), mockProvider(OverlayService)],
-    declarations: [MockComponent(WaterfallChartComponent)]
+    imports: [LoadAsyncModule, MemoizeModule],
+    providers: [
+      ...mockDashboardWidgetProviders(mockModel),
+      mockProvider(OverlayService),
+      mockProvider(ExplorerService)
+    ],
+    declarations: [MockComponent(WaterfallChartComponent), MockComponent(ExploreFilterLinkComponent)]
   });
 
   test('renders the widget', () => {
