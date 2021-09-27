@@ -16,6 +16,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
   selector: 'ht-page-header',
   styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div
       *ngIf="this.breadcrumbs$ | async as breadcrumbs"
