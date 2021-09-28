@@ -1,31 +1,79 @@
-export const durationFormatter = (duration?: number): string => {
-  const dayInMs: number = 1000 * 60 * 60 * 24;
-  if (duration === undefined) {
-    return '-';
-  }
-  const days = Math.abs(Math.trunc(duration / dayInMs));
+export const enum DurationDisplayMode {
+  DaysOnly,
+  DaysAndHours,
+  DaysHoursAndMinutes,
+  DaysHoursMinutesAndSeconds,
+  DaysHoursMinutesSecondsAndMilliseconds
+}
 
-  const date = new Date(duration);
-  const hours = date.getUTCHours();
-  const minutes = date.getUTCMinutes();
-  const seconds = date.getUTCSeconds();
-  const milliseconds = date.getUTCMilliseconds();
+export const enum DurationDisplayTextType {
+  Full,
+  Short
+}
 
-  if (days !== 0) {
-    return hours === 0 && minutes === 0 ? `${days}d` : `${days}d ${hours}h ${doubleDigit(minutes)}m`;
-  }
+export interface DurationFormatOptions {
+  mode: DurationDisplayMode;
+  textType: DurationDisplayTextType;
+}
 
-  if (hours !== 0) {
-    return `${hours}h ${doubleDigit(minutes)}m`;
-  }
-  if (minutes !== 0) {
-    return `${minutes}m ${doubleDigit(seconds)}s`;
-  }
-  if (seconds !== 0) {
-    return `${seconds}s`;
-  }
-
-  return `${milliseconds}ms`;
+export const defaultDurationFormatOptions: DurationFormatOptions = {
+  mode: DurationDisplayMode.DaysHoursMinutesAndSeconds,
+  textType: DurationDisplayTextType.Short // Example short -> 6d 5h   full -> 6 days 5 hours
 };
+
+export const durationFormatter = (duration: number, options: DurationFormatOptions): string => {
+  const dayInMs: number = 1000 * 60 * 60 * 24;
+  const date = new Date(duration);
+
+  const durationData: DurationData = {
+    days: Math.abs(Math.trunc(duration / dayInMs)),
+    hours: date.getUTCHours(),
+    minutes: date.getUTCMinutes(),
+    seconds: date.getUTCSeconds(),
+    milliseconds: date.getUTCMilliseconds()
+  };
+
+  return durationString(durationData, options).trim();
+};
+
+interface DurationData {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  milliseconds: number;
+}
+
+const durationString = (data: DurationData, options: DurationFormatOptions): string => {
+  const showFullText: boolean = options.textType === DurationDisplayTextType.Full;
+  const suffixes = showFullText
+    ? [' days', ' hours', ' minutes', ' seconds', ' milliseconds']
+    : ['d', 'h', 'm', 's', 'ms'];
+
+  switch (options.mode) {
+    case DurationDisplayMode.DaysOnly:
+      return `${data.days}${suffixes[0]}`;
+    case DurationDisplayMode.DaysAndHours:
+      return `${displayString(data.days, suffixes[0])} ${data.hours}${suffixes[1]}`;
+    case DurationDisplayMode.DaysHoursAndMinutes:
+      return `${displayString(data.days, suffixes[0])} ${displayString(data.hours, suffixes[1])} ${doubleDigit(
+        data.minutes
+      )}${suffixes[2]}`;
+    case DurationDisplayMode.DaysHoursMinutesAndSeconds:
+      return `${displayString(data.days, suffixes[0])} ${displayString(data.hours, suffixes[1])} ${displayString(
+        data.minutes,
+        suffixes[2]
+      )} ${doubleDigit(data.seconds)}${suffixes[3]}`;
+    case DurationDisplayMode.DaysHoursMinutesSecondsAndMilliseconds:
+      return `${displayString(data.days, suffixes[0])} ${displayString(data.hours, suffixes[1])} ${displayString(
+        data.minutes,
+        suffixes[2]
+      )} ${displayString(data.seconds, suffixes[3])} ${data.milliseconds}${suffixes[4]}`;
+    default:
+      return '-';
+  }
+};
+
+const displayString = (value: number, suffix: string): string => (value === 0 ? '' : `${value}${suffix}`);
 
 const doubleDigit = (value: number): string => (value < 10 ? `0${value}` : `${value}`);
