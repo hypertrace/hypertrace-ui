@@ -307,13 +307,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private attachBrush(): void {
-    // var brush = brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [200, 200]
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', this.updateChart);
-
     const { width, height } = this.hostElement.getBoundingClientRect();
     this.brushBehaviour.extent([
       [0, 0],
@@ -325,10 +318,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       .attr('class', 'brush')
       .call(this.brushBehaviour as any);
   }
-
-  // private updateChart(event: any): void {
-  //   console.log('🚀 ~ file: cartesian-chart.ts ~ line 299 ~ DefaultCartesianChart<TData> ~ updateChart ~ event', event);
-  // }
 
   private moveDataOnTopOfAxes(): void {
     if (!this.dataElement) {
