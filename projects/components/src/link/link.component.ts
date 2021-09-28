@@ -18,7 +18,7 @@ import { EMPTY, Observable } from 'rxjs';
       [queryParamsHandling]="navData?.extras?.queryParamsHandling"
       [skipLocationChange]="navData?.extras?.skipLocationChange"
       [replaceUrl]="navData?.extras?.replaceUrl"
-      htTrack
+      [htTrack]
       htTrackLabel="{{ navData && navData.path ? navData.path : '' }}"
     >
       <ng-content></ng-content>

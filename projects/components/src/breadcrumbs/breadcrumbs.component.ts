@@ -9,12 +9,14 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./breadcrumbs.component.scss'],
   template: `
     <div class="breadcrumbs">
-      <div class="breadcrumb-section" *ngIf="this.breadcrumbs.length > 1" htTrack [htTrackLabel]="breadcrumb.label">
+      <div class="breadcrumb-section" *ngIf="this.breadcrumbs.length > 1">
         <div
           class="breadcrumb"
           [ngClass]="{ navigable: breadcrumb.url !== undefined }"
           *ngFor="let breadcrumb of this.breadcrumbs; last as isLast; first as isFirst"
           [htTooltip]="this.tooltipMap.get(breadcrumb)"
+          [htTrack]
+          [htTrackLabel]="breadcrumb.label"
         >
           <ht-icon
             class="icon"

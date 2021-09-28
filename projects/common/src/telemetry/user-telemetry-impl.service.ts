@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Dictionary } from '../utilities/types/types';
@@ -9,7 +9,7 @@ import { UserTelemetryService } from './user-telemetry.service';
 export class UserTelemetryImplService extends UserTelemetryService {
   private telemetryProviders: UserTelemetryInternalConfig[] = [];
 
-  public constructor(private readonly injector: Injector, private readonly router: Router) {
+  public constructor(private readonly injector: Injector, @Optional() private readonly router?: Router) {
     super();
     this.setupAutomaticPageTracking();
   }
@@ -69,7 +69,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
   }
 
   private setupAutomaticPageTracking(): void {
-    this.router.events
+    this.router?.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url }));
   }
