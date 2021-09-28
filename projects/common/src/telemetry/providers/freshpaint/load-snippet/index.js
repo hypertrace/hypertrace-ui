@@ -1,6 +1,6 @@
 // tslint:disable
 
-export const loadFreshPaint = () => {
+const loadFreshPaint = () => {
   if (window.freshpaint) {
     return window.freshpaint;
   }
@@ -78,4 +78,8 @@ export const loadFreshPaint = () => {
   })(document, window.freshpaint || []);
 
   return freshpaint;
+};
+
+module.exports = {
+  loadFreshPaint
 };

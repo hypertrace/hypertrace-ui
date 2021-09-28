@@ -1,6 +1,6 @@
 // tslint:disable
 
-export const loadGA = () => {
+const loadGA = () => {
   /**
    * Creates a temporary global ga object and loads analytics.js.
    * Parameters o, a, and m are all used internally. They could have been
@@ -48,4 +48,8 @@ export const loadGA = () => {
   })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
   return ga;
+};
+
+module.exports = {
+  loadGA
 };

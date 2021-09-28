@@ -98,6 +98,17 @@ export * from './utilities/rxjs/subscription-lifeycle.service';
 export * from './utilities/types/angular-change-object';
 export * from './utilities/types/types';
 
+// Telemetry
+export * from './telemetry/user-telemetry.module';
+export * from './telemetry/track/user-telemetry-tracking.module';
+export * from './telemetry/track/track.directive';
+export * from './telemetry/user-telemetry.service';
+export * from './telemetry/telemetry';
+export { FullStoryTelemetry } from './telemetry/providers/fullstory/full-story-provider';
+export { FreshPaintTelemetry } from './telemetry/providers/freshpaint/freshpaint-provider';
+export { MixPanelTelemetry } from './telemetry/providers/mixpanel/mixpanel-provider';
+export { TrackDirective } from './telemetry/track/track.directive';
+
 // Time
 export * from './time/fixed-time-range';
 export * from './time/interval-duration.service';
