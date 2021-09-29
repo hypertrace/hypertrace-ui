@@ -40,6 +40,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
 
   public shutdown(): void {
     this.initializedTelemetryProviders.forEach(provider => provider.telemetryProvider.shutdown?.());
+    this.initializedTelemetryProviders = [];
   }
 
   public trackEvent(name: string, data: Dictionary<unknown>): void {
