@@ -60,7 +60,6 @@ export class UserTelemetryImplService extends UserTelemetryService {
 
   private buildTelemetryProvider(config: UserTelemetryRegistrationConfig<unknown>): UserTelemetryInternalConfig {
     const providerInstance = this.injector.get(config.telemetryProvider);
-    providerInstance.initialize(config.initConfig);
 
     return {
       ...config,
