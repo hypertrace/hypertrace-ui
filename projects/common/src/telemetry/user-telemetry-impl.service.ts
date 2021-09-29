@@ -7,7 +7,8 @@ import { UserTelemetryService } from './user-telemetry.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserTelemetryImplService extends UserTelemetryService {
-  private telemetryProviders: UserTelemetryInternalConfig[] = [];
+  private allTelemetryProviders: UserTelemetryInternalConfig[] = [];
+  private initializedTelemetryProviders: UserTelemetryInternalConfig[] = [];
 
   public constructor(private readonly injector: Injector, @Optional() private readonly router?: Router) {
     super();
@@ -17,7 +18,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
   public register(...configs: UserTelemetryRegistrationConfig<unknown>[]): void {
     try {
       const providers = configs.map(config => this.buildTelemetryProvider(config));
-      this.telemetryProviders = [...this.telemetryProviders, ...providers];
+      this.allTelemetryProviders = [...this.allTelemetryProviders, ...providers];
     } catch (error) {
       /**
        * Fail silently
@@ -29,31 +30,32 @@ export class UserTelemetryImplService extends UserTelemetryService {
   }
 
   public initialize(): void {
-    this.telemetryProviders.forEach(provider => provider.telemetryProvider.initialize(provider.initConfig));
+    this.allTelemetryProviders.forEach(provider => provider.telemetryProvider.initialize(provider.initConfig));
+    this.initializedTelemetryProviders = [...this.allTelemetryProviders];
   }
 
   public identify(userTraits: UserTraits): void {
-    this.telemetryProviders.forEach(provider => provider.telemetryProvider.identify(userTraits));
+    this.initializedTelemetryProviders.forEach(provider => provider.telemetryProvider.identify(userTraits));
   }
 
   public shutdown(): void {
-    this.telemetryProviders.forEach(provider => provider.telemetryProvider.shutdown?.());
+    this.initializedTelemetryProviders.forEach(provider => provider.telemetryProvider.shutdown?.());
   }
 
   public trackEvent(name: string, data: Dictionary<unknown>): void {
-    this.telemetryProviders
+    this.initializedTelemetryProviders
       .filter(provider => provider.enableEventTracking)
       .forEach(provider => provider.telemetryProvider.trackEvent?.(name, data));
   }
 
   public trackPageEvent(url: string, data: Dictionary<unknown>): void {
-    this.telemetryProviders
+    this.initializedTelemetryProviders
       .filter(provider => provider.enablePageTracking)
       .forEach(provider => provider.telemetryProvider.trackPage?.(url, data));
   }
 
   public trackErrorEvent(error: string, data: Dictionary<unknown>): void {
-    this.telemetryProviders
+    this.initializedTelemetryProviders
       .filter(provider => provider.enableErrorTracking)
       .forEach(provider => provider.telemetryProvider.trackError?.(`Error: ${error}`, data));
   }
