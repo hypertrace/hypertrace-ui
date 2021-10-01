@@ -2,8 +2,9 @@
 
 const loadFreshPaint = () => {
   if (window.freshpaint) {
-    return window.freshpaint;
+    return getFreshPaint;
   }
+
   (function (c, a) {
     if (!a.__SV) {
       var b = window;
@@ -77,7 +78,7 @@ const loadFreshPaint = () => {
     }
   })(document, window.freshpaint || []);
 
-  return freshpaint;
+  return window.freshpaint;
 };
 
 module.exports = {
