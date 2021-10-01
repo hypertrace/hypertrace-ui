@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
 import { Dictionary } from './../../../utilities/types/types';
-import { loadFreshPaint, FreshPaint } from './load-snippet';
+import { FreshPaint, loadFreshPaint } from './load-snippet';
 
 @Injectable({ providedIn: 'root' })
 export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
