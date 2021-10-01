@@ -2,8 +2,9 @@
 
 const loadFreshPaint = () => {
   if (window.freshpaint) {
-    return window.freshpaint;
+    return getFreshPaint;
   }
+
   (function (c, a) {
     if (!a.__SV) {
       var b = window;
@@ -46,9 +47,10 @@ const loadFreshPaint = () => {
         e.people.toString = function () {
           return e.toString(1) + '.people (stub)';
         };
-        l = 'disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove people group page alias ready addEventProperties addInitialEventProperties removeEventProperty addPageviewProperties'.split(
-          ' '
-        );
+        l =
+          'disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove people group page alias ready addEventProperties addInitialEventProperties removeEventProperty addPageviewProperties'.split(
+            ' '
+          );
         for (h = 0; h < l.length; h++) c(e, l[h]);
         var f = 'set set_once union unset remove delete'.split(' ');
         e.get_group = function () {
@@ -77,7 +79,7 @@ const loadFreshPaint = () => {
     }
   })(document, window.freshpaint || []);
 
-  return freshpaint;
+  return window.freshpaint;
 };
 
 module.exports = {
