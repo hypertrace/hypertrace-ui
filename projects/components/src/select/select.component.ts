@@ -1,5 +1,5 @@
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -68,7 +68,7 @@ import { SelectSize } from './select-size';
               </ht-icon>
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
               </ht-label>
-              <ng-container *ngTemplateOutlet="selected?.content"></ng-container>
+              <ng-container [ngTemplateOutlet]="selected?.content"></ng-container>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
             </div>
             <div
@@ -92,7 +92,7 @@ import { SelectSize } from './select-size';
             >
               <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
               </ht-label>
-              <ng-container *ngTemplateOutlet="selected?.content"></ng-container>
+              <ng-container [ngTemplateOutlet]="selected?.content"></ng-container>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
             </div>
           </div>
@@ -149,7 +149,7 @@ import { SelectSize } from './select-size';
     </div>
   `
 })
-export class SelectComponent<V> implements AfterContentInit, OnChanges {
+export class SelectComponent<V> implements AfterViewInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -210,7 +210,7 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     private readonly changeDetector: ChangeDetectorRef
   ) {}
 
-  public ngAfterContentInit(): void {
+  public ngAfterViewInit(): void {
     this.selected$ = this.buildObservableOfSelected();
     if (this.controlItems !== undefined) {
       this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
