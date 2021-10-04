@@ -58,15 +58,21 @@ describe('User Telemetry helper service', () => {
 
     // TrackEvent
     spectator.service.trackEvent('eventA', { target: 'unknown' });
-    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', { target: 'unknown' });
+    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
+      target: 'unknown',
+      eventCategory: 'user-action'
+    });
 
     // TrackPage
     spectator.service.trackPageEvent('/abs', { target: 'unknown' });
-    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown' });
+    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown', eventCategory: 'page-view' });
 
     // TrackError
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
-    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', { target: 'unknown' });
+    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
+      target: 'unknown',
+      eventCategory: 'error'
+    });
   });
 
   test('should not capture events if event tracking is disabled', () => {
@@ -112,11 +118,14 @@ describe('User Telemetry helper service', () => {
 
     // TrackPage
     spectator.service.trackPageEvent('/abs', { target: 'unknown' });
-    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown' });
+    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown', eventCategory: 'page-view' });
 
     // TrackError
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
-    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', { target: 'unknown' });
+    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
+      target: 'unknown',
+      eventCategory: 'error'
+    });
   });
 
   test('should not capture page events if page event tracking is disabled', () => {
@@ -158,7 +167,10 @@ describe('User Telemetry helper service', () => {
 
     // TrackEvent
     spectator.service.trackEvent('eventA', { target: 'unknown' });
-    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', { target: 'unknown' });
+    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
+      target: 'unknown',
+      eventCategory: 'user-action'
+    });
 
     // TrackPage
     spectator.service.trackPageEvent('/abs', { target: 'unknown' });
@@ -166,7 +178,10 @@ describe('User Telemetry helper service', () => {
 
     // TrackError
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
-    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', { target: 'unknown' });
+    expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
+      target: 'unknown',
+      eventCategory: 'error'
+    });
   });
 
   test('should not capture error events if eror event tracking is disabled', () => {
@@ -208,11 +223,14 @@ describe('User Telemetry helper service', () => {
 
     // TrackEvent
     spectator.service.trackEvent('eventA', { target: 'unknown' });
-    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', { target: 'unknown' });
+    expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
+      target: 'unknown',
+      eventCategory: 'user-action'
+    });
 
     // TrackPage
     spectator.service.trackPageEvent('/abs', { target: 'unknown' });
-    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown' });
+    expect(telemetryProvider.trackPage).toHaveBeenCalledWith('/abs', { target: 'unknown', eventCategory: 'page-view' });
 
     // TrackError
     spectator.service.trackPageEvent('console error', { target: 'unknown' });

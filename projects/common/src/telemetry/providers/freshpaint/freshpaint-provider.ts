@@ -6,11 +6,13 @@ import { FreshPaint, loadFreshPaint } from './load-snippet';
 @Injectable({ providedIn: 'root' })
 export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
   implements UserTelemetryProvider<InitConfig> {
-  private freshPaint?: FreshPaint;
+  private get freshPaint(): FreshPaint | undefined {
+    return window.freshpaint;
+  }
 
   public initialize(config: InitConfig): void {
-    this.freshPaint = loadFreshPaint();
-    this.freshPaint.init(config.orgId);
+    loadFreshPaint();
+    this.freshPaint?.init(config.orgId);
   }
 
   public identify(userTraits: UserTraits): void {
@@ -23,7 +25,9 @@ export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
   }
 
   public trackPage(name: string, eventData: Dictionary<unknown>): void {
-    this.freshPaint?.page(name, name, eventData);
+    this.freshPaint?.addPageviewProperties({ url: name, ...eventData });
+    this.freshPaint?.page('product-ui', name, eventData);
+    this.freshPaint?.track(name, eventData);
   }
 
   public trackError(name: string, eventData: Dictionary<unknown>): void {

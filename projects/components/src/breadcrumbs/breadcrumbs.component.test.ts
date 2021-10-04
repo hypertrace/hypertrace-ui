@@ -1,7 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, TrackDirective } from '@hypertrace/common';
 import { byText, createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { EMPTY } from 'rxjs';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsModule } from './breadcrumbs.module';
@@ -13,7 +15,8 @@ describe('BreadcrumbsComponent', () => {
   const createHost = createHostFactory({
     declareComponent: false,
     component: BreadcrumbsComponent,
-    imports: [BreadcrumbsModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [BreadcrumbsModule, HttpClientTestingModule, IconLibraryTestingModule, RouterTestingModule],
+    declarations: [MockDirective(TrackDirective)],
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
