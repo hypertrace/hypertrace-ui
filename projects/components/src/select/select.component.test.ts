@@ -11,7 +11,6 @@ import { SelectControlOptionPosition } from './select-control-option.component';
 import { SelectJustify } from './select-justify';
 import { SelectComponent, SelectTriggerDisplayMode } from './select.component';
 import { SelectModule } from './select.module';
-//
 
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
