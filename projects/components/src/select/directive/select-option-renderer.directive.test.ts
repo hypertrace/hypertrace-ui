@@ -1,7 +1,7 @@
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
 import { SelectOptionRendererDirective } from './select-option-renderer.directive';
 
-describe('Let async directive', () => {
+describe('Select Option Renderer directive', () => {
   let spectator: SpectatorDirective<SelectOptionRendererDirective>;
 
   const createDirective = createDirectiveFactory<SelectOptionRendererDirective>({
