@@ -55,20 +55,28 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-border"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-icon
-                *ngIf="this.getPrefixIcon(selected)"
-                class="trigger-prefix-icon"
-                [icon]="this.getPrefixIcon(selected)"
-                [size]="this.iconSize"
-                [color]="selected?.iconColor"
-                [borderType]="selected?.iconBorderType"
-                [borderColor]="selected?.iconBorderColor"
-                [borderRadius]="selected?.iconBorderRadius"
-              >
-              </ht-icon>
-              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
-              </ht-label>
+              <ng-container
+                [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBorderTriggerTemplate"
+              ></ng-container>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+              <ng-template #defaultMenuWithBorderTriggerTemplate
+                ><ht-icon
+                  *ngIf="this.getPrefixIcon(selected)"
+                  class="trigger-prefix-icon"
+                  [icon]="this.getPrefixIcon(selected)"
+                  [size]="this.iconSize"
+                  [color]="selected?.iconColor"
+                  [borderType]="selected?.iconBorderType"
+                  [borderColor]="selected?.iconBorderColor"
+                  [borderRadius]="selected?.iconBorderRadius"
+                >
+                </ht-icon>
+                <ht-label
+                  class="trigger-label"
+                  [label]="selected?.selectedLabel || selected?.label || this.placeholder"
+                >
+                </ht-label>
+              </ng-template>
             </div>
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
@@ -89,8 +97,16 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-background"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
-              </ht-label>
+              <ng-container
+                [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
+              ></ng-container>
+              <ng-template #defaultMenuWithBackgroundTriggerTemplate
+                ><<ht-label
+                  class="trigger-label"
+                  [label]="selected?.selectedLabel || selected?.label || this.placeholder"
+                >
+                </ht-label
+              ></ng-template>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
             </div>
           </div>
@@ -111,7 +127,6 @@ import { SelectSize } from './select-size';
               *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
             ></ng-container>
           </div>
-
           <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
             <div
               *ngFor="let item of items"
@@ -119,26 +134,32 @@ import { SelectSize } from './select-size';
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
             >
-              <div class="select-option-info">
-                <ht-icon
-                  *ngIf="item.icon"
-                  class="icon"
-                  [icon]="item.icon"
-                  size="${IconSize.Small}"
-                  [color]="item.iconColor"
-                  [borderType]="item?.iconBorderType"
-                  [borderColor]="item?.iconBorderColor"
-                  [borderRadius]="item?.iconBorderRadius"
-                >
-                </ht-icon>
-                <span class="label">{{ item.label }}</span>
-              </div>
+              <ng-container
+                *ngTemplateOutlet="item.selectOptionRenderer?.getTemplateRef() ?? defaultSelectOptionTemplate; context: {$implicit: item}"
+              ></ng-container>
               <ht-icon
                 class="status-icon"
                 *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
                 icon="${IconType.Checkmark}"
                 size="${IconSize.Small}"
               ></ht-icon>
+            </div>
+          </ng-template>
+
+          <ng-template #defaultSelectOptionTemplate let-item
+            ><div class="select-option-info">
+              <ht-icon
+                *ngIf="item.icon"
+                class="icon"
+                [icon]="item.icon"
+                size="${IconSize.Small}"
+                [color]="item.iconColor"
+                [borderType]="item?.iconBorderType"
+                [borderColor]="item?.iconBorderColor"
+                [borderRadius]="item?.iconBorderRadius"
+              >
+              </ht-icon>
+              <span class="label">{{ item.label }}</span>
             </div>
           </ng-template>
         </ht-popover-content>
