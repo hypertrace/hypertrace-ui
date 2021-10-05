@@ -113,26 +113,23 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <!-- Top Control Item --->
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
-                <div
-                  *ngFor="let item of topControlItems"
-                  (click)="this.onSelectionChange(item)"
-                  class="select-option"
-                  [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
-                >
-                  <ng-container
-                    *ngTemplateOutlet="item.selectOptionRenderer?.getTemplateRef() ?? defaultSelectOptionTemplate; context: {$implicit: item}"
-                  ></ng-container>
-                </div>
+                <ng-container
+                  *ngTemplateOutlet="itemsTemplate; context: { items: topControlItems, showSelectionStatus: false }"
+                ></ng-container>
+
                 <ht-divider></ht-divider>
               </div>
             </ng-container>
 
-            <!-- Select Option Items --->
+            <ng-container
+              *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
+            ></ng-container>
+          </div>
+          <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
             <div
-              *ngFor="let item of this.items"
+              *ngFor="let item of items"
               (click)="this.onSelectionChange(item)"
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
@@ -142,29 +139,29 @@ import { SelectSize } from './select-size';
               ></ng-container>
               <ht-icon
                 class="status-icon"
-                *ngIf="this.highlightSelected && this.isSelectedItem(item)"
+                *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
                 icon="${IconType.Checkmark}"
                 size="${IconSize.Small}"
               ></ht-icon>
             </div>
+          </ng-template>
 
-            <ng-template #defaultSelectOptionTemplate let-item
-              ><div class="select-option-info">
-                <ht-icon
-                  *ngIf="item.icon"
-                  class="icon"
-                  [icon]="item.icon"
-                  size="${IconSize.Small}"
-                  [color]="item.iconColor"
-                  [borderType]="item?.iconBorderType"
-                  [borderColor]="item?.iconBorderColor"
-                  [borderRadius]="item?.iconBorderRadius"
-                >
-                </ht-icon>
-                <span class="label">{{ item.label }}</span>
-              </div>
-            </ng-template>
-          </div>
+          <ng-template #defaultSelectOptionTemplate let-item
+            ><div class="select-option-info">
+              <ht-icon
+                *ngIf="item.icon"
+                class="icon"
+                [icon]="item.icon"
+                size="${IconSize.Small}"
+                [color]="item.iconColor"
+                [borderType]="item?.iconBorderType"
+                [borderColor]="item?.iconBorderColor"
+                [borderRadius]="item?.iconBorderRadius"
+              >
+              </ht-icon>
+              <span class="label">{{ item.label }}</span>
+            </div>
+          </ng-template>
         </ht-popover-content>
       </ht-popover>
     </div>
