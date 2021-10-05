@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -170,7 +170,7 @@ import { SelectSize } from './select-size';
     </div>
   `
 })
-export class SelectComponent<V> implements AfterViewInit, OnChanges {
+export class SelectComponent<V> implements AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -231,7 +231,7 @@ export class SelectComponent<V> implements AfterViewInit, OnChanges {
     private readonly changeDetector: ChangeDetectorRef
   ) {}
 
-  public ngAfterViewInit(): void {
+  public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
     if (this.controlItems !== undefined) {
       this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
