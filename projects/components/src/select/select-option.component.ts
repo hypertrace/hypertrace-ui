@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input, OnChanges } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Observable, Subject } from 'rxjs';
-import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holder';
 import { IconBorder } from '../icon/icon-border';
+import { SelectOptionRendererDirective } from './directive/select-option-renderer.directive';
 import { SelectOption } from './select-option';
 
 @Component({
   selector: 'ht-select-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: CONTENT_HOLDER_TEMPLATE
+  template: ``
 })
-export class SelectOptionComponent<V> extends ContentHolder implements OnChanges, SelectOption<V> {
+export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   @Input()
   public value!: V;
 
@@ -40,6 +40,9 @@ export class SelectOptionComponent<V> extends ContentHolder implements OnChanges
 
   @Input()
   public disabled?: boolean;
+
+  @ContentChild(SelectOptionRendererDirective)
+  public selectOptionRenderer?: SelectOptionRendererDirective;
 
   private readonly optionChangeSubject$: Subject<V> = new Subject<V>();
   public readonly optionChange$: Observable<V> = this.optionChangeSubject$.asObservable();
