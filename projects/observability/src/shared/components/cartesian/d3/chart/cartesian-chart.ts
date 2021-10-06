@@ -1,6 +1,6 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
-import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
+import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
 import { ContainerElement, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
@@ -78,7 +78,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2
   ) {
-    this.brushBehaviour = brush<unknown>().on('end', () => this.onBrushSelection(_d3CurrentEvent));
+    this.brushBehaviour = brushX<unknown>().on('end', () => this.onBrushSelection(_d3CurrentEvent));
   }
 
   protected onBrushSelection(event: D3BrushEvent<unknown>): void {
@@ -86,10 +86,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       return;
     }
 
-    const [start, end] = event.selection as [[number, number], [number, number]];
+    const { height } = this.hostElement.getBoundingClientRect();
 
-    let fromdata: any = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: start[0], y: start[1] }));
-    let todata: any = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: end[0], y: end[1] }));
+    const [startX, endX] = event.selection as [number, number];
+
+    let fromdata: any = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: startX, y: height }));
+    let todata: any = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endX, y: height }));
 
     this.eventListeners.forEach(listener => {
       listener.onEvent({ start: fromdata[0].dataPoint.timestamp, end: todata[0].dataPoint.timestamp } as any);
