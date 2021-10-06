@@ -101,7 +101,7 @@ import { SelectSize } from './select-size';
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
               ></ng-container>
               <ng-template #defaultMenuWithBackgroundTriggerTemplate
-                ><<ht-label
+                ><ht-label
                   class="trigger-label"
                   [label]="selected?.selectedLabel || selected?.label || this.placeholder"
                 >
