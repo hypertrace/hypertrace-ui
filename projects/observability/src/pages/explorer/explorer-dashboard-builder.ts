@@ -338,7 +338,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Entry Span ID',
             width: '1',
-            visible: false,
+            visible: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiTraceId'
@@ -364,7 +364,7 @@ export class ExplorerDashboardBuilder {
             type: 'table-widget-column',
             title: 'Trace ID',
             width: '1',
-            visible: false,
+            visible: true,
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
