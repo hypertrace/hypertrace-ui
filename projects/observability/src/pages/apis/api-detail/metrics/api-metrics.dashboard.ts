@@ -1,6 +1,7 @@
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 
 export const apiMetricsDashboard: DashboardDefaultConfiguration = {
   location: 'API_METRICS',
@@ -269,7 +270,10 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           },
           {
             type: 'container-widget',
@@ -329,7 +333,10 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
                       type: 'entity-error-percentage-timeseries-data-source'
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-navigation-handler'
+                }
               },
               {
                 type: 'cartesian-widget',
@@ -368,7 +375,10 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
                       }
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-navigation-handler'
+                }
               }
             ]
           }
@@ -397,7 +407,10 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
               }
             }
           }
-        ]
+        ],
+        'selection-handler': {
+          type: 'cartesian-explorer-navigation-handler'
+        }
       }
     ]
   }

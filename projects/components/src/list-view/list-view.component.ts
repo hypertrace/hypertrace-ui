@@ -1,15 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
-import { NavigationParamsType, NavigationService } from '@hypertrace/common';
-import { StringMapFilterBuilder } from '../filtering/filter/builder/types/string-map-filter-builder';
-import { FilterOperator } from '../filtering/filter/filter-operators';
-import { IconSize } from '../icon/icon-size';
-
+import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
+import { ListViewValueRendererDirective } from './list-view-value-renderer.directive';
 @Component({
   selector: 'ht-list-view',
   styleUrls: ['./list-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <ng-template #defaultValueRenderer let-record
+      ><span>{{ record.value }}</span></ng-template
+    >
     <div class="list-view">
       <div *ngIf="this.header" class="header-row">
         <div class="header-key-label">
@@ -24,17 +22,12 @@ import { IconSize } from '../icon/icon-size';
           <span>{{ record.key }}</span>
         </div>
         <div class="value">
-          <span>{{ record.value }}</span>
-        </div>
-        <div *ngIf="this.actionType" class="action-item">
-          <ht-icon
-            *ngIf="this.actionType === '${ListViewActionType.AttributeSearch}'"
-            class="attribute-search icon"
-            icon="${IconType.ChevronRight}"
-            size="${IconSize.Small}"
-            htTooltip="Search in Explorer"
-            (click)="this.searchAttributes(record.key, record.value)"
-          ></ht-icon>
+          <ng-container
+            *ngTemplateOutlet="
+              this.valueRenderer ? this.valueRenderer!.getTemplateRef() : defaultValueRenderer;
+              context: { $implicit: record }
+            "
+          ></ng-container>
         </div>
       </div>
     </div>
@@ -47,24 +40,8 @@ export class ListViewComponent {
   @Input()
   public records?: ListViewRecord[];
 
-  @Input()
-  public actionType?: ListViewActionType;
-
-  private readonly scopeQueryParam: string = 'endpoint-traces';
-  private readonly filterBuilder: StringMapFilterBuilder = new StringMapFilterBuilder();
-
-  public constructor(private readonly navigationService: NavigationService) {}
-
-  public searchAttributes(key: string, value: string): void {
-    this.navigationService.navigate({
-      navType: NavigationParamsType.InApp,
-      path: '/explorer',
-      queryParams: {
-        scope: this.scopeQueryParam,
-        filter: this.filterBuilder.buildEncodedUrlFilterString('tags', FilterOperator.ContainsKeyValue, [key, value])
-      }
-    });
-  }
+  @ContentChild(ListViewValueRendererDirective)
+  public valueRenderer?: ListViewValueRendererDirective;
 }
 
 export interface ListViewHeader {
@@ -75,8 +52,4 @@ export interface ListViewHeader {
 export interface ListViewRecord {
   key: string;
   value: string | number;
-}
-
-export const enum ListViewActionType {
-  AttributeSearch = 'attribute-search'
 }

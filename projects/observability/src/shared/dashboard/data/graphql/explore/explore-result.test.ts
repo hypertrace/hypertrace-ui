@@ -1,4 +1,5 @@
-import { AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from './explore-result';
 

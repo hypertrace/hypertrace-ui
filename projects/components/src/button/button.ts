@@ -3,6 +3,7 @@ export const enum ButtonRole {
   Primary = 'primary',
   Secondary = 'secondary',
   Tertiary = 'tertiary',
+  Quaternary = 'quaternary',
   Destructive = 'destructive',
   Additive = 'additive'
 }

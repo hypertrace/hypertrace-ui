@@ -1,21 +1,19 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Dictionary, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
-import {
-  AttributeMetadataType,
-  GraphQlTimeRange,
-  MetadataService,
-  MetricAggregationType,
-  MetricHealth,
-  Specification
-} from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument, GraphQlRequestCacheability, GraphQlSelection } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ENTITY_METADATA } from '../../../../../../shared/constants/entity-metadata';
+import { MetadataService } from '../../../../../services/metadata/metadata.service';
+import { AttributeMetadataType } from '../../../../model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../model/metrics/metric-health';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../model/schema/filter/entity/graphql-entity-filter';
 import { GraphQlIntervalUnit } from '../../../../model/schema/interval/graphql-interval-unit';
+import { Specification } from '../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../model/schema/timerange/graphql-time-range';
 import { ObservabilitySpecificationBuilder } from '../../../builders/selections/observability-specification-builder';
 import {
   EntitiesGraphQlQueryHandlerService,

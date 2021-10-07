@@ -2,14 +2,13 @@
 
 $key-width: 40%;
 $value-width: auto;
-$action-item-width: 32px;
 $horizontal-offset: 12px;
 
 @mixin grid-view {
   width: 100%;
   padding: 8px 0;
   display: grid;
-  grid-template-columns: $key-width $value-width $action-item-width;
+  grid-template-columns: $key-width $value-width;
   align-content: center;
 }
 
@@ -55,28 +54,6 @@ $horizontal-offset: 12px;
     }
     .key {
       font-weight: 500;
-    }
-
-    .action-item {
-      display: none;
-      align-self: center;
-
-      .attribute-search {
-        @include center-contents();
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 1px solid $gray-5;
-
-        &:hover {
-          @include link-hover();
-          border: 1px solid $blue-4;
-        }
-      }
-    }
-
-    &:hover .action-item {
-      display: contents;
     }
   }
 

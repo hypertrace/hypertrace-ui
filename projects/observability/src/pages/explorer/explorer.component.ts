@@ -2,11 +2,13 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
 import { Filter, ToggleItem } from '@hypertrace/components';
-import { AttributeMetadata, MetadataService, SPAN_SCOPE } from '@hypertrace/distributed-tracing';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
+import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import {
   ExplorerDashboardBuilder,
   ExplorerDashboardBuilderFactory,

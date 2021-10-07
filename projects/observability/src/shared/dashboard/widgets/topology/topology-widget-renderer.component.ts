@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -14,6 +13,7 @@ import { INTERACTION_SCOPE } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { TopologyData } from '../../data/graphql/topology/topology-data-source.model';
 import { EntityEdgeCurveRendererService } from './edge/curved/entity-edge-curve-renderer.service';
 import { ApiNodeBoxRendererService } from './node/box/api-node-renderer/api-node-box-renderer.service';

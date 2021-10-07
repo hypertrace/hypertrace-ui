@@ -10,11 +10,8 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, NavigationService, TimeRange } from '@hypertrace/common';
+import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
 import { defaults } from 'lodash-es';
-import { FilterOperator } from '../../../../../components/src/filtering/filter/filter-operators';
-import { ExplorerService } from '../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../pages/explorer/explorer.component';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -68,6 +65,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
+  @Output()
+  public readonly selecteRangeChange: EventEmitter<any> = new EventEmitter();
+
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
 
@@ -78,9 +78,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly renderer: Renderer2,
-    private readonly explorerService: ExplorerService,
-    private readonly navigationService: NavigationService
+    private readonly renderer: Renderer2
   ) {}
 
   public ngOnChanges(): void {
@@ -101,26 +99,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       )
       .withEventListener(ChartEvent.Select, data => {
-        let dataCopy: any = data;
-        const startDate = new Date(dataCopy.start).getTime() - 300000;
-        const endDate = new Date(dataCopy.end).getTime() + 300000;
-
-        this.explorerService
-          .buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-            {
-              field: 'startTime',
-              operator: FilterOperator.GreaterThanOrEqualTo,
-              value: startDate
-            },
-            {
-              field: 'endTime',
-              operator: FilterOperator.LessThanOrEqualTo,
-              value: endDate
-            }
-          ])
-          .subscribe(data => {
-            this.navigationService.navigate(data);
-          });
+        this.selecteRangeChange.emit(data);
       });
 
     if (this.bands) {

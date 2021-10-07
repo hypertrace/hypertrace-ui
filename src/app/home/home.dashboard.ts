@@ -3,10 +3,11 @@ import { CoreTableCellRendererType, TableMode, TableStyle, TitlePosition } from 
 import {
   DashboardDefaultConfiguration,
   GraphQlOperatorType,
+  LegendPosition,
   MetricAggregationType,
+  ObservabilityTableCellType,
   TracingTableCellType
-} from '@hypertrace/distributed-tracing';
-import { LegendPosition, ObservabilityTableCellType } from '@hypertrace/observability';
+} from '@hypertrace/observability';
 
 // tslint:disable: max-file-line-count
 export const homeDashboard: DashboardDefaultConfiguration = {
@@ -476,7 +477,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           },
           {
             type: 'cartesian-widget',
@@ -553,7 +557,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           },
           {
             type: 'cartesian-widget',
@@ -630,7 +637,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           }
         ]
       },

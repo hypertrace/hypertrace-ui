@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IconModule } from '../icon/icon.module';
-import { TooltipModule } from '../tooltip/tooltip.module';
+import { ListViewValueRendererDirective } from './list-view-value-renderer.directive';
 import { ListViewComponent } from './list-view.component';
 
 @NgModule({
-  declarations: [ListViewComponent],
-  exports: [ListViewComponent],
-  imports: [CommonModule, IconModule, TooltipModule]
+  declarations: [ListViewComponent, ListViewValueRendererDirective],
+  exports: [ListViewComponent, ListViewValueRendererDirective],
+  imports: [CommonModule]
 })
 export class ListViewModule {}

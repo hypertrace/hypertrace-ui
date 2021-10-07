@@ -25,7 +25,6 @@ This documents contains the onboarding guide for hypertrace-ui.
   - [Common](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/common)
   - [Components](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/components)
   - [Dashboards](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/dashboards)
-  - [Distributed Tracing](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/distributed-tracing)
   - [Observability](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/observability)
 
 - [Hypertrace ui app](https://github.com/hypertrace/hypertrace-ui/tree/main/src)

@@ -11,14 +11,21 @@ import {
 } from '@angular/core';
 import { LegendPosition } from '../legend/legend.component';
 import { TooltipOption } from '../utils/d3/d3-visualization-builder.service';
-import { Donut, DonutCenter, DonutSeries } from './donut';
+import { Donut, DonutAlignmentStyle, DonutCenter, DonutSeries } from './donut';
 import { DonutBuilderService } from './donut-builder.service';
 
 @Component({
   selector: 'ht-donut',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['../utils/d3/d3-visualization.scss', './donut.component.scss'],
-  template: ` <div class="fill-container donut-container" (htLayoutChange)="this.reflow()" #donutContainer></div> `
+  template: `
+    <div
+      class="fill-container donut-container"
+      (htLayoutChange)="this.reflow()"
+      [ngClass]="alignment"
+      #donutContainer
+    ></div>
+  `
 })
 export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input()
@@ -35,6 +42,9 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   @Input()
   public displayLegendCounts: boolean = true;
+
+  @Input()
+  public alignment: string = DonutAlignmentStyle.Center;
 
   @ViewChild('donutContainer', { static: true })
   private readonly donutContainer!: ElementRef;
