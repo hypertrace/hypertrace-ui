@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormattingModule, HtRoute } from '@hypertrace/common';
+import { FormattingModule, HtRoute, MemoizeModule } from '@hypertrace/common';
 import {
   ButtonModule,
   CopyShareableLinkToClipboardModule,
@@ -10,8 +10,9 @@ import {
   LoadAsyncModule,
   NavigableTabModule,
   SummaryValueModule,
-  LinkModule
+  TooltipModule
 } from '@hypertrace/components';
+import { ExploreFilterLinkModule } from '../../shared/components/explore-filter-link/explore-filter-link.module';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
 import { NavigableDashboardModule } from '../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
@@ -51,10 +52,12 @@ const ROUTE_CONFIG: HtRoute[] = [
     ObservabilityDashboardModule,
     IconModule,
     SummaryValueModule,
-    LinkModule,
     LoadAsyncModule,
+    MemoizeModule,
     FormattingModule,
     ButtonModule,
+    TooltipModule,
+    ExploreFilterLinkModule,
     CopyShareableLinkToClipboardModule,
     NavigableTabModule,
     LogEventsTableModule,

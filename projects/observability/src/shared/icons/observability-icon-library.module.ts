@@ -18,6 +18,7 @@ const iconsRootPath = 'assets/icons';
       { key: ObservabilityIconType.Cassandra, url: `${iconsRootPath}/cassandra.svg` },
       { key: ObservabilityIconType.Elastic, url: `${iconsRootPath}/elastic.svg` },
       { key: ObservabilityIconType.Edge, url: `${iconsRootPath}/edge.svg` },
+      { key: ObservabilityIconType.EdgeCalls, url: `${iconsRootPath}/edge-calls.svg` },
       { key: ObservabilityIconType.Gateway, url: `${iconsRootPath}/gateway.svg` },
       { key: ObservabilityIconType.Helm, url: `${iconsRootPath}/helm.svg` },
       { key: ObservabilityIconType.HTTP, url: `${iconsRootPath}/http.svg` },

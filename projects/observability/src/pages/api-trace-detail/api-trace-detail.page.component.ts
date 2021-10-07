@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationParams, NavigationParamsType, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
+import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
+import { ButtonRole, ButtonStyle, FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
+import { ExplorerService } from '../explorer/explorer-service';
 import { ScopeQueryParam } from '../explorer/explorer.component';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
@@ -32,14 +33,21 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
           ></ht-summary-value>
-          <ht-link class="link" [paramsOrUrl]="buildNavParamsForExplorer(traceDetails.traceId)" class="session-id-link">
+
+          <div class="filterable-summary-value">
             <ht-summary-value
               class="summary-value"
               icon="${IconType.TraceId}"
               label="Trace ID"
               [value]="traceDetails.traceId"
             ></ht-summary-value>
-          </ht-link>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+              htTooltip="See traces in Explorer"
+            >
+            </ht-explore-filter-link>
+          </div>
 
           <div class="separation"></div>
 
@@ -53,17 +61,17 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             (click)="this.navigateToFullTrace(traceDetails.traceId, traceDetails.startTime)"
           ></ht-button>
         </div>
-      </div>
 
-      <ht-navigable-tab-group class="tabs">
-        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
-        <ng-container *ngIf="this.logEvents$ | async as logEvents">
-          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
-        </ng-container>
-      </ht-navigable-tab-group>
+        <ht-navigable-tab-group class="tabs">
+          <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+          <ng-container *ngIf="this.logEvents$ | async as logEvents">
+            <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+          </ng-container>
+        </ht-navigable-tab-group>
 
-      <div class="scrollable-container">
-        <router-outlet></router-outlet>
+        <div class="scrollable-container">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   `
@@ -76,7 +84,8 @@ export class ApiTraceDetailPageComponent {
 
   public constructor(
     protected readonly navigationService: NavigationService,
-    private readonly apiTraceDetailService: ApiTraceDetailService
+    private readonly apiTraceDetailService: ApiTraceDetailService,
+    private readonly explorerService: ExplorerService
   ) {
     this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
     this.logEvents$ = this.apiTraceDetailService.fetchLogEvents();
@@ -90,14 +99,8 @@ export class ApiTraceDetailPageComponent {
     this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
 
-  public buildNavParamsForExplorer = (traceId: string): NavigationParams => ({
-    navType: NavigationParamsType.InApp,
-    path: '/explorer',
-    relativeTo: undefined,
-    replaceCurrentHistory: false,
-    queryParams: {
-      filter: ['trace', `traceId_eq_${traceId}`],
-      scope: ScopeQueryParam.EndpointTraces
-    }
-  });
+  public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.traceId }
+    ]);
 }
