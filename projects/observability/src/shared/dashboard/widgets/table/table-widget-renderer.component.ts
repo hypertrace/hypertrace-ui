@@ -32,7 +32,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, pairwise, share, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, pairwise, share, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -98,6 +98,10 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
+  private static readonly DEFAULT_PREFERENCES: TableWidgetPreferences = {
+    columns: []
+  };
+
   public viewItems: ToggleItem<string>[] = [];
 
   public selectControls$!: Observable<TableSelectControl[]>;
@@ -111,9 +115,7 @@ export class TableWidgetRendererComponent
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
-  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<
-    Dictionary<unknown>
-  >({});
+  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<Dictionary<unknown>>({});
   public queryProperties$: Observable<Dictionary<unknown>> = this.queryPropertiesSubject.asObservable();
 
   private selectedRowInteractionHandler?: InteractionHandler;
@@ -131,10 +133,8 @@ export class TableWidgetRendererComponent
     super.ngOnInit();
 
     this.metadata$ = this.getScopeAttributes();
-    this.columnConfigs$ = (isNonEmptyString(this.model.id)
-      ? this.preferenceService.get<TableColumnConfig[]>(this.model.id, [])
-      : of([])
-    ).pipe(switchMap(persistedColumns => this.getColumnConfigs(persistedColumns)));
+
+    this.columnConfigs$ = this.getColumnConfigs();
 
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
@@ -237,39 +237,27 @@ export class TableWidgetRendererComponent
     return this.data$!.pipe(map(data => data?.getScope?.()));
   }
 
-  private getColumnConfigs(persistedColumns: TableColumnConfig[] = []): Observable<TableColumnConfig[]> {
-    return combineLatest([
-      this.getScope(),
-      this.api.change$.pipe(
-        map(() => true),
-        startWith(true)
-      )
-    ]).pipe(
-      switchMap(([scope]) => this.model.getColumns(scope)),
-      startWith([]),
-      map((columns: SpecificationBackedTableColumnDef[]) =>
-        this.applySavedColumnPreferences(columns, persistedColumns)
-      ),
-      pairwise(),
-      filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
-      map(([_, current]) => current),
-      share(),
-      tap(() => this.onDashboardRefresh())
+  private getColumnConfigs(): Observable<TableColumnConfig[]> {
+    return this.getPreferences(TableWidgetRendererComponent.DEFAULT_PREFERENCES).pipe(
+      switchMap(preferences => combineLatest([
+        this.getScope(),
+        this.api.change$.pipe(
+          map(() => true),
+          startWith(true)
+        )
+      ]).pipe(
+        switchMap(([scope]) => this.model.getColumns(scope)),
+        startWith([]),
+        map((columns: SpecificationBackedTableColumnDef[]) =>
+          this.hydratePersistedColumnConfigs(columns, preferences.columns)
+        ),
+        pairwise(),
+        filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
+        map(([_, current]) => current),
+        share(),
+        tap(() => this.onDashboardRefresh())
+      ))
     );
-  }
-
-  private applySavedColumnPreferences(
-    columns: SpecificationBackedTableColumnDef[],
-    persistedColumns: TableColumnConfig[]
-  ): SpecificationBackedTableColumnDef[] {
-    return columns.map(column => {
-      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
-
-      return {
-        ...column, // Apply default column config
-        ...(found ? found : {}) // Override with any saved properties
-      };
-    });
   }
 
   private getScopeAttributes(): Observable<FilterAttribute[]> {
@@ -360,11 +348,10 @@ export class TableWidgetRendererComponent
   }
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
-    if (isNonEmptyString(this.model.id)) {
-      this.preferenceService.set(
-        this.model.id,
-        columns.map(column => this.pickPersistColumnProperties(column))
-      );
+    if (isNonEmptyString(this.model.getId())) {
+      this.setPreferences({
+        columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+      });
     }
   }
 
@@ -392,12 +379,42 @@ export class TableWidgetRendererComponent
     return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
   }
 
-  private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
+  private hydratePersistedColumnConfigs(
+    columns: SpecificationBackedTableColumnDef[],
+    persistedColumns: TableColumnConfig[]
+  ): SpecificationBackedTableColumnDef[] {
+    return columns.map(column => {
+      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
+
+      return {
+        ...column, // Apply default column config
+        ...(found ? found : {}) // Override with any saved properties
+      };
+    });
+  }
+
+  private dehydratePersistedColumnConfig(column: TableColumnConfig): PersistedTableColumnConfig {
     /*
      * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
      * to convert and store. We want to just pluck the relevant properties that are required to be saved.
      */
     return pick(column, ['id', 'visible']);
+  }
+
+  private getPreferences(defaultPreferences: TableWidgetPreferences): Observable<TableWidgetPreferences> {
+    return isNonEmptyString(this.model.getId())
+      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(
+        first(),
+        tap(preferences => console.debug('getPreferences', this.model.getId(), preferences))
+      )
+      : of(defaultPreferences);
+  }
+
+  private setPreferences(preferences: TableWidgetPreferences): void {
+    console.debug('setPreferences', this.model.getId(), preferences);
+    if (isNonEmptyString(this.model.getId())) {
+      this.preferenceService.set(this.model.getId()!, preferences);
+    }
   }
 
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {
@@ -417,3 +434,9 @@ export class TableWidgetRendererComponent
     };
   }
 }
+
+interface TableWidgetPreferences {
+  columns: PersistedTableColumnConfig[];
+}
+
+type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;

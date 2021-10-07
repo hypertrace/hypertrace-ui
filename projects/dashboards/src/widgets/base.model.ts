@@ -15,4 +15,8 @@ export abstract class BaseModel {
     type: STRING_PROPERTY.type
   })
   public id?: string;
+
+  public getId(): string | undefined {
+    return this.id;
+  }
 }

@@ -61,6 +61,10 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return found ? this.api.createChild<TableWidgetModel>(found.template) : undefined;
   }
 
+  public getId(): string | undefined {
+    return this.delegateModel && this.delegateModel?.getId();
+  }
+
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.delegateModel ? this.delegateModel?.getData() : NEVER;
   }
