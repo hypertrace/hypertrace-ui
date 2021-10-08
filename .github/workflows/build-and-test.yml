@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - rzp_main
 jobs:
   npm-install-if-needed:
     runs-on: ubuntu-20.04
@@ -121,7 +121,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
       - name: Upload Unit Test Results
         if: always()
@@ -156,7 +156,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: artifacts/**/*.xml
   merge-publish:
-    if: github.event_name == 'push'
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed, build, lint, test, validate-helm-charts]
     steps:
@@ -186,11 +185,16 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_READ_USER }}
-          password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
+          username: ${{ secrets.PUBLIC_DOCKER_USERNAME }}
+          password: ${{ secrets.PUBLIC_DOCKER_PASSWORD }}
 
-      - name: Push docker image
-        run: ./gradlew dockerPushImages
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
+      - name: Push To Dockerhub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.PUBLIC_DOCKER_USERNAME }}
+          password: ${{ secrets.PUBLIC_DOCKER_PASSWORD }}
+          repository: ${{ github.repository }}
+          tags: ${{ github.sha }}
+          dockerfile: Dockerfile
+          build_args: GIT_COMMIT_HASH=${{ github.sha }},GIT_TOKEN=${{ secrets.GIT_ACTION_TOKEN }},GIT_USERNAME=rzp
+
