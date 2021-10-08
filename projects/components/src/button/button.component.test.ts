@@ -1,6 +1,8 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { TrackDirective } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { IconSize } from '../icon/icon-size';
 import { ButtonRole, ButtonSize, ButtonStyle } from './button';
 import { ButtonComponent } from './button.component';
@@ -12,6 +14,7 @@ describe('Button Component', () => {
   const createHost = createHostFactory({
     component: ButtonComponent,
     imports: [ButtonModule, RouterTestingModule],
+    declarations: [MockDirective(TrackDirective)],
     providers: [],
     declareComponent: false
   });

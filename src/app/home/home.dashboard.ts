@@ -477,7 +477,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           },
           {
             type: 'cartesian-widget',
@@ -554,7 +557,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           },
           {
             type: 'cartesian-widget',
@@ -631,7 +637,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-navigation-handler'
+            }
           }
         ]
       },

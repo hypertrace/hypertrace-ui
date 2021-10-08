@@ -20,7 +20,8 @@ export const serviceApisListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'entity-specification',
           'entity-type': ObservabilityEntityType.Api
-        }
+        },
+        sort: TableSortDirection.Descending
       },
       {
         type: 'table-widget-column',
@@ -30,8 +31,7 @@ export const serviceApisListDashboard: DashboardDefaultConfiguration = {
           type: 'metric-aggregation',
           metric: 'duration',
           aggregation: 'p99'
-        },
-        sort: TableSortDirection.Descending
+        }
       },
       {
         type: 'table-widget-column',

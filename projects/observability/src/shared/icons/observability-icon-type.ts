@@ -9,6 +9,7 @@ export const enum ObservabilityIconType {
   Backend = 'svg:backend',
   Cassandra = 'svg:cassandra',
   Edge = 'svg:edge',
+  EdgeCalls = 'svg:edge-calls',
   Elastic = 'svg:elastic',
   Gateway = 'svg:gateway',
   Helm = 'svg:helm',

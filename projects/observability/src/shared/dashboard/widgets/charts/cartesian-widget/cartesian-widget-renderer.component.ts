@@ -28,6 +28,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"
         (selectedIntervalChange)="this.onIntervalChange($event)"
+        (selecteRangeChange)="this.onRangeChange($event)"
       >
       </ht-cartesian-chart>
     </ht-titled-content>
@@ -52,6 +53,10 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
     this.updateDataObservable();
+  }
+
+  public onRangeChange(data: any): void {
+    this.model.selectionHandler?.execute(data);
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {

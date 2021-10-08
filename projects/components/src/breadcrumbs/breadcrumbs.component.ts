@@ -15,6 +15,8 @@ import { IconSize } from '../icon/icon-size';
           [ngClass]="{ navigable: breadcrumb.url !== undefined }"
           *ngFor="let breadcrumb of this.breadcrumbs; last as isLast; first as isFirst"
           [htTooltip]="this.tooltipMap.get(breadcrumb)"
+          [htTrack]
+          [htTrackLabel]="breadcrumb.label"
         >
           <ht-icon
             class="icon"

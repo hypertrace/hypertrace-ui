@@ -1,5 +1,6 @@
 import { RouterLinkWithHref } from '@angular/router';
-import { NavigationService } from '@hypertrace/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NavigationService, TrackDirective } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
@@ -11,9 +12,9 @@ describe('Link component', () => {
 
   const createHost = createHostFactory({
     component: LinkComponent,
-    imports: [LetAsyncModule],
+    imports: [LetAsyncModule, RouterTestingModule],
     providers: [mockProvider(NavigationService)],
-    declarations: [MockDirective(RouterLinkWithHref)]
+    declarations: [MockDirective(RouterLinkWithHref), MockDirective(TrackDirective)]
   });
 
   test('Link contents should be displayed if params/url is undefined', () => {

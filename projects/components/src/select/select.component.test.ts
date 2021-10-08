@@ -60,6 +60,26 @@ describe('Select Component', () => {
     expect(spectator.element).toHaveText(selectionOptions[2].label);
   }));
 
+  test('should display initial selection for new select renderer', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected">
+      <ht-select-option *ngFor="let option of options; let i = index" [label]="option.label" [value]="option.value">
+      <div *htSelectOptionRenderer>new-label</div>
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value
+        }
+      }
+    );
+    spectator.tick();
+
+    expect(spectator.element).toHaveText('new-label');
+  }));
+
   test('should display provided options when clicked', fakeAsync(() => {
     spectator = hostFactory(
       `
