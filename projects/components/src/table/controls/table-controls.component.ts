@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
@@ -128,10 +129,8 @@ export class TableControlsComponent implements OnChanges {
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
 
-  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<
-    TableSelectControl,
-    TableSelectControlOption[]
-  >();
+  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<TableSelectControl,
+    TableSelectControlOption[]>();
 
   public checkboxSelections: string[] = [];
   private readonly checkboxDiffer?: IterableDiffer<string>;
@@ -194,7 +193,7 @@ export class TableControlsComponent implements OnChanges {
 
   private setActiveViewItem(): void {
     if (this.viewItems !== undefined) {
-      this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
+      this.activeViewItem = this.findViewItem(this.activeViewItem);
     }
   }
 
@@ -245,5 +244,9 @@ export class TableControlsComponent implements OnChanges {
 
   public onViewChange(item: ToggleItem<string>): void {
     this.viewChange.emit(item.value);
+  }
+
+  private findViewItem(viewItem?: ToggleItem): ToggleItem | undefined {
+    return this.viewItems?.find(item => isEqual(item, viewItem)) ?? this.viewItems![0];
   }
 }

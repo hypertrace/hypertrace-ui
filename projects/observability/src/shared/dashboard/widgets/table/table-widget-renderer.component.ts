@@ -62,6 +62,7 @@ import { TableWidgetModel } from './table-widget.model';
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
           [viewItems]="this.viewItems"
+          [activeViewItem]="this.activeViewItem$ | async"
           (searchChange)="this.onSearchChange($event)"
           (selectChange)="this.onSelectChange($event)"
           (checkboxChange)="this.onCheckboxChange($event)"
@@ -102,7 +103,10 @@ export class TableWidgetRendererComponent
     columns: []
   };
 
+  private static readonly DEFAULT_TAB_INDEX: number = 0;
+
   public viewItems: ToggleItem<string>[] = [];
+  public activeViewItem$!: Observable<ToggleItem<string>>;
 
   public selectControls$!: Observable<TableSelectControl[]>;
   public checkboxControls$!: Observable<TableCheckboxControl[]>;
@@ -132,7 +136,11 @@ export class TableWidgetRendererComponent
   public ngOnInit(): void {
     super.ngOnInit();
 
+    this.viewItems = this.model.getViewOptions().map(viewOption => this.buildViewItem(viewOption));
+
     this.metadata$ = this.getScopeAttributes();
+
+    this.activeViewItem$ = this.getActiveViewItem();
 
     this.columnConfigs$ = this.getColumnConfigs();
 
@@ -143,11 +151,6 @@ export class TableWidgetRendererComponent
     ]).pipe(
       map(([toggleFilters, searchFilters, selectFilters]) => [...toggleFilters, ...searchFilters, ...selectFilters])
     );
-
-    this.viewItems = this.model.getViewOptions().map(viewOption => ({
-      label: capitalize(viewOption),
-      value: viewOption
-    }));
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
@@ -237,8 +240,14 @@ export class TableWidgetRendererComponent
     return this.data$!.pipe(map(data => data?.getScope?.()));
   }
 
+  private getActiveViewItem(): Observable<ToggleItem<string>> {
+    return this.getViewPreferences().pipe(
+      map(preferences => this.hydratePersistedActiveViewItem(this.viewItems, preferences.activeViewItem))
+    );
+  }
+
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
-    return this.getPreferences(TableWidgetRendererComponent.DEFAULT_PREFERENCES).pipe(
+    return this.getPreferences().pipe(
       switchMap(preferences => combineLatest([
         this.getScope(),
         this.api.change$.pipe(
@@ -344,14 +353,25 @@ export class TableWidgetRendererComponent
 
   public onViewChange(view: string): void {
     this.model.setView(view);
+    if (isNonEmptyString(this.model.getId())) {
+      this.getViewPreferences().subscribe(
+        preferences => this.setViewPreferences({
+          ...preferences,
+          activeViewItem: view
+        })
+      );
+    }
     this.columnConfigs$ = this.getColumnConfigs();
   }
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.setPreferences({
-        columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
-      });
+      this.getPreferences().subscribe(
+        preferences => this.setPreferences({
+          ...preferences,
+          columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+        })
+      );
     }
   }
 
@@ -379,6 +399,13 @@ export class TableWidgetRendererComponent
     return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
   }
 
+  private hydratePersistedActiveViewItem(
+    viewItems: ToggleItem<string>[],
+    persistedActiveViewItem?: string
+  ): ToggleItem<string> {
+    return persistedActiveViewItem ? this.buildViewItem(persistedActiveViewItem) : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
+  }
+
   private hydratePersistedColumnConfigs(
     columns: SpecificationBackedTableColumnDef[],
     persistedColumns: TableColumnConfig[]
@@ -401,20 +428,45 @@ export class TableWidgetRendererComponent
     return pick(column, ['id', 'visible']);
   }
 
-  private getPreferences(defaultPreferences: TableWidgetPreferences): Observable<TableWidgetPreferences> {
+  private getViewPreferences(): Observable<TableWidgetViewPreferences> {
+    return isNonEmptyString(this.model.viewId)
+      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId!, {}).pipe(
+        first(),
+        tap(preferences => console.debug('getViewPreferences', this.model.viewId, preferences))
+      )
+      : of({});
+  }
+
+  private setViewPreferences(preferences: TableWidgetViewPreferences): void {
+    console.debug('setViewPreferences', this.model.viewId, preferences);
+    if (isNonEmptyString(this.model.viewId)) {
+      this.preferenceService.set(this.model.viewId!, preferences);
+    }
+  }
+
+  private getPreferences(
+    defaultPreferences: TableWidgetPreferences = TableWidgetRendererComponent.DEFAULT_PREFERENCES
+  ): Observable<TableWidgetPreferences> {
     return isNonEmptyString(this.model.getId())
       ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(
         first(),
-        tap(preferences => console.debug('getPreferences', this.model.getId(), preferences))
+        tap(preferences => console.info('getPreferences', this.model.getId(), preferences))
       )
       : of(defaultPreferences);
   }
 
   private setPreferences(preferences: TableWidgetPreferences): void {
-    console.debug('setPreferences', this.model.getId(), preferences);
+    console.info('setPreferences', this.model.getId(), preferences);
     if (isNonEmptyString(this.model.getId())) {
       this.preferenceService.set(this.model.getId()!, preferences);
     }
+  }
+
+  private buildViewItem(viewOption: string): ToggleItem<string> {
+    return ({
+      label: capitalize(viewOption),
+      value: viewOption
+    });
   }
 
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {
@@ -433,6 +485,10 @@ export class TableWidgetRendererComponent
       ...properties
     };
   }
+}
+
+interface TableWidgetViewPreferences {
+  activeViewItem?: string;
 }
 
 interface TableWidgetPreferences {
