@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { defaultIfEmpty } from 'rxjs/operators';
-import { ModalSize } from '../modal/modal';
+import { ModalDimension, ModalSize } from '../modal/modal';
 import { ModalService } from '../modal/modal.service';
 import { ConfirmationModalComponent, ConfirmationModalData } from './confirmation-modal.component';
 
@@ -14,7 +14,7 @@ export class ConfirmationService {
   public confirm(config: ConfirmationModalConfig): Observable<boolean> {
     return this.modalService
       .createModal({
-        size: ModalSize.Small,
+        size: config.size ?? ModalSize.Small,
         content: ConfirmationModalComponent,
         data: config,
         title: config.title
@@ -23,4 +23,4 @@ export class ConfirmationService {
   }
 }
 
-export type ConfirmationModalConfig = ConfirmationModalData & { title?: string };
+export type ConfirmationModalConfig = ConfirmationModalData & { title?: string, size?: ModalSize | ModalDimension };
