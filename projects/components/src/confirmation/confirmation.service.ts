@@ -23,4 +23,4 @@ export class ConfirmationService {
   }
 }
 
-export type ConfirmationModalConfig = ConfirmationModalData & { title?: string, size?: ModalSize | ModalDimension };
+export type ConfirmationModalConfig = ConfirmationModalData & { title?: string; size?: ModalSize | ModalDimension };
