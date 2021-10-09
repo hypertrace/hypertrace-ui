@@ -1,8 +1,8 @@
+import { NavigationService } from '@hypertrace/common';
+import { FilterOperator } from '@hypertrace/components';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
-import { NavigationService } from '../../../../../../../../common/src/navigation/navigation.service';
-import { FilterOperator } from '../../../../../../../../components/src/filtering/filter/filter-operators';
 import { ExplorerService } from '../../../../../../pages/explorer/explorer-service';
 import { ScopeQueryParam } from '../../../../../../pages/explorer/explorer.component';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
@@ -24,6 +24,7 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
       const startDate = data.getXAxisValue(startPoint[0]);
       const endDate = data.getXAxisValue(endPoint[0]);
       this.navigateToExplorer(startDate, endDate);
+
       return;
     });
 

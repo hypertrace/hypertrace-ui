@@ -1,7 +1,7 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
 import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
-import { ContainerElement, mouse, select } from 'd3-selection';
+import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
@@ -32,8 +32,6 @@ import { CartesianIntervalData } from '../legend/cartesian-interval-control.comp
 import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
-
-import { event as _d3CurrentEvent } from 'd3-selection';
 
 // tslint:disable:max-file-line-count
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
@@ -86,7 +84,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       if (listener.event === ChartEvent.Select) {
         const [start, end] = event.selection as [[number, number], [number, number]];
 
-        let selctionData: any = {
+        const selctionData: any = {
           series: this.allSeriesData,
           start: start,
           end: end
@@ -310,7 +308,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private attachBrush(): void {
-    let brushBehaviour: BrushBehavior<unknown> = brush<unknown>().on('end', () =>
+    const brushBehaviour: BrushBehavior<unknown> = brush<unknown>().on('end', () =>
       this.onBrushSelection(_d3CurrentEvent)
     );
 
@@ -465,10 +463,10 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return 'click';
       case ChartEvent.DoubleClick:
         return 'dblclick';
-      case ChartEvent.DoubleClick:
-        return 'select';
       case ChartEvent.RightClick:
         return 'contextmenu';
+      case ChartEvent.Select:
+        return 'select';
       default:
         return '';
     }
