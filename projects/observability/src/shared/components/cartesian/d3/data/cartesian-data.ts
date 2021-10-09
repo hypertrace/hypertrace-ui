@@ -41,6 +41,10 @@ export abstract class CartesianData<TData, TVisualization> {
     return this.dataLookupStrategy ? this.dataLookupStrategy.dataForLocation(location) : [];
   }
 
+  public getXAxisValue(point: number): Date | number {
+    return this.xScale.invert(point);
+  }
+
   protected buildXScale(): AnyCartesianScale<TData> {
     return this.scaleBuilder.build(AxisType.X);
   }
