@@ -51,6 +51,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Eye, url: `${iconsRootPath}/eye.svg` },
         { key: IconType.FileCode, url: `${iconsRootPath}/file-code.svg` },
         { key: IconType.Filter, url: `${iconsRootPath}/filter.svg` },
+        { key: IconType.FilterSpecial, url: `${iconsRootPath}/filter-special.svg` },
         { key: IconType.Go, url: `${iconsRootPath}/go.svg` },
         { key: IconType.Helm, url: `${iconsRootPath}/helm.svg` },
         { key: IconType.Hypertrace, url: `${iconsRootPath}/hypertrace.svg` },

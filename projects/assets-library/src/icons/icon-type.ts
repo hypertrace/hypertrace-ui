@@ -53,6 +53,7 @@ export const enum IconType {
   Favorite = 'favorite_border',
   FileCode = 'svg:file-code',
   Filter = 'svg:filter',
+  FilterSpecial = 'svg:filter-special',
   First = 'first_page',
   Go = 'svg:go',
   Helm = 'svg:helm',
