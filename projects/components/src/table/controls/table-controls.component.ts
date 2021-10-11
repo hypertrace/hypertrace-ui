@@ -161,6 +161,7 @@ export class TableControlsComponent implements OnChanges {
     }
 
     if (changes.checkboxControls) {
+      console.info('checkboxControl change', this.checkboxControls);
       this.diffCheckboxes();
     }
 

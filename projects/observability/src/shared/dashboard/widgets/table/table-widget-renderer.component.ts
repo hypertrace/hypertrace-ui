@@ -12,7 +12,8 @@ import {
   FilterOperator,
   StatefulTableRow,
   TableCheckboxChange,
-  TableCheckboxControl,
+  TableCheckboxControl, TableCheckboxControlOption,
+  TableCheckboxOptions,
   TableColumnConfig,
   TableControlOption,
   TableControlOptionType,
@@ -100,7 +101,8 @@ export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
   private static readonly DEFAULT_PREFERENCES: TableWidgetPreferences = {
-    columns: []
+    columns: [],
+    checkboxes: []
   };
 
   private static readonly DEFAULT_TAB_INDEX: number = 0;
@@ -204,34 +206,6 @@ export class TableWidgetRendererComponent
     );
   }
 
-  protected fetchAndPopulateCheckboxControls(): void {
-    this.checkboxControls$ = forkJoinSafeEmpty(
-      this.model
-        .getCheckboxControlOptions()
-        .filter(checkboxControlModel => checkboxControlModel.visible)
-        .map(checkboxControlModel =>
-          checkboxControlModel.getOptions().pipe(
-            take(1),
-            map(options => ({
-              label: checkboxControlModel.checked ? options[0].label : options[1].label,
-              value: checkboxControlModel.checked,
-              options: options
-            }))
-          )
-        )
-    ).pipe(
-      tap((checkboxControls: TableCheckboxControl[]) => {
-        // Apply initial values for checkboxes
-        checkboxControls.forEach(checkboxControl => {
-          this.onCheckboxChange({
-            checkbox: checkboxControl,
-            option: checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
-          });
-        });
-      })
-    );
-  }
-
   public get syncWithUrl(): boolean {
     return this.model.style === TableStyle.FullPage;
   }
@@ -242,7 +216,7 @@ export class TableWidgetRendererComponent
 
   private getActiveViewItem(): Observable<ToggleItem<string>> {
     return this.getViewPreferences().pipe(
-      map(preferences => this.hydratePersistedActiveViewItem(this.viewItems, preferences.activeViewItem))
+      map(preferences => this.hydratePersistedActiveView(this.viewItems, preferences.activeView))
     );
   }
 
@@ -258,7 +232,7 @@ export class TableWidgetRendererComponent
         switchMap(([scope]) => this.model.getColumns(scope)),
         startWith([]),
         map((columns: SpecificationBackedTableColumnDef[]) =>
-          this.hydratePersistedColumnConfigs(columns, preferences.columns)
+          this.hydratePersistedColumnConfigs(columns, preferences.columns ?? [])
         ),
         pairwise(),
         filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
@@ -299,40 +273,93 @@ export class TableWidgetRendererComponent
     this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
   }
 
-  public onCheckboxChange(changed: TableCheckboxChange): void {
-    switch (changed.option.type) {
+  protected fetchAndPopulateCheckboxControls(): void {
+    this.checkboxControls$ = this.getCheckboxControls()
+      .pipe(
+        tap((checkboxControls: TableCheckboxControl[]) => {
+          checkboxControls.forEach(checkboxControl =>
+            this.publishCheckboxOptionChange(checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1])
+            // this.onCheckboxChange({
+            //   checkbox: checkboxControl,
+            //   option: checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
+            // }, false);
+          );
+        })
+      );
+  }
+
+  private publishCheckboxOptionChange(option: TableCheckboxControlOption): void {
+    switch (option.type) {
       case TableControlOptionType.Property:
-        this.queryPropertiesSubject.next(this.mergeQueryProperties(changed.option.metaValue));
+        this.queryPropertiesSubject.next(this.mergeQueryProperties(option.metaValue));
         break;
       case TableControlOptionType.Filter:
-        this.selectFilterSubject.next(this.mergeFilters(changed.option.metaValue));
+        this.selectFilterSubject.next(this.mergeFilters(option.metaValue));
         break;
       case TableControlOptionType.Unset:
-        this.selectFilterSubject.next(this.removeFilters(changed.option.metaValue));
+        this.selectFilterSubject.next(this.removeFilters(option.metaValue));
         break;
       default:
-        assertUnreachable(changed.option);
+        assertUnreachable(option);
     }
+  }
 
-    // Update checkbox option label
+  public onCheckboxChange(changed: TableCheckboxChange): void {
+    this.publishCheckboxOptionChange(changed.option);
 
-    this.checkboxControls$ = forkJoinSafeEmpty(
-      this.model.getCheckboxControlOptions().map(checkboxControlModel =>
-        checkboxControlModel.getOptions().pipe(
-          take(1),
-          map(options => {
-            options.forEach(option => {
-              if (this.isLabeledOptionMatch(option, changed.option)) {
-                checkboxControlModel.checked = changed.option.value;
-              }
-            });
+    this.checkboxControls$ = this.getCheckboxControls(changed).pipe(
+      tap(tableCheckboxControls => this.updateCheckboxPreferences(tableCheckboxControls))
+    );
+  }
 
-            return {
-              label: checkboxControlModel.checked ? options[0].label : options[1].label,
-              value: checkboxControlModel.checked,
-              options: options
-            };
-          })
+  private updateCheckboxPreferences(tableCheckboxControls: TableCheckboxControl[]): void {
+    if (isNonEmptyString(this.model.getId())) {
+      this.getPreferences().subscribe(
+        preferences => this.setPreferences({
+          ...preferences,
+          checkboxes: tableCheckboxControls
+        })
+      );
+    }
+  }
+
+  private getCheckboxControls(changed?: TableCheckboxChange): Observable<TableCheckboxControl[]> {
+    return this.getPreferences().pipe(
+      switchMap(preferences => forkJoinSafeEmpty(
+        this.model
+          .getCheckboxControlOptions()
+          .filter(checkboxControlModel => checkboxControlModel.visible)
+          .map(checkboxControlModel =>
+            checkboxControlModel.getOptions().pipe(
+              take(1),
+              map((options: TableCheckboxOptions) => {
+                if (changed !== undefined) {
+                  options.forEach(option => {
+                    if (this.isLabeledOptionMatch(option, changed.option)) {
+                      checkboxControlModel.checked = changed.option.value;
+                    }
+                  });
+
+                  return {
+                    label: checkboxControlModel.checked ? options[0].label : options[1].label,
+                    value: checkboxControlModel.checked,
+                    options: options
+                  };
+                }
+
+                const found = preferences.checkboxes ? preferences.checkboxes
+                    .find(tableCheckboxControl => options
+                      .some(option => option.label === tableCheckboxControl.label))
+                  : undefined;
+
+                return found ?? {
+                  label: checkboxControlModel.checked ? options[0].label : options[1].label,
+                  value: checkboxControlModel.checked,
+                  options: options
+                };
+              })
+            )
+          )
         )
       )
     );
@@ -357,7 +384,7 @@ export class TableWidgetRendererComponent
       this.getViewPreferences().subscribe(
         preferences => this.setViewPreferences({
           ...preferences,
-          activeViewItem: view
+          activeView: view
         })
       );
     }
@@ -399,11 +426,11 @@ export class TableWidgetRendererComponent
     return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
   }
 
-  private hydratePersistedActiveViewItem(
+  private hydratePersistedActiveView(
     viewItems: ToggleItem<string>[],
-    persistedActiveViewItem?: string
+    persistedActiveView?: string
   ): ToggleItem<string> {
-    return persistedActiveViewItem ? this.buildViewItem(persistedActiveViewItem) : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
+    return persistedActiveView ? this.buildViewItem(persistedActiveView) : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
   }
 
   private hydratePersistedColumnConfigs(
@@ -430,15 +457,11 @@ export class TableWidgetRendererComponent
 
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
-      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId!, {}).pipe(
-        first(),
-        tap(preferences => console.debug('getViewPreferences', this.model.viewId, preferences))
-      )
+      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId!, {}).pipe(first())
       : of({});
   }
 
   private setViewPreferences(preferences: TableWidgetViewPreferences): void {
-    console.debug('setViewPreferences', this.model.viewId, preferences);
     if (isNonEmptyString(this.model.viewId)) {
       this.preferenceService.set(this.model.viewId!, preferences);
     }
@@ -448,15 +471,12 @@ export class TableWidgetRendererComponent
     defaultPreferences: TableWidgetPreferences = TableWidgetRendererComponent.DEFAULT_PREFERENCES
   ): Observable<TableWidgetPreferences> {
     return isNonEmptyString(this.model.getId())
-      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(
-        first(),
-        tap(preferences => console.info('getPreferences', this.model.getId(), preferences))
-      )
+      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(first())
       : of(defaultPreferences);
   }
 
   private setPreferences(preferences: TableWidgetPreferences): void {
-    console.info('setPreferences', this.model.getId(), preferences);
+    console.trace('setPreferences', this.model.getId(), preferences);
     if (isNonEmptyString(this.model.getId())) {
       this.preferenceService.set(this.model.getId()!, preferences);
     }
@@ -488,11 +508,12 @@ export class TableWidgetRendererComponent
 }
 
 interface TableWidgetViewPreferences {
-  activeViewItem?: string;
+  activeView?: string;
 }
 
 interface TableWidgetPreferences {
-  columns: PersistedTableColumnConfig[];
+  columns?: PersistedTableColumnConfig[];
+  checkboxes?: TableCheckboxControl[];
 }
 
 type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
