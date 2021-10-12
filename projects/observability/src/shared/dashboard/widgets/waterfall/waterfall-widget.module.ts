@@ -5,12 +5,12 @@ import {
   ButtonModule,
   IconModule,
   LabelModule,
+  LinkModule,
   LoadAsyncModule,
   OverlayModule,
   SummaryValueModule,
   TitledContentModule,
-  TooltipModule,
-  LinkModule
+  TooltipModule
 } from '@hypertrace/components';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { ExploreFilterLinkModule } from '../../../components/explore-filter-link/explore-filter-link.module';
