@@ -1,4 +1,4 @@
-import { Inject, ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
+import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { UserTelemetryRegistrationConfig } from './telemetry';
 import { UserTelemetryHelperService } from './user-telemetry-helper.service';
 

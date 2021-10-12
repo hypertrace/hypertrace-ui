@@ -1,6 +1,7 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
 import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
+// tslint:disable-next-line: no-restricted-globals weird tslint error. Rename event so we can type it and not mistake it for other events
 import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
@@ -17,7 +18,7 @@ import {
   Series,
   Summary
 } from '../../chart';
-import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
+import { ChartEvent, ChartEventListener, ChartSelect, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { CartesianBand } from '../data/band/cartesian-band';
@@ -84,7 +85,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       if (listener.event === ChartEvent.Select) {
         const [start, end] = event.selection as [[number, number], [number, number]];
 
-        const selctionData: any = {
+        const selctionData: ChartSelect = {
           series: this.allSeriesData,
           start: start,
           end: end
@@ -318,10 +319,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       [width, height]
     ]);
 
-    select(this.mouseEventContainer!)
-      .append('g')
-      .attr('class', 'brush')
-      .call(brushBehaviour as any);
+    select(this.mouseEventContainer!).append('g').attr('class', 'brush').call(brushBehaviour);
   }
 
   private moveDataOnTopOfAxes(): void {
