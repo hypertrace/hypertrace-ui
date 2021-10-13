@@ -270,7 +270,10 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'container-widget',
@@ -330,7 +333,10 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                       type: 'entity-error-percentage-timeseries-data-source'
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler'
+                }
               },
               {
                 type: 'cartesian-widget',
@@ -369,7 +375,10 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                       }
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler'
+                }
               }
             ]
           }
@@ -398,7 +407,10 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
               }
             }
           }
-        ]
+        ],
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler'
+        }
       }
     ]
   }

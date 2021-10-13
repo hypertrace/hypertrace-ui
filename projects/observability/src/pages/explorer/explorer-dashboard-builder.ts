@@ -62,7 +62,10 @@ export class ExplorerDashboardBuilder {
         type: 'cartesian-widget',
         'selectable-interval': false,
         'series-from-data': true,
-        'legend-position': LegendPosition.Bottom
+        'legend-position': LegendPosition.Bottom,
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler'
+        }
       },
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);

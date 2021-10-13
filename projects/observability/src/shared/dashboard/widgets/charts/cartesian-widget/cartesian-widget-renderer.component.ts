@@ -6,6 +6,7 @@ import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
+import { ChartSelect } from '../../../../components/cartesian/chart-interactivty';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
@@ -28,7 +29,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"
         (selectedIntervalChange)="this.onIntervalChange($event)"
-        (selecteRangeChange)="this.onRangeChange($event)"
+        (selectionChange)="this.onSelectionChange($event)"
       >
       </ht-cartesian-chart>
     </ht-titled-content>
@@ -55,7 +56,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     this.updateDataObservable();
   }
 
-  public onRangeChange(data: any): void {
+  public onSelectionChange(data: ChartSelect): void {
     this.model.selectionHandler?.execute(data);
   }
 
