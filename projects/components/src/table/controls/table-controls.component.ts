@@ -6,7 +6,8 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnChanges,
-  Output
+  Output,
+  TemplateRef
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -14,6 +15,7 @@ import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
+import { StatefulTableRow } from '../table-api';
 import {
   TableCheckboxChange,
   TableCheckboxControl,
@@ -86,6 +88,11 @@ import {
           [activeItem]="this.activeViewItem"
           (activeItemChange)="this.onViewChange($event)"
         ></ht-toggle-group>
+
+        <!-- Custom Control -->
+        <ng-container
+          *ngTemplateOutlet="this.customControlContent; context: { selectedRows: this.selectedRows }"
+        ></ng-container>
       </div>
     </div>
   `
@@ -113,6 +120,12 @@ export class TableControlsComponent implements OnChanges {
 
   @Input()
   public activeViewItem?: ToggleItem;
+
+  @Input()
+  public selectedRows?: StatefulTableRow[] = [];
+
+  @Input()
+  public customControlContent?: TemplateRef<{ selectedRows?: StatefulTableRow[] }>;
 
   @Output()
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();

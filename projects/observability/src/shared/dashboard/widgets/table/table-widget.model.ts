@@ -84,6 +84,12 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   public childTemplate?: ModelJson;
 
   @ModelProperty({
+    key: 'custom-control-widget',
+    type: ModelTemplatePropertyType.TYPE
+  })
+  public customControlModelJson?: ModelJson;
+
+  @ModelProperty({
     key: 'fetchEditableColumns',
     displayName: 'Query for additional columns not provided',
     type: BOOLEAN_PROPERTY.type
@@ -99,6 +105,17 @@ export class TableWidgetModel extends TableWidgetBaseModel {
 
   public getRowSelectionHandlers(_row: TableRow): TableWidgetRowSelectionModel[] {
     return this.rowSelectionHandlers ?? [];
+  }
+
+  public getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined {
+    if (this.customControlModelJson) {
+      const childModel = this.api.createChild<object>(this.customControlModelJson, this);
+      this.api.setVariable('selectedRows', selectedRows, childModel);
+
+      return childModel;
+    }
+
+    return undefined;
   }
 
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {

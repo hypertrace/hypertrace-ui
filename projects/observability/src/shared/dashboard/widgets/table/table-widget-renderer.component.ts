@@ -61,6 +61,8 @@ import { TableWidgetModel } from './table-widget.model';
           [searchPlaceholder]="this.api.model.getSearchPlaceholder()"
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
+          [selectedRows]="this.selectedRows"
+          [customControlContent]="customControlDetail"
           [viewItems]="this.viewItems"
           (searchChange)="this.onSearchChange($event)"
           (selectChange)="this.onSelectChange($event)"
@@ -93,6 +95,10 @@ import { TableWidgetModel } from './table-widget.model';
     <ng-template #childDetail let-row="row">
       <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
     </ng-template>
+
+    <ng-template #customControlDetail let-selectedRows="selectedRows">
+      <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize: selectedRows"></ng-container>
+    </ng-template>
   `
 })
 export class TableWidgetRendererComponent
@@ -106,6 +112,8 @@ export class TableWidgetRendererComponent
   public metadata$!: Observable<FilterAttribute[]>;
   public columnConfigs$!: Observable<TableColumnConfig[]>;
   public combinedFilters$!: Observable<TableFilter[]>;
+
+  public selectedRows?: StatefulTableRow[] = [];
 
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
@@ -151,6 +159,9 @@ export class TableWidgetRendererComponent
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
+
+  public getCustomControlWidgetModel = (selectedRows?: TableRow[]): object | undefined =>
+    this.model.getCustomControlWidgetModel(selectedRows);
 
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(
@@ -369,6 +380,7 @@ export class TableWidgetRendererComponent
   }
 
   public onRowSelection(selections: StatefulTableRow[]): void {
+    this.selectedRows = selections;
     if (this.api.model.getSelectionMode() === TableSelectionMode.Single) {
       /**
        * Execute selection handler for single selection mode only

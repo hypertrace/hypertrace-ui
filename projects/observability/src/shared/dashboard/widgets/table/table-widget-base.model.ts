@@ -4,12 +4,14 @@ import {
   BaseModel,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
+  ModelTemplatePropertyType,
   WidgetHeaderModel
 } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
   BOOLEAN_PROPERTY,
   ModelApi,
+  ModelJson,
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
@@ -76,6 +78,12 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public checkboxOptions: TableWidgetControlCheckboxOptionModel[] = [];
 
   @ModelProperty({
+    key: 'custom-control-widget',
+    type: ModelTemplatePropertyType.TYPE
+  })
+  public customControlModelJson?: ModelJson;
+
+  @ModelProperty({
     key: 'mode',
     displayName: 'Table Mode',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -140,6 +148,8 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     // No-op here, but can be overridden
     return [];
   }
+
+  public abstract getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined;
 
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;

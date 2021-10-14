@@ -73,6 +73,10 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return this.delegateModel && this.delegateModel?.getChildModel(row);
   }
 
+  public getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined {
+    return this.delegateModel && this.delegateModel?.getCustomControlWidgetModel(selectedRows);
+  }
+
   public getRowSelectionHandlers(row: TableRow): TableWidgetRowSelectionModel[] {
     return this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0
       ? this.delegateModel?.getRowSelectionHandlers(row)
