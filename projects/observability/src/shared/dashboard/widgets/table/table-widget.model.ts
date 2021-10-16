@@ -18,7 +18,7 @@ import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InteractionHandler } from '../../interaction/interaction-handler';
-import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetColumnsService } from './services/table-widget-columns.service';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './table-widget-column.model';
@@ -64,18 +64,32 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   public selectionHandler?: InteractionHandler;
 
   @ModelProperty({
-    key: 'row-selection-handlers',
-    displayName: 'Row selection Handlers',
+    key: 'row-click-handlers',
+    displayName: 'Row click Handlers',
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetRowSelectionModel
+        defaultModelClass: TableWidgetRowInteractionModel
       }
     } as ArrayPropertyTypeInstance
   })
-  public rowSelectionHandlers?: TableWidgetRowSelectionModel[];
+  public rowClickHandlers?: TableWidgetRowInteractionModel[];
+
+  @ModelProperty({
+    key: 'row-selection-handlers',
+    displayName: 'Row selection handlers',
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ARRAY_PROPERTY.type,
+      subtype: {
+        key: ModelPropertyType.TYPE,
+        defaultModelClass: TableWidgetRowInteractionModel
+      }
+    } as ArrayPropertyTypeInstance
+  })
+  public rowSelectionHandlers?: TableWidgetRowInteractionModel[];
 
   @ModelProperty({
     key: 'child-template',
@@ -103,8 +117,20 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowSelectionModel[] {
+  public getRowClickHandlers(): TableWidgetRowInteractionModel[] {
+    return this.rowClickHandlers ?? [];
+  }
+
+  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowInteractionModel[] {
     return this.rowSelectionHandlers ?? [];
+  }
+
+  public getSelectionMode(): TableSelectionMode {
+    return this.selectionMode;
+  }
+
+  public isCustomControlPresent(): boolean {
+    return !!this.customControlModelJson;
   }
 
   public getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined {

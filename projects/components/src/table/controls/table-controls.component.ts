@@ -90,9 +90,11 @@ import {
         ></ht-toggle-group>
 
         <!-- Custom Control -->
-        <ng-container
-          *ngTemplateOutlet="this.customControlContent; context: { selectedRows: this.selectedRows }"
-        ></ng-container>
+        <ng-container *ngIf="this.customControlContent">
+          <ng-container
+            *ngTemplateOutlet="this.customControlContent; context: { selectedRows: this.selectedRows }"
+          ></ng-container>
+        </ng-container>
       </div>
     </div>
   `
