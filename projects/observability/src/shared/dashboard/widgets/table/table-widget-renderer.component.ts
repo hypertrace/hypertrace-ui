@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  OnInit,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
   assertUnreachable,
   Dictionary,
@@ -70,7 +62,7 @@ import { TableWidgetModel } from './table-widget.model';
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
           [selectedRows]="this.selectedRows"
-          [customControlContent]="this.isCustomControlPresent() ? customControlDetail : undefined"
+          [customControlContent]="(this.isCustomControlPresent | htMemoize) ? customControlDetail : undefined"
           [viewItems]="this.viewItems"
           (searchChange)="this.onSearchChange($event)"
           (selectChange)="this.onSelectChange($event)"
@@ -123,9 +115,6 @@ export class TableWidgetRendererComponent
   public combinedFilters$!: Observable<TableFilter[]>;
 
   public selectedRows?: StatefulTableRow[] = [];
-
-  @ViewChild('customControlDetail')
-  public readonly customControlDetailTemplate!: TemplateRef<unknown>;
 
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
@@ -397,7 +386,9 @@ export class TableWidgetRendererComponent
 
   public onRowSelection(selections: StatefulTableRow[]): void {
     this.selectedRows = selections;
-    // Todo: Revisit this
+    /**
+     * Todo: Stich this with selection handlers
+     */
   }
 
   private getRowClickInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
@@ -405,14 +396,14 @@ export class TableWidgetRendererComponent
   }
 
   private getInteractionHandler(
-    selectedRow: StatefulTableRow,
-    rowInteractionHandlers: TableWidgetRowInteractionModel[] = []
+    row: StatefulTableRow,
+    rowHandlers: TableWidgetRowInteractionModel[] = []
   ): InteractionHandler | undefined {
-    const matchedSelectionHandlers = rowInteractionHandlers
-      .filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
+    const matchedHandlers = rowHandlers
+      .filter(interactionModel => interactionModel.appliesToCurrentRowDepth(row.$$state.depth))
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 
-    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
+    return !isEmpty(matchedHandlers) ? matchedHandlers[0].handler : undefined;
   }
 
   private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
