@@ -8,9 +8,17 @@ export const enum ChartEvent {
   Select
 }
 
-export type ChartEventListener<TData> = (data: MouseLocationData<TData, Series<TData> | Band<TData>>[]) => void;
+export type ChartEventListener<TData> = (
+  data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | ChartSelectedType<TData>
+) => void;
 
 export interface ChartTooltipTrackingOptions {
   followSingleAxis?: AxisType;
   radius?: number;
+}
+
+export interface ChartSelectedType<TData> {
+  series: TData[];
+  start: TData;
+  end: TData;
 }
