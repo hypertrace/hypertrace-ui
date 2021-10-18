@@ -40,6 +40,7 @@ export const enum IconType {
   Device = 'svg:device',
   Done = 'done',
   Download = 'download',
+  DrilldownFilter = 'svg:drilldown-filter',
   Edge = 'edge',
   Error = 'error_outline',
   Empty = 'panorama_fish_eye',
