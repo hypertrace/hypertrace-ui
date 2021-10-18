@@ -91,7 +91,7 @@
     "@types/d3-shape": "^2.1.0",
     "@types/d3-zoom": "^1.7.5",
     "@types/jest": "^26.0.24",
-    "@types/lodash-es": "^4.17.4",
+    "@types/lodash-es": "^4.17.5",
     "@types/mixpanel-browser": "^2.35.7",
     "@types/node": "^16.7.10",
     "@types/uuid": "^8.3.1",
