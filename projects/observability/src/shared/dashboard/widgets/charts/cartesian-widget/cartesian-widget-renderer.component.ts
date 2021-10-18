@@ -7,6 +7,7 @@ import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
+import { MouseLocationData } from '../../../../components/utils/mouse-tracking/mouse-tracking';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
@@ -55,7 +56,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     this.updateDataObservable();
   }
 
-  public onSelectionChange(data: any): void {
+  public onSelectionChange<TData>(data: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
     this.model.selectionHandler?.execute(data);
   }
 

@@ -66,7 +66,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
   @Output()
-  public readonly selectionChange: EventEmitter<any> = new EventEmitter();
+  public readonly selectionChange: EventEmitter<
+    MouseLocationData<TData, Series<TData> | Band<TData>>[]
+  > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
@@ -98,9 +100,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
           this.convertToDefaultTooltipRenderData(data)
         )
       )
-      .withEventListener(ChartEvent.Select, selectedData => {
-        this.selectionChange.emit(selectedData as any);
-      });
+      .withEventListener(ChartEvent.Select, selectedData => this.selectionChange.emit(selectedData));
 
     if (this.bands) {
       this.chart.withBands(...this.bands);

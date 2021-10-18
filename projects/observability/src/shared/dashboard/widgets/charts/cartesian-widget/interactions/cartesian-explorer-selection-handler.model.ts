@@ -18,15 +18,13 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
   private readonly navigationService!: NavigationService;
 
   public execute(selectionData: any): Observable<void> {
-    const startPoint = selectionData.start;
-    const endPoint = selectionData.end;
-    selectionData.series.map((data: any) => {
-      const startDate = data.getXAxisValue(startPoint[0]);
-      const endDate = data.getXAxisValue(endPoint[0]);
-      this.navigateToExplorer(startDate, endDate);
+    const startPoint = selectionData[0];
+    const endPoint = selectionData[0];
 
-      return;
-    });
+    const startDate = new Date(startPoint.dataPoint.timestamp);
+    const endDate = new Date(endPoint.dataPoint.timestamp);
+
+    this.navigateToExplorer(startDate, endDate);
 
     return of();
   }
