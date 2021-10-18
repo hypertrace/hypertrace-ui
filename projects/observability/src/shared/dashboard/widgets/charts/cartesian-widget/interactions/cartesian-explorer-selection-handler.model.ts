@@ -17,6 +17,7 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
   @ModelInject(NavigationService)
   private readonly navigationService!: NavigationService;
 
+  // tslint:disable-next-line
   public execute(selectionData: any): Observable<void> {
     const startPoint = selectionData[0];
     const endPoint = selectionData[0];
