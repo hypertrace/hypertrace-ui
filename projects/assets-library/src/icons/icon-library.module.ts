@@ -42,6 +42,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Dashboard, url: `${iconsRootPath}/dashboard.svg` },
         { key: IconType.Device, url: `${iconsRootPath}/device.svg` },
         { key: IconType.Download, url: `${iconsRootPath}/download.svg` },
+        { key: IconType.DrilldownFilter, url: `${iconsRootPath}/drilldown-filter.svg` },
         { key: IconType.Edge, url: `${iconsRootPath}/edge.svg` },
         { key: IconType.ExpandAll, url: `${iconsRootPath}/expand-all.svg` },
         { key: IconType.Expanded, url: `${iconsRootPath}/minus-circle.svg` },
