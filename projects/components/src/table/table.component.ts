@@ -273,6 +273,9 @@ export class TableComponent
   public pageSize?: number = 50;
 
   @Output()
+  public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
+
+  @Output()
   public readonly selectionsChange: EventEmitter<StatefulTableRow[]> = new EventEmitter<StatefulTableRow[]>();
 
   @Output()
@@ -548,9 +551,7 @@ export class TableComponent
   }
 
   public onDataRowClick(row: StatefulTableRow): void {
-    if (this.hasSelectableRows()) {
-      this.toggleRowSelected(row);
-    }
+    this.rowClicked.emit(row);
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {
@@ -693,10 +694,6 @@ export class TableComponent
 
   public isDetailExpanded(row: StatefulTableRow): boolean {
     return this.isDetailType() && row.$$state.expanded;
-  }
-
-  public hasSelectableRows(): boolean {
-    return this.hasSingleSelect() || this.hasMultiSelect();
   }
 
   public hasSingleSelect(): boolean {

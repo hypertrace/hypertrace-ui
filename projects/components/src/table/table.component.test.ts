@@ -60,7 +60,7 @@ describe('Table component', () => {
         queryParamMap: EMPTY
       }),
       mockProvider(DomElementMeasurerService, {
-        measureHtmlElement: (): ClientRect => ({
+        measureHtmlElement: (): Partial<ClientRect> => ({
           top: 0,
           left: 0,
           bottom: 20,
@@ -396,37 +396,6 @@ describe('Table component', () => {
       });
     });
   }));
-
-  test('should trigger toggle row selection for multi row select config', () => {
-    const columns = buildColumns();
-    const spectator = createHost(
-      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" (selectionsChange)="selectionsChange($event)"></ht-table>`,
-      {
-        hostProps: {
-          columnConfigs: columns,
-          data: buildData(),
-          selectionMode: TableSelectionMode.Multiple,
-          mode: TableMode.Flat
-        }
-      }
-    );
-
-    const row: StatefulTableRow = {
-      $$state: {
-        parent: undefined,
-        expanded: false,
-        selected: false,
-        root: false,
-        leaf: true,
-        depth: 1
-      }
-    };
-
-    const spyToggleRowSelection = spyOn(spectator.component, 'toggleRowSelected');
-    spectator.component.onDataCellClick(row);
-    expect(spyToggleRowSelection).toHaveBeenCalledWith(row);
-  });
 
   test('should emit selections on toggle select', () => {
     const mockSelectionsChange = jest.fn();

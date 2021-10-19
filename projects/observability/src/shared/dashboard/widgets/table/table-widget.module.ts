@@ -11,7 +11,7 @@ import {
 import { WidgetHeaderModel } from '@hypertrace/dashboards';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { TracingTableCellRendererModule } from '../../../components/table/tracing-table-cell-renderer.module';
-import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
@@ -27,7 +27,7 @@ import { TableWidgetModel } from './table-widget.model';
       models: [
         TableWidgetModel,
         TableWidgetColumnModel,
-        TableWidgetRowSelectionModel,
+        TableWidgetRowInteractionModel,
         TableWidgetControlCheckboxOptionModel,
         TableWidgetControlSelectOptionModel,
         WidgetHeaderModel,

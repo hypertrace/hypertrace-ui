@@ -22,7 +22,6 @@ import {
   TableRow,
   TableSelectChange,
   TableSelectControl,
-  TableSelectionMode,
   TableStyle,
   ToggleItem,
   toInFilter
@@ -36,6 +35,7 @@ import { filter, map, pairwise, share, startWith, switchMap, take, tap, withLate
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
@@ -61,6 +61,8 @@ import { TableWidgetModel } from './table-widget.model';
           [searchPlaceholder]="this.api.model.getSearchPlaceholder()"
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
+          [selectedRows]="this.selectedRows"
+          [customControlContent]="(this.isCustomControlPresent | htMemoize) ? customControlDetail : undefined"
           [viewItems]="this.viewItems"
           (searchChange)="this.onSearchChange($event)"
           (selectChange)="this.onSelectChange($event)"
@@ -83,6 +85,7 @@ import { TableWidgetModel } from './table-widget.model';
           [resizable]="this.api.model.isResizable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
+          (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
         >
@@ -92,6 +95,10 @@ import { TableWidgetModel } from './table-widget.model';
 
     <ng-template #childDetail let-row="row">
       <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
+    </ng-template>
+
+    <ng-template #customControlDetail let-selectedRows="selectedRows">
+      <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize: selectedRows"></ng-container>
     </ng-template>
   `
 })
@@ -107,6 +114,8 @@ export class TableWidgetRendererComponent
   public columnConfigs$!: Observable<TableColumnConfig[]>;
   public combinedFilters$!: Observable<TableFilter[]>;
 
+  public selectedRows?: StatefulTableRow[] = [];
+
   private readonly toggleFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
@@ -115,8 +124,6 @@ export class TableWidgetRendererComponent
     Dictionary<unknown>
   >({});
   public queryProperties$: Observable<Dictionary<unknown>> = this.queryPropertiesSubject.asObservable();
-
-  private selectedRowInteractionHandler?: InteractionHandler;
 
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
@@ -151,6 +158,11 @@ export class TableWidgetRendererComponent
   }
 
   public getChildModel = (row: TableRow): object | undefined => this.model.getChildModel(row);
+
+  public isCustomControlPresent = (): boolean => this.model.isCustomControlPresent();
+
+  public getCustomControlWidgetModel = (selectedRows?: TableRow[]): object | undefined =>
+    this.model.getCustomControlWidgetModel(selectedRows);
 
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(
@@ -368,28 +380,30 @@ export class TableWidgetRendererComponent
     }
   }
 
-  public onRowSelection(selections: StatefulTableRow[]): void {
-    if (this.api.model.getSelectionMode() === TableSelectionMode.Single) {
-      /**
-       * Execute selection handler for single selection mode only
-       */
-      let selectedRow;
-      if (selections.length > 0) {
-        selectedRow = selections[0];
-        this.selectedRowInteractionHandler = this.getInteractionHandler(selectedRow);
-      }
-
-      this.selectedRowInteractionHandler?.execute(selectedRow);
-    }
+  public onRowClicked(row: StatefulTableRow): void {
+    this.getRowClickInteractionHandler(row)?.execute(row);
   }
 
-  private getInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
-    const matchedSelectionHandlers = this.api.model
-      .getRowSelectionHandlers(selectedRow)
-      ?.filter(selectionModel => selectionModel.appliesToCurrentRowDepth(selectedRow.$$state.depth))
+  public onRowSelection(selections: StatefulTableRow[]): void {
+    this.selectedRows = selections;
+    /**
+     * Todo: Stich this with selection handlers
+     */
+  }
+
+  private getRowClickInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
+    return this.getInteractionHandler(selectedRow, this.api.model.getRowClickHandlers());
+  }
+
+  private getInteractionHandler(
+    row: StatefulTableRow,
+    rowHandlers: TableWidgetRowInteractionModel[] = []
+  ): InteractionHandler | undefined {
+    const matchedHandlers = rowHandlers
+      .filter(interactionModel => interactionModel.appliesToCurrentRowDepth(row.$$state.depth))
       .sort((model1, model2) => model2.rowDepth - model1.rowDepth);
 
-    return !isEmpty(matchedSelectionHandlers) ? matchedSelectionHandlers[0].handler : undefined;
+    return !isEmpty(matchedHandlers) ? matchedHandlers[0].handler : undefined;
   }
 
   private pickPersistColumnProperties(column: TableColumnConfig): Pick<TableColumnConfig, 'id' | 'visible'> {
