@@ -12,6 +12,10 @@
 .border {
   border: 1px solid $gray-2;
   border-radius: 6px;
+
+  &:hover {
+    border-color: $gray-4;
+  }
 }
 
 .underline {
