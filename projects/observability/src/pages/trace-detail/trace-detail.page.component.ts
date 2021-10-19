@@ -60,17 +60,17 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             htTooltip="Download Trace as Json"
           ></ht-download-json>
         </div>
+      </div>
 
-        <ht-navigable-tab-group class="tabs">
-          <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
-          <ng-container *ngIf="this.logEvents$ | async as logEvents">
-            <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
-          </ng-container>
-        </ht-navigable-tab-group>
+      <ht-navigable-tab-group class="tabs">
+        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+        <ng-container *ngIf="this.logEvents$ | async as logEvents">
+          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+        </ng-container>
+      </ht-navigable-tab-group>
 
-        <div class="scrollable-container">
-          <router-outlet></router-outlet>
-        </div>
+      <div class="scrollable-container">
+        <router-outlet></router-outlet>
       </div>
     </div>
   `
