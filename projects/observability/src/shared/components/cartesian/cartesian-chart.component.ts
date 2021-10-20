@@ -19,7 +19,7 @@ import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/de
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
-import { ChartEvent, ChartSelectedType } from './chart-interactivty';
+import { ChartEvent } from './chart-interactivty';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
@@ -67,7 +67,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   @Output()
   public readonly selectionChange: EventEmitter<
-    ChartSelectedType<MouseLocationData<TData, Series<TData>>>
+    MouseLocationData<TData, Series<TData> | Band<TData>>[]
   > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
@@ -100,8 +100,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
           this.convertToDefaultTooltipRenderData(data)
         )
       )
-      // tslint:disable-next-line
-      .withEventListener(ChartEvent.Select, selectedData => this.selectionChange.emit(selectedData as any));
+      .withEventListener(ChartEvent.Select, selectedData => this.selectionChange.emit(selectedData));
 
     if (this.bands) {
       this.chart.withBands(...this.bands);

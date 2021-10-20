@@ -19,10 +19,11 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
 
   // tslint:disable-next-line
   public execute(selectionData: any): Observable<void> {
-    const startPoint = selectionData.start;
-    const endPoint = selectionData.end;
+    const startPoint = selectionData[0];
+    const endPoint = selectionData[1];
 
     const startDate = new Date(startPoint.dataPoint.timestamp);
+
     const endDate = new Date(endPoint.dataPoint.timestamp);
 
     this.navigateToExplorer(startDate, endDate);

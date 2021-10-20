@@ -3,7 +3,6 @@ import { TimeRange } from '@hypertrace/common';
 import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
 // tslint:disable-next-line: no-restricted-globals weird tslint error. Rename event so we can type it and not mistake it for other events
 import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
-import { ChartSelectedType } from '../../../../../public-api';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
@@ -92,13 +91,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
         const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint[0], y: endPoint[1] }));
 
-        const selectedData: ChartSelectedType<MouseLocationData<TData, Series<TData>>> = {
-          series: startData,
-          start: startData[0],
-          end: endData[0]
-        };
-        // tslint:disable-next-line
-        listener.onEvent(selectedData as any);
+        const selectedData: MouseLocationData<TData, Series<TData>>[] = [startData[0], endData[0]];
+
+        listener.onEvent(selectedData);
       }
     });
   }
