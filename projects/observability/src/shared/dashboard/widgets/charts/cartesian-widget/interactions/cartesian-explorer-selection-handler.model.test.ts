@@ -19,23 +19,15 @@ describe('Cartesian Explorer Selection Handler Model', () => {
   ];
 
   const buildModel = createModelFactory({
-    providers: [
-      mockProvider(ExplorerService, {
-        buildNavParamsWithFilters: jest.fn()
-      }),
-      mockProvider(NavigationService, {
-        navigate: jest.fn()
-      })
-    ]
+    providers: [mockProvider(ExplorerService), mockProvider(NavigationService)]
   });
 
   test('calls navigateToExplorer with correct parameters', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
+    const explorerService = spectator.get(ExplorerService);
     const navService = spectator.get(NavigationService);
 
-    spectator.model.execute(selectedData);
-
-    const navigationUrl = {
+    const navigationUrl1 = {
       navType: 'in-app',
       path: '/explorer',
       queryParams: {
@@ -44,6 +36,9 @@ describe('Cartesian Explorer Selection Handler Model', () => {
       }
     };
 
-    expect(navService.navigate).toHaveBeenLastCalledWith(navigationUrl);
+    spyOn(explorerService, 'buildNavParamsWithFilters').and.returnValue(navigationUrl1);
+    setTimeout(() => {
+      expect(navService.navigate).toHaveBeenCalledWith(navigationUrl1);
+    });
   });
 });
