@@ -47,10 +47,5 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     spectator.model.execute(selectedData);
     expect(explorerService.buildNavParamsWithFilters).toHaveBeenCalled();
     expect(navService.navigate).toHaveBeenCalled();
-
-    // spyOn(explorerService, 'buildNavParamsWithFilters').and.returnValue(navigationUrl);
-    // setTimeout(() => {
-    //   expect(navService.navigate).toHaveBeenCalledWith(navigationUrl);
-    // });
   });
 });
