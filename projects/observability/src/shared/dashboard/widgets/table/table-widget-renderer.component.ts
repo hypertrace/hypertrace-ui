@@ -186,7 +186,7 @@ export class TableWidgetRendererComponent
     this.selectControls$ = this.getSelectControls().pipe(
       tap((selectControls: TableSelectControl[]) => {
         selectControls.forEach(selectControl =>
-          this.publishSelectValuesChange(selectControl.options[0].metaValue.field, selectControl.options)
+          this.publishSelectValuesChange(selectControl.options[0].metaValue.field, selectControl.options.filter(o => o.applied))
         );
       })
     );
