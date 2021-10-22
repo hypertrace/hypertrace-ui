@@ -2,10 +2,10 @@ import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, NUMBER_PROPE
 import { InteractionHandler } from '../../../interaction/interaction-handler';
 
 @Model({
-  type: 'table-widget-row-selection',
+  type: 'table-widget-row-interaction',
   displayName: 'Row Selection'
 })
-export class TableWidgetRowSelectionModel {
+export class TableWidgetRowInteractionModel {
   @ModelProperty({
     key: 'handler',
     displayName: 'Selection Handler',

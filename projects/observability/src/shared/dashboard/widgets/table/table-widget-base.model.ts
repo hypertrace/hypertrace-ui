@@ -17,7 +17,7 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
@@ -128,14 +128,9 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowSelectionModel[] {
+  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowInteractionModel[] {
     // No-op here, but can be overridden
     return [];
-  }
-
-  public getSelectionMode(): TableSelectionMode {
-    // No-op here, but can be overridden
-    return TableSelectionMode.Single;
   }
 
   public getViewId(): string | undefined {
@@ -152,6 +147,11 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     // No-op here, but can be overridden
     return [];
   }
+
+  public abstract getRowClickHandlers(): TableWidgetRowInteractionModel[];
+  public abstract getSelectionMode(): TableSelectionMode;
+  public abstract isCustomControlPresent(): boolean;
+  public abstract getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined;
 
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;

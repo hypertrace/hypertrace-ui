@@ -1,8 +1,8 @@
-import { TableWidgetRowSelectionModel } from './table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './table-widget-row-interaction.model';
 
-describe('TableWidgetRowSelectionModel applies to current row depth', () => {
+describe('TableWidgetRowInteractionModel applies to current row depth', () => {
   test('works for default properties', () => {
-    const model = new TableWidgetRowSelectionModel();
+    const model = new TableWidgetRowInteractionModel();
     model.handler = {
       execute: jest.fn()
     };
@@ -13,7 +13,7 @@ describe('TableWidgetRowSelectionModel applies to current row depth', () => {
   });
 
   test('works for higher row depth', () => {
-    const model = new TableWidgetRowSelectionModel();
+    const model = new TableWidgetRowInteractionModel();
     model.handler = {
       execute: jest.fn()
     };
@@ -26,7 +26,7 @@ describe('TableWidgetRowSelectionModel applies to current row depth', () => {
   });
 
   test('works correctly when applyToChildRows is false', () => {
-    const model = new TableWidgetRowSelectionModel();
+    const model = new TableWidgetRowInteractionModel();
     model.handler = {
       execute: jest.fn()
     };
