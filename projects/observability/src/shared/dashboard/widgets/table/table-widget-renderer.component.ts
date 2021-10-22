@@ -541,13 +541,13 @@ export class TableWidgetRendererComponent
 
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
-      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId!, {}).pipe(first())
+      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}).pipe(first())
       : of({});
   }
 
   private setViewPreferences(preferences: TableWidgetViewPreferences): void {
     if (isNonEmptyString(this.model.viewId)) {
-      this.preferenceService.set(this.model.viewId!, preferences);
+      this.preferenceService.set(this.model.viewId, preferences);
     }
   }
 
