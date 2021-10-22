@@ -1,18 +1,15 @@
-import { NavigationService } from '@hypertrace/common';
-import { FilterOperator } from '@hypertrace/components';
+import { NavigationParamsType, NavigationService, TimeRangeService } from '@hypertrace/common';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
-import { ExplorerService } from '../../../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../../../pages/explorer/explorer.component';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
 
 @Model({
   type: 'cartesian-explorer-selection-handler'
 })
 export class CartesianExplorerSelectionHandlerModel implements InteractionHandler {
-  @ModelInject(ExplorerService)
-  private readonly explorerService!: ExplorerService;
+  @ModelInject(TimeRangeService)
+  private readonly timeRangeService!: TimeRangeService;
 
   @ModelInject(NavigationService)
   private readonly navigationService!: NavigationService;
@@ -22,9 +19,12 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
     const startPoint = selectionData[0];
     const endPoint = selectionData[1];
 
-    const startDate = new Date(startPoint.dataPoint.timestamp);
+    // When there is only one point in selected area, start timestamp  and end timestamp is same. This causes timerange exception
+    const startTime = new Date(startPoint.dataPoint.timestamp).getTime() - 6000;
+    const endTime = new Date(endPoint.dataPoint.timestamp).getTime() + 6000;
 
-    const endDate = new Date(endPoint.dataPoint.timestamp);
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
 
     this.navigateToExplorer(startDate, endDate);
 
@@ -32,23 +32,14 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
   }
 
   private navigateToExplorer(start: Date, end: Date): void {
-    const startTime: number = new Date(start).getTime();
-    const endTime: number = new Date(end).getTime();
-    this.explorerService
-      .buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-        {
-          field: 'startTime',
-          operator: FilterOperator.GreaterThanOrEqualTo,
-          value: startTime
-        },
-        {
-          field: 'endTime',
-          operator: FilterOperator.LessThanOrEqualTo,
-          value: endTime
-        }
-      ])
-      .subscribe(data => {
-        this.navigationService.navigate(data);
-      });
+    const params = this.timeRangeService.toQueryParams(start, end);
+
+    this.navigationService.navigate({
+      navType: NavigationParamsType.InApp,
+      path: ['/explorer'],
+      queryParams: params,
+      queryParamsHandling: 'merge',
+      replaceCurrentHistory: true
+    });
   }
 }

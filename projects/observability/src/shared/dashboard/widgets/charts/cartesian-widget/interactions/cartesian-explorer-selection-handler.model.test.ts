@@ -1,8 +1,7 @@
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, TimeRangeService } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { ExplorerService } from '../../../../../../pages/explorer/explorer-service';
 import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
 
 describe('Cartesian Explorer Selection Handler Model', () => {
@@ -30,8 +29,8 @@ describe('Cartesian Explorer Selection Handler Model', () => {
 
   const buildModel = createModelFactory({
     providers: [
-      mockProvider(ExplorerService, {
-        buildNavParamsWithFilters: jest.fn().mockReturnValue(of(navigationUrl))
+      mockProvider(TimeRangeService, {
+        toQueryParams: jest.fn().mockReturnValue(of(navigationUrl))
       }),
       mockProvider(NavigationService, {
         navigate: jest.fn()
@@ -39,13 +38,11 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     ]
   });
 
-  test('calls navigateToExplorer with correct parameters1', () => {
+  test('calls navigateToExplorer with correct parameters', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
-    const explorerService = spectator.get(ExplorerService);
     const navService = spectator.get(NavigationService);
 
     spectator.model.execute(selectedData);
-    expect(explorerService.buildNavParamsWithFilters).toHaveBeenCalled();
     expect(navService.navigate).toHaveBeenCalled();
   });
 });

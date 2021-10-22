@@ -91,7 +91,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
         const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint[0], y: endPoint[1] }));
 
-        const selectedData: MouseLocationData<TData, Series<TData>>[] = [startData[0], endData[0]];
+        const selectedData = [startData[0], endData[0]];
 
         listener.onEvent(selectedData);
       }
