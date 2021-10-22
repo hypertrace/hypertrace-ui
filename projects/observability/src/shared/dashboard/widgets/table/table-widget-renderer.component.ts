@@ -12,7 +12,8 @@ import {
   FilterOperator,
   StatefulTableRow,
   TableCheckboxChange,
-  TableCheckboxControl, TableCheckboxControlOption,
+  TableCheckboxControl,
+  TableCheckboxControlOption,
   TableCheckboxOptions,
   TableColumnConfig,
   TableControlOption,
@@ -43,6 +44,7 @@ import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
+// tslint:disable: max-file-line-count
 @Renderer({ modelClass: TableWidgetModel })
 @Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({
@@ -131,7 +133,9 @@ export class TableWidgetRendererComponent
   private readonly searchFilterSubject: Subject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
   private readonly selectFilterSubject: BehaviorSubject<TableFilter[]> = new BehaviorSubject<TableFilter[]>([]);
 
-  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<Dictionary<unknown>>({});
+  private readonly queryPropertiesSubject: BehaviorSubject<Dictionary<unknown>> = new BehaviorSubject<
+    Dictionary<unknown>
+  >({});
   public queryProperties$: Observable<Dictionary<unknown>> = this.queryPropertiesSubject.asObservable();
 
   public constructor(
@@ -186,7 +190,10 @@ export class TableWidgetRendererComponent
     this.selectControls$ = this.getSelectControls().pipe(
       tap((selectControls: TableSelectControl[]) => {
         selectControls.forEach(selectControl =>
-          this.publishSelectValuesChange(selectControl.options[0].metaValue.field, selectControl.options.filter(o => o.applied))
+          this.publishSelectValuesChange(
+            selectControl.options[0].metaValue.field,
+            selectControl.options.filter(o => o.applied)
+          )
         );
       })
     );
@@ -196,47 +203,53 @@ export class TableWidgetRendererComponent
     this.checkboxControls$ = this.getCheckboxControls().pipe(
       tap((checkboxControls: TableCheckboxControl[]) => {
         checkboxControls.forEach(checkboxControl =>
-          this.publishCheckboxOptionChange(checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1])
+          this.publishCheckboxOptionChange(
+            checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
+          )
         );
       })
     );
   }
 
-
   private getSelectControls(changed?: TableSelectControl): Observable<TableSelectControl[]> {
     return this.getPreferences().pipe(
       take(1),
-      switchMap(preferences => forkJoinSafeEmpty(
-        this.model
-          .getSelectControlOptions()
-          .filter(selectControlModel => selectControlModel.visible)
-          .map(selectControlModel => {
+      switchMap(preferences =>
+        forkJoinSafeEmpty(
+          this.model
+            .getSelectControlOptions()
+            .filter(selectControlModel => selectControlModel.visible)
+            .map(selectControlModel => {
+              if (selectControlModel.placeholder === changed?.placeholder) {
+                return of(changed);
+              }
 
-            if (selectControlModel.placeholder === changed?.placeholder) {
-              return of(changed);
-            }
+              // Fetch the values for the selectFilter dropdown
+              return selectControlModel.getOptions().pipe(
+                take(1),
+                withLatestFrom(this.selectFilterSubject),
+                map(([options, filters]) => {
+                  const foundPreferences = preferences.selections
+                    ? preferences.selections.find(
+                        preferencesSelectionControl =>
+                          selectControlModel.placeholder === preferencesSelectionControl.placeholder
+                      )
+                    : undefined;
 
-            // Fetch the values for the selectFilter dropdown
-            return selectControlModel.getOptions().pipe(
-              take(1),
-              withLatestFrom(this.selectFilterSubject),
-              map(([options, filters]) => {
-
-                const foundPreferences = preferences.selections ? preferences.selections
-                    .find(preferencesSelectionControl => (selectControlModel.placeholder === preferencesSelectionControl.placeholder))
-                  : undefined;
-
-                return foundPreferences ?? {
-                  placeholder: selectControlModel.placeholder,
-                  options: options.map(option => ({
-                    ...option,
-                    applied: this.isFilterApplied(option.metaValue, filters)
-                  }))
-                };
-              })
-            );
-          })
-      ))
+                  return (
+                    foundPreferences ?? {
+                      placeholder: selectControlModel.placeholder,
+                      options: options.map(option => ({
+                        ...option,
+                        applied: this.isFilterApplied(option.metaValue, filters)
+                      }))
+                    }
+                  );
+                })
+              );
+            })
+        )
+      )
     );
   }
 
@@ -271,24 +284,26 @@ export class TableWidgetRendererComponent
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
     return this.getPreferences().pipe(
-      switchMap(preferences => combineLatest([
-        this.getScope(),
-        this.api.change$.pipe(
-          map(() => true),
-          startWith(true)
+      switchMap(preferences =>
+        combineLatest([
+          this.getScope(),
+          this.api.change$.pipe(
+            map(() => true),
+            startWith(true)
+          )
+        ]).pipe(
+          switchMap(([scope]) => this.model.getColumns(scope)),
+          startWith([]),
+          map((columns: SpecificationBackedTableColumnDef[]) =>
+            this.hydratePersistedColumnConfigs(columns, preferences.columns ?? [])
+          ),
+          pairwise(),
+          filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
+          map(([_, current]) => current),
+          share(),
+          tap(() => this.onDashboardRefresh())
         )
-      ]).pipe(
-        switchMap(([scope]) => this.model.getColumns(scope)),
-        startWith([]),
-        map((columns: SpecificationBackedTableColumnDef[]) =>
-          this.hydratePersistedColumnConfigs(columns, preferences.columns ?? [])
-        ),
-        pairwise(),
-        filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
-        map(([_, current]) => current),
-        share(),
-        tap(() => this.onDashboardRefresh())
-      ))
+      )
     );
   }
 
@@ -315,8 +330,9 @@ export class TableWidgetRendererComponent
      * The caller doesn't modify the values, it just returns an array of which values are selected.
      * We must apply the value change to the object, so we set all to false unless found in the changed value array.
      */
-    changed.select.options.forEach(option =>
-      option.applied = changed.values.find(changedOption => changedOption.label === option.label) !== undefined
+    changed.select.options.forEach(
+      option =>
+        (option.applied = changed.values.find(changedOption => changedOption.label === option.label) !== undefined)
     );
     this.publishSelectValuesChange(changed.select.options[0].metaValue.field, changed.values);
 
@@ -339,8 +355,8 @@ export class TableWidgetRendererComponent
 
   private updateSelectionPreferences(tableSelectControls: TableSelectControl[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(
-        preferences => this.setPreferences({
+      this.getPreferences().subscribe(preferences =>
+        this.setPreferences({
           ...preferences,
           selections: tableSelectControls
         })
@@ -374,8 +390,8 @@ export class TableWidgetRendererComponent
 
   private updateCheckboxPreferences(tableCheckboxControls: TableCheckboxControl[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(
-        preferences => this.setPreferences({
+      this.getPreferences().subscribe(preferences =>
+        this.setPreferences({
           ...preferences,
           checkboxes: tableCheckboxControls
         })
@@ -385,41 +401,45 @@ export class TableWidgetRendererComponent
 
   private getCheckboxControls(changed?: TableCheckboxChange): Observable<TableCheckboxControl[]> {
     return this.getPreferences().pipe(
-      switchMap(preferences => forkJoinSafeEmpty(
-        this.model
-          .getCheckboxControlOptions()
-          .filter(checkboxControlModel => checkboxControlModel.visible)
-          .map(checkboxControlModel =>
-            checkboxControlModel.getOptions().pipe(
-              take(1),
-              map((options: TableCheckboxOptions) => {
-                if (changed !== undefined) {
-                  options.forEach(option => {
-                    if (this.isLabeledOptionMatch(option, changed.option)) {
-                      checkboxControlModel.checked = changed.option.value;
+      switchMap(preferences =>
+        forkJoinSafeEmpty(
+          this.model
+            .getCheckboxControlOptions()
+            .filter(checkboxControlModel => checkboxControlModel.visible)
+            .map(checkboxControlModel =>
+              checkboxControlModel.getOptions().pipe(
+                take(1),
+                map((options: TableCheckboxOptions) => {
+                  if (changed !== undefined) {
+                    options.forEach(option => {
+                      if (this.isLabeledOptionMatch(option, changed.option)) {
+                        checkboxControlModel.checked = changed.option.value;
+                      }
+                    });
+
+                    return {
+                      label: checkboxControlModel.checked ? options[0].label : options[1].label,
+                      value: checkboxControlModel.checked,
+                      options: options
+                    };
+                  }
+
+                  const found = preferences.checkboxes
+                    ? preferences.checkboxes.find(preferencesCheckboxControl =>
+                        options.some(option => option.label === preferencesCheckboxControl.label)
+                      )
+                    : undefined;
+
+                  return (
+                    found ?? {
+                      label: checkboxControlModel.checked ? options[0].label : options[1].label,
+                      value: checkboxControlModel.checked,
+                      options: options
                     }
-                  });
-
-                  return {
-                    label: checkboxControlModel.checked ? options[0].label : options[1].label,
-                    value: checkboxControlModel.checked,
-                    options: options
-                  };
-                }
-
-                const found = preferences.checkboxes ? preferences.checkboxes
-                    .find(preferencesCheckboxControl => options
-                      .some(option => (option.label === preferencesCheckboxControl.label)))
-                  : undefined;
-
-                return found ?? {
-                  label: checkboxControlModel.checked ? options[0].label : options[1].label,
-                  value: checkboxControlModel.checked,
-                  options: options
-                };
-              })
+                  );
+                })
+              )
             )
-          )
         )
       )
     );
@@ -441,8 +461,8 @@ export class TableWidgetRendererComponent
   public onViewChange(view: string): void {
     this.model.setView(view);
     if (isNonEmptyString(this.model.getId())) {
-      this.getViewPreferences().subscribe(
-        preferences => this.setViewPreferences({
+      this.getViewPreferences().subscribe(preferences =>
+        this.setViewPreferences({
           ...preferences,
           activeView: view
         })
@@ -453,8 +473,8 @@ export class TableWidgetRendererComponent
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(
-        preferences => this.setPreferences({
+      this.getPreferences().subscribe(preferences =>
+        this.setPreferences({
           ...preferences,
           columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
         })
@@ -492,7 +512,9 @@ export class TableWidgetRendererComponent
     viewItems: ToggleItem<string>[],
     persistedActiveView?: string
   ): ToggleItem<string> {
-    return persistedActiveView ? this.buildViewItem(persistedActiveView) : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
+    return persistedActiveView !== undefined
+      ? this.buildViewItem(persistedActiveView)
+      : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
   }
 
   private hydratePersistedColumnConfigs(
@@ -538,17 +560,16 @@ export class TableWidgetRendererComponent
   }
 
   private setPreferences(preferences: TableWidgetPreferences): void {
-    // console.trace('setPreferences', this.model.getId(), preferences);
     if (isNonEmptyString(this.model.getId())) {
       this.preferenceService.set(this.model.getId()!, preferences);
     }
   }
 
   private buildViewItem(viewOption: string): ToggleItem<string> {
-    return ({
+    return {
       label: capitalize(viewOption),
       value: viewOption
-    });
+    };
   }
 
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {

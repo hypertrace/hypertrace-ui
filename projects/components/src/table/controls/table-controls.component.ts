@@ -144,8 +144,10 @@ export class TableControlsComponent implements OnChanges {
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
 
-  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<TableSelectControl,
-    TableSelectControlOption[]>();
+  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<
+    TableSelectControl,
+    TableSelectControlOption[]
+  >();
 
   public checkboxSelections: string[] = [];
   private readonly checkboxDiffer?: IterableDiffer<string>;
