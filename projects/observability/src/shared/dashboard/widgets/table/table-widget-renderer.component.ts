@@ -79,6 +79,7 @@ import { TableWidgetModel } from './table-widget.model';
           [selectionMode]="this.model.getSelectionMode()"
           [display]="this.model.style"
           [data]="this.data$ | async"
+          [customLoadingConfigs]="this.api.model.customLoadingConfigs"
           [filters]="this.combinedFilters$ | async"
           [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"

@@ -6,11 +6,15 @@ import { LoadAsyncStateType } from './load-async-state.type';
 
 @Injectable({ providedIn: 'root' })
 export class LoadAsyncService {
-  public mapObservableState(data$: Observable<unknown>): Observable<AsyncState> {
+  public mapObservableState(
+    data$: Observable<unknown>,
+    customConfigs: LoadAsyncCustomConfig[]
+  ): Observable<AsyncState> {
     return data$.pipe(
       map(data => this.buildStateForEmittedData(data)),
       defaultIfEmpty(this.buildNoDataState()),
       catchError(error => of(this.buildStateForEmittedError(error))),
+      map(data => ({ ...data, message: customConfigs.find(config => config.stateType === data.type)?.message })),
       startWith({ type: LoadAsyncStateType.Loading })
     );
   }
@@ -54,14 +58,22 @@ export type AsyncState = ErrorAsyncState | SuccessAsyncState | LoadingAsyncState
 
 interface LoadingAsyncState {
   type: LoadAsyncStateType.Loading;
+  message?: string;
 }
 
 interface SuccessAsyncState {
   type: LoadAsyncStateType.Success;
+  message?: string;
   context: LoadAsyncContext;
 }
 
 export interface ErrorAsyncState {
   type: LoadAsyncStateType.GenericError | LoadAsyncStateType.NoData;
+  message?: string;
   description?: string;
+}
+
+export interface LoadAsyncCustomConfig {
+  stateType: LoadAsyncStateType;
+  message: string;
 }

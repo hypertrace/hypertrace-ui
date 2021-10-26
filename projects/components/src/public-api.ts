@@ -173,6 +173,8 @@ export * from './list-view/list-view.module';
 // Load Async
 export { LoadAsyncDirective } from './load-async/load-async.directive';
 export { LoadAsyncModule } from './load-async/load-async.module';
+export { LoadAsyncCustomConfig } from './load-async/load-async.service';
+export { LoadAsyncStateType } from './load-async/load-async-state.type';
 
 // Message Display
 export { MessageDisplayComponent } from './message-display/message-display.component';

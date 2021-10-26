@@ -10,7 +10,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-import { LoadAsyncContext, LoadAsyncService } from './load-async.service';
+import { LoadAsyncContext, LoadAsyncCustomConfig, LoadAsyncService } from './load-async.service';
 import {
   ASYNC_WRAPPER_PARAMETERS$,
   LoadAsyncWrapperComponent,
@@ -23,6 +23,10 @@ import {
 export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
   public data$?: Observable<unknown>;
+
+  // tslint:disable-next-line:no-input-rename
+  @Input('htLoadAsyncCustomConfigs')
+  public customConfigs: LoadAsyncCustomConfig[] = [];
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
   private readonly wrapperInjector: Injector;
   private wrapperView?: ComponentRef<LoadAsyncWrapperComponent>;
@@ -48,7 +52,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     if (this.data$) {
       this.wrapperView = this.wrapperView || this.buildWrapperView();
       this.wrapperParamsSubject.next({
-        state$: this.loadAsyncService.mapObservableState(this.data$),
+        state$: this.loadAsyncService.mapObservableState(this.data$, this.customConfigs),
         content: this.templateRef
       });
     } else {

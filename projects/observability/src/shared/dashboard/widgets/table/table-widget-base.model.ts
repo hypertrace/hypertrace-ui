@@ -1,4 +1,11 @@
-import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
+import {
+  LoadAsyncCustomConfig,
+  TableDataSource,
+  TableMode,
+  TableRow,
+  TableSelectionMode,
+  TableStyle
+} from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   BaseModel,
@@ -110,6 +117,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     type: BOOLEAN_PROPERTY.type
   })
   public resizable: boolean = true;
+
+  @ModelProperty({
+    key: 'customLoadingConfigs',
+    required: false,
+    type: ARRAY_PROPERTY.type
+  })
+  public customLoadingConfigs?: LoadAsyncCustomConfig[];
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;

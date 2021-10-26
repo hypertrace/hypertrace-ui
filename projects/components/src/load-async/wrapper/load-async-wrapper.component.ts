@@ -43,22 +43,22 @@ export class LoadAsyncWrapperComponent {
     this.state$ = parameters$.pipe(
       tap(params => (this.content = params.content)),
       switchMap(parameter => parameter.state$),
-      tap(state => this.updateMessage(state.type, (state as Partial<ErrorAsyncState>).description))
+      tap(state => this.updateMessage(state.type, state.message, (state as Partial<ErrorAsyncState>).description))
     );
   }
 
-  private updateMessage(stateType: LoadAsyncStateType, description: string = ''): void {
+  private updateMessage(stateType: LoadAsyncStateType, message?: string, description: string = ''): void {
     this.description = description;
 
     switch (stateType) {
       case LoadAsyncStateType.NoData:
         this.icon = IconType.NoData;
-        this.title = 'No Data';
+        this.title = message ?? 'No Data';
         break;
       case LoadAsyncStateType.GenericError:
       default:
         this.icon = IconType.Error;
-        this.title = 'Error';
+        this.title = message ?? 'Error';
     }
   }
 }
