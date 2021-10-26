@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
@@ -101,6 +102,8 @@ import {
 })
 export class TableControlsComponent implements OnChanges {
   public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
+  @Input()
+  public persistenceId?: string;
 
   @Input()
   public searchEnabled?: boolean;
@@ -207,7 +210,7 @@ export class TableControlsComponent implements OnChanges {
 
   private setActiveViewItem(): void {
     if (this.viewItems !== undefined) {
-      this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
+      this.activeViewItem = this.findViewItem(this.activeViewItem);
     }
   }
 
@@ -258,5 +261,9 @@ export class TableControlsComponent implements OnChanges {
 
   public onViewChange(item: ToggleItem<string>): void {
     this.viewChange.emit(item.value);
+  }
+
+  private findViewItem(viewItem?: ToggleItem): ToggleItem | undefined {
+    return this.viewItems?.find(item => isEqual(item, viewItem)) ?? this.viewItems![0];
   }
 }

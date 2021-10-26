@@ -24,6 +24,13 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 
 export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
+    key: 'viewId',
+    displayName: 'Model View ID',
+    type: STRING_PROPERTY.type
+  })
+  public viewId?: string;
+
+  @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
@@ -124,6 +131,11 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public getRowSelectionHandlers(_row: TableRow): TableWidgetRowInteractionModel[] {
     // No-op here, but can be overridden
     return [];
+  }
+
+  public getViewId(): string | undefined {
+    // No-op here, but can be overridden
+    return this.viewId;
   }
 
   public setView(_view: string): void {
