@@ -113,6 +113,10 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelInject(TableWidgetColumnsService)
   private readonly tableWidgetColumnsService!: TableWidgetColumnsService;
 
+  public getId(): string | undefined {
+    return this.id;
+  }
+
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.api.getData<TableDataSource<TableRow>>();
   }
