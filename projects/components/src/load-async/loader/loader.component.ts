@@ -8,13 +8,13 @@ import { isNil } from 'lodash-es';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-loader">
-      <img [ngClass]="[this.loaderType]" [src]="this.imagePath" />
+      <img [ngClass]="[this.loaderType ?? '']" [src]="this.imagePath" />
     </div>
   `
 })
 export class LoaderComponent implements OnChanges {
   @Input()
-  public loaderType?: LoaderType;
+  public loaderType: LoaderType = LoaderType.Spinner;
 
   public imagePath?: ImagesAssetPath;
 
