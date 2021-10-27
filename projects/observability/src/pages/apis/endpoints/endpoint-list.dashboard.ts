@@ -1,10 +1,4 @@
-import {
-  CoreTableCellRendererType,
-  LoadAsyncStateType,
-  TableMode,
-  TableSortDirection,
-  TableStyle
-} from '@hypertrace/components';
+import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 import { TracingTableCellType } from '../../../shared/components/table/tracing-table-cell-type';
 import { DashboardDefaultConfiguration } from '../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
@@ -26,12 +20,11 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
-        customLoadingConfigs: [
-          {
-            stateType: LoadAsyncStateType.GenericError,
-            message: 'This is the custom error.'
+        loadingConfig: {
+          error: {
+            title: 'this is the custom error'
           }
-        ],
+        },
         'select-control-options': [
           {
             type: 'table-widget-select-option',

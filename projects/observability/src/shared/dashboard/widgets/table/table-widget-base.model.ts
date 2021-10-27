@@ -1,5 +1,5 @@
 import {
-  LoadAsyncCustomConfig,
+  LoadAsyncConfig,
   TableDataSource,
   TableMode,
   TableRow,
@@ -20,6 +20,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
+  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -119,11 +120,11 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public resizable: boolean = true;
 
   @ModelProperty({
-    key: 'customLoadingConfigs',
+    key: 'loadingConfig',
     required: false,
-    type: ARRAY_PROPERTY.type
+    type: PLAIN_OBJECT_PROPERTY.type
   })
-  public customLoadingConfigs?: LoadAsyncCustomConfig[];
+  public loadingConfig?: LoadAsyncConfig;
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;

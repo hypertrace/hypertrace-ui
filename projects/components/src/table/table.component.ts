@@ -27,7 +27,7 @@ import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
-import { LoadAsyncCustomConfig } from '../load-async/load-async.service';
+import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
@@ -165,7 +165,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         <div class="state-watcher" *ngIf="!loadingState.hide">
           <ng-container
             class="state-watcher"
-            *htLoadAsync="loadingState.loading$; customConfigs: this.customLoadingConfigs"
+            *htLoadAsync="loadingState.loading$; config: this.loadingConfig"
           ></ng-container>
         </div>
       </ng-container>
@@ -277,7 +277,7 @@ export class TableComponent
   public pageSize?: number = 50;
 
   @Input()
-  public customLoadingConfigs?: LoadAsyncCustomConfig;
+  public loadingConfig?: LoadAsyncConfig;
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
