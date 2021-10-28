@@ -2,13 +2,6 @@ import { NavigationParamsType, NavigationService, TimeRangeService } from '@hype
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
-import {
-  PopoverBackdrop,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverRelativePositionLocation,
-  PopoverService
-} from '@hypertrace/components';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
 
 @Model({
@@ -20,11 +13,6 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
 
   @ModelInject(NavigationService)
   private readonly navigationService!: NavigationService;
-
-  @ModelInject(PopoverService)
-  private readonly popoverService!: PopoverService;
-
-  private popover!: PopoverRef;
 
   // tslint:disable-next-line
   public execute(selectionData: any): Observable<void> {
@@ -41,21 +29,6 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
     this.navigateToExplorer(startDate, endDate);
 
     return of();
-  }
-
-  private showContextMenu() {
-    this.popover = this.popoverService.drawPopover({
-      componentOrTemplate: this.contextMenuTemplate,
-      data: this.contextMenuTemplate,
-      position: {
-        type: PopoverPositionType.Relative,
-        origin: this.container.nativeElement,
-        locationPreferences: [PopoverRelativePositionLocation.AboveRightAligned]
-      },
-      backdrop: PopoverBackdrop.Transparent
-    });
-    this.popover.closeOnBackdropClick();
-    this.popover.closeOnPopoverContentClick();
   }
 
   private navigateToExplorer(start: Date, end: Date): void {

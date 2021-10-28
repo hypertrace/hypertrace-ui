@@ -1,107 +1,62 @@
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { CardListComponent, CardListMode } from './card-list.component';
-import { CardListModule } from './card-list.module';
+import { fakeAsync } from '@angular/core/testing';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 
-describe('Card List component', () => {
-  let spectator: Spectator<CardListComponent>;
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { PopoverService } from '@hypertrace/components';
+import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu.component';
+import { CartesianExplorerContextMenuModule } from './cartesian-explorer-context-menu.module';
+
+describe('Cartesian Explorer Context menu component', () => {
+  let spectator: Spectator<CartesianExplorerContextMenuComponent>;
+
+  const mockPopoverRef = {
+    close: jest.fn()
+  };
 
   const createHost = createHostFactory({
     declareComponent: false,
-    component: CardListComponent,
-    imports: [CardListModule],
-    providers: []
+    component: CartesianExplorerContextMenuComponent,
+    providers: [
+      mockProvider(PopoverService, {
+        drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
+      })
+    ],
+    imports: [CartesianExplorerContextMenuModule, HttpClientTestingModule, IconLibraryTestingModule]
   });
 
-  test('should display all cards', () => {
-    const data = [
-      {
-        name: 'first'
-      },
-      {
-        name: 'second'
-      },
-      {
-        name: 'third'
-      }
-    ];
+  test('correctly renders context menu', fakeAsync(() => {
+    const menuSelectSpy = jest.fn();
 
     spectator = createHost(
-      `
-    <ht-card-list [mode]="mode">
-      <ht-card-container *ngFor="let cardData of this.data">
-        <div class="custom-card">
-          <div class="title">{{cardData.name}}</div>
-        </div>
-      </ht-card-container>
-    </ht-card-list>
-    `,
+      `<ht-cartesian-explorer-context-menu
+        [menus]="menus"
+        (menuSelect)="contextMenuSelectHandler($event)"
+      ></ht-cartesian-explorer-context-menu>`,
       {
         hostProps: {
-          data: data,
-          mode: CardListMode.Card
+          menus: [
+            {
+              name: 'Explore',
+              icon: IconType.ArrowUpRight
+            }
+          ],
+          contextMenuSelectHandler: menuSelectSpy
         }
       }
     );
 
-    // Add test logic
-    const projectedCardElements = spectator.queryAll('.custom-card');
+    expect(spectator.query('.context-menu')).toExist();
 
-    expect(projectedCardElements).toExist();
-    expect(projectedCardElements.length).toEqual(3);
+    spectator.tick();
 
-    projectedCardElements.forEach((projectedCardElement, index) => {
-      const titleElement = projectedCardElement.querySelector('.title');
-      expect(titleElement).toExist();
-      expect(titleElement).toHaveText(data[index].name);
+    const buttonElement = spectator.query('button')!;
+
+    // Click will toggle the values to true
+    spectator.click(buttonElement);
+    expect(menuSelectSpy).toHaveBeenCalledWith({
+      name: 'Explore',
+      icon: IconType.ArrowUpRight
     });
-
-    // Test selection style
-    const cardElements = spectator.queryAll('.card');
-    spectator.click(cardElements[0]);
-    expect(spectator.query('.selected-card')).toBe(cardElements[0]);
-    expect(spectator.query('.selected-card')).not.toBe(cardElements[1]);
-    expect(spectator.query('.selected-card')).not.toBe(cardElements[2]);
-  });
-
-  test('should apply grouped style class', () => {
-    const data = [
-      {
-        name: 'first',
-        grouped: true
-      },
-      {
-        name: 'second',
-        grouped: false
-      },
-      {
-        name: 'third',
-        grouped: false
-      }
-    ];
-
-    spectator = createHost(
-      `
-    <ht-card-list [mode]="mode">
-      <ht-card-container *ngFor="let cardData of this.data; first" showGroupedStyle="cardData.grouped">
-        <div class="custom-card">
-          <div class="title">{{cardData.name}}</div>
-        </div>
-      </ht-card-container>
-    </ht-card-list>
-    `,
-      {
-        hostProps: {
-          data: data,
-          mode: CardListMode.Card
-        }
-      }
-    );
-
-    // Test selection style
-    const cardElements = spectator.queryAll('.card');
-    spectator.click(cardElements[0]);
-    expect(spectator.query('.grouped-style')).toBe(cardElements[0]);
-    expect(spectator.query('.grouped-style')).not.toBe(cardElements[1]);
-    expect(spectator.query('.grouped-style')).not.toBe(cardElements[2]);
-  });
+  }));
 });

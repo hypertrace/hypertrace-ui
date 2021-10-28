@@ -8,10 +8,20 @@ import {
   OnDestroy,
   Output,
   Renderer2,
+  TemplateRef,
   ViewChild
 } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
+import {
+  PopoverBackdrop,
+  PopoverPositionType,
+  PopoverRef,
+  PopoverRelativePositionLocation,
+  PopoverService
+} from '@hypertrace/components';
 import { defaults } from 'lodash-es';
+import { ContextMenu } from '../../dashboard/widgets/charts/cartesian-widget/interactions/cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -26,7 +36,13 @@ import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-d
   selector: 'ht-cartesian-chart',
   styleUrls: ['./cartesian-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
+  template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div>
+    <ng-template #contextMenuTemplate>
+      <ht-cartesian-explorer-context-menu
+        [menus]="menus"
+        (menuSelect)="contextMenuSelectHandler($event)"
+      ></ht-cartesian-explorer-context-menu>
+    </ng-template> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
@@ -73,14 +89,29 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
 
+  private popover?: PopoverRef;
+
+  @ViewChild('contextMenuTemplate')
+  private readonly contextMenuTemplate!: TemplateRef<unknown>;
+
   private chart?: CartesianChart<TData>;
   private readonly dateCoercer: DateCoercer = new DateCoercer();
   private readonly dateFormatter: DateFormatter = new DateFormatter();
 
+  private selectedData!: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+
+  public menus: ContextMenu[] = [
+    {
+      name: 'Explore',
+      icon: IconType.ArrowUpRight
+    }
+  ];
+
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
+    private readonly popoverService: PopoverService
   ) {}
 
   public ngOnChanges(): void {
@@ -100,7 +131,14 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
           this.convertToDefaultTooltipRenderData(data)
         )
       )
-      .withEventListener(ChartEvent.Select, selectedData => this.selectionChange.emit(selectedData));
+      .withEventListener(ChartEvent.Select, selectedData => {
+        this.selectedData = selectedData;
+        if (this.legend === LegendPosition.Bottom) {
+          this.selectionChange.emit(this.selectedData);
+        } else {
+          this.showContextMenu();
+        }
+      });
 
     if (this.bands) {
       this.chart.withBands(...this.bands);
@@ -192,5 +230,24 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     const xAsDate = this.dateCoercer.coerce(xValue);
 
     return xAsDate ? this.dateFormatter.format(xAsDate) : String(xValue);
+  }
+
+  private showContextMenu(): void {
+    this.popover = this.popoverService.drawPopover({
+      componentOrTemplate: this.contextMenuTemplate,
+      data: this.contextMenuTemplate,
+      position: {
+        type: PopoverPositionType.Relative,
+        origin: this.container.nativeElement,
+        locationPreferences: [PopoverRelativePositionLocation.AboveRightAligned]
+      },
+      backdrop: PopoverBackdrop.Transparent
+    });
+    this.popover.closeOnBackdropClick();
+    this.popover.closeOnPopoverContentClick();
+  }
+
+  public contextMenuSelectHandler(_menu: ContextMenu): void {
+    this.selectionChange.emit(this.selectedData);
   }
 }
