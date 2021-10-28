@@ -52,8 +52,9 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     if (this.data$) {
       this.wrapperView = this.wrapperView || this.buildWrapperView();
       this.wrapperParamsSubject.next({
-        state$: this.loadAsyncService.mapObservableState(this.data$, this.config),
-        content: this.templateRef
+        state$: this.loadAsyncService.mapObservableState(this.data$),
+        content: this.templateRef,
+        config: this.config
       });
     } else {
       // If observable is cleared, clear the DOM

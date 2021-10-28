@@ -4,9 +4,3 @@ export const enum ImagesAssetPath {
   LoaderPage = 'assets/images/loader-page.gif',
   LoaderExpandableRow = 'assets/images/loader-expandable-row.gif'
 }
-
-export const enum LoaderType {
-  Spinner = 'spinner',
-  ExpandableRow = 'expandable-row',
-  Page = 'page'
-}

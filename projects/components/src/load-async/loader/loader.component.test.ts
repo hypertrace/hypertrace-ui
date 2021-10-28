@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { LoaderType } from '../load-async.service';
 import { LoaderComponent } from './loader.component';
 
 describe('Loader component', () => {

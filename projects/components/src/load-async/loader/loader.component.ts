@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
+import { LoaderType } from '../load-async.service';
 
 @Component({
   selector: 'ht-loader',
@@ -7,23 +8,22 @@ import { ImagesAssetPath, LoaderType } from '@hypertrace/assets-library';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-loader">
-      <img [ngClass]="[this.loaderType]" [src]="this.imagePath" />
+      <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />
     </div>
   `
 })
 export class LoaderComponent implements OnChanges {
   @Input()
-  public loaderType: LoaderType = LoaderType.Spinner;
+  public loaderType?: LoaderType;
 
-  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
+  public currentLoaderType: LoaderType = LoaderType.Spinner;
 
   public ngOnChanges(): void {
-    this.loaderType = this.loaderType ?? LoaderType.Spinner;
-    this.imagePath = this.getImagePathFromType();
+    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
   }
 
-  private getImagePathFromType(): ImagesAssetPath {
-    switch (this.loaderType) {
+  public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
+    switch (loaderType) {
       case LoaderType.ExpandableRow:
         return ImagesAssetPath.LoaderExpandableRow;
       case LoaderType.Page:
