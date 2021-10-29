@@ -1,4 +1,11 @@
-import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
+import {
+  LoadAsyncConfig,
+  TableDataSource,
+  TableMode,
+  TableRow,
+  TableSelectionMode,
+  TableStyle
+} from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   BaseModel,
@@ -13,6 +20,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
+  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -117,6 +125,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     type: BOOLEAN_PROPERTY.type
   })
   public resizable: boolean = true;
+
+  @ModelProperty({
+    key: 'loadingConfig',
+    required: false,
+    type: PLAIN_OBJECT_PROPERTY.type
+  })
+  public loadingConfig?: LoadAsyncConfig;
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;

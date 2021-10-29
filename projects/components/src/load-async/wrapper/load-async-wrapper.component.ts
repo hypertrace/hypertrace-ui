@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { LoadAsyncStateType } from '../load-async-state.type';
-import { AsyncState, ErrorAsyncState, LoadAsyncContext } from '../load-async.service';
+import { AsyncState, LoadAsyncConfig, LoadAsyncContext, LoaderType } from '../load-async.service';
 
 export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters>>(
   'ASYNC_WRAPPER_PARAMETERS$'
@@ -14,7 +14,7 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
   template: `
     <div *ngIf="this.state$ | async as state" class="fill-container" [ngSwitch]="state.type">
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Loading}'">
-        <ht-loader></ht-loader>
+        <ht-loader [loaderType]="this.loaderType"></ht-loader>
       </ng-container>
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Success}'">
         <ng-container *ngTemplateOutlet="this.content; context: state.context"></ng-container>
@@ -34,31 +34,43 @@ export class LoadAsyncWrapperComponent {
   public readonly state$: Observable<AsyncState>;
 
   public icon?: IconType;
+  public loaderType?: LoaderType;
   public title?: string;
   public description: string = '';
 
   public content?: TemplateRef<LoadAsyncContext>;
+  public config?: LoadAsyncConfig;
 
   public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>) {
     this.state$ = parameters$.pipe(
-      tap(params => (this.content = params.content)),
+      tap(params => {
+        this.content = params.content;
+        this.config = params.config;
+      }),
       switchMap(parameter => parameter.state$),
-      tap(state => this.updateMessage(state.type, (state as Partial<ErrorAsyncState>).description))
+      tap(state => this.updateMessage(state))
     );
   }
 
-  private updateMessage(stateType: LoadAsyncStateType, description: string = ''): void {
-    this.description = description;
-
-    switch (stateType) {
+  private updateMessage(state: AsyncState): void {
+    switch (state.type) {
+      case LoadAsyncStateType.Loading:
+        this.loaderType = this.config?.load?.loaderType;
+        break;
       case LoadAsyncStateType.NoData:
-        this.icon = IconType.NoData;
-        this.title = 'No Data';
+        this.icon = this.config?.noData?.icon ?? IconType.NoData;
+        this.title = this.config?.noData?.title ?? 'No Data';
+        this.description = this.config?.noData?.description ?? '';
         break;
       case LoadAsyncStateType.GenericError:
+        this.icon = this.config?.error?.icon ?? IconType.Error;
+        this.title = this.config?.error?.title ?? 'Error';
+        this.description = state.description ?? this.config?.error?.description ?? '';
+        break;
       default:
-        this.icon = IconType.Error;
-        this.title = 'Error';
+        this.icon = undefined;
+        this.title = '';
+        this.description = '';
     }
   }
 }
@@ -66,4 +78,5 @@ export class LoadAsyncWrapperComponent {
 export interface LoadAsyncWrapperParameters {
   state$: Observable<AsyncState>;
   content: TemplateRef<LoadAsyncContext>;
+  config?: LoadAsyncConfig;
 }
