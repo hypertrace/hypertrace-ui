@@ -20,11 +20,6 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
-        loadingConfig: {
-          error: {
-            title: 'this is the custom error'
-          }
-        },
         'select-control-options': [
           {
             type: 'table-widget-select-option',
