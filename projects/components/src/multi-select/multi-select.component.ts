@@ -52,7 +52,7 @@ import { MultiSelectJustify } from './multi-select-justify';
             <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
               <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
               <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
-              >+{{ this.selectedItemsCount - 1 }}</span
+                >+{{ this.selectedItemsCount - 1 }}</span
               >
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
@@ -246,15 +246,12 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
     this.subscriptionLifecycle.add(
       this.allOptions$?.subscribe(options => {
-
-        const selectedItems: SelectOptionComponent<V>[] = options.filter(item =>
-          this.isSelectedItem(item)
-        );
+        const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
 
         this.selectedItemsCount = selectedItems?.length ?? 0;
 
         // Trigger label is placeholder in case there is element selected on multiselect
-        this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems)[0]?.label;
+        this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : selectedItems[0]?.label;
       })
     );
   }
