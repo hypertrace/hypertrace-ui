@@ -255,7 +255,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   public onOptionClick(option: ComboBoxOption<TValue>): void {
     this.setText(option.text);
     this.hidePopover();
-    this.input.nativeElement.focus();
+    this.focus();
     this.selection.emit(this.buildResult());
   }
 
@@ -325,7 +325,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
      * This might just be a mac or browser specific thing, but when an input box gets tabbed into it doesn't
      * get focus, but the entire text content is selected. Let's use that to give ourselves focus as well.
      */
-    this.input.nativeElement.focus();
+    this.focus();
   }
 
   public onEscape(): void {
@@ -367,6 +367,10 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public isCreateOptionAvailable(): boolean {
     return this.createOption !== undefined && !isNil(this.text);
+  }
+
+  public focus(): void {
+    this.input.nativeElement.focus();
   }
 
   private buildResult(): ComboBoxResult<TValue> {
