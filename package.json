@@ -104,7 +104,7 @@
     "jest-config": "^27.3.1",
     "jest-html-reporter": "^3.4.1",
     "jest-junit": "^13.0.0",
-    "jest-preset-angular": "^8.4.0",
+    "jest-preset-angular": "^10.1.0",
     "lodash": "^4.17.21",
     "ng-mocks": "^12.5.0",
     "ng-packagr": "^12.2.5",
