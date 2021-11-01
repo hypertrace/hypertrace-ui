@@ -10,7 +10,7 @@ import {
   QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { queryListAndChanges$ } from '@hypertrace/common';
+import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -24,6 +24,7 @@ import { MultiSelectJustify } from './multi-select-justify';
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div
       class="multi-select"
@@ -47,11 +48,11 @@ import { MultiSelectJustify } from './multi-select-justify';
             [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
             #triggerContainer
           >
-            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
+            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
             <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
               <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
               <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
-                >+{{ this.selectedItemsCount - 1 }}</span
+              >+{{ this.selectedItemsCount - 1 }}</span
               >
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
@@ -166,6 +167,8 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public triggerLabel?: string;
   public selectedItemsCount: number = 0;
 
+  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
@@ -241,14 +244,19 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
       return;
     }
 
-    const selectedItems: SelectOptionComponent<V>[] | undefined = this.allOptionsList?.filter(item =>
-      this.isSelectedItem(item)
+    this.subscriptionLifecycle.add(
+      this.allOptions$?.subscribe(options => {
+
+        const selectedItems: SelectOptionComponent<V>[] = options.filter(item =>
+          this.isSelectedItem(item)
+        );
+
+        this.selectedItemsCount = selectedItems?.length ?? 0;
+
+        // Trigger label is placeholder in case there is element selected on multiselect
+        this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems)[0]?.label;
+      })
     );
-
-    this.selectedItemsCount = selectedItems?.length ?? 0;
-
-    // Trigger label is placeholder in case there is element selected on multiselect
-    this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems || [])[0]?.label;
   }
 }
 
