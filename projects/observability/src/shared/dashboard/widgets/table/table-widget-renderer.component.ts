@@ -298,13 +298,7 @@ export class TableWidgetRendererComponent
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
     return this.getPreferences().pipe(
       switchMap(preferences =>
-        combineLatest([
-          this.getScope(),
-          this.api.change$.pipe(
-            mapTo(true),
-            startWith(true)
-          )
-        ]).pipe(
+        combineLatest([this.getScope(), this.api.change$.pipe(mapTo(true), startWith(true))]).pipe(
           switchMap(([scope]) => this.model.getColumns(scope)),
           startWith([]),
           map((columns: SpecificationBackedTableColumnDef[]) =>
