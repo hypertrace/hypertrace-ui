@@ -125,7 +125,8 @@ export class TableWidgetRendererComponent
   implements OnInit {
   private static readonly DEFAULT_PREFERENCES: TableWidgetPreferences = {
     columns: [],
-    checkboxes: []
+    // Temporarily disabled: ENG-12582
+    // checkboxes: []
   };
 
   private static readonly DEFAULT_TAB_INDEX: number = 0;
@@ -227,7 +228,7 @@ export class TableWidgetRendererComponent
   private getSelectControls(changed?: TableSelectControl): Observable<TableSelectControl[]> {
     return this.getPreferences().pipe(
       take(1),
-      switchMap(preferences =>
+      switchMap(_preferences =>
         forkJoinSafeEmpty(
           this.model
             .getSelectControlOptions()
@@ -242,15 +243,17 @@ export class TableWidgetRendererComponent
                 take(1),
                 withLatestFrom(this.selectFilterSubject),
                 map(([options, filters]) => {
-                  const foundPreferences = preferences.selections
-                    ? preferences.selections.find(
-                        preferencesSelectionControl =>
-                          selectControlModel.placeholder === preferencesSelectionControl.placeholder
-                      )
-                    : undefined;
+                  // Temporarily disabled: ENG-12582
+                  // const foundPreferences = preferences.selections
+                  //   ? preferences.selections.find(
+                  //       preferencesSelectionControl =>
+                  //         selectControlModel.placeholder === preferencesSelectionControl.placeholder
+                  //     )
+                  //   : undefined;
 
                   return (
-                    foundPreferences ?? {
+                    // foundPreferences ??
+                    {
                       placeholder: selectControlModel.placeholder,
                       options: options.map(option => ({
                         ...option,
@@ -360,15 +363,16 @@ export class TableWidgetRendererComponent
     this.selectFilterSubject.next(this.mergeFilters(toInFilter(tableFilters)));
   }
 
-  private updateSelectionPreferences(tableSelectControls: TableSelectControl[]): void {
-    if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(preferences =>
-        this.setPreferences({
-          ...preferences,
-          selections: tableSelectControls
-        })
-      );
-    }
+  private updateSelectionPreferences(_tableSelectControls: TableSelectControl[]): void {
+    // Temporarily disabled: ENG-12582
+    // if (isNonEmptyString(this.model.getId())) {
+    //   this.getPreferences().subscribe(preferences =>
+    //     this.setPreferences({
+    //       ...preferences,
+    //       selections: tableSelectControls
+    //     })
+    //   );
+    // }
   }
 
   private publishCheckboxOptionChange(option: TableCheckboxControlOption): void {
@@ -395,20 +399,21 @@ export class TableWidgetRendererComponent
     );
   }
 
-  private updateCheckboxPreferences(tableCheckboxControls: TableCheckboxControl[]): void {
-    if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(preferences =>
-        this.setPreferences({
-          ...preferences,
-          checkboxes: tableCheckboxControls
-        })
-      );
-    }
+  private updateCheckboxPreferences(_tableCheckboxControls: TableCheckboxControl[]): void {
+    // Temporarily disabled: ENG-12582
+    // if (isNonEmptyString(this.model.getId())) {
+    //   this.getPreferences().subscribe(preferences =>
+    //     this.setPreferences({
+    //       ...preferences,
+    //       checkboxes: tableCheckboxControls
+    //     })
+    //   );
+    // }
   }
 
   private getCheckboxControls(changed?: TableCheckboxChange): Observable<TableCheckboxControl[]> {
     return this.getPreferences().pipe(
-      switchMap(preferences =>
+      switchMap(_preferences =>
         forkJoinSafeEmpty(
           this.model
             .getCheckboxControlOptions()
@@ -431,14 +436,16 @@ export class TableWidgetRendererComponent
                     };
                   }
 
-                  const found = preferences.checkboxes
-                    ? preferences.checkboxes.find(preferencesCheckboxControl =>
-                        options.some(option => option.label === preferencesCheckboxControl.label)
-                      )
-                    : undefined;
+                  // Temporarily disabled: ENG-12582
+                  // const found = preferences.checkboxes
+                  //   ? preferences.checkboxes.find(preferencesCheckboxControl =>
+                  //       options.some(option => option.label === preferencesCheckboxControl.label)
+                  //     )
+                  //   : undefined;
 
                   return (
-                    found ?? {
+                    // found ??
+                    {
                       label: checkboxControlModel.checked ? options[0].label : options[1].label,
                       value: checkboxControlModel.checked,
                       options: options
@@ -603,8 +610,9 @@ interface TableWidgetViewPreferences {
 
 interface TableWidgetPreferences {
   columns?: PersistedTableColumnConfig[];
-  checkboxes?: TableCheckboxControl[];
-  selections?: TableSelectControl[];
+  // Temporarily disabled: ENG-12582
+  // checkboxes?: TableCheckboxControl[];
+  // selections?: TableSelectControl[];
 }
 
 type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
