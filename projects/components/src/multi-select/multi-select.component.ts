@@ -53,7 +53,8 @@ import { MultiSelectJustify } from './multi-select-justify';
               <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
                 <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
                 <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
-                >+{{ triggerValues.selectedItemsCount - 1 }}</span>
+                  >+{{ triggerValues.selectedItemsCount - 1 }}</span
+                >
                 <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
               </div>
             </ng-container>
@@ -252,7 +253,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
         return {
           label: selectedItems.length === 0 ? this.placeholder : selectedItems[0]?.label,
           selectedItemsCount: selectedItems.length
-        }
+        };
       })
     );
   }
