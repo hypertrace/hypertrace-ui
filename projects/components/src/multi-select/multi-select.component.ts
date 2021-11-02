@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -49,13 +49,14 @@ import { MultiSelectJustify } from './multi-select-justify';
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
-            <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
-              <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
-              <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
-                >+{{ this.selectedItemsCount - 1 }}</span
-              >
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
-            </div>
+            <ng-container *htLoadAsync="this.triggerValues$ as triggerValues">
+              <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
+                <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
+                <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
+                >+{{ triggerValues.selectedItemsCount - 1 }}</span>
+                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+              </div>
+            </ng-container>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -164,10 +165,7 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   private readonly searchSubject: Subject<string> = new BehaviorSubject('');
 
   public popoverOpen: boolean = false;
-  public triggerLabel?: string;
-  public selectedItemsCount: number = 0;
-
-  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+  public triggerValues$: Observable<TriggerValues> = new Observable();
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
@@ -239,22 +237,30 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   private setTriggerLabel(): void {
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
-      this.triggerLabel = this.placeholder;
+      this.triggerValues$ = of({
+        label: this.placeholder,
+        selectedItemsCount: 0
+      });
 
       return;
     }
 
-    this.subscriptionLifecycle.add(
-      this.allOptions$?.subscribe(options => {
+    this.triggerValues$ = this.allOptions$?.pipe(
+      map(options => {
         const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
 
-        this.selectedItemsCount = selectedItems?.length ?? 0;
-
-        // Trigger label is placeholder in case there is element selected on multiselect
-        this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : selectedItems[0]?.label;
+        return {
+          label: selectedItems.length === 0 ? this.placeholder : selectedItems[0]?.label,
+          selectedItemsCount: selectedItems.length
+        }
       })
     );
   }
+}
+
+interface TriggerValues {
+  label: string | undefined;
+  selectedItemsCount: number;
 }
 
 export const enum TriggerLabelDisplayMode {
