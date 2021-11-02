@@ -125,7 +125,7 @@ export class TableWidgetRendererComponent
   implements OnInit {
   private static readonly DEFAULT_PREFERENCES: TableWidgetPreferences = {
     columns: [],
-    // Temporarily disabled: ENG-12582
+    // Temporarily disabled filter session storage
     // checkboxes: []
   };
 
@@ -243,7 +243,7 @@ export class TableWidgetRendererComponent
                 take(1),
                 withLatestFrom(this.selectFilterSubject),
                 map(([options, filters]) => {
-                  // Temporarily disabled: ENG-12582
+                  // Temporarily disabled filter session storage
                   // const foundPreferences = preferences.selections
                   //   ? preferences.selections.find(
                   //       preferencesSelectionControl =>
@@ -364,7 +364,7 @@ export class TableWidgetRendererComponent
   }
 
   private updateSelectionPreferences(_tableSelectControls: TableSelectControl[]): void {
-    // Temporarily disabled: ENG-12582
+    // Temporarily disabled filter session storage
     // if (isNonEmptyString(this.model.getId())) {
     //   this.getPreferences().subscribe(preferences =>
     //     this.setPreferences({
@@ -400,7 +400,7 @@ export class TableWidgetRendererComponent
   }
 
   private updateCheckboxPreferences(_tableCheckboxControls: TableCheckboxControl[]): void {
-    // Temporarily disabled: ENG-12582
+    // Temporarily disabled filter session storage
     // if (isNonEmptyString(this.model.getId())) {
     //   this.getPreferences().subscribe(preferences =>
     //     this.setPreferences({
@@ -436,7 +436,7 @@ export class TableWidgetRendererComponent
                     };
                   }
 
-                  // Temporarily disabled: ENG-12582
+                  // Temporarily disabled filter session storage
                   // const found = preferences.checkboxes
                   //   ? preferences.checkboxes.find(preferencesCheckboxControl =>
                   //       options.some(option => option.label === preferencesCheckboxControl.label)
@@ -610,7 +610,7 @@ interface TableWidgetViewPreferences {
 
 interface TableWidgetPreferences {
   columns?: PersistedTableColumnConfig[];
-  // Temporarily disabled: ENG-12582
+  // Temporarily disabled filter session storage
   // checkboxes?: TableCheckboxControl[];
   // selections?: TableSelectControl[];
 }
