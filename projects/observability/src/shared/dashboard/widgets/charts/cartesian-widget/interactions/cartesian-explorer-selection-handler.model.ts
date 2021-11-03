@@ -2,12 +2,13 @@ import { NavigationParamsType, NavigationService, TimeRangeService } from '@hype
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
+import { CartesianSelectedData } from '../../../../../../public-api';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
 
 @Model({
   type: 'cartesian-explorer-selection-handler'
 })
-export class CartesianExplorerSelectionHandlerModel implements InteractionHandler {
+export class CartesianExplorerSelectionHandlerModel<TData> implements InteractionHandler {
   @ModelInject(TimeRangeService)
   private readonly timeRangeService!: TimeRangeService;
 
@@ -15,18 +16,8 @@ export class CartesianExplorerSelectionHandlerModel implements InteractionHandle
   private readonly navigationService!: NavigationService;
 
   // tslint:disable-next-line
-  public execute(selectionData: any): Observable<void> {
-    const startPoint = selectionData[0];
-    const endPoint = selectionData[1];
-
-    // When there is only one point in selected area, start timestamp  and end timestamp is same. This causes timerange exception
-    const startTime = new Date(startPoint.dataPoint.timestamp).getTime() - 6000;
-    const endTime = new Date(endPoint.dataPoint.timestamp).getTime() + 6000;
-
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-
-    this.navigateToExplorer(startDate, endDate);
+  public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
+    this.navigateToExplorer(selectionData.timeRange.startTime, selectionData.timeRange.endTime);
 
     return of();
   }

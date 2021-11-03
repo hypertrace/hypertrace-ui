@@ -10,6 +10,7 @@ import { BAND_ARRAY_TYPE } from './band-array/band-array-type';
 import { BandModel } from './band.model';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
+import { CartesianExplorerContextMenuModule } from './interactions/cartesian-explorer-context-menu/cartesian-explorer-context-menu.module';
 import { CartesianExplorerSelectionHandlerModel } from './interactions/cartesian-explorer-selection-handler.model';
 import { SeriesArrayEditorComponent } from './series-array/series-array-editor.component';
 import { SERIES_ARRAY_TYPE } from './series-array/series-array-type';
@@ -38,7 +39,8 @@ import { SeriesModel } from './series.model';
     }),
     TitledContentModule,
     LoadAsyncModule,
-    FormattingModule
+    FormattingModule,
+    CartesianExplorerContextMenuModule
   ]
 })
 export class CartesianWidgetModule {}

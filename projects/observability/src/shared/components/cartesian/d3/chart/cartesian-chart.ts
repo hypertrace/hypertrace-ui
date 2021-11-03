@@ -1,5 +1,5 @@
 import { Injector, Renderer2 } from '@angular/core';
-import { TimeRange } from '@hypertrace/common';
+import { TimeRange, TimeRangeService } from '@hypertrace/common';
 import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
 // tslint:disable
 import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
@@ -83,25 +83,23 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.eventListeners.forEach(listener => {
       if (listener.event === ChartEvent.Select) {
+        const { height } = this.mouseEventContainer!.getBoundingClientRect();
+
         const [startPoint, endPoint] = event.selection as [number, number];
 
         const startDate = this.allSeriesData[0].getXAxisValue(startPoint);
         const endDate = this.allSeriesData[0].getXAxisValue(endPoint);
-        console.log(
-          '🚀 ~ file: cartesian-chart.ts ~ line 89 ~ DefaultCartesianChart<TData> ~ onBrushSelection ~ startDate',
-          startDate,
-          endDate
-        );
 
-        // const startData = this.allSeriesData.flatMap(viz =>
-        //   viz.dataForLocation({ x: startPoint[0], y: startPoint[1] })
-        // );
+        const startData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: startPoint, y: height }));
 
-        // const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint[0], y: endPoint[1] }));
+        const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint, y: height }));
 
-        // const selectedData = [startData[0], endData[0]];
-
-        // listener.onEvent(selectedData);
+        const timeRange = TimeRangeService.toFixedTimeRange(startDate, endDate);
+        const selectedData = {
+          timeRange: timeRange,
+          selectedData: [startData[0], endData[0]]
+        };
+        listener.onEvent(selectedData);
       }
     });
   }
