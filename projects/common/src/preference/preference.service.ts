@@ -24,10 +24,7 @@ export class PreferenceService {
   private readonly numberCoercer: NumberCoercer = new NumberCoercer();
   private readonly booleanCoercer: BooleanCoercer = new BooleanCoercer();
 
-  public constructor(
-    private readonly localStorage: LocalStorage,
-    private readonly sessionStorage: SessionStorage
-  ) {}
+  public constructor(private readonly localStorage: LocalStorage, private readonly sessionStorage: SessionStorage) {}
 
   /**
    * Returns the current storage value if defined, else the default value. The observable
@@ -40,14 +37,16 @@ export class PreferenceService {
     defaultValue?: T,
     type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
   ): Observable<T> {
-    return this.preferenceStorage(type).watch(this.asStorageKey(key)).pipe(
-      map(storedValue => this.fromStorageValue<T>(storedValue) ?? defaultValue),
-      switchMap(value =>
-        value === undefined
-          ? throwError(Error(`No value found or default provided for preferenceKey: ${key}`))
-          : of(value)
-      )
-    );
+    return this.preferenceStorage(type)
+      .watch(this.asStorageKey(key))
+      .pipe(
+        map(storedValue => this.fromStorageValue<T>(storedValue) ?? defaultValue),
+        switchMap(value =>
+          value === undefined
+            ? throwError(Error(`No value found or default provided for preferenceKey: ${key}`))
+            : of(value)
+        )
+      );
   }
 
   public set(

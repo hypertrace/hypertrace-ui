@@ -563,7 +563,9 @@ export class TableWidgetRendererComponent
     defaultPreferences: TableWidgetPreferences = TableWidgetRendererComponent.DEFAULT_PREFERENCES
   ): Observable<TableWidgetPreferences> {
     return isNonEmptyString(this.model.getId())
-      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences, StorageType.Session).pipe(first())
+      ? this.preferenceService
+          .get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences, StorageType.Session)
+          .pipe(first())
       : of(defaultPreferences);
   }
 
