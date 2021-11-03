@@ -375,6 +375,19 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Session ID',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'sessionId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Request URL',
             width: '1',
             visible: false,
@@ -506,6 +519,19 @@ export class ExplorerDashboardBuilder {
             },
             'click-handler': {
               type: 'span-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Session ID',
+            width: '1',
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'sessionId'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           }
         ];
