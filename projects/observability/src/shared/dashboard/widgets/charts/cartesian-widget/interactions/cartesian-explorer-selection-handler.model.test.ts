@@ -2,21 +2,53 @@ import { NavigationService, TimeRangeService } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { CartesianSelectedData } from '../../../../../../public-api';
 import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
 
 describe('Cartesian Explorer Selection Handler Model', () => {
-  const selectedData = [
-    {
-      dataPoint: {
-        timestamp: 'Wed Oct 20 2021 00:25:00 GMT+0530 (India Standard Time)'
+  const selectedData: CartesianSelectedData<unknown> = {
+    timeRange: TimeRangeService.toFixedTimeRange(
+      new Date('2021-11-02T05:33:19.288Z'),
+      new Date('2021-11-02T14:30:15.141Z')
+    ),
+    selectedData: [
+      {
+        dataPoint: { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+        context: {
+          data: [
+            { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
+            { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+          ],
+          units: 'ms',
+          color: '#4b5f77',
+          name: 'p99',
+          type: 1,
+          stacking: false,
+          hide: false
+        },
+        location: { x: 59, y: 31.023400000000215 }
+      },
+      {
+        dataPoint: { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 },
+        context: {
+          data: [
+            { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
+            { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+          ],
+          units: 'ms',
+          color: '#4b5f77',
+          name: 'p99',
+          type: 1,
+          stacking: false,
+          hide: false
+        },
+        location: { x: 138, y: 82.58120000000001 }
       }
-    },
-    {
-      dataPoint: {
-        timestamp: 'Wed Oct 20 2021 12:25:00 GMT+0530 (India Standard Time)'
-      }
-    }
-  ];
+    ],
+    location: { x: 452, y: 763 }
+  };
 
   const navigationUrl = {
     navType: 'in-app',
