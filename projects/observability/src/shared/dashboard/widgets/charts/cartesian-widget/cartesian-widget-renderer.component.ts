@@ -1,5 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, TemplateRef, ViewChild } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import {
+  PopoverBackdrop,
+  PopoverFixedPositionLocation,
+  PopoverPositionType,
+  PopoverRef,
+  PopoverService
+} from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -10,14 +18,6 @@ import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 import { ContextMenu } from './interactions/cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
-import { IconType } from '@hypertrace/assets-library';
-import {
-  PopoverBackdrop,
-  PopoverFixedPositionLocation,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverService
-} from '@hypertrace/components';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -52,7 +52,7 @@ import {
   `
 })
 export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends InteractiveDataWidgetRenderer<
-  CartesianWidgetModel<any>,
+  CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
   private popover?: PopoverRef;
@@ -163,7 +163,8 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
       data: this.contextMenuTemplate,
       position: {
         type: PopoverPositionType.Fixed,
-        location: PopoverFixedPositionLocation.Right
+        location: PopoverFixedPositionLocation.Custom,
+        customLocation: this.selectedData.location
       },
       backdrop: PopoverBackdrop.Transparent
     });

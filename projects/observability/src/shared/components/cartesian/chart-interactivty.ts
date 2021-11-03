@@ -21,4 +21,8 @@ export interface ChartTooltipTrackingOptions {
 export interface CartesianSelectedData<TData> {
   timeRange: TimeRange;
   selectedData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+  location: {
+    x: number;
+    y: number;
+  };
 }

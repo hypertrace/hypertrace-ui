@@ -97,7 +97,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         const timeRange = TimeRangeService.toFixedTimeRange(startDate, endDate);
         const selectedData = {
           timeRange: timeRange,
-          selectedData: [startData[0], endData[0]]
+          selectedData: [startData[0], endData[0]],
+          location: {
+            x: event.sourceEvent.clientX,
+            y: event.sourceEvent.clientY
+          }
         };
         listener.onEvent(selectedData);
       }
