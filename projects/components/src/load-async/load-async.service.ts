@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, map, startWith } from 'rxjs/operators';
@@ -50,18 +51,39 @@ export interface LoadAsyncContext {
   $implicit: unknown;
 }
 
-export type AsyncState = ErrorAsyncState | SuccessAsyncState | LoadingAsyncState;
+export interface LoadAsyncConfig {
+  load?: LoadingStateConfig;
+  noData?: NoDataOrErrorStateConfig;
+  error?: NoDataOrErrorStateConfig;
+}
+
+export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
+
+export const enum LoaderType {
+  Spinner = 'spinner',
+  ExpandableRow = 'expandable-row',
+  Page = 'page'
+}
 
 interface LoadingAsyncState {
   type: LoadAsyncStateType.Loading;
 }
-
 interface SuccessAsyncState {
   type: LoadAsyncStateType.Success;
   context: LoadAsyncContext;
 }
 
-export interface ErrorAsyncState {
+interface NoDataOrErrorAsyncState {
   type: LoadAsyncStateType.GenericError | LoadAsyncStateType.NoData;
+  description?: string;
+}
+
+interface LoadingStateConfig {
+  loaderType?: LoaderType;
+}
+
+interface NoDataOrErrorStateConfig {
+  icon?: IconType;
+  title?: string;
   description?: string;
 }

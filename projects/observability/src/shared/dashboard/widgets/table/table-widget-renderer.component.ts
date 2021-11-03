@@ -34,7 +34,19 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, pairwise, share, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import {
+  filter,
+  first,
+  map,
+  mapTo,
+  pairwise,
+  share,
+  startWith,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -84,6 +96,7 @@ import { TableWidgetModel } from './table-widget.model';
           [selectionMode]="this.model.getSelectionMode()"
           [display]="this.model.style"
           [data]="this.data$ | async"
+          [loadingConfig]="this.model.loadingConfig"
           [filters]="this.combinedFilters$ | async"
           [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"
@@ -285,13 +298,7 @@ export class TableWidgetRendererComponent
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
     return this.getPreferences().pipe(
       switchMap(preferences =>
-        combineLatest([
-          this.getScope(),
-          this.api.change$.pipe(
-            map(() => true),
-            startWith(true)
-          )
-        ]).pipe(
+        combineLatest([this.getScope(), this.api.change$.pipe(mapTo(true), startWith(true))]).pipe(
           switchMap(([scope]) => this.model.getColumns(scope)),
           startWith([]),
           map((columns: SpecificationBackedTableColumnDef[]) =>
