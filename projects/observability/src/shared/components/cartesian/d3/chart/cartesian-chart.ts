@@ -2,7 +2,7 @@ import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange, TimeRangeService } from '@hypertrace/common';
 import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
 // tslint:disable
-import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
+import { ContainerElement, event as d3CurrentEvent, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
@@ -323,7 +323,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private attachBrush(): void {
     const brushBehaviour: BrushBehavior<unknown> = brushX<unknown>().on('end', () =>
-      this.onBrushSelection(_d3CurrentEvent)
+      this.onBrushSelection(d3CurrentEvent)
     );
 
     const { width, height } = this.hostElement.getBoundingClientRect();
