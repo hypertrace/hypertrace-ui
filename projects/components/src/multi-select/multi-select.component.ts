@@ -10,7 +10,7 @@ import {
   QueryList
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { queryListAndChanges$ } from '@hypertrace/common';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -24,7 +24,6 @@ import { MultiSelectJustify } from './multi-select-justify';
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SubscriptionLifecycle],
   template: `
     <div
       class="multi-select"
