@@ -5,7 +5,8 @@ import {
   forkJoinSafeEmpty,
   isEqualIgnoreFunctions,
   isNonEmptyString,
-  PreferenceService
+  PreferenceService,
+  StorageType
 } from '@hypertrace/common';
 import {
   FilterAttribute,
@@ -31,7 +32,7 @@ import {
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import {
@@ -548,13 +549,13 @@ export class TableWidgetRendererComponent
 
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
-      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}).pipe(first())
+      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}, StorageType.Session).pipe(first())
       : of({});
   }
 
   private setViewPreferences(preferences: TableWidgetViewPreferences): void {
     if (isNonEmptyString(this.model.viewId)) {
-      this.preferenceService.set(this.model.viewId, preferences);
+      this.preferenceService.set(this.model.viewId, preferences, StorageType.Session);
     }
   }
 
@@ -562,13 +563,13 @@ export class TableWidgetRendererComponent
     defaultPreferences: TableWidgetPreferences = TableWidgetRendererComponent.DEFAULT_PREFERENCES
   ): Observable<TableWidgetPreferences> {
     return isNonEmptyString(this.model.getId())
-      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(first())
+      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences, StorageType.Session).pipe(first())
       : of(defaultPreferences);
   }
 
   private setPreferences(preferences: TableWidgetPreferences): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.preferenceService.set(this.model.getId()!, preferences);
+      this.preferenceService.set(this.model.getId()!, preferences, StorageType.Session);
     }
   }
 
