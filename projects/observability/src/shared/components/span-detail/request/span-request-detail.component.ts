@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
+import { SpanDetailCallHeaderType } from '../call/headers/span-detail-call-headers.component';
 
 @Component({
   selector: 'ht-span-request-detail',
@@ -9,7 +10,14 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
   template: `
     <div class="span-request-detail" [ngClass]="this.layout">
       <div class="section">
-        <ht-span-detail-call-headers [headers]="this.requestHeaders"></ht-span-detail-call-headers>
+        <ht-span-detail-call-headers
+          [data]="this.requestHeaders"
+          mode="${SpanDetailCallHeaderType.Header}"
+        ></ht-span-detail-call-headers>
+        <ht-span-detail-call-headers
+          [data]="this.requestCookies"
+          mode="${SpanDetailCallHeaderType.Cookie}"
+        ></ht-span-detail-call-headers>
       </div>
       <div class="section">
         <ht-span-detail-call-body [body]="this.requestBody"></ht-span-detail-call-body>
@@ -20,6 +28,9 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
 export class SpanRequestDetailComponent {
   @Input()
   public requestHeaders?: Dictionary<unknown>;
+
+  @Input()
+  public requestCookies?: Dictionary<unknown>;
 
   @Input()
   public requestBody?: string;

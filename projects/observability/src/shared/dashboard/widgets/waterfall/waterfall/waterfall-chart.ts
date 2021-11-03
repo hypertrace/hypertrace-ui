@@ -18,8 +18,10 @@ export interface WaterfallData {
   apiName?: string;
   spanType: SpanType;
   requestHeaders?: Dictionary<unknown>;
+  requestCookies?: Dictionary<unknown>;
   requestBody?: string;
   responseHeaders?: Dictionary<unknown>;
+  responseCookies?: Dictionary<unknown>;
   responseBody?: string;
   tags: Dictionary<unknown>;
   errorCount: number;
