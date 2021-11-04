@@ -1,5 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { Color } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
@@ -20,7 +21,10 @@ describe('Toggle Group Component', () => {
     const items: ToggleItem[] = [
       {
         label: 'First',
-        value: 'first-value'
+        value: 'first-value',
+        tagValue: 'tag',
+        tagColor: Color.Gray9,
+        tagBackgroundColor: Color.White
       },
       {
         label: 'Second',
@@ -50,5 +54,18 @@ describe('Toggle Group Component', () => {
 
     spectator.click(spectator.queryAll('ht-toggle-item')[0]);
     expect(activeItemChangeSpy).toHaveBeenCalledWith(items[0]);
+
+    const firstToggleItem = spectator.queryAll(ToggleItemComponent)[0];
+    expect(firstToggleItem.label).toEqual(items[0].label);
+    expect(firstToggleItem.tagValue).toEqual(items[0].tagValue);
+    expect(firstToggleItem.tagColor).toEqual(items[0].tagColor);
+    expect(firstToggleItem.tagBackgroundColor).toEqual(items[0].tagBackgroundColor);
+
+    const secondToggleItem = spectator.queryAll(ToggleItemComponent)[1];
+    expect(secondToggleItem.label).toEqual(items[1].label);
+    expect(secondToggleItem.tagValue).toBeUndefined();
+    expect(secondToggleItem.tagColor).toBeUndefined();
+    expect(secondToggleItem.tagBackgroundColor).toBeUndefined();
+
   }));
 });
