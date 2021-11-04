@@ -12,7 +12,13 @@ import { IconSize } from '../icon/icon-size';
       <ht-icon *ngIf="this.icon; else labelBlock" class="icon" [icon]="this.icon" size="${IconSize.Medium}"></ht-icon>
       <ng-template #labelBlock>
         <ht-label class="label" [label]="this.label"></ht-label>
-        <ht-label-tag *ngIf="this.tagValue !== ''" class="tag" [label]="this.tagValue" [backgroundColor]="this.tagBackgroundColor" [labelColor]="this.tagColor"></ht-label-tag>
+        <ht-label-tag
+          *ngIf="this.tagValue !== ''"
+          class="tag"
+          [label]="this.tagValue"
+          [backgroundColor]="this.tagBackgroundColor"
+          [labelColor]="this.tagColor"
+        ></ht-label-tag>
       </ng-template>
     </div>
   `

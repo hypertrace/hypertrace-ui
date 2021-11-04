@@ -66,6 +66,5 @@ describe('Toggle Group Component', () => {
     expect(secondToggleItem.tagValue).toBeUndefined();
     expect(secondToggleItem.tagColor).toBeUndefined();
     expect(secondToggleItem.tagBackgroundColor).toBeUndefined();
-
   }));
 });
