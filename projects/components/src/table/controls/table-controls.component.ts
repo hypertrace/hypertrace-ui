@@ -43,9 +43,7 @@ import {
         ></ht-search-box>
 
         <!-- Selects -->
-        <ng-container
-          *ngFor="let selectControl of this.selectControls"
-        >
+        <ng-container *ngFor="let selectControl of this.selectControls">
           <ht-multi-select
             *ngIf="selectControl.isMultiSelect"
             [selected]="this.appliedFilters(selectControl)"
@@ -77,7 +75,6 @@ import {
               [value]="option"
             ></ht-select-option>
           </ht-select>
-
         </ng-container>
       </div>
 
