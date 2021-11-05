@@ -317,7 +317,13 @@ export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
 
 // Titled Content
-export { TitledContentComponent, TitlePosition } from './titled-content/titled-content.component';
+export {
+  TitledContentComponent,
+  TitlePosition,
+  TitleStyle,
+  LinkButtonStyle,
+  HeaderPosition
+} from './titled-content/titled-content.component';
 export { TitledContentModule } from './titled-content/titled-content.module';
 
 // Toggle Button
