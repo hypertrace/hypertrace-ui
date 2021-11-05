@@ -18,7 +18,7 @@ describe('Span response detail component', () => {
   });
 
   test('should display headers and body title', () => {
-    spectator = createHost(`<ht-span-response-detail></ht-span-response-detail>`);
+    spectator = createHost(`<ht-span-response-detail title="Headers"></ht-span-response-detail>`);
 
     const headerTitleElement = spectator.query<HTMLElement>('.call-headers > .title');
     expect(headerTitleElement).not.toBeNull();

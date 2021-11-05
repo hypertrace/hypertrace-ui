@@ -10,7 +10,7 @@ import { EMPTY, Observable, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="call-headers">
-      <ht-label [label]="this.label" class="title"></ht-label>
+      <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container" data-sensitive-pii>
         <ng-container *htLoadAsync="this.records$ as records">
           <ht-list-view [records]="records"></ht-list-view>
@@ -24,25 +24,14 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public data?: Dictionary<unknown>;
 
   @Input()
-  public mode: SpanDetailCallHeaderType = SpanDetailCallHeaderType.Header;
+  public title?: string;
 
   public records$?: Observable<ListViewRecord[]>;
 
   public label?: string;
 
   public ngOnChanges(): void {
-    this.label = this.getLabel();
     this.buildRecords();
-  }
-
-  private getLabel(): string {
-    switch (this.mode) {
-      case SpanDetailCallHeaderType.Cookie:
-        return 'Cookies';
-      case SpanDetailCallHeaderType.Header:
-      default:
-        return 'Headers';
-    }
   }
 
   private buildRecords(): void {
@@ -59,9 +48,4 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
       );
     }
   }
-}
-
-export const enum SpanDetailCallHeaderType {
-  Header = 'header',
-  Cookie = 'cookie'
 }
