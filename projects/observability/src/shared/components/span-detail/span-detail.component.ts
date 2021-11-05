@@ -30,6 +30,7 @@ import { SpanDetailTab } from './span-detail-tab';
             class="request"
             [layout]="this.layout"
             [requestHeaders]="this.spanData.requestHeaders"
+            [requestCookies]="this.spanData.requestCookies"
             [requestBody]="this.spanData.requestBody"
           ></ht-span-request-detail>
         </ht-tab>
@@ -38,6 +39,7 @@ import { SpanDetailTab } from './span-detail-tab';
             class="response"
             [layout]="this.layout"
             [responseHeaders]="this.spanData.responseHeaders"
+            [responseCookies]="this.spanData.responseCookies"
             [responseBody]="this.spanData.responseBody"
           ></ht-span-response-detail>
         </ht-tab>
@@ -78,8 +80,14 @@ export class SpanDetailComponent implements OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
-      this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
-      this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
+      this.showRequestTab =
+        !isEmpty(this.spanData?.requestHeaders) ||
+        !isEmpty(this.spanData?.requestCookies) ||
+        !isEmpty(this.spanData?.requestBody);
+      this.showResponseTab =
+        !isEmpty(this.spanData?.responseHeaders) ||
+        !isEmpty(this.spanData?.responseCookies) ||
+        !isEmpty(this.spanData?.responseBody);
       this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
       this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;

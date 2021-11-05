@@ -9,7 +9,8 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
   template: `
     <div class="span-request-detail" [ngClass]="this.layout">
       <div class="section">
-        <ht-span-detail-call-headers [headers]="this.requestHeaders"></ht-span-detail-call-headers>
+        <ht-span-detail-call-headers [data]="this.requestHeaders" title="Headers"></ht-span-detail-call-headers>
+        <ht-span-detail-call-headers [data]="this.requestCookies" title="Cookies"></ht-span-detail-call-headers>
       </div>
       <div class="section">
         <ht-span-detail-call-body [body]="this.requestBody"></ht-span-detail-call-body>
@@ -20,6 +21,9 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
 export class SpanRequestDetailComponent {
   @Input()
   public requestHeaders?: Dictionary<unknown>;
+
+  @Input()
+  public requestCookies?: Dictionary<unknown>;
 
   @Input()
   public requestBody?: string;
