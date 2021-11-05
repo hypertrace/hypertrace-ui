@@ -62,6 +62,7 @@ describe('Table Controls component', () => {
         selectControls: [
           {
             placeholder: 'test1',
+            isMultiSelect: true,
             options: [
               {
                 label: 'first1',
@@ -88,6 +89,7 @@ describe('Table Controls component', () => {
         selectControls: [
           {
             placeholder: 'test1',
+            isMultiSelect: true,
             options: [
               {
                 label: 'first1',
