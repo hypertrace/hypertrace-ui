@@ -43,21 +43,42 @@ import {
         ></ht-search-box>
 
         <!-- Selects -->
-        <ht-multi-select
+        <ng-container
           *ngFor="let selectControl of this.selectControls"
-          [selected]="this.appliedFilters(selectControl)"
-          [placeholder]="selectControl.placeholder"
-          class="control select"
-          showBorder="true"
-          searchMode="${MultiSelectSearchMode.CaseInsensitive}"
-          (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
         >
-          <ht-select-option
-            *ngFor="let option of selectControl.options"
-            [label]="option.label"
-            [value]="option"
-          ></ht-select-option>
-        </ht-multi-select>
+          <ht-multi-select
+            *ngIf="selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            class="control select"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-multi-select>
+
+          <ht-select
+            *ngIf="!selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            class="control select"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-select>
+
+        </ng-container>
       </div>
 
       <!-- Right -->
