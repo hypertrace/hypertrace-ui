@@ -10,6 +10,8 @@ import { InputAppearance } from './input-appearance';
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
       <input
         matInput
+        [id]="this.id"
+        [name]="this.name"
         [type]="this.type"
         [required]="this.required"
         [disabled]="this.disabled"
@@ -21,6 +23,12 @@ import { InputAppearance } from './input-appearance';
   `
 })
 export class InputComponent<T extends string | number> implements OnChanges {
+  @Input()
+  public id?: string;
+
+  @Input()
+  public name?: string;
+
   @Input()
   public placeholder?: string;
 

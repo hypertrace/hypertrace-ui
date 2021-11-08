@@ -19,7 +19,7 @@ import { IconSize } from '../icon/icon-size';
         ></ht-icon>
       </div>
       <ng-content></ng-content>
-      <ht-label *ngIf="!this.isOptional" class="error-message" [label]="this.errorLabel"></ht-label>
+      <ht-label *ngIf="!this.isOptional || this.showError" class="error-message" [label]="this.errorLabel"></ht-label>
     </section>
   `
 })
@@ -38,6 +38,9 @@ export class FormFieldComponent {
 
   @Input()
   public iconTooltip?: string;
+
+  @Input()
+  public showError?: boolean = false;
 
   @Input()
   public errorLabel?: string = '';
