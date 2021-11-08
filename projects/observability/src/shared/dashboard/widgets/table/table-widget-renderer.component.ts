@@ -255,6 +255,7 @@ export class TableWidgetRendererComponent
                   return (
                     foundPreferences ?? {
                       placeholder: selectControlModel.placeholder,
+                      isMultiSelect: selectControlModel.isMultiselect,
                       options: options.map(option => ({
                         ...option,
                         applied: this.isFilterApplied(option.metaValue, filters)

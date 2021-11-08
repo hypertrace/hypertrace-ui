@@ -8,6 +8,8 @@ import { TableWidgetControlModel } from './table-widget-control.model';
   type: 'table-widget-select-option'
 })
 export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel<TableSelectControlOption> {
+  public readonly isMultiselect: boolean = false;
+
   @ModelProperty({
     key: 'placeholder',
     displayName: 'Placeholder',
