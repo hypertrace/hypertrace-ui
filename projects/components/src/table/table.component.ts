@@ -106,7 +106,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
               [ngClass]="{
-                'detail-expanded': this.isDetailExpanded(row)
+                'detail-expanded': this.isDetailExpanded(row),
+                'hide-divider': this.isDetailList()
               }"
               class="data-cell"
             >
@@ -697,6 +698,10 @@ export class TableComponent
 
   public hasExpandableRows(): boolean {
     return this.isDetailType() || this.isTreeType();
+  }
+
+  public isDetailList(): boolean {
+    return this.isDetailType() && this.display === TableStyle.List;
   }
 
   public isDetailExpanded(row: StatefulTableRow): boolean {
