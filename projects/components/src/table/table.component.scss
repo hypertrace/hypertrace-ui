@@ -110,6 +110,10 @@ $header-height: 32px;
     border-bottom: unset;
   }
 
+  &.hide-divider {
+    border-bottom: unset;
+  }
+
   .data-cell-renderer {
     display: block;
     height: 100%;
