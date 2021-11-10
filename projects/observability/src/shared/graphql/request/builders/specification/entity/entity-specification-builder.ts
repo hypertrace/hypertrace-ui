@@ -76,12 +76,7 @@ export class EntitySpecificationBuilder {
         alias: attribute,
         arguments: [this.argBuilder.forAttributeKey(attribute)]
       })),
-      ...additionalSpecifications.map(
-        (specification): GraphQlSelection => ({
-          path: specification.resultAlias(),
-          children: [specification.asGraphQlSelections()].flat()
-        })
-      )
+      ...additionalSpecifications.map(specification => specification.asGraphQlSelections()).flat()
     ];
 
     if (withEntityType) {
@@ -109,12 +104,7 @@ export class EntitySpecificationBuilder {
     });
 
     additionalSpecifications.forEach(specification => {
-      entity = {
-        ...entity,
-        [specification.name]: specification.extractFromServerData(
-          serverData[specification.resultAlias()] as Dictionary<unknown>
-        )
-      };
+      entity = { ...entity, [specification.name]: specification.extractFromServerData(serverData) };
     });
 
     return entity;
