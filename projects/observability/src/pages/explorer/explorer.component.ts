@@ -23,21 +23,20 @@ import {
   template: `
     <div class="explorer">
       <ht-page-header class="explorer-header"></ht-page-header>
+      <ht-toggle-group
+        class="explorer-data-toggle"
+        [items]="this.contextItems"
+        [activeItem]="this.activeContextItem$ | async"
+        (activeItemChange)="this.onContextUpdated($event.value)"
+      ></ht-toggle-group>
+
+      <ht-filter-bar
+        class="explorer-filter-bar"
+        [attributes]="this.attributes$ | async"
+        [syncWithUrl]="true"
+        (filtersChange)="this.onFiltersUpdated($event)"
+      ></ht-filter-bar>
       <div class="explorer-content">
-        <ht-toggle-group
-          class="explorer-data-toggle"
-          [items]="this.contextItems"
-          [activeItem]="this.activeContextItem$ | async"
-          (activeItemChange)="this.onContextUpdated($event.value)"
-        ></ht-toggle-group>
-
-        <ht-filter-bar
-          class="explorer-filter-bar"
-          [attributes]="this.attributes$ | async"
-          [syncWithUrl]="true"
-          (filtersChange)="this.onFiltersUpdated($event)"
-        ></ht-filter-bar>
-
         <ht-panel class="visualization-panel" [(expanded)]="this.visualizationExpanded">
           <ht-panel-header>
             <ht-panel-title [expanded]="this.visualizationExpanded"
