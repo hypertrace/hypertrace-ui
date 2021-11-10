@@ -172,9 +172,11 @@ describe('Entity Specification Builder', () => {
       name: 'test-name',
       attribute1: 'test-value-attrib1',
       attribute2: 'test-value-attrib2',
-      status: TraceStatusType.FAIL,
-      statusCode: '404',
-      statusMessage: 'Not Found'
+      [traceSpec.name]: {
+        status: TraceStatusType.FAIL,
+        statusCode: '404',
+        statusMessage: 'Not Found'
+      }
     });
   });
 
