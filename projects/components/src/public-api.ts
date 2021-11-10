@@ -345,3 +345,6 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
+
+// Filter Url Service
+export * from './filtering/filter/filter-url.service';

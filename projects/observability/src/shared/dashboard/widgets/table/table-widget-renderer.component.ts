@@ -203,11 +203,13 @@ export class TableWidgetRendererComponent
   protected fetchAndPopulateSelectControls(): void {
     this.selectControls$ = this.getSelectControls().pipe(
       tap((selectControls: TableSelectControl[]) => {
-        selectControls.forEach(selectControl =>
-          this.publishSelectValuesChange(
-            selectControl.options[0].metaValue.field,
-            selectControl.options.filter(o => o.applied)
-          )
+        selectControls.forEach(
+          selectControl =>
+            selectControl.options.length > 0 &&
+            this.publishSelectValuesChange(
+              selectControl.options[0].metaValue.field,
+              selectControl.options.filter(o => o.applied)
+            )
         );
       })
     );
@@ -253,6 +255,7 @@ export class TableWidgetRendererComponent
                   return (
                     foundPreferences ?? {
                       placeholder: selectControlModel.placeholder,
+                      isMultiSelect: selectControlModel.isMultiselect,
                       options: options.map(option => ({
                         ...option,
                         applied: this.isFilterApplied(option.metaValue, filters)
