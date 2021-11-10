@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Breadcrumb } from '@hypertrace/common';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import { EntityDetailService } from '../../../shared/services/entity/entity-detail.service';
 
@@ -18,8 +19,9 @@ export class ApiDetailService extends EntityDetailService<ApiEntity> {
   }
 }
 
-export interface ApiEntity extends Entity {
+export interface ApiEntity extends Entity, Breadcrumb {
   apiType: ApiType;
+  name: string;
 }
 
 export const enum ApiType {
