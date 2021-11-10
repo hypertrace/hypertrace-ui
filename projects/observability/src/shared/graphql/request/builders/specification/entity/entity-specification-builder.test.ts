@@ -124,38 +124,41 @@ describe('Entity Specification Builder', () => {
           }
         ]
       },
-      [
-        {
-          path: 'attribute',
-          alias: 'status',
-          arguments: [
-            {
-              name: 'key',
-              value: 'status'
-            }
-          ]
-        },
-        {
-          path: 'attribute',
-          alias: 'statusCode',
-          arguments: [
-            {
-              name: 'key',
-              value: 'statusCode'
-            }
-          ]
-        },
-        {
-          path: 'attribute',
-          alias: 'statusMessage',
-          arguments: [
-            {
-              name: 'key',
-              value: 'statusMessage'
-            }
-          ]
-        }
-      ]
+      {
+        path: traceSpec.resultAlias(),
+        children: [
+          {
+            path: 'attribute',
+            alias: 'status',
+            arguments: [
+              {
+                name: 'key',
+                value: 'status'
+              }
+            ]
+          },
+          {
+            path: 'attribute',
+            alias: 'statusCode',
+            arguments: [
+              {
+                name: 'key',
+                value: 'statusCode'
+              }
+            ]
+          },
+          {
+            path: 'attribute',
+            alias: 'statusMessage',
+            arguments: [
+              {
+                name: 'key',
+                value: 'statusMessage'
+              }
+            ]
+          }
+        ]
+      }
     ]);
 
     expect(
