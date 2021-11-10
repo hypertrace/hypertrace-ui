@@ -37,6 +37,7 @@ export interface TablePropertyControlOption {
 
 export interface TableSelectControl {
   placeholder: string;
+  isMultiSelect: boolean;
   options: TableSelectControlOption[];
 }
 
