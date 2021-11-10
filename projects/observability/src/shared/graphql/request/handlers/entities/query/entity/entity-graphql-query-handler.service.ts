@@ -59,7 +59,8 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
       properties: request.properties,
       filters: [new GraphQlEntityFilter(request.id, request.entityType)],
       // If querying for a single API by ID, then usually want to includeInactive
-      includeInactive: request.includeInactive !== false
+      includeInactive: request.includeInactive !== false,
+      withLabels: request.withLabels
     };
   }
 }
@@ -73,4 +74,5 @@ export interface GraphQlEntityRequest {
   properties: Specification[];
   timeRange: GraphQlTimeRange;
   includeInactive?: boolean;
+  withLabels?: boolean;
 }

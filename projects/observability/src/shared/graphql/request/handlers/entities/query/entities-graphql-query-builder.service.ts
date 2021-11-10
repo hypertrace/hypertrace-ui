@@ -103,6 +103,7 @@ export interface GraphQlEntitiesRequest {
   filters?: GraphQlFilter[];
   includeTotal?: boolean;
   includeInactive?: boolean;
+  withLabels?: boolean;
 }
 
 export interface EntitiesResponse {
