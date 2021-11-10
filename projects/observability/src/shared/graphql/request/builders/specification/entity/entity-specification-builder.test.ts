@@ -162,11 +162,9 @@ describe('Entity Specification Builder', () => {
         name: 'test-name',
         attribute1: 'test-value-attrib1',
         attribute2: 'test-value-attrib2',
-        [traceSpec.resultAlias()]: {
-          status: TraceStatusType.FAIL,
-          statusCode: '404',
-          statusMessage: 'Not Found'
-        }
+        status: TraceStatusType.FAIL,
+        statusCode: '404',
+        statusMessage: 'Not Found'
       })
     ).toEqual({
       [entityIdKey]: 'test-id',
@@ -174,11 +172,9 @@ describe('Entity Specification Builder', () => {
       name: 'test-name',
       attribute1: 'test-value-attrib1',
       attribute2: 'test-value-attrib2',
-      [traceSpec.resultAlias()]: {
-        status: TraceStatusType.FAIL,
-        statusCode: '404',
-        statusMessage: 'Not Found'
-      }
+      status: TraceStatusType.FAIL,
+      statusCode: '404',
+      statusMessage: 'Not Found'
     });
   });
 
