@@ -33,13 +33,10 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
 
     return Promise.resolve(
       this.fetchEntity(id, ObservabilityEntityType.Api).pipe(
-        map(
-          apiEntity =>
-            ({
-              ...apiEntity,
-              ...this.getParentPartial(apiEntity, parentEntityMetadata)
-            } as ApiBreadcrumbDetails)
-        ),
+        map(apiEntity => ({
+          ...apiEntity,
+          ...this.getParentPartial(apiEntity, parentEntityMetadata)
+        })),
         switchMap(api => [
           ...this.getParentBreadcrumbs(api, parentEntityMetadata),
           this.createBreadcrumbForEntity(api, activatedRouteSnapshot)
@@ -48,10 +45,7 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
     );
   }
 
-  protected createBreadcrumbForEntity(
-    api: ApiBreadcrumbDetails,
-    activatedRouteSnapshot: ActivatedRouteSnapshot
-  ): ApiEntity {
+  protected createBreadcrumbForEntity(api: T & Breadcrumb, activatedRouteSnapshot: ActivatedRouteSnapshot): ApiEntity {
     return {
       ...api,
       label: api.name,
@@ -60,18 +54,18 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
     };
   }
 
-  protected getParentBreadcrumbs(api: ApiBreadcrumbDetails, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
+  protected getParentBreadcrumbs(api: T & Breadcrumb, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
     return parentEntityMetadata !== undefined
       ? [
           {
-            label: api.parentName,
+            label: api.parentName as string,
             icon: parentEntityMetadata?.icon,
-            url: parentEntityMetadata?.detailPath(api.parentId)
+            url: parentEntityMetadata?.detailPath(api.parentId as string)
           },
           {
             label: 'Endpoints',
             icon: this.apiEntityMetadata?.icon,
-            url: parentEntityMetadata?.apisListPath?.(api.parentId)
+            url: parentEntityMetadata?.apisListPath?.(api.parentId as string)
           }
         ]
       : [];
