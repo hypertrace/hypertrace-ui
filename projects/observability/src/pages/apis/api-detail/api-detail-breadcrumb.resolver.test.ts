@@ -84,19 +84,40 @@ describe('Api detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(abc|)', {
           a: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'test service',
             icon: ObservabilityIconType.Service,
-            url: ['services', 'service', 'test-service-id']
+            url: ['services', 'service', 'test-service-id'],
+            name: 'test api',
+            parentId: 'test-service-id',
+            parentName: 'test service',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           },
           b: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'Endpoints',
             icon: ObservabilityIconType.Api,
-            url: ['services', 'service', 'test-service-id', 'endpoints']
+            url: ['services', 'service', 'test-service-id', 'endpoints'],
+            name: 'test api',
+            parentId: 'test-service-id',
+            parentName: 'test service',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           },
           c: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'test api',
             icon: ObservabilityIconType.Api,
-            url: ['api', 'test-id']
+            url: ['api', 'test-id'],
+            name: 'test api',
+            parentId: 'test-service-id',
+            parentName: 'test service',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           }
         });
       });
@@ -109,7 +130,7 @@ describe('Api detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 
@@ -123,9 +144,14 @@ describe('Api detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(y|)', {
           y: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'test api',
             icon: ObservabilityIconType.Api,
-            url: ['api', 'test-id']
+            url: ['api', 'test-id'],
+            name: 'test api',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           }
         });
       });
@@ -138,7 +164,7 @@ describe('Api detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 });

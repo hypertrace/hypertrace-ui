@@ -56,8 +56,11 @@ describe('Service detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(x|)', {
           x: {
+            [entityTypeKey]: ObservabilityEntityType.Service,
+            [entityIdKey]: 'test-id',
             label: 'test service',
-            icon: ObservabilityIconType.Service
+            icon: ObservabilityIconType.Service,
+            name: 'test service'
           }
         });
       });
@@ -70,7 +73,7 @@ describe('Service detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Service,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 });
