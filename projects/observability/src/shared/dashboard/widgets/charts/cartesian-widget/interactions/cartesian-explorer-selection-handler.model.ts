@@ -1,8 +1,3 @@
-import { Model } from '@hypertrace/hyperdash';
-import { ModelInject } from '@hypertrace/hyperdash-angular';
-import { Observable, of } from 'rxjs';
-import { CartesianSelectedData } from '../../../../../../public-api';
-import { InteractionHandler } from '../../../../interaction/interaction-handler';
 import {
   PopoverBackdrop,
   PopoverFixedPositionLocation,
@@ -10,6 +5,11 @@ import {
   PopoverRef,
   PopoverService
 } from '@hypertrace/components';
+import { Model } from '@hypertrace/hyperdash';
+import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { Observable, of } from 'rxjs';
+import { CartesianSelectedData } from '../../../../../../public-api';
+import { InteractionHandler } from '../../../../interaction/interaction-handler';
 
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';

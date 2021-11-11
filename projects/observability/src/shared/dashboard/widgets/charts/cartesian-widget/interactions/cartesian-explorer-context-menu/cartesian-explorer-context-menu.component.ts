@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { ButtonStyle, POPOVER_DATA } from '@hypertrace/components';
 import { IconType } from '@hypertrace/assets-library';
+import { ButtonStyle, POPOVER_DATA } from '@hypertrace/components';
 import { CartesianSelectedData } from '../../../../../../components/cartesian/chart-interactivty';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 
@@ -34,7 +34,7 @@ export class CartesianExplorerContextMenuComponent<TData> {
   ];
 
   public display: string = ButtonStyle.PlainText;
-  selectionData: CartesianSelectedData<TData>;
+  public selectionData: CartesianSelectedData<TData>;
 
   public constructor(
     @Inject(POPOVER_DATA) data: CartesianSelectedData<TData>,
