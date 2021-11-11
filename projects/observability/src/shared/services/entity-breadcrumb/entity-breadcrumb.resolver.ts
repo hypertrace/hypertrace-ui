@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
-import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
+import { GraphQlRequestCacheability, GraphQlRequestOptions, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Entity } from '../../graphql/model/schema/entity';
@@ -29,6 +29,10 @@ export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = Enti
     return [];
   }
 
+  protected getRequestOptions(): GraphQlRequestOptions | undefined {
+    return { cacheability: GraphQlRequestCacheability.Cacheable };
+  }
+
   protected fetchEntity(id: string, entityType: string): Observable<T> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
@@ -40,7 +44,7 @@ export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = Enti
             properties: [...this.getAttributeSpecification(), ...this.getAdditionalSpecifications()],
             timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
           },
-          { cacheability: GraphQlRequestCacheability.NotCacheable }
+          this.getRequestOptions()
         )
       ),
       map(entity => ({
