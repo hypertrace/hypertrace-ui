@@ -1,3 +1,4 @@
+import { EntityBreadcrumb } from './../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,10 +12,9 @@ import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/ent
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
 import { ServiceDetailBreadcrumbResolver } from './service-detail-breadcrumb.resolver';
-import { ServiceEntity } from './service-detail.service';
 
 describe('Service detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver<ServiceEntity>>;
+  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver<EntityBreadcrumb>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ServiceDetailBreadcrumbResolver,
