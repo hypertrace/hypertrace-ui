@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NavigationService } from '@hypertrace/common';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { EntityBreadcrumb } from './../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
@@ -12,10 +13,9 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../sh
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { ApiDetailBreadcrumbResolver } from './api-detail-breadcrumb.resolver';
-import { ApiEntity } from './api-detail.service';
 
 describe('Api detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ApiDetailBreadcrumbResolver<ApiEntity>>;
+  let spectator: SpectatorService<ApiDetailBreadcrumbResolver<EntityBreadcrumb>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ApiDetailBreadcrumbResolver,

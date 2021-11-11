@@ -11,7 +11,8 @@ import { EntityIconLookupService } from '../entity/entity-icon-lookup.service';
 import { Specification } from './../../graphql/model/schema/specifier/specification';
 import { ENTITY_GQL_REQUEST } from './../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
-export abstract class EntityBreadcrumbResolver<T extends Entity> implements Resolve<Observable<Breadcrumb>> {
+export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = EntityBreadcrumb>
+  implements Resolve<Observable<EntityBreadcrumb>> {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
   public constructor(
@@ -20,7 +21,7 @@ export abstract class EntityBreadcrumbResolver<T extends Entity> implements Reso
     protected readonly iconLookupService: EntityIconLookupService
   ) {}
 
-  public abstract resolve(route: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>>;
+  public abstract resolve(route: ActivatedRouteSnapshot): Promise<Observable<EntityBreadcrumb>>;
 
   protected abstract getAttributeKeys(): string[];
 
@@ -28,7 +29,7 @@ export abstract class EntityBreadcrumbResolver<T extends Entity> implements Reso
     return [];
   }
 
-  protected fetchEntity(id: string, entityType: string): Observable<T & Breadcrumb> {
+  protected fetchEntity(id: string, entityType: string): Observable<T> {
     return this.timeRangeService.getTimeRangeAndChanges().pipe(
       switchMap(timeRange =>
         this.graphQlQueryService.query<EntityGraphQlQueryHandlerService, T>(
@@ -57,3 +58,5 @@ export abstract class EntityBreadcrumbResolver<T extends Entity> implements Reso
     );
   }
 }
+
+export interface EntityBreadcrumb extends Breadcrumb, Entity {}

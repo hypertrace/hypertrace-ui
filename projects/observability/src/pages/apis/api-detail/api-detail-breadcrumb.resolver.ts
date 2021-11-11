@@ -1,18 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Breadcrumb, NavigationService, TimeRangeService } from '@hypertrace/common';
+import { NavigationService, TimeRangeService } from '@hypertrace/common';
 import { BreadcrumbsService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
 import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
-import { EntityBreadcrumbResolver } from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
+import {
+  EntityBreadcrumb,
+  EntityBreadcrumbResolver
+} from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { EntityIconLookupService } from './../../../shared/services/entity/entity-icon-lookup.service';
-import { ApiEntity } from './api-detail.service';
 
 @Injectable({ providedIn: 'root' })
-export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBreadcrumbResolver<T> {
+export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends EntityBreadcrumbResolver<T> {
   protected readonly apiEntityMetadata: EntityMetadata | undefined;
 
   public constructor(
@@ -27,7 +29,7 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
     this.apiEntityMetadata = this.entityMetadataMap.get(ObservabilityEntityType.Api);
   }
 
-  public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>> {
+  public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<EntityBreadcrumb>> {
     const id = activatedRouteSnapshot.paramMap.get('id') as string;
     const parentEntityMetadata = this.resolveParentType();
 
@@ -45,24 +47,26 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
     );
   }
 
-  protected createBreadcrumbForEntity(api: T & Breadcrumb, activatedRouteSnapshot: ActivatedRouteSnapshot): ApiEntity {
+  protected createBreadcrumbForEntity(api: Entity, activatedRouteSnapshot: ActivatedRouteSnapshot): EntityBreadcrumb {
     return {
       ...api,
-      label: api.name,
+      label: api.name as string,
       icon: this.apiEntityMetadata?.icon,
       url: this.breadcrumbService.getPath(activatedRouteSnapshot)
     };
   }
 
-  protected getParentBreadcrumbs(api: T & Breadcrumb, parentEntityMetadata?: EntityMetadata): Breadcrumb[] {
+  protected getParentBreadcrumbs(api: EntityBreadcrumb, parentEntityMetadata?: EntityMetadata): EntityBreadcrumb[] {
     return parentEntityMetadata !== undefined
       ? [
           {
+            ...api,
             label: api.parentName as string,
             icon: parentEntityMetadata?.icon,
             url: parentEntityMetadata?.detailPath(api.parentId as string)
           },
           {
+            ...api,
             label: 'Endpoints',
             icon: this.apiEntityMetadata?.icon,
             url: parentEntityMetadata?.apisListPath?.(api.parentId as string)
@@ -119,7 +123,7 @@ export class ApiDetailBreadcrumbResolver<T extends ApiEntity> extends EntityBrea
   }
 }
 
-export interface ApiBreadcrumbDetails extends ApiEntity {
+export interface ApiBreadcrumbDetails extends EntityBreadcrumb {
   name: string;
   parentName: string;
   parentId: string;

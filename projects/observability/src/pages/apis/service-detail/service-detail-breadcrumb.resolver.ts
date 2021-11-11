@@ -4,12 +4,14 @@ import { TimeRangeService } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
-import { EntityBreadcrumbResolver } from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
+import {
+  EntityBreadcrumb,
+  EntityBreadcrumbResolver
+} from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { EntityIconLookupService } from './../../../shared/services/entity/entity-icon-lookup.service';
-import { ServiceEntity } from './service-detail.service';
 
 @Injectable({ providedIn: 'root' })
-export class ServiceDetailBreadcrumbResolver<T extends ServiceEntity> extends EntityBreadcrumbResolver<T> {
+export class ServiceDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends EntityBreadcrumbResolver<T> {
   public constructor(
     timeRangeService: TimeRangeService,
     graphQlQueryService: GraphQlRequestService,
