@@ -1,13 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, TemplateRef, ViewChild } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
-import {
-  PopoverBackdrop,
-  PopoverFixedPositionLocation,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverService
-} from '@hypertrace/components';
+
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -17,7 +10,6 @@ import { CartesianSelectedData, LegendPosition } from '../../../../../public-api
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
-import { ContextMenu } from './interactions/cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -42,41 +34,19 @@ import { ContextMenu } from './interactions/cartesian-explorer-context-menu/cart
       >
       </ht-cartesian-chart>
     </ht-titled-content>
-
-    <ng-template #contextMenuTemplate>
-      <ht-cartesian-explorer-context-menu
-        [menus]="menus"
-        (menuSelect)="contextMenuSelectHandler($event)"
-      ></ht-cartesian-explorer-context-menu>
-    </ng-template>
   `
 })
 export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends InteractiveDataWidgetRenderer<
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
-  private popover?: PopoverRef;
-
-  @ViewChild('contextMenuTemplate')
-  private readonly contextMenuTemplate!: TemplateRef<unknown>;
-
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
-    private readonly intervalDurationService: IntervalDurationService,
-    private readonly popoverService: PopoverService
+    private readonly intervalDurationService: IntervalDurationService
   ) {
     super(api, changeDetector);
   }
-
-  public menus: ContextMenu[] = [
-    {
-      name: 'Explore',
-      icon: IconType.ArrowUpRight
-    }
-  ];
-
-  private selectedData!: CartesianSelectedData<TData>;
 
   public selectedInterval?: IntervalValue;
   public intervalOptions?: IntervalValue[];
@@ -89,11 +59,9 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
 
   public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
     if (this.model.legendPosition === LegendPosition.Bottom) {
-      this.model.selectionHandler?.execute(selectedData);
-    } else {
-      this.selectedData = selectedData;
-      this.showContextMenu();
+      selectedData.showContextMenu = false;
     }
+    this.model.selectionHandler?.execute(selectedData);
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {
@@ -155,25 +123,6 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
       );
 
     return match || 'AUTO';
-  }
-
-  private showContextMenu(): void {
-    this.popover = this.popoverService.drawPopover({
-      componentOrTemplate: this.contextMenuTemplate,
-      data: this.contextMenuTemplate,
-      position: {
-        type: PopoverPositionType.Fixed,
-        location: PopoverFixedPositionLocation.Custom,
-        customLocation: this.selectedData.location
-      },
-      backdrop: PopoverBackdrop.Transparent
-    });
-    this.popover.closeOnBackdropClick();
-    this.popover.closeOnPopoverContentClick();
-  }
-
-  public contextMenuSelectHandler(_menu: ContextMenu): void {
-    this.model.selectionHandler?.execute(this.selectedData);
   }
 }
 
