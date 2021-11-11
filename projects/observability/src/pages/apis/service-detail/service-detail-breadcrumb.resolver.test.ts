@@ -11,9 +11,10 @@ import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/ent
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
 import { ServiceDetailBreadcrumbResolver } from './service-detail-breadcrumb.resolver';
+import { ServiceEntity } from './service-detail.service';
 
 describe('Service detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver>;
+  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver<ServiceEntity>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ServiceDetailBreadcrumbResolver,

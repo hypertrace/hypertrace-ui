@@ -12,9 +12,10 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../sh
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { ApiDetailBreadcrumbResolver } from './api-detail-breadcrumb.resolver';
+import { ApiEntity } from './api-detail.service';
 
 describe('Api detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ApiDetailBreadcrumbResolver>;
+  let spectator: SpectatorService<ApiDetailBreadcrumbResolver<ApiEntity>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ApiDetailBreadcrumbResolver,
