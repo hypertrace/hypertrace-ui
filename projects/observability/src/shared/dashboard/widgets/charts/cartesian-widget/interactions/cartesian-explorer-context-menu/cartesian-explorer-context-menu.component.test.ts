@@ -6,9 +6,10 @@ import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { PopoverService } from '@hypertrace/components';
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu.component';
 import { CartesianExplorerContextMenuModule } from './cartesian-explorer-context-menu.module';
+import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 
 describe('Cartesian Explorer Context menu component', () => {
-  let spectator: Spectator<CartesianExplorerContextMenuComponent>;
+  let spectator: Spectator<CartesianExplorerContextMenuComponent<unknown>>;
 
   const mockPopoverRef = {
     close: jest.fn()
@@ -20,6 +21,9 @@ describe('Cartesian Explorer Context menu component', () => {
     providers: [
       mockProvider(PopoverService, {
         drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
+      }),
+      mockProvider(CartesainExplorerNavigationService, {
+        navigateToExplorer: jest.fn()
       })
     ],
     imports: [CartesianExplorerContextMenuModule, HttpClientTestingModule, IconLibraryTestingModule]
@@ -30,7 +34,6 @@ describe('Cartesian Explorer Context menu component', () => {
 
     spectator = createHost(
       `<ht-cartesian-explorer-context-menu
-        [menus]="menus"
         (menuSelect)="contextMenuSelectHandler($event)"
       ></ht-cartesian-explorer-context-menu>`,
       {

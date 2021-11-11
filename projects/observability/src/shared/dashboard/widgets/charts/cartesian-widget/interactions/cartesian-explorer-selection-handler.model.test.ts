@@ -1,9 +1,11 @@
-import { NavigationService, TimeRangeService } from '@hypertrace/common';
+import { TimeRangeService } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { PopoverService } from '@hypertrace/components';
 import { CartesianSelectedData } from '../../../../../../public-api';
 import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
+import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 
 describe('Cartesian Explorer Selection Handler Model', () => {
   const selectedData: CartesianSelectedData<unknown> = {
@@ -47,7 +49,8 @@ describe('Cartesian Explorer Selection Handler Model', () => {
         location: { x: 138, y: 82.58120000000001 }
       }
     ],
-    location: { x: 452, y: 763 }
+    location: { x: 452, y: 763 },
+    showContextMenu: true
   };
 
   const navigationUrl = {
@@ -64,17 +67,30 @@ describe('Cartesian Explorer Selection Handler Model', () => {
       mockProvider(TimeRangeService, {
         toQueryParams: jest.fn().mockReturnValue(of(navigationUrl))
       }),
-      mockProvider(NavigationService, {
-        navigate: jest.fn()
+      mockProvider(PopoverService, {
+        drawPopover: jest.fn()
+      }),
+      mockProvider(CartesainExplorerNavigationService, {
+        navigateToExplorer: jest.fn()
       })
     ]
   });
 
-  test('calls navigateToExplorer with correct parameters', () => {
+  test('calls showContextMenu with correct parameters', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
-    const navService = spectator.get(NavigationService);
+    const popoverService = spectator.get(PopoverService);
 
+    spectator.model.popover = popoverService.drawPopover(selectedData);
     spectator.model.execute(selectedData);
-    expect(navService.navigate).toHaveBeenCalled();
+    expect(popoverService.drawPopover).toHaveBeenCalled();
+  });
+
+  test('calls navigate to explorer correct parameters', () => {
+    const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
+    const cartesainExplorerNavigationService = spectator.get(CartesainExplorerNavigationService);
+
+    selectedData.showContextMenu = false;
+    spectator.model.execute(selectedData);
+    expect(cartesainExplorerNavigationService.navigateToExplorer).toHaveBeenCalled();
   });
 });

@@ -24,7 +24,7 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
   @ModelInject(CartesainExplorerNavigationService)
   private readonly cartesainExplorerNavigationService!: CartesainExplorerNavigationService;
 
-  private popover?: PopoverRef;
+  public popover?: PopoverRef;
 
   public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
     if (selectionData.showContextMenu) {
