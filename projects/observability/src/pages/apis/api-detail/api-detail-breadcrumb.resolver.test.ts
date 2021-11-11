@@ -84,28 +84,16 @@ describe('Api detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(abc|)', {
           a: {
-            [entityIdKey]: 'test-id',
-            [entityTypeKey]: ObservabilityEntityType.Api,
+            [entityIdKey]: 'test-service-id',
+            [entityTypeKey]: ObservabilityEntityType.Service,
             label: 'test service',
             icon: ObservabilityIconType.Service,
-            url: ['services', 'service', 'test-service-id'],
-            name: 'test api',
-            parentId: 'test-service-id',
-            parentName: 'test service',
-            serviceName: 'test service',
-            serviceId: 'test-service-id'
+            url: ['services', 'service', 'test-service-id']
           },
           b: {
-            [entityIdKey]: 'test-id',
-            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'Endpoints',
             icon: ObservabilityIconType.Api,
-            url: ['services', 'service', 'test-service-id', 'endpoints'],
-            name: 'test api',
-            parentId: 'test-service-id',
-            parentName: 'test service',
-            serviceName: 'test service',
-            serviceId: 'test-service-id'
+            url: ['services', 'service', 'test-service-id', 'endpoints']
           },
           c: {
             [entityIdKey]: 'test-id',

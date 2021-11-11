@@ -12,7 +12,7 @@ import { Specification } from './../../graphql/model/schema/specifier/specificat
 import { ENTITY_GQL_REQUEST } from './../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = EntityBreadcrumb>
-  implements Resolve<Observable<EntityBreadcrumb>> {
+  implements Resolve<Observable<Breadcrumb>> {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
   public constructor(
@@ -21,7 +21,7 @@ export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = Enti
     protected readonly iconLookupService: EntityIconLookupService
   ) {}
 
-  public abstract resolve(route: ActivatedRouteSnapshot): Promise<Observable<EntityBreadcrumb>>;
+  public abstract resolve(route: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>>;
 
   protected abstract getAttributeKeys(): string[];
 

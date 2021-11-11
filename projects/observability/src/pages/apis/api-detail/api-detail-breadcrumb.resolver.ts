@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { NavigationService, TimeRangeService } from '@hypertrace/common';
+import { Breadcrumb, NavigationService, TimeRangeService } from '@hypertrace/common';
 import { BreadcrumbsService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
+import { entityIdKey } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../shared/constants/entity-metadata';
-import { Entity, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
+import { Entity, entityTypeKey, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
   EntityBreadcrumb,
   EntityBreadcrumbResolver
@@ -29,7 +30,7 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     this.apiEntityMetadata = this.entityMetadataMap.get(ObservabilityEntityType.Api);
   }
 
-  public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<EntityBreadcrumb>> {
+  public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>> {
     const id = activatedRouteSnapshot.paramMap.get('id') as string;
     const parentEntityMetadata = this.resolveParentType();
 
@@ -56,17 +57,20 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     };
   }
 
-  protected getParentBreadcrumbs(api: EntityBreadcrumb, parentEntityMetadata?: EntityMetadata): EntityBreadcrumb[] {
+  protected getParentBreadcrumbs(
+    api: EntityBreadcrumb,
+    parentEntityMetadata?: EntityMetadata
+  ): (EntityBreadcrumb | Breadcrumb)[] {
     return parentEntityMetadata !== undefined
       ? [
           {
-            ...api,
+            [entityIdKey]: api.parentId as string,
+            [entityTypeKey]: parentEntityMetadata.entityType,
             label: api.parentName as string,
             icon: parentEntityMetadata?.icon,
             url: parentEntityMetadata?.detailPath(api.parentId as string)
           },
           {
-            ...api,
             label: 'Endpoints',
             icon: this.apiEntityMetadata?.icon,
             url: parentEntityMetadata?.apisListPath?.(api.parentId as string)
