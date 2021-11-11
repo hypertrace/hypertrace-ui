@@ -19,16 +19,6 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
         ></ht-label>
         <ht-link [paramsOrUrl]="this.link" class="link" [ngClass]="this.titleStyle" *ngIf="this.link">
           <ht-button
-            *ngIf="this.linkButtonStyle === '${LinkButtonStyle.Primary}'"
-            [label]="this.linkLabel"
-            role="${ButtonRole.Primary}"
-            display="${ButtonStyle.Text}"
-            size="${ButtonSize.ExtraSmall}"
-            icon="${IconType.ChevronRight}"
-            [trailingIcon]="true"
-          ></ht-button>
-          <ht-button
-            *ngIf="this.linkButtonStyle === '${LinkButtonStyle.Quaternary}'"
             [label]="this.linkLabel"
             role="${ButtonRole.Quaternary}"
             display="${ButtonStyle.Solid}"
@@ -58,7 +48,7 @@ export class TitledContentComponent {
   public titlePosition: TitlePosition = TitlePosition.Header;
 
   @Input()
-  public titleStyle: TitleStyle = TitleStyle.Regular;
+  public titleStyle: TitledContentTitleStyle = TitledContentTitleStyle.Regular;
 
   @Input()
   public hideTitle: boolean = false;
@@ -67,10 +57,7 @@ export class TitledContentComponent {
   public link?: string;
 
   @Input()
-  public linkButtonStyle: LinkButtonStyle = LinkButtonStyle.Primary;
-
-  @Input()
-  public headerPosition: HeaderPosition = HeaderPosition.Center;
+  public headerPosition: TitledContentHeaderJustify = TitledContentHeaderJustify.Center;
 
   @Input()
   public linkLabel?: string;
@@ -100,17 +87,12 @@ export const enum TitlePosition {
   Footer = 'footer'
 }
 
-export const enum TitleStyle {
+export const enum TitledContentTitleStyle {
   Regular = 'regular',
   GrayedOut = 'grayed-out'
 }
 
-export const enum LinkButtonStyle {
-  Primary = 'primary',
-  Quaternary = 'quaternary'
-}
-
-export const enum HeaderPosition {
+export const enum TitledContentHeaderJustify {
   Center = 'center',
   SpaceBetween = 'space-between'
 }

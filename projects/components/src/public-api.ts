@@ -320,9 +320,8 @@ export * from './time-range/time-range.module';
 export {
   TitledContentComponent,
   TitlePosition,
-  TitleStyle,
-  LinkButtonStyle,
-  HeaderPosition
+  TitledContentTitleStyle,
+  TitledContentHeaderJustify
 } from './titled-content/titled-content.component';
 export { TitledContentModule } from './titled-content/titled-content.module';
 
