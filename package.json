@@ -15,7 +15,7 @@
     "build:components": "ng build components",
     "build:dashboards": "ng build dashboards",
     "build:ci": "node --max_old_space_size=3584 node_modules/@angular/cli/bin/ng build --configuration production --no-progress",
-    "test": "ng test hypertrace-ui --cache",
+    "test": "ng test hypertrace-ui --cache --maxWorkers=2",
     "lint": "ng lint hypertrace-ui",
     "lint:fix": "ng lint --fix hypertrace-ui",
     "prettier:check": "prettier --check '**'",
