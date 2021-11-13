@@ -1,13 +1,13 @@
-import { Color, FeatureState } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { IconSize } from '../../../components/src/icon/icon-size';
+import { Color } from '../color/color';
+import { FeatureState} from '../feature/state/feature.state';
 
 export type NavItemConfig = NavItemLinkConfig | NavItemHeaderConfig | NavItemDividerConfig;
 
 export interface NavItemLinkConfig {
   type: NavItemType.Link;
   icon: string;
-  iconSize?: IconSize;
+  iconSize?: string;
   label: string;
   matchPaths: string[]; // For now, default path is index 0
   features?: string[];
