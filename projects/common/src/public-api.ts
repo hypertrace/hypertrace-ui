@@ -83,6 +83,7 @@ export * from './navigation/breadcrumb';
 export * from './navigation/navigation.service';
 export * from './navigation/ht-route-data';
 export * from './navigation/ht-route';
+export * from './navigation/navigation.config';
 
 // Operations
 export * from './utilities/operations/operation-utilities';

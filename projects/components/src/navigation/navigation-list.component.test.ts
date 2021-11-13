@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { MemoizeModule, NavigationService } from '@hypertrace/common';
+import { FooterItemConfig, MemoizeModule, NavigationService, NavItemConfig, NavItemType } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -10,7 +10,6 @@ import { LinkComponent } from './../link/link.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { NavigationListComponent } from './navigation-list.component';
-import { FooterItemConfig, NavItemConfig, NavItemType } from './navigation.config';
 describe('Navigation List Component', () => {
   let spectator: SpectatorHost<NavigationListComponent>;
   const activatedRoute = {

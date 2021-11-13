@@ -5,13 +5,12 @@ import {
   FeatureStateResolver,
   MemoizeModule,
   NavigationParamsType,
-  NavigationService
+  NavigationService, NavItemConfig, NavItemType
 } from '@hypertrace/common';
 import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { NavItemConfig, NavItemType } from '../navigation.config';
 import { FeatureConfigCheckModule } from './../../feature-check/feature-config-check.module';
 import { NavItemComponent } from './nav-item.component';
 

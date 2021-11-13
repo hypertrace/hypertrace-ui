@@ -1,6 +1,6 @@
 import { Color, FeatureState } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { IconSize } from '../icon/icon-size';
+import { IconSize } from '../../../components/src/icon/icon-size';
 
 export type NavItemConfig = NavItemLinkConfig | NavItemHeaderConfig | NavItemDividerConfig;
 

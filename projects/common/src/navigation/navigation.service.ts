@@ -14,13 +14,13 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
-import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { uniq } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
 import { APP_TITLE, HtRoute } from './ht-route';
+import { NavItemConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {

@@ -3,8 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
-import { APP_TITLE } from '@hypertrace/common';
-import { NavItemType } from '@hypertrace/components';
+import { APP_TITLE, NavItemType } from '@hypertrace/common';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import {

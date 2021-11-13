@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, PreferenceService } from '@hypertrace/common';
-import { NavItemConfig, NavItemType } from '@hypertrace/components';
+import { NavigationService, NavItemConfig, NavItemType, PreferenceService } from '@hypertrace/common';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 
