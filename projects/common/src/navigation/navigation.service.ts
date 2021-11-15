@@ -376,7 +376,7 @@ export class NavigationService {
 }
 
 export interface QueryParamObject extends Params {
-  [key: string]: string | string[] | number | number[] | undefined;
+  [key: string]: string | string[] | boolean | boolean[] | number | number[] | undefined;
 }
 
 export type NavigationPath = string | (string | Dictionary<string>)[];

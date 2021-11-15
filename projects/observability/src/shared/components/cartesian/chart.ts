@@ -61,11 +61,11 @@ export const enum RenderingStrategy {
 }
 
 export const enum CartesianSeriesVisualizationType {
-  Column,
-  Line,
-  DashedLine,
-  Scatter,
-  Area
+  Column = 'column',
+  Line = 'line',
+  DashedLine = 'dashed-line',
+  Scatter = 'scatter',
+  Area = 'area'
 }
 
 export const enum AxisType {
