@@ -10,7 +10,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="titled-content-container">
-      <div class="header" [ngClass]="this.headerPosition" [htLayoutChangeTrigger]="this.shouldShowHeader">
+      <div class="header" [ngClass]="this.headerJustifyContent" [htLayoutChangeTrigger]="this.shouldShowHeader">
         <ht-label
           *ngIf="this.shouldShowTitleInHeader"
           [ngClass]="this.titleStyle"
@@ -57,7 +57,7 @@ export class TitledContentComponent {
   public link?: string;
 
   @Input()
-  public headerPosition: TitledContentHeaderJustify = TitledContentHeaderJustify.Center;
+  public headerJustifyContent: TitledContentHeaderJustify = TitledContentHeaderJustify.Center;
 
   @Input()
   public linkLabel?: string;
@@ -87,6 +87,7 @@ export const enum TitlePosition {
   Footer = 'footer'
 }
 
+// Regular title (black) and GrayedOut new style (gray)
 export const enum TitledContentTitleStyle {
   Regular = 'regular',
   GrayedOut = 'grayed-out'
