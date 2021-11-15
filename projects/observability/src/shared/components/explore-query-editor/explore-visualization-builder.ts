@@ -3,7 +3,7 @@ import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hyper
 import { Filter } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { defaultIfEmpty, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, defaultIfEmpty, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
@@ -45,18 +45,16 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest()); // Todo: Revisit first request without knowing the context
 
     this.visualizationRequest$ = this.queryStateSubject.pipe(
+      debounceTime(10),
       map(requestState => this.buildRequest(requestState)),
-      takeUntil(this.destroyed$)
+      takeUntil(this.destroyed$),
+      shareReplay(1)
     );
   }
 
   public ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
-  }
-
-  public empty(): this {
-    return this.reset();
   }
 
   public reset(): this {
@@ -117,7 +115,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       resultLimit: state.resultLimit,
       series: [...state.series],
       filters: state.filters && [...state.filters],
-      interval: this.resolveInterval(state.interval),
+      interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
       exploreQuery$: this.mapStateToExploreQuery(state),
       resultsQuery$: this.mapStateToResultsQuery(state)
