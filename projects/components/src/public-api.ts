@@ -156,6 +156,7 @@ export * from './navigation/navigation-list.component';
 export * from './navigation/navigation-list.module';
 export * from './navigation/nav-item/nav-item.component';
 export * from './navigation/navigation-list-component.service';
+export * from './navigation/navigation-list.service';
 
 // Let async
 export { LetAsyncDirective } from './let-async/let-async.directive';

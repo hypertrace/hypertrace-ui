@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { FooterItemConfig, NavigationService, NavItemConfig, NavItemLinkConfig, NavItemType } from '@hypertrace/common';
+import { FooterItemConfig, NavigationService, NavItemType } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
+import { NavItemConfig, NavItemLinkConfig } from './navigation-list.service';
 
 @Component({
   selector: 'ht-navigation-list',

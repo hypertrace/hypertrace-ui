@@ -2,10 +2,9 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IconType } from '@hypertrace/assets-library';
-import { APP_TITLE, NavItemType } from '@hypertrace/common';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { APP_TITLE } from './ht-route';
 import {
   ExternalNavigationPathParams,
   ExternalNavigationWindowHandling,
@@ -69,6 +68,7 @@ describe('Navigation Service', () => {
     patchRouterNavigateForTest(spectator);
     router = spectator.inject(Router);
   });
+
   test('can retrieve a route config relative to the current route', () => {
     router.navigate(['root']);
     expect(spectator.service.getRouteConfig(['child'])).toEqual(firstChildRouteConfig);
@@ -295,36 +295,6 @@ describe('Navigation Service', () => {
         `/some/internal/path/of/app?type=json&time=1h&environment=development`
       );
     }
-  });
-
-  test('decorating navItem with features work as expected', () => {
-    expect(
-      spectator.service.decorateNavItem(
-        {
-          type: NavItemType.Header,
-          label: 'Label'
-        },
-        spectator.service.getCurrentActivatedRoute()
-      )
-    ).toEqual({ type: NavItemType.Header, label: 'Label' });
-
-    expect(
-      spectator.service.decorateNavItem(
-        {
-          type: NavItemType.Link,
-          label: 'Label',
-          icon: IconType.None,
-          matchPaths: ['root']
-        },
-        spectator.service.rootRoute()
-      )
-    ).toEqual({
-      type: NavItemType.Link,
-      label: 'Label',
-      icon: IconType.None,
-      matchPaths: ['root'],
-      features: ['test-feature']
-    });
   });
 
   test('setting title should work as expected', () => {

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver, NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver,  NavItemHeaderConfig, NavItemType } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { NavItemConfig, NavItemLinkConfig, } from './navigation-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationListComponentService {
