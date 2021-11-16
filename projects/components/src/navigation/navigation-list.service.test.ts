@@ -3,7 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { NavigationListService } from './navigation-list.service';
-import { NavItemType} from './navigation.config';
+import { NavItemType } from './navigation.config';
 
 describe('Navigation List Service', () => {
   let spectator: SpectatorService<NavigationListService>;
@@ -12,11 +12,13 @@ describe('Navigation List Service', () => {
     service: NavigationListService,
     providers: [
       mockProvider(ActivatedRoute),
-      mockProvider(NavigationService, { getRouteConfig: jest.fn().mockReturnValue({
+      mockProvider(NavigationService, {
+        getRouteConfig: jest.fn().mockReturnValue({
           path: 'root',
           data: { features: ['test-feature'] },
           children: []
-        })}),
+        })
+      })
     ]
   });
 

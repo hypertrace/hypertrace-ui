@@ -4,7 +4,7 @@ import { HtRoute, NavigationService } from '@hypertrace/common';
 import { uniq } from 'lodash-es';
 import { NavItemConfig, NavItemType } from './navigation.config';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class NavigationListService {
   public constructor(private readonly navigationService: NavigationService) {}
 
