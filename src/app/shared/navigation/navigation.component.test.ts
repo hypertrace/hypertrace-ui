@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService, PreferenceService } from '@hypertrace/common';
-import { LetAsyncModule, NavigationListComponent } from '@hypertrace/components';
+import { LetAsyncModule, NavigationListComponent, NavigationListService } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
@@ -19,8 +19,9 @@ describe('NavigationComponent', () => {
             features: ['example-feature']
           }
         }),
-        decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))
+
       }),
+      mockProvider(NavigationListService, { decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))}),
       mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })
     ]
