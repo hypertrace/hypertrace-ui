@@ -195,4 +195,8 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public isResizable(): boolean {
     return this.resizable;
   }
+
+  public getLoadingConfig(): LoadAsyncConfig | undefined {
+    return this.loadingConfig;
+  }
 }
