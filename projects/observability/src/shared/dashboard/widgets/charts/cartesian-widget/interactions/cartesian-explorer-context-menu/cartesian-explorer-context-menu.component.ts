@@ -51,7 +51,7 @@ export class CartesianExplorerContextMenuComponent<TData> {
   };
 }
 
-export interface ContextMenu {
+interface ContextMenu {
   name: string;
   icon: string;
 }

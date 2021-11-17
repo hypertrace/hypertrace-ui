@@ -25,5 +25,5 @@ export interface CartesianSelectedData<TData> {
     x: number;
     y: number;
   };
-  showContextMenu: boolean;
+  showContextMenu?: boolean;
 }

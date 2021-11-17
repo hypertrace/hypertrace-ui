@@ -60,6 +60,8 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
     if (this.model.legendPosition === LegendPosition.Bottom) {
       selectedData.showContextMenu = false;
+    } else {
+      selectedData.showContextMenu = true;
     }
     this.model.selectionHandler?.execute(selectedData);
   }

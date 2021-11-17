@@ -101,8 +101,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           location: {
             x: event.sourceEvent.clientX,
             y: event.sourceEvent.clientY
-          },
-          showContextMenu: true
+          }
         };
         listener.onEvent(selectedData);
       }
