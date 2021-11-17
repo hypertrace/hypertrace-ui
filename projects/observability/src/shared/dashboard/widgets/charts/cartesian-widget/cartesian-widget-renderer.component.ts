@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
+
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { CartesianSelectedData, LegendPosition } from '../../../../../public-api';
 import { Band, Series } from '../../../../components/cartesian/chart';
-import { ChartSelect } from '../../../../components/cartesian/chart-interactivty';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
@@ -35,7 +36,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
     </ht-titled-content>
   `
 })
-export class CartesianWidgetRendererComponent<TSeriesInterval> extends InteractiveDataWidgetRenderer<
+export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends InteractiveDataWidgetRenderer<
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
@@ -56,8 +57,13 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
     this.updateDataObservable();
   }
 
-  public onSelectionChange(data: ChartSelect): void {
-    this.model.selectionHandler?.execute(data);
+  public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
+    if (this.model.legendPosition === LegendPosition.Bottom) {
+      selectedData.showContextMenu = false;
+    } else {
+      selectedData.showContextMenu = true;
+    }
+    this.model.selectionHandler?.execute(selectedData);
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {

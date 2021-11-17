@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
-import { NavigationService } from '../navigation/navigation.service';
+import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
 import { RelativeTimeRange } from './relative-time-range';
@@ -109,5 +109,14 @@ export class TimeRangeService {
 
   public static toFixedTimeRange(startTime: Date, endTime: Date): FixedTimeRange {
     return new FixedTimeRange(startTime, endTime);
+  }
+
+  public toQueryParams(startTime: Date, endTime: Date): QueryParamObject {
+    const newTimeRange = TimeRangeService.toFixedTimeRange(startTime, endTime);
+    this.timeRangeSubject$.next(newTimeRange);
+
+    return {
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
+    };
   }
 }

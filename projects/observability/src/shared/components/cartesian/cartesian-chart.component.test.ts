@@ -1,6 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DomElementMeasurerService, selector } from '@hypertrace/common';
+import { PopoverService } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -29,7 +30,8 @@ describe('Cartesian Chart component', () => {
         }),
         getComputedTextLength: () => 0
       }),
-      mockProvider(Renderer2)
+      mockProvider(Renderer2),
+      mockProvider(PopoverService)
     ]
   });
 

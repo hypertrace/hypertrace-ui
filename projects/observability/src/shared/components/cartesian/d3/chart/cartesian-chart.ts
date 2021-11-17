@@ -1,8 +1,8 @@
 import { Injector, Renderer2 } from '@angular/core';
-import { TimeRange } from '@hypertrace/common';
-import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
-// tslint:disable-next-line: no-restricted-globals weird tslint error. Rename event so we can type it and not mistake it for other events
-import { ContainerElement, event as _d3CurrentEvent, mouse, select } from 'd3-selection';
+import { TimeRange, TimeRangeService } from '@hypertrace/common';
+import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
+// tslint:disable
+import { ContainerElement, event as d3CurrentEvent, mouse, select } from 'd3-selection';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
@@ -18,7 +18,7 @@ import {
   Series,
   Summary
 } from '../../chart';
-import { ChartEvent, ChartEventListener, ChartSelect, ChartTooltipTrackingOptions } from '../../chart-interactivty';
+import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { CartesianBand } from '../data/band/cartesian-band';
@@ -83,14 +83,27 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.eventListeners.forEach(listener => {
       if (listener.event === ChartEvent.Select) {
-        const [start, end] = event.selection as [[number, number], [number, number]];
+        const { height } = this.mouseEventContainer!.getBoundingClientRect();
 
-        const selctionData: ChartSelect = {
-          series: this.allSeriesData,
-          start: start,
-          end: end
+        const [startPoint, endPoint] = event.selection as [number, number];
+
+        const startDate = this.allSeriesData[0].getXAxisValue(startPoint);
+        const endDate = this.allSeriesData[0].getXAxisValue(endPoint);
+
+        const startData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: startPoint, y: height }));
+
+        const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint, y: height }));
+
+        const timeRange = TimeRangeService.toFixedTimeRange(startDate, endDate);
+        const selectedData = {
+          timeRange: timeRange,
+          selectedData: [startData[0], endData[0]],
+          location: {
+            x: event.sourceEvent.clientX,
+            y: event.sourceEvent.clientY
+          }
         };
-        listener.onEvent(selctionData);
+        listener.onEvent(selectedData);
       }
     });
   }
@@ -309,8 +322,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private attachBrush(): void {
-    const brushBehaviour: BrushBehavior<unknown> = brush<unknown>().on('end', () =>
-      this.onBrushSelection(_d3CurrentEvent)
+    const brushBehaviour: BrushBehavior<unknown> = brushX<unknown>().on('end', () =>
+      this.onBrushSelection(d3CurrentEvent)
     );
 
     const { width, height } = this.hostElement.getBoundingClientRect();
