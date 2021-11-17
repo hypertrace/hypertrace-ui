@@ -4,9 +4,9 @@ import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/je
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { PopoverService } from '@hypertrace/components';
+import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu.component';
 import { CartesianExplorerContextMenuModule } from './cartesian-explorer-context-menu.module';
-import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 
 describe('Cartesian Explorer Context menu component', () => {
   let spectator: Spectator<CartesianExplorerContextMenuComponent<unknown>>;

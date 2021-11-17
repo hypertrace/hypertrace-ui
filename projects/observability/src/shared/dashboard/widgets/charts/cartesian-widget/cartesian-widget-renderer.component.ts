@@ -6,7 +6,7 @@ import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { CartesianSelectedData, LegendPosition } from '../../../../../public-api';
+import { CartesianSelectedData } from '../../../../../public-api';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
@@ -58,11 +58,6 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   }
 
   public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
-    if (this.model.legendPosition === LegendPosition.Bottom) {
-      selectedData.showContextMenu = false;
-    } else {
-      selectedData.showContextMenu = true;
-    }
     this.model.selectionHandler?.execute(selectedData);
   }
 

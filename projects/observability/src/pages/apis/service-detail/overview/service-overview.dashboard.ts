@@ -341,7 +341,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 ],
                 'selection-handler': {
-                  type: 'cartesian-explorer-selection-handler'
+                  type: 'cartesian-chart-selection-handler'
                 }
               },
               {
@@ -438,7 +438,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 ],
                 'selection-handler': {
-                  type: 'cartesian-explorer-selection-handler'
+                  type: 'cartesian-chart-selection-handler'
                 }
               },
               {
@@ -535,7 +535,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 ],
                 'selection-handler': {
-                  type: 'cartesian-explorer-selection-handler'
+                  type: 'cartesian-chart-selection-handler'
                 }
               }
             ]
