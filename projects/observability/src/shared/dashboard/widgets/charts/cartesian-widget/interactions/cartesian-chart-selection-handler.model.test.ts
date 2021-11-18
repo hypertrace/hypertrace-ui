@@ -1,7 +1,7 @@
 import { TimeRangeService } from '@hypertrace/common';
+import { PopoverService } from '@hypertrace/components';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { PopoverService } from '@hypertrace/components';
 import { CartesianSelectedData } from '../../../../../../public-api';
 import { CartesianChartSelectionHandlerModel } from './cartesian-chart-selection-handler.model';
 
