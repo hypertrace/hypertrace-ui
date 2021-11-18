@@ -25,10 +25,13 @@ export class CartesianChartSelectionHandlerModel<TData> implements InteractionHa
   public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
     this.showContextMenu(selectionData);
 
+    this.popover?.closeOnBackdropClick();
+    this.popover?.closeOnPopoverContentClick();
+
     return of();
   }
 
-  private showContextMenu(selectionData: CartesianSelectedData<TData>): void {
+  public showContextMenu(selectionData: CartesianSelectedData<TData>): void {
     this.popover = this.popoverService.drawPopover({
       componentOrTemplate: CartesianExplorerContextMenuComponent,
       data: selectionData,
@@ -39,7 +42,5 @@ export class CartesianChartSelectionHandlerModel<TData> implements InteractionHa
       },
       backdrop: PopoverBackdrop.Transparent
     });
-    this.popover.closeOnBackdropClick();
-    this.popover.closeOnPopoverContentClick();
   }
 }
