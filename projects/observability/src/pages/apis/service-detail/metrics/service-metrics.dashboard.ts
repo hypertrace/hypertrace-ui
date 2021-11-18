@@ -272,7 +272,8 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
               }
             ],
             'selection-handler': {
-              type: 'cartesian-chart-selection-handler'
+              type: 'cartesian-explorer-selection-handler',
+              'show-context-menu': true
             }
           },
           {
@@ -335,7 +336,8 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 ],
                 'selection-handler': {
-                  type: 'cartesian-chart-selection-handler'
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
                 }
               },
               {
@@ -377,7 +379,8 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 ],
                 'selection-handler': {
-                  type: 'cartesian-chart-selection-handler'
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
                 }
               }
             ]
@@ -409,7 +412,8 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
           }
         ],
         'selection-handler': {
-          type: 'cartesian-chart-selection-handler'
+          type: 'cartesian-explorer-selection-handler',
+          'show-context-menu': true
         }
       }
     ]

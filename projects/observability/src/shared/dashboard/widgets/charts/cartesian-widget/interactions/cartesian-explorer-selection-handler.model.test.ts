@@ -1,7 +1,8 @@
 import { TimeRangeService } from '@hypertrace/common';
+import { PopoverService } from '@hypertrace/components';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { CartesianSelectedData } from '../../../../../../public-api';
+import { CartesianSelectedData, CartesianSeriesVisualizationType } from '../../../../../../public-api';
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
 
@@ -23,7 +24,7 @@ describe('Cartesian Explorer Selection Handler Model', () => {
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
-          type: 1,
+          type: CartesianSeriesVisualizationType.Column,
           stacking: false,
           hide: false
         },
@@ -40,7 +41,7 @@ describe('Cartesian Explorer Selection Handler Model', () => {
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
-          type: 1,
+          type: CartesianSeriesVisualizationType.Column,
           stacking: false,
           hide: false
         },
@@ -54,6 +55,9 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     providers: [
       mockProvider(CartesainExplorerNavigationService, {
         navigateToExplorer: jest.fn()
+      }),
+      mockProvider(PopoverService, {
+        drawPopover: jest.fn()
       })
     ]
   });
@@ -62,7 +66,19 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
     const cartesainExplorerNavigationService = spectator.get(CartesainExplorerNavigationService);
 
+    spectator.model.isContextMenuVisible = false;
+
     spectator.model.execute(selectedData);
     expect(cartesainExplorerNavigationService.navigateToExplorer).toHaveBeenCalled();
+  });
+
+  test('show context menu', () => {
+    const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
+    const popoverService = spectator.get(PopoverService);
+
+    spectator.model.isContextMenuVisible = true;
+
+    spectator.model.execute(selectedData);
+    expect(popoverService.drawPopover).toHaveBeenCalled();
   });
 });
