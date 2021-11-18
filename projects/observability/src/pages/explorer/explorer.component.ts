@@ -195,7 +195,12 @@ export class ExplorerComponent {
   private getGroupByQueryParams(groupBy?: GraphQlGroupBy): QueryParamObject {
     const key = groupBy?.keys[0];
     if (key === undefined) {
-      return {};
+      return {
+        // Clear existing selection
+        [ExplorerQueryParam.Group]: undefined,
+        [ExplorerQueryParam.OtherGroup]: undefined,
+        [ExplorerQueryParam.GroupLimit]: undefined
+      };
     }
 
     return {
