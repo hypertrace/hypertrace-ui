@@ -81,4 +81,12 @@ describe('Time range service', () => {
       });
     });
   });
+
+  test('returns custom time filter', () => {
+    const spectator = buildService();
+    spectator.service.toQueryParams(new Date(1573255100253), new Date(1573255111159));
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))
+    );
+  });
 });
