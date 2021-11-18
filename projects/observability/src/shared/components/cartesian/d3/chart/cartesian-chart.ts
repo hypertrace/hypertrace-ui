@@ -1,6 +1,7 @@
 import { Injector, Renderer2 } from '@angular/core';
 import { TimeRange } from '@hypertrace/common';
 import { ContainerElement, mouse, select } from 'd3-selection';
+import { Subscription } from 'rxjs';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
@@ -35,6 +36,7 @@ import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
 // tslint:disable:max-file-line-count
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
+  public static CHART_VISUALIZATION_CLASS: string = 'chart-visualization';
 
   protected readonly margin: number = 16;
   protected readonly axisHeight: number = 16;
@@ -65,6 +67,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     onEvent: ChartEventListener<TData>;
   }[] = [];
 
+  private activeSeriesSubscription?: Subscription;
+
   public constructor(
     protected readonly hostElement: Element,
     protected readonly injector: Injector,
@@ -79,6 +83,10 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.tooltip && this.tooltip.destroy();
     this.legend && this.legend.destroy();
+
+    if (this.activeSeriesSubscription) {
+      this.activeSeriesSubscription.unsubscribe();
+    }
 
     return this;
   }
@@ -271,8 +279,10 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     }
   }
 
-  private updateData(): void {
-    this.drawLegend();
+  private updateData(withLegend: boolean = true): void {
+    if (withLegend) {
+      this.drawLegend();
+    }
     this.buildVisualizations();
     this.drawChartBackground();
     this.drawAxes();
@@ -281,6 +291,16 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.moveDataOnTopOfAxes();
     this.drawMouseEventContainer();
     this.setupEventListeners();
+  }
+
+  private redrawVisualization(): void {
+    const chartViz = select(this.chartContainerElement!).selectAll(
+      `.${DefaultCartesianChart.CHART_VISUALIZATION_CLASS}`
+    );
+    if (chartViz.nodes().length > 0) {
+      chartViz.remove();
+      this.updateData(false);
+    }
   }
 
   private moveDataOnTopOfAxes(): void {
@@ -348,6 +368,14 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           this.chartContainerElement,
           this.legendPosition
         );
+        if (this.activeSeriesSubscription) {
+          this.activeSeriesSubscription.unsubscribe();
+        }
+        this.activeSeriesSubscription = this.legend.activeSeries$.subscribe(activeSeries => {
+          this.series.length = 0;
+          this.series.push(...(activeSeries as Series<TData>[]));
+          this.redrawVisualization();
+        });
       } else {
         // The legend also contains the interval selector, so even without a legend we need to create an element for that
         this.legend = new CartesianLegend([], this.injector, this.intervalData, this.seriesSummaries).draw(
@@ -370,6 +398,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.chartBackgroundSvgElement = select(this.chartContainerElement)
       .append('svg')
+      .classed(DefaultCartesianChart.CHART_VISUALIZATION_CLASS, true)
       .style('position', 'absolute')
       .attr('width', `${chartBox.width}px`)
       .attr('height', `${chartBox.height}px`)

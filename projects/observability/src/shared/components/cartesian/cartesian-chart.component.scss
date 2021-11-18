@@ -118,10 +118,38 @@
         }
 
         .legend-text {
-          fill: $gray-5;
           font-size: 14px;
           padding-left: 2px;
+          cursor: pointer;
+
+          &.default {
+            color: $gray-9;
+          }
+
+          &.active {
+            color: $blue-4;
+          }
+
+          &.inactive {
+            color: $gray-5;
+          }
         }
+      }
+    }
+
+    .reset {
+      @include font-title($blue-4);
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      &.hidden {
+        display: none;
+      }
+
+      &:hover {
+        color: $blue-6;
       }
     }
 
