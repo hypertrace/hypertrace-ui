@@ -1,4 +1,4 @@
-import { TimeRange } from '@hypertrace/common';
+import { TimeDuration, TimeRange, TimeUnit } from '@hypertrace/common';
 
 export class GraphQlTimeRange {
   public static fromTimeRange(timeRange: Pick<TimeRange, 'startTime' | 'endTime'>): GraphQlTimeRange {
@@ -12,5 +12,12 @@ export class GraphQlTimeRange {
       startTime: typeof this.from === 'number' ? new Date(this.from) : this.from,
       endTime: typeof this.to === 'number' ? new Date(this.to) : this.to
     };
+  }
+
+  public asTimeDuration(): TimeDuration {
+    return new TimeDuration(
+      this.asArgumentObject().endTime.getTime() - this.asArgumentObject().startTime.getTime(),
+      TimeUnit.Millisecond
+    );
   }
 }
