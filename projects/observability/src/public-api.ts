@@ -92,6 +92,7 @@ export * from './shared/graphql/model/schema/trace';
 // Services
 export * from './pages/trace-detail/trace-detail.service';
 export * from './shared/services/log-events/log-events.service';
+export * from './shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';
@@ -381,3 +382,6 @@ export * from './shared/components/label-detail/label-detail.module';
 // Bar Gauge
 export * from './shared/components/bar-gauge/bar-gauge.component';
 export * from './shared/components/bar-gauge/bar-gauge.module';
+
+// Time Range utils
+export * from './shared/utils/time-range';

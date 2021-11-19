@@ -5,7 +5,8 @@ import {
   forkJoinSafeEmpty,
   isEqualIgnoreFunctions,
   isNonEmptyString,
-  PreferenceService
+  PreferenceService,
+  StorageType
 } from '@hypertrace/common';
 import {
   FilterAttribute,
@@ -96,7 +97,7 @@ import { TableWidgetModel } from './table-widget.model';
           [selectionMode]="this.model.getSelectionMode()"
           [display]="this.model.style"
           [data]="this.data$ | async"
-          [loadingConfig]="this.model.loadingConfig"
+          [loadingConfig]="this.model.getLoadingConfig()"
           [filters]="this.combinedFilters$ | async"
           [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"
@@ -123,11 +124,6 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
-  private static readonly DEFAULT_PREFERENCES: TableWidgetPreferences = {
-    columns: [],
-    checkboxes: []
-  };
-
   private static readonly DEFAULT_TAB_INDEX: number = 0;
 
   public viewItems: ToggleItem<string>[] = [];
@@ -202,11 +198,13 @@ export class TableWidgetRendererComponent
   protected fetchAndPopulateSelectControls(): void {
     this.selectControls$ = this.getSelectControls().pipe(
       tap((selectControls: TableSelectControl[]) => {
-        selectControls.forEach(selectControl =>
-          this.publishSelectValuesChange(
-            selectControl.options[0].metaValue.field,
-            selectControl.options.filter(o => o.applied)
-          )
+        selectControls.forEach(
+          selectControl =>
+            selectControl.options.length > 0 &&
+            this.publishSelectValuesChange(
+              selectControl.options[0].metaValue.field,
+              selectControl.options.filter(o => o.applied)
+            )
         );
       })
     );
@@ -225,7 +223,7 @@ export class TableWidgetRendererComponent
   }
 
   private getSelectControls(changed?: TableSelectControl): Observable<TableSelectControl[]> {
-    return this.getPreferences().pipe(
+    return this.getSessionPreferences().pipe(
       take(1),
       switchMap(preferences =>
         forkJoinSafeEmpty(
@@ -252,6 +250,7 @@ export class TableWidgetRendererComponent
                   return (
                     foundPreferences ?? {
                       placeholder: selectControlModel.placeholder,
+                      isMultiSelect: selectControlModel.isMultiselect,
                       options: options.map(option => ({
                         ...option,
                         applied: this.isFilterApplied(option.metaValue, filters)
@@ -296,7 +295,7 @@ export class TableWidgetRendererComponent
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
-    return this.getPreferences().pipe(
+    return this.getLocalPreferences().pipe(
       switchMap(preferences =>
         combineLatest([this.getScope(), this.api.change$.pipe(mapTo(true), startWith(true))]).pipe(
           switchMap(([scope]) => this.model.getColumns(scope)),
@@ -362,8 +361,8 @@ export class TableWidgetRendererComponent
 
   private updateSelectionPreferences(tableSelectControls: TableSelectControl[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(preferences =>
-        this.setPreferences({
+      this.getSessionPreferences().subscribe(preferences =>
+        this.setSessionPreferences({
           ...preferences,
           selections: tableSelectControls
         })
@@ -397,8 +396,8 @@ export class TableWidgetRendererComponent
 
   private updateCheckboxPreferences(tableCheckboxControls: TableCheckboxControl[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(preferences =>
-        this.setPreferences({
+      this.getSessionPreferences().subscribe(preferences =>
+        this.setSessionPreferences({
           ...preferences,
           checkboxes: tableCheckboxControls
         })
@@ -407,7 +406,7 @@ export class TableWidgetRendererComponent
   }
 
   private getCheckboxControls(changed?: TableCheckboxChange): Observable<TableCheckboxControl[]> {
-    return this.getPreferences().pipe(
+    return this.getSessionPreferences().pipe(
       switchMap(preferences =>
         forkJoinSafeEmpty(
           this.model
@@ -480,8 +479,8 @@ export class TableWidgetRendererComponent
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.getPreferences().subscribe(preferences =>
-        this.setPreferences({
+      this.getLocalPreferences().subscribe(preferences =>
+        this.setLocalPreferences({
           ...preferences,
           columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
         })
@@ -496,7 +495,7 @@ export class TableWidgetRendererComponent
   public onRowSelection(selections: StatefulTableRow[]): void {
     this.selectedRows = selections;
     /**
-     * Todo: Stich this with selection handlers
+     * Todo: Stitch this with selection handlers
      */
   }
 
@@ -548,27 +547,41 @@ export class TableWidgetRendererComponent
 
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
-      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}).pipe(first())
+      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}, StorageType.Local).pipe(first())
       : of({});
   }
 
   private setViewPreferences(preferences: TableWidgetViewPreferences): void {
     if (isNonEmptyString(this.model.viewId)) {
-      this.preferenceService.set(this.model.viewId, preferences);
+      this.preferenceService.set(this.model.viewId, preferences, StorageType.Local);
     }
   }
 
-  private getPreferences(
-    defaultPreferences: TableWidgetPreferences = TableWidgetRendererComponent.DEFAULT_PREFERENCES
-  ): Observable<TableWidgetPreferences> {
+  private getLocalPreferences(): Observable<TableWidgetLocalPreferences> {
     return isNonEmptyString(this.model.getId())
-      ? this.preferenceService.get<TableWidgetPreferences>(this.model.getId()!, defaultPreferences).pipe(first())
-      : of(defaultPreferences);
+      ? this.preferenceService
+          .get<TableWidgetLocalPreferences>(this.model.getId()!, {}, StorageType.Local)
+          .pipe(first())
+      : of({});
   }
 
-  private setPreferences(preferences: TableWidgetPreferences): void {
+  private setLocalPreferences(preferences: TableWidgetLocalPreferences): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.preferenceService.set(this.model.getId()!, preferences);
+      this.preferenceService.set(this.model.getId()!, preferences, StorageType.Local);
+    }
+  }
+
+  private getSessionPreferences(): Observable<TableWidgetSessionPreferences> {
+    return isNonEmptyString(this.model.getId())
+      ? this.preferenceService
+          .get<TableWidgetSessionPreferences>(this.model.getId()!, {}, StorageType.Session)
+          .pipe(first())
+      : of({});
+  }
+
+  private setSessionPreferences(preferences: TableWidgetSessionPreferences): void {
+    if (isNonEmptyString(this.model.getId())) {
+      this.preferenceService.set(this.model.getId()!, preferences, StorageType.Session);
     }
   }
 
@@ -601,8 +614,11 @@ interface TableWidgetViewPreferences {
   activeView?: string;
 }
 
-interface TableWidgetPreferences {
+interface TableWidgetLocalPreferences {
   columns?: PersistedTableColumnConfig[];
+}
+
+interface TableWidgetSessionPreferences {
   checkboxes?: TableCheckboxControl[];
   selections?: TableSelectControl[];
 }

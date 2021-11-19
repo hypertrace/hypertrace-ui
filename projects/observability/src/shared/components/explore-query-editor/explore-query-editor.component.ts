@@ -64,6 +64,15 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   @Input()
   public context?: ExploreRequestContext;
 
+  @Input()
+  public series?: ExploreSeries[];
+
+  @Input()
+  public interval?: IntervalValue;
+
+  @Input()
+  public groupBy?: GraphQlGroupBy;
+
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
 
@@ -84,6 +93,18 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
     if (changeObject.filters) {
       this.visualizationBuilder.filters(this.filters);
+    }
+
+    if (changeObject.series && this.series?.length) {
+      this.setSeries(this.series);
+    }
+
+    if (changeObject.interval && this.interval) {
+      this.setInterval(this.interval);
+    }
+
+    if (changeObject.groupBy && this.groupBy?.keys.length) {
+      this.updateGroupByKey(this.groupBy, this.groupBy.keys[0]);
     }
   }
 

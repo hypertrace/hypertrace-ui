@@ -104,7 +104,7 @@ describe('Explore query editor', () => {
 
   const expectedDefaultQuery = (): ExploreVisualizationRequest =>
     expect.objectContaining({
-      interval: new TimeDuration(15, TimeUnit.Second),
+      interval: 'AUTO',
       series: [defaultSeries]
     });
 
@@ -120,7 +120,7 @@ describe('Explore query editor', () => {
       }
     );
 
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenCalledWith(expectedDefaultQuery());
 
@@ -140,16 +140,16 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
-
+    spectator.tick(10);
     spectator.click('.add-series-button');
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenCalledWith(
       expect.objectContaining({
         series: [defaultSeries, defaultSeries]
       })
     );
+    discardPeriodicTasks();
   }));
 
   test('emits changes to the query on group by change', fakeAsync(() => {
@@ -164,13 +164,13 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -197,19 +197,19 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     // First pick a group by to enable limit selection
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(10);
 
     const limitInputEl = spectator.query('ht-explore-query-limit-editor input') as HTMLInputElement;
     limitInputEl.value = '6';
     spectator.dispatchFakeEvent(limitInputEl, 'input');
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onQueryChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -235,13 +235,13 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     spectator.click(spectator.query('.interval .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[0]);
 
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -264,16 +264,18 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     // First pick a group by to enable limit selection
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(10);
 
     spectator.click('.limit-include-rest-container input[type="checkbox"]');
+
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({

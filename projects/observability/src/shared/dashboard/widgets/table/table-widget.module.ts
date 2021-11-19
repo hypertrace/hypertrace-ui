@@ -14,6 +14,7 @@ import { TracingTableCellRendererModule } from '../../../components/table/tracin
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetColumnModel } from './table-widget-column.model';
 import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
+import { TableWidgetControlMultiSelectOptionModel } from './table-widget-control-multi-select-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetRendererComponent } from './table-widget-renderer.component';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
@@ -30,6 +31,7 @@ import { TableWidgetModel } from './table-widget.model';
         TableWidgetRowInteractionModel,
         TableWidgetControlCheckboxOptionModel,
         TableWidgetControlSelectOptionModel,
+        TableWidgetControlMultiSelectOptionModel,
         WidgetHeaderModel,
         TableWidgetViewToggleModel,
         TableWidgetViewModel

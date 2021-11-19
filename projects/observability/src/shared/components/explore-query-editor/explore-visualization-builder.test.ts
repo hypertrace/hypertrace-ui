@@ -44,7 +44,7 @@ describe('Explore visualization builder', () => {
   const expectedQuery = (queryPartial: Partial<ExploreVisualizationRequest> = {}): ExploreVisualizationRequest =>
     expect.objectContaining({
       context: ObservabilityTraceType.Api,
-      interval: new TimeDuration(3, TimeUnit.Minute),
+      interval: 'AUTO',
       series: [matchSeriesWithName('calls')],
       ...queryPartial
     });
@@ -65,19 +65,19 @@ describe('Explore visualization builder', () => {
 
   test('defaults to single series query', () => {
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
     });
   });
 
   test('plays back current query for late subscribers', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
       tick(10000);
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
     });
   }));
 
-  test('notifies on query change', () => {
+  test('debounces then notifies on query change', () => {
     runFakeRxjs(({ expectObservable }) => {
       const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
 
@@ -89,31 +89,11 @@ describe('Explore visualization builder', () => {
         })
         .setSeries([buildSeries('test2')]);
 
-      expectObservable(recordedRequests).toBe('(abcd)', {
-        a: expectedQuery(),
-        b: expectedQuery({
-          series: [matchSeriesWithName('test1')]
-        }),
-        c: expectedQuery({
-          series: [matchSeriesWithName('test1')],
-          groupBy: { keys: ['testGroupBy'], limit: 15 }
-        }),
-        d: expectedQuery({
+      expectObservable(recordedRequests).toBe('10ms x', {
+        x: expectedQuery({
           series: [matchSeriesWithName('test2')],
           groupBy: { keys: ['testGroupBy'], limit: 15 }
         })
-      });
-    });
-  });
-
-  test('clears full query on empty', () => {
-    runFakeRxjs(({ expectObservable }) => {
-      const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
-      spectator.service.setSeries([buildSeries('test1')]).empty();
-
-      expectObservable(recordedRequests).toBe('(xyx)', {
-        x: expectedQuery(),
-        y: expectedQuery({ series: [matchSeriesWithName('test1')] })
       });
     });
   });
@@ -123,10 +103,8 @@ describe('Explore visualization builder', () => {
       const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
       spectator.service.setSeries([buildSeries('test1')]).reset();
 
-      expectObservable(recordedRequests).toBe('(xyz)', {
-        x: expectedQuery(),
-        y: expectedQuery({ series: [matchSeriesWithName('test1')] }),
-        z: expectedQuery()
+      expectObservable(recordedRequests).toBe('10ms x', {
+        x: expectedQuery()
       });
     });
   });
