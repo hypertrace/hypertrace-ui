@@ -4,13 +4,16 @@ import {
   Component,
   ContentChildren,
   EventEmitter,
+  forwardRef,
   Input,
   OnChanges,
   Output,
   QueryList
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -19,12 +22,18 @@ import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { MultiSelectJustify } from './multi-select-justify';
-
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SubscriptionLifecycle],
+  providers: [
+    SubscriptionLifecycle,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MultiSelectComponent),
+      multi: true
+    }
+  ],
   template: `
     <div
       class="multi-select"
@@ -121,7 +130,7 @@ import { MultiSelectJustify } from './multi-select-justify';
     </div>
   `
 })
-export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
+export class MultiSelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -167,6 +176,8 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
+
+  private propagateControlValueChange: (value: V[] | undefined) => void = () => {};
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
@@ -216,24 +227,39 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     }
 
     const selected = this.isSelectedItem(item)
-      ? this.selected?.filter(value => value !== item.value)
+      ? this.selected?.filter(value => !isEqual(value, item.value))
       : (this.selected ?? []).concat(item.value);
 
     this.setSelection(selected ?? []);
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
+    return this.selected !== undefined && this.selected.filter(value => isEqual(value, item.value)).length > 0;
   }
 
   public preventClickDefault(event: Event): void {
     event.preventDefault();
   }
 
+  public writeValue(value?: V[]): void {
+    this.setSelection(value ?? []);
+  }
+
+  public registerOnChange(onChange: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(_onTouch: any): void {
+    /**
+     * No-op
+     */
+  }
+
   private setSelection(selected: V[]): void {
     this.selected = selected;
     this.setTriggerLabel();
     this.selectedChange.emit(this.selected);
+    this.propagateControlValueChange(this.selected);
   }
 
   private setTriggerLabel(): void {

@@ -107,6 +107,7 @@ export * from './filtering/filter/parser/filter-parser-lookup.service';
 // Form Section
 export * from './form-field/form-field.component';
 export * from './form-field/form-field.module';
+export * from './form-field/form-field';
 
 // Greeting label
 export { GreetingLabelModule } from './greeting-label/greeting-label.module';

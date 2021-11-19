@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance } from './input-appearance';
 
@@ -6,6 +7,13 @@ import { InputAppearance } from './input-appearance';
   selector: 'ht-input',
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: InputComponent
+    }
+  ],
   template: `
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
       <input
@@ -22,7 +30,7 @@ import { InputAppearance } from './input-appearance';
     </mat-form-field>
   `
 })
-export class InputComponent<T extends string | number> implements OnChanges {
+export class InputComponent<T extends string | number> implements ControlValueAccessor, OnChanges {
   @Input()
   public id?: string;
 
@@ -60,10 +68,28 @@ export class InputComponent<T extends string | number> implements OnChanges {
     }
   }
 
+  private propagateControlValueChange: (value: T | undefined) => void = () => {};
+
   public onValueChange(value?: string): void {
     const coercedValue = this.coerceValueIfNeeded(value);
     this.value = coercedValue;
     this.valueChange.emit(coercedValue);
+    this.propagateControlValueChange(coercedValue);
+  }
+
+  public writeValue(value?: string): void {
+    const coercedValue = this.coerceValueIfNeeded(value);
+    this.value = coercedValue;
+  }
+
+  public registerOnChange(onChange: (value: T | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(_onTouch: any): void {
+    /**
+     * No-op
+     */
   }
 
   private coerceValueIfNeeded(value?: string): T | undefined {

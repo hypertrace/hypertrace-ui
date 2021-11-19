@@ -2,9 +2,6 @@
 @import 'color-palette';
 
 :host {
-  height: 44px;
-  width: 100%;
-
   ::ng-deep {
     &.disabled {
       background-color: $gray-2;
@@ -15,39 +12,25 @@
       &.mat-form-field {
         height: inherit;
         width: inherit;
-        border: 1px solid $gray-2;
-        border-radius: 6px;
-        background: white;
       }
-
       &.mat-focused {
-        border: 1px solid $blue-3;
-
         .mat-form-field-label {
           color: $gray-5;
         }
       }
-
-      &.ng-invalid {
-        border: 1px solid $red-3;
-      }
-
       .mat-form-field-underline {
         display: none;
       }
-
       .mat-form-field-infix {
         height: inherit;
         width: inherit;
         border: unset;
         padding: 0 0 0 8px;
       }
-
       .mat-form-field-flex {
         height: inherit;
         width: inherit;
       }
-
       .mat-form-field-wrapper {
         height: inherit;
         width: inherit;
@@ -60,7 +43,6 @@
           color: $gray-5;
         }
       }
-
       .mat-input-element {
         height: inherit;
         width: inherit;
