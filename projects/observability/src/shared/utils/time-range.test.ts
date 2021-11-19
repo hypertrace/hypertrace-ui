@@ -1,4 +1,5 @@
-import { getPreviousTimeRange, GraphQlTimeRange } from '@hypertrace/observability';
+import { GraphQlTimeRange } from '../graphql/model/schema/timerange/graphql-time-range';
+import { getPreviousTimeRange} from './time-range';
 
 describe('Time Range Util', () => {
   const oneHourRange = new GraphQlTimeRange( new Date(1637298000000), new Date(1637301600000));
