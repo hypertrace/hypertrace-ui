@@ -77,10 +77,10 @@ export class CartesianLegend {
       .text('Reset')
       .on('click', () => this.resetToDefault());
 
-    this.toggleReset(this.isDefault);
+    this.setResetVisibility(this.isDefault);
   }
 
-  private toggleReset(isHidden: boolean): void {
+  private setResetVisibility(isHidden: boolean): void {
     select(this.legendElement!).select(`span.${CartesianLegend.RESET_CSS_CLASS}`).classed('hidden', isHidden);
   }
 
@@ -188,7 +188,7 @@ export class CartesianLegend {
     this.activeSeries = [...this.initialSeries];
     this.isDefault = true;
     this.updateLegendTextClasses();
-    this.toggleReset(this.isDefault);
+    this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
 
@@ -205,11 +205,11 @@ export class CartesianLegend {
       }
     }
     this.updateLegendTextClasses();
-    this.toggleReset(this.isDefault);
+    this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
 
   private isThisLegendEntryActive(seriesEntry: Series<{}>): boolean {
-    return this.activeSeries.findIndex(series => series === seriesEntry) >= 0;
+    return this.activeSeries.includes(seriesEntry);
   }
 }
