@@ -68,6 +68,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }[] = [];
 
   private activeSeriesSubscription?: Subscription;
+  private activeSeries: Series<TData>[] = [];
 
   public constructor(
     protected readonly hostElement: Element,
@@ -112,6 +113,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public withSeries(...series: Series<TData>[]): this {
     this.series.length = 0;
     this.series.push(...series);
+    this.activeSeries = [...series];
 
     this.seriesSummaries.length = 0;
     this.seriesSummaries.push(
@@ -358,20 +360,21 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       return;
     }
 
-    new CartesianNoDataMessage(this.chartBackgroundSvgElement, this.series).updateMessage();
+    new CartesianNoDataMessage(this.chartBackgroundSvgElement, this.activeSeries).updateMessage();
   }
 
   private drawLegend(): void {
     if (this.chartContainerElement) {
       if (this.legendPosition !== undefined && this.legendPosition !== LegendPosition.None) {
-        this.legend = new CartesianLegend(this.series, this.injector, this.intervalData, this.seriesSummaries).draw(
-          this.chartContainerElement,
-          this.legendPosition
-        );
+        this.legend = new CartesianLegend(
+          this.activeSeries,
+          this.injector,
+          this.intervalData,
+          this.seriesSummaries
+        ).draw(this.chartContainerElement, this.legendPosition);
         this.activeSeriesSubscription?.unsubscribe();
         this.activeSeriesSubscription = this.legend.activeSeries$.subscribe(activeSeries => {
-          this.series.length = 0;
-          this.series.push(...(activeSeries as Series<TData>[]));
+          this.activeSeries = activeSeries as Series<TData>[];
           this.redrawVisualization();
         });
       } else {
@@ -457,7 +460,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private buildVisualizations(): void {
     this.allSeriesData = [
-      ...this.series.map(series => this.getChartSeriesVisualization(series)),
+      ...this.activeSeries.map(series => this.getChartSeriesVisualization(series)),
       ...this.bands.flatMap(band => [
         // Need to add bands as series to get tooltips
         this.getChartSeriesVisualization(band.upper),
