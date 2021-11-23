@@ -1,4 +1,3 @@
-import { AbstractControl } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
@@ -23,12 +22,13 @@ import { IconSize } from '../icon/icon-size';
       <div class="content" [ngClass]="{ 'error-border': this.showFormError && this.errorLabel }">
         <ng-content></ng-content>
       </div>
-
+      <!-- For Backward Compatibility: Start -->
       <ht-label
         *ngIf="!this.isOptional && this.showFormError === undefined"
         class="error-message"
         [label]="this.errorLabel"
       ></ht-label>
+      <!-- For Backward Compatibility: End -->
 
       <div class="error" *ngIf="this.showFormError && this.errorLabel">
         <ht-icon icon="${IconType.Error}" size="${IconSize.Small}"></ht-icon>
@@ -52,9 +52,6 @@ export class FormFieldComponent {
 
   @Input()
   public iconTooltip?: string;
-
-  @Input()
-  public formControlInstance?: AbstractControl;
 
   @Input()
   public errorLabel?: string = '';

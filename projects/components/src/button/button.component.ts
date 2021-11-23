@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle } from './button';
+import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
 
 @Component({
   selector: 'ht-button',
@@ -52,7 +52,7 @@ export class ButtonComponent {
   public trailingIcon?: boolean;
 
   @Input()
-  public type: 'submit' | 'button' = 'button';
+  public type: ButtonType = ButtonType.Button;
 
   @Input()
   public role: ButtonRole = ButtonRole.Secondary;

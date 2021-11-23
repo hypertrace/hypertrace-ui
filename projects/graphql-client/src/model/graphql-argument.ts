@@ -1,4 +1,4 @@
-import { Dictionary } from './../../../common/src/utilities/types/types';
+import { Dictionary } from '@hypertrace/common';
 
 export interface GraphQlArgument<T extends GraphQlArgumentValue = GraphQlArgumentValue> {
   name: string;

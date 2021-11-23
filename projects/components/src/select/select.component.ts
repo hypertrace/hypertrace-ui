@@ -5,7 +5,6 @@ import {
   Component,
   ContentChildren,
   EventEmitter,
-  forwardRef,
   Input,
   OnChanges,
   Output,
@@ -32,7 +31,7 @@ import { SelectSize } from './select-size';
     SubscriptionLifecycle,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SelectComponent),
+      useExisting: SelectComponent,
       multi: true
     }
   ],
@@ -217,7 +216,8 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public controlItems?: QueryList<SelectControlOptionComponent<V>>;
 
   public selected$?: Observable<SelectOption<V> | undefined>;
-  private propagateControlValueChange: (value: V | undefined) => void = () => {};
+  private propagateControlValueChange?: (value: V | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V | undefined) => void;
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
@@ -284,7 +284,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
     this.setSelection(item.value);
     this.selectedChange.emit(this.selected);
-    this.propagateControlValueChange(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private setSelection(value?: V): void {
@@ -320,10 +320,13 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     this.propagateControlValueChange = onChange;
   }
 
-  public registerOnTouched(_onTouch: any): void {
-    /**
-     * No-op
-     */
+  public registerOnTouched(onTouch: (value: V | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private propagateValueChangeToFormControl(value: V | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }
 

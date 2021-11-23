@@ -18,8 +18,6 @@ import { InputAppearance } from './input-appearance';
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
       <input
         matInput
-        [id]="this.id"
-        [name]="this.name"
         [type]="this.type"
         [required]="this.required"
         [disabled]="this.disabled"
@@ -31,12 +29,6 @@ import { InputAppearance } from './input-appearance';
   `
 })
 export class InputComponent<T extends string | number> implements ControlValueAccessor, OnChanges {
-  @Input()
-  public id?: string;
-
-  @Input()
-  public name?: string;
-
   @Input()
   public placeholder?: string;
 
@@ -68,13 +60,18 @@ export class InputComponent<T extends string | number> implements ControlValueAc
     }
   }
 
-  private propagateControlValueChange: (value: T | undefined) => void = () => {};
+  private propagateControlValueChange?: (value: T | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: T | undefined) => void;
 
   public onValueChange(value?: string): void {
     const coercedValue = this.coerceValueIfNeeded(value);
     this.value = coercedValue;
     this.valueChange.emit(coercedValue);
-    this.propagateControlValueChange(coercedValue);
+    this.propagateValueChangeToFormControl(coercedValue);
+  }
+
+  public getStyleClasses(): string[] {
+    return [this.appearance, this.disabled ? 'disabled' : ''];
   }
 
   public writeValue(value?: string): void {
@@ -86,10 +83,8 @@ export class InputComponent<T extends string | number> implements ControlValueAc
     this.propagateControlValueChange = onChange;
   }
 
-  public registerOnTouched(_onTouch: any): void {
-    /**
-     * No-op
-     */
+  public registerOnTouched(onTouch: (value: T | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
   }
 
   private coerceValueIfNeeded(value?: string): T | undefined {
@@ -101,7 +96,8 @@ export class InputComponent<T extends string | number> implements ControlValueAc
     }
   }
 
-  public getStyleClasses(): string[] {
-    return [this.appearance, this.disabled ? 'disabled' : ''];
+  private propagateValueChangeToFormControl(value: T | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }

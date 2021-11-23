@@ -4,13 +4,12 @@ import {
   Component,
   ContentChildren,
   EventEmitter,
-  forwardRef,
   Input,
   OnChanges,
   Output,
   QueryList
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isEqual } from 'lodash-es';
@@ -30,7 +29,7 @@ import { MultiSelectJustify } from './multi-select-justify';
     SubscriptionLifecycle,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MultiSelectComponent),
+      useExisting: MultiSelectComponent,
       multi: true
     }
   ],
@@ -177,7 +176,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
 
-  private propagateControlValueChange: (value: V[] | undefined) => void = () => {};
+  private propagateControlValueChange?: (value: V[] | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V[] | undefined) => void;
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
@@ -249,17 +249,15 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.propagateControlValueChange = onChange;
   }
 
-  public registerOnTouched(_onTouch: any): void {
-    /**
-     * No-op
-     */
+  public registerOnTouched(onTouch: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
   }
 
   private setSelection(selected: V[]): void {
     this.selected = selected;
     this.setTriggerLabel();
     this.selectedChange.emit(this.selected);
-    this.propagateControlValueChange(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private setTriggerLabel(): void {
@@ -282,6 +280,11 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
         };
       })
     );
+  }
+
+  private propagateValueChangeToFormControl(value: V[] | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }
 

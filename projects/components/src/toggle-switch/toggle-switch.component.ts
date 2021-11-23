@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ToggleSwitchSize } from './toggle-switch-size';
 
@@ -26,10 +18,7 @@ import { ToggleSwitchSize } from './toggle-switch-size';
     </mat-slide-toggle>
   `
 })
-export class ToggleSwitchComponent implements OnChanges {
-  ngOnChanges(_changes: SimpleChanges): void {
-    console.log('Method not implemented.');
-  }
+export class ToggleSwitchComponent {
   @Input()
   public checked?: boolean;
 
@@ -46,7 +35,6 @@ export class ToggleSwitchComponent implements OnChanges {
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
 
   public onToggle(toggleChange: MatSlideToggleChange): void {
-    this.checked = toggleChange.checked;
     this.checkedChange.emit(toggleChange.checked);
   }
 }
