@@ -29,7 +29,7 @@ export abstract class CartesianScale<TData, TDomain> {
 
   protected abstract setRange(): void;
 
-  public abstract invert(point: number): Date | number;
+  public abstract invert(x: number): Date | number;
 
   public getValueFromData(data: TData): TDomain {
     return this.dataAccessor(data);

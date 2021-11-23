@@ -1,3 +1,4 @@
+import { TimeRange } from '@hypertrace/common';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { AxisType, Band, Series } from './chart';
 
@@ -9,7 +10,7 @@ export const enum ChartEvent {
 }
 
 export type ChartEventListener<TData> = (
-  data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | ChartSelect
+  data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
 ) => void;
 
 export interface ChartTooltipTrackingOptions {
@@ -17,9 +18,11 @@ export interface ChartTooltipTrackingOptions {
   radius?: number;
 }
 
-export interface ChartSelect {
-  // tslint:disable-next-line
-  series: any;
-  start: [number, number];
-  end: [number, number];
+export interface CartesianSelectedData<TData> {
+  timeRange: TimeRange;
+  selectedData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+  location: {
+    x: number;
+    y: number;
+  };
 }

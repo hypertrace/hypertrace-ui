@@ -48,7 +48,7 @@ export class CartesianContinuousScale<TData> extends CartesianNumericScale<TData
     return scaleLinear();
   }
 
-  public invert(point: number): number {
-    return this.d3Implementation.invert(point);
+  public invert(x: number): number {
+    return this.d3Implementation.invert(x);
   }
 }

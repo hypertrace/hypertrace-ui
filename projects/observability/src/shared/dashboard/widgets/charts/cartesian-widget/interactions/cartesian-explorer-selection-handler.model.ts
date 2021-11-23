@@ -1,57 +1,63 @@
-import { NavigationService } from '@hypertrace/common';
-import { FilterOperator } from '@hypertrace/components';
-import { Model } from '@hypertrace/hyperdash';
+import {
+  PopoverBackdrop,
+  PopoverFixedPositionLocation,
+  PopoverPositionType,
+  PopoverRef,
+  PopoverService
+} from '@hypertrace/components';
+import { BOOLEAN_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
-import { ExplorerService } from '../../../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../../../pages/explorer/explorer.component';
-import { ChartSelect } from '../../../../../../public-api';
+import { CartesianSelectedData } from '../../../../../../public-api';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
+import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
+
+import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 
 @Model({
   type: 'cartesian-explorer-selection-handler'
 })
-export class CartesianExplorerSelectionHandlerModel implements InteractionHandler {
-  @ModelInject(ExplorerService)
-  private readonly explorerService!: ExplorerService;
+export class CartesianExplorerSelectionHandlerModel<TData> implements InteractionHandler {
+  @ModelInject(CartesainExplorerNavigationService)
+  private readonly cartesainExplorerNavigationService!: CartesainExplorerNavigationService;
 
-  @ModelInject(NavigationService)
-  private readonly navigationService!: NavigationService;
+  @ModelInject(PopoverService)
+  private readonly popoverService!: PopoverService;
 
-  public execute(selectionData: ChartSelect): Observable<void> {
-    const startPoint = selectionData.start;
-    const endPoint = selectionData.end;
+  public popover?: PopoverRef;
 
-    // tslint:disable-next-line
-    selectionData.series.map((data: any) => {
-      const startDate = data.getXAxisValue(startPoint[0]);
-      const endDate = data.getXAxisValue(endPoint[0]);
-      this.navigateToExplorer(startDate, endDate);
+  @ModelProperty({
+    key: 'show-context-menu',
+    displayName: 'Show Context Menu',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public isContextMenuVisible: boolean = true;
 
-      return;
-    });
+  public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
+    if (this.isContextMenuVisible) {
+      this.showContextMenu(selectionData);
+      this.popover?.closeOnBackdropClick();
+      this.popover?.closeOnPopoverContentClick();
+    } else {
+      this.cartesainExplorerNavigationService.navigateToExplorer(
+        selectionData.timeRange.startTime,
+        selectionData.timeRange.endTime
+      );
+    }
 
     return of();
   }
 
-  private navigateToExplorer(start: Date, end: Date): void {
-    const startTime: number = new Date(start).getTime();
-    const endTime: number = new Date(end).getTime();
-    this.explorerService
-      .buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-        {
-          field: 'startTime',
-          operator: FilterOperator.GreaterThanOrEqualTo,
-          value: startTime
-        },
-        {
-          field: 'endTime',
-          operator: FilterOperator.LessThanOrEqualTo,
-          value: endTime
-        }
-      ])
-      .subscribe(data => {
-        this.navigationService.navigate(data);
-      });
+  public showContextMenu(selectionData: CartesianSelectedData<TData>): void {
+    this.popover = this.popoverService.drawPopover({
+      componentOrTemplate: CartesianExplorerContextMenuComponent,
+      data: selectionData,
+      position: {
+        type: PopoverPositionType.Fixed,
+        location: PopoverFixedPositionLocation.Custom,
+        customLocation: selectionData.location
+      },
+      backdrop: PopoverBackdrop.Transparent
+    });
   }
 }

@@ -64,7 +64,7 @@ export class CartesianTimeScale<TData> extends CartesianNumericScale<TData> {
     return scaleTime();
   }
 
-  public invert(point: number): Date {
-    return this.d3Implementation.invert(point);
+  public invert(x: number): Date {
+    return this.d3Implementation.invert(x);
   }
 }
