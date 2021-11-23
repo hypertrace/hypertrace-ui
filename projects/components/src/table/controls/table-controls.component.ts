@@ -67,7 +67,7 @@ import {
             class="control select"
             showBorder="true"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
-            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+            (selectedChange)="this.onSelectChange(selectControl, $event)"
           >
             <ht-select-option
               *ngFor="let option of selectControl.options"
@@ -238,6 +238,13 @@ export class TableControlsComponent implements OnChanges {
     this.selectChange.emit({
       select: select,
       values: selections
+    });
+  }
+
+  public onSelectChange(select: TableSelectControl, selection: TableSelectControlOption): void {
+    this.selectChange.emit({
+      select: select,
+      values: [selection]
     });
   }
 
