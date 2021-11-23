@@ -90,7 +90,8 @@ export const enum TitlePosition {
 // Regular title (black) and GrayedOut new style (gray)
 export const enum TitledContentTitleStyle {
   Regular = 'regular',
-  GrayedOut = 'grayed-out'
+  GrayedOut = 'grayed-out',
+  TitleCasedGray = 'title-case-gray'
 }
 
 export const enum TitledContentHeaderJustify {
