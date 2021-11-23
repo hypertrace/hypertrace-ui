@@ -49,6 +49,7 @@ import {
             [selected]="this.appliedFilters(selectControl)"
             [placeholder]="selectControl.placeholder"
             class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
             (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
@@ -65,9 +66,10 @@ import {
             [selected]="this.appliedFilters(selectControl)"
             [placeholder]="selectControl.placeholder"
             class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
-            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+            (selectedChange)="this.onSelectChange(selectControl, $event)"
           >
             <ht-select-option
               *ngFor="let option of selectControl.options"
@@ -220,8 +222,8 @@ export class TableControlsComponent implements OnChanges {
     this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 
-  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] | undefined {
-    return this.selectSelections.get(selectControl);
+  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] {
+    return this.selectSelections.get(selectControl) || [];
   }
 
   private setActiveViewItem(): void {
@@ -234,11 +236,20 @@ export class TableControlsComponent implements OnChanges {
     this.searchChange.emit(text);
   }
 
-  public onMultiSelectChange(select: TableSelectControl, selections: TableSelectControlOption[]): void {
+  public onMultiSelectChange(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
     this.selectChange.emit({
-      select: select,
+      select: selectControl,
       values: selections
     });
+    this.diffSelections();
+  }
+
+  public onSelectChange(selectControl: TableSelectControl, selection: TableSelectControlOption): void {
+    this.selectChange.emit({
+      select: selectControl,
+      values: [selection]
+    });
+    this.diffSelections();
   }
 
   public onCheckboxChange(checked: string[]): void {
