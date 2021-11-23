@@ -49,6 +49,11 @@
         height: 12px;
         margin-bottom: 12px;
       }
+
+      &.title-case-gray {
+        @include subtitle-2($gray-4);
+        text-transform: capitalize;
+      }
     }
   }
 
