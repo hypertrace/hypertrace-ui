@@ -149,7 +149,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       defaultIfEmpty<AttributeMetadata[]>([]),
       map(attributes =>
         attributes
-          .filter(attribute => !attribute.onlySupportsAggregation)
+          .filter(attribute => !attribute.onlySupportsGrouping)
           .map(attribute => this.specBuilder.attributeSpecificationForKey(attribute.name))
       ),
       map(specsFromRequest => uniqBy(specsFromRequest, spec => spec.name))
@@ -205,11 +205,10 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private buildDefaultSeries(context: string): ExploreSeries {
-    const attributeKey = context === SPAN_SCOPE ? 'duration' : 'calls'; // Todo revisit this
-    const aggregation = context === SPAN_SCOPE ? MetricAggregationType.Average : MetricAggregationType.Count;
+    const attributeKey = context === SPAN_SCOPE ? 'spans' : 'calls';
 
     return {
-      specification: this.exploreSpecBuilder.exploreSpecificationForKey(attributeKey, aggregation),
+      specification: this.exploreSpecBuilder.exploreSpecificationForKey(attributeKey, MetricAggregationType.Count),
       visualizationOptions: {
         type: CartesianSeriesVisualizationType.Column
       }
