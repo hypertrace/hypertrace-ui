@@ -1,11 +1,10 @@
 import { TimeRangeService } from '@hypertrace/common';
+import { PopoverService } from '@hypertrace/components';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
-import { PopoverService } from '@hypertrace/components';
-import { CartesianSelectedData } from '../../../../../../public-api';
-import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
+import { CartesianSelectedData, CartesianSeriesVisualizationType } from '../../../../../../public-api';
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
+import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
 
 describe('Cartesian Explorer Selection Handler Model', () => {
   const selectedData: CartesianSelectedData<unknown> = {
@@ -25,7 +24,7 @@ describe('Cartesian Explorer Selection Handler Model', () => {
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
-          type: 1,
+          type: CartesianSeriesVisualizationType.Column,
           stacking: false,
           hide: false
         },
@@ -42,55 +41,44 @@ describe('Cartesian Explorer Selection Handler Model', () => {
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
-          type: 1,
+          type: CartesianSeriesVisualizationType.Column,
           stacking: false,
           hide: false
         },
         location: { x: 138, y: 82.58120000000001 }
       }
     ],
-    location: { x: 452, y: 763 },
-    showContextMenu: true
-  };
-
-  const navigationUrl = {
-    navType: 'in-app',
-    path: '/explorer',
-    queryParams: {
-      filter: ['startTime_gte_1634669700000', 'endTime_lte_1634712900000'],
-      scope: 'endpoint-traces'
-    }
+    location: { x: 452, y: 763 }
   };
 
   const buildModel = createModelFactory({
     providers: [
-      mockProvider(TimeRangeService, {
-        toQueryParams: jest.fn().mockReturnValue(of(navigationUrl))
+      mockProvider(CartesainExplorerNavigationService, {
+        navigateToExplorer: jest.fn()
       }),
       mockProvider(PopoverService, {
         drawPopover: jest.fn()
-      }),
-      mockProvider(CartesainExplorerNavigationService, {
-        navigateToExplorer: jest.fn()
       })
     ]
-  });
-
-  test('calls showContextMenu with correct parameters', () => {
-    const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
-    const popoverService = spectator.get(PopoverService);
-
-    spectator.model.popover = popoverService.drawPopover(selectedData);
-    spectator.model.execute(selectedData);
-    expect(popoverService.drawPopover).toHaveBeenCalled();
   });
 
   test('calls navigate to explorer correct parameters', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
     const cartesainExplorerNavigationService = spectator.get(CartesainExplorerNavigationService);
 
-    selectedData.showContextMenu = false;
+    spectator.model.isContextMenuVisible = false;
+
     spectator.model.execute(selectedData);
     expect(cartesainExplorerNavigationService.navigateToExplorer).toHaveBeenCalled();
+  });
+
+  test('show context menu', () => {
+    const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
+    const popoverService = spectator.get(PopoverService);
+
+    spectator.model.isContextMenuVisible = true;
+
+    spectator.model.execute(selectedData);
+    expect(popoverService.drawPopover).toHaveBeenCalled();
   });
 });

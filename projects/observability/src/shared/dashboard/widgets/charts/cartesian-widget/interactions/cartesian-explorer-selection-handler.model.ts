@@ -5,30 +5,39 @@ import {
   PopoverRef,
   PopoverService
 } from '@hypertrace/components';
-import { Model } from '@hypertrace/hyperdash';
+import { BOOLEAN_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { CartesianSelectedData } from '../../../../../../public-api';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
-
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
+
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 
 @Model({
   type: 'cartesian-explorer-selection-handler'
 })
 export class CartesianExplorerSelectionHandlerModel<TData> implements InteractionHandler {
-  @ModelInject(PopoverService)
-  private readonly popoverService!: PopoverService;
-
   @ModelInject(CartesainExplorerNavigationService)
   private readonly cartesainExplorerNavigationService!: CartesainExplorerNavigationService;
 
+  @ModelInject(PopoverService)
+  private readonly popoverService!: PopoverService;
+
   public popover?: PopoverRef;
 
+  @ModelProperty({
+    key: 'show-context-menu',
+    displayName: 'Show Context Menu',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public isContextMenuVisible: boolean = true;
+
   public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
-    if (selectionData.showContextMenu) {
+    if (this.isContextMenuVisible) {
       this.showContextMenu(selectionData);
+      this.popover?.closeOnBackdropClick();
+      this.popover?.closeOnPopoverContentClick();
     } else {
       this.cartesainExplorerNavigationService.navigateToExplorer(
         selectionData.timeRange.startTime,
@@ -39,7 +48,7 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
     return of();
   }
 
-  private showContextMenu(selectionData: CartesianSelectedData<TData>): void {
+  public showContextMenu(selectionData: CartesianSelectedData<TData>): void {
     this.popover = this.popoverService.drawPopover({
       componentOrTemplate: CartesianExplorerContextMenuComponent,
       data: selectionData,
@@ -50,7 +59,5 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
       },
       backdrop: PopoverBackdrop.Transparent
     });
-    this.popover.closeOnBackdropClick();
-    this.popover.closeOnPopoverContentClick();
   }
 }
