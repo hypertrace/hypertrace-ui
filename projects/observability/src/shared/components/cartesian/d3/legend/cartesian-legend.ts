@@ -1,5 +1,5 @@
 import { ComponentRef, Injector } from '@angular/core';
-import { DynamicComponentService } from '@hypertrace/common';
+import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
 import { Observable, of, Subject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
@@ -122,13 +122,23 @@ export class CartesianLegend {
       .text(series => series.name)
       .on('click', series => this.updateActiveSeries(series));
 
-    this.updateLegendTextClasses();
+    this.updateLegendClassesAndStyle();
 
     return legendEntry;
   }
 
-  private updateLegendTextClasses(): void {
-    select(this.legendElement!)
+  private updateLegendClassesAndStyle(): void {
+    const legendElementSelection = select(this.legendElement!);
+
+    // Legend entry symbol
+    legendElementSelection
+      .selectAll('.legend-symbol circle')
+      .style('fill', series =>
+        !this.isThisLegendEntryActive(series as Series<{}>) ? Color.Gray3 : (series as Series<{}>).color
+      );
+
+    // Legend entry value text
+    legendElementSelection
       .selectAll('span.legend-text')
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, this.isDefault)
       .classed(
@@ -187,7 +197,7 @@ export class CartesianLegend {
   private resetToDefault(): void {
     this.activeSeries = [...this.initialSeries];
     this.isDefault = true;
-    this.updateLegendTextClasses();
+    this.updateLegendClassesAndStyle();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
@@ -204,7 +214,7 @@ export class CartesianLegend {
         this.activeSeries.push(seriesEntry);
       }
     }
-    this.updateLegendTextClasses();
+    this.updateLegendClassesAndStyle();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
