@@ -1,5 +1,5 @@
 import { ComponentRef, Injector } from '@angular/core';
-import { DynamicComponentService } from '@hypertrace/common';
+import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
 import { isNil } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
@@ -165,12 +165,13 @@ export class CartesianLegend {
       .text(series => (!this.isGrouped ? series.name : series.assignedGroup!.groupName))
       .on('click', series => this.updateActiveSeries([series]));
 
-    this.updateLegendClasses();
+    this.updateLegendClassesAndStyle();
 
     return legendEntry;
   }
 
-  private updateLegendClasses(): void {
+  private updateLegendClassesAndStyle(): void {
+    const legendElementSelection = select(this.legendElement!);
     if (this.isGrouped) {
       // Legend entries
       select(this.legendElement!)
@@ -187,8 +188,15 @@ export class CartesianLegend {
         );
     }
 
+    // Legend entry symbol
+    legendElementSelection
+      .selectAll('.legend-symbol circle')
+      .style('fill', series =>
+        !this.isThisLegendEntryActive(series as Series<{}>) ? Color.Gray3 : (series as Series<{}>).color
+      );
+
     // Legend entry value text
-    select(this.legendElement!)
+    legendElementSelection
       .selectAll('span.legend-text')
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, this.isDefault)
       .classed(
@@ -247,7 +255,7 @@ export class CartesianLegend {
   private resetToDefault(): void {
     this.activeSeries = [...this.initialSeries];
     this.isDefault = true;
-    this.updateLegendClasses();
+    this.updateLegendClassesAndStyle();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
@@ -292,7 +300,7 @@ export class CartesianLegend {
         }
       });
     }
-    this.updateLegendClasses();
+    this.updateLegendClassesAndStyle();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
