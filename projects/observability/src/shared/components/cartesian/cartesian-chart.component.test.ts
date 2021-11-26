@@ -213,9 +213,14 @@ describe('Cartesian Chart component', () => {
     expect(chart.query('.group-1')).toExist();
     expect(chart.query('.reset.hidden')).toExist();
 
-    chart.click(chart.query('.legend-entries-title') as Element);
+    const legendEntriesTitleElement = chart.query('.legend-entries-title') as Element;
+    chart.click(legendEntriesTitleElement);
     tick();
     expect(chart.queryAll('.legend-text.active').length).toBe(2);
+
+    chart.click(legendEntriesTitleElement);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(0);
 
     const legendEntryTexts = chart.queryAll('.legend-text');
     chart.click(legendEntryTexts[0]);
@@ -226,6 +231,10 @@ describe('Cartesian Chart component', () => {
     chart.click(chart.query('.reset') as Element);
     tick();
     expect(chart.query('.reset.hidden')).toExist();
+
+    chart.click(legendEntryTexts[0]);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
   }));
 
   test('should render column chart', fakeAsync(() => {
