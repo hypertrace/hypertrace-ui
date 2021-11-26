@@ -185,6 +185,11 @@ describe('Cartesian Chart component', () => {
           name: 'test series 1',
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
+          assignedGroup: {
+            id: 1,
+            groupName: 'first',
+            specName: 'sum(foo)'
+          },
           stacking: true
         },
         {
@@ -192,6 +197,11 @@ describe('Cartesian Chart component', () => {
           name: 'test series 2',
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
+          assignedGroup: {
+            id: 1,
+            groupName: 'first',
+            specName: 'sum(foo)'
+          },
           stacking: true
         }
       ],
@@ -200,11 +210,17 @@ describe('Cartesian Chart component', () => {
     tick();
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
     expect(chart.queryAll('.legend-entry').length).toBe(2);
+    expect(chart.query('.group-1')).toExist();
     expect(chart.query('.reset.hidden')).toExist();
+
+    chart.click(chart.query('.legend-entries-title') as Element);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(2);
 
     const legendEntryTexts = chart.queryAll('.legend-text');
     chart.click(legendEntryTexts[0]);
     tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
     expect(chart.query('.reset.hidden')).not.toExist();
 
     chart.click(chart.query('.reset') as Element);
