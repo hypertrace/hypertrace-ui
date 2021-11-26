@@ -194,6 +194,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   private getGroupId(groupName: string, index: number): number {
     if (this.allGroups.length === 0 || !this.allGroups.includes(groupName)) {
       this.allGroups.push(groupName);
+
       return 1;
     }
 

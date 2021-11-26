@@ -1,7 +1,7 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 import { Observable, of, Subject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
@@ -28,7 +28,7 @@ export class CartesianLegend {
   private readonly numberOfgroups: number;
 
   private isDefault: boolean = true;
-  private isGrouped: boolean = true;
+  private readonly isGrouped: boolean = true;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<{}>[];
   private intervalControl?: ComponentRef<unknown>;
@@ -40,7 +40,6 @@ export class CartesianLegend {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = []
   ) {
-    // TODO (Sandeep): Create initialization method instead
     this.numberOfgroups =
       this.series.length === 0 || isNil(this.series[0].assignedGroup)
         ? 0
@@ -113,8 +112,8 @@ export class CartesianLegend {
         .enter()
         .append('div')
         .attr('class', seriesGroup => `legend-entries group-${seriesGroup[0].assignedGroup!.id}`)
-        .each((seriesGroup, index, elements) => {
-          const legendEntriesSelection = select(elements[index]);
+        .each((seriesGroup, id, elems) => {
+          const legendEntriesSelection = select(elems[id]);
 
           legendEntriesSelection
             .selectAll('.legend-entries-title')
@@ -163,7 +162,7 @@ export class CartesianLegend {
       .append('span')
       .classed('legend-text', true)
       .text(series => (!this.isGrouped ? series.name : series.assignedGroup!.groupName))
-      .on('click', series => this.updateActiveSeries([series]));
+      .on('click', series => this.updateActiveSeries(series));
 
     this.updateLegendClassesAndStyle();
 
@@ -286,19 +285,32 @@ export class CartesianLegend {
     return groupedSeries;
   }
 
-  private updateActiveSeries(seriesEntries: Series<{}>[]): void {
-    if (this.isDefault) {
-      this.activeSeries = [];
-      this.activeSeries.push(...seriesEntries);
-      this.isDefault = false;
-    } else {
-      seriesEntries.forEach(seriesEntry => {
-        if (this.isThisLegendEntryActive(seriesEntry)) {
-          this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
+  private updateActiveSeries(series: Series<{}> | Series<{}>[]): void {
+    if (series instanceof Array) {
+      if (this.isDefault) {
+        this.activeSeries = [];
+        this.activeSeries.push(...series);
+        this.isDefault = false;
+      } else {
+        if (!this.isThisLegendSeriesGroupActive(series)) {
+          this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
+          this.activeSeries.push(...series);
         } else {
-          this.activeSeries.push(seriesEntry);
+          this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
         }
-      });
+      }
+    } else {
+      if (this.isDefault) {
+        this.activeSeries = [];
+        this.activeSeries.push(series);
+        this.isDefault = false;
+      } else {
+        if (this.isThisLegendEntryActive(series)) {
+          this.activeSeries = this.activeSeries.filter(seriesEntry => series !== seriesEntry);
+        } else {
+          this.activeSeries.push(series);
+        }
+      }
     }
     this.updateLegendClassesAndStyle();
     this.setResetVisibility(this.isDefault);
