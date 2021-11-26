@@ -26,11 +26,18 @@ export interface Series<TInterval> {
   // Override the default color string using a method that takes data point as input
   getColor?(datum?: TInterval): string;
   name: string;
+  assignedGroup?: AssignedGroup;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
   getTooltipTitle?(datum: TInterval): string;
+}
+
+export interface AssignedGroup {
+  id: number;
+  specName: string;
+  groupName: string;
 }
 
 export interface Band<TInterval> {

@@ -55,6 +55,7 @@
     width: 100%;
     position: absolute;
     min-height: 48px;
+    padding-bottom: 20px;
 
     &.position-none {
       display: none;
@@ -150,6 +151,39 @@
 
       &:hover {
         color: $blue-6;
+      }
+    }
+
+    &.grouped {
+      flex-direction: column;
+      gap: 12px;
+
+      .legend-entries {
+        flex-direction: row;
+        display: grid;
+        grid-template-columns: 200px auto;
+        gap: 20px;
+        border: 1px solid $gray-2;
+        border-radius: 8px;
+        padding: 8px 20px;
+
+        &.active {
+          border-color: $blue-5;
+        }
+
+        .legend-entries-title {
+          @include body-1-regular($gray-5);
+          cursor: pointer;
+
+          &.active {
+            color: $blue-5;
+          }
+        }
+
+        .legend-entry-values {
+          display: flex;
+          flex-wrap: wrap;
+        }
       }
     }
 

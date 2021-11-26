@@ -1,6 +1,7 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
+import { isNil } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
@@ -23,8 +24,11 @@ export class CartesianLegend {
   public readonly activeSeries$: Observable<Series<{}>[]>;
   private readonly activeSeriesSubject: Subject<void> = new Subject();
   private readonly initialSeries: Series<{}>[];
+  private readonly groupedSeries: Series<{}>[][];
+  private readonly numberOfgroups: number;
 
   private isDefault: boolean = true;
+  private isGrouped: boolean = true;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<{}>[];
   private intervalControl?: ComponentRef<unknown>;
@@ -36,6 +40,14 @@ export class CartesianLegend {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = []
   ) {
+    // TODO (Sandeep): Create initialization method instead
+    this.numberOfgroups =
+      this.series.length === 0 || isNil(this.series[0].assignedGroup)
+        ? 0
+        : this.series[this.series.length - 1].assignedGroup!.id;
+    this.isGrouped = this.numberOfgroups !== 0;
+    this.groupedSeries = this.getGroupedSeries();
+
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
     this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(
@@ -85,13 +97,43 @@ export class CartesianLegend {
   }
 
   private drawLegendEntries(container: ContainerElement): void {
-    select(container)
-      .append('div')
-      .classed('legend-entries', true)
-      .selectAll('.legend-entry')
-      .data(this.series.filter(series => !series.hide))
-      .enter()
-      .each((_, index, elements) => this.drawLegendEntry(elements[index]));
+    const containerSelection = select(container);
+    if (!this.isGrouped) {
+      containerSelection
+        .append('div')
+        .classed('legend-entries', true)
+        .selectAll('.legend-entry')
+        .data(this.series.filter(series => !series.hide))
+        .enter()
+        .each((_, index, elements) => this.drawLegendEntry(elements[index]));
+    } else {
+      containerSelection
+        .selectAll('.legend-entries')
+        .data(this.groupedSeries)
+        .enter()
+        .append('div')
+        .attr('class', seriesGroup => `legend-entries group-${seriesGroup[0].assignedGroup!.id}`)
+        .each((seriesGroup, index, elements) => {
+          const legendEntriesSelection = select(elements[index]);
+
+          legendEntriesSelection
+            .selectAll('.legend-entries-title')
+            .data([seriesGroup])
+            .enter()
+            .append('div')
+            .classed('legend-entries-title', true)
+            .text(group => `${group[0].assignedGroup!.specName}:`)
+            .on('click', () => this.updateActiveSeries(seriesGroup));
+
+          legendEntriesSelection
+            .append('div')
+            .classed('legend-entry-values', true)
+            .selectAll('.legend-entry')
+            .data(seriesGroup)
+            .enter()
+            .each((_, index, elements) => this.drawLegendEntry(elements[index]));
+        });
+    }
   }
 
   private drawLegendContainer(
@@ -109,7 +151,8 @@ export class CartesianLegend {
     return select(hostElement)
       .append('div')
       .classed(CartesianLegend.CSS_CLASS, true)
-      .classed(`position-${legendPosition}`, true);
+      .classed(`position-${legendPosition}`, true)
+      .classed('grouped', this.isGrouped);
   }
 
   private drawLegendEntry(element: EnterElement): Selection<HTMLDivElement, Series<{}>, null, undefined> {
@@ -119,15 +162,32 @@ export class CartesianLegend {
     legendEntry
       .append('span')
       .classed('legend-text', true)
-      .text(series => series.name)
-      .on('click', series => this.updateActiveSeries(series));
+      .text(series => (!this.isGrouped ? series.name : series.assignedGroup!.groupName))
+      .on('click', series => this.updateActiveSeries([series]));
 
-    this.updateLegendTextClasses();
+    this.updateLegendClasses();
 
     return legendEntry;
   }
 
-  private updateLegendTextClasses(): void {
+  private updateLegendClasses(): void {
+    if (this.isGrouped) {
+      // Legend entries
+      select(this.legendElement!)
+        .selectAll('.legend-entries')
+        .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
+          this.isThisLegendSeriesGroupActive(seriesGroup as Series<{}>[])
+        );
+
+      // Legend entry title
+      select(this.legendElement!)
+        .selectAll('.legend-entries-title')
+        .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
+          this.isThisLegendSeriesGroupActive(seriesGroup as Series<{}>[])
+        );
+    }
+
+    // Legend entry value text
     select(this.legendElement!)
       .selectAll('span.legend-text')
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, this.isDefault)
@@ -187,29 +247,61 @@ export class CartesianLegend {
   private resetToDefault(): void {
     this.activeSeries = [...this.initialSeries];
     this.isDefault = true;
-    this.updateLegendTextClasses();
+    this.updateLegendClasses();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
 
-  private updateActiveSeries(seriesEntry: Series<{}>): void {
+  private getGroupedSeries(): Series<{}>[][] {
+    if (!this.isGrouped) {
+      return [];
+    }
+
+    const nonHiddenSeries = this.series.filter(series => !series.hide);
+    const groupedSeries: Series<{}>[][] = [];
+    const currentGroup: Series<{}>[] = [];
+
+    nonHiddenSeries.forEach(seriesEntry => {
+      if (
+        currentGroup.length === 0 ||
+        currentGroup[currentGroup.length - 1].assignedGroup!.id === seriesEntry.assignedGroup!.id
+      ) {
+        currentGroup.push(seriesEntry);
+      } else {
+        groupedSeries.push([...currentGroup]);
+        currentGroup.length = 0;
+        currentGroup.push(seriesEntry);
+      }
+    });
+    groupedSeries.push([...currentGroup]);
+
+    return groupedSeries;
+  }
+
+  private updateActiveSeries(seriesEntries: Series<{}>[]): void {
     if (this.isDefault) {
       this.activeSeries = [];
-      this.activeSeries.push(seriesEntry);
+      this.activeSeries.push(...seriesEntries);
       this.isDefault = false;
     } else {
-      if (this.isThisLegendEntryActive(seriesEntry)) {
-        this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
-      } else {
-        this.activeSeries.push(seriesEntry);
-      }
+      seriesEntries.forEach(seriesEntry => {
+        if (this.isThisLegendEntryActive(seriesEntry)) {
+          this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
+        } else {
+          this.activeSeries.push(seriesEntry);
+        }
+      });
     }
-    this.updateLegendTextClasses();
+    this.updateLegendClasses();
     this.setResetVisibility(this.isDefault);
     this.activeSeriesSubject.next();
   }
 
   private isThisLegendEntryActive(seriesEntry: Series<{}>): boolean {
     return this.activeSeries.includes(seriesEntry);
+  }
+
+  private isThisLegendSeriesGroupActive(seriesGroup: Series<{}>[]): boolean {
+    return this.isDefault ? false : seriesGroup.every(series => this.activeSeries.includes(series));
   }
 }
