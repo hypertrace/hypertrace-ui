@@ -1,3 +1,4 @@
+//
 import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { Model } from '@hypertrace/hyperdash';
@@ -295,7 +296,12 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              assignedGroup: {
+                id: 1,
+                groupName: 'first',
+                specName: 'sum(foo)'
+              }
             },
             {
               color: 'second color',
@@ -314,7 +320,12 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 25
                 }
-              ]
+              ],
+              assignedGroup: {
+                id: 1,
+                groupName: 'second',
+                specName: 'sum(foo)'
+              }
             }
           ],
           bands: []
