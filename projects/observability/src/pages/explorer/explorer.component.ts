@@ -304,8 +304,6 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
-  visualizationExpanded?: boolean;
-  resultsExpanded?: boolean;
 }
 
 interface ExplorerContextScope {
