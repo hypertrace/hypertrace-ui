@@ -112,27 +112,28 @@ export class CartesianLegend {
         .enter()
         .append('div')
         .attr('class', seriesGroup => `legend-entries group-${seriesGroup[0].assignedGroup!.id}`)
-        .each((seriesGroup, id, elems) => {
-          const legendEntriesSelection = select(elems[id]);
-
-          legendEntriesSelection
-            .selectAll('.legend-entries-title')
-            .data([seriesGroup])
-            .enter()
-            .append('div')
-            .classed('legend-entries-title', true)
-            .text(group => `${group[0].assignedGroup!.specName}:`)
-            .on('click', () => this.updateActiveSeries(seriesGroup));
-
-          legendEntriesSelection
-            .append('div')
-            .classed('legend-entry-values', true)
-            .selectAll('.legend-entry')
-            .data(seriesGroup)
-            .enter()
-            .each((_, index, elements) => this.drawLegendEntry(elements[index]));
-        });
+        .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
     }
+  }
+
+  private drawLegendEntriesTitleAndValues(seriesGroup: Series<{}>[], element: HTMLDivElement): void {
+    const legendEntriesSelection = select(element);
+    legendEntriesSelection
+      .selectAll('.legend-entries-title')
+      .data([seriesGroup])
+      .enter()
+      .append('div')
+      .classed('legend-entries-title', true)
+      .text(group => `${group[0].name}:`)
+      .on('click', () => this.updateActiveSeries(seriesGroup));
+
+    legendEntriesSelection
+      .append('div')
+      .classed('legend-entry-values', true)
+      .selectAll('.legend-entry')
+      .data(seriesGroup)
+      .enter()
+      .each((_, index, elements) => this.drawLegendEntry(elements[index]));
   }
 
   private drawLegendContainer(

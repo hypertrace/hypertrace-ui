@@ -36,7 +36,6 @@ export interface Series<TInterval> {
 
 export interface AssignedGroup {
   id: number;
-  specName: string;
   groupName: string;
 }
 
