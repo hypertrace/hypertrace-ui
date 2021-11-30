@@ -10,7 +10,7 @@ import {
 import { Filter, ToggleItem } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreRequestState,
@@ -53,7 +53,11 @@ import {
         (filtersChange)="this.onFiltersUpdated($event)"
       ></ht-filter-bar>
       <div class="explorer-content">
-        <ht-panel class="visualization-panel" [(expanded)]="this.visualizationExpanded">
+        <ht-panel
+          class="visualization-panel"
+          [expanded]="this.visualizationExpanded"
+          (expandedChange)="this.onVisualizationExpandedChange($event)"
+        >
           <ht-panel-header>
             <ht-panel-title [expanded]="this.visualizationExpanded"
               ><span class="panel-title">Visualization</span></ht-panel-title
@@ -83,7 +87,11 @@ import {
           </ht-panel-body>
         </ht-panel>
 
-        <ht-panel class="results-panel" [(expanded)]="this.resultsExpanded">
+        <ht-panel
+          class="results-panel"
+          [expanded]="this.resultsExpanded"
+          (expandedChange)="this.onResultsExpandedChange($event)"
+        >
           <ht-panel-header>
             <ht-panel-title [expanded]="this.resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
           </ht-panel-header>
@@ -146,7 +154,16 @@ export class ExplorerComponent {
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
     this.initialState$ = activatedRoute.queryParamMap.pipe(
       take(1),
-      map(paramMap => this.mapToInitialState(paramMap))
+      map(paramMap => this.mapToInitialState(paramMap)),
+      tap(initialState => {
+        // Updating initial visualization and results expanded state
+        this.visualizationExpanded = initialState.visualizationExpanded ?? true;
+        this.resultsExpanded = initialState.resultsExpanded ?? true;
+        this.navigationService.addQueryParametersToUrl({
+          [ExplorerQueryParam.VisualizationExpanded]: this.visualizationExpanded,
+          [ExplorerQueryParam.ResultsExpanded]: this.resultsExpanded
+        });
+      })
     );
     this.currentContext$ = concat(
       this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
@@ -181,6 +198,20 @@ export class ExplorerComponent {
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
     this.attributes$ = this.metadataService.getFilterAttributes(contextWrapper.dashboardContext);
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
+  }
+
+  public onVisualizationExpandedChange(expanded: boolean): void {
+    this.visualizationExpanded = expanded;
+    this.navigationService.addQueryParametersToUrl({
+      [ExplorerQueryParam.VisualizationExpanded]: expanded
+    });
+  }
+
+  public onResultsExpandedChange(expanded: boolean): void {
+    this.resultsExpanded = expanded;
+    this.navigationService.addQueryParametersToUrl({
+      [ExplorerQueryParam.ResultsExpanded]: expanded
+    });
   }
 
   private updateUrlWithVisualizationData(request: ExploreRequestState): void {
@@ -222,8 +253,14 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series))
+      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series)),
+      visualizationExpanded: this.getBooleanOrUndefined(param.get(ExplorerQueryParam.VisualizationExpanded)),
+      resultsExpanded: this.getBooleanOrUndefined(param.get(ExplorerQueryParam.ResultsExpanded))
     };
+  }
+
+  private getBooleanOrUndefined(value: string | null): boolean | undefined {
+    return !isNil(value) ? value === 'true' : undefined;
   }
 
   private encodeInterval(interval?: TimeDuration | 'AUTO'): string | undefined {
@@ -281,6 +318,8 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
+  visualizationExpanded?: boolean;
+  resultsExpanded?: boolean;
 }
 
 interface ExplorerContextScope {
@@ -298,5 +337,7 @@ const enum ExplorerQueryParam {
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
-  Series = 'series'
+  Series = 'series',
+  VisualizationExpanded = 'visualization-expanded',
+  ResultsExpanded = 'results-expanded'
 }
