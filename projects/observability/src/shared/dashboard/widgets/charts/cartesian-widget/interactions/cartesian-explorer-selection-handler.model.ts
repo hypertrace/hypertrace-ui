@@ -31,11 +31,11 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
     displayName: 'Show Context Menu',
     type: BOOLEAN_PROPERTY.type
   })
-  public isContextMenuVisible: boolean = true;
+  public showContextMenu: boolean = true;
 
   public execute(selectionData: CartesianSelectedData<TData>): Observable<void> {
-    if (this.isContextMenuVisible) {
-      this.showContextMenu(selectionData);
+    if (this.showContextMenu) {
+      this.showContextMenuList(selectionData);
       this.popover?.closeOnBackdropClick();
       this.popover?.closeOnPopoverContentClick();
     } else {
@@ -48,7 +48,7 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
     return of();
   }
 
-  public showContextMenu(selectionData: CartesianSelectedData<TData>): void {
+  public showContextMenuList(selectionData: CartesianSelectedData<TData>): void {
     this.popover = this.popoverService.drawPopover({
       componentOrTemplate: CartesianExplorerContextMenuComponent,
       data: selectionData,
