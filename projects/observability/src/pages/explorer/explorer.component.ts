@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
   assertUnreachable,
   NavigationService,
+  PreferenceService,
   QueryParamObject,
   TimeDuration,
   TimeDurationService
@@ -10,7 +11,7 @@ import {
 import { Filter, ToggleItem } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreRequestState,
@@ -54,12 +55,13 @@ import {
       ></ht-filter-bar>
       <div class="explorer-content">
         <ht-panel
+          *htLetAsync="this.visualizationExpanded$ as visualizationExpanded"
           class="visualization-panel"
-          [expanded]="this.visualizationExpanded"
+          [expanded]="visualizationExpanded"
           (expandedChange)="this.onVisualizationExpandedChange($event)"
         >
           <ht-panel-header>
-            <ht-panel-title [expanded]="this.visualizationExpanded"
+            <ht-panel-title [expanded]="visualizationExpanded"
               ><span class="panel-title">Visualization</span></ht-panel-title
             >
           </ht-panel-header>
@@ -88,12 +90,13 @@ import {
         </ht-panel>
 
         <ht-panel
+          *htLetAsync="this.resultsExpanded$ as resultsExpanded"
           class="results-panel"
-          [expanded]="this.resultsExpanded"
+          [expanded]="resultsExpanded"
           (expandedChange)="this.onResultsExpandedChange($event)"
         >
           <ht-panel-header>
-            <ht-panel-title [expanded]="this.resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
+            <ht-panel-title [expanded]="resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
           </ht-panel-header>
           <ht-panel-body>
             <ht-application-aware-dashboard
@@ -111,6 +114,8 @@ import {
   `
 })
 export class ExplorerComponent {
+  private static readonly VISUALIZATION_EXPANDED_PREFERENCE: string = 'explorer.visualizationExpanded';
+  private static readonly RESULTS_EXPANDED_PREFERENCE: string = 'explorer.resultsExpanded';
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
@@ -136,9 +141,8 @@ export class ExplorerComponent {
   ];
 
   public filters: Filter[] = [];
-
-  public visualizationExpanded: boolean = true;
-  public resultsExpanded: boolean = true;
+  public visualizationExpanded$: Observable<boolean>;
+  public resultsExpanded$: Observable<boolean>;
 
   private readonly contextChangeSubject: Subject<ExplorerGeneratedDashboardContext> = new Subject();
 
@@ -146,24 +150,18 @@ export class ExplorerComponent {
     private readonly metadataService: MetadataService,
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
+    private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
+    this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
+    this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
     this.initialState$ = activatedRoute.queryParamMap.pipe(
       take(1),
-      map(paramMap => this.mapToInitialState(paramMap)),
-      tap(initialState => {
-        // Updating initial visualization and results expanded state
-        this.visualizationExpanded = initialState.visualizationExpanded ?? true;
-        this.resultsExpanded = initialState.resultsExpanded ?? true;
-        this.navigationService.addQueryParametersToUrl({
-          [ExplorerQueryParam.VisualizationExpanded]: this.visualizationExpanded,
-          [ExplorerQueryParam.ResultsExpanded]: this.resultsExpanded
-        });
-      })
+      map(paramMap => this.mapToInitialState(paramMap))
     );
     this.currentContext$ = concat(
       this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
@@ -201,17 +199,11 @@ export class ExplorerComponent {
   }
 
   public onVisualizationExpandedChange(expanded: boolean): void {
-    this.visualizationExpanded = expanded;
-    this.navigationService.addQueryParametersToUrl({
-      [ExplorerQueryParam.VisualizationExpanded]: expanded
-    });
+    this.preferenceService.set(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, expanded);
   }
 
   public onResultsExpandedChange(expanded: boolean): void {
-    this.resultsExpanded = expanded;
-    this.navigationService.addQueryParametersToUrl({
-      [ExplorerQueryParam.ResultsExpanded]: expanded
-    });
+    this.preferenceService.set(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, expanded);
   }
 
   private updateUrlWithVisualizationData(request: ExploreRequestState): void {
@@ -253,14 +245,8 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series)),
-      visualizationExpanded: this.getBooleanOrUndefined(param.get(ExplorerQueryParam.VisualizationExpanded)),
-      resultsExpanded: this.getBooleanOrUndefined(param.get(ExplorerQueryParam.ResultsExpanded))
+      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series))
     };
-  }
-
-  private getBooleanOrUndefined(value: string | null): boolean | undefined {
-    return !isNil(value) ? value === 'true' : undefined;
   }
 
   private encodeInterval(interval?: TimeDuration | 'AUTO'): string | undefined {
@@ -337,7 +323,5 @@ const enum ExplorerQueryParam {
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
-  Series = 'series',
-  VisualizationExpanded = 'visualization-expanded',
-  ResultsExpanded = 'results-expanded'
+  Series = 'series'
 }
