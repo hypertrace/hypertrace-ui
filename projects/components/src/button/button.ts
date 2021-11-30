@@ -26,3 +26,8 @@ export const enum ButtonStyle {
   Text = 'text', //               No                    No                    Yes               No          Yes
   PlainText = 'plain-text' //     No                    No                    Yes               No           No
 }
+
+export const enum ButtonType {
+  Button = 'button',
+  Submit = 'submit'
+}
