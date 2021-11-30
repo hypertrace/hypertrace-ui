@@ -8,6 +8,7 @@ import {
   DEFAULT_COLOR_PALETTE,
   LayoutChangeService,
   NavigationService,
+  PreferenceService,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
@@ -102,6 +103,9 @@ describe('Explorer component', () => {
           colors: ['black', 'white']
         }
       },
+      mockProvider(PreferenceService, {
+        get: jest.fn().mockReturnValue(of(true))
+      }),
       ...getMockFlexLayoutProviders()
     ]
   });
