@@ -187,8 +187,7 @@ describe('Cartesian Chart component', () => {
           type: CartesianSeriesVisualizationType.Column,
           assignedGroup: {
             id: 1,
-            groupName: 'first',
-            specName: 'sum(foo)'
+            groupName: 'first'
           },
           stacking: true
         },
@@ -199,8 +198,7 @@ describe('Cartesian Chart component', () => {
           type: CartesianSeriesVisualizationType.Column,
           assignedGroup: {
             id: 1,
-            groupName: 'first',
-            specName: 'sum(foo)'
+            groupName: 'first'
           },
           stacking: true
         }

@@ -303,7 +303,7 @@ describe('Explorer Visualization cartesian data source model', () => {
           series: [
             {
               color: 'first color',
-              name: 'sum(foo): first',
+              name: 'sum(foo)',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -321,13 +321,12 @@ describe('Explorer Visualization cartesian data source model', () => {
               ],
               assignedGroup: {
                 id: 1,
-                groupName: 'first',
-                specName: 'sum(foo)'
+                groupName: 'first'
               }
             },
             {
               color: 'second color',
-              name: 'sum(foo): second',
+              name: 'sum(foo)',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -345,8 +344,7 @@ describe('Explorer Visualization cartesian data source model', () => {
               ],
               assignedGroup: {
                 id: 1,
-                groupName: 'second',
-                specName: 'sum(foo)'
+                groupName: 'second'
               }
             }
           ],
