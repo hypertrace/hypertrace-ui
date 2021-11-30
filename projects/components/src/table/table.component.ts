@@ -153,6 +153,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
+          [style.height]="this.rowHeight"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
@@ -279,6 +280,9 @@ export class TableComponent
 
   @Input()
   public loadingConfig?: LoadAsyncConfig;
+
+  @Input()
+  public rowHeight: string = '44px';
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();

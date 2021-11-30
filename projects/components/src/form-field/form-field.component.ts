@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -18,8 +19,21 @@ import { IconSize } from '../icon/icon-size';
           [htTooltip]="this.iconTooltip"
         ></ht-icon>
       </div>
-      <ng-content></ng-content>
-      <ht-label *ngIf="!this.isOptional" class="error-message" [label]="this.errorLabel"></ht-label>
+      <div class="content" [ngClass]="{ 'error-border': this.showFormError && this.errorLabel }">
+        <ng-content></ng-content>
+      </div>
+      <!-- For Backward Compatibility: Start -->
+      <ht-label
+        *ngIf="!this.isOptional && this.showFormError === undefined"
+        class="error-message"
+        [label]="this.errorLabel"
+      ></ht-label>
+      <!-- For Backward Compatibility: End -->
+
+      <div class="error" *ngIf="this.showFormError && this.errorLabel">
+        <ht-icon icon="${IconType.Error}" size="${IconSize.Small}"></ht-icon>
+        <ht-label class="error-label" [label]="this.errorLabel"></ht-label>
+      </div>
     </section>
   `
 })
@@ -41,4 +55,7 @@ export class FormFieldComponent {
 
   @Input()
   public errorLabel?: string = '';
+
+  @Input()
+  public showFormError?: boolean = true;
 }

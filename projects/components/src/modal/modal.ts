@@ -36,7 +36,7 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
     case ModalSize.Large:
       return getModalDimensionObject(640, 720);
     case ModalSize.LargeTall:
-      return getModalDimensionObject(640, 800);
+      return getModalDimensionObject(640, '90vh');
     case ModalSize.MediumWide:
       return getModalDimensionObject(840, 600);
     default:
@@ -44,7 +44,10 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
   }
 };
 
-const getModalDimensionObject = (width: number, height: number): ModalDimension => ({ width: width, height: height });
+const getModalDimensionObject = (width: number | string, height: number | string): ModalDimension => ({
+  width: width,
+  height: height
+});
 
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
 

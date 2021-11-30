@@ -54,4 +54,32 @@ describe('Form Field Component', () => {
     expect(labels[0].label).toEqual('Label');
     expect(labels[1].label).toEqual('(Optional)');
   });
+
+  test('should show error when showFormError and errorLabel is present', () => {
+    const spectator = hostFactory(
+      `
+    <ht-form-field [label]="label" [showFormError]="showFormError" [errorLabel]="errorLabel">
+    </ht-form-field>`,
+      {
+        hostProps: {
+          label: 'Label',
+          errorLabel: 'Invalid Form element',
+          showFormError: true
+        }
+      }
+    );
+
+    expect(spectator.query('.error')).toExist();
+
+    const labels = spectator.queryAll(LabelComponent);
+    expect(labels[0].label).toEqual('Label');
+    // Error label is shown when showFormError is true
+    expect(labels[1].label).toEqual('Invalid Form element');
+
+    spectator.setHostInput({
+      showFormError: false
+    });
+
+    expect(spectator.query('.error')).not.toExist();
+  });
 });
