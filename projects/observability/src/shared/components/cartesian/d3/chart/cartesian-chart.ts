@@ -47,7 +47,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected chartBackgroundSvgElement?: SVGSVGElement;
   protected dataElement?: ContainerElement;
   protected mouseEventContainer?: SVGSVGElement;
-  protected legend?: CartesianLegend;
+  protected legend?: CartesianLegend<TData>;
   protected tooltip?: ChartTooltipRef<TData>;
   protected allSeriesData: CartesianData<TData, Series<TData>>[] = [];
   protected allCartesianData: CartesianData<TData, Series<TData> | Band<TData>>[] = [];
@@ -368,7 +368,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private drawLegend(): void {
     if (this.chartContainerElement) {
       if (this.legendPosition !== undefined && this.legendPosition !== LegendPosition.None) {
-        this.legend = new CartesianLegend(
+        this.legend = new CartesianLegend<TData>(
           this.activeSeries,
           this.injector,
           this.intervalData,
@@ -376,12 +376,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         ).draw(this.chartContainerElement, this.legendPosition);
         this.activeSeriesSubscription?.unsubscribe();
         this.activeSeriesSubscription = this.legend.activeSeries$.subscribe(activeSeries => {
-          this.activeSeries = activeSeries as Series<TData>[];
+          this.activeSeries = activeSeries;
           this.redrawVisualization();
         });
       } else {
         // The legend also contains the interval selector, so even without a legend we need to create an element for that
-        this.legend = new CartesianLegend([], this.injector, this.intervalData, this.seriesSummaries).draw(
+        this.legend = new CartesianLegend<TData>([], this.injector, this.intervalData, this.seriesSummaries).draw(
           this.chartContainerElement,
           LegendPosition.None
         );
