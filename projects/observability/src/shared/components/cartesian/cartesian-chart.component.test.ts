@@ -185,10 +185,7 @@ describe('Cartesian Chart component', () => {
           name: 'test series 1',
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
-          assignedGroup: {
-            id: 1,
-            groupName: 'first'
-          },
+          groupName: 'first',
           stacking: true
         },
         {
@@ -196,10 +193,7 @@ describe('Cartesian Chart component', () => {
           name: 'test series 2',
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
-          assignedGroup: {
-            id: 1,
-            groupName: 'first'
-          },
+          groupName: 'seond',
           stacking: true
         }
       ],
