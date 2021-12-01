@@ -376,7 +376,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         ).draw(this.chartContainerElement, this.legendPosition);
         this.activeSeriesSubscription?.unsubscribe();
         this.activeSeriesSubscription = this.legend.activeSeries$.subscribe(activeSeries => {
-          this.activeSeries = activeSeries as Series<TData>[];
+          this.activeSeries = activeSeries;
           this.redrawVisualization();
         });
       } else {

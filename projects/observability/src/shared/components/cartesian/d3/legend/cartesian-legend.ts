@@ -117,7 +117,7 @@ export class CartesianLegend<TData> {
       .append('span')
       .classed('legend-text', true)
       .text(series => series.name)
-      .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : null));
+      .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
     this.updateLegendClassesAndStyle();
 
@@ -125,7 +125,7 @@ export class CartesianLegend<TData> {
   }
 
   private updateLegendClassesAndStyle(): void {
-    const legendElementSelection = select<HTMLDivElement, Series<TData>>(this.legendElement!);
+    const legendElementSelection = select(this.legendElement!);
 
     // Legend entry symbol
     legendElementSelection
