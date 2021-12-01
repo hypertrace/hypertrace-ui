@@ -24,7 +24,7 @@ export class CartesianLegend {
   private readonly activeSeriesSubject: Subject<void> = new Subject();
   private readonly initialSeries: Series<{}>[];
 
-  private isDefault: boolean = true;
+  private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<{}>[];
   private intervalControl?: ComponentRef<unknown>;
@@ -75,9 +75,9 @@ export class CartesianLegend {
       .append('span')
       .classed(CartesianLegend.RESET_CSS_CLASS, true)
       .text('Reset')
-      .on('click', () => this.resetToDefault());
+      .on('click', () => this.makeSelectionModeOff());
 
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
   }
 
   private setResetVisibility(isHidden: boolean): void {
@@ -140,14 +140,14 @@ export class CartesianLegend {
     // Legend entry value text
     legendElementSelection
       .selectAll('span.legend-text')
-      .classed(CartesianLegend.DEFAULT_CSS_CLASS, this.isDefault)
+      .classed(CartesianLegend.DEFAULT_CSS_CLASS, !this.isSelectionModeOn)
       .classed(
         CartesianLegend.ACTIVE_CSS_CLASS,
-        series => !this.isDefault && this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<{}>)
       )
       .classed(
         CartesianLegend.INACTIVE_CSS_CLASS,
-        series => !this.isDefault && !this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<{}>)
       );
   }
 
@@ -194,19 +194,19 @@ export class CartesianLegend {
     );
   }
 
-  private resetToDefault(): void {
+  private makeSelectionModeOff(): void {
     this.activeSeries = [...this.initialSeries];
-    this.isDefault = true;
+    this.isSelectionModeOn = false;
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
     this.activeSeriesSubject.next();
   }
 
   private updateActiveSeries(seriesEntry: Series<{}>): void {
-    if (this.isDefault) {
+    if (!this.isSelectionModeOn) {
       this.activeSeries = [];
       this.activeSeries.push(seriesEntry);
-      this.isDefault = false;
+      this.isSelectionModeOn = true;
     } else {
       if (this.isThisLegendEntryActive(seriesEntry)) {
         this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
@@ -215,7 +215,7 @@ export class CartesianLegend {
       }
     }
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
     this.activeSeriesSubject.next();
   }
 
