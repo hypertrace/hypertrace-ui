@@ -281,10 +281,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     }
   }
 
-  private updateData(withLegend: boolean = true): void {
-    if (withLegend) {
-      this.drawLegend();
-    }
+  private updateData(): void {
+    this.drawLegend();
+    this.drawVisualizations();
+  }
+
+  private drawVisualizations(): void {
     this.buildVisualizations();
     this.drawChartBackground();
     this.drawAxes();
@@ -301,7 +303,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     );
     if (chartViz.nodes().length > 0) {
       chartViz.remove();
-      this.updateData(false);
+      this.drawVisualizations();
     }
   }
 

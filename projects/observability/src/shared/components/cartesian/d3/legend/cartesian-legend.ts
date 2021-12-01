@@ -27,8 +27,8 @@ export class CartesianLegend {
   private readonly groupedSeries: Series<{}>[][];
   private readonly numberOfgroups: number;
 
-  private isDefault: boolean = true;
   private readonly isGrouped: boolean = true;
+  private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<{}>[];
   private intervalControl?: ComponentRef<unknown>;
@@ -86,9 +86,9 @@ export class CartesianLegend {
       .append('span')
       .classed(CartesianLegend.RESET_CSS_CLASS, true)
       .text('Reset')
-      .on('click', () => this.resetToDefault());
+      .on('click', () => this.makeSelectionModeOff());
 
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
   }
 
   private setResetVisibility(isHidden: boolean): void {
@@ -198,14 +198,14 @@ export class CartesianLegend {
     // Legend entry value text
     legendElementSelection
       .selectAll('span.legend-text')
-      .classed(CartesianLegend.DEFAULT_CSS_CLASS, this.isDefault)
+      .classed(CartesianLegend.DEFAULT_CSS_CLASS, !this.isSelectionModeOn)
       .classed(
         CartesianLegend.ACTIVE_CSS_CLASS,
-        series => !this.isDefault && this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<{}>)
       )
       .classed(
         CartesianLegend.INACTIVE_CSS_CLASS,
-        series => !this.isDefault && !this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<{}>)
       );
   }
 
@@ -252,11 +252,11 @@ export class CartesianLegend {
     );
   }
 
-  private resetToDefault(): void {
+  private makeSelectionModeOff(): void {
     this.activeSeries = [...this.initialSeries];
-    this.isDefault = true;
+    this.isSelectionModeOn = false;
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
     this.activeSeriesSubject.next();
   }
 
@@ -288,10 +288,10 @@ export class CartesianLegend {
 
   private updateActiveSeries(series: Series<{}> | Series<{}>[]): void {
     if (series instanceof Array) {
-      if (this.isDefault) {
+      if (!this.isSelectionModeOn) {
         this.activeSeries = [];
         this.activeSeries.push(...series);
-        this.isDefault = false;
+        this.isSelectionModeOn = true;
       } else {
         if (!this.isThisLegendSeriesGroupActive(series)) {
           this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
@@ -301,10 +301,10 @@ export class CartesianLegend {
         }
       }
     } else {
-      if (this.isDefault) {
+      if (!this.isSelectionModeOn) {
         this.activeSeries = [];
         this.activeSeries.push(series);
-        this.isDefault = false;
+        this.isSelectionModeOn = true;
       } else {
         if (this.isThisLegendEntryActive(series)) {
           this.activeSeries = this.activeSeries.filter(seriesEntry => series !== seriesEntry);
@@ -314,7 +314,7 @@ export class CartesianLegend {
       }
     }
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(this.isDefault);
+    this.setResetVisibility(!this.isSelectionModeOn);
     this.activeSeriesSubject.next();
   }
 
@@ -323,6 +323,6 @@ export class CartesianLegend {
   }
 
   private isThisLegendSeriesGroupActive(seriesGroup: Series<{}>[]): boolean {
-    return this.isDefault ? false : seriesGroup.every(series => this.activeSeries.includes(series));
+    return !this.isSelectionModeOn ? false : seriesGroup.every(series => this.activeSeries.includes(series));
   }
 }
