@@ -319,10 +319,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 15
                 }
               ],
-              assignedGroup: {
-                id: 1,
-                groupName: 'first'
-              }
+              groupName: 'first'
             },
             {
               color: 'second color',
@@ -342,10 +339,7 @@ describe('Explorer Visualization cartesian data source model', () => {
                   value: 25
                 }
               ],
-              assignedGroup: {
-                id: 1,
-                groupName: 'second'
-              }
+              groupName: 'second'
             }
           ],
           bands: []
