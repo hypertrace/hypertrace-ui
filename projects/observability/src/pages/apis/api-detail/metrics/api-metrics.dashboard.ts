@@ -272,8 +272,7 @@ export const apiMetricsDashboard: DashboardDefaultConfiguration = {
               }
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': true
+              type: 'cartesian-explorer-selection-handler'
             }
           },
           {

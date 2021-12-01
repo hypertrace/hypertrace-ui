@@ -289,8 +289,7 @@ export class BackendOverviewComponent {
               }
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': true
+              type: 'cartesian-explorer-selection-handler'
             }
           },
           {
@@ -371,8 +370,7 @@ export class BackendOverviewComponent {
               }
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': true
+              type: 'cartesian-explorer-selection-handler'
             }
           },
           {
@@ -453,8 +451,7 @@ export class BackendOverviewComponent {
               }
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': true
+              type: 'cartesian-explorer-selection-handler'
             }
           }
         ]
