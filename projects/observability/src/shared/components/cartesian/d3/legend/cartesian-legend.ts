@@ -1,8 +1,8 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { Observable, of, Subject } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
 import { Series, Summary } from '../../chart';
 import {
@@ -12,7 +12,7 @@ import {
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
 
-export class CartesianLegend {
+export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
   private static readonly RESET_CSS_CLASS: string = 'reset';
   private static readonly DEFAULT_CSS_CLASS: string = 'default';
@@ -20,28 +20,25 @@ export class CartesianLegend {
   private static readonly INACTIVE_CSS_CLASS: string = 'inactive';
   public static readonly CSS_SELECTOR: string = `.${CartesianLegend.CSS_CLASS}`;
 
-  public readonly activeSeries$: Observable<Series<{}>[]>;
-  private readonly activeSeriesSubject: Subject<void> = new Subject();
-  private readonly initialSeries: Series<{}>[];
+  public readonly activeSeries$: Observable<Series<TData>[]>;
+  private readonly activeSeriesSubject: Subject<Series<TData>[]> = new Subject();
+  private readonly initialSeries: Series<TData>[];
 
   private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
-  private activeSeries: Series<{}>[];
+  private activeSeries: Series<TData>[];
   private intervalControl?: ComponentRef<unknown>;
   private summaryControl?: ComponentRef<unknown>;
 
   public constructor(
-    private readonly series: Series<{}>[],
+    private readonly series: Series<TData>[],
     private readonly injector: Injector,
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = []
   ) {
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
-    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(
-      startWith(undefined),
-      switchMap(() => of(this.activeSeries))
-    );
+    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(distinctUntilChanged(), startWith(this.series));
   }
 
   public draw(hostElement: Element, position: LegendPosition): this {
@@ -75,12 +72,12 @@ export class CartesianLegend {
       .append('span')
       .classed(CartesianLegend.RESET_CSS_CLASS, true)
       .text('Reset')
-      .on('click', () => this.makeSelectionModeOff());
+      .on('click', () => this.disableSelectionMode());
 
-    this.setResetVisibility(!this.isSelectionModeOn);
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
   }
 
-  private setResetVisibility(isHidden: boolean): void {
+  private updateResetElementVisibility(isHidden: boolean): void {
     select(this.legendElement!).select(`span.${CartesianLegend.RESET_CSS_CLASS}`).classed('hidden', isHidden);
   }
 
@@ -112,15 +109,15 @@ export class CartesianLegend {
       .classed(`position-${legendPosition}`, true);
   }
 
-  private drawLegendEntry(element: EnterElement): Selection<HTMLDivElement, Series<{}>, null, undefined> {
-    const legendEntry = select<EnterElement, Series<{}>>(element).append('div').classed('legend-entry', true);
+  private drawLegendEntry(element: EnterElement): Selection<HTMLDivElement, Series<TData>, null, undefined> {
+    const legendEntry = select<EnterElement, Series<TData>>(element).append('div').classed('legend-entry', true);
 
     this.appendLegendSymbol(legendEntry);
     legendEntry
       .append('span')
       .classed('legend-text', true)
       .text(series => series.name)
-      .on('click', series => this.updateActiveSeries(series));
+      .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : null));
 
     this.updateLegendClassesAndStyle();
 
@@ -128,13 +125,13 @@ export class CartesianLegend {
   }
 
   private updateLegendClassesAndStyle(): void {
-    const legendElementSelection = select(this.legendElement!);
+    const legendElementSelection = select<HTMLDivElement, Series<TData>>(this.legendElement!);
 
     // Legend entry symbol
     legendElementSelection
       .selectAll('.legend-symbol circle')
       .style('fill', series =>
-        !this.isThisLegendEntryActive(series as Series<{}>) ? Color.Gray3 : (series as Series<{}>).color
+        !this.isThisLegendEntryActive(series as Series<TData>) ? Color.Gray3 : (series as Series<TData>).color
       );
 
     // Legend entry value text
@@ -143,15 +140,15 @@ export class CartesianLegend {
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, !this.isSelectionModeOn)
       .classed(
         CartesianLegend.ACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<TData>)
       )
       .classed(
         CartesianLegend.INACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<{}>)
+        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<TData>)
       );
   }
 
-  private appendLegendSymbol(selection: Selection<HTMLDivElement, Series<{}>, null, undefined>): void {
+  private appendLegendSymbol(selection: Selection<HTMLDivElement, Series<TData>, null, undefined>): void {
     selection
       .append('svg')
       .classed('legend-symbol', true)
@@ -194,32 +191,29 @@ export class CartesianLegend {
     );
   }
 
-  private makeSelectionModeOff(): void {
+  private disableSelectionMode(): void {
     this.activeSeries = [...this.initialSeries];
     this.isSelectionModeOn = false;
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(!this.isSelectionModeOn);
-    this.activeSeriesSubject.next();
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
+    this.activeSeriesSubject.next(this.activeSeries);
   }
 
-  private updateActiveSeries(seriesEntry: Series<{}>): void {
+  private updateActiveSeries(seriesEntry: Series<TData>): void {
     if (!this.isSelectionModeOn) {
-      this.activeSeries = [];
-      this.activeSeries.push(seriesEntry);
+      this.activeSeries = [seriesEntry];
       this.isSelectionModeOn = true;
+    } else if (this.isThisLegendEntryActive(seriesEntry)) {
+      this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
     } else {
-      if (this.isThisLegendEntryActive(seriesEntry)) {
-        this.activeSeries = this.activeSeries.filter(series => series !== seriesEntry);
-      } else {
-        this.activeSeries.push(seriesEntry);
-      }
+      this.activeSeries.push(seriesEntry);
     }
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(!this.isSelectionModeOn);
-    this.activeSeriesSubject.next();
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
+    this.activeSeriesSubject.next(this.activeSeries);
   }
 
-  private isThisLegendEntryActive(seriesEntry: Series<{}>): boolean {
+  private isThisLegendEntryActive(seriesEntry: Series<TData>): boolean {
     return this.activeSeries.includes(seriesEntry);
   }
 }
