@@ -3,6 +3,7 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   FormattingModule,
   IntervalDurationService,
+  MemoizeModule,
   RecursivePartial,
   TimeDuration,
   TimeUnit
@@ -33,7 +34,7 @@ describe('Cartesian widget renderer component', () => {
           availableDurations.find(availableDuration => duration.equals(availableDuration))
       })
     ],
-    imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule],
+    imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule, MemoizeModule],
     shallow: true
   });
 

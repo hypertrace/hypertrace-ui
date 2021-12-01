@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormattingModule } from '@hypertrace/common';
+import { FormattingModule, MemoizeModule } from '@hypertrace/common';
 import { ButtonModule, LabelModule, LoadAsyncModule, TitledContentModule } from '@hypertrace/components';
 import { DashboardPropertyEditorsModule } from '@hypertrace/dashboards';
 import { DashboardCoreModule, DashboardEditorModule } from '@hypertrace/hyperdash-angular';
@@ -41,7 +41,8 @@ import { SeriesModel } from './series.model';
     TitledContentModule,
     LoadAsyncModule,
     FormattingModule,
-    CartesianExplorerContextMenuModule
+    CartesianExplorerContextMenuModule,
+    MemoizeModule
   ]
 })
 export class CartesianWidgetModule {}

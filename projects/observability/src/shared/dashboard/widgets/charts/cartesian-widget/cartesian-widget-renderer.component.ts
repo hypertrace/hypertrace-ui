@@ -7,8 +7,9 @@ import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CartesianSelectedData } from '../../../../../public-api';
-import { Band, Series } from '../../../../components/cartesian/chart';
+import { Axis, Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
+import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
@@ -21,8 +22,8 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         class="fill-container"
         [series]="data.series"
         [bands]="data.bands"
-        [xAxisOption]="this.model.xAxis && this.model.xAxis!.getAxisOption()"
-        [yAxisOption]="this.model.yAxis && this.model.yAxis!.getAxisOption()"
+        [xAxisOption]="this.getAxisOption | htMemoize: this.model?.xAxis"
+        [yAxisOption]="this.getAxisOption | htMemoize: this.model?.yAxis"
         [showXAxis]="this.model.showXAxis"
         [showYAxis]="this.model.showYAxis"
         [timeRange]="this.timeRange"
@@ -59,6 +60,10 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
 
   public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
     this.model.selectionHandler?.execute(selectedData);
+  }
+
+  public getAxisOption(axis: CartesianAxisModel): Partial<Axis> {
+    return axis?.getAxisOption();
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {

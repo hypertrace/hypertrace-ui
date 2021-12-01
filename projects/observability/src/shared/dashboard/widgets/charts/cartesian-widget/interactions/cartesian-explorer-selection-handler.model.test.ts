@@ -66,7 +66,7 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
     const cartesainExplorerNavigationService = spectator.get(CartesainExplorerNavigationService);
 
-    spectator.model.isContextMenuVisible = false;
+    spectator.model.showContextMenu = false;
 
     spectator.model.execute(selectedData);
     expect(cartesainExplorerNavigationService.navigateToExplorer).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('Cartesian Explorer Selection Handler Model', () => {
     const spectator = buildModel(CartesianExplorerSelectionHandlerModel);
     const popoverService = spectator.get(PopoverService);
 
-    spectator.model.isContextMenuVisible = true;
+    spectator.model.showContextMenu = true;
 
     spectator.model.execute(selectedData);
     expect(popoverService.drawPopover).toHaveBeenCalled();
