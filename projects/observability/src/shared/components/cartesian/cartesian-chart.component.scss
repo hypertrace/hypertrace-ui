@@ -121,7 +121,10 @@
         .legend-text {
           font-size: 14px;
           padding-left: 2px;
-          cursor: pointer;
+
+          &.selectable {
+            cursor: pointer;
+          }
 
           &.default {
             color: $gray-9;

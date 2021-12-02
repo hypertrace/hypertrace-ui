@@ -2,8 +2,8 @@ import { ComponentRef, Injector } from '@angular/core';
 import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
 import { isEmpty } from 'lodash-es';
-import { Observable, of, Subject } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
 import { Series, Summary } from '../../chart';
 import {
@@ -16,13 +16,14 @@ import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.c
 export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
   private static readonly RESET_CSS_CLASS: string = 'reset';
+  private static readonly SELECTABLE_CSS_CLASS: string = 'selectable';
   private static readonly DEFAULT_CSS_CLASS: string = 'default';
   private static readonly ACTIVE_CSS_CLASS: string = 'active';
   private static readonly INACTIVE_CSS_CLASS: string = 'inactive';
   public static readonly CSS_SELECTOR: string = `.${CartesianLegend.CSS_CLASS}`;
 
   public readonly activeSeries$: Observable<Series<TData>[]>;
-  private readonly activeSeriesSubject: Subject<void> = new Subject();
+  private readonly activeSeriesSubject: Subject<Series<TData>[]> = new Subject();
   private readonly initialSeries: Series<TData>[];
   private readonly groupedSeries: Dictionary<Series<TData>[]>;
 
@@ -44,10 +45,7 @@ export class CartesianLegend<TData> {
 
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
-    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(
-      startWith(undefined),
-      switchMap(() => of(this.activeSeries))
-    );
+    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(startWith(this.series));
   }
 
   public draw(hostElement: Element, position: LegendPosition): this {
@@ -81,12 +79,12 @@ export class CartesianLegend<TData> {
       .append('span')
       .classed(CartesianLegend.RESET_CSS_CLASS, true)
       .text('Reset')
-      .on('click', () => this.makeSelectionModeOff());
+      .on('click', () => this.disableSelectionMode());
 
-    this.setResetVisibility(!this.isSelectionModeOn);
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
   }
 
-  private setResetVisibility(isHidden: boolean): void {
+  private updateResetElementVisibility(isHidden: boolean): void {
     select(this.legendElement!).select(`span.${CartesianLegend.RESET_CSS_CLASS}`).classed('hidden', isHidden);
   }
 
@@ -157,8 +155,9 @@ export class CartesianLegend<TData> {
     legendEntry
       .append('span')
       .classed('legend-text', true)
-      .text(series => (!this.isGrouped ? series.name : series.groupName ?? ''))
-      .on('click', series => this.updateActiveSeries(series));
+      .classed(CartesianLegend.SELECTABLE_CSS_CLASS, this.series.length > 1)
+      .text(series => series.name)
+      .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
     this.updateLegendClassesAndStyle();
 
@@ -247,12 +246,12 @@ export class CartesianLegend<TData> {
     );
   }
 
-  private makeSelectionModeOff(): void {
+  private disableSelectionMode(): void {
     this.activeSeries = [...this.initialSeries];
     this.isSelectionModeOn = false;
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(!this.isSelectionModeOn);
-    this.activeSeriesSubject.next();
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
+    this.activeSeriesSubject.next(this.activeSeries);
   }
 
   private getGroupedSeries(): Dictionary<Series<TData>[]> {
@@ -284,30 +283,26 @@ export class CartesianLegend<TData> {
         this.activeSeries = [];
         this.activeSeries.push(...series);
         this.isSelectionModeOn = true;
+      } else if (!this.isThisLegendSeriesGroupActive(series)) {
+        this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
+        this.activeSeries.push(...series);
       } else {
-        if (!this.isThisLegendSeriesGroupActive(series)) {
-          this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
-          this.activeSeries.push(...series);
-        } else {
-          this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
-        }
+        this.activeSeries = this.activeSeries.filter(seriesEntry => !series.includes(seriesEntry));
       }
     } else {
       if (!this.isSelectionModeOn) {
         this.activeSeries = [];
         this.activeSeries.push(series);
         this.isSelectionModeOn = true;
+      } else if (this.isThisLegendEntryActive(series)) {
+        this.activeSeries = this.activeSeries.filter(seriesEntry => series !== seriesEntry);
       } else {
-        if (this.isThisLegendEntryActive(series)) {
-          this.activeSeries = this.activeSeries.filter(seriesEntry => series !== seriesEntry);
-        } else {
-          this.activeSeries.push(series);
-        }
+        this.activeSeries.push(series);
       }
     }
     this.updateLegendClassesAndStyle();
-    this.setResetVisibility(!this.isSelectionModeOn);
-    this.activeSeriesSubject.next();
+    this.updateResetElementVisibility(!this.isSelectionModeOn);
+    this.activeSeriesSubject.next(this.activeSeries);
   }
 
   private isThisLegendEntryActive(seriesEntry: Series<TData>): boolean {
