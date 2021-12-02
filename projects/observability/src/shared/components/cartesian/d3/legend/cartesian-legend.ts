@@ -2,7 +2,7 @@ import { ComponentRef, Injector } from '@angular/core';
 import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
 import { Series, Summary } from '../../chart';
 import {
@@ -15,6 +15,7 @@ import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.c
 export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
   private static readonly RESET_CSS_CLASS: string = 'reset';
+  private static readonly SELECTABLE_CSS_CLASS: string = 'selectable';
   private static readonly DEFAULT_CSS_CLASS: string = 'default';
   private static readonly ACTIVE_CSS_CLASS: string = 'active';
   private static readonly INACTIVE_CSS_CLASS: string = 'inactive';
@@ -38,7 +39,7 @@ export class CartesianLegend<TData> {
   ) {
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
-    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(distinctUntilChanged(), startWith(this.series));
+    this.activeSeries$ = this.activeSeriesSubject.asObservable().pipe(startWith(this.series));
   }
 
   public draw(hostElement: Element, position: LegendPosition): this {
@@ -116,6 +117,7 @@ export class CartesianLegend<TData> {
     legendEntry
       .append('span')
       .classed('legend-text', true)
+      .classed(CartesianLegend.SELECTABLE_CSS_CLASS, this.series.length > 1)
       .text(series => series.name)
       .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
