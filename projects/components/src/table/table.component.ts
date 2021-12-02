@@ -678,7 +678,6 @@ export class TableComponent
 
   public shouldHighlightRowAsSelection(row: StatefulTableRow): boolean {
     return (
-      this.selectionMode !== TableSelectionMode.Multiple &&
       this.selections !== undefined &&
       this.selections.find(selection => TableCdkRowUtil.isEqualExceptState(selection, row)) !== undefined
     );
