@@ -156,7 +156,7 @@ export class CartesianLegend<TData> {
       .append('span')
       .classed('legend-text', true)
       .classed(CartesianLegend.SELECTABLE_CSS_CLASS, this.series.length > 1)
-      .text(series => series.name)
+      .text(series => (this.isGrouped ? series.groupName ?? '' : series.name))
       .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
     this.updateLegendClassesAndStyle();
