@@ -54,6 +54,7 @@ import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
+import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
@@ -232,36 +233,48 @@ export class TableWidgetRendererComponent
             .filter(selectControlModel => selectControlModel.visible)
             .map(selectControlModel => {
               if (selectControlModel.placeholder === changed?.placeholder) {
-                return of(changed);
+                return this.buildTableSelectControl(selectControlModel, changed);
               }
 
-              // Fetch the values for the selectFilter dropdown
-              return selectControlModel.getOptions().pipe(
-                take(1),
-                withLatestFrom(this.selectFilterSubject),
-                map(([options, filters]) => {
-                  const foundPreferences = preferences.selections
-                    ? preferences.selections.find(
-                        preferencesSelectionControl =>
-                          selectControlModel.placeholder === preferencesSelectionControl.placeholder
-                      )
-                    : undefined;
+              const foundPreferences = preferences.selections
+                ? preferences.selections.find(
+                    preferencesSelectionControl =>
+                      selectControlModel.placeholder === preferencesSelectionControl.placeholder
+                  )
+                : undefined;
 
-                  return (
-                    foundPreferences ?? {
-                      placeholder: selectControlModel.placeholder,
-                      isMultiSelect: selectControlModel.isMultiselect,
-                      options: options.map(option => ({
-                        ...option,
-                        applied: this.isFilterApplied(option.metaValue, filters)
-                      }))
-                    }
-                  );
-                })
-              );
+              // Fetch the values for the selectFilter dropdown
+              return this.buildTableSelectControl(selectControlModel, foundPreferences);
             })
         )
       )
+    );
+  }
+
+  private buildTableSelectControl(
+    model: TableWidgetControlSelectOptionModel,
+    override?: TableSelectControl
+  ): Observable<TableSelectControl> {
+    return model.getOptions().pipe(
+      take(1),
+      withLatestFrom(this.selectFilterSubject),
+      map(([options, filters]) => {
+        const mergedOptions = options.map(option => {
+          const found = override?.options.find(o => o.label === option.label);
+
+          return {
+            ...option,
+            applied: found?.applied || this.isFilterApplied(option.metaValue, filters)
+          };
+        });
+
+        return {
+          placeholder: model.placeholder,
+          prefix: `${model.placeholder}: `,
+          isMultiSelect: model.isMultiselect,
+          options: mergedOptions
+        };
+      })
     );
   }
 

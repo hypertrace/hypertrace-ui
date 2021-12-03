@@ -146,6 +146,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public placeholder?: string;
 
   @Input()
+  public prefix?: string;
+
+  @Input()
   public disabled: boolean = false;
 
   @Input()
@@ -275,11 +278,19 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
         const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
 
         return {
-          label: selectedItems.length === 0 ? this.placeholder : selectedItems[0]?.label,
+          label: this.getLabel(selectedItems),
           selectedItemsCount: selectedItems.length
         };
       })
     );
+  }
+
+  private getLabel(selectedItems: SelectOptionComponent<V>[]): string {
+    if (selectedItems.length === 0) {
+      return this.placeholder === undefined ? '' : this.placeholder;
+    }
+
+    return this.prefix === undefined ? selectedItems[0]?.label : `${this.prefix}${selectedItems[0]?.label}`.trim();
   }
 
   private propagateValueChangeToFormControl(value: V[] | undefined): void {

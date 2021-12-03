@@ -171,6 +171,47 @@ describe('Cartesian Chart component', () => {
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
   }));
 
+  test('should have correct active series', fakeAsync(() => {
+    const chart = createHost(`<ht-cartesian-chart [series]="series" [legend]="legend"></ht-cartesian-chart>`, {
+      hostProps: {
+        series: [],
+        legend: undefined
+      }
+    });
+    chart.setHostInput({
+      series: [
+        {
+          data: [[1, 2]],
+          name: 'test series 1',
+          color: 'blue',
+          type: CartesianSeriesVisualizationType.Column,
+          stacking: true
+        },
+        {
+          data: [[1, 6]],
+          name: 'test series 2',
+          color: 'red',
+          type: CartesianSeriesVisualizationType.Column,
+          stacking: true
+        }
+      ],
+      legend: LegendPosition.Bottom
+    });
+    tick();
+    expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
+    expect(chart.queryAll('.legend-entry').length).toBe(2);
+    expect(chart.query('.reset.hidden')).toExist();
+
+    const legendEntryTexts = chart.queryAll('.legend-text');
+    chart.click(legendEntryTexts[0]);
+    tick();
+    expect(chart.query('.reset.hidden')).not.toExist();
+
+    chart.click(chart.query('.reset') as Element);
+    tick();
+    expect(chart.query('.reset.hidden')).toExist();
+  }));
+
   test('should render column chart', fakeAsync(() => {
     const chart = createHost(`<ht-cartesian-chart [series]="series"></ht-cartesian-chart>`, {
       hostProps: {

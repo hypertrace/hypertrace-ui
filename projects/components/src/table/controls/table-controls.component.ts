@@ -48,6 +48,7 @@ import {
             *ngIf="selectControl.isMultiSelect"
             [selected]="this.appliedFilters(selectControl)"
             [placeholder]="selectControl.placeholder"
+            [prefix]="selectControl.prefix"
             class="control select"
             [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"

@@ -486,7 +486,7 @@ describe('Table component', () => {
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[1])).toBeFalsy();
   });
 
-  test('row should not be highlighted only in multi selection mode', () => {
+  test('row should be highlighted (even) when in multi selection mode', () => {
     const columns = buildColumns();
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
@@ -504,7 +504,7 @@ describe('Table component', () => {
       }
     );
 
-    expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeFalsy();
+    expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeTruthy();
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[1])).toBeFalsy();
   });
 

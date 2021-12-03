@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
   assertUnreachable,
   NavigationService,
+  PreferenceService,
   QueryParamObject,
   TimeDuration,
   TimeDurationService
@@ -53,9 +54,14 @@ import {
         (filtersChange)="this.onFiltersUpdated($event)"
       ></ht-filter-bar>
       <div class="explorer-content">
-        <ht-panel class="visualization-panel" [(expanded)]="this.visualizationExpanded">
+        <ht-panel
+          *htLetAsync="this.visualizationExpanded$ as visualizationExpanded"
+          class="visualization-panel"
+          [expanded]="visualizationExpanded"
+          (expandedChange)="this.onVisualizationExpandedChange($event)"
+        >
           <ht-panel-header>
-            <ht-panel-title [expanded]="this.visualizationExpanded"
+            <ht-panel-title [expanded]="visualizationExpanded"
               ><span class="panel-title">Visualization</span></ht-panel-title
             >
           </ht-panel-header>
@@ -83,9 +89,14 @@ import {
           </ht-panel-body>
         </ht-panel>
 
-        <ht-panel class="results-panel" [(expanded)]="this.resultsExpanded">
+        <ht-panel
+          *htLetAsync="this.resultsExpanded$ as resultsExpanded"
+          class="results-panel"
+          [expanded]="resultsExpanded"
+          (expandedChange)="this.onResultsExpandedChange($event)"
+        >
           <ht-panel-header>
-            <ht-panel-title [expanded]="this.resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
+            <ht-panel-title [expanded]="resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
           </ht-panel-header>
           <ht-panel-body>
             <ht-application-aware-dashboard
@@ -103,6 +114,8 @@ import {
   `
 })
 export class ExplorerComponent {
+  private static readonly VISUALIZATION_EXPANDED_PREFERENCE: string = 'explorer.visualizationExpanded';
+  private static readonly RESULTS_EXPANDED_PREFERENCE: string = 'explorer.resultsExpanded';
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
@@ -128,9 +141,8 @@ export class ExplorerComponent {
   ];
 
   public filters: Filter[] = [];
-
-  public visualizationExpanded: boolean = true;
-  public resultsExpanded: boolean = true;
+  public visualizationExpanded$: Observable<boolean>;
+  public resultsExpanded$: Observable<boolean>;
 
   private readonly contextChangeSubject: Subject<ExplorerGeneratedDashboardContext> = new Subject();
 
@@ -138,10 +150,13 @@ export class ExplorerComponent {
     private readonly metadataService: MetadataService,
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
+    private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
+    this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
+    this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
     this.initialState$ = activatedRoute.queryParamMap.pipe(
@@ -181,6 +196,14 @@ export class ExplorerComponent {
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
     this.attributes$ = this.metadataService.getFilterAttributes(contextWrapper.dashboardContext);
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
+  }
+
+  public onVisualizationExpandedChange(expanded: boolean): void {
+    this.preferenceService.set(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, expanded);
+  }
+
+  public onResultsExpandedChange(expanded: boolean): void {
+    this.preferenceService.set(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, expanded);
   }
 
   private updateUrlWithVisualizationData(request: ExploreRequestState): void {
