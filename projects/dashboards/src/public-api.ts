@@ -19,5 +19,6 @@ export * from './widgets/interactive-data-widget-renderer';
 export * from './widgets/header/widget-header.model';
 export * from './widgets/container/container-widget.model';
 export * from './widgets/link/link-widget.model';
+export * from './widgets/text/text-widget-types';
 
 export * from './dashboard.module';
