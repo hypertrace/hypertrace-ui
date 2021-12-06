@@ -190,6 +190,22 @@
       }
     }
 
+    .reset {
+      @include font-title($blue-4);
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      &.hidden {
+        display: none;
+      }
+
+      &:hover {
+        color: $blue-6;
+      }
+    }
+
     .interval-control {
       padding: 0 8px;
     }
