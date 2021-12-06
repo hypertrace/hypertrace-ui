@@ -1,0 +1,29 @@
+{
+  "name": "@hypertrace/dashboards",
+  "version": "0.0.0",
+  "peerDependencies": {
+    "@angular/common": "^12.2.1",
+    "@angular/core": "^12.2.1",
+    "@angular/cdk": "^12.2.1",
+    "@angular/platform-browser": "^12.2.1",
+    "@angular/material": "^12.2.1",
+    "@angular/forms": "^12.2.1",
+    "@angular/router": "^12.2.1",
+    "@angular/flex-layout": "^12.0.0-beta.34",
+    "@hypertrace/common": "^0.0.0",
+    "@hypertrace/components": "^0.0.0",
+    "@hypertrace/graphql-client": "^0.0.0",
+    "@hypertrace/hyperdash-angular": "^2.6.0",
+    "@hypertrace/hyperdash": "^1.2.1",
+    "uuid": "^8.3.2",
+    "rxjs": "~6.6.7",
+    "lodash-es": "^4.17.21",
+    "d3-selection": "^1.4.2"
+  },
+  "devDependencies": {
+    "@hypertrace/test-utils": "^0.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.1"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": "./",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "importHelpers": true,
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2020",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "downlevelIteration": true,
+    "allowJs": true,
+    "lib": ["es2015", "es2016", "es2017", "esnext.string", "esnext.array", "esnext.asynciterable", "dom"],
+    "paths": {
+      "@hypertrace/assets-library": ["libs/assets-library/src/index.ts"],
+      "@hypertrace/common": ["libs/common/src/index.ts"],
+      "@hypertrace/components": ["libs/components/src/index.ts"],
+      "@hypertrace/dashboards": ["libs/dashboards/src/index.ts"],
+      "@hypertrace/dashboards/testing": ["libs/dashboards/src/test/index.ts"],
+      "@hypertrace/graphql-client": ["libs/graphql-client/src/index.ts"],
+      "@hypertrace/observability": ["libs/observability/src/index.ts"],
+      "@hypertrace/observability/testing": ["libs/observability/src/test/index.ts"],
+      "@hypertrace/test-utils": ["libs/test-utils/src/index.ts"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "strictTemplates": false
+  }
+}

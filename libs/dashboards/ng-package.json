@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/libs/dashboards",
+  "lib": {
+    "styleIncludePaths": ["../assets-library/assets/styles"],
+    "entryFile": "src/index.ts",
+    "umdModuleIds": {
+      "lodash": "_"
+    }
+  }
+}

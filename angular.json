@@ -1,59 +1,249 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "hypertrace-ui": {
-      "root": "",
-      "sourceRoot": "src",
-      "projectType": "application",
-      "prefix": "app",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
+    "assets-library": {
+      "projectType": "library",
+      "root": "libs/assets-library",
+      "sourceRoot": "libs/assets-library/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/assets-library"],
+          "options": {
+            "project": "libs/assets-library/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/assets-library/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/assets-library/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/assets-library"],
+          "options": {
+            "jestConfig": "libs/assets-library/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/assets-library/tsconfig.lib.json", "libs/assets-library/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
         }
       },
+      "tags": []
+    },
+    "common": {
+      "projectType": "library",
+      "root": "libs/common",
+      "sourceRoot": "libs/common/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/common"],
+          "options": {
+            "project": "libs/common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/common/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/common/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/common"],
+          "options": {
+            "jestConfig": "libs/common/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/common/tsconfig.lib.json", "libs/common/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "components": {
+      "projectType": "library",
+      "root": "libs/components",
+      "sourceRoot": "libs/components/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/components"],
+          "options": {
+            "project": "libs/components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/components/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/components/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/components"],
+          "options": {
+            "jestConfig": "libs/components/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/components/tsconfig.lib.json", "libs/components/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "dashboards": {
+      "projectType": "library",
+      "root": "libs/dashboards",
+      "sourceRoot": "libs/dashboards/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/dashboards"],
+          "options": {
+            "project": "libs/dashboards/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/dashboards/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/dashboards/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/dashboards"],
+          "options": {
+            "jestConfig": "libs/dashboards/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/dashboards/tsconfig.lib.json", "libs/dashboards/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "graphql-client": {
+      "projectType": "library",
+      "root": "libs/graphql-client",
+      "sourceRoot": "libs/graphql-client/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/graphql-client"],
+          "options": {
+            "project": "libs/graphql-client/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/graphql-client/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/graphql-client/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/graphql-client"],
+          "options": {
+            "jestConfig": "libs/graphql-client/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/graphql-client/tsconfig.lib.json", "libs/graphql-client/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "hypertrace-ui": {
+      "projectType": "application",
+      "root": "apps/hypertrace-ui",
+      "sourceRoot": "apps/hypertrace-ui/src",
+      "prefix": "hypertrace",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/hypertrace-ui",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/apps/hypertrace-ui",
+            "index": "apps/hypertrace-ui/src/index.html",
+            "main": "apps/hypertrace-ui/src/main.ts",
+            "polyfills": "apps/hypertrace-ui/src/polyfills.ts",
+            "tsConfig": "apps/hypertrace-ui/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.png",
+              "apps/hypertrace-ui/src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "./projects/assets-library/assets",
+                "input": "./libs/assets-library/assets",
                 "output": "./assets"
               },
               {
                 "glob": "**/*",
-                "input": "./projects/observability/assets",
+                "input": "./libs/observability/assets",
                 "output": "./assets"
               }
             ],
-            "styles": ["src/styles/main.scss"],
+            "styles": ["apps/hypertrace-ui/src/styles/main.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": ["./projects/assets-library/assets/styles", "./node_modules"]
+              "includePaths": ["./libs/assets-library/assets/styles", "./node_modules"]
             },
             "scripts": [],
-            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"]
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "apps/hypertrace-ui/src/environments/environment.ts",
+                  "with": "apps/hypertrace-ui/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -74,20 +264,29 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "hypertrace-ui:build"
-          },
           "configurations": {
             "production": {
               "browserTarget": "hypertrace-ui:build:production"
+            },
+            "development": {
+              "browserTarget": "hypertrace-ui:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -96,23 +295,122 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/hypertrace-ui"],
           "options": {
-            "no-cache": true
+            "jestConfig": "apps/hypertrace-ui/jest.config.js",
+            "passWithNoTests": true
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": ["apps/hypertrace-ui/tsconfig.app.json", "apps/hypertrace-ui/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "../libs/**"]
           }
         }
       }
+    },
+    "observability": {
+      "projectType": "library",
+      "root": "libs/observability",
+      "sourceRoot": "libs/observability/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/observability"],
+          "options": {
+            "project": "libs/observability/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/observability/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/observability/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/observability"],
+          "options": {
+            "jestConfig": "libs/observability/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/observability/tsconfig.lib.json", "libs/observability/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "test-utils": {
+      "projectType": "library",
+      "root": "libs/test-utils",
+      "sourceRoot": "libs/test-utils/src",
+      "prefix": "hypertrace",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/test-utils"],
+          "options": {
+            "project": "libs/test-utils/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/test-utils/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/test-utils/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/test-utils"],
+          "options": {
+            "jestConfig": "libs/test-utils/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/test-utils/tsconfig.lib.json", "libs/test-utils/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "hypertrace-ui/**"]
+          }
+        }
+      },
+      "tags": []
     }
   },
   "defaultProject": "hypertrace-ui",
   "cli": {
-    "analytics": false
+    "defaultCollection": "@nrwl/angular",
+    "packageManager": "npm"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
   }
 }
