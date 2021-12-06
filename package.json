@@ -50,7 +50,7 @@
     "d3-color": "^1.4.0",
     "d3-drag": "^1.2.4",
     "d3-force": "^2.1.1",
-    "d3-hierarchy": "^1.1.9",
+    "d3-hierarchy": "^3.1.0",
     "d3-interpolate": "^2.0.1",
     "d3-path": "^1.0.9",
     "d3-quadtree": "^1.0.6",
