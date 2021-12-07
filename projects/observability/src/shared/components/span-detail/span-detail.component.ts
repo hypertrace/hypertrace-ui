@@ -24,7 +24,11 @@ import { SpanDetailTab } from './span-detail-tab';
         <ng-content></ng-content>
       </div>
 
-      <ht-tab-group class="tabs-group" [activeTabLabel]="this.activeTabLabel">
+      <ht-tab-group
+        class="tabs-group"
+        [activeTabLabel]="this.activeTabLabel"
+        (activeTabLabelChange)="this.onActiveTabLabelChange($event)"
+      >
         <ht-tab label="${SpanDetailTab.Request}" *ngIf="this.showRequestTab">
           <ht-span-request-detail
             class="request"
@@ -70,6 +74,9 @@ export class SpanDetailComponent implements OnChanges {
   public activeTabLabel?: SpanDetailTab;
 
   @Output()
+  public activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
+
+  @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
 
   public showRequestTab?: boolean;
@@ -92,5 +99,10 @@ export class SpanDetailComponent implements OnChanges {
       this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
     }
+  }
+
+  public onActiveTabLabelChange(tabLabel: SpanDetailTab): void {
+    this.activeTabLabel = tabLabel;
+    this.activeTabLabelChange.emit(tabLabel);
   }
 }
