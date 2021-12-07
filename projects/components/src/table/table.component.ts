@@ -153,7 +153,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
-          [style.height]="this.rowHeight"
+          [style.minHeight]="this.rowHeight"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
