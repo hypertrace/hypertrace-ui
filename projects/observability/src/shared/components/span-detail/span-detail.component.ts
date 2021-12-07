@@ -74,7 +74,7 @@ export class SpanDetailComponent implements OnChanges {
   public activeTabLabel?: SpanDetailTab;
 
   @Output()
-  public activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
+  private readonly activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
 
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
