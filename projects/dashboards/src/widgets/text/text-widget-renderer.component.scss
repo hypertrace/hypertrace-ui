@@ -4,8 +4,13 @@
 .text-widget {
   @include ellipsis-overflow();
 
-  .primary-text {
+  .title {
     @include header-3();
+  }
+
+  .section-title {
+    @include subtitle-1($gray-7);
+    text-transform: capitalize;
   }
 
   .secondary-text {
