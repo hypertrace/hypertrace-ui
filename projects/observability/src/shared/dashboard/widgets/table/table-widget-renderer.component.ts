@@ -105,6 +105,7 @@ import { TableWidgetModel } from './table-widget.model';
           [resizable]="this.api.model.isResizable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
+          [rowHeight]="this.api.model.getRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
