@@ -28,3 +28,8 @@ export interface UserTraits extends Dictionary<unknown> {
   name?: string;
   displayName?: string;
 }
+
+export const enum TrackUserEventsType {
+  Click = 'click',
+  ContextMenu = 'context-menu'
+}

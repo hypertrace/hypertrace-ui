@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NavigationService } from '@hypertrace/common';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { EntityBreadcrumb } from './../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
@@ -14,7 +15,7 @@ import { ObservabilityIconType } from '../../../shared/icons/observability-icon-
 import { ApiDetailBreadcrumbResolver } from './api-detail-breadcrumb.resolver';
 
 describe('Api detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ApiDetailBreadcrumbResolver>;
+  let spectator: SpectatorService<ApiDetailBreadcrumbResolver<EntityBreadcrumb>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ApiDetailBreadcrumbResolver,
@@ -83,6 +84,8 @@ describe('Api detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(abc|)', {
           a: {
+            [entityIdKey]: 'test-service-id',
+            [entityTypeKey]: ObservabilityEntityType.Service,
             label: 'test service',
             icon: ObservabilityIconType.Service,
             url: ['services', 'service', 'test-service-id']
@@ -93,9 +96,16 @@ describe('Api detail breadcrumb resolver', () => {
             url: ['services', 'service', 'test-service-id', 'endpoints']
           },
           c: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'test api',
             icon: ObservabilityIconType.Api,
-            url: ['api', 'test-id']
+            url: ['api', 'test-id'],
+            name: 'test api',
+            parentId: 'test-service-id',
+            parentName: 'test service',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           }
         });
       });
@@ -108,7 +118,7 @@ describe('Api detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 
@@ -122,9 +132,14 @@ describe('Api detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(y|)', {
           y: {
+            [entityIdKey]: 'test-id',
+            [entityTypeKey]: ObservabilityEntityType.Api,
             label: 'test api',
             icon: ObservabilityIconType.Api,
-            url: ['api', 'test-id']
+            url: ['api', 'test-id'],
+            name: 'test api',
+            serviceName: 'test service',
+            serviceId: 'test-service-id'
           }
         });
       });
@@ -137,7 +152,7 @@ describe('Api detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Api,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 });

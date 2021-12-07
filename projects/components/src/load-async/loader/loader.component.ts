@@ -1,15 +1,36 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
-import { IconSize } from '../../icon/icon-size';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
+import { LoaderType } from '../load-async.service';
 
 @Component({
   selector: 'ht-loader',
   styleUrls: ['./loader.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-loader">
-      <ht-icon icon="${IconType.Loading}" size="${IconSize.Large}"></ht-icon>
+      <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />
     </div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `
 })
-export class LoaderComponent {}
+export class LoaderComponent implements OnChanges {
+  @Input()
+  public loaderType?: LoaderType;
+
+  public currentLoaderType: LoaderType = LoaderType.Spinner;
+
+  public ngOnChanges(): void {
+    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
+  }
+
+  public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
+    switch (loaderType) {
+      case LoaderType.ExpandableRow:
+        return ImagesAssetPath.LoaderExpandableRow;
+      case LoaderType.Page:
+        return ImagesAssetPath.LoaderPage;
+      case LoaderType.Spinner:
+      default:
+        return ImagesAssetPath.LoaderSpinner;
+    }
+  }
+}

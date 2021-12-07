@@ -8,6 +8,7 @@ import { LabelModule } from '../label/label.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { PopoverModule } from '../popover/popover.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
+import { SelectOptionRendererDirective } from './directive/select-option-renderer.directive';
 import { SelectControlOptionComponent } from './select-control-option.component';
 import { SelectGroupComponent } from './select-group.component';
 import { SelectOptionComponent } from './select-option.component';
@@ -25,7 +26,19 @@ import { SelectComponent } from './select.component';
     DividerModule,
     MemoizeModule
   ],
-  declarations: [SelectComponent, SelectOptionComponent, SelectGroupComponent, SelectControlOptionComponent],
-  exports: [SelectComponent, SelectOptionComponent, SelectGroupComponent, SelectControlOptionComponent]
+  declarations: [
+    SelectComponent,
+    SelectOptionComponent,
+    SelectGroupComponent,
+    SelectControlOptionComponent,
+    SelectOptionRendererDirective
+  ],
+  exports: [
+    SelectComponent,
+    SelectOptionComponent,
+    SelectGroupComponent,
+    SelectControlOptionComponent,
+    SelectOptionRendererDirective
+  ]
 })
 export class SelectModule {}

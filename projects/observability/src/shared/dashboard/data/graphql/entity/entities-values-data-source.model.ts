@@ -1,4 +1,4 @@
-import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { BOOLEAN_PROPERTY, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityType } from '../../../../graphql/model/schema/entity';
@@ -15,6 +15,12 @@ import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceModel<unknown[]> {
   protected abstract specification: Specification;
   protected abstract entityType: EntityType;
+
+  @ModelProperty({
+    key: 'includeInactive',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public includeInactive: boolean = false;
 
   @ModelProperty({
     key: 'limit',
@@ -38,7 +44,8 @@ export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceMod
       limit: this.limit,
       properties: [specification],
       timeRange: this.getTimeRangeOrThrow(),
-      filters: inheritedFilters
+      filters: inheritedFilters,
+      includeInactive: this.includeInactive
     };
   }
 }

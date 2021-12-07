@@ -9,6 +9,10 @@
     &:not(:first-child) {
       margin-left: 12px;
     }
+
+    &.applied {
+      background: $blue-1;
+    }
   }
 
   .table-controls-left {
@@ -21,6 +25,7 @@
 
   .table-controls-right {
     display: flex;
+    margin-left: 12px;
 
     .filter-multi-select {
       color: $gray-7;

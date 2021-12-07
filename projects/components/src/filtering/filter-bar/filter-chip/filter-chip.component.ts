@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../../combo-box/combo-box-api';
+import { ComboBoxComponent } from '../../../combo-box/combo-box.component';
 import { Filter, IncompleteFilter } from '../../filter/filter';
 import { FilterAttribute } from '../../filter/filter-attribute';
 import { FilterChipService } from './filter-chip.service';
@@ -43,6 +53,9 @@ export class FilterChipComponent implements OnInit, OnChanges {
   @Output()
   public readonly clear: EventEmitter<void> = new EventEmitter();
 
+  @ViewChild(ComboBoxComponent)
+  public readonly comboBox?: ComboBoxComponent;
+
   public text?: string;
   public options?: ComboBoxOption<IncompleteFilter>[];
 
@@ -84,6 +97,10 @@ export class FilterChipComponent implements OnInit, OnChanges {
   public onClear(): void {
     this.onTextChange(undefined);
     this.clear.emit();
+  }
+
+  public focus(): void {
+    this.comboBox?.focus();
   }
 
   private isValidFilter(result: ComboBoxResult<IncompleteFilter>): result is ComboBoxResult<Filter> {

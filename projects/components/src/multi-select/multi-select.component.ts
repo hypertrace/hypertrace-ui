@@ -9,9 +9,11 @@ import {
   Output,
   QueryList
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
-import { queryListAndChanges$ } from '@hypertrace/common';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -19,11 +21,18 @@ import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { MultiSelectJustify } from './multi-select-justify';
-
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    SubscriptionLifecycle,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MultiSelectComponent,
+      multi: true
+    }
+  ],
   template: `
     <div
       class="multi-select"
@@ -47,14 +56,16 @@ import { MultiSelectJustify } from './multi-select-justify';
             [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
             #triggerContainer
           >
-            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"> </ht-icon>
-            <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
-              <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
-              <span *ngIf="this.selectedItemsCount > 1" class="trigger-more-items"
-                >+{{ this.selectedItemsCount - 1 }}</span
-              >
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
-            </div>
+            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
+            <ng-container *htLoadAsync="this.triggerValues$ as triggerValues">
+              <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
+                <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
+                <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
+                  >+{{ triggerValues.selectedItemsCount - 1 }}</span
+                >
+                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+              </div>
+            </ng-container>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -118,7 +129,7 @@ import { MultiSelectJustify } from './multi-select-justify';
     </div>
   `
 })
-export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
+export class MultiSelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -133,6 +144,9 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
 
   @Input()
   public placeholder?: string;
+
+  @Input()
+  public prefix?: string;
 
   @Input()
   public disabled: boolean = false;
@@ -163,8 +177,10 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   private readonly searchSubject: Subject<string> = new BehaviorSubject('');
 
   public popoverOpen: boolean = false;
-  public triggerLabel?: string;
-  public selectedItemsCount: number = 0;
+  public triggerValues$: Observable<TriggerValues> = new Observable();
+
+  private propagateControlValueChange?: (value: V[] | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V[] | undefined) => void;
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
@@ -214,42 +230,78 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
     }
 
     const selected = this.isSelectedItem(item)
-      ? this.selected?.filter(value => value !== item.value)
+      ? this.selected?.filter(value => !isEqual(value, item.value))
       : (this.selected ?? []).concat(item.value);
 
     this.setSelection(selected ?? []);
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
+    return this.selected !== undefined && this.selected.filter(value => isEqual(value, item.value)).length > 0;
   }
 
   public preventClickDefault(event: Event): void {
     event.preventDefault();
   }
 
+  public writeValue(value?: V[]): void {
+    this.setSelection(value ?? []);
+  }
+
+  public registerOnChange(onChange: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
   private setSelection(selected: V[]): void {
     this.selected = selected;
     this.setTriggerLabel();
     this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private setTriggerLabel(): void {
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
-      this.triggerLabel = this.placeholder;
+      this.triggerValues$ = of({
+        label: this.placeholder,
+        selectedItemsCount: 0
+      });
 
       return;
     }
 
-    const selectedItems: SelectOptionComponent<V>[] | undefined = this.allOptionsList?.filter(item =>
-      this.isSelectedItem(item)
+    this.triggerValues$ = this.allOptions$?.pipe(
+      map(options => {
+        const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
+
+        return {
+          label: this.getLabel(selectedItems),
+          selectedItemsCount: selectedItems.length
+        };
+      })
     );
-
-    this.selectedItemsCount = selectedItems?.length ?? 0;
-
-    // Trigger label is placeholder in case there is element selected on multiselect
-    this.triggerLabel = this.selectedItemsCount === 0 ? this.placeholder : (selectedItems || [])[0]?.label;
   }
+
+  private getLabel(selectedItems: SelectOptionComponent<V>[]): string {
+    if (selectedItems.length === 0) {
+      return this.placeholder === undefined ? '' : this.placeholder;
+    }
+
+    return this.prefix === undefined ? selectedItems[0]?.label : `${this.prefix}${selectedItems[0]?.label}`.trim();
+  }
+
+  private propagateValueChangeToFormControl(value: V[] | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
+  }
+}
+
+interface TriggerValues {
+  label: string | undefined;
+  selectedItemsCount: number;
 }
 
 export const enum TriggerLabelDisplayMode {

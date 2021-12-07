@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -13,13 +12,15 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { Filter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterUrlService } from '../filter/filter-url.service';
 import { FilterBarService } from './filter-bar.service';
+import { FilterChipComponent } from './filter-chip/filter-chip.component';
 
 @Component({
   selector: 'ht-filter-bar',
@@ -83,14 +84,16 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   @Output()
   public readonly filtersChange: EventEmitter<Filter[]> = new EventEmitter();
 
-  @ViewChild('filterInput', { read: ElementRef })
-  public readonly filterInput!: ElementRef;
+  @ViewChild('filterInput')
+  public readonly filterInput?: FilterChipComponent;
 
   public isFocused: boolean = false;
 
   private readonly attributeSubject$: BehaviorSubject<FilterAttribute[]> = new BehaviorSubject<FilterAttribute[]>([]);
   private readonly internalFiltersSubject$: BehaviorSubject<Filter[]> = new BehaviorSubject<Filter[]>([]);
-  public readonly internalFilters$: Observable<Filter[]> = this.internalFiltersSubject$.asObservable();
+  public readonly internalFilters$: Observable<Filter[]> = this.internalFiltersSubject$
+    .asObservable()
+    .pipe(distinctUntilChanged(isEqual));
 
   private subscription?: Subscription;
 
@@ -123,7 +126,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscribeToUrlFilterChanges(): void {
     this.subscription = this.attributeSubject$
-      .pipe(mergeMap(attributes => this.filterUrlService.getUrlFiltersChanges$(attributes)))
+      .pipe(switchMap(attributes => this.filterUrlService.getUrlFiltersChanges$(attributes)))
       .subscribe(filters => this.onFiltersChanged(filters, true, false));
   }
 
@@ -168,7 +171,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private resetFocus(): void {
-    this.filterInput?.nativeElement.focus();
+    this.filterInput?.focus();
   }
 
   private updateFilter(oldFilter: Filter, newFilter: Filter): void {

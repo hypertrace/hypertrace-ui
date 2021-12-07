@@ -8,12 +8,15 @@ import {
   ViewChild
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ButtonStyle, OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
+import { NavigationParams } from '@hypertrace/common';
+import { ButtonStyle, FilterOperator, OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
 import { SpanDetailLayoutStyle } from '../../../components/span-detail/span-detail-layout-style';
 import { SpanDetailTab } from '../../../components/span-detail/span-detail-tab';
 import { WaterfallWidgetModel } from './waterfall-widget.model';
@@ -67,12 +70,21 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [activeTabLabel]="this.activeTabLabel"
           (closed)="this.closeSheet()"
         >
-          <ht-summary-value
-            data-sensitive-pii
-            icon="${IconType.SpanId}"
-            label="Span ID"
-            [value]="this.selectedData!.id"
-          ></ht-summary-value>
+          <div class="filterable-summary-value">
+            <ht-summary-value
+              class="summary-value"
+              data-sensitive-pii
+              icon="${IconType.SpanId}"
+              label="Span ID"
+              [value]="this.selectedData!.id"
+            ></ht-summary-value>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
+              htTooltip="See spans in Explorer"
+            >
+            </ht-explore-filter-link>
+          </div>
         </ht-span-detail>
       </div>
     </ng-template>
@@ -94,7 +106,8 @@ export class WaterfallWidgetRendererComponent
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<WaterfallWidgetModel>,
     changeDetector: ChangeDetectorRef,
-    private readonly overlayService: OverlayService
+    private readonly overlayService: OverlayService,
+    private readonly explorerService: ExplorerService
   ) {
     super(api, changeDetector);
   }
@@ -141,4 +154,9 @@ export class WaterfallWidgetRendererComponent
   protected fetchData(): Observable<WaterfallData[]> {
     return this.model.getData();
   }
+
+  public getExploreNavigationParams = (selectedData: WaterfallData | undefined): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.Spans, [
+      { field: 'id', operator: FilterOperator.Equals, value: selectedData!.id }
+    ]);
 }

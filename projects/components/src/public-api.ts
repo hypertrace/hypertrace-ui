@@ -157,6 +157,7 @@ export * from './navigation/navigation-list.module';
 export * from './navigation/nav-item/nav-item.component';
 export * from './navigation/navigation.config';
 export * from './navigation/navigation-list-component.service';
+export * from './navigation/navigation-list.service';
 
 // Let async
 export { LetAsyncDirective } from './let-async/let-async.directive';
@@ -171,8 +172,10 @@ export * from './list-view/list-view.component';
 export * from './list-view/list-view.module';
 
 // Load Async
-export { LoadAsyncDirective } from './load-async/load-async.directive';
-export { LoadAsyncModule } from './load-async/load-async.module';
+export * from './load-async/load-async.directive';
+export * from './load-async/load-async.module';
+export * from './load-async/load-async.service';
+export * from './load-async/load-async-state.type';
 
 // Message Display
 export { MessageDisplayComponent } from './message-display/message-display.component';
@@ -315,7 +318,12 @@ export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
 
 // Titled Content
-export { TitledContentComponent, TitlePosition } from './titled-content/titled-content.component';
+export {
+  TitledContentComponent,
+  TitlePosition,
+  TitledContentTitleStyle,
+  TitledContentHeaderJustify
+} from './titled-content/titled-content.component';
 export { TitledContentModule } from './titled-content/titled-content.module';
 
 // Toggle Button
@@ -337,3 +345,6 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
+
+// Filter Url Service
+export * from './filtering/filter/filter-url.service';

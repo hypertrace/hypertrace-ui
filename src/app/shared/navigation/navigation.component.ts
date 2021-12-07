@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, PreferenceService } from '@hypertrace/common';
-import { NavItemConfig, NavItemType } from '@hypertrace/components';
+import { PreferenceService } from '@hypertrace/common';
+import { NavigationListService, NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 
@@ -74,12 +74,12 @@ export class NavigationComponent {
   ];
 
   public constructor(
-    private readonly navigationService: NavigationService,
+    private readonly navigationListService: NavigationListService,
     private readonly preferenceService: PreferenceService,
     private readonly activatedRoute: ActivatedRoute
   ) {
     this.navItems = this.navItemDefinitions.map(definition =>
-      this.navigationService.decorateNavItem(definition, this.activatedRoute)
+      this.navigationListService.decorateNavItem(definition, this.activatedRoute)
     );
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }

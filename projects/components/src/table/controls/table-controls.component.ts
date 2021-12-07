@@ -6,14 +6,17 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnChanges,
-  Output
+  Output,
+  TemplateRef
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
+import { StatefulTableRow } from '../table-api';
 import {
   TableCheckboxChange,
   TableCheckboxControl,
@@ -40,21 +43,42 @@ import {
         ></ht-search-box>
 
         <!-- Selects -->
-        <ht-multi-select
-          *ngFor="let selectControl of this.selectControls"
-          [selected]="this.appliedFilters(selectControl)"
-          [placeholder]="selectControl.placeholder"
-          class="control select"
-          showBorder="true"
-          searchMode="${MultiSelectSearchMode.CaseInsensitive}"
-          (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
-        >
-          <ht-select-option
-            *ngFor="let option of selectControl.options"
-            [label]="option.label"
-            [value]="option"
-          ></ht-select-option>
-        </ht-multi-select>
+        <ng-container *ngFor="let selectControl of this.selectControls">
+          <ht-multi-select
+            *ngIf="selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            [prefix]="selectControl.prefix"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-multi-select>
+
+          <ht-select
+            *ngIf="!selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-select>
+        </ng-container>
       </div>
 
       <!-- Right -->
@@ -86,6 +110,13 @@ import {
           [activeItem]="this.activeViewItem"
           (activeItemChange)="this.onViewChange($event)"
         ></ht-toggle-group>
+
+        <!-- Custom Control -->
+        <ng-container *ngIf="this.customControlContent">
+          <ng-container
+            *ngTemplateOutlet="this.customControlContent; context: { selectedRows: this.selectedRows }"
+          ></ng-container>
+        </ng-container>
       </div>
     </div>
   `
@@ -113,6 +144,12 @@ export class TableControlsComponent implements OnChanges {
 
   @Input()
   public activeViewItem?: ToggleItem;
+
+  @Input()
+  public selectedRows?: StatefulTableRow[] = [];
+
+  @Input()
+  public customControlContent?: TemplateRef<{ selectedRows?: StatefulTableRow[] }>;
 
   @Output()
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
@@ -186,13 +223,13 @@ export class TableControlsComponent implements OnChanges {
     this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 
-  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] | undefined {
-    return this.selectSelections.get(selectControl);
+  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] {
+    return this.selectSelections.get(selectControl) || [];
   }
 
   private setActiveViewItem(): void {
     if (this.viewItems !== undefined) {
-      this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
+      this.activeViewItem = this.findViewItem(this.activeViewItem);
     }
   }
 
@@ -200,11 +237,20 @@ export class TableControlsComponent implements OnChanges {
     this.searchChange.emit(text);
   }
 
-  public onMultiSelectChange(select: TableSelectControl, selections: TableSelectControlOption[]): void {
+  public onMultiSelectChange(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
     this.selectChange.emit({
-      select: select,
+      select: selectControl,
       values: selections
     });
+    this.diffSelections();
+  }
+
+  public onSelectChange(selectControl: TableSelectControl, selection: TableSelectControlOption): void {
+    this.selectChange.emit({
+      select: selectControl,
+      values: [selection]
+    });
+    this.diffSelections();
   }
 
   public onCheckboxChange(checked: string[]): void {
@@ -243,5 +289,9 @@ export class TableControlsComponent implements OnChanges {
 
   public onViewChange(item: ToggleItem<string>): void {
     this.viewChange.emit(item.value);
+  }
+
+  private findViewItem(viewItem?: ToggleItem): ToggleItem | undefined {
+    return this.viewItems?.find(item => isEqual(item, viewItem)) ?? this.viewItems![0];
   }
 }

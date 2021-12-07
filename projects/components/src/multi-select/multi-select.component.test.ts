@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
+import { PopoverComponent } from '@hypertrace/components';
+import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { NEVER } from 'rxjs';
@@ -12,7 +14,6 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
 import { LoadAsyncModule } from '../load-async/load-async.module';
-import { PopoverComponent } from '../popover/popover.component';
 import { PopoverModule } from '../popover/popover.module';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
@@ -69,15 +70,20 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
 
-    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toExist();
     expect(spectator.query('.trigger-label-container')).toExist();
     expect(spectator.query('.trigger-label')).toExist();
     expect(spectator.query('.trigger-icon')).toExist();
     expect(spectator.query('.trigger-more-items')).not.toExist();
 
-    // Selected element is 1 as set in hostProps
-    expect(spectator.component.selectedItemsCount).toBe(1);
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          selectedItemsCount: 1 // Selected element is 1 as set in hostProps
+        }
+      });
+    });
 
     const popoverComponent = spectator.query(PopoverComponent);
     expect(popoverComponent?.closeOnClick).toEqual(false);
@@ -101,11 +107,19 @@ describe('Multi Select Component', () => {
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
     expect(spectator.query('.trigger-more-items')).toExist();
-    expect(spectator.component.selectedItemsCount).toBe(2);
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
     ).toBe(2);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          selectedItemsCount: 2
+        }
+      });
+    });
   }));
 
   test('should display provided options with icons when clicked', fakeAsync(() => {
@@ -136,11 +150,19 @@ describe('Multi Select Component', () => {
 
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
     expect(spectator.query('.trigger-more-items')).toExist();
-    expect(spectator.component.selectedItemsCount).toBe(2);
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
     ).toBe(2);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: 'second',
+          selectedItemsCount: 2
+        }
+      });
+    });
 
     optionElements.forEach((element, index) => {
       expect(element).toHaveText(selectionOptions[index].label);
@@ -204,8 +226,17 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query('.trigger-more-items')).toExist();
-    expect(spectator.component.selectedItemsCount).toBe(2);
     expect(spectator.query(LabelComponent)?.label).toEqual('second');
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: 'second',
+          selectedItemsCount: 2
+        }
+      });
+    });
+
     flush();
   }));
 
@@ -332,7 +363,16 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
     expect(spectator.query('.trigger-more-items')).not.toExist();
-    expect(spectator.component.selectedItemsCount).toBe(0);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('(x|)', {
+        x: {
+          label: 'Placeholder',
+          selectedItemsCount: 0
+        }
+      });
+    });
+
     flush();
   }));
 
@@ -354,7 +394,15 @@ describe('Multi Select Component', () => {
     );
     spectator.tick();
 
-    expect(spectator.component.triggerLabel).toEqual(selectionOptions[1].label);
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          selectedItemsCount: 1
+        }
+      });
+    });
+
     expect(spectator.query('.trigger-content')).toExist();
     expect(spectator.query('.trigger-label-container')).toExist();
     expect(spectator.query('.trigger-label')).toExist();

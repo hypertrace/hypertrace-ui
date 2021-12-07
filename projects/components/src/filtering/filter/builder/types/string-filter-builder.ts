@@ -9,7 +9,7 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]
   }
 
   public supportedOperators(): FilterOperator[] {
-    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In];
+    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In, FilterOperator.Like];
   }
 
   protected buildValueString(value: string | string[]): string {

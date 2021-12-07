@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { ButtonRole, ButtonStyle } from '../button/button';
 
@@ -9,7 +10,7 @@ import { ButtonRole, ButtonStyle } from '../button/button';
   template: `
     <div class="not-found-container fill-container">
       <div class="not-found-content">
-        <img class="not-found-image" src="assets/images/error-page.svg" loading="lazy" alt="not found page" />
+        <img class="not-found-image" src="${ImagesAssetPath.ErrorPage}" loading="lazy" alt="not found page" />
         <div class="not-found-message-wrapper">
           <div class="not-found-text-wrapper">
             <div class="not-found-message">Page not found</div>

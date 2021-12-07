@@ -27,6 +27,7 @@ import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
+import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
@@ -105,7 +106,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
               [ngClass]="{
-                'detail-expanded': this.isDetailExpanded(row)
+                'detail-expanded': this.isDetailExpanded(row),
+                'hide-divider': this.isDetailList()
               }"
               class="data-cell"
             >
@@ -151,6 +153,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
+          [style.height]="this.rowHeight"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
@@ -162,7 +165,10 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       <!-- State Watcher -->
       <ng-container *ngIf="this.dataSource?.loadingStateChange$ | async as loadingState">
         <div class="state-watcher" *ngIf="!loadingState.hide">
-          <ng-container class="state-watcher" *htLoadAsync="loadingState.loading$"></ng-container>
+          <ng-container
+            class="state-watcher"
+            *htLoadAsync="loadingState.loading$; config: this.loadingConfig"
+          ></ng-container>
         </div>
       </ng-container>
 
@@ -271,6 +277,15 @@ export class TableComponent
 
   @Input()
   public pageSize?: number = 50;
+
+  @Input()
+  public loadingConfig?: LoadAsyncConfig;
+
+  @Input()
+  public rowHeight: string = '44px';
+
+  @Output()
+  public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
 
   @Output()
   public readonly selectionsChange: EventEmitter<StatefulTableRow[]> = new EventEmitter<StatefulTableRow[]>();
@@ -548,9 +563,7 @@ export class TableComponent
   }
 
   public onDataRowClick(row: StatefulTableRow): void {
-    if (this.hasSelectableRows()) {
-      this.toggleRowSelected(row);
-    }
+    this.rowClicked.emit(row);
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {
@@ -665,7 +678,6 @@ export class TableComponent
 
   public shouldHighlightRowAsSelection(row: StatefulTableRow): boolean {
     return (
-      this.selectionMode !== TableSelectionMode.Multiple &&
       this.selections !== undefined &&
       this.selections.find(selection => TableCdkRowUtil.isEqualExceptState(selection, row)) !== undefined
     );
@@ -691,12 +703,12 @@ export class TableComponent
     return this.isDetailType() || this.isTreeType();
   }
 
-  public isDetailExpanded(row: StatefulTableRow): boolean {
-    return this.isDetailType() && row.$$state.expanded;
+  public isDetailList(): boolean {
+    return this.isDetailType() && this.display === TableStyle.List;
   }
 
-  public hasSelectableRows(): boolean {
-    return this.hasSingleSelect() || this.hasMultiSelect();
+  public isDetailExpanded(row: StatefulTableRow): boolean {
+    return this.isDetailType() && row.$$state.expanded;
   }
 
   public hasSingleSelect(): boolean {

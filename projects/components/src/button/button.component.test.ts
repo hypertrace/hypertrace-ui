@@ -1,8 +1,10 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { TrackDirective } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle } from './button';
+import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -12,6 +14,7 @@ describe('Button Component', () => {
   const createHost = createHostFactory({
     component: ButtonComponent,
     imports: [ButtonModule, RouterTestingModule],
+    declarations: [MockDirective(TrackDirective)],
     providers: [],
     declareComponent: false
   });
@@ -23,7 +26,22 @@ describe('Button Component', () => {
       }
     });
 
-    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
+    const buttonEl = spectator.query('.button');
+    expect(buttonEl).toHaveClass('button secondary small solid');
+    expect(buttonEl).toHaveAttribute('type', 'button');
+  });
+
+  test('should set correct button type', () => {
+    spectator = createHost(`<ht-button [label]="label" [type]="type"></ht-button>`, {
+      hostProps: {
+        label: 'Button',
+        type: ButtonType.Submit
+      }
+    });
+
+    const buttonEl = spectator.query('.button');
+    expect(buttonEl).toHaveClass('button secondary small solid');
+    expect(buttonEl).toHaveAttribute('type', 'submit');
   });
 
   test('should have correct style class for selected role', () => {

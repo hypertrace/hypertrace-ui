@@ -7,4 +7,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  .page {
+    height: 50px;
+    width: 50px;
+  }
+
+  .spinner {
+    height: 20px;
+    width: 20px;
+  }
+
+  .expandable-row {
+    height: 20px;
+    width: auto;
+  }
 }

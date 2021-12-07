@@ -10,6 +10,7 @@ import {
   Output,
   QueryList
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { EMPTY, merge, Observable, of } from 'rxjs';
@@ -26,7 +27,14 @@ import { SelectSize } from './select-size';
   selector: 'ht-select',
   styleUrls: ['./select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SubscriptionLifecycle],
+  providers: [
+    SubscriptionLifecycle,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: SelectComponent,
+      multi: true
+    }
+  ],
   template: `
     <div
       class="select"
@@ -55,20 +63,28 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-border"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-icon
-                *ngIf="this.getPrefixIcon(selected)"
-                class="trigger-prefix-icon"
-                [icon]="this.getPrefixIcon(selected)"
-                [size]="this.iconSize"
-                [color]="selected?.iconColor"
-                [borderType]="selected?.iconBorderType"
-                [borderColor]="selected?.iconBorderColor"
-                [borderRadius]="selected?.iconBorderRadius"
-              >
-              </ht-icon>
-              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
-              </ht-label>
+              <ng-container
+                [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBorderTriggerTemplate"
+              ></ng-container>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+              <ng-template #defaultMenuWithBorderTriggerTemplate
+                ><ht-icon
+                  *ngIf="this.getPrefixIcon(selected)"
+                  class="trigger-prefix-icon"
+                  [icon]="this.getPrefixIcon(selected)"
+                  [size]="this.iconSize"
+                  [color]="selected?.iconColor"
+                  [borderType]="selected?.iconBorderType"
+                  [borderColor]="selected?.iconBorderColor"
+                  [borderRadius]="selected?.iconBorderRadius"
+                >
+                </ht-icon>
+                <ht-label
+                  class="trigger-label"
+                  [label]="selected?.selectedLabel || selected?.label || this.placeholder"
+                >
+                </ht-label>
+              </ng-template>
             </div>
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.Icon}'"
@@ -89,8 +105,16 @@ import { SelectSize } from './select-size';
               class="trigger-content menu-with-background"
               [ngClass]="[this.justifyClass]"
             >
-              <ht-label class="trigger-label" [label]="selected?.selectedLabel || selected?.label || this.placeholder">
-              </ht-label>
+              <ng-container
+                [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
+              ></ng-container>
+              <ng-template #defaultMenuWithBackgroundTriggerTemplate
+                ><ht-label
+                  class="trigger-label"
+                  [label]="selected?.selectedLabel || selected?.label || this.placeholder"
+                >
+                </ht-label
+              ></ng-template>
               <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
             </div>
           </div>
@@ -111,7 +135,6 @@ import { SelectSize } from './select-size';
               *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
             ></ng-container>
           </div>
-
           <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
             <div
               *ngFor="let item of items"
@@ -119,20 +142,9 @@ import { SelectSize } from './select-size';
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
             >
-              <div class="select-option-info">
-                <ht-icon
-                  *ngIf="item.icon"
-                  class="icon"
-                  [icon]="item.icon"
-                  size="${IconSize.Small}"
-                  [color]="item.iconColor"
-                  [borderType]="item?.iconBorderType"
-                  [borderColor]="item?.iconBorderColor"
-                  [borderRadius]="item?.iconBorderRadius"
-                >
-                </ht-icon>
-                <span class="label">{{ item.label }}</span>
-              </div>
+              <ng-container
+                *ngTemplateOutlet="item.selectOptionRenderer?.getTemplateRef() ?? defaultSelectOptionTemplate; context: {$implicit: item}"
+              ></ng-container>
               <ht-icon
                 class="status-icon"
                 *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
@@ -141,12 +153,29 @@ import { SelectSize } from './select-size';
               ></ht-icon>
             </div>
           </ng-template>
+
+          <ng-template #defaultSelectOptionTemplate let-item
+            ><div class="select-option-info">
+              <ht-icon
+                *ngIf="item.icon"
+                class="icon"
+                [icon]="item.icon"
+                size="${IconSize.Small}"
+                [color]="item.iconColor"
+                [borderType]="item?.iconBorderType"
+                [borderColor]="item?.iconBorderColor"
+                [borderRadius]="item?.iconBorderRadius"
+              >
+              </ht-icon>
+              <span class="label">{{ item.label }}</span>
+            </div>
+          </ng-template>
         </ht-popover-content>
       </ht-popover>
     </div>
   `
 })
-export class SelectComponent<V> implements AfterContentInit, OnChanges {
+export class SelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -187,6 +216,8 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public controlItems?: QueryList<SelectControlOptionComponent<V>>;
 
   public selected$?: Observable<SelectOption<V> | undefined>;
+  private propagateControlValueChange?: (value: V | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V | undefined) => void;
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
@@ -251,9 +282,14 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
       return;
     }
 
-    this.selected = item.value;
-    this.selected$ = this.buildObservableOfSelected();
+    this.setSelection(item.value);
     this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
+  }
+
+  private setSelection(value?: V): void {
+    this.selected = value;
+    this.selected$ = this.buildObservableOfSelected();
   }
 
   private findItem(value: V | undefined): SelectOption<V> | undefined {
@@ -274,6 +310,23 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     }
 
     return styles;
+  }
+
+  public writeValue(value?: V): void {
+    this.setSelection(value);
+  }
+
+  public registerOnChange(onChange: (value: V | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value: V | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private propagateValueChangeToFormControl(value: V | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }
 
