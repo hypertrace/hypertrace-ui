@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
+import { TimeRangeService } from '@hypertrace/common';
 import { ButtonComponent, DividerComponent, POPOVER_DATA } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { CartesianSelectedData, CartesianSeriesVisualizationType } from '../../../../../../../public-api';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 import { CartesianExplorerContextMenuComponent, ContextMenu } from './cartesian-explorer-context-menu.component';
-import { IconType } from '@hypertrace/assets-library';
-import { CartesianSelectedData, CartesianSeriesVisualizationType } from '../../../../../../../public-api';
-import { TimeRangeService } from '@hypertrace/common';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -87,7 +87,7 @@ describe('Sheet Overlay component', () => {
     ]
   });
 
-  const createConfiguredHost = (_configOverrides: any = {}) =>
+  const createConfiguredHost = ({}) =>
     createHost(undefined, {
       providers: [
         {
@@ -109,7 +109,7 @@ describe('Sheet Overlay component', () => {
       ]
     });
 
-  test('should display the title', () => {
+  test('should navigate to explorer on click explore menu', () => {
     spectator = createConfiguredHost({
       data: selectedData
     });
