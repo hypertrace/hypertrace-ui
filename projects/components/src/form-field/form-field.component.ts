@@ -19,7 +19,13 @@ import { IconSize } from '../icon/icon-size';
           [htTooltip]="this.iconTooltip"
         ></ht-icon>
       </div>
-      <div class="content" [ngClass]="{ 'error-border': this.showFormError && this.errorLabel }">
+      <div
+        class="content"
+        [ngClass]="{
+          'show-border': this.showBorder,
+          'error-border': this.showFormError && this.errorLabel
+        }"
+      >
         <ng-content></ng-content>
       </div>
       <!-- For Backward Compatibility: Start -->
@@ -55,6 +61,9 @@ export class FormFieldComponent {
 
   @Input()
   public errorLabel?: string = '';
+
+  @Input()
+  public showBorder: boolean = false;
 
   @Input()
   public showFormError?: boolean = true;
