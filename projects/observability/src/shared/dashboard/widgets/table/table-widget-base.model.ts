@@ -127,6 +127,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public resizable: boolean = true;
 
   @ModelProperty({
+    key: 'row-height',
+    displayName: 'Row Height',
+    type: STRING_PROPERTY.type
+  })
+  public rowHeight: string = '44px';
+
+  @ModelProperty({
     key: 'loadingConfig',
     required: false,
     type: PLAIN_OBJECT_PROPERTY.type
@@ -194,6 +201,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public isResizable(): boolean {
     return this.resizable;
+  }
+
+  public getRowHeight(): string {
+    return this.rowHeight;
   }
 
   public getLoadingConfig(): LoadAsyncConfig | undefined {
