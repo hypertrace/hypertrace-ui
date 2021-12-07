@@ -114,8 +114,10 @@ describe('Sheet Overlay component', () => {
       data: selectedData
     });
 
+    spectator.component.selectionData = selectedData;
+
     spectator.component.menuSelectHandler(menu);
 
-    expect(1).toBe(1);
+    expect(spectator.inject(CartesainExplorerNavigationService).navigateToExplorer).toHaveBeenCalled();
   });
 });

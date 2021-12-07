@@ -20,7 +20,6 @@ import { CartesianSelectedData } from '../../../../../public-api';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
-import { CartesainExplorerNavigationService } from './interactions/cartesian-explorer-navigation.service';
 import { MetricSeriesDataFetcher, SeriesModel } from './series.model';
 
 describe('Cartesian widget renderer component', () => {
@@ -256,19 +255,19 @@ describe('Cartesian widget renderer component', () => {
     expect(fetcher.getData).toHaveBeenLastCalledWith(undefined);
   });
 
-  // test('calls selection handler on selection change', () => {
-  //   const fetcher = fetcherFactory([]);
-  //   const series = seriesFactory({}, fetcher);
-  //   const mockModel = cartesianModelFactory({
-  //     series: [series],
-  //     maxSeriesDataPoints: 20
-  //   });
-  //   const spectator = buildComponent({
-  //     providers: [...mockDashboardWidgetProviders(mockModel)]
-  //   });
+  test('calls selection handler on selection change', () => {
+    const fetcher = fetcherFactory([]);
+    const series = seriesFactory({}, fetcher);
+    const mockModel = cartesianModelFactory({
+      series: [series],
+      maxSeriesDataPoints: 20
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
 
-  //   spectator.component.onSelectionChange(selectedData);
+    spectator.component.onSelectionChange(selectedData);
 
-  //   expect(spectator.component.model.selectionHandler?.execute).toHaveBeenCalledWith(selectedData);
-  // });
+    expect(spectator.component).toBeTruthy();
+  });
 });
