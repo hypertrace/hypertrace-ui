@@ -32,10 +32,12 @@
   .content {
     flex: 1 1 auto;
     width: 100%;
-    border: 1px solid $gray-2;
-    border-radius: 6px;
-    width: 100%;
     background: white;
+
+    &.show-border {
+      border: 1px solid $gray-2;
+      border-radius: 6px;
+    }
 
     &.error-border {
       border: 1px solid $red-3;
