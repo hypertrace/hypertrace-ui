@@ -1,15 +1,12 @@
 import { Time } from '@hypertrace/common';
+import { DatetimePickerComponent, InputComponent, LabelComponent, TimePickerComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { InputComponent } from '../input/input.component';
-import { LabelComponent } from './../label/label.component';
-import { TimePickerComponent } from './../time-picker/time-picker.component';
-import { DatetimePickerComponent } from './datetime-picker.component';
 
 describe('Date Time Picker Component', () => {
   let spectator: SpectatorHost<DatetimePickerComponent>;
-  let onDateChangeSpy = jest.fn();
-  let initDate = new Date();
+  const onDateChangeSpy = jest.fn();
+  const initDate = new Date();
   const createHost = createHostFactory({
     component: DatetimePickerComponent,
     shallow: true,
@@ -74,7 +71,7 @@ describe('Date Time Picker Component', () => {
     ];
 
     validationSet.forEach(({ date, time, expected }) => {
-      spectator.setHostInput({ date });
+      spectator.setHostInput({ date: date });
       spectator.triggerEventHandler(TimePickerComponent, 'timeChange', time);
       const changedDate = new Date(date.valueOf());
       changedDate.setHours(time.hours, time.minutes);
