@@ -55,7 +55,10 @@ export class DatetimePickerComponent implements OnChanges {
   public getInputDate(): string {
     if (!this.date) return '';
     const d = this.date;
-    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() > 9 ? d.getDate() : `0${d.getDate()}`}`;
+    const YEAR = d.getFullYear();
+    const MONTH = d.getMonth() + 1 > 9 ? d.getMonth() + 1 : `0${d.getMonth() + 1}`;
+    const DATE = d.getDate() > 9 ? d.getDate() : `0${d.getDate()}`;
+    return `${YEAR}-${MONTH}-${DATE}`;
   }
 
   private getInputTime(date: Date): Time {
