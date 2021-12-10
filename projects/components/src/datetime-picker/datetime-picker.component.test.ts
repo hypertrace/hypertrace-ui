@@ -50,22 +50,22 @@ describe('Date Time Picker Component', () => {
     const validationSet = [
       {
         date: new Date('2020-10-10'),
-        time: new Time(18, 10),
+        time: new Time(18, 10, 0, 0, true),
         expected: '2020-10-10'
       },
       {
         date: new Date('2020-1-1'),
-        time: new Time(0, 30),
+        time: new Time(0, 30, 0, 0, true),
         expected: '2020-01-01'
       },
       {
         date: new Date('2020-1-1'),
-        time: new Time(23, 59),
+        time: new Time(23, 59, 0, 0, true),
         expected: '2020-01-01'
       },
       {
         date: new Date('2020-1-1'),
-        time: new Time(0, 0),
+        time: new Time(0, 0, 0, 0, true),
         expected: '2020-01-01'
       }
     ];
