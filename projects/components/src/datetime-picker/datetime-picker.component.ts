@@ -71,7 +71,7 @@ export class DatetimePickerComponent implements OnChanges {
 
   public onTimeChange(time: Time): void {
     this.time = time;
-    this.date?.setHours(time.hours, time.minutes, time.seconds, time.milliseconds);
+    this.date?.setUTCHours(time.hours, time.minutes, time.seconds, time.milliseconds);
     this.dateChange.emit(this.date);
   }
 }
