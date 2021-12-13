@@ -84,23 +84,59 @@ export class ExplorerDashboardBuilder {
   }
 
   private buildDashboardData(request: ExploreVisualizationRequest): Observable<ResultsDashboardData> {
-    return request.resultsQuery$.pipe(
-      switchMap(resultsQuery =>
-        forkJoinSafeEmpty(
-          resultsQuery.properties.map(property => this.metadataService.getAttribute(request.context, property.name))
-        ).pipe(
-          map(attributes => [
-            ...this.getDefaultTableColumns(request.context as ExplorerGeneratedDashboardContext),
-            ...this.getUserRequestedNonDefaultColumns(attributes, request.context as ExplorerGeneratedDashboardContext)
-          ]),
-          map(columns => this.buildColumnModelJson(request.context, columns)),
-          map(json => ({
-            json: json,
-            filters: resultsQuery.filters || []
-          }))
+    return forkJoinSafeEmpty({
+      resultsQuery: request.resultsQuery$,
+      attributes: this.metadataService.getAllAttributes(request.context)
+    }).pipe(
+      map(data => ({
+        resultsQuery: data.resultsQuery,
+        columns: this.getAllAttributeColumns(
+          this.getDefaultTableColumns(request.context as ExplorerGeneratedDashboardContext),
+          data.attributes,
+          request.context as ExplorerGeneratedDashboardContext
         )
-      )
+      })),
+      map(data => ({
+        resultsQuery: data.resultsQuery,
+        json: this.buildColumnModelJson(request.context, data.columns)
+      })),
+      map(data => ({
+        json: data.json,
+        filters: data.resultsQuery.filters || []
+      }))
     );
+  }
+
+  private getAllAttributeColumns(
+    defaultColumns: ModelJson[],
+    attributes: AttributeMetadata[],
+    context: ExplorerGeneratedDashboardContext
+  ): ModelJson[] {
+    console.log(attributes);
+    const defaultColumnAttributes = defaultColumns.map(column => (column.value as ModelJson).attribute as string);
+    console.log(defaultColumnAttributes);
+
+    // return defaultColumns;
+    return [
+      ...defaultColumns,
+      ...attributes
+        .filter(attribute => defaultColumnAttributes.findIndex(attr => attr === attribute.name) === -1)
+        .map(attribute => ({
+          type: 'table-widget-column',
+          title: attribute.displayName,
+          width: '1',
+          display: this.getRendererForType(attribute.type),
+          visible: false,
+          filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
+          value: {
+            type: 'attribute-specification',
+            attribute: attribute.name
+          },
+          'click-handler': {
+            type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
+          }
+        }))
+    ];
   }
 
   protected buildColumnModelJson(context: string, columns: ModelJson[]): ModelJson {
@@ -543,29 +579,30 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private getUserRequestedNonDefaultColumns(
-    attributes: AttributeMetadata[],
-    context: ExplorerGeneratedDashboardContext
-  ): ModelJson[] {
-    const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
+  // private getUserRequestedNonDefaultColumns(
+  //   attributes: AttributeMetadata[],
+  //   context: ExplorerGeneratedDashboardContext
+  // ): ModelJson[] {
+  //   console.log(attributes);
+  //   const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
 
-    return attributes
-      .filter(attribute => !attributesToExclude.has(attribute.name))
-      .map(attribute => ({
-        type: 'table-widget-column',
-        title: attribute.displayName,
-        width: '1',
-        display: this.getRendererForType(attribute.type),
-        filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
-        value: {
-          type: 'attribute-specification',
-          attribute: attribute.name
-        },
-        'click-handler': {
-          type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
-        }
-      }));
-  }
+  //   return attributes
+  //     .filter(attribute => !attributesToExclude.has(attribute.name))
+  //     .map(attribute => ({
+  //       type: 'table-widget-column',
+  //       title: attribute.displayName,
+  //       width: '1',
+  //       display: this.getRendererForType(attribute.type),
+  //       filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
+  //       value: {
+  //         type: 'attribute-specification',
+  //         attribute: attribute.name
+  //       },
+  //       'click-handler': {
+  //         type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
+  //       }
+  //     }));
+  // }
 }
 
 export interface ExplorerGeneratedDashboard {
