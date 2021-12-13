@@ -19,6 +19,7 @@ import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/de
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
+import { ChartEvent } from './chart-interactivty';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
@@ -61,8 +62,19 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
   public selectedInterval?: IntervalValue;
 
+  @Input()
+  public sync?: boolean;
+
+  @Input()
+  public groupId?: string;
+
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
+
+  @Output()
+  public readonly mousePositionChange: EventEmitter<
+    MouseLocationData<TData, Series<TData> | Band<TData>>[]
+  > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
@@ -87,13 +99,16 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.sync, this.groupId)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      );
+      )
+      .withEventListener(ChartEvent.Hover, data => {
+        this.mousePositionChange.emit(data);
+      });
 
     if (this.bands) {
       this.chart.withBands(...this.bands);

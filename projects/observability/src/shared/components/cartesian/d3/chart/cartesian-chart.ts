@@ -76,7 +76,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly renderingStrategy: RenderingStrategy,
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
-    protected readonly domRenderer: Renderer2
+    protected readonly domRenderer: Renderer2,
+    protected readonly sync?: boolean,
+    protected readonly groupId?: string
   ) {}
 
   public destroy(): this {
@@ -515,6 +517,15 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
+
+    if (this.sync && this.groupId) {
+      this.eventListeners.forEach(listener => {
+        if (listener.event === ChartEvent.Hover) {
+          listener.onEvent(locationData);
+        }
+      });
+    }
+
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, locationData);
     }

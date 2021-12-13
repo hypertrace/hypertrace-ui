@@ -4,7 +4,8 @@ import { AxisType, Band, Series } from './chart';
 export const enum ChartEvent {
   Click,
   DoubleClick,
-  RightClick
+  RightClick,
+  Hover
 }
 
 export type ChartEventListener<TData> = (data: MouseLocationData<TData, Series<TData> | Band<TData>>[]) => void;

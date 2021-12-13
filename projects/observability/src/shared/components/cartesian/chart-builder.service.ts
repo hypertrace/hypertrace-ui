@@ -12,7 +12,22 @@ export class ChartBuilderService {
     protected readonly d3Utils: D3UtilService
   ) {}
 
-  public build<TData>(strategy: RenderingStrategy, element: Element, renderer: Renderer2): CartesianChart<TData> {
-    return new DefaultCartesianChart(element, this.injector, strategy, this.svgUtilService, this.d3Utils, renderer);
+  public build<TData>(
+    strategy: RenderingStrategy,
+    element: Element,
+    renderer: Renderer2,
+    sync?: boolean,
+    groupId?: string
+  ): CartesianChart<TData> {
+    return new DefaultCartesianChart(
+      element,
+      this.injector,
+      strategy,
+      this.svgUtilService,
+      this.d3Utils,
+      renderer,
+      sync,
+      groupId
+    );
   }
 }
