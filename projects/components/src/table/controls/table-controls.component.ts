@@ -52,6 +52,7 @@ import {
             class="control select"
             [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"
+            [maxHeight]="440"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
             (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
           >
