@@ -280,7 +280,7 @@ describe('Explore cartesian data source model', () => {
           series: [
             {
               color: 'first color',
-              name: 'sum(foo)',
+              name: 'first',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -296,11 +296,11 @@ describe('Explore cartesian data source model', () => {
                   value: 15
                 }
               ],
-              groupName: 'first'
+              groupName: 'sum(foo)'
             },
             {
               color: 'second color',
-              name: 'sum(foo)',
+              name: 'second',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -316,7 +316,7 @@ describe('Explore cartesian data source model', () => {
                   value: 25
                 }
               ],
-              groupName: 'second'
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
