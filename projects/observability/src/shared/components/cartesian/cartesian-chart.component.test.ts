@@ -9,6 +9,7 @@ import { Axis, AxisLocation, AxisType, CartesianSeriesVisualizationType, ScaleTy
 import { CartesianAxis } from './d3/axis/cartesian-axis';
 import { CartesianNoDataMessage } from './d3/cartesian-no-data-message';
 import { CartesianLegend } from './d3/legend/cartesian-legend';
+//
 
 describe('Cartesian Chart component', () => {
   // NOTE: tests need to query from root because angular abstraction does not support SVG
@@ -182,18 +183,18 @@ describe('Cartesian Chart component', () => {
       series: [
         {
           data: [[1, 2]],
-          name: 'test series 1',
+          name: 'first',
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
-          groupName: 'first',
+          groupName: 'test series',
           stacking: true
         },
         {
           data: [[1, 6]],
-          name: 'test series 2',
+          name: 'second',
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
-          groupName: 'seond',
+          groupName: 'test series',
           stacking: true
         }
       ],
