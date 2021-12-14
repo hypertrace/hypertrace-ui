@@ -9,7 +9,6 @@ import { Axis, AxisLocation, AxisType, CartesianSeriesVisualizationType, ScaleTy
 import { CartesianAxis } from './d3/axis/cartesian-axis';
 import { CartesianNoDataMessage } from './d3/cartesian-no-data-message';
 import { CartesianLegend } from './d3/legend/cartesian-legend';
-//
 
 describe('Cartesian Chart component', () => {
   // NOTE: tests need to query from root because angular abstraction does not support SVG
