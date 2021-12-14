@@ -41,8 +41,8 @@ export class CartesianLegend<TData> {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = []
   ) {
-    this.isGrouped = !isNil(this.series[0].groupName);
-    this.isNonTitledGrouped = this.series[0].name === this.series[0].groupName;
+    this.isGrouped = !isNil(this.series[0]?.groupName);
+    this.isNonTitledGrouped = this.series.length > 0 && this.series[0].name === this.series[0].groupName;
     this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : {};
 
     this.activeSeries = [...this.series];
