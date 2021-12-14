@@ -163,8 +163,7 @@
 
       .legend-entries {
         flex-direction: row;
-        display: grid;
-        grid-template-columns: 200px auto;
+        display: flex;
         gap: 20px;
         border: 1px solid $gray-2;
         border-radius: 8px;
@@ -176,6 +175,7 @@
 
         .legend-entries-title {
           @include body-1-regular($gray-5);
+          width: 200px;
           cursor: pointer;
 
           &.active {
@@ -184,6 +184,7 @@
         }
 
         .legend-entry-values {
+          flex: 1;
           display: flex;
           flex-wrap: wrap;
         }

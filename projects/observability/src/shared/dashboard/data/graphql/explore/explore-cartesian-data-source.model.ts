@@ -1,5 +1,6 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
+import { isNil } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
@@ -133,8 +134,12 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         data: result.data,
         units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
         type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
-        name: request.useGroupName ? result.groupName! : obj.specDisplayName,
-        groupName: result.groupName,
+        name: result.groupName ?? obj.specDisplayName,
+        groupName: !isNil(result.groupName)
+          ? request.useGroupName
+            ? result.groupName
+            : obj.specDisplayName
+          : undefined,
         color: color
       }))
     );
