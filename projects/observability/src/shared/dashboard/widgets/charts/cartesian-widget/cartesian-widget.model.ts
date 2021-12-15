@@ -147,12 +147,6 @@ export class CartesianWidgetModel<TInterval> {
   public maxSeriesDataPoints?: number;
 
   @ModelProperty({
-    key: 'mouse-sync',
-    type: BOOLEAN_PROPERTY.type
-  })
-  public mouseSync?: boolean = false;
-
-  @ModelProperty({
     key: 'sync-group-id',
     type: STRING_PROPERTY.type
   })

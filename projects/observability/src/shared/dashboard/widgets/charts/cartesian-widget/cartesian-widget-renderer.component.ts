@@ -27,7 +27,6 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [selectedInterval]="this.selectedInterval"
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"
-        [sync]="this.model.mouseSync"
         [groupId]="this.model.syncGroupId"
         (selectedIntervalChange)="this.onIntervalChange($event)"
       >

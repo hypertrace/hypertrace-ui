@@ -18,6 +18,7 @@ import {
   Summary
 } from '../../chart';
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
+import { ChartSyncService } from '../../chart-sync-service';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { CartesianBand } from '../data/band/cartesian-band';
@@ -77,9 +78,19 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
-    protected readonly sync?: boolean,
-    protected readonly groupId?: string
-  ) {}
+    protected readonly groupId?: string,
+    private readonly chartSyncService?: ChartSyncService
+  ) {
+    this.chartSyncService?.locationChangeSubject.subscribe(data => {
+      this.showTooltip(data);
+    });
+  }
+
+  private showTooltip(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+    if (this.tooltip) {
+      this.tooltip.showWithData(this.mouseEventContainer!, locationData);
+    }
+  }
 
   public destroy(): this {
     this.clear();
@@ -518,7 +529,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
 
-    if (this.sync && this.groupId) {
+    if (this.groupId) {
       this.eventListeners.forEach(listener => {
         if (listener.event === ChartEvent.Hover) {
           listener.onEvent(locationData);

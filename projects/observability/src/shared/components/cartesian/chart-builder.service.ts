@@ -2,6 +2,7 @@ import { Injectable, Injector, Renderer2 } from '@angular/core';
 import { D3UtilService } from '../utils/d3/d3-util.service';
 import { SvgUtilService } from '../utils/svg/svg-util.service';
 import { CartesianChart, RenderingStrategy } from './chart';
+import { ChartSyncService } from './chart-sync-service';
 import { DefaultCartesianChart } from './d3/chart/cartesian-chart';
 
 @Injectable({ providedIn: 'root' })
@@ -16,8 +17,8 @@ export class ChartBuilderService {
     strategy: RenderingStrategy,
     element: Element,
     renderer: Renderer2,
-    sync?: boolean,
-    groupId?: string
+    groupId?: string,
+    chartSyncService?: ChartSyncService
   ): CartesianChart<TData> {
     return new DefaultCartesianChart(
       element,
@@ -26,8 +27,8 @@ export class ChartBuilderService {
       this.svgUtilService,
       this.d3Utils,
       renderer,
-      sync,
-      groupId
+      groupId,
+      chartSyncService
     );
   }
 }
