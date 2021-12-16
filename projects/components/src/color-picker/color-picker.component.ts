@@ -26,7 +26,7 @@ import { IconSize } from '../icon/icon-size';
       ></div>
       <ht-popover>
         <ht-popover-trigger>
-          <ht-icon icon="${IconType.Add}" size="${IconSize.Small}"></ht-icon>
+          <ht-icon class="add-icon" icon="${IconType.Add}" size="${IconSize.Small}"></ht-icon>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="container">
