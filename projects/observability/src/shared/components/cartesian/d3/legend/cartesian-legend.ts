@@ -1,7 +1,7 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { groupBy, isNil } from 'lodash-es';
+import { groupBy } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
@@ -28,7 +28,6 @@ export class CartesianLegend<TData> {
   private readonly groupedSeries: Dictionary<Series<TData>[]>;
 
   private readonly isGrouped: boolean = true;
-  private readonly isNonTitledGrouped: boolean = false;
   private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<TData>[];
@@ -41,8 +40,8 @@ export class CartesianLegend<TData> {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = []
   ) {
-    this.isGrouped = !isNil(this.series[0]?.groupName);
-    this.isNonTitledGrouped = this.series.length > 0 && this.series[0].name === this.series[0].groupName;
+    this.isGrouped =
+      this.series.length > 0 && this.series.every(seriesEntry => seriesEntry.groupName !== seriesEntry.name);
     this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : {};
 
     this.activeSeries = [...this.series];
@@ -106,23 +105,21 @@ export class CartesianLegend<TData> {
         .data(Object.values(this.groupedSeries))
         .enter()
         .append('div')
-        .attr('class', (_, index) => `legend-entries group-${index + 1}`)
+        .classed('legend-entries', true)
         .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
     }
   }
 
   private drawLegendEntriesTitleAndValues(seriesGroup: Series<TData>[], element: HTMLDivElement): void {
     const legendEntriesSelection = select(element);
-    if (!this.isNonTitledGrouped) {
-      legendEntriesSelection
-        .selectAll('.legend-entries-title')
-        .data([seriesGroup])
-        .enter()
-        .append('div')
-        .classed('legend-entries-title', true)
-        .text(group => `${group[0].groupName}:`)
-        .on('click', () => this.updateActiveSeriesGroup(seriesGroup));
-    }
+    legendEntriesSelection
+      .selectAll('.legend-entries-title')
+      .data([seriesGroup])
+      .enter()
+      .append('div')
+      .classed('legend-entries-title', true)
+      .text(group => `${group[0].groupName}:`)
+      .on('click', () => this.updateActiveSeriesGroup(seriesGroup));
 
     legendEntriesSelection
       .append('div')
