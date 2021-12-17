@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
@@ -37,7 +37,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class ColorPickerComponent {
+export class ColorPickerComponent implements ControlValueAccessor {
   @Input()
   public selected?: string;
 
