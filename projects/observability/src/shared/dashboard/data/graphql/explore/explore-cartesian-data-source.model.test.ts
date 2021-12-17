@@ -134,7 +134,8 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -198,7 +199,8 @@ describe('Explore cartesian data source model', () => {
               data: [
                 ['first', 10],
                 ['second', 15]
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []

@@ -202,7 +202,6 @@ describe('Cartesian Chart component', () => {
     tick();
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
     expect(chart.queryAll('.legend-entry').length).toBe(2);
-    expect(chart.query('.group-1')).toExist();
     expect(chart.query('.reset.hidden')).toExist();
 
     const legendEntriesTitleElement = chart.query('.legend-entries-title') as Element;

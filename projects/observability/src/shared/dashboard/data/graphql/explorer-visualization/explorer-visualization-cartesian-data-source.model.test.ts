@@ -1,4 +1,3 @@
-//
 import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -154,7 +153,8 @@ describe('Explorer Visualization cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -219,7 +219,8 @@ describe('Explorer Visualization cartesian data source model', () => {
               data: [
                 ['first', 10],
                 ['second', 15]
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
