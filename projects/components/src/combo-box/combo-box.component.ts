@@ -13,9 +13,10 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { DomElementScrollIntoViewService, isNonEmptyString, TypedSimpleChanges } from '@hypertrace/common';
-import { isNil } from 'lodash-es';
+import { isNil, isEmpty } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';
@@ -25,6 +26,13 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
   selector: 'ht-combo-box',
   styleUrls: ['./combo-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: ComboBoxComponent
+    }
+  ],
   template: `
     <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
       <ht-popover-trigger>
@@ -113,7 +121,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
     </ht-popover>
   `
 })
-export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy {
+export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
   public mode?: ComboBoxMode = ComboBoxMode.Input;
 
@@ -176,6 +184,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public createOption?: ComboBoxOption<TValue>;
 
+  private propagateControlValueChange?: (value: string | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
+
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly scrollIntoViewService: DomElementScrollIntoViewService
@@ -204,10 +215,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   private setFilteredOptions(searchText?: string): void {
-    this.filteredOptions =
-      searchText === undefined
-        ? this.options ?? []
-        : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText.toLowerCase()));
+    this.filteredOptions = isEmpty(searchText)
+      ? this.options ?? []
+      : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText!.toLowerCase()));
     this.createOption = this.isShowCreateOption(searchText) ? this.buildCreateOption(searchText) : undefined;
     this.setHighlightedOptionIndex();
   }
@@ -227,6 +237,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
       this.measureText();
       this.setHighlightedOptionIndex();
       this.textChange.emit(this.text);
+      this.propagateValueChangeToFormControl(this.text);
     }
   }
 
@@ -404,5 +415,22 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
           : '100%';
       this.changeDetectorRef.markForCheck(); // Yes, required
     });
+  }
+
+  private propagateValueChangeToFormControl(value?: string): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  public writeValue(text?: string): void {
+    this.text = text;
+  }
+
+  public registerOnChange(onChange: (value?: string) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: string) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
   }
 }
