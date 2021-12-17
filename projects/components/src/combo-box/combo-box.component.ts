@@ -16,7 +16,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { DomElementScrollIntoViewService, isNonEmptyString, TypedSimpleChanges } from '@hypertrace/common';
-import { isNil, isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';
