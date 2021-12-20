@@ -94,7 +94,7 @@
     "@types/jest": "^26.0.24",
     "@types/lodash-es": "^4.17.5",
     "@types/mixpanel-browser": "^2.35.7",
-    "@types/node": "^16.11.12",
+    "@types/node": "^17.0.1",
     "@types/uuid": "^8.3.1",
     "@types/webpack-env": "^1.16.3",
     "codelyzer": "^6.0.2",
