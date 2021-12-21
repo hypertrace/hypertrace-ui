@@ -1,7 +1,7 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { groupBy, isEmpty } from 'lodash-es';
+import { groupBy } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
@@ -41,8 +41,7 @@ export class CartesianLegend<TData> {
     private readonly summaries: Summary[] = []
   ) {
     this.isGrouped =
-      this.series.length > 0 &&
-      this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
+      this.series.length > 0 && this.series.every(seriesEntry => seriesEntry.groupName !== seriesEntry.name);
     this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : {};
 
     this.activeSeries = [...this.series];
