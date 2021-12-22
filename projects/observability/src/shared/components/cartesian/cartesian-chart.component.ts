@@ -80,7 +80,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
     private readonly renderer: Renderer2,
-    private readonly chartSyncService: ChartSyncService
+    private readonly chartSyncService: ChartSyncService<TData>
   ) {}
 
   public ngOnChanges(): void {

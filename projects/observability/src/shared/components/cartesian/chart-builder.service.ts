@@ -18,7 +18,7 @@ export class ChartBuilderService {
     element: Element,
     renderer: Renderer2,
     groupId?: string,
-    chartSyncService?: ChartSyncService
+    chartSyncService?: ChartSyncService<TData>
   ): CartesianChart<TData> {
     return new DefaultCartesianChart(
       element,

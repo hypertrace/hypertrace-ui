@@ -79,7 +79,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
     protected readonly groupId?: string,
-    private readonly chartSyncService?: ChartSyncService
+    private readonly chartSyncService?: ChartSyncService<TData>
   ) {
     this.chartSyncService?.locationChangeSubject.subscribe(data => {
       this.showTooltip(data);
@@ -87,8 +87,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private showTooltip(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+    const location = locationData[0].location;
+
+    const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
+
     if (this.tooltip) {
-      this.tooltip.showWithData(this.mouseEventContainer!, locationData);
+      this.tooltip.showWithData(this.mouseEventContainer!, currentLocation);
+      this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
     }
   }
 
@@ -529,6 +534,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
 
+    // tslint:disable-next-line
     if (this.groupId) {
       this.eventListeners.forEach(listener => {
         if (listener.event === ChartEvent.Hover) {
