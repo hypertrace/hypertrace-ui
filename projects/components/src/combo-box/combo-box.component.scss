@@ -11,8 +11,11 @@
   align-items: center;
   height: inherit;
   width: inherit;
-  border: 1px solid $color-border;
   border-radius: 6px;
+
+  &.show-border {
+    border: 1px solid $color-border;
+  }
 
   &.chip {
     border: 1px solid transparent;
