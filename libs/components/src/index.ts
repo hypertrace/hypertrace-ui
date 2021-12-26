@@ -37,6 +37,10 @@ export * from './tabs/content/tab-group.component';
 export * from './tabs/content/tab.module';
 export * from './tabs/content/tab/tab.component';
 
+// Color picker
+export * from './color-picker/color-picker.component';
+export * from './color-picker/color-picker.module';
+
 // Copy to Clipboard
 export * from './copy-to-clipboard/copy-to-clipboard.component';
 export * from './copy-to-clipboard/copy-to-clipboard.module';
@@ -171,6 +175,7 @@ export * from './link/link.module';
 export * from './list-view/list-view.component';
 export * from './list-view/list-view.module';
 export * from './list-view/list-view-value-renderer.directive';
+export * from './list-view/list-view-key-renderer.directive';
 
 // Load Async
 export * from './load-async/load-async.directive';

@@ -97,6 +97,8 @@ export * from './shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 // Span Detail
 export { SpanData } from './shared/components/span-detail/span-data';
 export { SpanTitle } from './shared/components/span-detail/span-title';
+export { SpanDetailTab } from './shared/components/span-detail/span-detail-tab';
+
 export * from './shared/components/span-detail/span-detail.component';
 export * from './shared/components/span-detail/span-detail.module';
 export { SpanDetailLayoutStyle } from './shared/components/span-detail/span-detail-layout-style';

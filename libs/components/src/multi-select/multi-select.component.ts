@@ -57,8 +57,8 @@ import { MultiSelectJustify } from './multi-select-justify';
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
-            <ng-container *htLoadAsync="this.triggerValues$ as triggerValues">
-              <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
+            <ng-container *ngIf="!this.isIconOnlyMode()">
+              <div class="trigger-label-container" *ngIf="this.triggerValues$ | async as triggerValues">
                 <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
                 <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
                   >+{{ triggerValues.selectedItemsCount - 1 }}</span

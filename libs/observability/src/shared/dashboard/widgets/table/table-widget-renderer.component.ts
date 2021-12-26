@@ -105,6 +105,7 @@ import { TableWidgetModel } from './table-widget.model';
           [resizable]="this.api.model.isResizable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
+          [rowHeight]="this.api.model.getRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
@@ -124,7 +125,8 @@ import { TableWidgetModel } from './table-widget.model';
 })
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
-  implements OnInit {
+  implements OnInit
+{
   private static readonly DEFAULT_TAB_INDEX: number = 0;
 
   public viewItems: ToggleItem<string>[] = [];

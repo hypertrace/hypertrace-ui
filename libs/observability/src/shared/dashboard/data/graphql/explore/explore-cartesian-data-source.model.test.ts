@@ -134,7 +134,8 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -198,7 +199,8 @@ describe('Explore cartesian data source model', () => {
               data: [
                 ['first', 10],
                 ['second', 15]
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -280,7 +282,7 @@ describe('Explore cartesian data source model', () => {
           series: [
             {
               color: 'first color',
-              name: 'sum(foo): first',
+              name: 'first',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -295,11 +297,12 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             },
             {
               color: 'second color',
-              name: 'sum(foo): second',
+              name: 'second',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -314,7 +317,8 @@ describe('Explore cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 25
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []

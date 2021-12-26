@@ -26,6 +26,7 @@ export interface Series<TInterval> {
   // Override the default color string using a method that takes data point as input
   getColor?(datum?: TInterval): string;
   name: string;
+  groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;

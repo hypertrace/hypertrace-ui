@@ -134,11 +134,9 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         data: result.data,
         units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
         type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
-        name: isEmpty(result.groupName)
-          ? obj.specDisplayName
-          : request.useGroupName
-          ? result.groupName!
-          : `${obj.specDisplayName}: ${result.groupName}`,
+        name: !isEmpty(result.groupName) ? result.groupName! : obj.specDisplayName,
+        groupName:
+          !isEmpty(result.groupName) && (request.useGroupName ?? false) ? result.groupName! : obj.specDisplayName,
         color: color
       }))
     );
