@@ -39,7 +39,11 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
         <div
           #trigger
           class="popover-trigger"
-          [ngClass]="this.mode"
+          [ngClass]="{
+            input: this.mode === '${ComboBoxMode.Input}',
+            chip: this.mode === '${ComboBoxMode.Chip}',
+            'show-border': this.showBorder
+          }"
           [class.has-text]="this.text"
           [class.input-focused]="input.matches(':focus')"
         >
@@ -148,6 +152,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   @Input()
   public options?: ComboBoxOption<TValue>[] = [];
+
+  @Input()
+  public showBorder: boolean = true;
 
   @Output()
   public readonly textChange: EventEmitter<string> = new EventEmitter();
