@@ -53,7 +53,7 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
+            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '', this.size]"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
@@ -63,7 +63,11 @@ import { MultiSelectJustify } from './multi-select-justify';
                 <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
                   >+{{ triggerValues.selectedItemsCount - 1 }}</span
                 >
-                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+                <ht-icon
+                  class="trigger-icon"
+                  icon="${IconType.ChevronDown}"
+                  [size]="this.size === '${IconSize.ExtraSmall}' ? '${IconSize.ExtraSmall}' : '${IconSize.Small}'"
+                ></ht-icon>
               </div>
             </ng-container>
           </div>
