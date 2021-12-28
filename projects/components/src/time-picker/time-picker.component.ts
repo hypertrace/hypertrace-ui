@@ -9,8 +9,8 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
   styleUrls: ['./time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="time-picker">
-      <ht-popover class="time-selector" [closeOnClick]="true">
+    <div class="time-picker" [ngClass]="[this.disabled ? 'disabled' : '']">
+      <ht-popover class="time-selector" [disabled]="this.disabled" [ngClass]="this.displayMode" [closeOnClick]="true">
         <ht-popover-trigger>
           <div class="popover-trigger" #popoverTrigger>
             <ht-icon
@@ -48,6 +48,12 @@ export class TimePickerComponent {
   @Input()
   public showTimeTriggerIcon?: boolean = false;
 
+  @Input()
+  public displayMode?: TimePickerDisplayMode = TimePickerDisplayMode.MenuWithBackground;
+
+  @Input()
+  public disabled: boolean = false;
+
   @Output()
   public readonly timeChange: EventEmitter<Time> = new EventEmitter();
 
@@ -66,4 +72,9 @@ export class TimePickerComponent {
     this.time = time;
     this.timeChange.emit(time);
   }
+}
+
+export const enum TimePickerDisplayMode {
+  MenuWithBorder = 'with-border',
+  MenuWithBackground = 'with-background'
 }
