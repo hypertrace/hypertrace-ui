@@ -84,6 +84,10 @@
       .trigger-icon {
         padding-top: 1px;
       }
+
+      &.transparent-background {
+        background-color: transparent;
+      }
     }
 
     &.justify-left {

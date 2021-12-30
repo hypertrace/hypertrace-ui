@@ -103,7 +103,7 @@ import { SelectSize } from './select-size';
             <div
               *ngSwitchCase="'${SelectTriggerDisplayMode.MenuWithBackground}'"
               class="trigger-content menu-with-background"
-              [ngClass]="[this.justifyClass]"
+              [ngClass]="[this.justifyClass, this.showTransparentBackground ? 'transparent-background' : '']"
             >
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
@@ -199,6 +199,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   @Input()
   public showBorder: boolean = false;
+
+  @Input()
+  public showTransparentBackground: boolean = false;
 
   @Input()
   public justify?: SelectJustify;
