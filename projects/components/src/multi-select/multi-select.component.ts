@@ -63,11 +63,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                 <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
                   >+{{ triggerValues.selectedItemsCount - 1 }}</span
                 >
-                <ht-icon
-                  class="trigger-icon"
-                  icon="${IconType.ChevronDown}"
-                  [size]="this.size === '${IconSize.ExtraSmall}' ? '${IconSize.ExtraSmall}' : '${IconSize.Small}'"
-                ></ht-icon>
+                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" [size]="this.iconSize"></ht-icon>
               </div>
             </ng-container>
           </div>

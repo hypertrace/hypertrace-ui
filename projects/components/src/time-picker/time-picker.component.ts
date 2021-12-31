@@ -9,7 +9,7 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
   styleUrls: ['./time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="time-picker" [ngClass]="[this.disabled ? 'disabled' : '']">
+    <div class="time-picker" [ngClass]="{ disabled: this.disabled }">
       <ht-popover class="time-selector" [disabled]="this.disabled" [ngClass]="this.displayMode" [closeOnClick]="true">
         <ht-popover-trigger>
           <div class="popover-trigger" #popoverTrigger>
