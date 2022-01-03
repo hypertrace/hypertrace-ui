@@ -1,6 +1,7 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
+import { AttributeExpression } from 'projects/observability/src/shared/graphql/model/attribute/attribute-expression';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
@@ -107,19 +108,19 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
       );
 
-    const groupByKeys = request.groupBy?.keys ?? [];
-    const isGroupBy = groupByKeys.length > 0;
+    const groupByExpressions = request.groupBy?.keyExpressions ?? [];
+    const isGroupBy = groupByExpressions.length > 0;
 
     if (!isGroupBy && request.interval) {
       return aggregatableSpecs.map(spec => this.buildTimeseriesData(spec, result));
     }
 
     if (isGroupBy && !request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByKeys, result));
+      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByExpressions, result));
     }
 
     if (isGroupBy && request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByKeys, result)).flat();
+      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByExpressions, result)).flat();
     }
 
     return [];
@@ -149,10 +150,14 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     };
   }
 
-  public buildGroupedSeriesData(spec: AggregatableSpec, groupByKeys: string[], result: ExploreResult): SeriesData {
+  public buildGroupedSeriesData(
+    spec: AggregatableSpec,
+    groupByExpressions: AttributeExpression[],
+    result: ExploreResult
+  ): SeriesData {
     return {
       data: result
-        .getGroupedSeriesData(groupByKeys, spec.name, spec.aggregation)
+        .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
         .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
       spec: spec
     };
@@ -160,10 +165,10 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
 
   public buildGroupedTimeseriesData(
     spec: AggregatableSpec,
-    groupByKeys: string[],
+    groupByExpressions: AttributeExpression[],
     result: ExploreResult
   ): SeriesData[] {
-    return Array.from(result.getGroupedTimeSeriesData(groupByKeys, spec.name, spec.aggregation).entries()).map(
+    return Array.from(result.getGroupedTimeSeriesData(groupByExpressions, spec.name, spec.aggregation).entries()).map(
       ([groupNames, data]) => ({
         data: data,
         groupName: this.buildGroupedSeriesName(groupNames),

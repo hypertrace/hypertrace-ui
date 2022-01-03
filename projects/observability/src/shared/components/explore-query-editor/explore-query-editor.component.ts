@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnI
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
+import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
@@ -103,8 +104,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.setInterval(this.interval);
     }
 
-    if (changeObject.groupBy && this.groupBy?.keys.length) {
-      this.updateGroupByKey(this.groupBy, this.groupBy.keys[0]);
+    if (changeObject.groupBy && this.groupBy?.keyExpressions.length) {
+      this.updateGroupByKey(this.groupBy, this.groupBy.keyExpressions[0]);
     }
   }
 
@@ -112,12 +113,14 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.setSeries(series);
   }
 
-  public updateGroupByKey(groupBy?: GraphQlGroupBy, key?: string): void {
-    if (key === undefined) {
+  public updateGroupByKey(groupBy?: GraphQlGroupBy, keyExpression?: AttributeExpression): void {
+    if (keyExpression === undefined) {
       this.visualizationBuilder.groupBy();
     } else {
       this.visualizationBuilder.groupBy(
-        groupBy ? { ...groupBy, keys: [key] } : { keys: [key], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+        groupBy
+          ? { ...groupBy, keyExpressions: [keyExpression] }
+          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
       );
     }
   }
