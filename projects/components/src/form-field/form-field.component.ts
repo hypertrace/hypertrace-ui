@@ -23,7 +23,7 @@ import { IconSize } from '../icon/icon-size';
         class="content"
         [ngClass]="{
           'show-border': this.showBorder,
-          'error-border': (this.showFormError && this.errorLabel) || this.showOnlyErrorBorder
+          'error-border': (this.showFormError && this.errorLabel)
         }"
       >
         <ng-content></ng-content>
@@ -64,9 +64,6 @@ export class FormFieldComponent {
 
   @Input()
   public showBorder: boolean = false;
-
-  @Input()
-  public showOnlyErrorBorder: boolean = false;
 
   @Input()
   public showFormError?: boolean = true;
