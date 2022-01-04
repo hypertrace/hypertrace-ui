@@ -28,6 +28,19 @@
     padding: 0 8px;
     cursor: pointer;
     height: 34px;
+    border-radius: 6px;
+
+    &.extra-small {
+      height: 30px;
+    }
+
+    &.small {
+      height: 32px;
+    }
+
+    &.large {
+      height: 44px;
+    }
 
     &.open {
       background-color: $gray-2;
