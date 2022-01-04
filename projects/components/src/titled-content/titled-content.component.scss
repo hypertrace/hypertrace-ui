@@ -71,14 +71,14 @@
   .footer {
     .title {
       margin-top: 8px;
-    }
 
-    &.regular {
-      @include overline($gray-4);
-    }
+      &.regular {
+        @include overline($gray-4);
+      }
 
-    &.grayed-out {
-      @include overline($gray-5);
+      &.grayed-out {
+        @include overline($gray-5);
+      }
     }
   }
 }
