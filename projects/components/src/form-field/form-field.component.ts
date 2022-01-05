@@ -23,7 +23,7 @@ import { IconSize } from '../icon/icon-size';
         class="content"
         [ngClass]="{
           'show-border': this.showBorder,
-          'error-border': this.showBorder && this.showFormError && this.errorLabel
+          'error-border': this.showFormError && this.errorLabel
         }"
       >
         <ng-content></ng-content>
