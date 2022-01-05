@@ -1,23 +1,14 @@
 @import 'mixins';
 
 .time-picker {
-  @include disableable;
   display: flex;
 
   .time-selector {
     @include body-1-medium($gray-7);
     height: 32px;
+    border: 1px solid $gray-1;
+    background: $gray-1;
     border-radius: 4px;
-
-    &.with-background {
-      border: 1px solid $gray-1;
-      background: $gray-1;
-    }
-
-    &.with-border {
-      border: 1px solid $color-border;
-      border-radius: 6px;
-    }
   }
 }
 
@@ -28,6 +19,7 @@
   height: 32px;
   padding: 0 8px;
   cursor: pointer;
+  min-width: 108px;
 
   .trigger-icon {
     padding: 0 8px;
@@ -48,6 +40,7 @@
   background: white;
   overflow: auto;
   max-height: 320px;
+  min-width: 108px;
 
   .popover-item {
     @include list-hover;
