@@ -9,8 +9,8 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
   styleUrls: ['./time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="time-picker">
-      <ht-popover class="time-selector" [closeOnClick]="true">
+    <div class="time-picker" [ngClass]="{ disabled: this.disabled }">
+      <ht-popover class="time-selector" [disabled]="this.disabled" [ngClass]="this.displayMode" [closeOnClick]="true">
         <ht-popover-trigger>
           <div class="popover-trigger" #popoverTrigger>
             <ht-icon
@@ -20,7 +20,13 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
               *ngIf="this.showTimeTriggerIcon"
             ></ht-icon>
             <ht-label class="trigger-label" *ngIf="this.time" [label]="this.time!.label"></ht-label>
-            <ht-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+            <ht-icon
+              class="trigger-caret"
+              icon="${IconType.ChevronDown}"
+              [size]="
+                this.iconSize === '${TimePickerIconSize.Regular}' ? '${IconSize.Small}' : '${IconSize.ExtraSmall}'
+              "
+            ></ht-icon>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
@@ -46,7 +52,16 @@ export class TimePickerComponent {
   public time?: Time;
 
   @Input()
+  public iconSize?: TimePickerIconSize = TimePickerIconSize.Regular;
+
+  @Input()
   public showTimeTriggerIcon?: boolean = false;
+
+  @Input()
+  public displayMode?: TimePickerDisplayMode = TimePickerDisplayMode.MenuWithBackground;
+
+  @Input()
+  public disabled: boolean = false;
 
   @Output()
   public readonly timeChange: EventEmitter<Time> = new EventEmitter();
@@ -66,4 +81,14 @@ export class TimePickerComponent {
     this.time = time;
     this.timeChange.emit(time);
   }
+}
+
+export const enum TimePickerDisplayMode {
+  MenuWithBorder = 'with-border',
+  MenuWithBackground = 'with-background'
+}
+
+export const enum TimePickerIconSize {
+  Small = 'small',
+  Regular = 'regular'
 }
