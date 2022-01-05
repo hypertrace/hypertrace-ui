@@ -83,6 +83,9 @@ describe('Sheet Overlay component', () => {
     providers: [
       mockProvider(CartesainExplorerNavigationService, {
         navigateToExplorer: jest.fn()
+      }),
+      mockProvider(TimeRangeService, {
+        toQueryParams: jest.fn()
       })
     ]
   });

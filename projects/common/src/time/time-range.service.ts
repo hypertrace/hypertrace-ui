@@ -112,8 +112,7 @@ export class TimeRangeService {
   }
 
   public toQueryParams(startTime: Date, endTime: Date): QueryParamObject {
-    const newTimeRange = TimeRangeService.toFixedTimeRange(startTime, endTime);
-    this.timeRangeSubject$.next(newTimeRange);
+    const newTimeRange = new FixedTimeRange(startTime, endTime);
 
     return {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()

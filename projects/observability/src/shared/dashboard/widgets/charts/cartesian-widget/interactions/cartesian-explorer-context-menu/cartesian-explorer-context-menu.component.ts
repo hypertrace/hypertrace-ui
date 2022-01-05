@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { TimeRangeService } from '@hypertrace/common';
 import { ButtonStyle, POPOVER_DATA } from '@hypertrace/components';
 import { CartesianSelectedData } from '../../../../../../components/cartesian/chart-interactivty';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
@@ -28,6 +29,10 @@ import { CartesainExplorerNavigationService } from '../cartesian-explorer-naviga
 export class CartesianExplorerContextMenuComponent<TData> {
   public menus?: ContextMenu[] = [
     {
+      name: 'Set Time Range',
+      icon: IconType.Alarm
+    },
+    {
       name: 'Explore',
       icon: IconType.ArrowUpRight
     }
@@ -38,16 +43,21 @@ export class CartesianExplorerContextMenuComponent<TData> {
 
   public constructor(
     @Inject(POPOVER_DATA) data: CartesianSelectedData<TData>,
-    private readonly cartesainExplorerNavigationService: CartesainExplorerNavigationService
+    private readonly cartesainExplorerNavigationService: CartesainExplorerNavigationService,
+    private readonly timeRangeService: TimeRangeService
   ) {
     this.selectionData = data;
   }
 
   public menuSelectHandler = (_menu: ContextMenu): void => {
-    this.cartesainExplorerNavigationService.navigateToExplorer(
-      this.selectionData.timeRange.startTime,
-      this.selectionData.timeRange.endTime
-    );
+    this.timeRangeService.setFixedRange(this.selectionData.timeRange.startTime, this.selectionData.timeRange.endTime);
+
+    if (_menu.name === 'Explore') {
+      this.cartesainExplorerNavigationService.navigateToExplorer(
+        this.selectionData.timeRange.startTime,
+        this.selectionData.timeRange.endTime
+      );
+    }
   };
 }
 
