@@ -14,6 +14,7 @@ export interface IncompleteFilter<TValue = unknown> extends FieldFilter<TValue> 
 
 export interface FieldFilter<TValue = unknown> {
   field: string;
+  subpath?: string;
   operator?: FilterOperator;
   value?: TValue;
 }

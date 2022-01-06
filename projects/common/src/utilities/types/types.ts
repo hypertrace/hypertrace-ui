@@ -7,6 +7,8 @@ export type DistributiveOmit<T, K extends UnionKeys<T>> = T extends any ? Omit<T
 
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type RequireBy<T, K extends keyof T> = T & Required<Pick<T, K>>;
+export type KeysWithType<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
+
 export interface Dictionary<T> {
   [key: string]: T;
 }

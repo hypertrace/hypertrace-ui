@@ -1,5 +1,4 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { ARRAY_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator } from '../../filter-operators';
@@ -15,11 +14,8 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
     return [FilterOperator.In];
   }
 
-  public parseValueString(
-    attribute: FilterAttribute,
-    splitFilter: SplitFilter<FilterOperator>
-  ): PossibleValuesTypes | undefined {
-    switch (attribute.type) {
+  public parseValueString(splitFilter: SplitFilter<FilterOperator>): PossibleValuesTypes | undefined {
+    switch (splitFilter.attribute.type) {
       case FilterAttributeType.String:
         return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Number:
@@ -30,7 +26,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
       default:
-        assertUnreachable(attribute.type);
+        assertUnreachable(splitFilter.attribute.type);
     }
   }
 

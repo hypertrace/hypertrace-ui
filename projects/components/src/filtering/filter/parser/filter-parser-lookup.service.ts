@@ -24,7 +24,6 @@ export class FilterParserLookupService {
       case FilterOperator.In:
         return new InFilterParser();
       case FilterOperator.ContainsKey:
-      case FilterOperator.ContainsKeyValue:
         return new ContainsFilterParser();
       default:
         return assertUnreachable(operator);

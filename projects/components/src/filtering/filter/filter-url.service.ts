@@ -7,7 +7,7 @@ import { areCompatibleFilters, Filter, IncompleteFilter } from './filter';
 import { FilterAttribute } from './filter-attribute';
 import { fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
 import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
-import { splitFilterStringByOperator } from './parser/types/abstract-filter-parser';
+import { splitFilterStringByOperator } from './parser/parsed-filter';
 
 @Injectable({
   providedIn: 'root'
@@ -62,25 +62,29 @@ export class FilterUrlService {
       .filter(attribute => this.filterBuilderLookupService.isBuildableType(attribute.type))
       .flatMap(attribute => {
         const filterBuilder = this.filterBuilderLookupService.lookup(attribute.type);
-        const supportedUrlOperators = filterBuilder.supportedOperators().map(toUrlFilterOperator);
+        const supportedUrlOperators = filterBuilder.allSupportedOperators().map(toUrlFilterOperator);
 
-        const splitUrlFilter = splitFilterStringByOperator(supportedUrlOperators, filterString, false);
+        const splitUrlFilter = splitFilterStringByOperator(
+          attribute,
+          supportedUrlOperators,
+          decodeURIComponent(filterString)
+        );
 
         if (splitUrlFilter === undefined) {
           return undefined;
         }
 
-        const filterParser = this.filterParserLookupService.lookup(fromUrlFilterOperator(splitUrlFilter.operator));
+        const convertedOperator = fromUrlFilterOperator(splitUrlFilter.operator);
 
-        const parsedFilter = filterParser.parseUrlFilterString(attribute, filterString);
+        const parsedFilter = this.filterParserLookupService.lookup(convertedOperator).parseSplitFilter({
+          ...splitUrlFilter,
+          operator: convertedOperator
+        });
 
-        if (parsedFilter === undefined) {
-          return undefined;
-        }
-
-        return splitUrlFilter.lhs === parsedFilter.field
-          ? filterBuilder.buildFilter(attribute, parsedFilter.operator, parsedFilter.value)
-          : undefined;
+        return (
+          parsedFilter &&
+          filterBuilder.buildFilter(attribute, parsedFilter.operator, parsedFilter.value, parsedFilter.subpath)
+        );
       })
       .find(splitFilter => splitFilter !== undefined);
   }
