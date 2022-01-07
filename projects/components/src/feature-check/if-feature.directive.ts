@@ -38,12 +38,14 @@ export class IfFeatureDirective implements OnChanges {
         // If shouldn't be rendered, destroy if exists
         this.clearView();
       }
-    } else if (!this.embeddedViewRef) {
-      // Should be rendered but isnt
-      this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.templateRef, this.context);
     } else {
-      // Already rendered, just update
-      this.embeddedViewRef.markForCheck();
+      if (!this.embeddedViewRef) {
+        // Should be rendered but isnt
+        this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.templateRef, this.context);
+      } else {
+        // Already rendered, just update
+        this.embeddedViewRef.markForCheck();
+      }
     }
   }
 
