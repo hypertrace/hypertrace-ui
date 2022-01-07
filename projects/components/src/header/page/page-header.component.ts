@@ -23,23 +23,25 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <div class="breadcrumb-container">
-        <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-        <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
-          <ht-icon
-            class="icon"
-            *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
-            [icon]="titlecrumb.icon"
-            [label]="titlecrumb.label"
-            size="${IconSize.Large}"
-          ></ht-icon>
+      <div [ngClass]="this.contentAlignment">
+        <div class="breadcrumb-container">
+          <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
+          <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
+            <ht-icon
+              class="icon"
+              *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
+              [icon]="titlecrumb.icon"
+              [label]="titlecrumb.label"
+              size="${IconSize.Large}"
+            ></ht-icon>
 
-          <ht-label [label]="titlecrumb.label"></ht-label>
-          <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+            <ht-label [label]="titlecrumb.label"></ht-label>
+            <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+          </div>
         </div>
-      </div>
 
-      <ng-content></ng-content>
+        <ng-content></ng-content>
+      </div>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
         <ht-navigable-tab
@@ -63,6 +65,9 @@ export class PageHeaderComponent implements OnInit {
 
   @Input()
   public isBeta: boolean = false;
+
+  @Input()
+  public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
@@ -115,4 +120,9 @@ export class PageHeaderComponent implements OnInit {
 
 interface PageHeaderPreferences {
   selectedTabPath?: string;
+}
+
+export const enum PageHeaderContentAlignment {
+  Column = 'column-alignment',
+  Row = 'row-alignment'
 }
