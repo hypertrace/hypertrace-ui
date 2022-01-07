@@ -308,7 +308,7 @@ export class ExplorerComponent {
   private tryDecodeAttributeExpression(expressionString: string): [AttributeExpression] | [] {
     const [key, subpath] = expressionString.split('__');
 
-    return [{ key: key, ...(isEmpty(subpath) ? { subpath: subpath } : {}) }];
+    return [{ key: key, ...(!isEmpty(subpath) ? { subpath: subpath } : {}) }];
   }
 }
 interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {

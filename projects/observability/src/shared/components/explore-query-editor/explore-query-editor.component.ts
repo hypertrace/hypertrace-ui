@@ -39,8 +39,8 @@ import {
         <ht-explore-query-group-by-editor
           class="group-by"
           [context]="currentVisualization.context"
-          [groupByKey]="(currentVisualization.groupBy?.keyExpressions)?.[0]?.key"
-          (groupByKeyChange)="this.updateGroupByKey(currentVisualization.groupBy, $event)"
+          [groupByExpression]="(currentVisualization.groupBy?.keyExpressions)[0]"
+          (groupByExpressionChange)="this.updateGroupByExpression(currentVisualization.groupBy, $event)"
         ></ht-explore-query-group-by-editor>
 
         <ht-explore-query-limit-editor
@@ -104,7 +104,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
 
     if (changeObject.groupBy && this.groupBy?.keyExpressions.length) {
-      this.updateGroupByKey(this.groupBy, this.groupBy.keyExpressions[0]?.key);
+      this.updateGroupByExpression(this.groupBy, this.groupBy.keyExpressions[0]);
     }
   }
 
@@ -112,8 +112,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.setSeries(series);
   }
 
-  public updateGroupByKey(groupBy?: GraphQlGroupBy, key?: string): void {
-    if (key === undefined) {
+  public updateGroupByExpression(groupBy?: GraphQlGroupBy, keyExpression?: AttributeExpression): void {
+    if (keyExpression === undefined) {
       this.visualizationBuilder.groupBy();
     } else {
       this.visualizationBuilder.groupBy(

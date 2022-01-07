@@ -5,7 +5,11 @@ import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, map, shareReplay, tap, throwIfEmpty } from 'rxjs/operators';
-import { AttributeMetadata, toFilterAttributeType } from '../../graphql/model/metadata/attribute-metadata';
+import {
+  AttributeMetadata,
+  AttributeMetadataType,
+  toFilterAttributeType
+} from '../../graphql/model/metadata/attribute-metadata';
 import {
   addAggregationToDisplayName,
   getAggregationDisplayName,
@@ -52,8 +56,10 @@ export class MetadataService {
 
   public getGroupableAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return this.getServerDefinedAttributes(scope).pipe(
-      // Can only group by strings right now
-      map(attributes => attributes.filter(attribute => attribute.groupable))
+      // Can only group by strings or string map subpaths right now
+      map(attributes =>
+        attributes.filter(attribute => attribute.groupable || attribute.type === AttributeMetadataType.StringMap)
+      )
     );
   }
 
