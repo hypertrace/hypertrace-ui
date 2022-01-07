@@ -10,7 +10,7 @@ export class IfFeatureDirective implements OnChanges {
   public featureState?: FeatureState;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('htIfFeatureElseContent')
+  @Input('htIfFeatureElse')
   public elseContent?: TemplateRef<unknown>;
 
   private embeddedViewRef?: EmbeddedViewRef<FeatureFlagsContext | unknown>;
