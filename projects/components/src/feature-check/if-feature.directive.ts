@@ -31,22 +31,15 @@ export class IfFeatureDirective implements OnChanges {
   private updateView(state: FeatureState): void {
     this.context.$implicit = state;
     this.context.htIfFeature = state;
+    this.clearView();
     if (state === FeatureState.Disabled) {
       if (!isNil(this.elseContent)) {
         this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.elseContent);
-      } else {
-        // If shouldn't be rendered, destroy if exists
-        this.clearView();
       }
     } else {
-      if (!this.embeddedViewRef) {
-        // Should be rendered but isnt
-        this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.templateRef, this.context);
-      } else {
-        // Already rendered, just update
-        this.embeddedViewRef.markForCheck();
-      }
+      this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.templateRef, this.context);
     }
+    this.embeddedViewRef?.markForCheck();
   }
 
   private clearView(): void {
