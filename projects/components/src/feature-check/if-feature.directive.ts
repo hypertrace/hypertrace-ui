@@ -10,8 +10,8 @@ export class IfFeatureDirective implements OnChanges {
   public featureState?: FeatureState;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('htIfFeatureElse')
-  public else?: TemplateRef<unknown>;
+  @Input('htIfFeatureElseContent')
+  public elseContent?: TemplateRef<unknown>;
 
   private embeddedViewRef?: EmbeddedViewRef<FeatureFlagsContext | unknown>;
   private readonly context: FeatureFlagsContext = {
@@ -32,8 +32,8 @@ export class IfFeatureDirective implements OnChanges {
     this.context.$implicit = state;
     this.context.htIfFeature = state;
     if (state === FeatureState.Disabled) {
-      if (!isNil(this.else)) {
-        this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.else);
+      if (!isNil(this.elseContent)) {
+        this.embeddedViewRef = this.viewContainer.createEmbeddedView(this.elseContent);
       } else {
         // If shouldn't be rendered, destroy if exists
         this.clearView();
