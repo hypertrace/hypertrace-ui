@@ -148,6 +148,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   public provideCreateOption: boolean = false;
 
   @Input()
+  public createOptionLabel?: string = 'Create';
+
+  @Input()
   public text?: string = '';
 
   @Input()
@@ -215,7 +218,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   private buildCreateOption(text: string): ComboBoxOption<TValue> {
     return {
-      text: `Create "${text}"`,
+      text: `${this.createOptionLabel} "${text}"`,
       tooltip: text,
       icon: IconType.AddCircleOutline
     };
