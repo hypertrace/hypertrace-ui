@@ -22,11 +22,6 @@ class TestComponent {
 }
 
 describe('Sheet Overlay component', () => {
-  const menu: ContextMenu = {
-    name: 'Explore',
-    icon: IconType.ArrowUpRight
-  };
-
   const selectedData: CartesianSelectedData<unknown> = {
     timeRange: TimeRangeService.toFixedTimeRange(
       new Date('2021-11-02T05:33:19.288Z'),
@@ -119,7 +114,17 @@ describe('Sheet Overlay component', () => {
 
     spectator.component.selectionData = selectedData;
 
-    spectator.component.menuSelectHandler(menu);
+    const menu: ContextMenu = {
+      name: 'Explore',
+      icon: IconType.ArrowUpRight,
+      onClick: () => {
+        spectator
+          .inject(CartesainExplorerNavigationService)
+          .navigateToExplorer(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+      }
+    };
+
+    menu.onClick();
 
     expect(spectator.inject(CartesainExplorerNavigationService).navigateToExplorer).toHaveBeenCalled();
   });

@@ -13,12 +13,7 @@ import { CartesainExplorerNavigationService } from '../cartesian-explorer-naviga
     <div class="context-menu-container">
       <div *ngFor="let menu of menus">
         <div class="context-menu">
-          <ht-button
-            [label]="menu.name"
-            [icon]="menu.icon"
-            [display]="display"
-            (click)="menuSelectHandler(menu)"
-          ></ht-button>
+          <ht-button [label]="menu.name" [icon]="menu.icon" [display]="display" (click)="menu.onClick()"></ht-button>
         </div>
 
         <ht-divider></ht-divider>
@@ -30,11 +25,13 @@ export class CartesianExplorerContextMenuComponent<TData> {
   public menus?: ContextMenu[] = [
     {
       name: 'Set Time Range',
-      icon: IconType.Alarm
+      icon: IconType.Alarm,
+      onClick: () => this.setTimeRangeHandler()
     },
     {
       name: 'Explore',
-      icon: IconType.ArrowUpRight
+      icon: IconType.ArrowUpRight,
+      onClick: () => this.explorerNavigationHandler()
     }
   ];
 
@@ -49,19 +46,20 @@ export class CartesianExplorerContextMenuComponent<TData> {
     this.selectionData = data;
   }
 
-  public menuSelectHandler = (_menu: ContextMenu): void => {
-    this.timeRangeService.setFixedRange(this.selectionData.timeRange.startTime, this.selectionData.timeRange.endTime);
+  public readonly explorerNavigationHandler = () => {
+    this.cartesainExplorerNavigationService.navigateToExplorer(
+      this.selectionData.timeRange.startTime,
+      this.selectionData.timeRange.endTime
+    );
+  };
 
-    if (_menu.name === 'Explore') {
-      this.cartesainExplorerNavigationService.navigateToExplorer(
-        this.selectionData.timeRange.startTime,
-        this.selectionData.timeRange.endTime
-      );
-    }
+  public readonly setTimeRangeHandler = () => {
+    this.timeRangeService.setFixedRange(this.selectionData.timeRange.startTime, this.selectionData.timeRange.endTime);
   };
 }
 
 export interface ContextMenu {
   name: string;
   icon: string;
+  onClick(): void;
 }
