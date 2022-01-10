@@ -14,4 +14,9 @@ describe('Time', () => {
   test('can get ISO String from time', () => {
     expect(mockedTime.toISOString()).toBe('08:30:00.000Z');
   });
+
+  test('can compare two times', () => {
+    expect(mockedTime.equals(new Time(8, 30))).toBeTruthy();
+    expect(mockedTime.equals(new Time(9, 30))).toBeFalsy();
+  });
 });

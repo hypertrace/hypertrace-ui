@@ -35,4 +35,8 @@ export class Time {
   public toISOString(): string {
     return this.date.toISOString().substring(11);
   }
+
+  public equals(other?: Time): boolean {
+    return this.toISOString() === other?.toISOString();
+  }
 }
