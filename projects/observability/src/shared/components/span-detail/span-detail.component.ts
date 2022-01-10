@@ -24,12 +24,17 @@ import { SpanDetailTab } from './span-detail-tab';
         <ng-content></ng-content>
       </div>
 
-      <ht-tab-group class="tabs-group" [activeTabLabel]="this.activeTabLabel">
+      <ht-tab-group
+        class="tabs-group"
+        [activeTabLabel]="this.activeTabLabel"
+        (activeTabLabelChange)="this.onActiveTabLabelChange($event)"
+      >
         <ht-tab label="${SpanDetailTab.Request}" *ngIf="this.showRequestTab">
           <ht-span-request-detail
             class="request"
             [layout]="this.layout"
             [requestHeaders]="this.spanData.requestHeaders"
+            [requestCookies]="this.spanData.requestCookies"
             [requestBody]="this.spanData.requestBody"
           ></ht-span-request-detail>
         </ht-tab>
@@ -38,6 +43,7 @@ import { SpanDetailTab } from './span-detail-tab';
             class="response"
             [layout]="this.layout"
             [responseHeaders]="this.spanData.responseHeaders"
+            [responseCookies]="this.spanData.responseCookies"
             [responseBody]="this.spanData.responseBody"
           ></ht-span-response-detail>
         </ht-tab>
@@ -68,6 +74,9 @@ export class SpanDetailComponent implements OnChanges {
   public activeTabLabel?: SpanDetailTab;
 
   @Output()
+  private readonly activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
+
+  @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
 
   public showRequestTab?: boolean;
@@ -78,11 +87,22 @@ export class SpanDetailComponent implements OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
-      this.showRequestTab = !isEmpty(this.spanData?.requestHeaders) || !isEmpty(this.spanData?.requestBody);
-      this.showResponseTab = !isEmpty(this.spanData?.responseHeaders) || !isEmpty(this.spanData?.responseBody);
+      this.showRequestTab =
+        !isEmpty(this.spanData?.requestHeaders) ||
+        !isEmpty(this.spanData?.requestCookies) ||
+        !isEmpty(this.spanData?.requestBody);
+      this.showResponseTab =
+        !isEmpty(this.spanData?.responseHeaders) ||
+        !isEmpty(this.spanData?.responseCookies) ||
+        !isEmpty(this.spanData?.responseBody);
       this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
       this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
     }
+  }
+
+  public onActiveTabLabelChange(tabLabel: SpanDetailTab): void {
+    this.activeTabLabel = tabLabel;
+    this.activeTabLabelChange.emit(tabLabel);
   }
 }

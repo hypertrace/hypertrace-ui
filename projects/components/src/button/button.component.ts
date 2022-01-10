@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle } from './button';
+import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
 
 @Component({
   selector: 'ht-button',
@@ -10,7 +10,13 @@ import { ButtonRole, ButtonSize, ButtonStyle } from './button';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-event-blocker event="click" class="button-container" [enabled]="this.disabled">
-      <button class="button" [ngClass]="this.getStyleClasses()" [htTrack] [htTrackLabel]="this.label">
+      <button
+        class="button"
+        [ngClass]="this.getStyleClasses()"
+        [htTrack]
+        [htTrackLabel]="this.label"
+        [type]="this.type"
+      >
         <ht-icon
           *ngIf="this.icon && !this.trailingIcon"
           [icon]="this.icon"
@@ -44,6 +50,9 @@ export class ButtonComponent {
 
   @Input()
   public trailingIcon?: boolean;
+
+  @Input()
+  public type: ButtonType = ButtonType.Button;
 
   @Input()
   public role: ButtonRole = ButtonRole.Secondary;

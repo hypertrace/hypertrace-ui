@@ -22,7 +22,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
         searchAttribute: 'name',
         'select-control-options': [
           {
-            type: 'table-widget-select-option',
+            type: 'table-widget-multi-select-option',
             'unique-values': true,
             placeholder: 'Services',
             data: {

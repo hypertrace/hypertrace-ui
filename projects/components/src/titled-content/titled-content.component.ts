@@ -10,13 +10,18 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="titled-content-container">
-      <div class="header" [htLayoutChangeTrigger]="this.shouldShowHeader">
-        <ht-label *ngIf="this.shouldShowTitleInHeader" [label]="this.title" class="title"></ht-label>
-        <ht-link [paramsOrUrl]="this.link" class="link" *ngIf="this.link">
+      <div class="header" [ngClass]="this.headerJustifyContent" [htLayoutChangeTrigger]="this.shouldShowHeader">
+        <ht-label
+          *ngIf="this.shouldShowTitleInHeader"
+          [ngClass]="this.titleStyle"
+          [label]="this.title"
+          class="title"
+        ></ht-label>
+        <ht-link [paramsOrUrl]="this.link" class="link" [ngClass]="this.titleStyle" *ngIf="this.link">
           <ht-button
             [label]="this.linkLabel"
-            role="${ButtonRole.Primary}"
-            display="${ButtonStyle.Text}"
+            role="${ButtonRole.Quaternary}"
+            display="${ButtonStyle.Solid}"
             size="${ButtonSize.ExtraSmall}"
             icon="${IconType.ChevronRight}"
             [trailingIcon]="true"
@@ -29,8 +34,8 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
       <div class="content">
         <ng-content></ng-content>
       </div>
-      <div class="footer">
-        <ht-label *ngIf="this.shouldShowTitleInFooter" [label]="this.title" class="title"></ht-label>
+      <div class="footer" *ngIf="this.shouldShowTitleInFooter">
+        <ht-label [ngClass]="this.titleStyle" [label]="this.title" class="title"></ht-label>
       </div>
     </div>
   `
@@ -43,10 +48,16 @@ export class TitledContentComponent {
   public titlePosition: TitlePosition = TitlePosition.Header;
 
   @Input()
+  public titleStyle: TitledContentTitleStyle = TitledContentTitleStyle.Regular;
+
+  @Input()
   public hideTitle: boolean = false;
 
   @Input()
   public link?: string;
+
+  @Input()
+  public headerJustifyContent: TitledContentHeaderJustify = TitledContentHeaderJustify.Center;
 
   @Input()
   public linkLabel?: string;
@@ -74,4 +85,16 @@ export class TitledContentComponent {
 export const enum TitlePosition {
   Header = 'header',
   Footer = 'footer'
+}
+
+// Regular title (black) and GrayedOut new style (gray)
+export const enum TitledContentTitleStyle {
+  Regular = 'regular',
+  GrayedOut = 'grayed-out',
+  TitleCaseGray = 'title-case-gray'
+}
+
+export const enum TitledContentHeaderJustify {
+  Center = 'center',
+  SpaceBetween = 'space-between'
 }

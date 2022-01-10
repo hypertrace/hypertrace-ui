@@ -28,6 +28,19 @@
     padding: 0 8px;
     cursor: pointer;
     height: 34px;
+    border-radius: 6px;
+
+    &.extra-small {
+      height: 30px;
+    }
+
+    &.small {
+      height: 32px;
+    }
+
+    &.large {
+      height: 44px;
+    }
 
     &.open {
       background-color: $gray-2;
@@ -89,6 +102,7 @@
   min-width: 120px;
   display: flex;
   height: 100%;
+  max-height: 360px;
   flex-direction: column;
 
   .divider {

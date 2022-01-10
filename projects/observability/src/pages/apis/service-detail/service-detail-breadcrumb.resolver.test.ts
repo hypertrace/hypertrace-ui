@@ -10,10 +10,11 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../sh
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
+import { EntityBreadcrumb } from './../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { ServiceDetailBreadcrumbResolver } from './service-detail-breadcrumb.resolver';
 
 describe('Service detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver>;
+  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver<EntityBreadcrumb>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ServiceDetailBreadcrumbResolver,
@@ -55,8 +56,11 @@ describe('Service detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(x|)', {
           x: {
+            [entityTypeKey]: ObservabilityEntityType.Service,
+            [entityIdKey]: 'test-id',
             label: 'test service',
-            icon: ObservabilityIconType.Service
+            icon: ObservabilityIconType.Service,
+            name: 'test service'
           }
         });
       });
@@ -69,7 +73,7 @@ describe('Service detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Service,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 });

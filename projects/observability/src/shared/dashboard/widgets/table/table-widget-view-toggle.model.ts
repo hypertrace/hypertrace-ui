@@ -1,9 +1,9 @@
-import { TableDataSource, TableRow } from '@hypertrace/components';
+import { LoadAsyncConfig, TableDataSource, TableRow, TableSelectionMode } from '@hypertrace/components';
 import { ArrayPropertyTypeInstance } from '@hypertrace/dashboards';
 import { ARRAY_PROPERTY, Model, ModelApi, ModelOnInit, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
-import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
@@ -61,6 +61,10 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return found ? this.api.createChild<TableWidgetModel>(found.template) : undefined;
   }
 
+  public getId(): string | undefined {
+    return this.delegateModel && this.delegateModel?.getId();
+  }
+
   public getData(): Observable<TableDataSource<TableRow>> {
     return this.delegateModel ? this.delegateModel?.getData() : NEVER;
   }
@@ -73,7 +77,23 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return this.delegateModel && this.delegateModel?.getChildModel(row);
   }
 
-  public getRowSelectionHandlers(row: TableRow): TableWidgetRowSelectionModel[] {
+  public getSelectionMode(): TableSelectionMode {
+    return this.delegateModel?.getSelectionMode() ?? TableSelectionMode.Single;
+  }
+
+  public isCustomControlPresent(): boolean {
+    return this.delegateModel?.isCustomControlPresent() ?? false;
+  }
+
+  public getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined {
+    return this.delegateModel && this.delegateModel?.getCustomControlWidgetModel(selectedRows);
+  }
+
+  public getRowClickHandlers(): TableWidgetRowInteractionModel[] {
+    return this.delegateModel?.getRowClickHandlers() ?? [];
+  }
+
+  public getRowSelectionHandlers(row: TableRow): TableWidgetRowInteractionModel[] {
     return this.delegateModel && this.delegateModel?.getRowSelectionHandlers(row).length > 0
       ? this.delegateModel?.getRowSelectionHandlers(row)
       : [];
@@ -97,5 +117,9 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
 
   public getSelectControlOptions(): TableWidgetControlSelectOptionModel[] {
     return this.delegateModel?.getSelectControlOptions() ?? this.selectOptions;
+  }
+
+  public getLoadingConfig(): LoadAsyncConfig | undefined {
+    return this.delegateModel?.getLoadingConfig();
   }
 }

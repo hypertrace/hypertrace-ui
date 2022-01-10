@@ -16,7 +16,8 @@ export const enum ModalSize {
   LargeShort = 'large-short',
   Large = 'large',
   LargeTall = 'large-tall',
-  MediumWide = 'medium-wide'
+  MediumWide = 'medium-wide',
+  LargeWide = 'large-wide'
 }
 
 export interface ModalDimension {
@@ -36,15 +37,20 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
     case ModalSize.Large:
       return getModalDimensionObject(640, 720);
     case ModalSize.LargeTall:
-      return getModalDimensionObject(640, 800);
+      return getModalDimensionObject(840, '90vh');
     case ModalSize.MediumWide:
       return getModalDimensionObject(840, 600);
+    case ModalSize.LargeWide:
+      return getModalDimensionObject('95em', '90vh');
     default:
       return getModalDimensionObject(420, 365);
   }
 };
 
-const getModalDimensionObject = (width: number, height: number): ModalDimension => ({ width: width, height: height });
+const getModalDimensionObject = (width: number | string, height: number | string): ModalDimension => ({
+  width: width,
+  height: height
+});
 
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
 

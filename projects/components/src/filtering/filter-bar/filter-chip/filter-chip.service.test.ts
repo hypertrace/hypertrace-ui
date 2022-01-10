@@ -236,6 +236,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.In,
         userString: `${attribute.displayName} ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName} ${FilterOperator.Like}`
       }
     ]);
   });

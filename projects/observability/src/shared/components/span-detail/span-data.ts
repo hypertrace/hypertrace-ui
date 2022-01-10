@@ -7,8 +7,10 @@ export interface SpanData {
   apiName?: string;
   protocolName?: string;
   requestHeaders: Dictionary<unknown>;
+  requestCookies: Dictionary<unknown>;
   requestBody: string;
   responseHeaders: Dictionary<unknown>;
+  responseCookies: Dictionary<unknown>;
   responseBody: string;
   tags: Dictionary<unknown>;
   requestUrl: string;

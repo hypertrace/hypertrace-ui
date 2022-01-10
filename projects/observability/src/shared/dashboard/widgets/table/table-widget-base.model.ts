@@ -1,4 +1,11 @@
-import { TableDataSource, TableMode, TableRow, TableSelectionMode, TableStyle } from '@hypertrace/components';
+import {
+  LoadAsyncConfig,
+  TableDataSource,
+  TableMode,
+  TableRow,
+  TableSelectionMode,
+  TableStyle
+} from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   BaseModel,
@@ -13,16 +20,24 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
+  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
-import { TableWidgetRowSelectionModel } from './selections/table-widget-row-selection.model';
+import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetControlCheckboxOptionModel } from './table-widget-control-checkbox-option.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 
 export abstract class TableWidgetBaseModel extends BaseModel {
+  @ModelProperty({
+    key: 'viewId',
+    displayName: 'Model View ID',
+    type: STRING_PROPERTY.type
+  })
+  public viewId?: string;
+
   @ModelProperty({
     // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
@@ -111,6 +126,20 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public resizable: boolean = true;
 
+  @ModelProperty({
+    key: 'row-height',
+    displayName: 'Row Height',
+    type: STRING_PROPERTY.type
+  })
+  public rowHeight: string = '44px';
+
+  @ModelProperty({
+    key: 'loadingConfig',
+    required: false,
+    type: PLAIN_OBJECT_PROPERTY.type
+  })
+  public loadingConfig?: LoadAsyncConfig;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 
@@ -121,14 +150,14 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return this.api.getData<TableDataSource<TableRow>>();
   }
 
-  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowSelectionModel[] {
+  public getRowSelectionHandlers(_row: TableRow): TableWidgetRowInteractionModel[] {
     // No-op here, but can be overridden
     return [];
   }
 
-  public getSelectionMode(): TableSelectionMode {
+  public getViewId(): string | undefined {
     // No-op here, but can be overridden
-    return TableSelectionMode.Single;
+    return this.viewId;
   }
 
   public setView(_view: string): void {
@@ -140,6 +169,11 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     // No-op here, but can be overridden
     return [];
   }
+
+  public abstract getRowClickHandlers(): TableWidgetRowInteractionModel[];
+  public abstract getSelectionMode(): TableSelectionMode;
+  public abstract isCustomControlPresent(): boolean;
+  public abstract getCustomControlWidgetModel(selectedRows?: TableRow[]): object | undefined;
 
   public getSearchAttribute(): string | undefined {
     return this.searchAttribute;
@@ -167,5 +201,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public isResizable(): boolean {
     return this.resizable;
+  }
+
+  public getRowHeight(): string {
+    return this.rowHeight;
+  }
+
+  public getLoadingConfig(): LoadAsyncConfig | undefined {
+    return this.loadingConfig;
   }
 }

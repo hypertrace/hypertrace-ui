@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
+import { ListViewKeyRendererDirective } from './list-view-key-renderer.directive';
 import { ListViewValueRendererDirective } from './list-view-value-renderer.directive';
 @Component({
   selector: 'ht-list-view',
@@ -8,6 +9,10 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
     <ng-template #defaultValueRenderer let-record
       ><span>{{ record.value }}</span></ng-template
     >
+    <ng-template #defaultKeyRenderer let-record
+      ><span>{{ record.key }}</span></ng-template
+    >
+
     <div class="list-view">
       <div *ngIf="this.header" class="header-row">
         <div class="header-key-label">
@@ -19,7 +24,12 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
       </div>
       <div class="data-row" *ngFor="let record of this.records">
         <div class="key">
-          <span>{{ record.key }}</span>
+          <ng-container
+            *ngTemplateOutlet="
+              this.keyRenderer ? this.keyRenderer!.getTemplateRef() : defaultKeyRenderer;
+              context: { $implicit: record }
+            "
+          ></ng-container>
         </div>
         <div class="value">
           <ng-container
@@ -42,6 +52,9 @@ export class ListViewComponent {
 
   @ContentChild(ListViewValueRendererDirective)
   public valueRenderer?: ListViewValueRendererDirective;
+
+  @ContentChild(ListViewKeyRendererDirective)
+  public keyRenderer?: ListViewKeyRendererDirective;
 }
 
 export interface ListViewHeader {
