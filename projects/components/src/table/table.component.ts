@@ -106,7 +106,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
               [ngClass]="{
-                'detail-expanded': this.isDetailExpanded(row)
+                'detail-expanded': this.isDetailExpanded(row),
+                'hide-divider': this.isDetailList()
               }"
               class="data-cell"
             >
@@ -152,6 +153,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
+          [style.minHeight]="this.rowHeight"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
@@ -278,6 +280,9 @@ export class TableComponent
 
   @Input()
   public loadingConfig?: LoadAsyncConfig;
+
+  @Input()
+  public rowHeight: string = '44px';
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
@@ -673,7 +678,6 @@ export class TableComponent
 
   public shouldHighlightRowAsSelection(row: StatefulTableRow): boolean {
     return (
-      this.selectionMode !== TableSelectionMode.Multiple &&
       this.selections !== undefined &&
       this.selections.find(selection => TableCdkRowUtil.isEqualExceptState(selection, row)) !== undefined
     );
@@ -697,6 +701,10 @@ export class TableComponent
 
   public hasExpandableRows(): boolean {
     return this.isDetailType() || this.isTreeType();
+  }
+
+  public isDetailList(): boolean {
+    return this.isDetailType() && this.display === TableStyle.List;
   }
 
   public isDetailExpanded(row: StatefulTableRow): boolean {

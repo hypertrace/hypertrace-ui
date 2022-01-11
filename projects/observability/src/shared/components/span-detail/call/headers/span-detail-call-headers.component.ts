@@ -10,10 +10,10 @@ import { EMPTY, Observable, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="call-headers">
-      <ht-label label="Headers" class="title"></ht-label>
+      <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container" data-sensitive-pii>
-        <ng-container *htLoadAsync="this.headerRecords$ as headerRecords">
-          <ht-list-view [records]="headerRecords"></ht-list-view>
+        <ng-container *htLoadAsync="this.records$ as records">
+          <ht-list-view [records]="records"></ht-list-view>
         </ng-container>
       </div>
     </div>
@@ -21,24 +21,29 @@ import { EMPTY, Observable, of } from 'rxjs';
 })
 export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
-  public headers?: Dictionary<unknown>;
+  public data?: Dictionary<unknown>;
 
-  public headerRecords$?: Observable<ListViewRecord[]>;
+  @Input()
+  public title?: string;
+
+  public records$?: Observable<ListViewRecord[]>;
+
+  public label?: string;
 
   public ngOnChanges(): void {
-    this.buildHeaderRecords();
+    this.buildRecords();
   }
 
-  private buildHeaderRecords(): void {
-    if (isNil(this.headers)) {
-      this.headerRecords$ = EMPTY;
+  private buildRecords(): void {
+    if (isNil(this.data)) {
+      this.records$ = EMPTY;
     } else {
-      this.headerRecords$ = of(
-        Object.keys(this.headers)
+      this.records$ = of(
+        Object.keys(this.data)
           .sort((key1, key2) => key1.localeCompare(key2))
           .map(key => ({
             key: key,
-            value: this.headers![key] as string | number
+            value: this.data![key] as string | number
           }))
       );
     }

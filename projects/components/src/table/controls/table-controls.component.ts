@@ -43,21 +43,42 @@ import {
         ></ht-search-box>
 
         <!-- Selects -->
-        <ht-multi-select
-          *ngFor="let selectControl of this.selectControls"
-          [selected]="this.appliedFilters(selectControl)"
-          [placeholder]="selectControl.placeholder"
-          class="control select"
-          showBorder="true"
-          searchMode="${MultiSelectSearchMode.CaseInsensitive}"
-          (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
-        >
-          <ht-select-option
-            *ngFor="let option of selectControl.options"
-            [label]="option.label"
-            [value]="option"
-          ></ht-select-option>
-        </ht-multi-select>
+        <ng-container *ngFor="let selectControl of this.selectControls">
+          <ht-multi-select
+            *ngIf="selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            [prefix]="selectControl.prefix"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-multi-select>
+
+          <ht-select
+            *ngIf="!selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-select>
+        </ng-container>
       </div>
 
       <!-- Right -->
@@ -102,8 +123,6 @@ import {
 })
 export class TableControlsComponent implements OnChanges {
   public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
-  @Input()
-  public persistenceId?: string;
 
   @Input()
   public searchEnabled?: boolean;
@@ -204,8 +223,8 @@ export class TableControlsComponent implements OnChanges {
     this.checkboxDiffer?.diff(this.checkboxSelections);
   }
 
-  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] | undefined {
-    return this.selectSelections.get(selectControl);
+  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] {
+    return this.selectSelections.get(selectControl) || [];
   }
 
   private setActiveViewItem(): void {
@@ -218,11 +237,28 @@ export class TableControlsComponent implements OnChanges {
     this.searchChange.emit(text);
   }
 
-  public onMultiSelectChange(select: TableSelectControl, selections: TableSelectControlOption[]): void {
+  public onMultiSelectChange(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    this.applySelections(selectControl, selections);
+
     this.selectChange.emit({
-      select: select,
+      select: selectControl,
       values: selections
     });
+    this.diffSelections();
+  }
+
+  private applySelections(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    selectControl.options.forEach(
+      option => (option.applied = selections.find(selection => isEqual(selection, option)) !== undefined)
+    );
+  }
+
+  public onSelectChange(selectControl: TableSelectControl, selection: TableSelectControlOption): void {
+    this.selectChange.emit({
+      select: selectControl,
+      values: [selection]
+    });
+    this.diffSelections();
   }
 
   public onCheckboxChange(checked: string[]): void {

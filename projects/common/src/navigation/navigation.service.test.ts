@@ -2,9 +2,7 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IconType } from '@hypertrace/assets-library';
 import { APP_TITLE } from '@hypertrace/common';
-import { NavItemType } from '@hypertrace/components';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import {
@@ -296,36 +294,6 @@ describe('Navigation Service', () => {
         `/some/internal/path/of/app?type=json&time=1h&environment=development`
       );
     }
-  });
-
-  test('decorating navItem with features work as expected', () => {
-    expect(
-      spectator.service.decorateNavItem(
-        {
-          type: NavItemType.Header,
-          label: 'Label'
-        },
-        spectator.service.getCurrentActivatedRoute()
-      )
-    ).toEqual({ type: NavItemType.Header, label: 'Label' });
-
-    expect(
-      spectator.service.decorateNavItem(
-        {
-          type: NavItemType.Link,
-          label: 'Label',
-          icon: IconType.None,
-          matchPaths: ['root']
-        },
-        spectator.service.rootRoute()
-      )
-    ).toEqual({
-      type: NavItemType.Link,
-      label: 'Label',
-      icon: IconType.None,
-      matchPaths: ['root'],
-      features: ['test-feature']
-    });
   });
 
   test('setting title should work as expected', () => {

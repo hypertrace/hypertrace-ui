@@ -37,6 +37,10 @@ export * from './tabs/content/tab-group.component';
 export * from './tabs/content/tab.module';
 export * from './tabs/content/tab/tab.component';
 
+// Color picker
+export * from './color-picker/color-picker.component';
+export * from './color-picker/color-picker.module';
+
 // Copy to Clipboard
 export * from './copy-to-clipboard/copy-to-clipboard.component';
 export * from './copy-to-clipboard/copy-to-clipboard.module';
@@ -157,6 +161,7 @@ export * from './navigation/navigation-list.module';
 export * from './navigation/nav-item/nav-item.component';
 export * from './navigation/navigation.config';
 export * from './navigation/navigation-list-component.service';
+export * from './navigation/navigation-list.service';
 
 // Let async
 export { LetAsyncDirective } from './let-async/let-async.directive';
@@ -317,7 +322,12 @@ export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
 
 // Titled Content
-export { TitledContentComponent, TitlePosition } from './titled-content/titled-content.component';
+export {
+  TitledContentComponent,
+  TitlePosition,
+  TitledContentTitleStyle,
+  TitledContentHeaderJustify
+} from './titled-content/titled-content.component';
 export { TitledContentModule } from './titled-content/titled-content.module';
 
 // Toggle Button
@@ -339,3 +349,6 @@ export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 // Tooltip
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
+
+// Filter Url Service
+export * from './filtering/filter/filter-url.service';

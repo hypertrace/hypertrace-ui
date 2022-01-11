@@ -48,7 +48,7 @@ $header-height: 32px;
   }
 
   &.selected-row {
-    background: $gray-1;
+    background: $blue-1;
     border-bottom: 1px solid $blue-2;
     border-top: 1px solid $blue-2;
 
@@ -107,6 +107,10 @@ $header-height: 32px;
   border-bottom: 1px solid $gray-1;
 
   &.detail-expanded {
+    border-bottom: unset;
+  }
+
+  &.hide-divider {
     border-bottom: unset;
   }
 

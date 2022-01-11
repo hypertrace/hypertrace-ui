@@ -37,9 +37,10 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     idKey: string,
     nameKey: string,
     entityType?: EntityType,
-    additionalAttributes?: string[]
+    additionalAttributes?: string[],
+    additionalSpecifications: Specification[] = []
   ): EntitySpecification {
-    return this.entitySpecBuilder.build(idKey, nameKey, entityType, additionalAttributes);
+    return this.entitySpecBuilder.build(idKey, nameKey, entityType, additionalAttributes, additionalSpecifications);
   }
 
   public neighborAttributeSpecificationForKey(

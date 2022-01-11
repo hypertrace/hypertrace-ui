@@ -14,8 +14,6 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
-import { NavItemConfig, NavItemType } from '@hypertrace/components';
-import { uniq } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
@@ -243,26 +241,6 @@ export class NavigationService {
     return this.findRouteConfig(path, childRoutes ? childRoutes : []);
   }
 
-  public decorateNavItem(navItem: NavItemConfig, activatedRoute: ActivatedRoute): NavItemConfig {
-    if (navItem.type !== NavItemType.Link) {
-      return { ...navItem };
-    }
-    const features = navItem.matchPaths
-      .map(path => this.getRouteConfig([path], activatedRoute))
-      .filter((maybeRoute): maybeRoute is HtRoute => maybeRoute !== undefined)
-      .flatMap(route => this.getFeaturesForRoute(route))
-      .concat(navItem.features || []);
-
-    return {
-      ...navItem,
-      features: uniq(features)
-    };
-  }
-
-  private getFeaturesForRoute(route: HtRoute): string[] {
-    return (route.data && route.data.features) || [];
-  }
-
   public rootRoute(): ActivatedRoute {
     return this.router.routerState.root;
   }
@@ -376,7 +354,7 @@ export class NavigationService {
 }
 
 export interface QueryParamObject extends Params {
-  [key: string]: string | string[] | number | number[] | undefined;
+  [key: string]: string | string[] | boolean | boolean[] | number | number[] | undefined;
 }
 
 export type NavigationPath = string | (string | Dictionary<string>)[];

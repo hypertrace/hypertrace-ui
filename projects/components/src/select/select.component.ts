@@ -10,6 +10,7 @@ import {
   Output,
   QueryList
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { EMPTY, merge, Observable, of } from 'rxjs';
@@ -26,7 +27,14 @@ import { SelectSize } from './select-size';
   selector: 'ht-select',
   styleUrls: ['./select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SubscriptionLifecycle],
+  providers: [
+    SubscriptionLifecycle,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: SelectComponent,
+      multi: true
+    }
+  ],
   template: `
     <div
       class="select"
@@ -167,7 +175,7 @@ import { SelectSize } from './select-size';
     </div>
   `
 })
-export class SelectComponent<V> implements AfterContentInit, OnChanges {
+export class SelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -208,6 +216,8 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
   public controlItems?: QueryList<SelectControlOptionComponent<V>>;
 
   public selected$?: Observable<SelectOption<V> | undefined>;
+  private propagateControlValueChange?: (value: V | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V | undefined) => void;
 
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
@@ -272,9 +282,14 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
       return;
     }
 
-    this.selected = item.value;
-    this.selected$ = this.buildObservableOfSelected();
+    this.setSelection(item.value);
     this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
+  }
+
+  private setSelection(value?: V): void {
+    this.selected = value;
+    this.selected$ = this.buildObservableOfSelected();
   }
 
   private findItem(value: V | undefined): SelectOption<V> | undefined {
@@ -295,6 +310,23 @@ export class SelectComponent<V> implements AfterContentInit, OnChanges {
     }
 
     return styles;
+  }
+
+  public writeValue(value?: V): void {
+    this.setSelection(value);
+  }
+
+  public registerOnChange(onChange: (value: V | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value: V | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private propagateValueChangeToFormControl(value: V | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }
 

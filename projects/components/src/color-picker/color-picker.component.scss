@@ -1,0 +1,35 @@
+@import 'color-palette';
+@import 'mixins';
+
+.color-picker {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  .color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 6px;
+    cursor: pointer;
+
+    &.selected {
+      border: 2px solid $blue-4;
+    }
+  }
+
+  .add-icon {
+    cursor: pointer;
+  }
+}
+
+.container {
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+}
+
+.color-sketch {
+  width: 200px;
+  height: 200px;
+}

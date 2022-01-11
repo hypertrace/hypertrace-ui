@@ -175,7 +175,7 @@ export class MetadataService {
     );
   }
 
-  private getAllAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
+  public getAllAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return this.getServerDefinedAttributes(scope);
   }
 
