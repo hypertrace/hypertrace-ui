@@ -85,7 +85,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   public edgeMetricsModel!: TopologyMetricsModel;
 
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
-  private readonly requestOptions: GraphQlRequestOptions = {
+  public readonly requestOptions: GraphQlRequestOptions = {
     cacheability: GraphQlRequestCacheability.Cacheable,
     isolated: true
   };
