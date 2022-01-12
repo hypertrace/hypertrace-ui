@@ -7,7 +7,7 @@ import { AbstractFilterParser } from './abstract-filter-parser';
 
 export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   public supportedAttributeTypes(): FilterAttributeType[] {
-    return [FilterAttributeType.String, FilterAttributeType.Number];
+    return [FilterAttributeType.String, FilterAttributeType.Number, FilterAttributeType.StringMap];
   }
 
   public supportedOperators(): FilterOperator[] {
@@ -17,12 +17,12 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   public parseValueString(splitFilter: SplitFilter<FilterOperator>): PossibleValuesTypes | undefined {
     switch (splitFilter.attribute.type) {
       case FilterAttributeType.String:
+      case FilterAttributeType.StringMap:
         return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Number:
         return this.parseNumberArrayValue(splitFilter.rhs);
       case FilterAttributeType.Boolean: // Unsupported
       case FilterAttributeType.StringArray: // Unsupported
-      case FilterAttributeType.StringMap: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
       default:

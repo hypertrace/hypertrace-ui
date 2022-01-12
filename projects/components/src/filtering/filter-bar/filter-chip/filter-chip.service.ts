@@ -128,7 +128,7 @@ export class FilterChipService {
   }
 
   private isPartialAttributeMatch(text: string, attribute: FilterAttribute): boolean {
-    return attribute.displayName.toLowerCase().startsWith(text.toLowerCase());
+    return attribute.displayName.toLowerCase().includes(text.toLowerCase());
   }
 
   private buildIncompleteFilterForPartialAttributeMatch(

@@ -35,8 +35,9 @@ describe('Filter Bar service', () => {
     ),
     new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
-      FilterOperator.ContainsKeyValue,
-      ['myKey', 'myValue']
+      FilterOperator.Equals,
+      'myValue',
+      'myKey'
     )
   ];
 
@@ -184,18 +185,33 @@ describe('Filter Bar service', () => {
     expect(testFilters).toEqual([stringFilter, inNumberFilter]);
 
     /*
-     * Add a StringMap CONTAINS_KEY_VALUE that should not replace any existing filters
+     * Add a StringMap EQUALS should not replace any existing filters
      */
 
-    const ckvStringMapFilter = new StringMapFilterBuilder().buildFilter(
+    const firstStringMapFilter = new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
-      FilterOperator.ContainsKeyValue,
-      ['myKey', 'myValue']
+      FilterOperator.Equals,
+      'myValue',
+      'myKey'
     );
 
-    testFilters = spectator.service.addFilter(testFilters, ckvStringMapFilter);
+    testFilters = spectator.service.addFilter(testFilters, firstStringMapFilter);
 
-    expect(testFilters).toEqual([stringFilter, inNumberFilter, ckvStringMapFilter]);
+    expect(testFilters).toEqual([stringFilter, inNumberFilter, firstStringMapFilter]);
+    /*
+     * Add a second StringMap EQUALS filters with a different key should not replace any existing filters
+     */
+
+    const secondStringMapFilter = new StringMapFilterBuilder().buildFilter(
+      getTestFilterAttribute(FilterAttributeType.StringMap),
+      FilterOperator.Equals,
+      'myValue',
+      'mySecondKey'
+    );
+
+    testFilters = spectator.service.addFilter(testFilters, secondStringMapFilter);
+
+    expect(testFilters).toEqual([stringFilter, inNumberFilter, firstStringMapFilter, secondStringMapFilter]);
 
     /*
      * Add a StringMap CONTAINS_KEY that should not replace any existing filters
@@ -209,7 +225,13 @@ describe('Filter Bar service', () => {
 
     testFilters = spectator.service.addFilter(testFilters, ckStringMapFilter);
 
-    expect(testFilters).toEqual([stringFilter, inNumberFilter, ckvStringMapFilter, ckStringMapFilter]);
+    expect(testFilters).toEqual([
+      stringFilter,
+      inNumberFilter,
+      firstStringMapFilter,
+      secondStringMapFilter,
+      ckStringMapFilter
+    ]);
   });
 
   test('correctly updates filters', () => {
@@ -221,8 +243,9 @@ describe('Filter Bar service', () => {
 
     const testStringMapFilter = new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
-      FilterOperator.ContainsKeyValue,
-      ['myTestKey', 'myTestValue']
+      FilterOperator.Equals,
+      'myTestValue',
+      'myTestKey'
     );
 
     const testNumberFilter = new NumberFilterBuilder().buildFilter(

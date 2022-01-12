@@ -19,12 +19,5 @@ export interface FieldFilter<TValue = unknown> {
   value?: TValue;
 }
 
-export const areEqualFilters = (f1: IncompleteFilter, f2: IncompleteFilter) =>
-  (f1.field === f2.field && f1.operator === undefined) ||
-  f2.operator === undefined ||
-  (f1.operator === f2.operator && f1.value === undefined) ||
-  f2.value === undefined ||
-  f1.value === f2.value;
-
 export const areCompatibleFilters = (f1: Filter, f2: Filter) =>
-  f1.field !== f2.field || (f1.field === f2.field && !incompatibleOperators(f1.operator).includes(f2.operator));
+  f1.field !== f2.field || f1.subpath !== f2.subpath || !incompatibleOperators(f1.operator).includes(f2.operator);
