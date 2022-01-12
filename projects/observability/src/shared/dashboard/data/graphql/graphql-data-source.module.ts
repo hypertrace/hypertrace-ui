@@ -7,6 +7,7 @@ import { GraphQlFilterDataSourceModel } from './filter/graphql-filter-data-sourc
 import { GraphqlIdScopeFilterModel } from './filter/graphql-id-scope-filter.model';
 import { GraphQlKeyValueFilterModel } from './filter/graphql-key-value-filter.model';
 import { GRAPHQL_DATA_SOURCE_HANDLER_PROVIDERS } from './graphql-handler-configuration';
+import { GraphQlRequestOptionsModel } from './request-option/graphql-request-options.model';
 import { SpanDataSourceModel } from './span/span-data-source.model';
 import { AttributeSpecificationModel } from './specifiers/attribute-specification.model';
 import { CompositeSpecificationModel } from './specifiers/composite-specification.model';
@@ -29,6 +30,7 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         GraphQlFilterDataSourceModel,
         GraphQlKeyValueFilterModel,
         GraphqlIdScopeFilterModel,
+        GraphQlRequestOptionsModel,
         SpansTableDataSourceModel,
         TracesTableDataSourceModel,
         SpanDataSourceModel,
