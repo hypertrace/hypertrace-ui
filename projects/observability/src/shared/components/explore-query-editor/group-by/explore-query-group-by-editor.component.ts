@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance, SelectOption } from '@hypertrace/components';
-import { isEmpty, isNil } from 'lodash-es';
+import { isEmpty, isNil, omit } from 'lodash-es';
 import { combineLatest, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators';
 import { AttributeExpression } from '../../../graphql/model/attribute/attribute-expression';
@@ -82,7 +82,8 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
     this.groupByExpressionsToEmit
       .pipe(
         filter(expression => this.isValidExpressionToEmit(expression)),
-        debounceTime(500)
+        debounceTime(500),
+        map(expression => omit(expression, 'metadata'))
       )
       .subscribe(this.groupByExpressionChange);
   }

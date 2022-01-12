@@ -358,13 +358,13 @@ describe('Explorer component', () => {
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
     spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
-    spectator.query(ExploreQueryEditorComponent)!.updateGroupByKey(
+    spectator.query(ExploreQueryEditorComponent)!.updateGroupByExpression(
       {
         keyExpressions: [{ key: 'apiName' }],
         limit: 6,
         includeRest: true
       },
-      'apiName'
+      { key: 'apiName' }
     );
     detectQueryChange();
     expect(queryParamChangeSpy).toHaveBeenLastCalledWith({
@@ -394,7 +394,7 @@ describe('Explorer component', () => {
       }
     });
     expect(spectator.query(ToggleGroupComponent)?.activeItem?.label).toBe('Spans');
-    expect(spectator.query(ExploreQueryGroupByEditorComponent)?.groupByKey).toBe('apiName');
+    expect(spectator.query(ExploreQueryGroupByEditorComponent)?.groupByExpression).toEqual({ key: 'apiName' });
     expect(spectator.query(ExploreQueryLimitEditorComponent)?.limit).toBe(6);
     expect(spectator.query(ExploreQueryLimitEditorComponent)?.includeRest).toBe(true);
     expect(spectator.query(ExploreQuerySeriesEditorComponent)?.series).toEqual({

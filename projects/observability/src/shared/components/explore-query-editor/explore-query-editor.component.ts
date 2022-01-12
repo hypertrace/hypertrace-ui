@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnI
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
+import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
@@ -118,8 +119,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     } else {
       this.visualizationBuilder.groupBy(
         groupBy
-          ? { ...groupBy, keyExpressions: [{ key: key }] }
-          : { keyExpressions: [{ key: key }], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+          ? { ...groupBy, keyExpressions: [keyExpression] }
+          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
       );
     }
   }
