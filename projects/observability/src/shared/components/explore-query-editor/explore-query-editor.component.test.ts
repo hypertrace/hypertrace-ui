@@ -176,7 +176,7 @@ describe('Explore query editor', () => {
       expect.objectContaining({
         series: [defaultSeries],
         groupBy: {
-          keys: ['first groupable'],
+          keyExpressions: [{ key: 'first groupable' }],
           limit: 5 // Default group by limit
         }
       })
@@ -215,7 +215,7 @@ describe('Explore query editor', () => {
       expect.objectContaining({
         series: [defaultSeries],
         groupBy: {
-          keys: ['first groupable'],
+          keyExpressions: [{ key: 'first groupable' }],
           limit: 6
         }
       })

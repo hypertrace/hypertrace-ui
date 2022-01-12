@@ -1,11 +1,11 @@
 import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
-import { AttributeExpression } from 'projects/observability/src/shared/graphql/model/attribute/attribute-expression';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';

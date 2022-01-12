@@ -1,6 +1,6 @@
 import { TimeDuration } from '@hypertrace/common';
 import { groupBy } from 'lodash-es';
-import { AttributeExpression } from 'projects/observability/src/shared/graphql/model/attribute/attribute-expression';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';

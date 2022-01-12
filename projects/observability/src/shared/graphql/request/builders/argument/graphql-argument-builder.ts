@@ -1,5 +1,5 @@
 import { GraphQlArgument, GraphQlArgumentObject, GraphQlEnumArgument } from '@hypertrace/graphql-client';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, omit } from 'lodash-es';
 import { AttributeExpression } from '../../../model/attribute/attribute-expression';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
@@ -92,8 +92,10 @@ export class GraphQlArgumentBuilder {
 
   protected buildOrderByArgumentValue(orderBy: GraphQlSortBySpecification): GraphQlArgumentObject {
     const orderByFragment = orderBy.key.asGraphQlOrderByFragment();
+    const unknownFields = omit(orderByFragment, 'direction', 'expression');
 
     return {
+      ...unknownFields,
       direction: new GraphQlEnumArgument(orderBy.direction),
       keyExpression: this.buildAttributeExpression(orderByFragment.expression)
     };

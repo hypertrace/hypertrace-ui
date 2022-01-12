@@ -259,11 +259,11 @@ describe('Entity topology graphql query handler', () => {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] },
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
             {
               path: 'metric',
               alias: 'duration',
-              arguments: [{ name: 'key', value: 'duration' }],
+              arguments: [{ name: 'expression', value: { key: 'duration' } }],
               children: [
                 {
                   path: 'avg',
@@ -284,7 +284,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'metric',
                       alias: 'duration',
-                      arguments: [{ name: 'key', value: 'duration' }],
+                      arguments: [{ name: 'expression', value: { key: 'duration' } }],
                       children: [
                         {
                           path: 'avg',
@@ -298,12 +298,20 @@ describe('Entity topology graphql query handler', () => {
                       path: 'neighbor',
                       children: [
                         { path: 'id' },
-                        { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] },
-                        { path: 'attribute', alias: 'type', arguments: [{ name: 'key', value: 'type' }] },
+                        {
+                          path: 'attribute',
+                          alias: 'name',
+                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                        },
+                        {
+                          path: 'attribute',
+                          alias: 'type',
+                          arguments: [{ name: 'expression', value: { key: 'type' } }]
+                        },
                         {
                           path: 'metric',
                           alias: 'numCalls',
-                          arguments: [{ name: 'key', value: 'numCalls' }],
+                          arguments: [{ name: 'expression', value: { key: 'numCalls' } }],
                           children: [
                             {
                               path: 'avgrate',
@@ -333,7 +341,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'metric',
                       alias: 'duration',
-                      arguments: [{ name: 'key', value: 'duration' }],
+                      arguments: [{ name: 'expression', value: { key: 'duration' } }],
                       children: [
                         {
                           path: 'avg',
@@ -347,11 +355,15 @@ describe('Entity topology graphql query handler', () => {
                       path: 'neighbor',
                       children: [
                         { path: 'id' },
-                        { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] },
+                        {
+                          path: 'attribute',
+                          alias: 'name',
+                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                        },
                         {
                           path: 'metric',
                           alias: 'duration',
-                          arguments: [{ name: 'key', value: 'duration' }],
+                          arguments: [{ name: 'expression', value: { key: 'duration' } }],
                           children: [
                             {
                               path: 'avg',
@@ -378,7 +390,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'metric',
                       alias: 'duration',
-                      arguments: [{ name: 'key', value: 'duration' }],
+                      arguments: [{ name: 'expression', value: { key: 'duration' } }],
                       children: [
                         {
                           path: 'avg',
@@ -392,11 +404,15 @@ describe('Entity topology graphql query handler', () => {
                       path: 'neighbor',
                       children: [
                         { path: 'id' },
-                        { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] },
+                        {
+                          path: 'attribute',
+                          alias: 'name',
+                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                        },
                         {
                           path: 'metric',
                           alias: 'duration',
-                          arguments: [{ name: 'key', value: 'duration' }],
+                          arguments: [{ name: 'expression', value: { key: 'duration' } }],
                           children: [
                             {
                               path: 'avg',
