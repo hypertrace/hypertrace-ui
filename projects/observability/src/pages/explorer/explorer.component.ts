@@ -9,7 +9,7 @@ import {
   TimeDurationService
 } from '@hypertrace/common';
 import { Filter, ToggleItem } from '@hypertrace/components';
-import { isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
@@ -19,6 +19,7 @@ import {
   ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
+import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
@@ -216,8 +217,8 @@ export class ExplorerComponent {
   }
 
   private getGroupByQueryParams(groupBy?: GraphQlGroupBy): QueryParamObject {
-    const key = groupBy?.keys[0];
-    if (key === undefined) {
+    const keyExpressions = groupBy?.keyExpressions ?? [];
+    if (keyExpressions.length === 0) {
       return {
         // Clear existing selection
         [ExplorerQueryParam.Group]: undefined,
@@ -227,7 +228,7 @@ export class ExplorerComponent {
     }
 
     return {
-      [ExplorerQueryParam.Group]: key,
+      [ExplorerQueryParam.Group]: keyExpressions.map(expression => this.encodeAttributeExpression(expression)),
       [ExplorerQueryParam.OtherGroup]: groupBy?.includeRest || undefined, // No param needed for false
       [ExplorerQueryParam.GroupLimit]: groupBy?.limit
     };
@@ -238,7 +239,9 @@ export class ExplorerComponent {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
       groupBy: param.has(ExplorerQueryParam.Group)
         ? {
-            keys: param.getAll(ExplorerQueryParam.Group),
+            keyExpressions: param
+              .getAll(ExplorerQueryParam.Group)
+              .flatMap(expressionString => this.tryDecodeAttributeExpression(expressionString)),
             includeRest: param.get(ExplorerQueryParam.OtherGroup) === 'true',
             // tslint:disable-next-line: strict-boolean-expressions
             limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
@@ -293,6 +296,19 @@ export class ExplorerComponent {
         }
       }
     ];
+  }
+
+  private encodeAttributeExpression(attributeExpression: AttributeExpression): string {
+    if (isEmpty(attributeExpression.subpath)) {
+      return attributeExpression.key;
+    }
+
+    return `${attributeExpression.key}__${attributeExpression.subpath}`;
+  }
+  private tryDecodeAttributeExpression(expressionString: string): [AttributeExpression] | [] {
+    const [key, subpath] = expressionString.split('__');
+
+    return [{ key: key, ...(!isEmpty(subpath) ? { subpath: subpath } : {}) }];
   }
 }
 interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {

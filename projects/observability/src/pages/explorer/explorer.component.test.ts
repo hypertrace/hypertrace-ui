@@ -203,7 +203,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 1000,
         interval: new TimeDuration(5, TimeUnit.Minute)
       }),
@@ -214,7 +214,7 @@ describe('Explorer component', () => {
       2,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 100
       }),
       expect.objectContaining({})
@@ -290,7 +290,7 @@ describe('Explorer component', () => {
         context: SPAN_SCOPE,
         limit: 1000,
         interval: new TimeDuration(5, TimeUnit.Minute),
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
       expect.objectContaining({})
     );
@@ -300,7 +300,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
         limit: 100,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
       expect.objectContaining({})
     );
@@ -358,19 +358,19 @@ describe('Explorer component', () => {
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
     spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
-    spectator.query(ExploreQueryEditorComponent)!.updateGroupByKey(
+    spectator.query(ExploreQueryEditorComponent)!.updateGroupByExpression(
       {
-        keys: ['apiName'],
+        keyExpressions: [{ key: 'apiName' }],
         limit: 6,
         includeRest: true
       },
-      'apiName'
+      { key: 'apiName' }
     );
     detectQueryChange();
     expect(queryParamChangeSpy).toHaveBeenLastCalledWith({
       scope: 'spans',
       series: ['column:avg(second)'],
-      group: 'apiName',
+      group: ['apiName'],
       limit: 6,
       other: true,
       interval: '30s'
@@ -394,7 +394,7 @@ describe('Explorer component', () => {
       }
     });
     expect(spectator.query(ToggleGroupComponent)?.activeItem?.label).toBe('Spans');
-    expect(spectator.query(ExploreQueryGroupByEditorComponent)?.groupByKey).toBe('apiName');
+    expect(spectator.query(ExploreQueryGroupByEditorComponent)?.groupByExpression).toEqual({ key: 'apiName' });
     expect(spectator.query(ExploreQueryLimitEditorComponent)?.limit).toBe(6);
     expect(spectator.query(ExploreQueryLimitEditorComponent)?.includeRest).toBe(true);
     expect(spectator.query(ExploreQuerySeriesEditorComponent)?.series).toEqual({

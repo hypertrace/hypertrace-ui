@@ -20,7 +20,7 @@ export class SpecificationBuilder {
       extractFromServerData: serverData =>
         specifications.map(specification => specification.extractFromServerData(serverData)),
       asGraphQlOrderByFragment: () => ({
-        key: orderByKey
+        expression: { key: orderByKey }
       })
     };
   }
@@ -44,25 +44,7 @@ export class SpecificationBuilder {
         return serverValue === 'null' ? undefined : serverValue;
       },
       asGraphQlOrderByFragment: () => ({
-        key: attributeKey
-      })
-    };
-  }
-
-  public fieldSpecificationForKey(field: string): Specification {
-    return {
-      resultAlias: () => field,
-      name: field,
-      asGraphQlSelections: () => ({
-        path: field
-      }),
-      extractFromServerData: serverData => {
-        const serverValue = serverData[field];
-
-        return serverValue === 'null' ? undefined : serverValue;
-      },
-      asGraphQlOrderByFragment: () => ({
-        key: field
+        expression: { key: attributeKey }
       })
     };
   }

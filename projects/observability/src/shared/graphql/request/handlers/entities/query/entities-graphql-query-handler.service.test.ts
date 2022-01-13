@@ -94,7 +94,7 @@ describe('Entities graphql query handler', () => {
           {
             path: 'attribute',
             alias: 'name',
-            arguments: [{ name: 'key', value: 'name' }]
+            arguments: [{ name: 'expression', value: { key: 'name' } }]
           }
         ]
       },
@@ -217,7 +217,7 @@ describe('Entities graphql query handler', () => {
             {
               path: 'metric',
               alias: 'some_metric',
-              arguments: [{ name: 'key', value: 'some_metric' }],
+              arguments: [{ name: 'expression', value: { key: 'some_metric' } }],
               children: [
                 {
                   alias: 'avgrate_min',
@@ -234,7 +234,7 @@ describe('Entities graphql query handler', () => {
             {
               path: 'metric',
               alias: 'some_metric',
-              arguments: [{ name: 'key', value: 'some_metric' }],
+              arguments: [{ name: 'expression', value: { key: 'some_metric' } }],
               children: [
                 {
                   alias: 'avgrate_sec',
@@ -343,7 +343,7 @@ describe('Entities graphql query handler', () => {
             {
               path: 'metric',
               alias: 'a_metric',
-              arguments: [{ name: 'key', value: 'a_metric' }],
+              arguments: [{ name: 'expression', value: { key: 'a_metric' } }],
               children: [
                 {
                   alias: 'min_series_1m',
@@ -362,7 +362,7 @@ describe('Entities graphql query handler', () => {
             {
               path: 'metric',
               alias: 'a_metric',
-              arguments: [{ name: 'key', value: 'a_metric' }],
+              arguments: [{ name: 'expression', value: { key: 'a_metric' } }],
               children: [
                 {
                   alias: 'max_series_1m',
@@ -382,7 +382,7 @@ describe('Entities graphql query handler', () => {
             {
               path: 'metric',
               alias: 'a_metric',
-              arguments: [{ name: 'key', value: 'a_metric' }],
+              arguments: [{ name: 'expression', value: { key: 'a_metric' } }],
               children: [
                 {
                   alias: 'min_series_5m',

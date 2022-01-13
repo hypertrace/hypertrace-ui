@@ -83,7 +83,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+    expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
       { keys: ['second'], value: 15 },
       { keys: ['third'], value: 20 }
@@ -116,7 +116,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+    expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
       { keys: ['Others'], value: 15 }
     ]);
@@ -172,7 +172,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedTimeSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual(
+    expect(result.getGroupedTimeSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual(
       new Map([
         [
           ['first'],

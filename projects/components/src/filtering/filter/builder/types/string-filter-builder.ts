@@ -8,8 +8,12 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]
     return FilterAttributeType.String;
   }
 
-  public supportedOperators(): FilterOperator[] {
+  public supportedTopLevelOperators(): FilterOperator[] {
     return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In, FilterOperator.Like];
+  }
+
+  public supportedSubpathOperators(): FilterOperator[] {
+    return [];
   }
 
   protected buildValueString(value: string | string[]): string {
