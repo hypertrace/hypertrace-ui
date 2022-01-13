@@ -71,7 +71,8 @@ export class IntervalDurationService {
       throw Error('No intervals supported at requested time range');
     }
 
-    return durations[0];
+    // Get largest supported duration
+    return durations[durations.length - 1];
   }
 
   private getAvailableIntervals(timeRange: TimeRange, minDataPoints: number, maxDataPoints: number): TimeDuration[] {
