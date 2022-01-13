@@ -146,14 +146,6 @@ export class CartesianWidgetModel<TInterval> {
   })
   public maxSeriesDataPoints?: number;
 
-  @ModelProperty({
-    key: 'use-highest-granularity-auto-interval',
-    required: false,
-    displayName: 'Use Highest Granularity Auto Interval',
-    type: BOOLEAN_PROPERTY.type
-  })
-  public useHighestGranularityAutoInterval?: boolean;
-
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 

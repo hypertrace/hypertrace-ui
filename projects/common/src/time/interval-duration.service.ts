@@ -58,24 +58,20 @@ export class IntervalDurationService {
 
   public getAutoDuration(
     timeRange: TimeRange = this.timeRangeService.getCurrentTimeRange(),
-    maximumDataPoints?: number,
-    useHighestGranularityAutoInterval?: boolean
+    maximumDataPoints?: number
   ): TimeDuration {
     // Currently sorted smallest to largest
     const availableDurations = this.getAvailableIntervalsForTimeRange(timeRange, maximumDataPoints);
 
-    return this.getAutoDurationFromTimeDurations(availableDurations, useHighestGranularityAutoInterval);
+    return this.getAutoDurationFromTimeDurations(availableDurations);
   }
 
-  public getAutoDurationFromTimeDurations(
-    durations: TimeDuration[],
-    useHighestGranularityAutoInterval: boolean = false
-  ): TimeDuration {
+  public getAutoDurationFromTimeDurations(durations: TimeDuration[]): TimeDuration {
     if (durations.length === 0) {
       throw Error('No intervals supported at requested time range');
     }
 
-    return !useHighestGranularityAutoInterval ? durations[0] : durations[durations.length - 1];
+    return durations[0];
   }
 
   private getAvailableIntervals(timeRange: TimeRange, minDataPoints: number, maxDataPoints: number): TimeDuration[] {
