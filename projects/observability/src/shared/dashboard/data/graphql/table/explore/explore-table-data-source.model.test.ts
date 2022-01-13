@@ -187,7 +187,7 @@ describe('Explore table data source model', () => {
         limit: 100,
         offset: 0,
         groupBy: expect.objectContaining({
-          keys: ['name'],
+          keyExpressions: [{ key: 'name' }],
           includeRest: false
         }),
         orderBy: [

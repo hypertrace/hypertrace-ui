@@ -10,7 +10,11 @@ export class GraphQlFilterBuilderService {
   public buildGraphQlFilters(filters: TableFilter[]): GraphQlFilter[] {
     return filters.map(
       filter =>
-        new GraphQlFieldFilter(filter.field, toGraphQlOperator(filter.operator), filter.value as GraphQlArgumentValue)
+        new GraphQlFieldFilter(
+          { key: filter.field, subpath: filter.subpath },
+          toGraphQlOperator(filter.operator),
+          filter.value as GraphQlArgumentValue
+        )
     );
   }
 }
@@ -35,8 +39,6 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.In;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
-    case FilterOperator.ContainsKeyValue:
-      return GraphQlOperatorType.ContainsKeyValue;
     default:
       return assertUnreachable(operator);
   }

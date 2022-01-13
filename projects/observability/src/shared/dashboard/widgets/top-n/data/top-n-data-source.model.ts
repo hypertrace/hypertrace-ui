@@ -65,7 +65,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       selections: [labelAttributeSpec, idAttributeSpec, metricSpec.metric],
       filters: (filters ?? []).concat(metricSpec.filters ?? []),
       groupBy: {
-        keys: [labelAttributeSpec.name, idAttributeSpec.name],
+        keyExpressions: [{ key: labelAttributeSpec.name }, { key: idAttributeSpec.name }],
         limit: this.resultLimit
       },
       orderBy: [

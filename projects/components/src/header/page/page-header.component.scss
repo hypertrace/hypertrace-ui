@@ -6,6 +6,16 @@
   display: flex;
   flex-direction: column;
 
+  .column-alignment {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .row-alignment {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &.bottom-border {
     padding-bottom: 16px;
     border-bottom: 1px solid $color-border;

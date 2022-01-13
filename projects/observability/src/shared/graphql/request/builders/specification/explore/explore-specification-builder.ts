@@ -1,5 +1,7 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { isEmpty } from 'lodash-es';
+import { AttributeExpression } from '../../../../model/attribute/attribute-expression';
 import { AttributeMetadataType } from '../../../../model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../../../model/metrics/metric-aggregation';
 import { INTERVAL_START_QUERY_KEY } from '../../../../model/schema/explore';
@@ -25,23 +27,31 @@ export class ExploreSpecificationBuilder {
         type: AttributeMetadataType.Timestamp
       }),
       asGraphQlOrderByFragment: () => ({
-        key: 'intervalStart'
+        expression: { key: 'intervalStart' }
       })
     };
   }
 
   public exploreSpecificationForKey(key: string, aggregation?: MetricAggregationType): ExploreSpecification {
-    const queryAlias = aggregation === undefined ? key : `${aggregation}_${key}`;
+    return this.exploreSpecificationForAttributeExpression({ key: key }, aggregation);
+  }
+
+  public exploreSpecificationForAttributeExpression(
+    expression: AttributeExpression,
+    aggregation?: MetricAggregationType
+  ): ExploreSpecification {
+    const expressionString = this.attributeExpressionAsString(expression).replaceAll('.', '_');
+    const queryAlias = aggregation === undefined ? expressionString : `${aggregation}_${expressionString}`;
 
     return {
-      resultAlias: () => this.buildResultAlias(key, aggregation),
-      name: key,
+      resultAlias: () => this.buildResultAlias(expression, aggregation),
+      name: expressionString,
       aggregation: aggregation,
       asGraphQlSelections: () => ({
         path: 'selection',
         alias: queryAlias,
         arguments: [
-          this.argBuilder.forAttributeKey(key),
+          this.argBuilder.forAttributeExpression(expression),
           ...this.argBuilder.forAggregation(aggregation),
           ...this.argBuilder.forAggregationArgs(aggregation)
         ],
@@ -50,7 +60,7 @@ export class ExploreSpecificationBuilder {
       extractFromServerData: serverData => serverData[queryAlias],
       asGraphQlOrderByFragment: () => {
         const fragment: GraphQlSortWithoutDirection & Dictionary<unknown> = {
-          key: key
+          expression: expression
         };
 
         if (aggregation !== undefined) {
@@ -62,8 +72,14 @@ export class ExploreSpecificationBuilder {
     };
   }
 
-  protected buildResultAlias(key: string, aggregation?: MetricAggregationType): string {
-    return aggregation === undefined ? key : `${aggregation}(${key})`;
+  protected attributeExpressionAsString(expression: AttributeExpression): string {
+    return isEmpty(expression.subpath) ? expression.key : `${expression.key}.${expression.subpath}`;
+  }
+
+  protected buildResultAlias(expression: AttributeExpression, aggregation?: MetricAggregationType): string {
+    const expressionString = this.attributeExpressionAsString(expression);
+
+    return aggregation === undefined ? expressionString : `${aggregation}(${expressionString})`;
   }
 
   protected aggregationAsEnum(aggregation: MetricAggregationType): GraphQlEnumArgument<GraphQlMetricAggregationType> {

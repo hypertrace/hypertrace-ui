@@ -153,7 +153,8 @@ describe('Explorer Visualization cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -166,7 +167,7 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: undefined,
       groupBy: {
-        keys: ['baz'],
+        keyExpressions: [{ key: 'baz' }],
         limit: 10
       },
       series: [
@@ -218,7 +219,8 @@ describe('Explorer Visualization cartesian data source model', () => {
               data: [
                 ['first', 10],
                 ['second', 15]
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []
@@ -231,7 +233,7 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: new TimeDuration(5, TimeUnit.Minute),
       groupBy: {
-        keys: ['baz'],
+        keyExpressions: [{ key: 'baz' }],
         limit: 5
       },
       series: [
@@ -302,7 +304,7 @@ describe('Explorer Visualization cartesian data source model', () => {
           series: [
             {
               color: 'first color',
-              name: 'sum(foo): first',
+              name: 'first',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -317,11 +319,12 @@ describe('Explorer Visualization cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 15
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             },
             {
               color: 'second color',
-              name: 'sum(foo): second',
+              name: 'second',
               type: CartesianSeriesVisualizationType.Area,
               data: [
                 {
@@ -336,7 +339,8 @@ describe('Explorer Visualization cartesian data source model', () => {
                   timestamp: secondIntervalTime,
                   value: 25
                 }
-              ]
+              ],
+              groupName: 'sum(foo)'
             }
           ],
           bands: []

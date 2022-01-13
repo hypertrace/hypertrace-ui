@@ -29,6 +29,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
       <div class="name-with-icon fill-container">
         <ht-icon
           [icon]="this.entityIconType"
+          [color]="this.iconColor"
           class="icon"
           *ngIf="this.showIcon && this.entityIconType"
           size="${IconSize.Large}"
@@ -50,6 +51,9 @@ export class EntityRendererComponent implements OnChanges {
 
   @Input()
   public icon?: string;
+
+  @Input()
+  public iconColor?: string;
 
   @Input()
   public showIcon: boolean = false;

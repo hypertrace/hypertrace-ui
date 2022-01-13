@@ -1,4 +1,6 @@
-import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { GraphQlArgument, GraphQlArgumentObject, GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { isEmpty, omit } from 'lodash-es';
+import { AttributeExpression } from '../../../model/attribute/attribute-expression';
 import { GraphQlFilter } from '../../../model/schema/filter/graphql-filter';
 import { GraphQlSortBySpecification } from '../../../model/schema/sort/graphql-sort-by-specification';
 import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-range';
@@ -10,9 +12,13 @@ export class GraphQlArgumentBuilder {
   }
 
   public forAttributeKey(key: string): GraphQlArgument {
+    return this.forAttributeExpression({ key: key });
+  }
+
+  public forAttributeExpression(attributeExpression: AttributeExpression): GraphQlArgument {
     return {
-      name: 'key',
-      value: key
+      name: 'expression',
+      value: this.buildAttributeExpression(attributeExpression)
     };
   }
 
@@ -32,10 +38,7 @@ export class GraphQlArgumentBuilder {
     return [
       {
         name: 'orderBy',
-        value: orderBys.map(orderBy => ({
-          ...orderBy.key.asGraphQlOrderByFragment(),
-          direction: new GraphQlEnumArgument(orderBy.direction)
-        }))
+        value: orderBys.map(orderBy => this.buildOrderByArgumentValue(orderBy))
       }
     ];
   }
@@ -76,5 +79,25 @@ export class GraphQlArgumentBuilder {
 
   public forScope(scope: string): GraphQlArgument {
     return { name: 'scope', value: scope };
+  }
+
+  protected buildAttributeExpression(
+    attributeExpression: AttributeExpression
+  ): AttributeExpression & GraphQlArgumentObject {
+    return {
+      key: attributeExpression.key,
+      ...(!isEmpty(attributeExpression.subpath) ? { subpath: attributeExpression.subpath } : {})
+    };
+  }
+
+  protected buildOrderByArgumentValue(orderBy: GraphQlSortBySpecification): GraphQlArgumentObject {
+    const orderByFragment = orderBy.key.asGraphQlOrderByFragment();
+    const unknownFields = omit(orderByFragment, 'direction', 'expression');
+
+    return {
+      ...unknownFields,
+      direction: new GraphQlEnumArgument(orderBy.direction),
+      keyExpression: this.buildAttributeExpression(orderByFragment.expression)
+    };
   }
 }

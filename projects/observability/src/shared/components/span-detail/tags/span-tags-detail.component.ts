@@ -44,7 +44,7 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'tags', operator: FilterOperator.ContainsKeyValue, value: [tag.key, tag.value] }
+      { field: 'tags', subpath: tag.key, operator: FilterOperator.Equals, value: tag.value }
     ]);
 
   private buildTagRecords(): void {
