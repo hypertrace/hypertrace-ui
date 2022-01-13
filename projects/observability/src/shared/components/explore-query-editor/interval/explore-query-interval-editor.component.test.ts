@@ -91,7 +91,7 @@ describe('Explore Query Interval Editor component', () => {
     spectator.detectChanges();
     const newOptions = spectator.queryAll('.select-option', { root: true });
     expect(newOptions.length).toBe(8);
-    expect(newOptions[1]).toHaveText('Auto (30s)');
+    expect(newOptions[1]).toHaveText('Auto (1h)');
     flush();
   }));
 
