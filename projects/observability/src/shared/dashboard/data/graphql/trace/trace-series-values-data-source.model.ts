@@ -1,4 +1,3 @@
-import { GraphQlFilter } from './../../../../graphql/model/schema/filter/graphql-filter';
 import { TimeDuration } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,6 +10,7 @@ import {
   GraphQlExploreResult
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
+import { GraphQlFilter } from './../../../../graphql/model/schema/filter/graphql-filter';
 
 export abstract class TraceSeriesValuesDataSourceModel<TData> extends GraphQlDataSourceModel<TData> {
   protected abstract specification: ExploreSpecification;
