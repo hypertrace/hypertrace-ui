@@ -39,7 +39,7 @@ import {
         <ht-explore-query-group-by-editor
           class="group-by"
           [context]="currentVisualization.context"
-          [groupByKey]="(currentVisualization.groupBy?.keys)[0]"
+          [groupByKey]="(currentVisualization.groupBy?.keyExpressions)?.[0]?.key"
           (groupByKeyChange)="this.updateGroupByKey(currentVisualization.groupBy, $event)"
         ></ht-explore-query-group-by-editor>
 
@@ -103,8 +103,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.setInterval(this.interval);
     }
 
-    if (changeObject.groupBy && this.groupBy?.keys.length) {
-      this.updateGroupByKey(this.groupBy, this.groupBy.keys[0]);
+    if (changeObject.groupBy && this.groupBy?.keyExpressions.length) {
+      this.updateGroupByKey(this.groupBy, this.groupBy.keyExpressions[0]?.key);
     }
   }
 
@@ -117,7 +117,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.visualizationBuilder.groupBy();
     } else {
       this.visualizationBuilder.groupBy(
-        groupBy ? { ...groupBy, keys: [key] } : { keys: [key], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+        groupBy
+          ? { ...groupBy, keyExpressions: [{ key: key }] }
+          : { keyExpressions: [{ key: key }], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
       );
     }
   }

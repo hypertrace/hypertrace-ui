@@ -102,6 +102,8 @@ export class ExploreGraphqlQueryBuilderService {
   }
 
   private groupByAsSpecifications(groupBy?: GraphQlGroupBy): ExploreSpecification[] {
-    return (groupBy?.keys ?? []).map(key => this.specBuilder.exploreSpecificationForKey(key));
+    return (groupBy?.keyExpressions ?? []).map(expression =>
+      this.specBuilder.exploreSpecificationForAttributeExpression(expression)
+    );
   }
 }

@@ -97,7 +97,7 @@ describe('SpansGraphQlQueryHandlerService', () => {
               direction: {
                 value: 'ASC'
               },
-              key: 'apiName'
+              keyExpression: { key: 'apiName' }
             }
           ]
         }
@@ -109,22 +109,12 @@ describe('SpansGraphQlQueryHandlerService', () => {
             { path: 'id' },
             {
               alias: 'apiName',
-              arguments: [
-                {
-                  name: 'key',
-                  value: 'apiName'
-                }
-              ],
+              arguments: [{ name: 'expression', value: { key: 'apiName' } }],
               path: 'attribute'
             },
             {
               alias: 'duration',
-              arguments: [
-                {
-                  name: 'key',
-                  value: 'duration'
-                }
-              ],
+              arguments: [{ name: 'expression', value: { key: 'duration' } }],
               path: 'attribute'
             }
           ]

@@ -360,7 +360,7 @@ describe('Explorer component', () => {
     spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
     spectator.query(ExploreQueryEditorComponent)!.updateGroupByKey(
       {
-        keys: ['apiName'],
+        keyExpressions: [{ key: 'apiName' }],
         limit: 6,
         includeRest: true
       },
@@ -370,7 +370,7 @@ describe('Explorer component', () => {
     expect(queryParamChangeSpy).toHaveBeenLastCalledWith({
       scope: 'spans',
       series: ['column:avg(second)'],
-      group: 'apiName',
+      group: ['apiName'],
       limit: 6,
       other: true,
       interval: '30s'

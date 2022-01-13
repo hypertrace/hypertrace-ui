@@ -2,7 +2,6 @@ import { GraphQlArgumentObject } from '@hypertrace/graphql-client';
 
 export interface GraphQlFilter {
   asArgumentObjects(): GraphQlArgumentObject[];
-  key: string;
 }
 
 export interface GraphQlFilterable {
