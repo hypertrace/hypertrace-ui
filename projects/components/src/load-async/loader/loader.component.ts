@@ -2,15 +2,27 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { LoaderType } from '../load-async.service';
 
-// TODO 7872 put display class on img when its displayed to center it
+// TODO 7872 add configs to switch cases
+
 @Component({
   selector: 'ht-loader',
   styleUrls: ['./loader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-loader">
-      <!--      <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />-->
-      <ht-skeleton></ht-skeleton>
+    <div class="ht-loader" [ngClass]="this.containerDisplayClass()" [ngSwitch]="this.currentLoaderType">
+      <ht-skeleton *ngSwitchCase="'${LoaderType.Rectangle}'" [shapeStyle]="'${LoaderType.Rectangle}'"></ht-skeleton>
+      <ht-skeleton
+        *ngSwitchCase="'${LoaderType.RectangleText}'"
+        [shapeStyle]="'${LoaderType.RectangleText}'"
+      ></ht-skeleton>
+      <ht-skeleton *ngSwitchCase="'${LoaderType.Circle}'" [shapeStyle]="'${LoaderType.Circle}'"></ht-skeleton>
+      <ht-skeleton *ngSwitchCase="'${LoaderType.Square}'" size="3rem"></ht-skeleton>
+      <img
+        *ngSwitchDefault
+        [ngClass]="[this.currentLoaderType]"
+        [src]="this.getImagePathFromType(this.currentLoaderType)"
+      />
+      <!--      <ht-skeleton></ht-skeleton>-->
     </div>
   `
 })
@@ -34,5 +46,15 @@ export class LoaderComponent implements OnChanges {
       default:
         return ImagesAssetPath.LoaderSpinner;
     }
+  }
+
+  public containerDisplayClass(): { 'flex-centered': boolean } {
+    // return { 'flex-centered': false }
+    return {
+      'flex-centered':
+        this.currentLoaderType === LoaderType.ExpandableRow ||
+        this.currentLoaderType === LoaderType.Spinner ||
+        this.currentLoaderType === LoaderType.Page
+    };
   }
 }
