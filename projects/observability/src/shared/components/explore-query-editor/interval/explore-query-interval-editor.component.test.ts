@@ -71,7 +71,7 @@ describe('Explore Query Interval Editor component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('AUTO');
 
-    expect(spectator.element).toHaveText('Auto (15m)');
+    expect(spectator.element).toHaveText('Auto (15s)');
     flush();
   }));
 
@@ -86,12 +86,12 @@ describe('Explore Query Interval Editor component', () => {
     spectator.click(spectator.query(byText('None'))!);
     const options = spectator.queryAll('.select-option', { root: true });
     expect(options.length).toBe(7);
-    expect(options[1]).toHaveText('Auto (15m)');
+    expect(options[1]).toHaveText('Auto (15s)');
     spectator.inject(TimeRangeService).setRelativeRange(3, TimeUnit.Hour);
     spectator.detectChanges();
     const newOptions = spectator.queryAll('.select-option', { root: true });
     expect(newOptions.length).toBe(8);
-    expect(newOptions[1]).toHaveText('Auto (1h)');
+    expect(newOptions[1]).toHaveText('Auto (30s)');
     flush();
   }));
 

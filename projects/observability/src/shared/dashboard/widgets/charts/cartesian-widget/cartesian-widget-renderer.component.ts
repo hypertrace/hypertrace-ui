@@ -94,7 +94,11 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   private resolveInterval(value?: IntervalValue): TimeDuration {
     return value instanceof TimeDuration
       ? value
-      : this.intervalDurationService.getAutoDuration(this.timeRange, this.model.maxSeriesDataPoints);
+      : this.intervalDurationService.getAutoDuration(
+          this.timeRange,
+          this.model.maxSeriesDataPoints,
+          this.model.useHighestGranularityAutoInterval
+        );
   }
 
   private buildIntervalOptions(): IntervalValue[] {
