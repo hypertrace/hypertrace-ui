@@ -144,7 +144,7 @@ describe('Navigable dashboard component', () => {
     };
     spectator.query(FilterBarComponent)?.filtersChange.next([explicitFilter]);
     expect(mockDataSource.addFilters).toHaveBeenCalledWith(
-      expect.objectContaining({ keyOrExpression: 'foo', operator: GraphQlOperatorType.Equals, value: 'bar' })
+      expect.objectContaining({ keyOrExpression: { key: 'foo' }, operator: GraphQlOperatorType.Equals, value: 'bar' })
     );
   });
 

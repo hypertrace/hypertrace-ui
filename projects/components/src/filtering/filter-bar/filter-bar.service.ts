@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { areCompatibleFilters, areEqualFilters, Filter } from '../filter/filter';
+import { isEqual } from 'lodash-es';
+import { areCompatibleFilters, Filter } from '../filter/filter';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class FilterBarService {
   public updateFilter(filters: Filter[], oldFilter: Filter, newFilter: Filter): Filter[] {
     const clonedFilters = [...filters];
 
-    const index = filters.findIndex(f => areEqualFilters(f, oldFilter));
+    const index = filters.findIndex(f => isEqual(f, oldFilter));
 
     if (index < 0) {
       throw new Error(`Unable to update filter. Filter for '${oldFilter.field}' not found.`);
@@ -22,10 +23,10 @@ export class FilterBarService {
 
     clonedFilters.splice(index, 1, newFilter);
 
-    return clonedFilters.filter(f => areEqualFilters(f, newFilter) || areCompatibleFilters(f, newFilter));
+    return clonedFilters.filter(f => isEqual(f, newFilter) || areCompatibleFilters(f, newFilter));
   }
 
   public deleteFilter(filters: Filter[], filter: Filter): Filter[] {
-    return filters.filter(f => !areEqualFilters(f, filter));
+    return filters.filter(f => !isEqual(f, filter));
   }
 }
