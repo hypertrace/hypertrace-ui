@@ -5,10 +5,11 @@ import { MessageDisplayModule } from '../message-display/message-display.module'
 import { LoadAsyncDirective } from './load-async.directive';
 import { LoaderComponent } from './loader/loader.component';
 import { LoadAsyncWrapperComponent } from './wrapper/load-async-wrapper.component';
+import { SkeletonModule } from '../skeleton/skeleton.module';
 
 @NgModule({
   declarations: [LoadAsyncDirective, LoadAsyncWrapperComponent, LoaderComponent],
-  imports: [CommonModule, IconModule, MessageDisplayModule],
+  imports: [CommonModule, IconModule, MessageDisplayModule, SkeletonModule],
   exports: [LoadAsyncDirective]
 })
 export class LoadAsyncModule {}

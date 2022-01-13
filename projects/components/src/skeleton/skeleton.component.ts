@@ -9,11 +9,12 @@ interface ContainerClass {
 
 // TODO ENG-7872 type def container style
 // TODO ENG-7872 strongly type with enums config options
+// TODO ENG-7872 replace styles with any predefined
 @Component({
   selector: 'ht-skeleton',
   template: ` <div [ngClass]="containerClass()" [ngStyle]="containerStyle()"></div> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./skeleton.scss']
+  styleUrls: ['./skeleton.component.scss']
 })
 export class SkeletonComponent implements OnInit {
   // Inline styles

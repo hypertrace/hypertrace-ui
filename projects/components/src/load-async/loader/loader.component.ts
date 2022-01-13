@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { LoaderType } from '../load-async.service';
 
+// TODO 7872 put display class on img when its displayed to center it
 @Component({
   selector: 'ht-loader',
   styleUrls: ['./loader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-loader">
-      <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />
+      <!--      <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />-->
+      <ht-skeleton></ht-skeleton>
     </div>
   `
 })
