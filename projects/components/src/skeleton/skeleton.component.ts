@@ -20,6 +20,7 @@ export const enum SkeletonType {
   ListItem = 'list-item'
 }
 
+// TODO 7872 Allow circle and donut to take the height of parent, with equal width.
 @Component({
   selector: 'ht-skeleton',
   template: `

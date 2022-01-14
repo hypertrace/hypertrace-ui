@@ -39,8 +39,10 @@
 }
 
 .skeleton.skeleton-rectangle-text {
+  @include initial-location;
   height: 1.3rem;
   width: 90%;
+  margin: 10px;
 }
 
 .skeleton.skeleton-circle {
@@ -50,15 +52,15 @@
 }
 
 .skeleton.skeleton-square {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .skeleton.skeleton-table-row {
+  @include initial-location;
   height: 1.3rem;
   width: 90%;
-
-  @include initial-location;
+  margin-left: 10px;
 }
 
 .skeleton.skeleton-repeating {
