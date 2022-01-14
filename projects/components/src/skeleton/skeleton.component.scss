@@ -1,3 +1,5 @@
+@import 'color-palette';
+
 @mixin loading-animation {
   content: '';
   animation: skeleton-animation 1.2s infinite;
@@ -53,106 +55,107 @@
 
 .skeleton {
   @include block-parent-center;
+  &::after {
+    @include loading-animation;
+  }
   position: relative;
-  background-color: #dee2e6;
+  background-color: $gray-2;
   overflow: hidden;
   border-radius: 6px;
-}
 
-.skeleton::after {
-  @include loading-animation;
-}
-
-.skeleton.skeleton-rectangle {
-  height: 80%;
-  width: 80%;
-}
-
-.skeleton.skeleton-rectangle-text {
-  @include initial-location;
-  height: 1.3rem;
-  width: 90%;
-  margin: 10px;
-}
-
-.skeleton.skeleton-circle {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-}
-
-.skeleton.skeleton-square {
-  width: 2rem;
-  height: 2rem;
-}
-
-.skeleton.skeleton-table-row {
-  @include initial-location;
-  height: 1.3rem;
-  width: 90%;
-  margin-left: 10px;
-}
-
-.skeleton.skeleton-donut {
-  display: inline-block;
-  background-color: #dee2e6;
-  border-radius: 50%;
-  width: 40%;
-  padding-bottom: 40%;
-
-  .donut-inner {
-    @include block-parent-center;
-    width: 70%;
-    height: 70%;
-    position: absolute;
-    background-color: white;
-    z-index: 1;
-    border-radius: 50%;
-  }
-}
-.skeleton.skeleton-donut::after {
-  @include donut-animation;
-}
-
-.skeleton.skeleton-repeating {
-  margin-top: 1rem;
-}
-
-.skeleton.skeleton-list-item {
-  background-color: rgb(255, 255, 255);
-  @include initial-location;
-  display: flex;
-  justify-content: flex-start;
-
-  .item-circle {
-    background-color: #dee2e6;
-    height: 2rem;
-    width: 2rem;
-    border-radius: 50%;
-  }
-  .item-circle::after {
-    @include loading-animation;
+  &.skeleton-rectangle {
+    height: 80%;
+    width: 80%;
   }
 
-  .item-column {
-    display: flex;
-    flex-direction: column;
-    padding-left: 1rem;
-    width: 100%;
-  }
-
-  .item-column > div {
-    background-color: #dee2e6;
-    height: 0.9rem;
-    border-radius: 6px;
+  &.skeleton-rectangle-text {
+    @include initial-location;
+    height: 1.3rem;
     width: 90%;
+    margin: 10px;
+  }
 
-    &:last-child {
-      margin-top: 5px;
-      width: 80%;
+  &.skeleton-circle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+  }
+
+  &.skeleton-square {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &.skeleton-table-row {
+    @include initial-location;
+    height: 1.3rem;
+    width: 90%;
+    margin-left: 10px;
+  }
+
+  &.skeleton-donut {
+    display: inline-block;
+    background-color: $gray-2;
+    border-radius: 50%;
+    width: 40%;
+    padding-bottom: 40%;
+
+    .donut-inner {
+      @include block-parent-center;
+      width: 70%;
+      height: 70%;
+      position: absolute;
+      background-color: white;
+      z-index: 1;
+      border-radius: 50%;
     }
   }
-  .item-column > div::after {
-    @include loading-animation;
+
+  &.skeleton-donut::after {
+    @include donut-animation;
+  }
+
+  &.skeleton-list-item {
+    @include initial-location;
+    background-color: white;
+    display: flex;
+    justify-content: flex-start;
+
+    .item-circle {
+      background-color: $gray-2;
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 50%;
+    }
+    .item-circle::after {
+      @include loading-animation;
+    }
+
+    .item-column {
+      display: flex;
+      flex-direction: column;
+      padding-left: 1rem;
+      width: 100%;
+
+      .item-line {
+        background-color: $gray-2;
+        height: 0.7rem;
+        border-radius: 6px;
+        width: 90%;
+
+        &:last-child {
+          margin-top: 5px;
+          width: 80%;
+        }
+      }
+    }
+
+    .item-column > div::after {
+      @include loading-animation;
+    }
+  }
+
+  &.skeleton-repeating {
+    margin-top: 1rem;
   }
 }

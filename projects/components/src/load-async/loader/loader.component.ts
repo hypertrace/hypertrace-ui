@@ -8,8 +8,8 @@ import { LoaderType } from '../load-async.service';
   styleUrls: ['./loader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-loader" [ngClass]="{ 'flex-centered': this.oldLoaderType() }">
-      <ng-container *ngIf="!this.oldLoaderType(); else oldLoader">
+    <div class="ht-loader" [ngClass]="{ 'flex-centered': this.isOldLoaderType }">
+      <ng-container *ngIf="!this.isOldLoaderType; else oldLoader">
         <ht-skeleton [shapeStyle]="this.skeletonType" [repeat]="this.repeatLoaderCount"></ht-skeleton>
       </ng-container>
 
@@ -30,10 +30,17 @@ export class LoaderComponent implements OnChanges {
 
   public currentLoaderType: LoaderType = LoaderType.Spinner;
 
+  public isOldLoaderType: boolean = false;
+
   public ngOnChanges(): void {
     this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
 
-    this.skeletonType = this.loaderToSkeletonTypeMap(this.currentLoaderType);
+    this.isOldLoaderType =
+      this.currentLoaderType === LoaderType.ExpandableRow ||
+      this.currentLoaderType === LoaderType.Spinner ||
+      this.currentLoaderType === LoaderType.Page;
+
+    this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
   }
 
   public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
@@ -48,7 +55,7 @@ export class LoaderComponent implements OnChanges {
     }
   }
 
-  public loaderToSkeletonTypeMap(curLoaderType: LoaderType): SkeletonType {
+  public getSkeletonTypeForLoader(curLoaderType: LoaderType): SkeletonType {
     switch (curLoaderType) {
       case LoaderType.RectangleText:
         return SkeletonType.RectangleText;
@@ -65,13 +72,5 @@ export class LoaderComponent implements OnChanges {
       default:
         return SkeletonType.Rectangle;
     }
-  }
-
-  public oldLoaderType(): boolean {
-    return (
-      this.currentLoaderType === LoaderType.ExpandableRow ||
-      this.currentLoaderType === LoaderType.Spinner ||
-      this.currentLoaderType === LoaderType.Page
-    );
   }
 }
