@@ -13,7 +13,7 @@ export class EnrichedAttributeSpecificationBuilder {
       asGraphQlSelections: () => this.buildGraphQlSelections(attributeKey),
       extractFromServerData: serverData => this.extractFromServerData(attributeKey, units, serverData),
       asGraphQlOrderByFragment: () => ({
-        key: attributeKey
+        expression: { key: attributeKey }
       })
     };
   }

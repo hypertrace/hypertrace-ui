@@ -167,7 +167,7 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: undefined,
       groupBy: {
-        keys: ['baz'],
+        keyExpressions: [{ key: 'baz' }],
         limit: 10
       },
       series: [
@@ -233,7 +233,7 @@ describe('Explorer Visualization cartesian data source model', () => {
     model.request = buildVisualizationRequest({
       interval: new TimeDuration(5, TimeUnit.Minute),
       groupBy: {
-        keys: ['baz'],
+        keyExpressions: [{ key: 'baz' }],
         limit: 5
       },
       series: [

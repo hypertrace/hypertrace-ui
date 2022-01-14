@@ -155,7 +155,7 @@ describe('Explore cartesian data source model', () => {
     ];
 
     model.groupBy = {
-      keys: ['baz'],
+      keyExpressions: [{ key: 'baz' }],
       includeRest: true,
       limit: 5
     };
@@ -220,7 +220,7 @@ describe('Explore cartesian data source model', () => {
     ];
 
     model.groupBy = {
-      keys: ['baz'],
+      keyExpressions: [{ key: 'baz' }],
       limit: 5
     };
 

@@ -12,7 +12,6 @@ import { SpanDataSourceModel } from './span/span-data-source.model';
 import { AttributeSpecificationModel } from './specifiers/attribute-specification.model';
 import { CompositeSpecificationModel } from './specifiers/composite-specification.model';
 import { EnrichedAttributeSpecificationModel } from './specifiers/enriched-attribute-specification.model';
-import { FieldSpecificationModel } from './specifiers/field-specification.model';
 import { MappedAttributeSpecificationModel } from './specifiers/mapped-attribute-specification.model';
 import { TraceStatusSpecificationModel } from './specifiers/trace-status-specification.model';
 import { SpansTableDataSourceModel } from './table/spans/spans-table-data-source.model';
@@ -40,7 +39,6 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         TracesDataSourceModel,
         CompositeSpecificationModel,
         AttributeSpecificationModel,
-        FieldSpecificationModel,
         TraceStatusSpecificationModel,
         EnrichedAttributeSpecificationModel,
         MappedAttributeSpecificationModel
