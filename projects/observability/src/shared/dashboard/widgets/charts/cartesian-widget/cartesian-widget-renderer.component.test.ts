@@ -260,7 +260,10 @@ describe('Cartesian widget renderer component', () => {
     const series = seriesFactory({}, fetcher);
     const mockModel = cartesianModelFactory({
       series: [series],
-      maxSeriesDataPoints: 20
+      maxSeriesDataPoints: 20,
+      selectionHandler: {
+        execute: jest.fn()
+      }
     });
     const spectator = buildComponent({
       providers: [...mockDashboardWidgetProviders(mockModel)]
@@ -268,6 +271,6 @@ describe('Cartesian widget renderer component', () => {
 
     spectator.component.onSelectionChange(selectedData);
 
-    expect(spectator.component).toBeTruthy();
+    expect(spectator.component.model.selectionHandler?.execute).toHaveBeenCalled();
   });
 });

@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '
 import { IconType } from '@hypertrace/assets-library';
 import { TimeRangeService } from '@hypertrace/common';
 import { ButtonComponent, DividerComponent, POPOVER_DATA } from '@hypertrace/components';
+import { CartesianSelectedData, CartesianSeriesVisualizationType } from '@hypertrace/observability';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { CartesianSelectedData, CartesianSeriesVisualizationType } from '../../../../../../../public-api';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 import { CartesianExplorerContextMenuComponent, ContextMenu } from './cartesian-explorer-context-menu.component';
 
