@@ -36,16 +36,16 @@ export class SkeletonComponent implements OnChanges {
   @Input()
   public size: string = '';
 
-  public numberOfIterations: Array<number> = Array(1).fill(1);
+  public numberOfIterations: number[] = Array(1).fill(1);
 
   public containerClass: ContainerClass;
 
-  constructor() {
+  public constructor() {
     this.containerClass = this.getContainerClass();
   }
 
-  ngOnChanges() {
-    this.numberOfIterations = this.repeat ? Array(this.repeat).fill(1) : Array(this.repeat).fill(1);
+  public ngOnChanges(): void {
+    this.numberOfIterations = Array(this.repeat).fill(1);
 
     this.containerClass = this.getContainerClass();
   }
