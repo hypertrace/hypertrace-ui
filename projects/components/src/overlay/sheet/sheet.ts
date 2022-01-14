@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PopoverFixedPositionLocation } from '../../popover/popover';
 import { OverlayConfig } from './../overlay';
@@ -8,6 +8,8 @@ export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   data?: TData;
   position?: PopoverFixedPositionLocation.Right | PopoverFixedPositionLocation.RightUnderHeader;
   closeOnEscapeKey?: boolean;
+  collapseExpandTrigger?: TemplateRef<unknown>; // To toggle between collapse and expand
+  showAnimation?: boolean;
 }
 
 export const enum SheetSize {

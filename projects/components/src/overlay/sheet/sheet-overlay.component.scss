@@ -1,8 +1,10 @@
 @import 'color-palette';
 @import 'font';
 
+$box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08);
+
 .sheet-overlay {
-  box-shadow: -3px 1px 24px rgba(0, 0, 0, 0.12), -1px -1px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: $box-shadow;
   border-radius: 16px 0 0 16px;
   height: 100%;
   overflow: hidden;
@@ -33,6 +35,15 @@
     width: 1280px;
   }
 
+  &.collapsed {
+    width: 0;
+    padding: 0;
+  }
+
+  &.animate {
+    transition: width 0.75s;
+  }
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -60,5 +71,27 @@
       bottom: 0;
       left: 0;
     }
+  }
+}
+
+.collapse-expand-trigger {
+  cursor: pointer;
+  box-shadow: $box-shadow;
+  background: white;
+  width: 200px;
+  height: 40px;
+  float: left;
+  position: relative;
+  top: -50%;
+  left: -20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%) rotate(270deg);
+  clip-path: inset(-20px -20px 0px -20px);
+
+  &.collapsed {
+    left: 180px;
   }
 }

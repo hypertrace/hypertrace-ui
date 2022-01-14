@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { ButtonStyle } from '../../button/button';
 import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
@@ -12,7 +13,15 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
   styleUrls: ['./sheet-overlay.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div *ngIf="this.visible" class="sheet-overlay" [ngClass]="'sheet-size-' + this.size">
+    <div
+      *ngIf="this.visible"
+      class="sheet-overlay"
+      [ngClass]="'sheet-size-' + this.size"
+      [ngClass]="{
+        collapsed: !this.isRegularSheet && this.isCollapsed,
+        animate: this.showAnimation
+      }"
+    >
       <div *ngIf="this.showHeader" class="header">
         <h3 class="header-title">{{ sheetTitle }}</h3>
         <ht-button
@@ -26,15 +35,27 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
       </div>
       <div class="content-wrapper">
         <div class="content">
-          <ng-container *ngIf="this.isComponentSheet; else templateRenderer">
-            <ng-container *ngComponentOutlet="this.renderer; injector: this.rendererInjector"></ng-container>
-          </ng-container>
-          <ng-template #templateRenderer>
-            <ng-container *ngTemplateOutlet="this.renderer"></ng-container>
-          </ng-template>
+          <ng-container *ngIf="this.isRegularSheet || (!this.isRegularSheet && !this.isCollapsed)"
+            ><ng-container *ngIf="this.isComponentSheet; else templateRenderer">
+              <ng-container *ngComponentOutlet="this.renderer; injector: this.rendererInjector"></ng-container>
+            </ng-container>
+            <ng-template #templateRenderer>
+              <ng-container *ngTemplateOutlet="this.renderer"></ng-container> </ng-template
+          ></ng-container>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="!this.isRegularSheet">
+      <div
+        [ngClass]="{
+          collapsed: this.isCollapsed
+        }"
+        (click)="this.toggleCollapse()"
+        class="collapse-expand-trigger"
+      >
+        <ng-container *ngTemplateOutlet="this.collapseExpandTrigger"></ng-container>
+      </div>
+    </ng-container>
   `
 })
 export class SheetOverlayComponent {
@@ -45,7 +66,11 @@ export class SheetOverlayComponent {
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
   public visible: boolean = true;
+  public isCollapsed: boolean = true;
+  public isRegularSheet: boolean = true;
+  public collapseExpandTrigger?: TemplateRef<unknown>;
   public readonly closeOnEscape: boolean;
+  public readonly showAnimation: boolean;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -61,6 +86,9 @@ export class SheetOverlayComponent {
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
     this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));
+    this.collapseExpandTrigger = sheetConfig.collapseExpandTrigger;
+    this.isRegularSheet = isNil(this.collapseExpandTrigger);
+    this.showAnimation = sheetConfig.showAnimation ?? false;
 
     if (this.size === SheetSize.ResponsiveExtraLarge) {
       this.popoverRef.width('60%');
@@ -87,6 +115,10 @@ export class SheetOverlayComponent {
   public close(): void {
     this.visible = false;
     this.popoverRef.close();
+  }
+
+  public toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   private getHeightForPopover(globalHeaderHeight: string, position?: PopoverFixedPositionLocation): string {
