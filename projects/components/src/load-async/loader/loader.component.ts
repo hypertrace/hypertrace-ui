@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
-import { LoaderType } from '../load-async.service';
 import { SkeletonType } from '../../skeleton/skeleton.component';
+import { LoaderType } from '../load-async.service';
 
 @Component({
   selector: 'ht-loader',

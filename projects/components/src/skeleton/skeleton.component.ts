@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 interface ContainerClass {
   skeleton: boolean;
@@ -43,14 +43,12 @@ export const enum SkeletonType {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./skeleton.component.scss']
 })
-export class SkeletonComponent implements OnInit {
+export class SkeletonComponent {
   @Input() public shapeStyle: SkeletonType = SkeletonType.Rectangle;
 
   @Input() public repeat: number = 1;
 
   @Input() public size: string = '';
-
-  public ngOnInit() {}
 
   public containerClass(): ContainerClass {
     return {
