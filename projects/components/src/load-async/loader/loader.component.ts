@@ -60,6 +60,8 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.TableRow;
       case LoaderType.ListItem:
         return SkeletonType.ListItem;
+      case LoaderType.Donut:
+        return SkeletonType.Donut;
       default:
         return SkeletonType.Rectangle;
     }

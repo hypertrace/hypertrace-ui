@@ -9,6 +9,7 @@ interface ContainerClass {
   'skeleton-table-row': boolean;
   'skeleton-list-item': boolean;
   'skeleton-repeating': boolean;
+  'skeleton-donut': boolean;
 }
 
 export const enum SkeletonType {
@@ -17,7 +18,8 @@ export const enum SkeletonType {
   Square = 'square',
   Circle = 'circle',
   TableRow = 'table-row',
-  ListItem = 'list-item'
+  ListItem = 'list-item',
+  Donut = 'donut'
 }
 
 // TODO 7872 Allow circle and donut to take the height of parent, with equal width.
@@ -30,6 +32,7 @@ export const enum SkeletonType {
         <div *ngSwitchCase="'${SkeletonType.Circle}'" [ngClass]="containerClass()"></div>
         <div *ngSwitchCase="'${SkeletonType.Square}'" [ngClass]="containerClass()"></div>
         <div *ngSwitchCase="'${SkeletonType.TableRow}'" [ngClass]="containerClass()"></div>
+        <div *ngSwitchCase="'${SkeletonType.Donut}'" [ngClass]="containerClass()"><div class="donut-inner"></div></div>
         <div *ngSwitchCase="'${SkeletonType.ListItem}'" [ngClass]="containerClass()">
           <div class="item-circle"></div>
           <div class="item-column">
@@ -60,6 +63,7 @@ export class SkeletonComponent {
       'skeleton-rectangle-text': this.shapeStyle === 'rectangle-text',
       'skeleton-table-row': this.shapeStyle === 'table-row',
       'skeleton-list-item': this.shapeStyle === 'list-item',
+      'skeleton-donut': this.shapeStyle === 'donut',
       'skeleton-repeating': this.repeat > 1
     };
   }

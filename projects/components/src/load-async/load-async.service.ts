@@ -68,7 +68,8 @@ export const enum LoaderType {
   Square = 'square',
   Circle = 'circle',
   TableRow = 'table-row',
-  ListItem = 'list-item'
+  ListItem = 'list-item',
+  Donut = 'donut'
 }
 
 interface LoadingAsyncState {

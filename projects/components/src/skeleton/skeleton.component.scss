@@ -10,6 +10,34 @@
   z-index: 1;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
 }
+@keyframes skeleton-animation {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@mixin donut-animation {
+  content: '';
+  animation: donut-spin 1.2s linear infinite;
+  transform-origin: 50% 0%;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+}
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @mixin initial-location {
   top: initial;
@@ -17,15 +45,17 @@
   transform: initial;
 }
 
-.skeleton {
-  position: relative;
-  background-color: #dee2e6;
-  overflow: hidden;
-
+@mixin block-parent-center {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
 
+.skeleton {
+  @include block-parent-center;
+  position: relative;
+  background-color: #dee2e6;
+  overflow: hidden;
   border-radius: 6px;
 }
 
@@ -61,6 +91,27 @@
   height: 1.3rem;
   width: 90%;
   margin-left: 10px;
+}
+
+.skeleton.skeleton-donut {
+  display: inline-block;
+  background-color: #dee2e6;
+  border-radius: 50%;
+  width: 40%;
+  padding-bottom: 40%;
+
+  .donut-inner {
+    @include block-parent-center;
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    border-radius: 50%;
+  }
+}
+.skeleton.skeleton-donut::after {
+  @include donut-animation;
 }
 
 .skeleton.skeleton-repeating {
@@ -103,14 +154,5 @@
   }
   .item-column > div::after {
     @include loading-animation;
-  }
-}
-
-@keyframes skeleton-animation {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100%);
   }
 }
