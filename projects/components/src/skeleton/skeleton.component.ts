@@ -2,77 +2,66 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 
 interface ContainerClass {
   skeleton: boolean;
+  'skeleton-rectangle': boolean;
+  'skeleton-square': boolean;
   'skeleton-circle': boolean;
   'skeleton-rectangle-text': boolean;
-  'skeleton-none': boolean;
+  'skeleton-table-row': boolean;
+  'skeleton-list-item': boolean;
+  'skeleton-repeating': boolean;
 }
 
-// TODO ENG-7872 type def container style
-// TODO ENG-7872 strongly type with enums config options
-// TODO ENG-7872 replace styles with any predefined
+export const enum SkeletonType {
+  Rectangle = 'rectangle',
+  RectangleText = 'rectangle-text',
+  Square = 'square',
+  Circle = 'circle',
+  TableRow = 'table-row',
+  ListItem = 'list-item'
+}
+
 @Component({
   selector: 'ht-skeleton',
-  template: ` <div [ngClass]="containerClass()" [ngStyle]="containerStyle()"></div> `,
+  template: `
+    <ng-container *ngFor="let k of [].constructor(this.repeat)">
+      <ng-container [ngSwitch]="this.shapeStyle">
+        <div *ngSwitchCase="'${SkeletonType.RectangleText}'" [ngClass]="containerClass()"></div>
+        <div *ngSwitchCase="'${SkeletonType.Circle}'" [ngClass]="containerClass()"></div>
+        <div *ngSwitchCase="'${SkeletonType.Square}'" [ngClass]="containerClass()"></div>
+        <div *ngSwitchCase="'${SkeletonType.TableRow}'" [ngClass]="containerClass()"></div>
+        <div *ngSwitchCase="'${SkeletonType.ListItem}'" [ngClass]="containerClass()">
+          <div class="item-circle"></div>
+          <div class="item-column">
+            <div class="line-one"></div>
+            <div class="line-two"></div>
+          </div>
+        </div>
+        <div *ngSwitchDefault class="skeleton skeleton-rectangle"></div>
+      </ng-container>
+    </ng-container>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./skeleton.component.scss']
 })
 export class SkeletonComponent implements OnInit {
-  // Inline styles
-  @Input() public style: any; // Must be any for spread operator
+  @Input() public shapeStyle: SkeletonType = SkeletonType.Rectangle;
 
-  @Input() public shapeStyle: string = 'rectangle';
-
-  @Input() public animation: string = 'wave';
+  @Input() public repeat: number = 1;
 
   @Input() public size: string = '';
 
-  @Input() public width: string = '';
-
-  @Input() public height: string = '';
-
-  public ngOnInit() {
-    // Set default dimensions for shapes
-    switch (this.shapeStyle) {
-      case 'rectangle': // Could remove this
-        this.width = this.width ? this.width : '80%';
-        this.height = this.height ? this.height : '80%';
-        break;
-      case 'rectangle-text':
-        this.width = this.width ? this.width : '80%';
-        this.height = this.height ? this.height : '1.3rem';
-        break;
-      case 'circle':
-        this.width = this.width ? this.width : '3rem';
-        this.height = this.height ? this.height : '3rem';
-        break;
-      default:
-        this.width = this.width ? this.width : '80%';
-        this.height = this.height ? this.height : '80%';
-    }
-  }
+  public ngOnInit() {}
 
   public containerClass(): ContainerClass {
     return {
       skeleton: true,
+      'skeleton-rectangle': this.shapeStyle === 'rectangle',
+      'skeleton-square': this.shapeStyle === 'square',
       'skeleton-circle': this.shapeStyle === 'circle',
       'skeleton-rectangle-text': this.shapeStyle === 'rectangle-text',
-      'skeleton-none': this.animation === 'none'
+      'skeleton-table-row': this.shapeStyle === 'table-row',
+      'skeleton-list-item': this.shapeStyle === 'list-item',
+      'skeleton-repeating': this.repeat > 1
     };
-  }
-
-  public containerStyle() {
-    if (!!this.size) {
-      return {
-        ...this.style,
-        width: this.size,
-        height: this.size
-      };
-    } else {
-      return {
-        ...this.style,
-        width: this.width,
-        height: this.height
-      };
-    }
   }
 }

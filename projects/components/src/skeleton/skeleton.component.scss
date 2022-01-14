@@ -1,16 +1,4 @@
-.skeleton {
-  position: relative;
-  background-color: #dee2e6;
-  overflow: hidden;
-
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  border-radius: 4px;
-}
-
-.skeleton::after {
+@mixin loading-animation {
   content: '';
   animation: skeleton-animation 1.2s infinite;
   height: 100%;
@@ -23,16 +11,97 @@
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
 }
 
-.skeleton.skeleton-rectangle-text {
+@mixin initial-location {
+  top: initial;
+  left: initial;
+  transform: initial;
+}
+
+.skeleton {
+  position: relative;
+  background-color: #dee2e6;
+  overflow: hidden;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   border-radius: 6px;
 }
 
+.skeleton::after {
+  @include loading-animation;
+}
+
+.skeleton.skeleton-rectangle {
+  height: 80%;
+  width: 80%;
+}
+
+.skeleton.skeleton-rectangle-text {
+  height: 1.3rem;
+  width: 90%;
+}
+
 .skeleton.skeleton-circle {
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
 }
 
-.skeleton-none::after {
-  animation: none;
+.skeleton.skeleton-square {
+  width: 3rem;
+  height: 3rem;
+}
+
+.skeleton.skeleton-table-row {
+  height: 1.3rem;
+  width: 90%;
+
+  @include initial-location;
+}
+
+.skeleton.skeleton-repeating {
+  margin-top: 1rem;
+}
+
+.skeleton.skeleton-list-item {
+  background-color: rgb(255, 255, 255);
+  @include initial-location;
+  display: flex;
+  justify-content: flex-start;
+
+  .item-circle {
+    background-color: #dee2e6;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+  }
+  .item-circle::after {
+    @include loading-animation;
+  }
+
+  .item-column {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    width: 100%;
+  }
+
+  .item-column > div {
+    background-color: #dee2e6;
+    height: 0.9rem;
+    border-radius: 6px;
+    width: 90%;
+
+    &:last-child {
+      margin-top: 5px;
+      width: 80%;
+    }
+  }
+  .item-column > div::after {
+    @include loading-animation;
+  }
 }
 
 @keyframes skeleton-animation {

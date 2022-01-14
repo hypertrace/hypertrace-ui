@@ -66,7 +66,9 @@ export const enum LoaderType {
   Rectangle = 'rectangle',
   RectangleText = 'rectangle-text',
   Square = 'square',
-  Circle = 'circle'
+  Circle = 'circle',
+  TableRow = 'table-row',
+  ListItem = 'list-item'
 }
 
 interface LoadingAsyncState {
@@ -84,6 +86,7 @@ interface NoDataOrErrorAsyncState {
 
 interface LoadingStateConfig {
   loaderType?: LoaderType;
+  repeatCount?: number;
 }
 
 interface NoDataOrErrorStateConfig {

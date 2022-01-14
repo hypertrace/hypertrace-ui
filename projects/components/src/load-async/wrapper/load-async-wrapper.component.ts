@@ -14,7 +14,7 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
   template: `
     <div *ngIf="this.state$ | async as state" class="fill-container" [ngSwitch]="state.type">
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Loading}'">
-        <ht-loader [loaderType]="this.loaderType"></ht-loader>
+        <ht-loader [loaderType]="this.loaderType" [repeatLoaderCount]="this.config?.load?.repeatCount"></ht-loader>
       </ng-container>
       <ng-container *ngSwitchCase="'${LoadAsyncStateType.Success}'">
         <ng-container *ngTemplateOutlet="this.content; context: state.context"></ng-container>
