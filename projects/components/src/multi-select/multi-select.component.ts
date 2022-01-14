@@ -69,7 +69,10 @@ import { MultiSelectJustify } from './multi-select-justify';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }">
+          <div
+            class="multi-select-content"
+            [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
+          >
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
                 <ht-search-box
