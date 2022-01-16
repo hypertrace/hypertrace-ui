@@ -30,7 +30,7 @@ export class LoaderComponent implements OnChanges {
 
   public currentLoaderType: LoaderType = LoaderType.Spinner;
 
-  public isOldLoaderType: boolean = false;
+  public isOldLoaderType: boolean = true;
 
   public ngOnChanges(): void {
     this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
