@@ -31,10 +31,7 @@ export class SkeletonComponent implements OnChanges {
   public shapeStyle: SkeletonType = SkeletonType.Rectangle;
 
   @Input()
-  public repeat: number = 1;
-
-  @Input()
-  public size: string = '';
+  public repeat: number | undefined = 1;
 
   public numberOfIterations: number[] = Array(1).fill(1);
 
@@ -60,7 +57,7 @@ export class SkeletonComponent implements OnChanges {
       'skeleton-table-row': this.shapeStyle === SkeletonType.TableRow,
       'skeleton-list-item': this.shapeStyle === SkeletonType.ListItem,
       'skeleton-donut': this.shapeStyle === SkeletonType.Donut,
-      'skeleton-repeating': this.repeat > 1
+      'skeleton-repeating': !!(this.repeat && this.repeat > 1)
     };
   }
 }

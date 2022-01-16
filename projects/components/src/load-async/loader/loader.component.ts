@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { LoaderType } from '../load-async.service';
+import { assertUnreachable } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-loader',
@@ -69,8 +70,13 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.ListItem;
       case LoaderType.Donut:
         return SkeletonType.Donut;
-      default:
+      case LoaderType.Rectangle:
+      case LoaderType.ExpandableRow:
+      case LoaderType.Page:
+      case LoaderType.Spinner:
         return SkeletonType.Rectangle;
+      default:
+        return assertUnreachable(curLoaderType);
     }
   }
 }
