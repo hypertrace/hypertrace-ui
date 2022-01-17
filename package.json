@@ -95,7 +95,7 @@
     "@types/lodash-es": "^4.17.5",
     "@types/mixpanel-browser": "^2.36.0",
     "@types/node": "^17.0.5",
-    "@types/uuid": "^8.3.1",
+    "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
     "codelyzer": "^6.0.2",
     "commitizen": "^4.2.4",
