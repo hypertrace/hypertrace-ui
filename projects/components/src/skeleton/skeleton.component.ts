@@ -57,7 +57,7 @@ export class SkeletonComponent implements OnChanges {
       'skeleton-table-row': this.shapeStyle === SkeletonType.TableRow,
       'skeleton-list-item': this.shapeStyle === SkeletonType.ListItem,
       'skeleton-donut': this.shapeStyle === SkeletonType.Donut,
-      'skeleton-repeating': !!(this.repeat && this.repeat > 1)
+      'skeleton-repeating': this.repeat !== undefined && this.repeat > 1
     };
   }
 }

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
+import { assertUnreachable } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { LoaderType } from '../load-async.service';
-import { assertUnreachable } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-loader',

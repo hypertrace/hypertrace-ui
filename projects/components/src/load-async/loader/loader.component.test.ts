@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
-import { LoaderType } from '../load-async.service';
-import { LoaderComponent } from './loader.component';
 import { MockComponent } from 'ng-mocks';
 import { SkeletonComponent, SkeletonType } from '../../skeleton/skeleton.component';
+import { LoaderType } from '../load-async.service';
+import { LoaderComponent } from './loader.component';
 
 describe('Loader component', () => {
   let spectator: SpectatorHost<LoaderComponent>;
