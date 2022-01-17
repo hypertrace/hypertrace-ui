@@ -28,8 +28,6 @@ describe('Time range service', () => {
     ]
   });
 
-  beforeEach(() => {});
-
   test('throws error when asking for time range before initialization', () => {
     const spectator = buildService();
     expect(() => spectator.service.getCurrentTimeRange()).toThrow();
