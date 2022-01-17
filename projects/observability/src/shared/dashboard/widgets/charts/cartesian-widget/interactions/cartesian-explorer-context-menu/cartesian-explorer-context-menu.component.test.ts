@@ -1,12 +1,12 @@
-import { Injector } from '@angular/core';
+import { StaticProvider } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TimeRangeService } from '@hypertrace/common';
 import { ButtonComponent, DividerComponent, POPOVER_DATA } from '@hypertrace/components';
 import { CartesianSelectedData, CartesianSeriesVisualizationType } from '@hypertrace/observability';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
-import { CartesianExplorerContextMenuComponent, ContextMenu } from './cartesian-explorer-context-menu.component';
+import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu.component';
 
 describe('Cartesian context menu component', () => {
   const selectedData: CartesianSelectedData<unknown> = {
@@ -54,65 +54,97 @@ describe('Cartesian context menu component', () => {
   };
   let spectator: Spectator<CartesianExplorerContextMenuComponent<unknown>>;
 
-  const createHost = createHostFactory({
+  const createComponent = createComponentFactory({
     component: CartesianExplorerContextMenuComponent,
     declarations: [MockComponent(ButtonComponent), MockComponent(DividerComponent)],
     shallow: true,
-    template: `
-  <ht-cartesian-explorer-context-menu>
-  </ht-cartesian-explorer-context-menu>
-    `,
     providers: [
       mockProvider(CartesainExplorerNavigationService, {
         navigateToExplorer: jest.fn()
       }),
       mockProvider(TimeRangeService, {
-        toQueryParams: jest.fn()
+        toQueryParams: jest.fn(),
+        setFixedRange: jest.fn()
       })
     ]
   });
 
-  const createConfiguredHost = ({}) =>
-    createHost(undefined, {
-      providers: [
-        {
-          provide: POPOVER_DATA,
-          deps: [Injector],
-          useFactory: (injector: Injector) => ({
-            injector: Injector.create({
-              providers: [
-                {
-                  provide: POPOVER_DATA,
-                  useValue: {}
-                }
-              ],
-              // Normally, this would be a root injector when this is invoked from a service
-              parent: injector
-            })
-          })
-        }
-      ]
-    });
+  const buildProviders = (data: CartesianSelectedData<unknown>): { providers: StaticProvider[] } => ({
+    providers: [
+      {
+        provide: POPOVER_DATA,
+        useValue: data
+      }
+    ]
+  });
 
   test('should navigate to explorer on click explore menu', () => {
-    spectator = createConfiguredHost({
-      data: selectedData
-    });
+    spectator = createComponent(buildProviders(selectedData));
 
     spectator.component.selectionData = selectedData;
-
-    const menu: ContextMenu = {
-      name: 'Explore',
-      icon: IconType.ArrowUpRight,
-      onClick: () => {
-        spectator
-          .inject(CartesainExplorerNavigationService)
-          .navigateToExplorer(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+    spectator.component.menus = [
+      {
+        name: 'Set Time Range',
+        icon: IconType.Alarm,
+        onClick: () => {
+          spectator
+            .inject(TimeRangeService)
+            .setFixedRange(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+        }
+      },
+      {
+        name: 'Explore',
+        icon: IconType.ArrowUpRight,
+        onClick: () => {
+          spectator
+            .inject(CartesainExplorerNavigationService)
+            .navigateToExplorer(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+        }
       }
-    };
+    ];
 
-    menu.onClick();
+    const buttons = spectator.queryAll(ButtonComponent);
+    expect(buttons.length).toBe(2);
+
+    const exploreMenu = spectator.queryAll('ht-button')[1];
+
+    spectator.click(exploreMenu);
 
     expect(spectator.inject(CartesainExplorerNavigationService).navigateToExplorer).toHaveBeenCalled();
+  });
+
+  test('should change timerange on click timerange menu', () => {
+    spectator = createComponent(buildProviders(selectedData));
+
+    spectator.component.selectionData = selectedData;
+    spectator.component.menus = [
+      {
+        name: 'Set Time Range',
+        icon: IconType.Alarm,
+        onClick: () => {
+          spectator
+            .inject(TimeRangeService)
+            .setFixedRange(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+        }
+      },
+      {
+        name: 'Explore',
+        icon: IconType.ArrowUpRight,
+        onClick: () => {
+          spectator
+            .inject(CartesainExplorerNavigationService)
+            .navigateToExplorer(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
+        }
+      }
+    ];
+
+    const buttons = spectator.queryAll(ButtonComponent);
+    expect(buttons.length).toBe(2);
+
+    const timerangeMenu = spectator.queryAll('ht-button')[0];
+
+    spectator.click(timerangeMenu);
+
+    expect(spectator.inject(TimeRangeService).setFixedRange).toHaveBeenCalled();
   });
 });
