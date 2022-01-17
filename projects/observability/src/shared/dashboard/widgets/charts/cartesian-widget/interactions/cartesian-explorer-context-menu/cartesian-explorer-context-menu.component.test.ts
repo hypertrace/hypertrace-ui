@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
+import { Injector } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TimeRangeService } from '@hypertrace/common';
 import { ButtonComponent, DividerComponent, POPOVER_DATA } from '@hypertrace/components';
@@ -8,20 +8,7 @@ import { MockComponent } from 'ng-mocks';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 import { CartesianExplorerContextMenuComponent, ContextMenu } from './cartesian-explorer-context-menu.component';
 
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'test-context-menu-content',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="test-modal-content">Test Component Content</div> `
-})
-class TestComponent {
-  public constructor(
-    public readonly injector: Injector,
-    @Optional() @Inject(POPOVER_DATA) public readonly data: unknown
-  ) {}
-}
-
-describe('Sheet Overlay component', () => {
+describe('Cartesian context menu component', () => {
   const selectedData: CartesianSelectedData<unknown> = {
     timeRange: TimeRangeService.toFixedTimeRange(
       new Date('2021-11-02T05:33:19.288Z'),
@@ -69,7 +56,7 @@ describe('Sheet Overlay component', () => {
 
   const createHost = createHostFactory({
     component: CartesianExplorerContextMenuComponent,
-    declarations: [MockComponent(ButtonComponent), MockComponent(DividerComponent), TestComponent],
+    declarations: [MockComponent(ButtonComponent), MockComponent(DividerComponent)],
     shallow: true,
     template: `
   <ht-cartesian-explorer-context-menu>
