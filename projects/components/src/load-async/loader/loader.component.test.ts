@@ -64,10 +64,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type rectangle', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.Rectangle}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.Rectangle}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '1'
+          repeatCount: '1'
         }
       }
     );
@@ -81,10 +81,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type rectangle text', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.RectangleText}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.RectangleText}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '1'
+          repeatCount: '1'
         }
       }
     );
@@ -98,10 +98,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type circle', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.Circle}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.Circle}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '1'
+          repeatCount: '1'
         }
       }
     );
@@ -115,10 +115,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type square', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.Square}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.Square}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '1'
+          repeatCount: '1'
         }
       }
     );
@@ -132,10 +132,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type table row', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.TableRow}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.TableRow}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '4'
+          repeatCount: '4'
         }
       }
     );
@@ -148,14 +148,11 @@ describe('Loader component', () => {
   });
 
   test('Should use corresponding skeleton component for loader type donut', () => {
-    spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.Donut}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
-      {
-        hostProps: {
-          repeatLoaderCount: '1'
-        }
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Donut}'" [repeatCount]="repeatCount"></ht-loader>`, {
+      hostProps: {
+        repeatCount: '1'
       }
-    );
+    });
 
     expect(spectator.query('.ht-loader')).toExist();
     expect(spectator.query('.ht-loader')).not.toHaveClass('flex-centered');
@@ -166,10 +163,10 @@ describe('Loader component', () => {
 
   test('Should use corresponding skeleton component for loader type list item', () => {
     spectator = createHost(
-      `<ht-loader [loaderType]="'${LoaderType.ListItem}'" [repeatLoaderCount]="repeatLoaderCount"></ht-loader>`,
+      `<ht-loader [loaderType]="'${LoaderType.ListItem}'" [repeatCount]="repeatCount"></ht-loader>`,
       {
         hostProps: {
-          repeatLoaderCount: '1'
+          repeatCount: '1'
         }
       }
     );

@@ -31,14 +31,13 @@ export class LoaderComponent implements OnChanges {
 
   public currentLoaderType: LoaderType = LoaderType.Spinner;
 
-  public imagePath: string = '';
+  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
 
   public isOldLoaderType: boolean = true;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.loaderType) {
       this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
-      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
 
       this.isOldLoaderType =
         this.currentLoaderType === LoaderType.ExpandableRow ||
@@ -47,6 +46,8 @@ export class LoaderComponent implements OnChanges {
 
       this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
     }
+
+    this.imagePath = this.getImagePathFromType(this.currentLoaderType);
   }
 
   public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
