@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
@@ -10,12 +10,12 @@ import { LoaderType } from '../load-async.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="ht-loader" [ngClass]="{ 'flex-centered': this.isOldLoaderType }">
-      <ng-container *ngIf="!this.isOldLoaderType; else oldLoader">
-        <ht-skeleton [shapeStyle]="this.skeletonType" [repeat]="this.repeatLoaderCount"></ht-skeleton>
+      <ng-container *ngIf="!this.isOldLoaderType; else oldLoaderTemplate">
+        <ht-skeleton [shapeStyle]="this.skeletonType" [repeat]="this.repeatCount"></ht-skeleton>
       </ng-container>
 
-      <ng-template #oldLoader>
-        <img [ngClass]="[this.currentLoaderType]" [src]="this.getImagePathFromType(this.currentLoaderType)" />
+      <ng-template #oldLoaderTemplate>
+        <img [ngClass]="[this.currentLoaderType]" [src]="this.imagePath" />
       </ng-template>
     </div>
   `
@@ -25,23 +25,28 @@ export class LoaderComponent implements OnChanges {
   public loaderType?: LoaderType;
 
   @Input()
-  public repeatLoaderCount?: number;
+  public repeatCount?: number;
 
   public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
   public currentLoaderType: LoaderType = LoaderType.Spinner;
 
+  public imagePath: string = '';
+
   public isOldLoaderType: boolean = true;
 
-  public ngOnChanges(): void {
-    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.loaderType) {
+      this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
+      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
 
-    this.isOldLoaderType =
-      this.currentLoaderType === LoaderType.ExpandableRow ||
-      this.currentLoaderType === LoaderType.Spinner ||
-      this.currentLoaderType === LoaderType.Page;
+      this.isOldLoaderType =
+        this.currentLoaderType === LoaderType.ExpandableRow ||
+        this.currentLoaderType === LoaderType.Spinner ||
+        this.currentLoaderType === LoaderType.Page;
 
-    this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
+      this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
+    }
   }
 
   public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
