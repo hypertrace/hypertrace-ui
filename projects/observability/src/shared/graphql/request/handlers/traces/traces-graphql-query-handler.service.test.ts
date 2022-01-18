@@ -74,12 +74,7 @@ describe('TracesGraphQlQueryHandlerService', () => {
             {
               alias: 'name',
               path: 'attribute',
-              arguments: [
-                {
-                  name: 'key',
-                  value: 'name'
-                }
-              ]
+              arguments: [{ name: 'expression', value: { key: 'name' } }]
             }
           ]
         },

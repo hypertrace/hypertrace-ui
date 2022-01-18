@@ -1,5 +1,7 @@
+import { AttributeExpression } from '../../attribute/attribute-expression';
+
 export interface GraphQlGroupBy {
-  keys: string[];
+  keyExpressions: AttributeExpression[];
   includeRest?: boolean;
   limit: number;
 }

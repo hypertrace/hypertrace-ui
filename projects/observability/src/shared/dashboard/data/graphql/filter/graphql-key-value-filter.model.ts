@@ -31,8 +31,7 @@ export class GraphQlKeyValueFilterModel implements GraphQlFilter {
         GraphQlOperatorType.LessThanOrEqualTo,
         GraphQlOperatorType.Like,
         GraphQlOperatorType.NotIn,
-        GraphQlOperatorType.ContainsKey,
-        GraphQlOperatorType.ContainsKeyValue
+        GraphQlOperatorType.ContainsKey
       ]
     } as EnumPropertyTypeInstance
   })
