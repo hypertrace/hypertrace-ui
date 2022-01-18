@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
-import { assertUnreachable } from '@hypertrace/common';
+import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { LoaderType } from '../load-async.service';
 
@@ -35,7 +35,7 @@ export class LoaderComponent implements OnChanges {
 
   public isOldLoaderType: boolean = true;
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.loaderType) {
       this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
       this.imagePath = this.getImagePathFromType(this.currentLoaderType);
