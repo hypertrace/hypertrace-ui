@@ -207,7 +207,6 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
-            'max-series-data-points': 150,
             bands: [
               {
                 type: 'band',
@@ -396,7 +395,6 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
           'show-grid-lines': true,
           'min-upper-limit': 25
         },
-        'max-series-data-points': 150,
         series: [
           {
             type: 'series',
