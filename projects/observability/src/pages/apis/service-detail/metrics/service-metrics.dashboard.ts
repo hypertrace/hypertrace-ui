@@ -201,6 +201,13 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
             'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
+            'show-y-axis': true,
+            'y-axis': {
+              type: 'cartesian-axis',
+              'show-grid-lines': true,
+              'min-upper-limit': 25
+            },
+            'max-series-data-points': 150,
             bands: [
               {
                 type: 'band',
@@ -383,6 +390,13 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
         type: 'cartesian-widget',
         'selectable-interval': true,
         'legend-position': LegendPosition.None,
+        'show-y-axis': true,
+        'y-axis': {
+          type: 'cartesian-axis',
+          'show-grid-lines': true,
+          'min-upper-limit': 25
+        },
+        'max-series-data-points': 150,
         series: [
           {
             type: 'series',
