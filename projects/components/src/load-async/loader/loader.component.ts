@@ -37,16 +37,16 @@ export class LoaderComponent implements OnChanges {
   public ngOnChanges(): void {
     this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
 
-    if (
-      this.currentLoaderType === LoaderType.ExpandableRow ||
-      this.currentLoaderType === LoaderType.Spinner ||
-      this.currentLoaderType === LoaderType.Page
-    ) {
-      this.isOldLoaderType = true;
-      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
-    } else {
-      this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
-      this.isOldLoaderType = false;
+    switch (this.currentLoaderType) {
+      case LoaderType.Spinner:
+      case LoaderType.ExpandableRow:
+      case LoaderType.Page:
+        this.isOldLoaderType = true;
+        this.imagePath = this.getImagePathFromType(this.currentLoaderType);
+        break;
+      default:
+        this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
+        this.isOldLoaderType = false;
     }
   }
 
