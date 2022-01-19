@@ -11,18 +11,18 @@ describe('Skeleton Component', () => {
   test('Should only be one skeleton element by default', () => {
     spectator = createHost(`<ht-skeleton></ht-skeleton>`);
 
-    expect(spectator.query('.skeleton.skeleton-rectangle')).toExist();
-    expect(spectator.query('.skeleton-repeating')).not.toExist();
-    expect(spectator.queryAll('.skeleton.skeleton-rectangle').length).toEqual(1);
+    expect(spectator.query('.skeleton.rectangle')).toExist();
+    expect(spectator.query('.repeating')).not.toExist();
+    expect(spectator.queryAll('.skeleton.rectangle').length).toEqual(1);
   });
 
   test('Should display number of skeleton elements equal to the repeat input', () => {
     spectator = createHost(`<ht-skeleton [shapeStyle]="'${SkeletonType.ListItem}'" [repeat]="repeat"></ht-skeleton>`);
     spectator.setHostInput({ repeat: 3 });
 
-    expect(spectator.query('.skeleton.skeleton-list-item')).toExist();
+    expect(spectator.query('.skeleton.list-item')).toExist();
     expect(spectator.query('.skeleton .item-circle')).toExist();
-    expect(spectator.queryAll('.skeleton.skeleton-repeating')).toHaveLength(3);
+    expect(spectator.queryAll('.skeleton.repeating')).toHaveLength(3);
   });
 
   test('Should match the skeleton type to the corresponding element', () => {
@@ -32,7 +32,7 @@ describe('Skeleton Component', () => {
         repeat: 1
       },
       {
-        type: SkeletonType.RectangleText,
+        type: SkeletonType.Text,
         repeat: 2
       },
       {
@@ -56,13 +56,18 @@ describe('Skeleton Component', () => {
         repeat: 2
       }
     ];
-    spectator = createHost(`<ht-skeleton [shapeStyle]="shapeStyle" [repeat]="repeat"></ht-skeleton>`);
+    spectator = createHost(`<ht-skeleton [shapeStyle]="shapeStyle" [repeat]="repeat"></ht-skeleton>`, {
+      hostProps: {
+        shapeStyle: SkeletonType.Donut,
+        repeat: 1
+      }
+    });
 
     skeletonInputData.forEach(testConfig => {
       spectator.setHostInput({ shapeStyle: testConfig.type });
       spectator.setHostInput({ repeat: testConfig.repeat });
 
-      const shapeContainerClass = `.skeleton-${testConfig.type}`;
+      const shapeContainerClass = `.${testConfig.type}`;
       expect(spectator.query(shapeContainerClass)).toExist();
       expect(spectator.queryAll(shapeContainerClass)).toHaveLength(testConfig.repeat);
     });

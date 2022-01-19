@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
-import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { LoaderType } from '../load-async.service';
 
@@ -35,19 +34,20 @@ export class LoaderComponent implements OnChanges {
 
   public isOldLoaderType: boolean = true;
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.loaderType) {
-      this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
+  public ngOnChanges(): void {
+    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
 
-      this.isOldLoaderType =
-        this.currentLoaderType === LoaderType.ExpandableRow ||
-        this.currentLoaderType === LoaderType.Spinner ||
-        this.currentLoaderType === LoaderType.Page;
-
+    if (
+      this.currentLoaderType === LoaderType.ExpandableRow ||
+      this.currentLoaderType === LoaderType.Spinner ||
+      this.currentLoaderType === LoaderType.Page
+    ) {
+      this.isOldLoaderType = true;
+      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
+    } else {
       this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
+      this.isOldLoaderType = false;
     }
-
-    this.imagePath = this.getImagePathFromType(this.currentLoaderType);
   }
 
   public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
@@ -64,8 +64,8 @@ export class LoaderComponent implements OnChanges {
 
   public getSkeletonTypeForLoader(curLoaderType: LoaderType): SkeletonType {
     switch (curLoaderType) {
-      case LoaderType.RectangleText:
-        return SkeletonType.RectangleText;
+      case LoaderType.Text:
+        return SkeletonType.Text;
       case LoaderType.Circle:
         return SkeletonType.Circle;
       case LoaderType.Square:
@@ -76,13 +76,8 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.ListItem;
       case LoaderType.Donut:
         return SkeletonType.Donut;
-      case LoaderType.Rectangle:
-      case LoaderType.ExpandableRow:
-      case LoaderType.Page:
-      case LoaderType.Spinner:
-        return SkeletonType.Rectangle;
       default:
-        return assertUnreachable(curLoaderType);
+        return SkeletonType.Rectangle;
     }
   }
 }

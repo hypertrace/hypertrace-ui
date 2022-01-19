@@ -63,37 +63,37 @@
   overflow: hidden;
   border-radius: 6px;
 
-  &.skeleton-rectangle {
+  &.rectangle {
     height: 80%;
     width: 80%;
   }
 
-  &.skeleton-rectangle-text {
+  &.text {
     @include initial-location;
     height: 1.3rem;
     width: 90%;
     margin: 10px;
   }
 
-  &.skeleton-circle {
+  &.circle {
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
   }
 
-  &.skeleton-square {
+  &.square {
     width: 2rem;
     height: 2rem;
   }
 
-  &.skeleton-table-row {
+  &.table-row {
     @include initial-location;
     height: 1.3rem;
     width: 90%;
     margin-left: 10px;
   }
 
-  &.skeleton-donut {
+  &.donut {
     display: inline-block;
     background-color: $gray-2;
     border-radius: 50%;
@@ -111,11 +111,11 @@
     }
   }
 
-  &.skeleton-donut::after {
+  &.donut::after {
     @include donut-animation;
   }
 
-  &.skeleton-list-item {
+  &.list-item {
     @include initial-location;
     background-color: white;
     display: flex;
@@ -155,7 +155,7 @@
     }
   }
 
-  &.skeleton-repeating {
+  &.repeating {
     margin-top: 1rem;
   }
 }

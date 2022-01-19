@@ -64,7 +64,7 @@ export const enum LoaderType {
   ExpandableRow = 'expandable-row',
   Page = 'page',
   Rectangle = 'rectangle',
-  RectangleText = 'rectangle-text',
+  Text = 'text',
   Square = 'square',
   Circle = 'circle',
   TableRow = 'table-row',
