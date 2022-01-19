@@ -15,7 +15,7 @@ import { TimeUnit } from './time-unit.type';
   providedIn: 'root'
 })
 export class TimeRangeService {
-  public static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
+  private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
 
   private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
