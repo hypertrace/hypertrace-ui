@@ -17,59 +17,56 @@ describe('Skeleton Component', () => {
   });
 
   test('Should display number of skeleton elements equal to the repeat input', () => {
-    spectator = createHost(`<ht-skeleton [shapeStyle]="'${SkeletonType.ListItem}'" [repeat]="repeat"></ht-skeleton>`);
-    spectator.setHostInput({ repeat: 3 });
+    spectator = createHost(`<ht-skeleton [shapeStyle]="'${SkeletonType.ListItem}'" ></ht-skeleton>`);
 
     expect(spectator.query('.skeleton.list-item')).toExist();
     expect(spectator.query('.skeleton .item-circle')).toExist();
-    expect(spectator.queryAll('.skeleton.repeating')).toHaveLength(3);
+    expect(spectator.queryAll('.skeleton.repeating')).toHaveLength(4);
   });
 
   test('Should match the skeleton type to the corresponding element', () => {
-    const skeletonInputData: { type: SkeletonType; repeat: number }[] = [
+    const skeletonInputData: { type: SkeletonType; expectedRepeat: number }[] = [
       {
         type: SkeletonType.Donut,
-        repeat: 1
+        expectedRepeat: 1
       },
       {
         type: SkeletonType.Text,
-        repeat: 2
+        expectedRepeat: 1
       },
       {
         type: SkeletonType.Rectangle,
-        repeat: 1
+        expectedRepeat: 1
       },
       {
         type: SkeletonType.Circle,
-        repeat: 1
+        expectedRepeat: 1
       },
       {
         type: SkeletonType.TableRow,
-        repeat: 3
+        expectedRepeat: 5
       },
       {
         type: SkeletonType.Square,
-        repeat: 1
+        expectedRepeat: 1
       },
       {
         type: SkeletonType.ListItem,
-        repeat: 2
+        expectedRepeat: 4
       }
     ];
-    spectator = createHost(`<ht-skeleton [shapeStyle]="shapeStyle" [repeat]="repeat"></ht-skeleton>`, {
+    spectator = createHost(`<ht-skeleton [shapeStyle]="shapeStyle"></ht-skeleton>`, {
       hostProps: {
-        shapeStyle: SkeletonType.Donut,
-        repeat: 1
+        shapeStyle: SkeletonType.Donut
       }
     });
 
     skeletonInputData.forEach(testConfig => {
       spectator.setHostInput({ shapeStyle: testConfig.type });
-      spectator.setHostInput({ repeat: testConfig.repeat });
 
       const shapeContainerClass = `.${testConfig.type}`;
       expect(spectator.query(shapeContainerClass)).toExist();
-      expect(spectator.queryAll(shapeContainerClass)).toHaveLength(testConfig.repeat);
+      expect(spectator.queryAll(shapeContainerClass)).toHaveLength(testConfig.expectedRepeat);
     });
   });
 });

@@ -4,6 +4,7 @@ import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, map, startWith } from 'rxjs/operators';
 import { LoadAsyncStateType } from './load-async-state.type';
+import { SkeletonType } from '../skeleton/skeleton.component';
 
 @Injectable({ providedIn: 'root' })
 export class LoadAsyncService {
@@ -59,17 +60,12 @@ export interface LoadAsyncConfig {
 
 export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
 
-export const enum LoaderType {
+export type LoaderType = ImgLoaderType | SkeletonType;
+
+export const enum ImgLoaderType {
   Spinner = 'spinner',
   ExpandableRow = 'expandable-row',
-  Page = 'page',
-  Rectangle = 'rectangle',
-  Text = 'text',
-  Square = 'square',
-  Circle = 'circle',
-  TableRow = 'table-row',
-  ListItem = 'list-item',
-  Donut = 'donut'
+  Page = 'page'
 }
 
 interface LoadingAsyncState {
@@ -87,7 +83,6 @@ interface NoDataOrErrorAsyncState {
 
 interface LoadingStateConfig {
   loaderType?: LoaderType;
-  repeatCount?: number;
 }
 
 interface NoDataOrErrorStateConfig {
