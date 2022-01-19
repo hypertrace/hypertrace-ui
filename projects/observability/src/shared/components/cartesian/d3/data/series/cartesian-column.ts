@@ -6,7 +6,7 @@ import { SingleAxisDataLookupStrategy } from '../../interactivity/data-strategy/
 import { CartesianSeries } from './cartesian-series';
 export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly CSS_CLASS: string = 'columns-data-series';
-  private static readonly MAX_COLUMN_WIDTH: number = 48;
+  private static readonly MAX_COLUMN_WIDTH: number = 12;
   private static readonly MIN_COLUMN_HEIGHT: number = 1;
   private static readonly COLUMN_ROUNDING_RADIUS: number = 2;
 
