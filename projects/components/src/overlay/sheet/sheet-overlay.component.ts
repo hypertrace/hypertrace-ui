@@ -61,7 +61,7 @@ export class SheetOverlayComponent {
   public visible: boolean = true;
   public readonly closeOnEscape: boolean;
   public readonly attachedTriggerTemplate?: TemplateRef<unknown>;
-  public isViewCollapsed: boolean = false;
+  public isViewCollapsed: boolean;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -75,11 +75,12 @@ export class SheetOverlayComponent {
     this.size = sheetConfig.size;
     this.closeOnEscape = sheetConfig.closeOnEscapeKey ?? true;
     this.attachedTriggerTemplate = sheetConfig.attachedTriggerTemplate;
+    this.isViewCollapsed = !!this.attachedTriggerTemplate;
 
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
     this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));
-    this.popoverRef.width(this.getWidthForPopover());
+    this.setWidth();
 
     this.rendererInjector = Injector.create({
       providers: [
@@ -107,6 +108,10 @@ export class SheetOverlayComponent {
   public toggleCollapseExpand(): void {
     this.isViewCollapsed = !this.isViewCollapsed;
 
+    this.setWidth();
+  }
+
+  private setWidth(): void {
     this.popoverRef.width(this.isViewCollapsed ? '0px' : this.getWidthForPopover());
   }
 
