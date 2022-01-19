@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
+import { assertUnreachable } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { ImgLoaderType, LoaderType } from '../load-async.service';
-import { assertUnreachable } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-loader',
@@ -44,7 +44,7 @@ export class LoaderComponent implements OnChanges {
     }
   }
 
-  public determineIfOldLoaderType(loaderType: LoaderType) {
+  public determineIfOldLoaderType(loaderType: LoaderType): boolean {
     switch (loaderType) {
       case ImgLoaderType.Spinner:
       case ImgLoaderType.ExpandableRow:

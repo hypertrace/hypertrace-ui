@@ -3,8 +3,8 @@ import { IconType } from '@hypertrace/assets-library';
 import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, map, startWith } from 'rxjs/operators';
-import { LoadAsyncStateType } from './load-async-state.type';
 import { SkeletonType } from '../skeleton/skeleton.component';
+import { LoadAsyncStateType } from './load-async-state.type';
 
 @Injectable({ providedIn: 'root' })
 export class LoadAsyncService {

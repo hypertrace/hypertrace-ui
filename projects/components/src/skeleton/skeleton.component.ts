@@ -41,12 +41,13 @@ export class SkeletonComponent implements OnChanges {
   }
 
   public getIterationsArray(): number[] {
-    if (this.shapeStyle === SkeletonType.TableRow) {
-      return Array(5).fill(1);
-    } else if (this.shapeStyle === SkeletonType.ListItem) {
-      return Array(4).fill(1);
-    } else {
-      return Array(1).fill(1);
+    switch (this.shapeStyle) {
+      case SkeletonType.TableRow:
+        return Array(5).fill(1);
+      case SkeletonType.ListItem:
+        return Array(4).fill(1);
+      default:
+        return Array(1).fill(1);
     }
   }
 
