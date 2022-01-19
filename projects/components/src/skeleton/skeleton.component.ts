@@ -30,9 +30,9 @@ export class SkeletonComponent implements OnChanges {
 
   public containerClass: string[];
 
-  public static skeletonClass: string = 'skeleton';
+  private static readonly SKELETON_CLASS_NAME: string = 'skeleton';
 
-  public static repeatingClass: string = 'repeating';
+  private static readonly REPEATING_CLASS_NAME: string = 'repeating';
 
   public constructor() {
     this.containerClass = this.getContainerClass();
@@ -56,10 +56,10 @@ export class SkeletonComponent implements OnChanges {
   }
 
   public getContainerClass(): string[] {
-    const classes = [SkeletonComponent.skeletonClass, this.skeletonType];
+    const classes = [SkeletonComponent.SKELETON_CLASS_NAME, this.skeletonType];
 
     if (this.skeletonType === SkeletonType.TableRow || this.skeletonType === SkeletonType.ListItem) {
-      classes.push(SkeletonComponent.repeatingClass);
+      classes.push(SkeletonComponent.REPEATING_CLASS_NAME);
     }
 
     return classes;
