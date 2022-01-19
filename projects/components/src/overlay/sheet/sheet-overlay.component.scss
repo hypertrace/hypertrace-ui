@@ -1,10 +1,13 @@
 @import 'color-palette';
 @import 'font';
 
+$box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08);
+
 .sheet-overlay {
-  box-shadow: -3px 1px 24px rgba(0, 0, 0, 0.12), -1px -1px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: $box-shadow;
   border-radius: 16px 0 0 16px;
   height: 100%;
+  width: 100%;
   overflow: hidden;
 
   padding: 24px;
@@ -12,26 +15,6 @@
   display: flex;
   flex-direction: column;
   z-index: 1;
-
-  &.sheet-size-responsive-extra-large {
-    width: 100%;
-  }
-
-  &.sheet-size-small {
-    width: 320px;
-  }
-
-  &.sheet-size-medium {
-    width: 600px;
-  }
-
-  &.sheet-size-large {
-    width: 840px;
-  }
-
-  &.sheet-size-extra-large {
-    width: 1280px;
-  }
 
   .header {
     display: flex;
@@ -60,5 +43,26 @@
       bottom: 0;
       left: 0;
     }
+  }
+}
+
+.attached-trigger {
+  cursor: pointer;
+  box-shadow: $box-shadow;
+  clip-path: inset(-20px -20px 0px -20px);
+  background: white;
+  width: 200px;
+  height: 40px;
+  transform: translate(calc(-50% - 20px), 0px) rotate(270deg);
+  position: relative;
+  top: -50%;
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  padding: 0px 12px;
+
+  .trigger-icon {
+    margin-right: 14px;
   }
 }
