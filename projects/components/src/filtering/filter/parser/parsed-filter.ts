@@ -62,6 +62,11 @@ export const tryParseStringForAttribute = (
   // Now, we know that it does match. Remove the attribute name from the beginning and try to determine the subpath next.
   const stringAfterAttributeName = text.slice(attributeToTest[matchingNameField].length).trim();
 
+  // If the string continues with more alphanumeric characters directly after this attribute name, it's no longer a match
+  if (stringAfterAttributeName.match(/^\w/)) {
+    return undefined;
+  }
+
   if (stringAfterAttributeName.startsWith(MAP_LHS_DELIMITER)) {
     if (attributeToTest.type !== FilterAttributeType.StringMap) {
       // Can't have a subpath if not a map
