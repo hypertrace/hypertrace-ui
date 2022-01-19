@@ -23,16 +23,15 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
   styleUrls: ['./skeleton.component.scss']
 })
 export class SkeletonComponent implements OnChanges {
+  private static readonly SKELETON_CLASS_NAME: string = 'skeleton';
+  private static readonly REPEATING_CLASS_NAME: string = 'repeating';
+
   @Input()
   public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
   public iterationsArray: number[] = Array(1).fill(1);
 
   public containerClass: string[];
-
-  private static readonly SKELETON_CLASS_NAME: string = 'skeleton';
-
-  private static readonly REPEATING_CLASS_NAME: string = 'repeating';
 
   public constructor() {
     this.containerClass = this.getContainerClass();
