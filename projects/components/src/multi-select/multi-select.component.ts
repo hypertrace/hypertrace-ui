@@ -69,7 +69,10 @@ import { MultiSelectJustify } from './multi-select-justify';
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
+          <div
+            class="multi-select-content"
+            [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
+          >
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
                 <ht-search-box
@@ -162,6 +165,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
+
+  @Input()
+  public maxHeight: number = 360;
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
