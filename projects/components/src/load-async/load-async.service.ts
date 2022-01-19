@@ -3,7 +3,6 @@ import { IconType } from '@hypertrace/assets-library';
 import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, map, startWith } from 'rxjs/operators';
-import { SkeletonType } from '../skeleton/skeleton.component';
 import { LoadAsyncStateType } from './load-async-state.type';
 
 @Injectable({ providedIn: 'root' })
@@ -60,12 +59,17 @@ export interface LoadAsyncConfig {
 
 export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
 
-export type LoaderType = ImgLoaderType | SkeletonType;
-
-export const enum ImgLoaderType {
+export const enum LoaderType {
   Spinner = 'spinner',
   ExpandableRow = 'expandable-row',
-  Page = 'page'
+  Page = 'page',
+  Rectangle = 'rectangle',
+  Text = 'text',
+  Square = 'square',
+  Circle = 'circle',
+  TableRow = 'table-row',
+  ListItem = 'list-item',
+  Donut = 'donut'
 }
 
 interface LoadingAsyncState {

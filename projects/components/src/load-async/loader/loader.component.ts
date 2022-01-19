@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
-import { ImgLoaderType, LoaderType } from '../load-async.service';
+import { LoaderType } from '../load-async.service';
 
 @Component({
   selector: 'ht-loader',
@@ -11,7 +11,7 @@ import { ImgLoaderType, LoaderType } from '../load-async.service';
   template: `
     <div class="ht-loader" [ngClass]="{ 'flex-centered': this.isOldLoaderType }">
       <ng-container *ngIf="!this.isOldLoaderType; else oldLoaderTemplate">
-        <ht-skeleton [shapeStyle]="this.skeletonType"></ht-skeleton>
+        <ht-skeleton [skeletonType]="this.skeletonType"></ht-skeleton>
       </ng-container>
 
       <ng-template #oldLoaderTemplate>
@@ -26,52 +26,71 @@ export class LoaderComponent implements OnChanges {
 
   public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
-  public currentLoaderType: LoaderType = ImgLoaderType.Spinner;
+  public currentLoaderType: LoaderType = LoaderType.Spinner;
 
   public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
 
   public isOldLoaderType: boolean = true;
 
   public ngOnChanges(): void {
-    this.currentLoaderType = this.loaderType ?? ImgLoaderType.Spinner;
+    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
 
     if (this.determineIfOldLoaderType(this.currentLoaderType)) {
       this.isOldLoaderType = true;
-      this.imagePath = this.getImagePathFromType(this.currentLoaderType as ImgLoaderType);
+      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
     } else {
       this.isOldLoaderType = false;
-      this.skeletonType = this.currentLoaderType as SkeletonType;
+      this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
     }
   }
 
   public determineIfOldLoaderType(loaderType: LoaderType): boolean {
     switch (loaderType) {
-      case ImgLoaderType.Spinner:
-      case ImgLoaderType.ExpandableRow:
-      case ImgLoaderType.Page:
+      case LoaderType.Spinner:
+      case LoaderType.ExpandableRow:
+      case LoaderType.Page:
         return true;
-      case SkeletonType.Circle:
-      case SkeletonType.Text:
-      case SkeletonType.ListItem:
-      case SkeletonType.Rectangle:
-      case SkeletonType.Square:
-      case SkeletonType.TableRow:
-      case SkeletonType.Donut:
+      case LoaderType.Circle:
+      case LoaderType.Text:
+      case LoaderType.ListItem:
+      case LoaderType.Rectangle:
+      case LoaderType.Square:
+      case LoaderType.TableRow:
+      case LoaderType.Donut:
         return false;
       default:
         return assertUnreachable(loaderType);
     }
   }
 
-  public getImagePathFromType(loaderType: ImgLoaderType): ImagesAssetPath {
+  public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
     switch (loaderType) {
-      case ImgLoaderType.ExpandableRow:
+      case LoaderType.ExpandableRow:
         return ImagesAssetPath.LoaderExpandableRow;
-      case ImgLoaderType.Page:
+      case LoaderType.Page:
         return ImagesAssetPath.LoaderPage;
-      case ImgLoaderType.Spinner:
+      case LoaderType.Spinner:
       default:
         return ImagesAssetPath.LoaderSpinner;
+    }
+  }
+
+  public getSkeletonTypeForLoader(curLoaderType: LoaderType): SkeletonType {
+    switch (curLoaderType) {
+      case LoaderType.Text:
+        return SkeletonType.Text;
+      case LoaderType.Circle:
+        return SkeletonType.Circle;
+      case LoaderType.Square:
+        return SkeletonType.Square;
+      case LoaderType.TableRow:
+        return SkeletonType.TableRow;
+      case LoaderType.ListItem:
+        return SkeletonType.ListItem;
+      case LoaderType.Donut:
+        return SkeletonType.Donut;
+      default:
+        return SkeletonType.Rectangle;
     }
   }
 }

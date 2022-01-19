@@ -17,7 +17,7 @@ describe('Skeleton Component', () => {
   });
 
   test('Should display number of skeleton elements equal to the repeat input', () => {
-    spectator = createHost(`<ht-skeleton [shapeStyle]="'${SkeletonType.ListItem}'" ></ht-skeleton>`);
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.ListItem}'" ></ht-skeleton>`);
 
     expect(spectator.query('.skeleton.list-item')).toExist();
     expect(spectator.query('.skeleton .item-circle')).toExist();
@@ -55,14 +55,14 @@ describe('Skeleton Component', () => {
         expectedRepeat: 4
       }
     ];
-    spectator = createHost(`<ht-skeleton [shapeStyle]="shapeStyle"></ht-skeleton>`, {
+    spectator = createHost(`<ht-skeleton [skeletonType]="skeletonType"></ht-skeleton>`, {
       hostProps: {
-        shapeStyle: SkeletonType.Donut
+        skeletonType: SkeletonType.Donut
       }
     });
 
     skeletonInputData.forEach(testConfig => {
-      spectator.setHostInput({ shapeStyle: testConfig.type });
+      spectator.setHostInput({ skeletonType: testConfig.type });
 
       const shapeContainerClass = `.${testConfig.type}`;
       expect(spectator.query(shapeContainerClass)).toExist();

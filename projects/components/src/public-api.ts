@@ -181,9 +181,6 @@ export * from './load-async/load-async.module';
 export * from './load-async/load-async.service';
 export * from './load-async/load-async-state.type';
 
-// Skeleton
-export * from './skeleton/skeleton.component';
-
 // Message Display
 export { MessageDisplayComponent } from './message-display/message-display.component';
 export { MessageDisplayModule } from './message-display/message-display.module';

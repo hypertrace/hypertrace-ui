@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
   selector: 'ht-skeleton',
   template: `
     <ng-container *ngFor="let k of this.iterationsArray">
-      <ng-container [ngSwitch]="this.shapeStyle">
+      <ng-container [ngSwitch]="this.skeletonType">
         <div *ngSwitchCase="'${SkeletonType.Donut}'" [ngClass]="this.containerClass">
           <div class="donut-inner"></div>
         </div>
@@ -24,11 +24,15 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 })
 export class SkeletonComponent implements OnChanges {
   @Input()
-  public shapeStyle: SkeletonType = SkeletonType.Rectangle;
+  public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
   public iterationsArray: number[] = Array(1).fill(1);
 
   public containerClass: string[];
+
+  public static skeletonClass: string = 'skeleton';
+
+  public static repeatingClass: string = 'repeating';
 
   public constructor() {
     this.containerClass = this.getContainerClass();
@@ -41,7 +45,7 @@ export class SkeletonComponent implements OnChanges {
   }
 
   public getIterationsArray(): number[] {
-    switch (this.shapeStyle) {
+    switch (this.skeletonType) {
       case SkeletonType.TableRow:
         return Array(5).fill(1);
       case SkeletonType.ListItem:
@@ -52,10 +56,10 @@ export class SkeletonComponent implements OnChanges {
   }
 
   public getContainerClass(): string[] {
-    const classes = ['skeleton', this.shapeStyle];
+    const classes = [SkeletonComponent.skeletonClass, this.skeletonType];
 
-    if (this.shapeStyle === SkeletonType.TableRow || this.shapeStyle === SkeletonType.ListItem) {
-      classes.push('repeating');
+    if (this.skeletonType === SkeletonType.TableRow || this.skeletonType === SkeletonType.ListItem) {
+      classes.push(SkeletonComponent.repeatingClass);
     }
 
     return classes;
