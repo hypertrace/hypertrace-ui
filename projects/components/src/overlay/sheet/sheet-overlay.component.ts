@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, Tem
 import { IconType } from '@hypertrace/assets-library';
 import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
 import { ButtonStyle } from '../../button/button';
+import { IconSize } from '../../icon/icon-size';
 import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
 import { SheetConstructionData } from '../overlay.service';
@@ -39,6 +40,12 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
         </ng-container>
       </div>
       <div class="attached-trigger" *ngIf="!!this.attachedTriggerTemplate" (click)="this.toggleCollapseExpand()">
+        <ht-icon
+          class="trigger-icon"
+          icon="{{ this.isViewCollapsed ? '${IconType.ChevronUp}' : '${IconType.ChevronDown}' }}"
+          size="${IconSize.Small}"
+          htTooltip="{{ this.isViewCollapsed ? 'Expand Sheet' : 'Collapse Sheet' }}"
+        ></ht-icon>
         <ng-container *ngTemplateOutlet="this.attachedTriggerTemplate"></ng-container>
       </div>
     </ng-container>
