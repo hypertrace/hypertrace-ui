@@ -63,7 +63,6 @@ describe('Cartesian context menu component', () => {
         navigateToExplorer: jest.fn()
       }),
       mockProvider(TimeRangeService, {
-        toQueryParams: jest.fn(),
         setFixedRange: jest.fn()
       })
     ]
@@ -117,26 +116,6 @@ describe('Cartesian context menu component', () => {
     spectator = createComponent(buildProviders(selectedData));
 
     spectator.component.selectionData = selectedData;
-    spectator.component.menus = [
-      {
-        name: 'Set Time Range',
-        icon: IconType.Alarm,
-        onClick: () => {
-          spectator
-            .inject(TimeRangeService)
-            .setFixedRange(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
-        }
-      },
-      {
-        name: 'Explore',
-        icon: IconType.ArrowUpRight,
-        onClick: () => {
-          spectator
-            .inject(CartesainExplorerNavigationService)
-            .navigateToExplorer(selectedData.timeRange.startTime, selectedData.timeRange.endTime);
-        }
-      }
-    ];
 
     const buttons = spectator.queryAll(ButtonComponent);
     expect(buttons.length).toBe(2);
