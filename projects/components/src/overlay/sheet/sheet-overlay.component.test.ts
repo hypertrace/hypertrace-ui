@@ -48,6 +48,7 @@ describe('Sheet Overlay component', () => {
           provide: PopoverRef,
           useValue: {
             height: jest.fn(),
+            width: jest.fn(),
             close: jest.fn()
           }
         },
@@ -86,11 +87,39 @@ describe('Sheet Overlay component', () => {
     expect(spectator.query('.header')).toHaveText('expected title');
   });
 
-  test('uses the requested size', () => {
+  test('uses the requested size for small', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.Small
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('320px');
+  });
+
+  test('uses the requested size for medium', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.Medium
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('600px');
+  });
+
+  test('uses the requested size for large', () => {
     spectator = createConfiguredHost({
       size: SheetSize.Large
     });
-    expect(spectator.query('.sheet-overlay')).toHaveClass('sheet-size-large');
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('840px');
+  });
+
+  test('uses the requested size for extra large', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.ExtraLarge
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('1280px');
+  });
+
+  test('uses the requested size for responsive extra large', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.ResponsiveExtraLarge
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('60%');
   });
 
   test('closes on close button click', () => {
