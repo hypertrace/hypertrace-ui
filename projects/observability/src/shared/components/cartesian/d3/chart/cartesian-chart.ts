@@ -2,7 +2,7 @@ import { Injector, Renderer2 } from '@angular/core';
 
 import { TimeRange, TimeRangeService } from '@hypertrace/common';
 import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
-// tslint:disable
+// tslint:disable-next-line: no-restricted-globals
 import { ContainerElement, event as d3CurrentEvent, mouse, select } from 'd3-selection';
 import { Subscription } from 'rxjs';
 import { LegendPosition } from '../../../legend/legend.component';

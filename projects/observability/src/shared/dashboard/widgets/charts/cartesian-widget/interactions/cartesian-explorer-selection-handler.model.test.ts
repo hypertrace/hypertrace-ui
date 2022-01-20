@@ -1,8 +1,9 @@
 import { TimeRangeService } from '@hypertrace/common';
 import { PopoverService } from '@hypertrace/components';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import { CartesianSelectedData, CartesianSeriesVisualizationType } from '@hypertrace/observability';
 import { mockProvider } from '@ngneat/spectator/jest';
+import { CartesianSeriesVisualizationType } from '../../../../../components/cartesian/chart';
+import { CartesianSelectedData } from '../../../../../components/cartesian/chart-interactivty';
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 import { CartesianExplorerSelectionHandlerModel } from './cartesian-explorer-selection-handler.model';
 

@@ -2,9 +2,10 @@ import { StaticProvider } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TimeRangeService } from '@hypertrace/common';
 import { ButtonComponent, DividerComponent, POPOVER_DATA } from '@hypertrace/components';
-import { CartesianSelectedData, CartesianSeriesVisualizationType } from '@hypertrace/observability';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { CartesianSeriesVisualizationType } from '../../../../../../components/cartesian/chart';
+import { CartesianSelectedData } from '../../../../../../components/cartesian/chart-interactivty';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu.component';
 
