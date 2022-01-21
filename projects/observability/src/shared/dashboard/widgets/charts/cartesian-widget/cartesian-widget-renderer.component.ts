@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
-import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -15,10 +14,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
   selector: 'ht-cartesian-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content
-      *htLoadAsync="this.data$ as data; config: this.dataLoaderConfig"
-      [title]="this.model.title | htDisplayTitle"
-    >
+    <ht-titled-content *htLoadAsync="this.data$ as data" [title]="this.model.title | htDisplayTitle">
       <ht-cartesian-chart
         class="fill-container"
         [series]="data.series"
@@ -41,7 +37,6 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
-  public readonly dataLoaderConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Rectangle } };
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,

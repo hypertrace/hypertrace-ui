@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LoadAsyncConfig, LoaderType, TitlePosition } from '@hypertrace/components';
+import { TitlePosition } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-titled-content
-      *htLoadAsync="this.data$ as data; config: this.displayLoaderConfig"
+      *htLoadAsync="this.data$ as data"
       [title]="this.model.title | htDisplayTitle: this.getUnits(data.units)"
       [hideTitle]="this.hideTitle()"
       [titlePosition]="this.getTitlePosition()"
@@ -31,7 +31,6 @@ export class MetricDisplayWidgetRendererComponent extends WidgetRenderer<
   MetricDisplayWidgetModel,
   MetricWidgetValueData
 > {
-  public readonly displayLoaderConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Rectangle } };
   protected fetchData(): Observable<MetricWidgetValueData> {
     return this.model.getData();
   }
