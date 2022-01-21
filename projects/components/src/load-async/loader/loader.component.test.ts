@@ -29,10 +29,6 @@ describe('Loader component', () => {
     spectator = createHost(`<ht-loader></ht-loader>`);
 
     expect(spectator.query('.ht-loader')).toExist();
-    expect(spectator.query('.ht-loader')).toHaveClass('flex-centered');
-    expect(spectator.query('.ht-loader img')).toExist();
-    expect(spectator.query('.ht-loader img')).toHaveClass(LoaderType.Spinner);
-    expect(spectator.query('.ht-loader img')).toHaveAttribute('src', ImagesAssetPath.LoaderSpinner);
   });
 
   test('Loader component when loader type is spinner', () => {
@@ -53,13 +49,6 @@ describe('Loader component', () => {
     expect(spectator.query('.ht-loader img')).toExist();
     expect(spectator.query('.ht-loader img')).toHaveClass(LoaderType.ExpandableRow);
     expect(spectator.query('.ht-loader img')).toHaveAttribute('src', ImagesAssetPath.LoaderExpandableRow);
-  });
-
-  test('Should use old loader type by default', () => {
-    spectator = createHost(`<ht-loader></ht-loader>`);
-
-    expect(spectator.component.isOldLoaderType).toBe(true);
-    expect(spectator.query(SkeletonComponent)).not.toExist();
   });
 
   test('Should use corresponding skeleton component for loader type rectangle', () => {
