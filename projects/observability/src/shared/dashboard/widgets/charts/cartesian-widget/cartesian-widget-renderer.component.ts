@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -8,7 +9,6 @@ import { switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
-import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
