@@ -26,14 +26,14 @@ export class LoaderComponent implements OnChanges {
 
   public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
-  public currentLoaderType: LoaderType = LoaderType.Spinner;
+  public currentLoaderType: LoaderType = LoaderType.Rectangle;
 
   public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
 
-  public isOldLoaderType: boolean = true;
+  public isOldLoaderType: boolean = false;
 
   public ngOnChanges(): void {
-    this.currentLoaderType = this.loaderType ?? LoaderType.Spinner;
+    this.currentLoaderType = this.loaderType ?? LoaderType.Rectangle;
 
     if (this.determineIfOldLoaderType(this.currentLoaderType)) {
       this.isOldLoaderType = true;

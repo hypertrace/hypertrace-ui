@@ -8,13 +8,17 @@ import { switchMap, tap } from 'rxjs/operators';
 import { Band, Series } from '../../../../components/cartesian/chart';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
+import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
   selector: 'ht-cartesian-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content *htLoadAsync="this.data$ as data" [title]="this.model.title | htDisplayTitle">
+    <ht-titled-content
+      *htLoadAsync="this.data$ as data; config: this.dataLoaderConfig"
+      [title]="this.model.title | htDisplayTitle"
+    >
       <ht-cartesian-chart
         class="fill-container"
         [series]="data.series"
@@ -37,6 +41,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
+  public readonly dataLoaderConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Rectangle } };
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
