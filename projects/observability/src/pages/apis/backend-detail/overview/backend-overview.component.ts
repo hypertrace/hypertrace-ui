@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Color, SubscriptionLifecycle } from '@hypertrace/common';
-import { CoreTableCellRendererType, TableStyle } from '@hypertrace/components';
+import { CoreTableCellRendererType, LoaderType, TableStyle } from '@hypertrace/components';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
@@ -451,6 +451,7 @@ export class BackendOverviewComponent {
         type: 'table-widget',
         id: 'backend-overview.table',
         style: TableStyle.Embedded,
+        loadingConfig: { load: { loaderType: LoaderType.TableRow } },
         header: {
           type: 'widget-header',
           title: 'Services'

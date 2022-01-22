@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CoreTableCellRendererType, TableSortDirection, TableStyle } from '@hypertrace/components';
+import { CoreTableCellRendererType, LoaderType, TableSortDirection, TableStyle } from '@hypertrace/components';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
 import { TracingTableCellType } from '../../../shared/components/table/tracing-table-cell-type';
@@ -21,6 +21,7 @@ export class BackendListComponent {
     id: 'backends-list.table',
     style: TableStyle.FullPage,
     searchAttribute: 'name',
+    loaderConfig: { load: { loaderType: LoaderType.TableRow } },
     columns: [
       {
         type: 'table-widget-column',
