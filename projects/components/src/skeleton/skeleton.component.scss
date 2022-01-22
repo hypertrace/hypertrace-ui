@@ -123,8 +123,8 @@
 
     .item-circle {
       background-color: $gray-2;
-      height: 2.5rem;
-      width: 2.5rem;
+      height: 36px;
+      width: 36px;
       border-radius: 50%;
     }
     .item-circle::after {
@@ -134,8 +134,8 @@
     .item-column {
       display: flex;
       flex-direction: column;
-      padding-left: 1rem;
-      width: 100%;
+      padding-left: 0.5rem;
+      width: 85%;
 
       .item-line {
         background-color: $gray-2;
