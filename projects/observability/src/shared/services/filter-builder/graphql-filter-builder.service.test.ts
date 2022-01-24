@@ -41,12 +41,12 @@ describe('Graphql filter builder service', () => {
         buildFilter(attribute1, FilterOperator.LessThanOrEqualTo, 20)
       ])
     ).toEqual([
-      new GraphQlFieldFilter(attribute2.name, GraphQlOperatorType.Equals, 'foo'),
-      new GraphQlFieldFilter(attribute2.name, GraphQlOperatorType.NotEquals, 'bar'),
-      new GraphQlFieldFilter(attribute1.name, GraphQlOperatorType.GreaterThan, 5),
-      new GraphQlFieldFilter(attribute1.name, GraphQlOperatorType.GreaterThanOrEqualTo, 10),
-      new GraphQlFieldFilter(attribute1.name, GraphQlOperatorType.LessThan, 15),
-      new GraphQlFieldFilter(attribute1.name, GraphQlOperatorType.LessThanOrEqualTo, 20)
+      new GraphQlFieldFilter({ key: attribute2.name }, GraphQlOperatorType.Equals, 'foo'),
+      new GraphQlFieldFilter({ key: attribute2.name }, GraphQlOperatorType.NotEquals, 'bar'),
+      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.GreaterThan, 5),
+      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.GreaterThanOrEqualTo, 10),
+      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.LessThan, 15),
+      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.LessThanOrEqualTo, 20)
     ]);
   });
 });

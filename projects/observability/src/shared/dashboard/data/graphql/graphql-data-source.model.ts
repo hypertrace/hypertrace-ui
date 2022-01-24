@@ -4,9 +4,12 @@ import {
   dataSourceMarker,
   ModelApi,
   ModelEventPublisher,
-  ModelProperty
+  ModelModelPropertyTypeInstance,
+  ModelProperty,
+  ModelPropertyType
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
+import { GraphQlRequestOptionsModel } from './request-option/graphql-request-options.model';
 
 import {
   GraphQlQueryHandler,
@@ -31,6 +34,15 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
     type: ARRAY_PROPERTY.type
   })
   public filters: GraphQlFilter[] = [];
+
+  @ModelProperty({
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE
+    } as ModelModelPropertyTypeInstance,
+    key: 'request-options'
+  })
+  public requestOptions?: GraphQlRequestOptionsModel;
 
   @ModelInject(MODEL_API)
   public api!: ModelApi;
@@ -61,7 +73,7 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
 
     this.querySubject.next({
       buildRequest: this.convertToBuilder(requestOrBuilder),
-      requestOptions: requestOptions,
+      requestOptions: requestOptions ?? this.requestOptions,
       responseObserver: resultSubject as Observer<unknown>
     });
 

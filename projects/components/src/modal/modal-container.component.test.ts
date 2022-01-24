@@ -130,7 +130,17 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: ModalSize.LargeTall
     });
-    checkSyles('640px', '90vh');
+    checkSyles('840px', '90vh');
+  });
+
+  test('uses the requested large-wide size', () => {
+    spectator = createConfiguredHost({
+      showControls: true,
+      title: 'Create User',
+      content: TestComponent,
+      size: ModalSize.LargeWide
+    });
+    checkSyles('95em', '90vh');
   });
 
   test('uses the requested medium-wide size', () => {

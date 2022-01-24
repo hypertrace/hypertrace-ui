@@ -37,6 +37,10 @@ export * from './tabs/content/tab-group.component';
 export * from './tabs/content/tab.module';
 export * from './tabs/content/tab/tab.component';
 
+// Color picker
+export * from './color-picker/color-picker.component';
+export * from './color-picker/color-picker.module';
+
 // Copy to Clipboard
 export * from './copy-to-clipboard/copy-to-clipboard.component';
 export * from './copy-to-clipboard/copy-to-clipboard.module';

@@ -120,8 +120,7 @@ export class FilterChipComponent implements OnInit, OnChanges {
   private mapToComboBoxOption(filter: IncompleteFilter): ComboBoxOption<IncompleteFilter> {
     return {
       text: filter.userString,
-      value: filter,
-      tooltip: `${filter.userString} (${filter.field})`
+      value: filter
     };
   }
 }

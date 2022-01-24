@@ -105,6 +105,7 @@ import { TableWidgetModel } from './table-widget.model';
           [resizable]="this.api.model.isResizable()"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
+          [rowHeight]="this.api.model.getRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
@@ -469,12 +470,18 @@ export class TableWidgetRendererComponent
   }
 
   public onSearchChange(text: string): void {
-    const searchFilter: TableFilter = {
-      field: this.api.model.getSearchAttribute()!,
-      operator: FilterOperator.Like,
-      value: text
-    };
-    this.searchFilterSubject.next([searchFilter]);
+    let searchFilters: TableFilter[] = [];
+    // In case of empty string, avoid sending LIKE operator with empty value
+    if (isNonEmptyString(text)) {
+      searchFilters = [
+        {
+          field: this.api.model.getSearchAttribute()!,
+          operator: FilterOperator.Like,
+          value: text
+        }
+      ];
+    }
+    this.searchFilterSubject.next(searchFilters);
   }
 
   public onViewChange(view: string): void {

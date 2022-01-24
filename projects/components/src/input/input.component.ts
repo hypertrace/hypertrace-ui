@@ -86,6 +86,9 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   public registerOnTouched(onTouch: (value: T | undefined) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
 
   private coerceValueIfNeeded(value?: string): T | undefined {
     switch (this.type) {

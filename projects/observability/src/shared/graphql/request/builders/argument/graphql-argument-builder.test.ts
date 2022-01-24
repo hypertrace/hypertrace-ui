@@ -15,7 +15,9 @@ describe('Graphql Argument Builder', () => {
   });
 
   test('construct arguments for attribute key correctly', () => {
-    expect(argBuilder.forAttributeKey('test-key')).toEqual(expect.objectContaining({ name: 'key', value: 'test-key' }));
+    expect(argBuilder.forAttributeKey('test-key')).toEqual(
+      expect.objectContaining({ name: 'expression', value: { key: 'test-key' } })
+    );
   });
 
   test('construct arguments for limit correctly', () => {
@@ -26,7 +28,11 @@ describe('Graphql Argument Builder', () => {
     expect(argBuilder.forOrderBy(undefined)).toEqual(expect.arrayContaining([]));
     expect(
       argBuilder.forOrderBy({ direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key') })
-    ).toEqual(expect.arrayContaining([{ name: 'orderBy', value: [{ direction: { value: 'ASC' }, key: 'test-key' }] }]));
+    ).toEqual(
+      expect.arrayContaining([
+        { name: 'orderBy', value: [{ direction: { value: 'ASC' }, keyExpression: { key: 'test-key' } }] }
+      ])
+    );
   });
 
   test('construct arguments for orderBys correctly', () => {
@@ -41,8 +47,8 @@ describe('Graphql Argument Builder', () => {
         {
           name: 'orderBy',
           value: [
-            { direction: { value: 'ASC' }, key: 'test-key' },
-            { direction: { value: 'ASC' }, key: 'test-key2' }
+            { direction: { value: 'ASC' }, keyExpression: { key: 'test-key' } },
+            { direction: { value: 'ASC' }, keyExpression: { key: 'test-key2' } }
           ]
         }
       ])
@@ -82,7 +88,12 @@ describe('Graphql Argument Builder', () => {
         {
           name: 'filterBy',
           value: [
-            { key: 'filter-key', operator: { value: 'EQUALS' }, type: { value: 'ATTRIBUTE' }, value: 'filter-value' }
+            {
+              keyExpression: { key: 'filter-key' },
+              operator: { value: 'EQUALS' },
+              type: { value: 'ATTRIBUTE' },
+              value: 'filter-value'
+            }
           ]
         }
       ])

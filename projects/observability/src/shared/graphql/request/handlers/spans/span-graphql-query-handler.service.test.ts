@@ -101,7 +101,7 @@ describe('SpanGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
-              key: 'id'
+              keyExpression: { key: 'id' }
             }
           ]
         }
@@ -111,8 +111,8 @@ describe('SpanGraphQlQueryHandlerService', () => {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'apiName', arguments: [{ name: 'key', value: 'apiName' }] },
-            { path: 'attribute', alias: 'duration', arguments: [{ name: 'key', value: 'duration' }] }
+            { path: 'attribute', alias: 'apiName', arguments: [{ name: 'expression', value: { key: 'apiName' } }] },
+            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] }
           ]
         },
         { path: 'total' }
@@ -145,7 +145,7 @@ describe('SpanGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
-              key: 'id'
+              keyExpression: { key: 'id' }
             }
           ]
         }
@@ -155,8 +155,8 @@ describe('SpanGraphQlQueryHandlerService', () => {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'apiName', arguments: [{ name: 'key', value: 'apiName' }] },
-            { path: 'attribute', alias: 'duration', arguments: [{ name: 'key', value: 'duration' }] }
+            { path: 'attribute', alias: 'apiName', arguments: [{ name: 'expression', value: { key: 'apiName' } }] },
+            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] }
           ]
         },
         { path: 'total' }

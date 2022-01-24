@@ -5,6 +5,7 @@ import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -107,19 +108,19 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
       );
 
-    const groupByKeys = request.groupBy?.keys ?? [];
-    const isGroupBy = groupByKeys.length > 0;
+    const groupByExpressions = request.groupBy?.keyExpressions ?? [];
+    const isGroupBy = groupByExpressions.length > 0;
 
     if (!isGroupBy && request.interval) {
       return aggregatableSpecs.map(spec => this.buildTimeseriesData(spec, result));
     }
 
     if (isGroupBy && !request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByKeys, result));
+      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByExpressions, result));
     }
 
     if (isGroupBy && request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByKeys, result)).flat();
+      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByExpressions, result)).flat();
     }
 
     return [];
@@ -134,11 +135,9 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         data: result.data,
         units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
         type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
-        name: isEmpty(result.groupName)
-          ? obj.specDisplayName
-          : request.useGroupName
-          ? result.groupName!
-          : `${obj.specDisplayName}: ${result.groupName}`,
+        name: !isEmpty(result.groupName) ? result.groupName! : obj.specDisplayName,
+        groupName:
+          !isEmpty(result.groupName) && (request.useGroupName ?? false) ? result.groupName! : obj.specDisplayName,
         color: color
       }))
     );
@@ -151,10 +150,14 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     };
   }
 
-  public buildGroupedSeriesData(spec: AggregatableSpec, groupByKeys: string[], result: ExploreResult): SeriesData {
+  public buildGroupedSeriesData(
+    spec: AggregatableSpec,
+    groupByExpressions: AttributeExpression[],
+    result: ExploreResult
+  ): SeriesData {
     return {
       data: result
-        .getGroupedSeriesData(groupByKeys, spec.name, spec.aggregation)
+        .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
         .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
       spec: spec
     };
@@ -162,10 +165,10 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
 
   public buildGroupedTimeseriesData(
     spec: AggregatableSpec,
-    groupByKeys: string[],
+    groupByExpressions: AttributeExpression[],
     result: ExploreResult
   ): SeriesData[] {
-    return Array.from(result.getGroupedTimeSeriesData(groupByKeys, spec.name, spec.aggregation).entries()).map(
+    return Array.from(result.getGroupedTimeSeriesData(groupByExpressions, spec.name, spec.aggregation).entries()).map(
       ([groupNames, data]) => ({
         data: data,
         groupName: this.buildGroupedSeriesName(groupNames),
