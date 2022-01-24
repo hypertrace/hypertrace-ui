@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { forkJoinSafeEmpty, SubscriptionLifecycle } from '@hypertrace/common';
-import { SelectOption, SelectSize } from '@hypertrace/components';
+import { LoadAsyncConfig, LoaderType, SelectOption, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -41,7 +41,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
           ></ht-select-option>
         </ht-select>
         <ht-gauge-list
-          *htLoadAsync="this.data$ as data"
+          *htLoadAsync="this.data$ as data; config: this.dataLoaderConfig"
           [items]="data"
           [itemClickable]="true"
           (itemClick)="this.onItemClicked($event)"
@@ -52,6 +52,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
   `
 })
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, GaugeItem[]> {
+  public readonly dataLoaderConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.TableRow } };
   public metricSpecification!: TopNExploreSelectionSpecificationModel;
   public options$!: Observable<SelectOption<TopNExploreSelectionSpecificationModel>[]>;
   private fetcher?: TopNWidgetDataFetcher;

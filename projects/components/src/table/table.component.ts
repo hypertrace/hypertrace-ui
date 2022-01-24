@@ -279,7 +279,7 @@ export class TableComponent
   public pageSize?: number = 50;
 
   @Input()
-  public loadingConfig?: LoadAsyncConfig;
+  public loadingConfig?: LoadAsyncConfig = { load: { loaderType: LoaderType.TableRow } };
 
   @Input()
   public rowHeight: string = '44px';
@@ -374,8 +374,6 @@ export class TableComponent
   private resizeHeaderOffsetLeft: number = 0;
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
-
-  public defaultLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.TableRow } };
 
   public constructor(
     private readonly elementRef: ElementRef,
