@@ -27,7 +27,7 @@ import { without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
-import { LoadAsyncConfig } from '../load-async/load-async.service';
+import { LoadAsyncConfig, LoaderType } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
@@ -375,6 +375,8 @@ export class TableComponent
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
 
+  public defaultLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.TableRow } };
+
   public constructor(
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
@@ -414,6 +416,12 @@ export class TableComponent
 
     if (changes.selections) {
       this.toggleRowSelections(this.selections);
+    }
+
+    if (changes.loadingConfig) {
+      if (!this.loadingConfig?.load) {
+        this.loadingConfig = { ...this.loadingConfig, load: { loaderType: LoaderType.TableRow } };
+      }
     }
   }
 
