@@ -20,7 +20,7 @@ import {
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
