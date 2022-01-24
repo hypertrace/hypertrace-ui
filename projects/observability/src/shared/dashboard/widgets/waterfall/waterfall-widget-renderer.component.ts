@@ -9,10 +9,18 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationParams } from '@hypertrace/common';
-import { ButtonStyle, FilterOperator, OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
+import {
+  ButtonStyle,
+  FilterOperator,
+  LoadAsyncConfig,
+  LoaderType,
+  OverlayService,
+  SheetRef,
+  SheetSize
+} from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
@@ -30,7 +38,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="waterfall-widget-renderer fill-container">
-      <div class="content" *htLoadAsync="this.data$ as data">
+      <div class="content" *htLoadAsync="this.data$ as data; config: this.dataLoadingConfig">
         <div class="header">
           <ht-label class="widget-title" *ngIf="this.model.title" [label]="this.model.title"></ht-label>
 
@@ -93,6 +101,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
 export class WaterfallWidgetRendererComponent
   extends WidgetRenderer<WaterfallWidgetModel, WaterfallData[]>
   implements OnInit {
+  public readonly dataLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.TableRow } };
   @ViewChild('chart')
   private readonly waterfallChart!: WaterfallChartComponent;
 
