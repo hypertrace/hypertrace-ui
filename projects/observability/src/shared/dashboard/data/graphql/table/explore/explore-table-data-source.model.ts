@@ -87,7 +87,7 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       groupBy: {
-        keys: this.groupBy,
+        keyExpressions: this.groupBy.map(key => ({ key: key })),
         includeRest: this.groupByIncludeRest,
         limit: this.groupLimit
       }

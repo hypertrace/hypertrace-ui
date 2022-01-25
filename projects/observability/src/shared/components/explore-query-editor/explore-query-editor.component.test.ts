@@ -170,13 +170,13 @@ describe('Explore query editor', () => {
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick(10);
+    spectator.tick(510); // Debounced
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         series: [defaultSeries],
         groupBy: {
-          keys: ['first groupable'],
+          keyExpressions: [{ key: 'first groupable' }],
           limit: 5 // Default group by limit
         }
       })
@@ -204,7 +204,7 @@ describe('Explore query editor', () => {
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick(10);
+    spectator.tick(510);
 
     const limitInputEl = spectator.query('ht-explore-query-limit-editor input') as HTMLInputElement;
     limitInputEl.value = '6';
@@ -215,7 +215,7 @@ describe('Explore query editor', () => {
       expect.objectContaining({
         series: [defaultSeries],
         groupBy: {
-          keys: ['first groupable'],
+          keyExpressions: [{ key: 'first groupable' }],
           limit: 6
         }
       })
@@ -271,7 +271,7 @@ describe('Explore query editor', () => {
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick(10);
+    spectator.tick(510); // Debounced
 
     spectator.click('.limit-include-rest-container input[type="checkbox"]');
 

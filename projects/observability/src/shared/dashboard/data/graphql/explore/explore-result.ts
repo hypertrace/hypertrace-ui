@@ -1,5 +1,6 @@
 import { TimeDuration } from '@hypertrace/common';
 import { groupBy } from 'lodash-es';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
@@ -27,19 +28,25 @@ export class ExploreResult {
     return this.extractTimeseriesForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
   }
 
-  public getGroupedSeriesData(groupKeys: string[], metricKey: string, aggregation: MetricAggregationType): GroupData[] {
+  public getGroupedSeriesData(
+    groupExpressions: AttributeExpression[],
+    metricKey: string,
+    aggregation: MetricAggregationType
+  ): GroupData[] {
     return this.extractGroupSeriesForSpec(
-      groupKeys.map(key => this.specBuilder.exploreSpecificationForKey(key)),
+      groupExpressions.map(expression => this.specBuilder.exploreSpecificationForAttributeExpression(expression)),
       this.specBuilder.exploreSpecificationForKey(metricKey, aggregation)
     );
   }
 
   public getGroupedTimeSeriesData(
-    groupKeys: string[],
+    groupExpressions: AttributeExpression[],
     metricKey: string,
     aggregation: MetricAggregationType
   ): Map<string[], MetricTimeseriesInterval[]> {
-    const groupSpecs = groupKeys.map(key => this.specBuilder.exploreSpecificationForKey(key));
+    const groupSpecs = groupExpressions.map(expression =>
+      this.specBuilder.exploreSpecificationForAttributeExpression(expression)
+    );
     const spec = this.specBuilder.exploreSpecificationForKey(metricKey, aggregation);
     const groupedResults = groupBy(this.response.results, result =>
       this.getGroupNamesFromResult(result, groupSpecs).join(',')

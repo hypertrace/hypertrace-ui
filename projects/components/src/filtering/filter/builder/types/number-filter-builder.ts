@@ -8,7 +8,7 @@ export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]
     return FilterAttributeType.Number;
   }
 
-  public supportedOperators(): FilterOperator[] {
+  public supportedTopLevelOperators(): FilterOperator[] {
     return [
       FilterOperator.Equals,
       FilterOperator.NotEquals,
@@ -18,6 +18,10 @@ export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]
       FilterOperator.GreaterThanOrEqualTo,
       FilterOperator.In
     ];
+  }
+
+  public supportedSubpathOperators(): FilterOperator[] {
+    return [];
   }
 
   protected buildValueString(value: number | number[]): string {

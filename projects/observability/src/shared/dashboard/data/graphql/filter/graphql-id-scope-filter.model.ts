@@ -33,9 +33,7 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
         GraphQlOperatorType.GreaterThanOrEqualTo,
         GraphQlOperatorType.LessThan,
         GraphQlOperatorType.LessThanOrEqualTo,
-        GraphQlOperatorType.Like,
-        GraphQlOperatorType.ContainsKey,
-        GraphQlOperatorType.ContainsKeyValue
+        GraphQlOperatorType.Like
       ]
     } as EnumPropertyTypeInstance
   })

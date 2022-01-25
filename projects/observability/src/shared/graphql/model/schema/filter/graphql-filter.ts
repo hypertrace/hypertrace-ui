@@ -2,7 +2,6 @@ import { GraphQlArgumentObject } from '@hypertrace/graphql-client';
 
 export interface GraphQlFilter {
   asArgumentObjects(): GraphQlArgumentObject[];
-  key: string;
 }
 
 export interface GraphQlFilterable {
@@ -24,6 +23,5 @@ export const enum GraphQlOperatorType {
   Like = 'LIKE',
   In = 'IN',
   NotIn = 'NOT_IN',
-  ContainsKey = 'CONTAINS_KEY',
-  ContainsKeyValue = 'CONTAINS_KEY_VALUE'
+  ContainsKey = 'CONTAINS_KEY'
 }

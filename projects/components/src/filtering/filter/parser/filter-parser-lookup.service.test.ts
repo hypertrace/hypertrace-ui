@@ -28,7 +28,6 @@ describe('Filter Parser Lookup service', () => {
     expect(spectator.service.lookup(FilterOperator.In)).toEqual(expect.any(InFilterParser));
 
     expect(spectator.service.lookup(FilterOperator.ContainsKey)).toEqual(expect.any(ContainsFilterParser));
-    expect(spectator.service.lookup(FilterOperator.ContainsKeyValue)).toEqual(expect.any(ContainsFilterParser));
   });
 
   test('correctly identify parsable operators for a type', () => {
@@ -42,7 +41,7 @@ describe('Filter Parser Lookup service', () => {
       true
     );
     expect(spectator.service.isParsableOperatorForType(FilterOperator.Equals, FilterAttributeType.StringMap)).toEqual(
-      false
+      true
     );
     expect(spectator.service.isParsableOperatorForType(FilterOperator.Equals, FilterAttributeType.Timestamp)).toEqual(
       false
@@ -59,7 +58,7 @@ describe('Filter Parser Lookup service', () => {
     );
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.NotEquals, FilterAttributeType.StringMap)
-    ).toEqual(false);
+    ).toEqual(true);
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.NotEquals, FilterAttributeType.Timestamp)
     ).toEqual(false);
@@ -73,9 +72,7 @@ describe('Filter Parser Lookup service', () => {
     expect(spectator.service.isParsableOperatorForType(FilterOperator.LessThan, FilterAttributeType.String)).toEqual(
       true
     );
-    expect(spectator.service.isParsableOperatorForType(FilterOperator.LessThan, FilterAttributeType.StringMap)).toEqual(
-      false
-    );
+
     expect(spectator.service.isParsableOperatorForType(FilterOperator.LessThan, FilterAttributeType.Timestamp)).toEqual(
       false
     );
@@ -89,9 +86,7 @@ describe('Filter Parser Lookup service', () => {
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.LessThanOrEqualTo, FilterAttributeType.String)
     ).toEqual(true);
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.LessThanOrEqualTo, FilterAttributeType.StringMap)
-    ).toEqual(false);
+
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.LessThanOrEqualTo, FilterAttributeType.Timestamp)
     ).toEqual(false);
@@ -105,9 +100,7 @@ describe('Filter Parser Lookup service', () => {
     expect(spectator.service.isParsableOperatorForType(FilterOperator.GreaterThan, FilterAttributeType.String)).toEqual(
       true
     );
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.GreaterThan, FilterAttributeType.StringMap)
-    ).toEqual(false);
+
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.GreaterThan, FilterAttributeType.Timestamp)
     ).toEqual(false);
@@ -122,18 +115,13 @@ describe('Filter Parser Lookup service', () => {
       spectator.service.isParsableOperatorForType(FilterOperator.GreaterThanOrEqualTo, FilterAttributeType.String)
     ).toEqual(true);
     expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.GreaterThanOrEqualTo, FilterAttributeType.StringMap)
-    ).toEqual(false);
-    expect(
       spectator.service.isParsableOperatorForType(FilterOperator.GreaterThanOrEqualTo, FilterAttributeType.Timestamp)
     ).toEqual(false);
 
     expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.Boolean)).toEqual(false);
     expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.Number)).toEqual(true);
     expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.String)).toEqual(true);
-    expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.StringMap)).toEqual(
-      false
-    );
+    expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.StringMap)).toEqual(true);
     expect(spectator.service.isParsableOperatorForType(FilterOperator.In, FilterAttributeType.Timestamp)).toEqual(
       false
     );
@@ -153,29 +141,15 @@ describe('Filter Parser Lookup service', () => {
     expect(
       spectator.service.isParsableOperatorForType(FilterOperator.ContainsKey, FilterAttributeType.Timestamp)
     ).toEqual(false);
-
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.ContainsKeyValue, FilterAttributeType.Boolean)
-    ).toEqual(false);
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.ContainsKeyValue, FilterAttributeType.Number)
-    ).toEqual(false);
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.ContainsKeyValue, FilterAttributeType.String)
-    ).toEqual(false);
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.ContainsKeyValue, FilterAttributeType.StringMap)
-    ).toEqual(true);
-    expect(
-      spectator.service.isParsableOperatorForType(FilterOperator.ContainsKeyValue, FilterAttributeType.Timestamp)
-    ).toEqual(false);
   });
 
-  test('can provide a parser to parse user filter strings', () => {
+  test('can provide a parser to parse split filters', () => {
     expect(
-      spectator.service
-        .lookup(FilterOperator.Equals)
-        .parseFilterString(getTestFilterAttribute(FilterAttributeType.Boolean), 'Boolean Attribute = false')
+      spectator.service.lookup(FilterOperator.Equals).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.Boolean),
+        operator: FilterOperator.Equals,
+        rhs: 'false'
+      })
     ).toEqual({
       field: 'booleanAttribute',
       operator: FilterOperator.Equals,
@@ -183,9 +157,11 @@ describe('Filter Parser Lookup service', () => {
     });
 
     expect(
-      spectator.service
-        .lookup(FilterOperator.LessThanOrEqualTo)
-        .parseFilterString(getTestFilterAttribute(FilterAttributeType.Number), 'Number Attribute <= 217')
+      spectator.service.lookup(FilterOperator.LessThanOrEqualTo).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.Number),
+        operator: FilterOperator.LessThanOrEqualTo,
+        rhs: '217'
+      })
     ).toEqual({
       field: 'numberAttribute',
       operator: FilterOperator.LessThanOrEqualTo,
@@ -193,9 +169,11 @@ describe('Filter Parser Lookup service', () => {
     });
 
     expect(
-      spectator.service
-        .lookup(FilterOperator.NotEquals)
-        .parseFilterString(getTestFilterAttribute(FilterAttributeType.String), 'String Attribute != myString')
+      spectator.service.lookup(FilterOperator.NotEquals).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.String),
+        operator: FilterOperator.NotEquals,
+        rhs: 'myString'
+      })
     ).toEqual({
       field: 'stringAttribute',
       operator: FilterOperator.NotEquals,
@@ -203,9 +181,11 @@ describe('Filter Parser Lookup service', () => {
     });
 
     expect(
-      spectator.service
-        .lookup(FilterOperator.In)
-        .parseFilterString(getTestFilterAttribute(FilterAttributeType.String), 'String Attribute IN myStr, myString')
+      spectator.service.lookup(FilterOperator.In).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.String),
+        operator: FilterOperator.In,
+        rhs: 'myStr, myString'
+      })
     ).toEqual({
       field: 'stringAttribute',
       operator: FilterOperator.In,
@@ -213,119 +193,38 @@ describe('Filter Parser Lookup service', () => {
     });
 
     expect(
-      spectator.service
-        .lookup(FilterOperator.ContainsKey)
-        .parseFilterString(
-          getTestFilterAttribute(FilterAttributeType.StringMap),
-          'String Map Attribute CONTAINS_KEY myKey'
-        )
+      spectator.service.lookup(FilterOperator.ContainsKey).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.StringMap),
+        operator: FilterOperator.ContainsKey,
+        rhs: 'myKey'
+      })
     ).toEqual({
       field: 'stringMapAttribute',
       operator: FilterOperator.ContainsKey,
-      value: ['myKey']
+      value: 'myKey'
     });
 
     expect(
-      spectator.service
-        .lookup(FilterOperator.ContainsKeyValue)
-        .parseFilterString(
-          getTestFilterAttribute(FilterAttributeType.StringMap),
-          'String Map Attribute CONTAINS_KEY_VALUE myKey:myValue'
-        )
+      spectator.service.lookup(FilterOperator.Equals).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.StringMap),
+        subpath: 'myKey',
+        operator: FilterOperator.Equals,
+        rhs: 'myValue'
+      })
     ).toEqual({
       field: 'stringMapAttribute',
-      operator: FilterOperator.ContainsKeyValue,
-      value: ['myKey', 'myValue']
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.Equals)
-        .parseFilterString(getTestFilterAttribute(FilterAttributeType.Boolean), 'Timestamp Attribute = 1601578015330')
-    ).toEqual(undefined);
-  });
-
-  test('can provide a parser to parse various URL filter strings', () => {
-    expect(
-      spectator.service
-        .lookup(FilterOperator.Equals)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.Boolean), 'booleanAttribute_eq_false')
-    ).toEqual({
-      field: 'booleanAttribute',
+      subpath: 'myKey',
       operator: FilterOperator.Equals,
-      value: false
+      value: 'myValue'
     });
 
+    // Not supported
     expect(
-      spectator.service
-        .lookup(FilterOperator.LessThanOrEqualTo)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.Number), 'numberAttribute_lte_217')
-    ).toEqual({
-      field: 'numberAttribute',
-      operator: FilterOperator.LessThanOrEqualTo,
-      value: 217
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.In)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.Number), 'numberAttribute_in_217%2C415%2C707')
-    ).toEqual({
-      field: 'numberAttribute',
-      operator: FilterOperator.In,
-      value: [217, 415, 707]
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.NotEquals)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.String), 'stringAttribute_neq_myString')
-    ).toEqual({
-      field: 'stringAttribute',
-      operator: FilterOperator.NotEquals,
-      value: 'myString'
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.In)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.String), 'stringAttribute_in_myStr%2CmyString')
-    ).toEqual({
-      field: 'stringAttribute',
-      operator: FilterOperator.In,
-      value: ['myStr', 'myString']
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.ContainsKey)
-        .parseUrlFilterString(getTestFilterAttribute(FilterAttributeType.StringMap), 'stringMapAttribute_ck_myKey')
-    ).toEqual({
-      field: 'stringMapAttribute',
-      operator: FilterOperator.ContainsKey,
-      value: ['myKey']
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.ContainsKeyValue)
-        .parseUrlFilterString(
-          getTestFilterAttribute(FilterAttributeType.StringMap),
-          'stringMapAttribute_ckv_myKey%3AmyValue'
-        )
-    ).toEqual({
-      field: 'stringMapAttribute',
-      operator: FilterOperator.ContainsKeyValue,
-      value: ['myKey', 'myValue']
-    });
-
-    expect(
-      spectator.service
-        .lookup(FilterOperator.Equals)
-        .parseUrlFilterString(
-          getTestFilterAttribute(FilterAttributeType.Timestamp),
-          'timestampAttribute_eq_1601578015330'
-        )
+      spectator.service.lookup(FilterOperator.Equals).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.Boolean),
+        operator: FilterOperator.Equals,
+        rhs: '601578015330'
+      })
     ).toEqual(undefined);
   });
 });

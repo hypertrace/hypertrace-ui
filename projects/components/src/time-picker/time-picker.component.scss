@@ -28,6 +28,7 @@
   height: 32px;
   padding: 0 8px;
   cursor: pointer;
+  min-width: 108px;
 
   .trigger-icon {
     padding: 0 8px;
@@ -48,6 +49,7 @@
   background: white;
   overflow: auto;
   max-height: 320px;
+  min-width: 108px;
 
   .popover-item {
     @include list-hover;

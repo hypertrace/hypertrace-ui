@@ -30,8 +30,8 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     });
   }
 
-  protected buildGraphqlRequestOptions(): GraphQlRequestOptions {
-    return {};
+  protected buildGraphqlRequestOptions(): GraphQlRequestOptions | undefined {
+    return undefined;
   }
 
   public abstract getScope(): string | undefined;
