@@ -1,6 +1,9 @@
 import { Injector, Renderer2 } from '@angular/core';
-import { TimeRange } from '@hypertrace/common';
-import { ContainerElement, mouse, select } from 'd3-selection';
+
+import { TimeRange, TimeRangeService } from '@hypertrace/common';
+import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush';
+// tslint:disable-next-line: no-restricted-globals
+import { ContainerElement, event as d3CurrentEvent, mouse, select } from 'd3-selection';
 import { Subscription } from 'rxjs';
 import { LegendPosition } from '../../../legend/legend.component';
 import { ChartTooltipRef } from '../../../utils/chart-tooltip/chart-tooltip-popover';
@@ -78,6 +81,38 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2
   ) {}
+
+  protected onBrushSelection(event: D3BrushEvent<unknown>): void {
+    if (!event.selection) {
+      return;
+    }
+
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Select) {
+        const { height } = this.mouseEventContainer!.getBoundingClientRect();
+
+        const [startPoint, endPoint] = event.selection as [number, number];
+
+        const startDate = this.allSeriesData[0].getXAxisValue(startPoint);
+        const endDate = this.allSeriesData[0].getXAxisValue(endPoint);
+
+        const startData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: startPoint, y: height }));
+
+        const endData = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: endPoint, y: height }));
+
+        const timeRange = TimeRangeService.toFixedTimeRange(startDate, endDate);
+        const selectedData = {
+          timeRange: timeRange,
+          selectedData: [startData[0], endData[0]],
+          location: {
+            x: event.sourceEvent.clientX,
+            y: event.sourceEvent.clientY
+          }
+        };
+        listener.onEvent(selectedData);
+      }
+    });
+  }
 
   public destroy(): this {
     this.clear();
@@ -266,11 +301,15 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     eventContainer.on('mousemove', () => this.onMouseMove()).on('mouseleave', () => this.onMouseLeave());
 
-    this.eventListeners.forEach(listener =>
-      eventContainer.on(this.getNativeEventName(listener.event), () =>
-        listener.onEvent(this.getMouseDataForCurrentEvent())
-      )
-    );
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Select) {
+        this.attachBrush();
+      } else {
+        eventContainer.on(this.getNativeEventName(listener.event), () =>
+          listener.onEvent(this.getMouseDataForCurrentEvent())
+        );
+      }
+    });
   }
 
   protected clear(): void {
@@ -295,6 +334,20 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.moveDataOnTopOfAxes();
     this.drawMouseEventContainer();
     this.setupEventListeners();
+  }
+
+  private attachBrush(): void {
+    const brushBehaviour: BrushBehavior<unknown> = brushX<unknown>().on('end', () =>
+      this.onBrushSelection(d3CurrentEvent)
+    );
+
+    const { width, height } = this.hostElement.getBoundingClientRect();
+    brushBehaviour.extent([
+      [0, 0],
+      [width, height]
+    ]);
+
+    select(this.mouseEventContainer!).append('g').attr('class', 'brush').call(brushBehaviour);
   }
 
   private redrawVisualization(): void {
@@ -442,6 +495,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     if (!this.dataElement) {
       return [];
     }
+
     const location = mouse(this.dataElement);
 
     return this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location[0], y: location[1] }));
@@ -455,6 +509,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return 'dblclick';
       case ChartEvent.RightClick:
         return 'contextmenu';
+      case ChartEvent.Select:
+        return 'select';
       default:
         return '';
     }
