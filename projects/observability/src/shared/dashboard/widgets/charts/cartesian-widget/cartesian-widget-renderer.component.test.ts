@@ -3,8 +3,10 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   FormattingModule,
   IntervalDurationService,
+  MemoizeModule,
   RecursivePartial,
   TimeDuration,
+  TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
@@ -15,11 +17,56 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
+import { CartesianSelectedData } from '../../../../components/cartesian/chart-interactivty';
 import { CartesianWidgetRendererComponent } from './cartesian-widget-renderer.component';
 import { CartesianWidgetModel } from './cartesian-widget.model';
 import { MetricSeriesDataFetcher, SeriesModel } from './series.model';
 
 describe('Cartesian widget renderer component', () => {
+  const selectedData: CartesianSelectedData<unknown> = {
+    timeRange: TimeRangeService.toFixedTimeRange(
+      new Date('2021-11-02T05:33:19.288Z'),
+      new Date('2021-11-02T14:30:15.141Z')
+    ),
+    selectedData: [
+      {
+        dataPoint: { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+        context: {
+          data: [
+            { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
+            { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+          ],
+          units: 'ms',
+          color: '#4b5f77',
+          name: 'p99',
+          type: CartesianSeriesVisualizationType.Column,
+          stacking: false,
+          hide: false
+        },
+        location: { x: 59, y: 31.023400000000215 }
+      },
+      {
+        dataPoint: { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 },
+        context: {
+          data: [
+            { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
+            { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+          ],
+          units: 'ms',
+          color: '#4b5f77',
+          name: 'p99',
+          type: CartesianSeriesVisualizationType.Column,
+          stacking: false,
+          hide: false
+        },
+        location: { x: 138, y: 82.58120000000001 }
+      }
+    ],
+    location: { x: 452, y: 763 }
+  };
+
   const buildComponent = createComponentFactory({
     component: CartesianWidgetRendererComponent,
     providers: [
@@ -33,7 +80,7 @@ describe('Cartesian widget renderer component', () => {
           availableDurations.find(availableDuration => duration.equals(availableDuration))
       })
     ],
-    imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule],
+    imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule, MemoizeModule],
     shallow: true
   });
 
@@ -206,5 +253,24 @@ describe('Cartesian widget renderer component', () => {
     expect(originalDataObservable).not.toBe(spectator.component.data$);
     spectator.component.onIntervalChange('AUTO');
     expect(fetcher.getData).toHaveBeenLastCalledWith(undefined);
+  });
+
+  test('calls selection handler on selection change', () => {
+    const fetcher = fetcherFactory([]);
+    const series = seriesFactory({}, fetcher);
+    const mockModel = cartesianModelFactory({
+      series: [series],
+      maxSeriesDataPoints: 20,
+      selectionHandler: {
+        execute: jest.fn()
+      }
+    });
+    const spectator = buildComponent({
+      providers: [...mockDashboardWidgetProviders(mockModel)]
+    });
+
+    spectator.component.onSelectionChange(selectedData);
+
+    expect(spectator.component.model.selectionHandler?.execute).toHaveBeenCalled();
   });
 });
