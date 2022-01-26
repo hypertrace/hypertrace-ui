@@ -34,7 +34,12 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
     }
   ],
   template: `
-    <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
+    <ht-popover
+      class="combo-box"
+      [disabled]="this.disabled"
+      (popoverOpen)="this.onPopoverOpen($event)"
+      (popoverClose)="this.onPopoverClose()"
+    >
       <ht-popover-trigger>
         <div
           #trigger
@@ -360,10 +365,6 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
-    if (this.disabled) {
-      return;
-    }
-
     this.setFilteredOptions(this.text);
     this.popoverRef = popoverRef;
   }
