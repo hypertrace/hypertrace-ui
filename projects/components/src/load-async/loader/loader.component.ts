@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { ImagesAssetPath } from '@hypertrace/assets-library';
-import { assertUnreachable } from '@hypertrace/common';
+import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
 import { SkeletonType } from '../../skeleton/skeleton.component';
 import { LoaderType } from '../load-async.service';
 
@@ -9,73 +8,24 @@ import { LoaderType } from '../load-async.service';
   styleUrls: ['./loader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-loader" [ngClass]="{ 'flex-centered': this.isOldLoaderType }">
-      <ng-container *ngIf="!this.isOldLoaderType; else oldLoaderTemplate">
-        <ht-skeleton [skeletonType]="this.skeletonType"></ht-skeleton>
-      </ng-container>
-
-      <ng-template #oldLoaderTemplate>
-        <img [ngClass]="[this.currentLoaderType]" [src]="this.imagePath" />
-      </ng-template>
+    <div class="ht-loader">
+      <ht-skeleton [skeletonType]="this.skeletonType"></ht-skeleton>
     </div>
   `
 })
 export class LoaderComponent implements OnChanges {
   @Input()
-  public loaderType?: LoaderType;
+  public loaderType?: LoaderType = LoaderType.Rectangle;
 
   public skeletonType: SkeletonType = SkeletonType.Rectangle;
 
-  public currentLoaderType: LoaderType = LoaderType.Rectangle;
-
-  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderSpinner;
-
-  public isOldLoaderType: boolean = false;
-
-  public ngOnChanges(): void {
-    this.currentLoaderType = this.loaderType ?? LoaderType.Rectangle;
-
-    if (this.determineIfOldLoaderType(this.currentLoaderType)) {
-      this.isOldLoaderType = true;
-      this.imagePath = this.getImagePathFromType(this.currentLoaderType);
-    } else {
-      this.isOldLoaderType = false;
-      this.skeletonType = this.getSkeletonTypeForLoader(this.currentLoaderType);
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.loaderType) {
+      this.skeletonType = this.getSkeletonTypeForLoader(this.loaderType);
     }
   }
 
-  public determineIfOldLoaderType(loaderType: LoaderType): boolean {
-    switch (loaderType) {
-      case LoaderType.Spinner:
-      case LoaderType.ExpandableRow:
-      case LoaderType.Page:
-        return true;
-      case LoaderType.Circle:
-      case LoaderType.Text:
-      case LoaderType.ListItem:
-      case LoaderType.Rectangle:
-      case LoaderType.Square:
-      case LoaderType.TableRow:
-      case LoaderType.Donut:
-        return false;
-      default:
-        return assertUnreachable(loaderType);
-    }
-  }
-
-  public getImagePathFromType(loaderType: LoaderType): ImagesAssetPath {
-    switch (loaderType) {
-      case LoaderType.ExpandableRow:
-        return ImagesAssetPath.LoaderExpandableRow;
-      case LoaderType.Page:
-        return ImagesAssetPath.LoaderPage;
-      case LoaderType.Spinner:
-      default:
-        return ImagesAssetPath.LoaderSpinner;
-    }
-  }
-
-  public getSkeletonTypeForLoader(curLoaderType: LoaderType): SkeletonType {
+  public getSkeletonTypeForLoader(curLoaderType: LoaderType | undefined): SkeletonType {
     switch (curLoaderType) {
       case LoaderType.Text:
         return SkeletonType.Text;
@@ -89,8 +39,11 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.ListItem;
       case LoaderType.Donut:
         return SkeletonType.Donut;
-      default:
+      case LoaderType.Rectangle:
+      case undefined:
         return SkeletonType.Rectangle;
+      default:
+        return assertUnreachable(curLoaderType);
     }
   }
 }

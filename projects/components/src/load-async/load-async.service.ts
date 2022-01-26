@@ -60,9 +60,6 @@ export interface LoadAsyncConfig {
 export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
 
 export const enum LoaderType {
-  Spinner = 'spinner',
-  ExpandableRow = 'expandable-row',
-  Page = 'page',
   Rectangle = 'rectangle',
   Text = 'text',
   Square = 'square',
