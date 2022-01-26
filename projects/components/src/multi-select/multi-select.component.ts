@@ -53,23 +53,26 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '']"
+            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '', this.size]"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
-            <ng-container *htLoadAsync="this.triggerValues$ as triggerValues">
-              <div *ngIf="!this.isIconOnlyMode()" class="trigger-label-container">
+            <ng-container *ngIf="!this.isIconOnlyMode()">
+              <div class="trigger-label-container" *ngIf="this.triggerValues$ | async as triggerValues">
                 <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
                 <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
                   >+{{ triggerValues.selectedItemsCount - 1 }}</span
                 >
-                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" [size]="this.iconSize"></ht-icon>
               </div>
             </ng-container>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
+          <div
+            class="multi-select-content"
+            [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
+          >
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ng-container *ngIf="this.allOptions$ | async as allOptions">
                 <ht-search-box
@@ -162,6 +165,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
+
+  @Input()
+  public maxHeight: number = 360;
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();

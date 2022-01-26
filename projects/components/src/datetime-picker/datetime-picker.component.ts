@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Time, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance } from '../input/input-appearance';
 
@@ -6,6 +7,13 @@ import { InputAppearance } from '../input/input-appearance';
   selector: 'ht-datetime-picker',
   styleUrls: ['./datetime-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: DatetimePickerComponent
+    }
+  ],
   template: `
     <div class="datetime-picker">
       <ht-label *ngIf="this.label" [label]="this.label" class="datetime-label"></ht-label>
@@ -21,17 +29,19 @@ import { InputAppearance } from '../input/input-appearance';
         >
         </ht-input>
 
-        <ht-time-picker
-          class="time-selector"
-          [time]="this.time"
-          [showTimeTriggerIcon]="this.showTimeTriggerIcon"
-          (timeChange)="this.onTimeChange($event)"
-        ></ht-time-picker>
+        <ng-container *ngIf="!this.showDateOnly"
+          ><ht-time-picker
+            class="time-selector"
+            [time]="this.time"
+            [showTimeTriggerIcon]="this.showTimeTriggerIcon"
+            (timeChange)="this.onTimeChange($event)"
+          ></ht-time-picker
+        ></ng-container>
       </div>
     </div>
   `
 })
-export class DatetimePickerComponent implements OnChanges {
+export class DatetimePickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public label?: string;
 
@@ -40,6 +50,9 @@ export class DatetimePickerComponent implements OnChanges {
 
   @Input()
   public date?: Date = new Date();
+
+  @Input()
+  public showDateOnly: boolean = false;
 
   @Output()
   public readonly dateChange: EventEmitter<Date> = new EventEmitter();
@@ -52,8 +65,28 @@ export class DatetimePickerComponent implements OnChanges {
     }
   }
 
+  private propagateControlValueChange?: (value?: Date) => void;
+  private propagateControlValueChangeOnTouch?: (value?: Date) => void;
+
   public getInputDate(): string {
     return this.date?.toISOString().slice(0, 10) ?? '';
+  }
+
+  public writeValue(value?: Date): void {
+    this.date = value;
+  }
+
+  public registerOnChange(onChange: (value?: Date) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: Date) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private propagateValueChangeToFormControl(value?: Date): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 
   private getInputTime(date: Date): Time {
@@ -67,11 +100,13 @@ export class DatetimePickerComponent implements OnChanges {
     d.setFullYear(Number(yearMonthDay[0]), Number(yearMonthDay[1]) - 1, Number(yearMonthDay[2]));
     this.date = d;
     this.dateChange.emit(d);
+    this.propagateValueChangeToFormControl(d);
   }
 
   public onTimeChange(time: Time): void {
     this.time = time;
-    this.date?.setHours(time.hours, time.minutes, time.seconds, time.milliseconds);
+    this.date?.setUTCHours(time.hours, time.minutes, time.seconds, time.milliseconds);
     this.dateChange.emit(this.date);
+    this.propagateValueChangeToFormControl(this.date);
   }
 }

@@ -61,7 +61,7 @@ describe('Top N Data Source Model', () => {
         ]),
         filters: [],
         groupBy: expect.objectContaining({
-          keys: ['nameKey', 'idKey']
+          keyExpressions: [{ key: 'nameKey' }, { key: 'idKey' }]
         })
       })
     );

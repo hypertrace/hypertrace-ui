@@ -184,16 +184,18 @@ describe('Cartesian Chart component', () => {
       series: [
         {
           data: [[1, 2]],
-          name: 'test series 1',
+          name: 'first',
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
+          groupName: 'test series',
           stacking: true
         },
         {
           data: [[1, 6]],
-          name: 'test series 2',
+          name: 'second',
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
+          groupName: 'test series',
           stacking: true
         }
       ],
@@ -204,14 +206,28 @@ describe('Cartesian Chart component', () => {
     expect(chart.queryAll('.legend-entry').length).toBe(2);
     expect(chart.query('.reset.hidden')).toExist();
 
+    const legendEntriesTitleElement = chart.query('.legend-entries-title') as Element;
+    chart.click(legendEntriesTitleElement);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(2);
+
+    chart.click(legendEntriesTitleElement);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(0);
+
     const legendEntryTexts = chart.queryAll('.legend-text');
     chart.click(legendEntryTexts[0]);
     tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
     expect(chart.query('.reset.hidden')).not.toExist();
 
     chart.click(chart.query('.reset') as Element);
     tick();
     expect(chart.query('.reset.hidden')).toExist();
+
+    chart.click(legendEntryTexts[0]);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
   }));
 
   test('should render column chart', fakeAsync(() => {

@@ -32,6 +32,7 @@ describe('Trace metric timeseries data source model', () => {
       requestType: EXPLORE_GQL_REQUEST,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       context: ObservabilityTraceType.Api,
+      filters: [],
       interval: testInterval,
       limit: 10000,
       selections: [model.specification]

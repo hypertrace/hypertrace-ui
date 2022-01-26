@@ -1,10 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-textarea',
   styleUrls: ['./textarea.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: TextareaComponent
+    }
+  ],
   template: `
     <mat-form-field class="fill-container" floatLabel="never">
       <textarea
@@ -20,7 +28,7 @@ import { LoggerService } from '@hypertrace/common';
     </mat-form-field>
   `
 })
-export class TextareaComponent implements OnInit {
+export class TextareaComponent implements ControlValueAccessor, OnInit {
   @Input()
   public placeholder!: string;
 
@@ -45,8 +53,29 @@ export class TextareaComponent implements OnInit {
     }
   }
 
+  private propagateControlValueChange?: (value?: string) => void;
+  private propagateControlValueChangeOnTouch?: (value?: string) => void;
+
   public onValueChange(value: string): void {
     this.value = value;
     this.valueChange.emit(value);
+    this.propagateValueChangeToFormControl(value);
+  }
+
+  public writeValue(value?: string): void {
+    this.value = value;
+  }
+
+  public registerOnChange(onChange: (value?: string) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: string) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private propagateValueChangeToFormControl(value?: string): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }

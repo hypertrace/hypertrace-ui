@@ -44,6 +44,7 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
+              htTooltip="{{ segment.label }} : {{ segment.value | htDisplayNumber }}"
             >
               <div class="divider"></div>
             </div>

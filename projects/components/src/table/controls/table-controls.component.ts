@@ -238,11 +238,19 @@ export class TableControlsComponent implements OnChanges {
   }
 
   public onMultiSelectChange(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    this.applySelections(selectControl, selections);
+
     this.selectChange.emit({
       select: selectControl,
       values: selections
     });
     this.diffSelections();
+  }
+
+  private applySelections(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    selectControl.options.forEach(
+      option => (option.applied = selections.find(selection => isEqual(selection, option)) !== undefined)
+    );
   }
 
   public onSelectChange(selectControl: TableSelectControl, selection: TableSelectControlOption): void {

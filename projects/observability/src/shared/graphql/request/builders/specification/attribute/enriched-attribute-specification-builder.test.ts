@@ -11,8 +11,8 @@ describe('EnrichedAttributeSpecificationBuilder', () => {
       alias: 'duration',
       arguments: [
         {
-          name: 'key',
-          value: 'duration'
+          name: 'expression',
+          value: { key: 'duration' }
         }
       ]
     });

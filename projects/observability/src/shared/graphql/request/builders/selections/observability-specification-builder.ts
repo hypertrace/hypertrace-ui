@@ -297,7 +297,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
       name: metric,
       aggregation: aggregation,
       asGraphQlOrderByFragment: () => ({
-        key: metric,
+        expression: { key: metric },
         aggregation: this.aggregationAsEnum(aggregation)
       })
     };

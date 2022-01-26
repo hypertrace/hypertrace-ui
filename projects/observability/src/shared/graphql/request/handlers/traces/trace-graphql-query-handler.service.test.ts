@@ -79,7 +79,10 @@ describe('TraceGraphQlQueryHandlerService', () => {
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+          children: [
+            { path: 'id' },
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
+          ]
         }
       ]
     });
@@ -113,7 +116,10 @@ describe('TraceGraphQlQueryHandlerService', () => {
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+          children: [
+            { path: 'id' },
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
+          ]
         }
       ]
     });
@@ -156,7 +162,10 @@ describe('TraceGraphQlQueryHandlerService', () => {
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+          children: [
+            { path: 'id' },
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
+          ]
         }
       ]
     });
@@ -190,7 +199,10 @@ describe('TraceGraphQlQueryHandlerService', () => {
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }]
+          children: [
+            { path: 'id' },
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
+          ]
         }
       ]
     });

@@ -13,8 +13,8 @@ describe('TraceStatusSpecificationBuilder', () => {
         alias: 'status',
         arguments: [
           {
-            name: 'key',
-            value: 'status'
+            name: 'expression',
+            value: { key: 'status' }
           }
         ]
       },
@@ -23,8 +23,8 @@ describe('TraceStatusSpecificationBuilder', () => {
         alias: 'statusCode',
         arguments: [
           {
-            name: 'key',
-            value: 'statusCode'
+            name: 'expression',
+            value: { key: 'statusCode' }
           }
         ]
       },
@@ -33,8 +33,8 @@ describe('TraceStatusSpecificationBuilder', () => {
         alias: 'statusMessage',
         arguments: [
           {
-            name: 'key',
-            value: 'statusMessage'
+            name: 'expression',
+            value: { key: 'statusMessage' }
           }
         ]
       }

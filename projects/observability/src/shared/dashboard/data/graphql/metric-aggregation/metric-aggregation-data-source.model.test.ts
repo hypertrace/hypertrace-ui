@@ -76,7 +76,7 @@ describe('Metric aggregation data source model', () => {
         }),
         filters: [
           expect.objectContaining({
-            key: 'duration',
+            keyOrExpression: 'duration',
             operator: GraphQlOperatorType.GreaterThan,
             value: 500
           })
