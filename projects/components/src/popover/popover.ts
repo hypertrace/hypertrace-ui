@@ -34,6 +34,10 @@ export interface PopoverRelativePosition {
 export interface PopoverFixedPosition {
   type: PopoverPositionType.Fixed;
   location: PopoverFixedPositionLocation;
+  customLocation?: {
+    x: number;
+    y: number;
+  };
 }
 
 export type PopoverPosition =
@@ -65,7 +69,8 @@ export const enum PopoverRelativePositionLocation {
 export const enum PopoverFixedPositionLocation {
   RightUnderHeader,
   Centered,
-  Right
+  Right,
+  Custom
 }
 
 export const POPOVER_DATA = new InjectionToken<unknown>('POPOVER_DATA');
