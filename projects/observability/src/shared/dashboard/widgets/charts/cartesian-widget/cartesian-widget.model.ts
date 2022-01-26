@@ -16,6 +16,7 @@ import { map } from 'rxjs/operators';
 import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
 import { MetricTimeseriesBandInterval } from '../../../../graphql/model/metric/metric-timeseries';
+import { InteractionHandler } from '../../../interaction/interaction-handler';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { BAND_ARRAY_TYPE } from './band-array/band-array-type';
 import { BandModel, MetricBand, MetricBandDataFetcher } from './band.model';
@@ -145,6 +146,13 @@ export class CartesianWidgetModel<TInterval> {
     type: NUMBER_PROPERTY.type
   })
   public maxSeriesDataPoints?: number;
+
+  @ModelProperty({
+    key: 'selection-handler',
+    displayName: 'Selection Handler',
+    type: ModelPropertyType.TYPE
+  })
+  public selectionHandler?: InteractionHandler;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;

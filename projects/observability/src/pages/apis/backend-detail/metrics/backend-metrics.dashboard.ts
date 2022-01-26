@@ -260,7 +260,10 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'container-widget',
@@ -320,7 +323,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                       type: 'entity-error-percentage-timeseries-data-source'
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               },
               {
                 type: 'cartesian-widget',
@@ -343,7 +350,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                       }
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               }
             ]
           }
@@ -378,7 +389,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
               }
             }
           }
-        ]
+        ],
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler',
+          'show-context-menu': true
+        }
       }
     ]
   }
