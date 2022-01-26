@@ -9,7 +9,7 @@
 
   .title {
     height: 28px;
-    @include widget-title($gray-9);
+    @include overline($gray-5);
     padding-bottom: 16px;
   }
 
