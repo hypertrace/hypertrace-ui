@@ -295,10 +295,7 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ],
-            'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+            ]
           },
           {
             type: 'cartesian-widget',
@@ -392,10 +389,7 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ],
-            'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+            ]
           },
           {
             type: 'cartesian-widget',
@@ -489,10 +483,7 @@ export const apiOverviewDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ],
-            'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+            ]
           }
         ]
       },
