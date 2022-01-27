@@ -1,0 +1,41 @@
+<svg
+  width="201"
+  height="198"
+  viewBox="0 0 201 198"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g fill="#E1E4E5">
+    <path d="M139.529 73.51h32.902l2.763-2.764V61.46l-2.763-2.763h-29.956a51.79 51.79 0 0 1-36.613-15.177L62.226 0h-3.944L51.84 6.457v3.945l45.616 45.65a59.612 59.612 0 0 0 42.072 17.457ZM139.529 124.152a59.602 59.602 0 0 0-42.171 17.458L51.74 187.226v3.944l6.54 6.541h3.945l43.569-43.57a51.785 51.785 0 0 1 36.613-15.211h29.957l2.762-2.762v-9.254l-2.762-2.762h-32.836ZM25.33 112.852 1.914 136.351v3.944l6.54 6.54h3.944l24.714-24.647a33.183 33.183 0 0 0 0-46.931L10.485 48.629H6.54L0 55.169v3.945l25.413 25.38a20.104 20.104 0 0 1 0 28.424l-.083-.066Z"/>
+    <path d="M197.644 91.067h-60.928a92.315 92.315 0 0 1-59.629-26.162L17.74 5.658h-3.944L7.24 12.215v3.945l57.583 57.582a35.498 35.498 0 0 1-.1 49.844L6.657 181.667v3.945l6.54 6.54h3.944l59.763-59.762a90.466 90.466 0 0 1 63.956-26.495h56.801l2.779-2.763v-9.253l-2.796-2.812Z"/>
+  </g>
+
+  <rect x="0" y="0" class="shimmer" width="50%" height="100%" />
+
+  <linearGradient id="gradient-shimmer" x1="0" x2="1" y1="0" y2="0">
+    <stop class="stop1" offset="0%"/>
+    <stop class="stop2" offset="50%"/>
+    <stop class="stop3" offset="100%"/>
+  </linearGradient>
+
+  <style>
+
+    .stop1 { stop-color: rgb(255, 255, 255); stop-opacity: 0.1;}
+    .stop2 { stop-color: rgb(255, 255, 255); stop-opacity: 0.6;}
+    .stop3 { stop-color: rgb(255, 255, 255); stop-opacity: 0.1;}
+
+    .shimmer {
+      fill: url(#gradient-shimmer);
+      transform: translateX(-100%);
+      animation: skeleton-animation 1.2s infinite;
+    }
+    @keyframes skeleton-animation {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(100%);
+      }
+    }
+  </style>
+</svg>

@@ -159,3 +159,17 @@
     margin-top: 1rem;
   }
 }
+
+.logo {
+  @include block-parent-center;
+  position: relative;
+  height: 100px;
+  width: 100px;
+}
+
+.cartesian {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 1rem;
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { Filter } from '@hypertrace/components';
+import { Filter, LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -16,7 +16,10 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
   styleUrls: ['./navigable-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="navigable-dashboard" *htLoadAsync="this.dashboardJson$ as dashboardJson">
+    <div
+      class="navigable-dashboard"
+      *htLoadAsync="this.dashboardJson$ as dashboardJson; config: this.pageLoadingConfig"
+    >
       <ht-filter-bar
         class="filter-bar"
         *ngIf="this.filterConfig?.filterBar"
@@ -37,6 +40,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
   `
 })
 export class NavigableDashboardComponent implements OnChanges {
+  public readonly pageLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Logo } };
   @Input()
   public navLocation?: string | null;
 

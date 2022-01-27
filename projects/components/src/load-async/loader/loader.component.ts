@@ -39,6 +39,16 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.ListItem;
       case LoaderType.Donut:
         return SkeletonType.Donut;
+      case LoaderType.Logo:
+        return SkeletonType.Logo;
+      case LoaderType.CartesianColumn:
+        return SkeletonType.CartesianColumn;
+      case LoaderType.Cartesian:
+        return SkeletonType.Cartesian;
+      case LoaderType.Radar:
+        return SkeletonType.Radar;
+      case LoaderType.Topology:
+        return SkeletonType.Topology;
       case LoaderType.Rectangle:
       case undefined:
         return SkeletonType.Rectangle;

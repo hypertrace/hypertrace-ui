@@ -1,0 +1,49 @@
+<svg
+  width="259"
+  height="90"
+  viewBox="0 0 259 90"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M103 0H78v90h25V0ZM25 17H0v73h25V17ZM51 58H26v32h25V58ZM52 36h25v54H52V36ZM104 23h25v67h-25V23ZM155 17h-25v73h25V17ZM156 58h25v32h-25V58ZM207 36h-25v54h25V36ZM208 0h25v90h-25V0ZM259 23h-25v67h25V23Z"
+    fill="#E1E4E5"
+  />
+
+  <linearGradient id="shimmer-gradient" x1="0" x2="1" y1="0" y2="0">
+    <stop class="stop1" offset="0%" />
+    <stop class="stop2" offset="50%" />
+    <stop class="stop3" offset="100%" />
+  </linearGradient>
+
+  <rect x="0" y="0" class="shimmer" width="50%" height="100%" />
+
+  <style>
+    .stop1 {
+      stop-color: rgb(255, 255, 255);
+      stop-opacity: 0.1;
+    }
+    .stop2 {
+      stop-color: rgb(255, 255, 255);
+      stop-opacity: 0.6;
+    }
+    .stop3 {
+      stop-color: rgb(255, 255, 255);
+      stop-opacity: 0.1;
+    }
+
+    .shimmer {
+      fill: url(#shimmer-gradient);
+      transform: translateX(-100%);
+      animation: skeleton-animation 1.2s infinite;
+    }
+    @keyframes skeleton-animation {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(100%);
+      }
+    }
+  </style>
+</svg>
