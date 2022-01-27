@@ -93,8 +93,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, currentLocation);
-      this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
     }
+
+    this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
   }
 
   public destroy(): this {
@@ -534,14 +535,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
 
-    // tslint:disable-next-line
-    if (this.groupId) {
-      this.eventListeners.forEach(listener => {
-        if (listener.event === ChartEvent.Hover) {
-          listener.onEvent(locationData);
-        }
-      });
-    }
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Hover) {
+        listener.onEvent(locationData);
+      }
+    });
 
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, locationData);
