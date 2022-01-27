@@ -41,7 +41,11 @@ describe('Explorer dashboard builder', () => {
             type: 'cartesian-widget',
             'selectable-interval': false,
             'series-from-data': true,
-            'legend-position': LegendPosition.Bottom
+            'legend-position': LegendPosition.Bottom,
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler',
+              'show-context-menu': false
+            }
           },
           onReady: expect.any(Function)
         }
