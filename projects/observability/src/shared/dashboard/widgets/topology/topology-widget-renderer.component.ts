@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { forkJoinSafeEmpty } from '@hypertrace/common';
+import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -22,7 +23,6 @@ import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/
 import { TopologyEntityTooltipComponent } from './tooltip/topology-entity-tooltip.component';
 import { TopologyDataSourceModelPropertiesService } from './topology-data-source-model-properties.service';
 import { TopologyWidgetModel } from './topology-widget.model';
-import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 
 @Renderer({ modelClass: TopologyWidgetModel })
 @Component({
