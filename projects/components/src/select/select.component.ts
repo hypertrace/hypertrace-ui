@@ -324,6 +324,10 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
   private propagateValueChangeToFormControl(value: V | undefined): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
