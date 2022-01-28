@@ -171,5 +171,19 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  padding-top: 1rem;
+  width: 100%;
+  max-width: 330px;
+}
+
+.radar {
+  @include block-parent-center;
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+
+.topology {
+  @include block-parent-center;
+  position: relative;
+  max-width: 200px;
 }

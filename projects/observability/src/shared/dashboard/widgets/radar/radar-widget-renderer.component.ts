@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { TimeDuration, TimeUnit } from '@hypertrace/common';
-import { SelectSize } from '@hypertrace/components';
+import { LoadAsyncConfig, LoaderType, SelectSize } from '@hypertrace/components';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -32,7 +32,7 @@ import { ComparisonDuration, RadarWidgetModel } from './radar-widget.model';
         ></ht-select-option>
       </ht-select>
 
-      <ng-container *htLoadAsync="this.data$ as data">
+      <ng-container *htLoadAsync="this.data$ as data; config: this.radarLoadingConfig">
         <ht-radar-chart
           [levels]="this.model.levels"
           [axes]="data.axes"
@@ -46,6 +46,7 @@ import { ComparisonDuration, RadarWidgetModel } from './radar-widget.model';
 export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<RadarWidgetModel, RadarOptions> {
   public selectedDuration!: ComparisonDuration;
   private fetcher?: RadarWidgetDataFetcher;
+  public readonly radarLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Radar } };
 
   public constructor(@Inject(RENDERER_API) api: RendererApi<RadarWidgetModel>, changeDetector: ChangeDetectorRef) {
     super(api, changeDetector);

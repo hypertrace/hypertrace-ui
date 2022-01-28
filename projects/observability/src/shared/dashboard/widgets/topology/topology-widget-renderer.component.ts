@@ -22,6 +22,7 @@ import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/
 import { TopologyEntityTooltipComponent } from './tooltip/topology-entity-tooltip.component';
 import { TopologyDataSourceModelPropertiesService } from './topology-data-source-model-properties.service';
 import { TopologyWidgetModel } from './topology-widget.model';
+import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 
 @Renderer({ modelClass: TopologyWidgetModel })
 @Component({
@@ -49,7 +50,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
         [link]="this.model.link?.url"
         [linkLabel]="this.model.link?.displayText"
       >
-        <div class="visualization" *htLoadAsync="this.data$ as data">
+        <div class="visualization" *htLoadAsync="this.data$ as data; config: this.topologyLoadingConfig">
           <div *ngIf="this.model.showLegend" class="legend">
             <div class="latency">
               <div class="label">P99 Latency:</div>
@@ -84,6 +85,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
+  public readonly topologyLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Topology } };
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TopologyWidgetModel>,
     changeDetector: ChangeDetectorRef,

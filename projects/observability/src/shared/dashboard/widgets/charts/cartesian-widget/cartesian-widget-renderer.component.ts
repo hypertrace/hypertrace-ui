@@ -11,13 +11,17 @@ import { CartesianSelectedData } from '../../../../components/cartesian/chart-in
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
+import { LoadAsyncConfig, LoaderType } from '@hypertrace/components';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
   selector: 'ht-cartesian-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content *htLoadAsync="this.data$ as data" [title]="this.model.title | htDisplayTitle">
+    <ht-titled-content
+      *htLoadAsync="this.data$ as data; config: this.cartesianLoadingConfig"
+      [title]="this.model.title | htDisplayTitle"
+    >
       <ht-cartesian-chart
         class="fill-container"
         [series]="data.series"
@@ -41,6 +45,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
+  public readonly cartesianLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Cartesian } };
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
