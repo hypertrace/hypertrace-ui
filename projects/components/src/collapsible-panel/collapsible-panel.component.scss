@@ -1,0 +1,59 @@
+@import 'font';
+@import 'color-palette';
+
+.collapsible-panel {
+  .header {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+
+    &.default {
+      cursor: pointer;
+
+      .toggle-icon {
+        color: $gray-4;
+      }
+
+      .title {
+        @include font-heading();
+        font-size: 16px;
+      }
+    }
+  }
+
+  .body {
+    margin-top: 6px;
+  }
+
+  &.transparent {
+    .header.default {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 2px;
+
+      &:hover,
+      &:focus {
+        outline-color: $gray-4;
+        background-color: $gray-1;
+      }
+    }
+  }
+
+  &.with-background {
+    background-color: $gray-1;
+    border-radius: 10px;
+    border: 1px solid $gray-2;
+
+    .header.default {
+      border-radius: 10px;
+      padding: 16px 14px;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        outline-color: $gray-4;
+        background-color: $gray-2;
+      }
+    }
+  }
+}
