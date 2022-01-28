@@ -352,3 +352,6 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 
 // Filter Url Service
 export * from './filtering/filter/filter-url.service';
+
+// Collapsible Section
+export * from './collapsible-panel';
