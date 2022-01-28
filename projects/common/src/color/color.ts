@@ -1,4 +1,5 @@
 export const enum Color {
+  Blue1 = '#f0f6ff',
   Blue2 = '#b8d3ff',
   Blue3 = '#70a7ff',
   Blue4 = '#2478ff',

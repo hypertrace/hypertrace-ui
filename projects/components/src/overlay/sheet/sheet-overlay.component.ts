@@ -44,7 +44,6 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
           class="trigger-icon"
           icon="{{ this.isViewCollapsed ? '${IconType.ChevronUp}' : '${IconType.ChevronDown}' }}"
           size="${IconSize.Small}"
-          htTooltip="{{ this.isViewCollapsed ? 'Expand Sheet' : 'Collapse Sheet' }}"
         ></ht-icon>
         <ng-container *ngTemplateOutlet="this.attachedTriggerTemplate"></ng-container>
       </div>

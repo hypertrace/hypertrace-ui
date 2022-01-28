@@ -40,4 +40,8 @@ export class CartesianBandScale<TData> extends CartesianScale<TData, string> {
   protected getEmptyScale(): ScaleBand<string> {
     return scaleBand().paddingInner(0.2).paddingOuter(0.1).align(1);
   }
+
+  public invert(x: number): number {
+    return x;
+  }
 }
