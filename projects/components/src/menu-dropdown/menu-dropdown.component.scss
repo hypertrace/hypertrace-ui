@@ -1,4 +1,5 @@
 @import 'interaction';
+@import 'mixins';
 
 .menu-popover-container {
   width: 100%;
@@ -35,5 +36,5 @@
 }
 
 .dropdown-content {
-  @include popover-menu-content;
+  @include body-1-regular;
 }
