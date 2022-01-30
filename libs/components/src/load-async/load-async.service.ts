@@ -62,7 +62,14 @@ export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAs
 export const enum LoaderType {
   Spinner = 'spinner',
   ExpandableRow = 'expandable-row',
-  Page = 'page'
+  Page = 'page',
+  Rectangle = 'rectangle',
+  Text = 'text',
+  Square = 'square',
+  Circle = 'circle',
+  TableRow = 'table-row',
+  ListItem = 'list-item',
+  Donut = 'donut'
 }
 
 interface LoadingAsyncState {

@@ -7,6 +7,6 @@ module.exports = {
     ...nxPreset.moduleNameMapper,
     '^lodash-es$': 'lodash'
   },
-  maxWorkers: '40%',
+  maxWorkers: 2,
   testRunner: 'jest-jasmine2'
 };

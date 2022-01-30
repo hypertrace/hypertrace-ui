@@ -7,8 +7,12 @@ export class BooleanFilterBuilder extends AbstractFilterBuilder<boolean> {
     return FilterAttributeType.Boolean;
   }
 
-  public supportedOperators(): FilterOperator[] {
+  public supportedTopLevelOperators(): FilterOperator[] {
     return [FilterOperator.Equals, FilterOperator.NotEquals];
+  }
+
+  public supportedSubpathOperators(): FilterOperator[] {
+    return [];
   }
 
   protected buildValueString(value: boolean): string {

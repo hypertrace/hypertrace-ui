@@ -62,7 +62,6 @@ describe('Filter Chip service', () => {
             case FilterOperator.In:
               return new InFilterParser();
             case FilterOperator.ContainsKey:
-            case FilterOperator.ContainsKeyValue:
               return new ContainsFilterParser();
             default:
               return assertUnreachable(operator);
@@ -246,21 +245,79 @@ describe('Filter Chip service', () => {
     ]);
   });
 
-  test('correctly autocompletes operator filters for string map attribute once space key is entered', () => {
+  test('correctly autocompletes operator filters for string map attribute', () => {
     const attribute = getTestFilterAttribute(FilterAttributeType.StringMap);
 
-    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute.testKey ')).toEqual([
+    // Contains key or subpath operators if no subpath specified but could be
+    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute')).toEqual([
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
-        userString: `${attribute.displayName} ${FilterOperator.ContainsKey} testKey`
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKey}`
       },
       {
         metadata: attribute,
         field: attribute.name,
-        operator: FilterOperator.ContainsKeyValue,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.ContainsKeyValue}`
+        operator: FilterOperator.Equals,
+        userString: `${attribute.displayName}.example ${FilterOperator.Equals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotEquals,
+        userString: `${attribute.displayName}.example ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName}.example ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName}.example ${FilterOperator.Like}`
+      }
+    ]);
+
+    // Regular operators only once subpath included
+    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute.testKey')).toEqual([
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.Equals,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Equals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.NotEquals,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Like}`
       }
     ]);
   });

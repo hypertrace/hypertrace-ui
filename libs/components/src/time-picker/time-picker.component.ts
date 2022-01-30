@@ -36,7 +36,7 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
               *ngFor="let predefinedTime of this.predefinedTimes"
               (click)="this.onTimeChange(predefinedTime)"
               [ngClass]="{
-                selected: predefinedTime.hours === this.time?.hours && predefinedTime.minutes === this.time?.minutes
+                selected: this.time && (this.areEqualTimes | htMemoize: this.time:predefinedTime)
               }"
             >
               <span>{{ predefinedTime.label }}</span>
@@ -81,6 +81,8 @@ export class TimePickerComponent {
     this.time = time;
     this.timeChange.emit(time);
   }
+
+  public areEqualTimes = (time: Time, predefinedTime: Time) => time.equals(predefinedTime);
 }
 
 export const enum TimePickerDisplayMode {

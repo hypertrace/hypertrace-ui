@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ButtonModule, InputModule, SelectModule, TooltipModule, TraceCheckboxModule } from '@hypertrace/components';
+import {
+  ButtonModule,
+  FormFieldModule,
+  InputModule,
+  LetAsyncModule,
+  SelectModule,
+  TooltipModule,
+  TraceCheckboxModule
+} from '@hypertrace/components';
 import { IntervalSelectModule } from '../interval-select/interval-select.module';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryGroupByEditorComponent } from './group-by/explore-query-group-by-editor.component';
@@ -26,7 +34,9 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
     TooltipModule,
     InputModule,
     IntervalSelectModule,
-    TraceCheckboxModule
+    TraceCheckboxModule,
+    LetAsyncModule,
+    FormFieldModule
   ]
 })
 export class ExploreQueryEditorModule {}

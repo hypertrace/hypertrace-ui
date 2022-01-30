@@ -18,8 +18,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -28,8 +28,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
@@ -38,8 +38,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute1',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute1'
+            name: 'expression',
+            value: { key: 'attribute1' }
           }
         ]
       },
@@ -48,8 +48,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute2',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute2'
+            name: 'expression',
+            value: { key: 'attribute2' }
           }
         ]
       }
@@ -89,8 +89,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -99,8 +99,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
@@ -109,8 +109,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute1',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute1'
+            name: 'expression',
+            value: { key: 'attribute1' }
           }
         ]
       },
@@ -119,8 +119,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute2',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute2'
+            name: 'expression',
+            value: { key: 'attribute2' }
           }
         ]
       },
@@ -129,8 +129,8 @@ describe('Entity Specification Builder', () => {
         alias: 'status',
         arguments: [
           {
-            name: 'key',
-            value: 'status'
+            name: 'expression',
+            value: { key: 'status' }
           }
         ]
       },
@@ -139,8 +139,8 @@ describe('Entity Specification Builder', () => {
         alias: 'statusCode',
         arguments: [
           {
-            name: 'key',
-            value: 'statusCode'
+            name: 'expression',
+            value: { key: 'statusCode' }
           }
         ]
       },
@@ -149,8 +149,8 @@ describe('Entity Specification Builder', () => {
         alias: 'statusMessage',
         arguments: [
           {
-            name: 'key',
-            value: 'statusMessage'
+            name: 'expression',
+            value: { key: 'statusMessage' }
           }
         ]
       }
@@ -189,8 +189,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -199,8 +199,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
@@ -231,8 +231,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -241,8 +241,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
