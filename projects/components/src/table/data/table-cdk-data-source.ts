@@ -57,7 +57,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   public connect(): Observable<ReadonlyArray<TableRow>> {
     this.changeSubscription = this.buildChangeObservable()
       .pipe(
-        tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
+        tap(() => this.loadingStateSubject.next({ loading$: NEVER, hide: true })),
         /**
          * Below debounce is needed to handle multiple emission from buildChangeObservable.
          */
