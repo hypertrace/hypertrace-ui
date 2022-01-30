@@ -1,8 +1,12 @@
+import { IconType } from '@hypertrace/assets-library';
+import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { SkeletonComponent, SkeletonType } from './skeleton.component';
 
 describe('Skeleton Component', () => {
   const createHost = createHostFactory<SkeletonComponent>({
+    declarations: [MockComponent(IconComponent)],
     component: SkeletonComponent
   });
 
@@ -24,7 +28,7 @@ describe('Skeleton Component', () => {
     expect(spectator.queryAll('.skeleton.repeating')).toHaveLength(4);
   });
 
-  test('Should match the skeleton type to the corresponding element', () => {
+  test('Should match non icon skeleton types to the corresponding element', () => {
     const skeletonInputData: { type: SkeletonType; expectedRepeat: number }[] = [
       {
         type: SkeletonType.Donut,
@@ -68,5 +72,45 @@ describe('Skeleton Component', () => {
       expect(spectator.query(shapeContainerClass)).toExist();
       expect(spectator.queryAll(shapeContainerClass)).toHaveLength(testConfig.expectedRepeat);
     });
+  });
+
+  test('Should display ht-icon component for logo skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Logo}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Logo);
+  });
+
+  test('Should display ht-icon component for cartesian skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Cartesian}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Cartesian);
+  });
+
+  test('Should display ht-icon component for cartesian column skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.CartesianColumn}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.CartesianColumn);
+  });
+
+  test('Should display ht-icon component for radar skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Radar}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Radar);
+  });
+
+  test('Should display ht-icon component for topology skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Topology}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Topology);
   });
 });

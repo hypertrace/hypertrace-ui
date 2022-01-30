@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { ImagesAssetPath } from '@hypertrace/assets-library';
+import { IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
+import { IconSize } from '../icon/icon-size';
 
 @Component({
   selector: 'ht-skeleton',
   template: `
     <ng-container *ngFor="let k of this.iterationsArray">
-      <ng-container *ngIf="!isImage; else imageSkeletonTemplate" [ngSwitch]="this.skeletonType">
+      <ng-container *ngIf="!isIcon; else iconSkeletonTemplate" [ngSwitch]="this.skeletonType">
         <div *ngSwitchCase="'${SkeletonType.Donut}'" [ngClass]="this.containerClass">
           <div class="donut-inner"></div>
         </div>
@@ -20,8 +21,10 @@ import { assertUnreachable } from '@hypertrace/common';
         <div *ngSwitchDefault [ngClass]="this.containerClass"></div>
       </ng-container>
 
-      <ng-template #imageSkeletonTemplate>
-        <img [src]="this.imagePath" [ngClass]="this.skeletonType" />
+      <ng-template #iconSkeletonTemplate>
+        <div class="icon-container">
+          <ht-icon [icon]="this.iconType" size="${IconSize.Inherit}" [ngClass]="this.skeletonType"></ht-icon>
+        </div>
       </ng-template>
     </ng-container>
   `,
@@ -39,9 +42,9 @@ export class SkeletonComponent implements OnChanges {
 
   public containerClass: string[];
 
-  public isImage: boolean = false;
+  public isIcon: boolean = false;
 
-  public imagePath: ImagesAssetPath = ImagesAssetPath.LoaderLogo;
+  public iconType: IconType = IconType.Logo;
 
   public constructor() {
     this.containerClass = this.getContainerClass();
@@ -52,23 +55,23 @@ export class SkeletonComponent implements OnChanges {
 
     this.containerClass = this.getContainerClass();
 
-    this.isImage = this.determineIfImage(this.skeletonType);
+    this.isIcon = this.determineIfIcon(this.skeletonType);
 
-    if (this.isImage) {
-      this.imagePath = this.getImgAssetPath(this.skeletonType);
+    if (this.isIcon) {
+      this.iconType = this.getIconTypeForSkeleton(this.skeletonType);
     }
   }
 
-  public getImgAssetPath(skeletonType: SkeletonType): ImagesAssetPath {
+  public getIconTypeForSkeleton(skeletonType: SkeletonType): IconType {
     switch (skeletonType) {
       case SkeletonType.Cartesian:
-        return ImagesAssetPath.LoaderCartesion;
+        return IconType.Cartesian;
       case SkeletonType.CartesianColumn:
-        return ImagesAssetPath.LoaderCartesionColumn;
+        return IconType.CartesianColumn;
       case SkeletonType.Radar:
-        return ImagesAssetPath.LoaderRadar;
+        return IconType.Radar;
       case SkeletonType.Topology:
-        return ImagesAssetPath.LoaderTopology;
+        return IconType.Topology;
       case SkeletonType.Logo:
       case SkeletonType.ListItem:
       case SkeletonType.Circle:
@@ -77,7 +80,7 @@ export class SkeletonComponent implements OnChanges {
       case SkeletonType.Square:
       case SkeletonType.TableRow:
       case SkeletonType.Text:
-        return ImagesAssetPath.LoaderLogo;
+        return IconType.Logo;
       default:
         return assertUnreachable(skeletonType);
     }
@@ -104,7 +107,7 @@ export class SkeletonComponent implements OnChanges {
     return classes;
   }
 
-  public determineIfImage(skeletonType: SkeletonType): boolean {
+  public determineIfIcon(skeletonType: SkeletonType): boolean {
     switch (skeletonType) {
       case SkeletonType.Logo:
       case SkeletonType.Radar:

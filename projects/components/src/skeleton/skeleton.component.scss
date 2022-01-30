@@ -160,30 +160,26 @@
   }
 }
 
-.logo {
-  @include block-parent-center;
-  position: relative;
-  height: 100px;
-  width: 100px;
-}
-
-.cartesian {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+.icon-container {
+  height: 100%;
   width: 100%;
-  max-width: 330px;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-.radar {
-  @include block-parent-center;
-  position: relative;
-  width: 100%;
-  max-width: 280px;
-}
+  .logo {
+    height: 100px;
+    width: 100px;
+  }
+  .cartesian {
+    height: 95%;
+  }
 
-.topology {
-  @include block-parent-center;
-  position: relative;
-  max-width: 200px;
+  .cartesian-column {
+    height: 95%;
+  }
+
+  .topology {
+    max-width: 200px;
+  }
 }
