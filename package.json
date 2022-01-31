@@ -19,7 +19,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier:check": "nx format:check --all",
     "prettier:write:uncommitted": "nx format:write --uncommitted=true",
-    "test:ci": "nx run-many --target=test --all --ci --coverage",
+    "test:ci": "nx run-many --target=test --all --ci --coverage --no-cache",
     "docs": "compodoc -p tsconfig.json",
     "prepare": "husky install",
     "check": "npm run build:ci && npm run lint && npm run test:ci && npm run prettier:check"
