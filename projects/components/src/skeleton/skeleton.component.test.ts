@@ -79,7 +79,7 @@ describe('Skeleton Component', () => {
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();
-    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Logo);
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.PageLoader);
   });
 
   test('Should display ht-icon component for cartesian skeleton', () => {
@@ -87,7 +87,7 @@ describe('Skeleton Component', () => {
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();
-    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Cartesian);
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.CartesianLoader);
   });
 
   test('Should display ht-icon component for cartesian column skeleton', () => {
@@ -95,7 +95,7 @@ describe('Skeleton Component', () => {
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();
-    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.CartesianColumn);
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.CartesianColumnLoader);
   });
 
   test('Should display ht-icon component for radar skeleton', () => {
@@ -103,7 +103,7 @@ describe('Skeleton Component', () => {
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();
-    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Radar);
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.RadarLoader);
   });
 
   test('Should display ht-icon component for topology skeleton', () => {
@@ -111,6 +111,6 @@ describe('Skeleton Component', () => {
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();
-    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.Topology);
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.TopologyLoader);
   });
 });
