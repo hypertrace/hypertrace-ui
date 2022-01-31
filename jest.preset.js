@@ -8,5 +8,6 @@ module.exports = {
     '^lodash-es$': 'lodash'
   },
   maxWorkers: 2,
-  testRunner: 'jest-jasmine2'
+  testRunner: 'jest-jasmine2',
+  watchPathIgnorePatterns: ['test-results']
 };

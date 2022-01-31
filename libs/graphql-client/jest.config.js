@@ -9,6 +9,21 @@ module.exports = {
     }
   },
   coverageDirectory: '../../coverage/libs/graphql-client',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: 'test-results/hypertrace-ui/libs/graphql-client'
+      }
+    ],
+    [
+      'jest-html-reporter',
+      {
+        outputPath: 'test-results/hypertrace-ui/libs/graphql-client/test-report.html'
+      }
+    ]
+  ],
   transform: {
     '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular'
   },

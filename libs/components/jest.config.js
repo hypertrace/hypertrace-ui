@@ -9,6 +9,21 @@ module.exports = {
     }
   },
   coverageDirectory: '../../coverage/libs/components',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: 'test-results/hypertrace-ui/libs/components'
+      }
+    ],
+    [
+      'jest-html-reporter',
+      {
+        outputPath: 'test-results/hypertrace-ui/libs/components/test-report.html'
+      }
+    ]
+  ],
   transform: {
     '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular'
   },

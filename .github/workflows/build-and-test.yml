@@ -132,7 +132,7 @@ jobs:
   test-all:
     name: Test All
     runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed, setup-test-batches]
+    needs: [npm-install-if-needed]
     strategy:
       fail-fast: false
     steps:
