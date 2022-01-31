@@ -129,6 +129,39 @@ jobs:
         with:
           name: Unit Test Results (chunk ${{ matrix.chunk }})
           path: test-results/**/*.xml
+  test-all:
+    name: Test All
+    runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed, setup-test-batches]
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        # Used by CCI uploader to detect base commit
+        with:
+          fetch-depth: 0
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Unit Test Results (all)
+          path: test-results/**/*.xml
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
