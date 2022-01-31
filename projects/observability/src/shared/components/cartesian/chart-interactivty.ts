@@ -8,9 +8,16 @@ export const enum ChartEvent {
   Hover
 }
 
-export type ChartEventListener<TData> = (data: MouseLocationData<TData, Series<TData> | Band<TData>>[]) => void;
+export type ChartEventListener<TData> = (
+  data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianHoverData<TData>
+) => void;
 
 export interface ChartTooltipTrackingOptions {
   followSingleAxis?: AxisType;
   radius?: number;
+}
+
+export interface CartesianHoverData<TData> {
+  groupId?: string;
+  selectedData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
 }

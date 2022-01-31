@@ -36,13 +36,11 @@ export class ChartTooltipPopover<TData, TContext> implements ChartTooltipRef<TDa
       this.boundElement = element;
     } else {
       const location = data[0]?.location;
-      if (location) {
-        this.popoverRef.updatePositionStrategy({
-          type: PopoverPositionType.Fixed,
-          location: PopoverFixedPositionLocation.Custom,
-          customLocation: location
-        });
-      }
+      this.popoverRef.updatePositionStrategy({
+        type: PopoverPositionType.Fixed,
+        location: PopoverFixedPositionLocation.Custom,
+        customLocation: location
+      });
     }
   }
 }
