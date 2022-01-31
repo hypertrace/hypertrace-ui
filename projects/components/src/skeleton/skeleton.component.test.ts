@@ -113,4 +113,12 @@ describe('Skeleton Component', () => {
     expect(spectator.query('.skeleton')).not.toExist();
     expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.TopologyLoader);
   });
+
+  test('Should display ht-icon component for none skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.None}'"></ht-skeleton>`);
+
+    expect(spectator.query(IconComponent)).toExist();
+    expect(spectator.query('.skeleton')).not.toExist();
+    expect(spectator.query(IconComponent)).toHaveAttribute('icon', IconType.None);
+  });
 });

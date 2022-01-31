@@ -83,4 +83,64 @@ describe('Loader component', () => {
     expect(skeletonComponent).toExist();
     expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.ListItem);
   });
+
+  test('Should use corresponding skeleton component for loader type cartesian', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Cartesian}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Cartesian);
+  });
+
+  test('Should use corresponding skeleton component for loader type cartesian column ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.CartesianColumn}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.CartesianColumn);
+  });
+
+  test('Should use corresponding skeleton component for loader type logo ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Logo}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Logo);
+  });
+
+  test('Should use corresponding skeleton component for loader type none ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.None}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.None);
+  });
+
+  test('Should use corresponding skeleton component for loader type radar ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Radar}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Radar);
+  });
+
+  test('Should use corresponding skeleton component for loader type topology ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Topology}'" ></ht-loader>`);
+
+    expect(spectator.query('.ht-loader')).toExist();
+
+    const skeletonComponent = spectator.query(SkeletonComponent);
+    expect(skeletonComponent).toExist();
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Topology);
+  });
 });
