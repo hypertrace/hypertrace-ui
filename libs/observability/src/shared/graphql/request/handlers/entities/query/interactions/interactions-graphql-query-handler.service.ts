@@ -18,7 +18,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class InteractionsGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlInteractionsRequest, InteractionsResponse> {
+  implements GraphQlQueryHandler<GraphQlInteractionsRequest, InteractionsResponse>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
   private readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();

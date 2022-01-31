@@ -101,9 +101,10 @@ export class NavigationService {
     return this.router.serializeUrl(inputUrlTree);
   }
 
-  public buildNavigationParams(
-    paramsOrUrl: NavigationParams | string
-  ): { path: NavigationPath; extras?: NavigationExtras } {
+  public buildNavigationParams(paramsOrUrl: NavigationParams | string): {
+    path: NavigationPath;
+    extras?: NavigationExtras;
+  } {
     const params = typeof paramsOrUrl === 'string' ? this.convertUrlToNavParams(paramsOrUrl) : paramsOrUrl;
 
     if (params.navType === NavigationParamsType.External) {

@@ -10,7 +10,8 @@ import { GraphQlArgumentBuilder } from '../../builders/argument/graphql-argument
 
 @Injectable({ providedIn: 'root' })
 export class ExportSpansGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlExportSpansRequest, string | undefined> {
+  implements GraphQlQueryHandler<GraphQlExportSpansRequest, string | undefined>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
   private readonly argBuilder: GraphQlArgumentBuilder = new GraphQlArgumentBuilder();
 

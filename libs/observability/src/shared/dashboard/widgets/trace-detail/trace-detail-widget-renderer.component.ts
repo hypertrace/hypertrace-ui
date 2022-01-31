@@ -50,7 +50,8 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
 })
 export class TraceDetailWidgetRendererComponent
   extends WidgetRenderer<TraceDetailWidgetModel, TraceDetailData>
-  implements OnInit {
+  implements OnInit
+{
   protected fetchData(): Observable<TraceDetailData> {
     return this.model.getData();
   }

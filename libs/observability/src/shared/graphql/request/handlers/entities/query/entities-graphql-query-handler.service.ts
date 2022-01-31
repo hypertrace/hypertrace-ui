@@ -14,7 +14,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class EntitiesGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlEntitiesQueryRequest, EntitiesResponse> {
+  implements GraphQlQueryHandler<GraphQlEntitiesQueryRequest, EntitiesResponse>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
   public constructor(private readonly entitiesGraphQlQueryBuilderService: EntitiesGraphqlQueryBuilderService) {}

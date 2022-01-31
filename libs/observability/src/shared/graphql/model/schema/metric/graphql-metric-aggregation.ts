@@ -19,8 +19,7 @@ export interface GraphQlMetricBandAggregation {
   lowerBound: number;
 }
 
-export type GraphQlMetricAggregationContainer<
-  T extends Partial<GraphQlMetricAggregation> = GraphQlMetricAggregation
-> = {
-  [key in GraphQlMetricAggregationPath]?: T;
-};
+export type GraphQlMetricAggregationContainer<T extends Partial<GraphQlMetricAggregation> = GraphQlMetricAggregation> =
+  {
+    [key in GraphQlMetricAggregationPath]?: T;
+  };

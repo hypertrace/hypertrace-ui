@@ -15,7 +15,8 @@ import { SpecificationModel } from './specification.model';
 })
 export class ExploreSelectionSpecificationModel
   extends SpecificationModel<ExploreSpecification>
-  implements ExploreSpecification {
+  implements ExploreSpecification
+{
   @ModelProperty({
     key: 'metric',
     displayName: 'Metric',

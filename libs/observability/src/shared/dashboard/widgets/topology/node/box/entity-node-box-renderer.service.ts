@@ -29,10 +29,8 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   private readonly entityOuterBandClass: string = 'entity-outer-band';
   private readonly metricCategoryClass: string = 'metric-category';
   private readonly dropshadowFilterId: string = 'entity-node-dropshadow-filter';
-  private readonly nodeSelectionMap: WeakMap<
-    EntityNode,
-    Selection<SVGGElement, unknown, null, undefined>
-  > = new WeakMap();
+  private readonly nodeSelectionMap: WeakMap<EntityNode, Selection<SVGGElement, unknown, null, undefined>> =
+    new WeakMap();
   private readonly numberFormatter: NumericFormatter = new NumericFormatter();
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
   private readonly destroyed$: Subject<EntityNode> = new Subject();

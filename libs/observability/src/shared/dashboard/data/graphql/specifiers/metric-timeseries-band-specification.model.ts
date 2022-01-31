@@ -13,7 +13,8 @@ import { MetricSpecificationModel } from './metric-specification.model';
 })
 export class MetricTimeseriesBandSpecificationModel
   extends MetricSpecificationModel<MetricTimeseriesBandSpecification>
-  implements MetricTimeseriesBandSpecification {
+  implements MetricTimeseriesBandSpecification
+{
   @ModelProperty({
     key: 'interval-duration',
     displayName: 'Interval Duration',

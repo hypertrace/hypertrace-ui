@@ -92,7 +92,8 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
 })
 export class WaterfallWidgetRendererComponent
   extends WidgetRenderer<WaterfallWidgetModel, WaterfallData[]>
-  implements OnInit {
+  implements OnInit
+{
   @ViewChild('chart')
   private readonly waterfallChart!: WaterfallChartComponent;
 

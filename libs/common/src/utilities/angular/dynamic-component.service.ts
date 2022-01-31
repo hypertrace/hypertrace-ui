@@ -17,7 +17,7 @@ export class DynamicComponentService {
     injector: Injector,
     providers: StaticProvider[] = []
   ): ComponentRef<C> {
-    const componentResolver = injector.get((ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>);
+    const componentResolver = injector.get(ComponentFactoryResolver as unknown as Type<ComponentFactoryResolver>);
 
     const applicationRef = injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, injector);

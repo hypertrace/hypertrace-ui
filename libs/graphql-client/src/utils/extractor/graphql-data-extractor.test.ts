@@ -9,7 +9,7 @@ describe('GraphQL Data Extractor', () => {
 
   beforeEach(() => {
     // tslint:disable-next-line: no-object-literal-type-assertion
-    mockRequestBuilder = ({
+    mockRequestBuilder = {
       // tslint:disable-next-line: strict-boolean-expressions
       getKeyForSelection: jest.fn((selection: GraphQlSelection) => {
         if (keyLookupMap.has(selection)) {
@@ -18,7 +18,7 @@ describe('GraphQL Data Extractor', () => {
 
         return selection.path;
       })
-    } as Pick<GraphQlRequestBuilder, 'getKeyForSelection'>) as GraphQlRequestBuilder;
+    } as Pick<GraphQlRequestBuilder, 'getKeyForSelection'> as GraphQlRequestBuilder;
     keyLookupMap.clear();
   });
 
@@ -41,9 +41,7 @@ describe('GraphQL Data Extractor', () => {
   test('can retrieve properties with injected keys', () => {
     const selection = { path: 'property' };
     keyLookupMap.set(selection, 'property1');
-    expect(
-      extractor.extract<number>(selection, mockRequestBuilder, { property1: 15 })
-    ).toBe(15);
+    expect(extractor.extract<number>(selection, mockRequestBuilder, { property1: 15 })).toBe(15);
   });
 
   test('result has injected keys removed', () => {

@@ -8,7 +8,8 @@ import {
 import { BubbleChartData } from './bubble-chart';
 
 export class BubbleDataLookupStrategy<TData extends Pick<BubbleChartData, 'r' | 'x' | 'y'>>
-  implements MouseDataLookupStrategy<TData, undefined> {
+  implements MouseDataLookupStrategy<TData, undefined>
+{
   public constructor(
     private readonly data: TData[],
     private readonly xScale: NumericScale,

@@ -5,7 +5,8 @@ import { FreshPaint, loadFreshPaint } from './load-snippet';
 
 @Injectable({ providedIn: 'root' })
 export class FreshPaintTelemetry<InitConfig extends TelemetryProviderConfig>
-  implements UserTelemetryProvider<InitConfig> {
+  implements UserTelemetryProvider<InitConfig>
+{
   private get freshPaint(): FreshPaint | undefined {
     return window.freshpaint;
   }

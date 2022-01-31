@@ -14,7 +14,8 @@ import { MetricSpecificationModel } from './metric-specification.model';
 })
 export class MetricTimeseriesSpecificationModel
   extends MetricSpecificationModel<MetricTimeseriesSpecification>
-  implements MetricTimeseriesSpecification {
+  implements MetricTimeseriesSpecification
+{
   @ModelProperty({
     key: 'interval-duration',
     displayName: 'Interval Duration',

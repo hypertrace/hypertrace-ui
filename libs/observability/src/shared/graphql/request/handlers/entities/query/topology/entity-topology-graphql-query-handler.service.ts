@@ -15,7 +15,8 @@ import { SpecificationBuilder } from '../../../../builders/specification/specifi
 
 @Injectable({ providedIn: 'root' })
 export class EntityTopologyGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlEntityTopologyRequest, EntityNode[]> {
+  implements GraphQlQueryHandler<GraphQlEntityTopologyRequest, EntityNode[]>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();

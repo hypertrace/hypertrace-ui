@@ -3,7 +3,8 @@ import { Dictionary } from './../../../utilities/types/types';
 import { loadGA } from './load-snippet';
 
 export class GoogleAnalyticsTelemetry<InitConfig extends TelemetryProviderConfig>
-  implements UserTelemetryProvider<InitConfig> {
+  implements UserTelemetryProvider<InitConfig>
+{
   public initialize(config: InitConfig): void {
     const ga = loadGA();
     ga('create', config.orgId, 'auto');

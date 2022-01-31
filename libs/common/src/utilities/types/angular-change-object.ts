@@ -19,7 +19,6 @@ export type KnownLifecycleKeys = 'ngOnInit' | 'ngOnChanges' | 'ngOnDestroy' | 'n
 /**
  * A typed version of Angular's `SimpleChanges`.
  */
-export type TypedSimpleChanges<T> = SimpleChanges &
-  {
-    readonly [P in keyof T]?: TypedSimpleChange<T[P]>;
-  };
+export type TypedSimpleChanges<T> = SimpleChanges & {
+  readonly [P in keyof T]?: TypedSimpleChange<T[P]>;
+};

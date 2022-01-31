@@ -10,7 +10,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ExploreGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlExploreRequest, GraphQlExploreResponse> {
+  implements GraphQlQueryHandler<GraphQlExploreRequest, GraphQlExploreResponse>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
   public constructor(private readonly exploreGraphQlQueryBuilderService: ExploreGraphqlQueryBuilderService) {}

@@ -8,10 +8,8 @@ import { RadarPoint, RadarSeries } from '../radar';
 export class RadialDataLookupStrategy {
   private readonly radialBisector: Bisector<RadarAxisData, number>;
   private readonly radialAxisData: RadarAxisData[];
-  private readonly axisDataPointMap: WeakMap<
-    RadarAxisData,
-    MouseLocationData<RadarPoint, RadarSeries>[]
-  > = new WeakMap();
+  private readonly axisDataPointMap: WeakMap<RadarAxisData, MouseLocationData<RadarPoint, RadarSeries>[]> =
+    new WeakMap();
 
   public constructor(private readonly allSeries: RadarSeries[], radialAxisData: RadarAxisData[]) {
     this.radialBisector = bisector(axisData => axisData.axisRadian);

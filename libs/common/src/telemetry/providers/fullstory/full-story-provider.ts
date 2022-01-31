@@ -5,7 +5,8 @@ import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from './..
 
 @Injectable({ providedIn: 'root' })
 export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
-  implements UserTelemetryProvider<InitConfig> {
+  implements UserTelemetryProvider<InitConfig>
+{
   public initialize(config: InitConfig): void {
     FullStory.init({
       orgId: config.orgId,

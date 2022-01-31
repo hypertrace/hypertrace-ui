@@ -53,7 +53,7 @@ export class CartesianAxisCrosshair {
   }
 
   private getCrosshairParentSelection(axisElement: SVGElement): Selection<SVGSVGElement, {}, null, undefined> {
-    return select((axisElement.parentElement as unknown) as SVGSVGElement);
+    return select(axisElement.parentElement as unknown as SVGSVGElement);
   }
 
   private updatePosition(

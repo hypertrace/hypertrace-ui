@@ -18,7 +18,8 @@ export class TraceD3Selection<
   TData = undefined,
   PElement extends BaseType = null,
   PData = undefined
-> implements Selection<TElement, TData, PElement, PData> {
+> implements Selection<TElement, TData, PElement, PData>
+{
   public constructor(
     private readonly renderer: Renderer2,
     private readonly d3Utils: D3UtilService,

@@ -6,7 +6,8 @@ import { SpecificationModel } from './specification.model';
 
 export abstract class MetricSpecificationModel<TSpecification extends MetricSpecification>
   extends SpecificationModel<TSpecification>
-  implements MetricSpecification {
+  implements MetricSpecification
+{
   @ModelProperty({
     key: 'metric',
     displayName: 'Metric',

@@ -23,7 +23,7 @@ export abstract class ContainerLayout {
   public abstract getContainerLayoutData(children: object[]): ContainerLayoutData;
 
   public draw(containerRef: ViewContainerRef, children: object[]): void {
-    const resolver = containerRef.injector.get((ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>);
+    const resolver = containerRef.injector.get(ComponentFactoryResolver as unknown as Type<ComponentFactoryResolver>);
 
     const containerFactory = resolver.resolveComponentFactory(ContainerLayoutComponent);
     const layoutData = this.getContainerLayoutData(children);

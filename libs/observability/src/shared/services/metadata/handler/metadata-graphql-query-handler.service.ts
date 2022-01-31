@@ -8,7 +8,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class MetadataGraphQlQueryHandlerService
-  implements GraphQlQueryHandler<GraphQlMetadataRequest, AttributeMetadata[]> {
+  implements GraphQlQueryHandler<GraphQlMetadataRequest, AttributeMetadata[]>
+{
   public readonly type: GraphQlHandlerType.Query = GraphQlHandlerType.Query;
 
   public matchesRequest(request: unknown): request is GraphQlMetadataRequest {

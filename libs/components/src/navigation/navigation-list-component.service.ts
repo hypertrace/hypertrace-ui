@@ -14,9 +14,8 @@ export class NavigationListComponentService {
     let linkItemsForThisSection: NavItemLinkConfig[] = [];
     for (let i = updatedItems.length - 1; i >= 0; i--) {
       if (updatedItems[i].type === NavItemType.Header) {
-        (updatedItems[i] as NavItemHeaderConfig).isVisible$ = this.updateHeaderNavItemsVisibility(
-          linkItemsForThisSection
-        );
+        (updatedItems[i] as NavItemHeaderConfig).isVisible$ =
+          this.updateHeaderNavItemsVisibility(linkItemsForThisSection);
         linkItemsForThisSection = [];
       } else if (updatedItems[i].type === NavItemType.Link) {
         linkItemsForThisSection.push(updatedItems[i] as NavItemLinkConfig);

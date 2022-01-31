@@ -27,15 +27,11 @@ import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
 export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataSourceModel<
   MetricSeriesDataFetcher<MetricTimeseriesInterval>
 > {
-  private readonly errorCountSpec: MetricAggregationSpecification = new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(
-    'errorCount',
-    MetricAggregationType.Sum
-  );
+  private readonly errorCountSpec: MetricAggregationSpecification =
+    new ObservabilitySpecificationBuilder().metricAggregationSpecForKey('errorCount', MetricAggregationType.Sum);
 
-  private readonly callCountSpec: MetricAggregationSpecification = new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(
-    'numCalls',
-    MetricAggregationType.Sum
-  );
+  private readonly callCountSpec: MetricAggregationSpecification =
+    new ObservabilitySpecificationBuilder().metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum);
 
   @ModelInject(LoggerService)
   private readonly loggerService!: LoggerService;
