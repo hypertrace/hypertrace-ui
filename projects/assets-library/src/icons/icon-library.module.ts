@@ -92,11 +92,11 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
         { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
         { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` },
-        { key: IconType.Cartesian, url: `${iconsRootPath}/loader-cartesian.svg` },
-        { key: IconType.CartesianColumn, url: `${iconsRootPath}/loader-cartesian-column.svg` },
-        { key: IconType.Logo, url: `${iconsRootPath}/loader-logo.svg` },
-        { key: IconType.Radar, url: `${iconsRootPath}/loader-radar.svg` },
-        { key: IconType.Topology, url: `${iconsRootPath}/loader-topology.svg` }
+        { key: IconType.CartesianLoader, url: `${iconsRootPath}/loader-cartesian.svg` },
+        { key: IconType.CartesianColumnLoader, url: `${iconsRootPath}/loader-cartesian-column.svg` },
+        { key: IconType.PageLoader, url: `${iconsRootPath}/loader-page.svg` },
+        { key: IconType.RadarLoader, url: `${iconsRootPath}/loader-radar.svg` },
+        { key: IconType.TopologyLoader, url: `${iconsRootPath}/loader-topology.svg` }
       ]
     }
   ]

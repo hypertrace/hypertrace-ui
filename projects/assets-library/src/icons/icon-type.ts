@@ -119,9 +119,9 @@ export const enum IconType {
   VirtualMachine = 'svg:virtual-machine',
   Yaml = 'svg:yaml',
   ZoomToFit = 'zoom_out_map',
-  Logo = 'svg:logo',
-  Cartesian = 'svg:cartesian',
-  CartesianColumn = 'svg:cartesian-column',
-  Radar = 'svg:radar',
-  Topology = 'svg:topology'
+  PageLoader = 'svg:logo',
+  CartesianLoader = 'svg:cartesian',
+  CartesianColumnLoader = 'svg:cartesian-column',
+  RadarLoader = 'svg:radar',
+  TopologyLoader = 'svg:topology'
 }

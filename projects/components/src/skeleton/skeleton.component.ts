@@ -44,7 +44,7 @@ export class SkeletonComponent implements OnChanges {
 
   public isIcon: boolean = false;
 
-  public iconType: IconType = IconType.Logo;
+  public iconType: IconType = IconType.PageLoader;
 
   public constructor() {
     this.containerClass = this.getContainerClass();
@@ -65,13 +65,13 @@ export class SkeletonComponent implements OnChanges {
   public getIconTypeForSkeleton(skeletonType: SkeletonType): IconType {
     switch (skeletonType) {
       case SkeletonType.Cartesian:
-        return IconType.Cartesian;
+        return IconType.CartesianLoader;
       case SkeletonType.CartesianColumn:
-        return IconType.CartesianColumn;
+        return IconType.CartesianColumnLoader;
       case SkeletonType.Radar:
-        return IconType.Radar;
+        return IconType.RadarLoader;
       case SkeletonType.Topology:
-        return IconType.Topology;
+        return IconType.TopologyLoader;
       case SkeletonType.None:
         return IconType.None;
       case SkeletonType.Logo:
@@ -82,7 +82,7 @@ export class SkeletonComponent implements OnChanges {
       case SkeletonType.Square:
       case SkeletonType.TableRow:
       case SkeletonType.Text:
-        return IconType.Logo;
+        return IconType.PageLoader;
       default:
         return assertUnreachable(skeletonType);
     }
