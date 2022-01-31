@@ -64,6 +64,7 @@ export * from './shared/services/metadata/metadata.service';
 export * from './shared/services/metadata/metadata.service.module';
 export * from './shared/graphql/model/metadata/attribute-metadata';
 
+export * from './shared/graphql/model/attribute/attribute-expression';
 export * from './shared/graphql/model/metrics/metric-aggregation';
 export * from './shared/graphql/model/metrics/metric-health';
 

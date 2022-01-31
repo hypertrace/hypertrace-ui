@@ -44,7 +44,7 @@ export class EntitySpecificationBuilder {
           additionalSpecifications
         ),
       asGraphQlOrderByFragment: () => ({
-        key: nameKey
+        expression: { key: nameKey }
       })
     };
   }

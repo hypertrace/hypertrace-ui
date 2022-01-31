@@ -6,7 +6,7 @@
   @include overline($gray-9);
 
   width: fit-content;
-  height: 16px;
+  height: 22px;
   padding: 3px 8px;
 
   display: flex;
@@ -14,6 +14,6 @@
   justify-content: center;
 
   // Default color. Could be overridden by the component
-  background-color: $gray-1;
-  border-radius: 8px;
+  background-color: $blue-1;
+  border-radius: 2px;
 }

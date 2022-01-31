@@ -84,7 +84,7 @@ describe('Explore visualization builder', () => {
       spectator.service
         .setSeries([buildSeries('test1')])
         .groupBy({
-          keys: ['testGroupBy'],
+          keyExpressions: [{ key: 'testGroupBy' }],
           limit: 15
         })
         .setSeries([buildSeries('test2')]);
@@ -92,7 +92,7 @@ describe('Explore visualization builder', () => {
       expectObservable(recordedRequests).toBe('10ms x', {
         x: expectedQuery({
           series: [matchSeriesWithName('test2')],
-          groupBy: { keys: ['testGroupBy'], limit: 15 }
+          groupBy: { keyExpressions: [{ key: 'testGroupBy' }], limit: 15 }
         })
       });
     });

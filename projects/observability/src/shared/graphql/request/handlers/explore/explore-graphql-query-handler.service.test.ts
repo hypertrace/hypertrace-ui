@@ -57,7 +57,7 @@ describe('Explore graphql query handler', () => {
     groupBy: {
       limit: 2,
       includeRest: true,
-      keys: ['serviceName']
+      keyExpressions: [{ key: 'serviceName' }]
     },
     orderBy: [
       {
@@ -98,13 +98,13 @@ describe('Explore graphql query handler', () => {
           name: 'filterBy',
           value: [
             {
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.GreaterThan),
               value: 0,
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
             },
             {
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
@@ -115,7 +115,7 @@ describe('Explore graphql query handler', () => {
           name: 'groupBy',
           value: {
             includeRest: true,
-            keys: ['serviceName'],
+            expressions: [{ key: 'serviceName' }],
             groupLimit: 2
           }
         },
@@ -124,7 +124,7 @@ describe('Explore graphql query handler', () => {
           value: [
             {
               direction: new GraphQlEnumArgument('ASC'),
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
             }
           ]
@@ -138,14 +138,14 @@ describe('Explore graphql query handler', () => {
             {
               path: 'selection',
               alias: 'serviceName',
-              arguments: [{ name: 'key', value: 'serviceName' }],
+              arguments: [{ name: 'expression', value: { key: 'serviceName' } }],
               children: [{ path: 'value' }, { path: 'type' }]
             },
             {
               path: 'selection',
               alias: 'avg_duration',
               arguments: [
-                { name: 'key', value: 'duration' },
+                { name: 'expression', value: { key: 'duration' } },
                 { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
               ],
               children: [{ path: 'value' }, { path: 'type' }]
@@ -154,7 +154,7 @@ describe('Explore graphql query handler', () => {
               path: 'selection',
               alias: 'avgrate_min_duration',
               arguments: [
-                { name: 'key', value: 'duration' },
+                { name: 'expression', value: { key: 'duration' } },
                 { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate) },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                 { name: 'size', value: 1 }
@@ -193,13 +193,13 @@ describe('Explore graphql query handler', () => {
           name: 'filterBy',
           value: [
             {
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.GreaterThan),
               value: 0,
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
             },
             {
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
@@ -210,7 +210,7 @@ describe('Explore graphql query handler', () => {
           name: 'groupBy',
           value: {
             includeRest: true,
-            keys: ['serviceName'],
+            expressions: [{ key: 'serviceName' }],
             groupLimit: 2
           }
         },
@@ -219,7 +219,7 @@ describe('Explore graphql query handler', () => {
           value: [
             {
               direction: new GraphQlEnumArgument('ASC'),
-              key: 'duration',
+              keyExpression: { key: 'duration' },
               aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
             }
           ]
@@ -233,14 +233,14 @@ describe('Explore graphql query handler', () => {
             {
               path: 'selection',
               alias: 'serviceName',
-              arguments: [{ name: 'key', value: 'serviceName' }],
+              arguments: [{ name: 'expression', value: { key: 'serviceName' } }],
               children: [{ path: 'value' }, { path: 'type' }]
             },
             {
               path: 'selection',
               alias: 'avg_duration',
               arguments: [
-                { name: 'key', value: 'duration' },
+                { name: 'expression', value: { key: 'duration' } },
                 { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
               ],
               children: [{ path: 'value' }, { path: 'type' }]
@@ -249,7 +249,7 @@ describe('Explore graphql query handler', () => {
               path: 'selection',
               alias: 'avgrate_min_duration',
               arguments: [
-                { name: 'key', value: 'duration' },
+                { name: 'expression', value: { key: 'duration' } },
                 { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate) },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                 { name: 'size', value: 1 }

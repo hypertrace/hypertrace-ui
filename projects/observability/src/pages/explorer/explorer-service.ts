@@ -31,7 +31,7 @@ export class ExplorerService {
             filterAttribute =>
               this.filterBuilderLookupService
                 .lookup(filterAttribute.type)
-                .buildFilter(filterAttribute, filter.operator, filter.value).urlString
+                .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString
           )
         )
     );

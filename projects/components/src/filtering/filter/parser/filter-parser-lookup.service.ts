@@ -11,6 +11,9 @@ import { InFilterParser } from './types/in-filter-parser';
   providedIn: 'root'
 })
 export class FilterParserLookupService {
+  // TODO remove the separate parsers entirely.
+  // There's next to no logic left in them, and they duplicate (incorrectly) supported operators,
+  // Which should be based on attribute type (as defined in filter builders)
   public lookup(operator: FilterOperator): AbstractFilterParser<unknown> {
     switch (operator) {
       case FilterOperator.Equals:
@@ -24,7 +27,6 @@ export class FilterParserLookupService {
       case FilterOperator.In:
         return new InFilterParser();
       case FilterOperator.ContainsKey:
-      case FilterOperator.ContainsKeyValue:
         return new ContainsFilterParser();
       default:
         return assertUnreachable(operator);

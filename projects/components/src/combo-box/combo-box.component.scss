@@ -11,8 +11,11 @@
   align-items: center;
   height: inherit;
   width: inherit;
-  border: 1px solid $color-border;
   border-radius: 6px;
+
+  &.show-border {
+    border: 1px solid $color-border;
+  }
 
   &.chip {
     border: 1px solid transparent;
@@ -39,6 +42,13 @@
       &:hover {
         background-color: $gray-1;
       }
+    }
+  }
+
+  &.disabled {
+    background-color: $gray-2;
+    .trigger-input {
+      color: black;
     }
   }
 

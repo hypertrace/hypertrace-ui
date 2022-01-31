@@ -17,7 +17,7 @@ export class TraceStatusSpecificationBuilder {
       name: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD,
       asGraphQlSelections: () => this.buildGraphQlSelections(),
       extractFromServerData: serverData => this.extractFromServerData(serverData),
-      asGraphQlOrderByFragment: () => ({ key: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD })
+      asGraphQlOrderByFragment: () => ({ expression: { key: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD } })
     };
   }
 

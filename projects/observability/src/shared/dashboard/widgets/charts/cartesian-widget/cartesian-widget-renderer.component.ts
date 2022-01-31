@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
+
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { NEVER, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { Band, Series } from '../../../../components/cartesian/chart';
+import { Axis, Band, Series } from '../../../../components/cartesian/chart';
+import { CartesianSelectedData } from '../../../../components/cartesian/chart-interactivty';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
+import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
 
 @Renderer({ modelClass: CartesianWidgetModel })
@@ -19,8 +22,8 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         class="fill-container"
         [series]="data.series"
         [bands]="data.bands"
-        [xAxisOption]="this.model.xAxis && this.model.xAxis!.getAxisOption()"
-        [yAxisOption]="this.model.yAxis && this.model.yAxis!.getAxisOption()"
+        [xAxisOption]="this.getAxisOption | htMemoize: this.model?.xAxis"
+        [yAxisOption]="this.getAxisOption | htMemoize: this.model?.yAxis"
         [showXAxis]="this.model.showXAxis"
         [showYAxis]="this.model.showYAxis"
         [timeRange]="this.timeRange"
@@ -29,12 +32,13 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [legend]="this.model.legendPosition"
         [groupId]="this.model.syncGroupId"
         (selectedIntervalChange)="this.onIntervalChange($event)"
+        (selectionChange)="this.onSelectionChange($event)"
       >
       </ht-cartesian-chart>
     </ht-titled-content>
   `
 })
-export class CartesianWidgetRendererComponent<TSeriesInterval> extends InteractiveDataWidgetRenderer<
+export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends InteractiveDataWidgetRenderer<
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
@@ -53,6 +57,14 @@ export class CartesianWidgetRendererComponent<TSeriesInterval> extends Interacti
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
     this.updateDataObservable();
+  }
+
+  public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {
+    this.model.selectionHandler?.execute(selectedData);
+  }
+
+  public getAxisOption(axis: CartesianAxisModel): Partial<Axis> {
+    return axis?.getAxisOption();
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {

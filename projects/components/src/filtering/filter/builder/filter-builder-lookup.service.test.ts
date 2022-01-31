@@ -177,17 +177,15 @@ describe('Filter Builder Lookup service', () => {
     expect(
       spectator.service
         .lookup(FilterAttributeType.StringMap)
-        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.ContainsKeyValue, [
-          'myKey',
-          'myValue'
-        ])
+        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.Equals, 'myValue', 'myKey')
     ).toEqual({
       metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
       field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
-      operator: FilterOperator.ContainsKeyValue,
-      value: ['myKey', 'myValue'],
-      userString: 'String Map Attribute.myKey CONTAINS_KEY_VALUE myValue',
-      urlString: 'stringMapAttribute_ckv_myKey%3AmyValue'
+      subpath: 'myKey',
+      operator: FilterOperator.Equals,
+      value: 'myValue',
+      userString: 'String Map Attribute.myKey = myValue',
+      urlString: 'stringMapAttribute.myKey_eq_myValue'
     });
   });
 });

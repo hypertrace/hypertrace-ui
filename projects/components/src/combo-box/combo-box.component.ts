@@ -13,9 +13,10 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { DomElementScrollIntoViewService, isNonEmptyString, TypedSimpleChanges } from '@hypertrace/common';
-import { isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';
@@ -25,13 +26,30 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
   selector: 'ht-combo-box',
   styleUrls: ['./combo-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: ComboBoxComponent
+    }
+  ],
   template: `
-    <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
+    <ht-popover
+      class="combo-box"
+      [disabled]="this.disabled"
+      (popoverOpen)="this.onPopoverOpen($event)"
+      (popoverClose)="this.onPopoverClose()"
+    >
       <ht-popover-trigger>
         <div
           #trigger
           class="popover-trigger"
-          [ngClass]="this.mode"
+          [ngClass]="{
+            input: this.mode === '${ComboBoxMode.Input}',
+            chip: this.mode === '${ComboBoxMode.Chip}',
+            'show-border': this.showBorder,
+            disabled: this.disabled
+          }"
           [class.has-text]="this.text"
           [class.input-focused]="input.matches(':focus')"
         >
@@ -67,6 +85,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
 
           <!-- Clear Button -->
           <div
+            *ngIf="!this.disabled"
             [class.has-text]="this.text"
             [class.input-focused]="input.matches(':focus')"
             [ngClass]="this.mode"
@@ -113,7 +132,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
     </ht-popover>
   `
 })
-export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy {
+export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
   public mode?: ComboBoxMode = ComboBoxMode.Input;
 
@@ -136,10 +155,16 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   public provideCreateOption: boolean = false;
 
   @Input()
+  public createOptionLabel?: string = 'Create';
+
+  @Input()
   public text?: string = '';
 
   @Input()
   public options?: ComboBoxOption<TValue>[] = [];
+
+  @Input()
+  public showBorder: boolean = true;
 
   @Output()
   public readonly textChange: EventEmitter<string> = new EventEmitter();
@@ -176,6 +201,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public createOption?: ComboBoxOption<TValue>;
 
+  private propagateControlValueChange?: (value: string | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
+
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly scrollIntoViewService: DomElementScrollIntoViewService
@@ -197,17 +225,16 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   private buildCreateOption(text: string): ComboBoxOption<TValue> {
     return {
-      text: `Create "${text}"`,
+      text: `${this.createOptionLabel} "${text}"`,
       tooltip: text,
       icon: IconType.AddCircleOutline
     };
   }
 
   private setFilteredOptions(searchText?: string): void {
-    this.filteredOptions =
-      searchText === undefined
-        ? this.options ?? []
-        : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText.toLowerCase()));
+    this.filteredOptions = isEmpty(searchText)
+      ? this.options ?? []
+      : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText!.toLowerCase()));
     this.createOption = this.isShowCreateOption(searchText) ? this.buildCreateOption(searchText) : undefined;
     this.setHighlightedOptionIndex();
   }
@@ -227,6 +254,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
       this.measureText();
       this.setHighlightedOptionIndex();
       this.textChange.emit(this.text);
+      this.propagateValueChangeToFormControl(this.text);
     }
   }
 
@@ -404,5 +432,27 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
           : '100%';
       this.changeDetectorRef.markForCheck(); // Yes, required
     });
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValueChangeToFormControl(value?: string): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  public writeValue(text?: string): void {
+    this.text = text;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public registerOnChange(onChange: (value?: string) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: string) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
   }
 }
