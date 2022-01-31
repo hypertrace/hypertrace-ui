@@ -49,6 +49,8 @@ export class LoaderComponent implements OnChanges {
         return SkeletonType.Radar;
       case LoaderType.Topology:
         return SkeletonType.Topology;
+      case LoaderType.None:
+        return SkeletonType.None;
       case LoaderType.Rectangle:
       case undefined:
         return SkeletonType.Rectangle;

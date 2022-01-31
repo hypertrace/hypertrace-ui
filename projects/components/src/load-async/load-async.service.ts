@@ -71,7 +71,8 @@ export const enum LoaderType {
   Cartesian = 'cartesian',
   CartesianColumn = 'cartesian-column',
   Radar = 'radar',
-  Topology = 'topology'
+  Topology = 'topology',
+  None = 'none'
 }
 
 interface LoadingAsyncState {

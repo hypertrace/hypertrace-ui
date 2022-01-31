@@ -72,6 +72,8 @@ export class SkeletonComponent implements OnChanges {
         return IconType.Radar;
       case SkeletonType.Topology:
         return IconType.Topology;
+      case SkeletonType.None:
+        return IconType.None;
       case SkeletonType.Logo:
       case SkeletonType.ListItem:
       case SkeletonType.Circle:
@@ -114,6 +116,7 @@ export class SkeletonComponent implements OnChanges {
       case SkeletonType.Topology:
       case SkeletonType.Cartesian:
       case SkeletonType.CartesianColumn:
+      case SkeletonType.None:
         return true;
       case SkeletonType.Circle:
       case SkeletonType.Text:
@@ -141,5 +144,6 @@ export const enum SkeletonType {
   Cartesian = 'cartesian',
   CartesianColumn = 'cartesian-column',
   Radar = 'radar',
-  Topology = 'topology'
+  Topology = 'topology',
+  None = 'none'
 }
