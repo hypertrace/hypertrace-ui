@@ -92,7 +92,7 @@ interface LoadingStateConfig {
   loaderType?: LoaderType;
 }
 
-interface NoDataOrErrorStateConfig {
+export interface NoDataOrErrorStateConfig {
   icon?: IconType;
   title?: string;
   description?: string;
