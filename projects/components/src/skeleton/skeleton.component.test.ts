@@ -74,8 +74,8 @@ describe('Skeleton Component', () => {
     });
   });
 
-  test('Should display ht-icon component for logo skeleton', () => {
-    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Logo}'"></ht-skeleton>`);
+  test('Should display ht-icon component for page skeleton', () => {
+    spectator = createHost(`<ht-skeleton [skeletonType]="'${SkeletonType.Page}'"></ht-skeleton>`);
 
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query('.skeleton')).not.toExist();

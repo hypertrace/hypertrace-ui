@@ -104,14 +104,14 @@ describe('Loader component', () => {
     expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.CartesianColumn);
   });
 
-  test('Should use corresponding skeleton component for loader type logo ', () => {
-    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Logo}'" ></ht-loader>`);
+  test('Should use corresponding skeleton component for loader type page ', () => {
+    spectator = createHost(`<ht-loader [loaderType]="'${LoaderType.Page}'" ></ht-loader>`);
 
     expect(spectator.query('.ht-loader')).toExist();
 
     const skeletonComponent = spectator.query(SkeletonComponent);
     expect(skeletonComponent).toExist();
-    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Logo);
+    expect(skeletonComponent).toHaveAttribute('skeletonType', SkeletonType.Page);
   });
 
   test('Should use corresponding skeleton component for loader type none ', () => {

@@ -74,7 +74,7 @@ export class SkeletonComponent implements OnChanges {
         return IconType.TopologyLoader;
       case SkeletonType.None:
         return IconType.None;
-      case SkeletonType.Logo:
+      case SkeletonType.Page:
       case SkeletonType.ListItem:
       case SkeletonType.Circle:
       case SkeletonType.Donut:
@@ -111,7 +111,7 @@ export class SkeletonComponent implements OnChanges {
 
   public determineIfIcon(skeletonType: SkeletonType): boolean {
     switch (skeletonType) {
-      case SkeletonType.Logo:
+      case SkeletonType.Page:
       case SkeletonType.Radar:
       case SkeletonType.Topology:
       case SkeletonType.Cartesian:
@@ -140,7 +140,7 @@ export const enum SkeletonType {
   TableRow = 'table-row',
   ListItem = 'list-item',
   Donut = 'donut',
-  Logo = 'logo',
+  Page = 'page',
   Cartesian = 'cartesian',
   CartesianColumn = 'cartesian-column',
   Radar = 'radar',

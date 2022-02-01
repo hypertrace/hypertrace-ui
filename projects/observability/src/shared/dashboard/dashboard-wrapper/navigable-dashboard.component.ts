@@ -40,7 +40,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
   `
 })
 export class NavigableDashboardComponent implements OnChanges {
-  public readonly pageLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Logo } };
+  public readonly pageLoadingConfig: LoadAsyncConfig = { load: { loaderType: LoaderType.Page } };
   @Input()
   public navLocation?: string | null;
 

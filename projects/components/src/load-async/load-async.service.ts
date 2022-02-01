@@ -67,7 +67,7 @@ export const enum LoaderType {
   TableRow = 'table-row',
   ListItem = 'list-item',
   Donut = 'donut',
-  Logo = 'logo',
+  Page = 'page',
   Cartesian = 'cartesian',
   CartesianColumn = 'cartesian-column',
   Radar = 'radar',
