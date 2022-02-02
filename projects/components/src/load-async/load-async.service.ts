@@ -88,7 +88,7 @@ interface NoDataOrErrorAsyncState {
   description?: string;
 }
 
-interface LoadingStateConfig {
+export interface LoadingStateConfig {
   loaderType?: LoaderType;
 }
 

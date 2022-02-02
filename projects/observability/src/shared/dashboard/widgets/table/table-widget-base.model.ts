@@ -1,5 +1,5 @@
 import {
-  LoadAsyncConfig,
+  NoDataOrErrorStateConfig,
   TableDataSource,
   TableMode,
   TableRow,
@@ -20,7 +20,6 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -133,12 +132,12 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public rowHeight: string = '44px';
 
-  @ModelProperty({
-    key: 'loadingConfig',
-    required: false,
-    type: PLAIN_OBJECT_PROPERTY.type
-  })
-  public loadingConfig?: LoadAsyncConfig;
+  // @ModelProperty({
+  //   key: 'loadingConfig',
+  //   required: false,
+  //   type: PLAIN_OBJECT_PROPERTY.type
+  // })
+  // public loadingConfig?: LoadAsyncConfig;
 
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
@@ -207,7 +206,7 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     return this.rowHeight;
   }
 
-  public getLoadingConfig(): LoadAsyncConfig | undefined {
-    return this.loadingConfig;
+  public getNoDataLoadingConfig(): NoDataOrErrorStateConfig | undefined {
+    return this.noDataLoadingConfig;
   }
 }

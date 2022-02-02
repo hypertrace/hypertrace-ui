@@ -1,4 +1,4 @@
-import { LoadAsyncConfig, TableDataSource, TableRow, TableSelectionMode } from '@hypertrace/components';
+import { NoDataOrErrorStateConfig, TableDataSource, TableRow, TableSelectionMode } from '@hypertrace/components';
 import { ArrayPropertyTypeInstance } from '@hypertrace/dashboards';
 import { ARRAY_PROPERTY, Model, ModelApi, ModelOnInit, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
@@ -119,7 +119,7 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
     return this.delegateModel?.getSelectControlOptions() ?? this.selectOptions;
   }
 
-  public getLoadingConfig(): LoadAsyncConfig | undefined {
-    return this.delegateModel?.getLoadingConfig();
+  public getNoDataLoadingConfig(): NoDataOrErrorStateConfig | undefined {
+    return this.delegateModel?.getNoDataLoadingConfig();
   }
 }

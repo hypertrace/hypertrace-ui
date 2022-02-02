@@ -418,9 +418,10 @@ export class TableComponent
 
     // TODO: improve in next iteration of loaders
     if (changes.loadingConfig) {
-      if (!this.loadingConfig?.load) {
-        this.loadingConfig = { ...this.loadingConfig, load: { loaderType: LoaderType.TableRow } };
-      }
+      this.loadingConfig = {
+        load: { loaderType: LoaderType.TableRow },
+        ...this.loadingConfig
+      };
     }
   }
 

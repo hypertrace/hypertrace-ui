@@ -1,4 +1,5 @@
-import { ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { NoDataOrErrorStateConfig } from '@hypertrace/components';
+import { ModelProperty, PLAIN_OBJECT_PROPERTY, STRING_PROPERTY } from '@hypertrace/hyperdash';
 
 export abstract class BaseModel {
   /*
@@ -15,6 +16,13 @@ export abstract class BaseModel {
     type: STRING_PROPERTY.type
   })
   public id?: string;
+
+  @ModelProperty({
+    key: 'noDataLoadingConfig',
+    required: false,
+    type: PLAIN_OBJECT_PROPERTY.type
+  })
+  public noDataLoadingConfig?: NoDataOrErrorStateConfig;
 
   public getId(): string | undefined {
     return this.id;

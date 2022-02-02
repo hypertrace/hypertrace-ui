@@ -10,7 +10,13 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-import { LoadAsyncConfig, LoadAsyncContext, LoadAsyncService } from './load-async.service';
+import {
+  LoadAsyncConfig,
+  LoadAsyncContext,
+  LoadAsyncService,
+  LoadingStateConfig,
+  NoDataOrErrorStateConfig
+} from './load-async.service';
 import {
   ASYNC_WRAPPER_PARAMETERS$,
   LoadAsyncWrapperComponent,
@@ -27,6 +33,13 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   // tslint:disable-next-line:no-input-rename
   @Input('htLoadAsyncConfig')
   public config?: LoadAsyncConfig;
+
+  @Input('htLoadAsyncLoaderType')
+  public loaderType?: LoadingStateConfig;
+
+  @Input('htLoadAsyncNoData')
+  public noData?: NoDataOrErrorStateConfig;
+
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
   private readonly wrapperInjector: Injector;
   private wrapperView?: ComponentRef<LoadAsyncWrapperComponent>;
@@ -49,6 +62,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges(): void {
+    this.config = this.buildLoadingConfig();
     if (this.data$) {
       this.wrapperView = this.wrapperView || this.buildWrapperView();
       this.wrapperParamsSubject.next({
@@ -65,6 +79,13 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
 
   public ngOnDestroy(): void {
     this.wrapperParamsSubject.complete();
+  }
+
+  public buildLoadingConfig(): LoadAsyncConfig {
+    return {
+      noData: this.noData ?? this.config?.noData,
+      load: this.loaderType ?? this.config?.load
+    };
   }
 
   private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent> {
