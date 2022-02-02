@@ -105,7 +105,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       );
 
-    if (this.isSelectionHandlerAvailable) {
+    if (this. isRangeSelectionEnabled) {
       this.chart.withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
       });
