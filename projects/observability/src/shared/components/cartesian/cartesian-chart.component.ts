@@ -58,7 +58,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public timeRange?: TimeRange;
 
   @Input()
-  public isRangeSelectionEnabled: boolean = false;
+  public rangeSelectionEnabled: boolean = false;
 
   @Input()
   public intervalOptions?: IntervalValue[];
