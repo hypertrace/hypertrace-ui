@@ -20,12 +20,7 @@ import {
   Series,
   Summary
 } from '../../chart';
-import {
-  CartesianHoverData,
-  ChartEvent,
-  ChartEventListener,
-  ChartTooltipTrackingOptions
-} from '../../chart-interactivty';
+import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { ChartSyncService } from '../../chart-sync-service';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
@@ -89,16 +84,14 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly groupId?: string,
     private readonly chartSyncService?: ChartSyncService<TData>
   ) {
-    this.chartSyncService?.locationChange$.subscribe(data => {
-      const hoverData = data as CartesianHoverData<TData>;
-
-      if (this.groupId === hoverData.groupId) {
-        this.showTooltip(hoverData.selectedData);
-      }
-    });
+    if (groupId) {
+      this.chartSyncService?.getLocationChangesForGroup(groupId).subscribe(data => {
+        this.showCrosshair(data as MouseLocationData<TData, Series<TData> | Band<TData>>[]);
+      });
+    }
   }
 
-  private showTooltip(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+  private showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
     const location = locationData[0].location;
 
     const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
@@ -596,14 +589,9 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
 
-    const hoverData = {
-      groupId: this.groupId,
-      selectedData: locationData
-    };
-
     this.eventListeners.forEach(listener => {
       if (listener.event === ChartEvent.Hover) {
-        listener.onEvent(hoverData);
+        listener.onEvent(locationData);
       }
     });
 
