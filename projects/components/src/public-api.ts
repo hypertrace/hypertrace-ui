@@ -284,6 +284,10 @@ export * from './summary-value/summary-value.module';
 export * from './summary-values/summary-values.component';
 export * from './summary-values/summary-values.module';
 
+// Summary Box
+export * from './summary-box/summary-box.component';
+export * from './summary-box/summary-box.module';
+
 // Table
 export * from './table/controls/table-controls-api';
 export * from './table/data/table-data-source';
