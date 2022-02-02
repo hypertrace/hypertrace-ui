@@ -58,6 +58,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public timeRange?: TimeRange;
 
   @Input()
+  public isSelectionHandlerAvailable: boolean = false;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
@@ -100,10 +103,13 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      )
-      .withEventListener(ChartEvent.Select, selectedData => {
+      );
+
+    if (this.isSelectionHandlerAvailable) {
+      this.chart.withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
       });
+    }
 
     if (this.bands) {
       this.chart.withBands(...this.bands);
