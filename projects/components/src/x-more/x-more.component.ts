@@ -13,7 +13,7 @@ import { TooltipDirective } from '../public-api';
       [style.color]="this.color"
       [style.backgroundColor]="this.backgroundColor"
       [ngClass]="this.displayStyle"
-      >{{this.summaryText}}</span
+      >{{ this.summaryText }}</span
     >
   </div>`,
   styleUrls: ['./x-more.component.scss']
@@ -42,7 +42,7 @@ export class XMoreComponent implements OnChanges {
   public ngOnChanges(): void {
     this.summaryText = `+${this.count}`;
 
-    if(this.suffix !== ''){
+    if (this.suffix !== '') {
       this.summaryText += ` ${this.suffix}`;
     }
 
