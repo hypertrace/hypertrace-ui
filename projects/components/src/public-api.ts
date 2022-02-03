@@ -284,7 +284,7 @@ export * from './summary-value/summary-value.module';
 export * from './summary-values/summary-values.component';
 export * from './summary-values/summary-values.module';
 
-// Summary Box
+// X More
 export * from './x-more/x-more.component';
 export * from './x-more/x-more.module';
 
