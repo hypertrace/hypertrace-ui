@@ -42,8 +42,9 @@ export class XMoreComponent implements OnChanges {
   public ngOnChanges(): void {
     this.summaryText = `+${this.count}`;
 
-    if(this.suffix !== '')
-    this.summaryText += ` ${this.suffix}`;
+    if(this.suffix !== ''){
+      this.summaryText += ` ${this.suffix}`;
+    }
 
     if (this.displayStyle === XMoreDisplay.Plain) {
       this.backgroundColor = Color.White;
