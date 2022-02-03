@@ -1,11 +1,10 @@
-import { Color } from '@hypertrace/common';
 import { TooltipDirective } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 
 import { XMoreComponent, XMoreDisplay } from './x-more.component';
 
-describe('Summary Box Component', () => {
+describe('X-More Component', () => {
   let spectator: SpectatorHost<XMoreComponent>;
 
   const createHost = createHostFactory({
