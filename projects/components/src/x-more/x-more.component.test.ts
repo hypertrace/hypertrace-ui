@@ -49,27 +49,6 @@ describe('Summary Box Component', () => {
     expect(spectator.query(TooltipDirective)).toExist();
   });
 
-  test('should have plain background for any background color if display style is plain', () => {
-    spectator = createHost(
-      `<ht-x-more [count]="count" [tooltip] = "value"
-      [backgroundColor] = "background" [displayStyle] = "style">
-      </ht-x-more>`,
-      {
-        hostProps: {
-          count: 1,
-          value: 'tooltip value',
-          style: XMoreDisplay.Plain,
-          background: Color.Blue3
-        }
-      }
-    );
-
-    expect(spectator.query('.summary-text')).toExist();
-    expect(spectator.query(TooltipDirective)).toExist();
-    expect(spectator.query('.summary-text')).toHaveText('+1');
-    expect(spectator.component.backgroundColor).toBe(Color.White);
-  });
-
   test('should contain suffix if provided', () => {
     spectator = createHost(
       `<ht-x-more [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle" [suffix] = "suffix">
