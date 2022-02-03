@@ -3,26 +3,26 @@ import { TooltipDirective } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 
-import { SummaryBoxComponent, SummaryBoxDisplay } from './summary-box.component';
+import { XMoreComponent, XMoreDisplay } from './x-more.component';
 
 describe('Summary Box Component', () => {
-  let spectator: SpectatorHost<SummaryBoxComponent>;
+  let spectator: SpectatorHost<XMoreComponent>;
 
   const createHost = createHostFactory({
-    component: SummaryBoxComponent,
+    component: XMoreComponent,
     shallow: true,
     declarations: [MockDirective(TooltipDirective)]
   });
 
   test('should not display if count is 0', () => {
     spectator = createHost(
-      `<ht-summary-box [count]="count" [tooltip]="value" [displayStyle]="displayStyle">
-    </ht-summary-box>`,
+      `<ht-x-more [count]="count" [tooltip]="value" [displayStyle]="displayStyle">
+    </ht-x-more>`,
       {
         hostProps: {
           count: 0,
           value: 'tooltip value',
-          displayStyle: SummaryBoxDisplay.Plain
+          displayStyle: XMoreDisplay.Plain
         }
       }
     );
@@ -33,13 +33,13 @@ describe('Summary Box Component', () => {
 
   test('should display if count greater than 0', () => {
     spectator = createHost(
-      `<ht-summary-box [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle">
-    </ht-summary-box>`,
+      `<ht-x-more [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle">
+    </ht-x-more>`,
       {
         hostProps: {
           count: 1,
           value: 'tooltip value',
-          displayStyle: SummaryBoxDisplay.Plain
+          displayStyle: XMoreDisplay.Plain
         }
       }
     );
@@ -51,14 +51,14 @@ describe('Summary Box Component', () => {
 
   test('should have plain background for any background color if display style is plain', () => {
     spectator = createHost(
-      `<ht-summary-box [count]="count" [tooltip] = "value"
+      `<ht-x-more [count]="count" [tooltip] = "value"
       [backgroundColor] = "background" [displayStyle] = "style">
-      </ht-summary-box>`,
+      </ht-x-more>`,
       {
         hostProps: {
           count: 1,
           value: 'tooltip value',
-          style: SummaryBoxDisplay.Plain,
+          style: XMoreDisplay.Plain,
           background: Color.Blue3
         }
       }
@@ -72,13 +72,13 @@ describe('Summary Box Component', () => {
 
   test('should contain suffix if provided', () => {
     spectator = createHost(
-      `<ht-summary-box [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle" [suffix] = "suffix">
-    </ht-summary-box>`,
+      `<ht-x-more [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle" [suffix] = "suffix">
+    </ht-x-more>`,
       {
         hostProps: {
           count: 1,
           value: 'tooltip value',
-          displayStyle: SummaryBoxDisplay.Plain,
+          displayStyle: XMoreDisplay.Plain,
           suffix: 'more'
         }
       }

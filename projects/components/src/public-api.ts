@@ -285,8 +285,8 @@ export * from './summary-values/summary-values.component';
 export * from './summary-values/summary-values.module';
 
 // Summary Box
-export * from './summary-box/summary-box.component';
-export * from './summary-box/summary-box.module';
+export * from './x-more/x-more.component';
+export * from './x-more/x-more.module';
 
 // Table
 export * from './table/controls/table-controls-api';

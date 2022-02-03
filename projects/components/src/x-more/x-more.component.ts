@@ -3,9 +3,9 @@ import { Color } from '@hypertrace/common';
 import { TooltipDirective } from '../public-api';
 
 @Component({
-  selector: 'ht-summary-box',
+  selector: 'ht-x-more',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="ht-summary-box">
+  template: `<div class="ht-x-more">
     <span
       class="summary-text"
       *ngIf="this.count > 0"
@@ -16,9 +16,9 @@ import { TooltipDirective } from '../public-api';
       >{{this.summaryText}}</span
     >
   </div>`,
-  styleUrls: ['./summary-box.component.scss']
+  styleUrls: ['./x-more.component.scss']
 })
-export class SummaryBoxComponent implements OnChanges {
+export class XMoreComponent implements OnChanges {
   @Input()
   public count!: number;
 
@@ -26,7 +26,7 @@ export class SummaryBoxComponent implements OnChanges {
   public suffix?: string = '';
 
   @Input()
-  public displayStyle: SummaryBoxDisplay = SummaryBoxDisplay.Plain;
+  public displayStyle: XMoreDisplay = XMoreDisplay.Plain;
 
   @Input()
   public backgroundColor?: Color;
@@ -45,13 +45,13 @@ export class SummaryBoxComponent implements OnChanges {
     if(this.suffix !== '')
     this.summaryText += ` ${this.suffix}`;
 
-    if (this.displayStyle === SummaryBoxDisplay.Plain) {
+    if (this.displayStyle === XMoreDisplay.Plain) {
       this.backgroundColor = Color.White;
     }
   }
 }
 
-export const enum SummaryBoxDisplay {
+export const enum XMoreDisplay {
   Plain = 'plain',
   WithBackground = 'with-background'
 }
