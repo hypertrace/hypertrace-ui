@@ -63,9 +63,9 @@ export class LoadAsyncWrapperComponent {
         this.description = this.config?.noData?.description ?? '';
         break;
       case LoadAsyncStateType.GenericError:
-        this.icon = this.config?.error?.icon ?? IconType.Error;
-        this.title = this.config?.error?.title ?? 'Error';
-        this.description = state.description ?? this.config?.error?.description ?? '';
+        this.icon = IconType.Error;
+        this.title = 'Internal Error';
+        this.description = '';
         break;
       default:
         this.icon = undefined;

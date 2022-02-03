@@ -132,13 +132,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public rowHeight: string = '44px';
 
-  // @ModelProperty({
-  //   key: 'loadingConfig',
-  //   required: false,
-  //   type: PLAIN_OBJECT_PROPERTY.type
-  // })
-  // public loadingConfig?: LoadAsyncConfig;
-
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 

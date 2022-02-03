@@ -76,8 +76,7 @@ describe('Load Async directive', () => {
     spectator.detectChanges();
     expect(spectator.query(LoaderComponent)).not.toExist();
     expect(spectator.query(LoadAsyncWrapperComponent)!.icon).toBe(IconType.Error);
-    expect(spectator.query('ht-message-display .title')).toContainText('Error');
-    expect(spectator.query('ht-message-display .description')).toContainText('custom error message');
+    expect(spectator.query('ht-message-display .title')).toContainText('Internal Error');
     expect(spectator.query('.test-data')).not.toExist();
   }));
 

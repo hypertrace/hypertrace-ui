@@ -34,9 +34,11 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsyncConfig')
   public config?: LoadAsyncConfig;
 
+  // tslint:disable-next-line: no-input-rename
   @Input('htLoadAsyncLoaderType')
   public loaderType?: LoadingStateConfig;
 
+  // tslint:disable-next-line: no-input-rename
   @Input('htLoadAsyncNoData')
   public noData?: NoDataOrErrorStateConfig;
 
