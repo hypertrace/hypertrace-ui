@@ -69,4 +69,24 @@ describe('Summary Box Component', () => {
     expect(spectator.query('.summary-text')).toHaveText('+1');
     expect(spectator.component.backgroundColor).toBe(Color.White);
   });
+
+  test('should contain suffix if provided', () => {
+    spectator = createHost(
+      `<ht-summary-box [count]="count" [tooltip] = "value" [displayStyle] = "displayStyle" [suffix] = "suffix">
+    </ht-summary-box>`,
+      {
+        hostProps: {
+          count: 1,
+          value: 'tooltip value',
+          displayStyle: SummaryBoxDisplay.Plain,
+          suffix: 'more'
+        }
+      }
+    );
+
+    expect(spectator.query('.summary-text')).toExist();
+    expect(spectator.query('.summary-text')).toHaveText('+1');
+    expect(spectator.query('.summary-text')).toHaveText('more');
+    expect(spectator.query(TooltipDirective)).toExist();
+  });
 });

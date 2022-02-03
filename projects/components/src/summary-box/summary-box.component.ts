@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { Color } from '@hypertrace/common';
+import { TooltipDirective } from '../public-api';
 
 @Component({
   selector: 'ht-summary-box',
@@ -8,15 +9,12 @@ import { Color } from '@hypertrace/common';
     <span
       class="summary-text"
       *ngIf="this.count > 0"
-      [htTooltip]="summaryTooltip"
+      [htTooltip]="this.tooltip"
       [style.color]="this.color"
       [style.backgroundColor]="this.backgroundColor"
       [ngClass]="this.displayStyle"
-      >{{ this.summaryText }} {{ this.suffix }}</span
+      >{{this.summaryText}}</span
     >
-    <ng-template #summaryTooltip>
-      <div class="tooltip-contents">{{ this.tooltip }}</div>
-    </ng-template>
   </div>`,
   styleUrls: ['./summary-box.component.scss']
 })
@@ -25,24 +23,28 @@ export class SummaryBoxComponent implements OnChanges {
   public count!: number;
 
   @Input()
-  public suffix?: string = 'more';
+  public suffix?: string = '';
 
   @Input()
   public displayStyle: SummaryBoxDisplay = SummaryBoxDisplay.Plain;
 
   @Input()
-  public backgroundColor?: Color = Color.White;
+  public backgroundColor?: Color;
 
   @Input()
-  public color?: string = Color.Gray7;
+  public color?: string;
 
   @Input()
-  public tooltip!: string;
+  public tooltip!: string | number | TemplateRef<TooltipDirective>;
 
   public summaryText!: string;
 
   public ngOnChanges(): void {
     this.summaryText = `+${this.count}`;
+
+    if(this.suffix !== '')
+    this.summaryText += ` ${this.suffix}`;
+
     if (this.displayStyle === SummaryBoxDisplay.Plain) {
       this.backgroundColor = Color.White;
     }
