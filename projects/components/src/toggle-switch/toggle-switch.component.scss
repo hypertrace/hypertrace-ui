@@ -2,6 +2,7 @@
 @import 'font';
 
 :host {
+  display: flex;
   ::ng-deep {
     .mat-slide-toggle {
       &.disabled {
