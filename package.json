@@ -37,7 +37,7 @@
     "@angular/platform-browser-dynamic": "^12.2.1",
     "@angular/router": "^12.2.1",
     "@apollo/client": "^3.5.8",
-    "@fullstory/browser": "^1.4.10",
+    "@fullstory/browser": "^1.5.0",
     "@hypertrace/hyperdash": "^1.2.1",
     "@hypertrace/hyperdash-angular": "^2.6.0",
     "@types/d3-hierarchy": "^2.0.2",
