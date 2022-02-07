@@ -36,7 +36,7 @@ export class XMoreComponent implements OnChanges, OnInit {
     }
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.summaryText = `+${this.count}`;
 
     if (this.suffix !== '') {
