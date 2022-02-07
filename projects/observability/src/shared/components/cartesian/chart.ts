@@ -16,6 +16,7 @@ export interface CartesianChart<TInterval> {
   withIntervalData(intervalData: CartesianIntervalData): this;
   withTooltip(tooltip: ChartTooltipRef<TInterval>): this;
   withTimeRange(timeRange: TimeRange): this;
+  // tslint:disable-next-line
   showCrosshair(locationData: any): void;
 }
 

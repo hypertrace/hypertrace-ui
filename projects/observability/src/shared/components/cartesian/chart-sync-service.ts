@@ -23,7 +23,7 @@ export class ChartSyncService<TData> {
   public getLocationChangesForGroup(
     groupId: string
   ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>> {
-    let selectedData = this.locationChangeSubject.pipe(
+    const selectedData = this.locationChangeSubject.pipe(
       switchMap(async results => results),
       filter(_result => this.groupId === groupId)
     );

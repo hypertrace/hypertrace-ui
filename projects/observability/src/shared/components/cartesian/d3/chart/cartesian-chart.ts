@@ -83,6 +83,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly groupId?: string
   ) {}
 
+  // tslint:disable-next-line
   public showCrosshair(locationData: any): void {
     const location = locationData[0].location;
     const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
