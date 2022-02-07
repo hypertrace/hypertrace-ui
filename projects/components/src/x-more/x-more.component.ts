@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
-import { TooltipDirective } from '../public-api';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, TemplateRef } from '@angular/core';
+import { TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-x-more',
@@ -11,7 +11,8 @@ import { TooltipDirective } from '../public-api';
   </div>`,
   styleUrls: ['./x-more.component.scss']
 })
-export class XMoreComponent implements OnChanges {
+export class XMoreComponent implements OnChanges, OnInit {
+  
   @Input()
   public count!: number;
 
@@ -22,11 +23,22 @@ export class XMoreComponent implements OnChanges {
   public displayStyle: XMoreDisplay = XMoreDisplay.Plain;
 
   @Input()
-  public tooltip!: string | number | TemplateRef<TooltipDirective>;
+  public tooltip!: string | number | TemplateRef<unknown>;
 
   public summaryText!: string;
 
-  public ngOnChanges(): void {
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if(changes.count || changes.suffix){
+      this.summaryText = `+${this.count}`;
+
+      if (this.suffix !== '') {
+        this.summaryText += ` ${this.suffix}`;
+      }
+    }
+  }
+
+  ngOnInit(): void {
+
     this.summaryText = `+${this.count}`;
 
     if (this.suffix !== '') {
