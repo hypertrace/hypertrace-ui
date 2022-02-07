@@ -107,11 +107,17 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       )
       .withEventListener(ChartEvent.Hover, data => {
-        this.chartSyncService.mouseLocationChange(data);
+        this.chartSyncService.mouseLocationChange(data, this.groupId);
       })
       .withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
       });
+
+    if (this.groupId) {
+      this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
+        this.chart?.showCrosshair(data);
+      });
+    }
 
     if (this.bands) {
       this.chart.withBands(...this.bands);

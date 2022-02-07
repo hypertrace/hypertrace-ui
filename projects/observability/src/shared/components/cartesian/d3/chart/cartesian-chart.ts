@@ -21,7 +21,6 @@ import {
   Summary
 } from '../../chart';
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
-import { ChartSyncService } from '../../chart-sync-service';
 import { CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { CartesianBand } from '../data/band/cartesian-band';
@@ -81,21 +80,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
-    protected readonly groupId?: string,
-    private readonly chartSyncService?: ChartSyncService<TData>
-  ) {
-    if (groupId) {
-      this.chartSyncService?.getLocationChangesForGroup(groupId).subscribe(data => {
-        this.showCrosshair(data as MouseLocationData<TData, Series<TData> | Band<TData>>[]);
-      });
-    }
-  }
+    protected readonly groupId?: string
+  ) {}
 
-  private showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+  public showCrosshair(locationData: any): void {
     const location = locationData[0].location;
-
     const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
-
     this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
   }
 
