@@ -12,7 +12,6 @@ import { TypedSimpleChanges } from '@hypertrace/common';
   styleUrls: ['./x-more.component.scss']
 })
 export class XMoreComponent implements OnChanges, OnInit {
-  
   @Input()
   public count!: number;
 
@@ -28,7 +27,7 @@ export class XMoreComponent implements OnChanges, OnInit {
   public summaryText!: string;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if(changes.count || changes.suffix){
+    if (changes.count || changes.suffix) {
       this.summaryText = `+${this.count}`;
 
       if (this.suffix !== '') {
@@ -38,7 +37,6 @@ export class XMoreComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
-
     this.summaryText = `+${this.count}`;
 
     if (this.suffix !== '') {
