@@ -80,7 +80,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: selectionOptions[1].label,
-          selectedItemsCount: 1 // Selected element is 1 as set in hostProps
+          overflowItemsCount: 0,
+          overflowLabel: undefined
         }
       });
     });
@@ -116,7 +117,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: selectionOptions[1].label,
-          selectedItemsCount: 2
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
         }
       });
     });
@@ -159,7 +161,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: 'second',
-          selectedItemsCount: 2
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
         }
       });
     });
@@ -232,7 +235,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: 'second',
-          selectedItemsCount: 2
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
         }
       });
     });
@@ -368,7 +372,7 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('(x|)', {
         x: {
           label: 'Placeholder',
-          selectedItemsCount: 0
+          overflowItemsCount: 0
         }
       });
     });
@@ -398,7 +402,7 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: selectionOptions[1].label,
-          selectedItemsCount: 1
+          overflowItemsCount: 0
         }
       });
     });

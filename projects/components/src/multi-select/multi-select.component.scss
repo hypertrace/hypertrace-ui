@@ -30,6 +30,10 @@
     height: 34px;
     border-radius: 6px;
 
+    &.disabled {
+      cursor: not-allowed;
+    }
+
     &.extra-small {
       height: 30px;
     }
