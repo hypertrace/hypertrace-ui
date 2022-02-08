@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 
 @Component({
@@ -11,7 +11,7 @@ import { TypedSimpleChanges } from '@hypertrace/common';
   </div>`,
   styleUrls: ['./x-more.component.scss']
 })
-export class XMoreComponent implements OnChanges, OnInit {
+export class XMoreComponent implements OnChanges {
   @Input()
   public count!: number;
 
@@ -28,15 +28,8 @@ export class XMoreComponent implements OnChanges, OnInit {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.count || changes.suffix) {
-      this.summaryText = this.suffix !== undefined && this.suffix !== '' ? `+${this.count} ${this.suffix}` : `+${this.count}`
-    }
-  }
-
-  public ngOnInit(): void {
-    this.summaryText = `+${this.count}`;
-
-    if (this.suffix !== '') {
-      this.summaryText += ` ${this.suffix}`;
+      this.summaryText =
+        this.suffix !== undefined && this.suffix !== '' ? `+${this.count} ${this.suffix}` : `+${this.count}`;
     }
   }
 }
