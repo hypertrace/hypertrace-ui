@@ -284,6 +284,10 @@ export * from './summary-value/summary-value.module';
 export * from './summary-values/summary-values.component';
 export * from './summary-values/summary-values.module';
 
+// X More
+export * from './x-more/x-more.component';
+export * from './x-more/x-more.module';
+
 // Table
 export * from './table/controls/table-controls-api';
 export * from './table/data/table-data-source';
