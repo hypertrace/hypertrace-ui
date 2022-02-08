@@ -1,7 +1,7 @@
 @import 'color-palette';
 @import 'font';
 
-:host {
+.toggle-switch {
   display: flex;
   ::ng-deep {
     .mat-slide-toggle {
