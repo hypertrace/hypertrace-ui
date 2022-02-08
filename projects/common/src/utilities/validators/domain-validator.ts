@@ -1,6 +1,4 @@
-export const DOMAIN_REGEX = new RegExp(
-  /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-);
+export const DOMAIN_REGEX = new RegExp(/^.+\.[a-zA-Z]{2,}$/);
 
 export const isDomainValid = (domain: string) => {
   return DOMAIN_REGEX.test(domain);
