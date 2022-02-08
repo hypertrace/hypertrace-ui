@@ -1,4 +1,4 @@
-import { areDomainsValid } from './domain-validator';
+import { isDomainValid } from './domain-validator';
 
 const VALID_DOMAINS = [
   'google.com',
@@ -10,11 +10,14 @@ const VALID_DOMAINS = [
   'HYPER.TRACE.ORG',
   'hyper.trace.org'
 ];
-const INVALID_DOMAINS = ['https://google.com', 'google.com/', '123123@.scom', 'g00#.dd', 'www.112323.com'];
+const INVALID_DOMAINS = ['.hypertrace.org.', 'hypertrace.42', 'hyper.$trace', 'hyper-trac.e'];
 describe('Domain validator', () => {
   test('can validate email lists correctly', () => {
-    expect(areDomainsValid(VALID_DOMAINS)).toBeTruthy();
-    expect(areDomainsValid(INVALID_DOMAINS)).toBeFalsy();
-    expect(areDomainsValid(VALID_DOMAINS.concat(INVALID_DOMAINS))).toBeFalsy();
+    VALID_DOMAINS.forEach(domain => {
+      expect(isDomainValid(domain)).toBeTruthy();
+    });
+    INVALID_DOMAINS.forEach(domain => {
+      expect(isDomainValid(domain)).toBeFalsy();
+    });
   });
 });
