@@ -56,9 +56,6 @@ import { NavigableTabComponent } from './navigable-tab.component';
       </nav>
       <div class="divider"></div>
     </div>
-
-    <!-- When tabs input changes, change detection will be triggered automatically -->
-    <ng-container *ngIf="tabs.changes | async"></ng-container>
   `
 })
 export class NavigableTabGroupComponent implements AfterContentInit {
