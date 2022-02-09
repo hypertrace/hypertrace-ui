@@ -1,13 +1,13 @@
 import { collapseWhitespace } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
-import { Filter } from '../../filter';
+import { Filter, FilterValue } from '../../filter';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { MAP_LHS_DELIMITER } from '../../filter-delimiters';
 import { FilterOperator, toUrlFilterOperator } from '../../filter-operators';
 import { FilterAttributeExpression } from '../../parser/parsed-filter';
 
-export abstract class AbstractFilterBuilder<TValue> {
+export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
   public abstract supportedAttributeType(): FilterAttributeType;
 
   public abstract supportedSubpathOperators(): FilterOperator[];

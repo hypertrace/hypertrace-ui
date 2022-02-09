@@ -9,6 +9,7 @@ export const enum FilterOperator {
   GreaterThanOrEqualTo = '>=',
   Like = '~',
   In = 'IN',
+  NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY'
 }
 
@@ -21,6 +22,7 @@ export const enum UrlFilterOperator {
   GreaterThanOrEqualTo = '_gte_',
   Like = '_lk_',
   In = '_in_',
+  NotIn = '_nin_',
   ContainsKey = '_ck_'
 }
 
@@ -43,6 +45,8 @@ export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator
     case FilterOperator.In:
       return UrlFilterOperator.In;
     case FilterOperator.ContainsKey:
+      return UrlFilterOperator.ContainsKey;
+    case FilterOperator.NotIn:
       return UrlFilterOperator.ContainsKey;
     default:
       return assertUnreachable(operator);
@@ -67,6 +71,8 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
       return FilterOperator.Like;
     case UrlFilterOperator.In:
       return FilterOperator.In;
+    case UrlFilterOperator.NotIn:
+      return FilterOperator.NotIn;
     case UrlFilterOperator.ContainsKey:
       return FilterOperator.ContainsKey;
     default:
@@ -78,6 +84,7 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
   switch (operator) {
     case FilterOperator.In:
     case FilterOperator.Equals:
+    case FilterOperator.NotIn:
       return [
         FilterOperator.In,
         FilterOperator.Equals,
@@ -92,17 +99,24 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
     case FilterOperator.ContainsKey:
     case FilterOperator.NotEquals:
     case FilterOperator.Like:
-      return [FilterOperator.In, FilterOperator.Equals];
+      return [FilterOperator.In, FilterOperator.Equals, FilterOperator.NotIn];
     case FilterOperator.LessThan:
     case FilterOperator.LessThanOrEqualTo:
-      return [FilterOperator.In, FilterOperator.Equals, FilterOperator.LessThan, FilterOperator.LessThanOrEqualTo];
+      return [
+        FilterOperator.In,
+        FilterOperator.Equals,
+        FilterOperator.LessThan,
+        FilterOperator.LessThanOrEqualTo,
+        FilterOperator.NotIn
+      ];
     case FilterOperator.GreaterThan:
     case FilterOperator.GreaterThanOrEqualTo:
       return [
         FilterOperator.In,
         FilterOperator.Equals,
         FilterOperator.GreaterThan,
-        FilterOperator.GreaterThanOrEqualTo
+        FilterOperator.GreaterThanOrEqualTo,
+        FilterOperator.NotIn
       ];
     default:
       assertUnreachable(operator);

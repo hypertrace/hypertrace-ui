@@ -1,13 +1,36 @@
+import { FieldFilter, FilterValue } from './../../../../../components/src/filtering/filter/filter';
+import { TableFilter } from './../../../../../components/src/table/table-api';
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterOperator, TableFilter } from '@hypertrace/components';
+import { FilterOperator } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
 
 @Injectable({ providedIn: 'root' })
 export class GraphQlFilterBuilderService {
-  public buildGraphQlFilters(filters: TableFilter[]): GraphQlFilter[] {
+  public buildFiltersFromGraphQlFieldFilters(filters: GraphQlFieldFilter[]): FieldFilter[] {
+    return filters.map(filter => ({
+      field: typeof filter.keyOrExpression === 'string' ? filter.keyOrExpression : filter.keyOrExpression.key,
+      subpath: typeof filter.keyOrExpression === 'string' ? undefined : filter.keyOrExpression.subpath,
+      operator: toFilterOperator(filter.operator),
+      value: filter.value as FilterValue,
+      urlString: ''
+    }));
+  }
+
+  public buildGraphQlFilters(filters: FieldFilter[]): GraphQlFilter[] {
+    return filters.map(
+      filter =>
+        new GraphQlFieldFilter(
+          { key: filter.field, subpath: filter.subpath },
+          toGraphQlOperator(filter.operator!), // Todo : Very weird
+          filter.value as GraphQlArgumentValue
+        )
+    );
+  }
+
+  public buildGraphQlFiltersFromTableFilters(filters: TableFilter[]): GraphQlFilter[] {
     return filters.map(
       filter =>
         new GraphQlFieldFilter(
@@ -37,8 +60,46 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.Like;
     case FilterOperator.In:
       return GraphQlOperatorType.In;
+    case FilterOperator.NotIn:
+      return GraphQlOperatorType.NotIn;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
+    default:
+      return assertUnreachable(operator);
+  }
+};
+
+export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator => {
+  switch (operator) {
+    case GraphQlOperatorType.Equals:
+      return FilterOperator.Equals;
+
+    case GraphQlOperatorType.NotEquals:
+      return FilterOperator.NotEquals;
+
+    case GraphQlOperatorType.LessThan:
+      return FilterOperator.LessThan;
+
+    case GraphQlOperatorType.LessThanOrEqualTo:
+      return FilterOperator.LessThanOrEqualTo;
+
+    case GraphQlOperatorType.GreaterThan:
+      return FilterOperator.GreaterThan;
+
+    case GraphQlOperatorType.GreaterThanOrEqualTo:
+      return FilterOperator.GreaterThanOrEqualTo;
+
+    case GraphQlOperatorType.Like:
+      return FilterOperator.Like;
+
+    case GraphQlOperatorType.In:
+      return FilterOperator.In;
+
+    case GraphQlOperatorType.NotIn:
+      return FilterOperator.NotIn;
+
+    case GraphQlOperatorType.ContainsKey:
+      return FilterOperator.ContainsKey;
     default:
       return assertUnreachable(operator);
   }

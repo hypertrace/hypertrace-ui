@@ -1,4 +1,4 @@
-import { FilterOperator, TableControlOptionType, TableSelectControlOption } from '@hypertrace/components';
+import { FilterOperator, FilterValue, TableControlOptionType, TableSelectControlOption } from '@hypertrace/components';
 import { Model } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
           metaValue: {
             field: this.specification.name,
             operator: FilterOperator.Equals,
-            value: value
+            value: value as FilterValue
           }
         }))
       )
