@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../icon/icon-size';
 
@@ -7,17 +7,27 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./collapsible-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="collapsible-sidebar">
-      <div class="label" [ngClass]="{ string: !this.isLabelATemplate }">
-        <ng-template #stringLabelTemplate>{{ this.label }}</ng-template>
-        <ng-container *ngTemplateOutlet="this.isLabelATemplate ? this.label : stringLabelTemplate"><ng-container>
+    <div class="collapsible-sidebar" [ngClass]="{ collapsed: !this.isExpanded }">
+      <div class="content">
+        <ng-container *ngIf="this.isExpanded; else labelTemplate"><ng-content></ng-content></ng-container>
       </div>
-      <div class="content"><ng-content></ng-content></div>
-      <ht-icon class="toggle-icon" [icon]="this.isExpanded ? '${IconType.TriangleLeft}' : '${IconType.TriangleRight}'" size="${IconSize.Small}"></ht-icon>
+      <ng-template #stringLabelTemplate
+        ><span class="string-label">{{ this.label }}</span></ng-template
+      >
+      <ng-template #labelTemplate
+        ><ng-container *ngTemplateOutlet="this.isLabelATemplate ? this.label : stringLabelTemplate"></ng-container
+      ></ng-template>
+      <div class="toggle" (click)="this.toggleCollapseExpand()">
+        <ht-icon
+          class="icon"
+          [icon]="this.isExpanded ? '${IconType.TriangleLeft}' : '${IconType.TriangleRight}'"
+          size="${IconSize.Small}"
+        ></ht-icon>
+      </div>
     </div>
   `
 })
-export class CollapsibleSidebarComponent {
+export class CollapsibleSidebarComponent implements OnChanges {
   @Input()
   public label: string | TemplateRef<unknown> = '';
 
@@ -34,7 +44,7 @@ export class CollapsibleSidebarComponent {
     return typeof this.label !== 'string';
   }
 
-  public toggleExpanded(): void {
+  public toggleCollapseExpand(): void {
     this.isExpanded = !this.isExpanded;
   }
 }
