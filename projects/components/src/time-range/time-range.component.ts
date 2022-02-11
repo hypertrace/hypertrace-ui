@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, NgZone, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
   FixedTimeRange,
@@ -75,6 +75,9 @@ export class TimeRangeComponent {
 
   public showCustom: boolean = false;
 
+  @Output()
+  public readonly timeRangeSelected: EventEmitter<RelativeTimeRange> = new EventEmitter();
+
   public constructor(private readonly timeRangeService: TimeRangeService, private readonly ngZone: NgZone) {}
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
@@ -88,6 +91,7 @@ export class TimeRangeComponent {
 
   public setToRelativeTimeRange(timeRange: RelativeTimeRange): void {
     this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+    this.timeRangeSelected.emit(timeRange);
     this.popoverRef!.close();
   }
 

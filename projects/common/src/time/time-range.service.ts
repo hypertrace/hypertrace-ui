@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -67,6 +67,8 @@ export class TimeRangeService {
     this.navigationService.navigation$
       .pipe(
         take(1), // Wait for first navigation
+        // tslint:disable-next-line: no-console
+        tap(activated => console.log('## activated route: ', activated)),
         switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
         take(1), // Only the first set of params
         map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
@@ -80,7 +82,7 @@ export class TimeRangeService {
       });
   }
 
-  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);

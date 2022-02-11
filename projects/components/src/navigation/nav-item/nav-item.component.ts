@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import {
+  FeatureState,
+  NavigationParams,
+  NavigationParamsType,
+  PageTimeRangeService,
+  RelativeTimeRange,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation.config';
 
@@ -44,7 +54,7 @@ import { NavItemLinkConfig } from '../navigation.config';
     </ht-link>
   `
 })
-export class NavItemComponent {
+export class NavItemComponent implements OnInit {
   @Input()
   public config!: NavItemLinkConfig;
 
@@ -54,6 +64,23 @@ export class NavItemComponent {
   @Input()
   public collapsed: boolean = true;
 
+  @HostListener('click')
+  public onClick(): void {
+    this.setTimeRangeForPage();
+  }
+
+  public constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly timeRangeService: TimeRangeService,
+    private readonly pageTimeRangeService: PageTimeRangeService
+  ) {}
+
+  public ngOnInit(): void {
+    if (isNil(this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0]))) {
+      this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.buildDefaultPageTimeRange());
+    }
+  }
+
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
     navType: NavigationParamsType.InApp,
     path: item.matchPaths[0],
@@ -61,5 +88,18 @@ export class NavItemComponent {
     replaceCurrentHistory: item.replaceCurrentHistory
   });
 
-  public constructor(private readonly activatedRoute: ActivatedRoute) {}
+  public buildDefaultPageTimeRange(): RelativeTimeRange {
+    if (isNil(this.config.defaultPageTimeRange?.value) || isNil(this.config.defaultPageTimeRange?.unit)) {
+      throw Error('Time range not provided for navigation route');
+    }
+    const value: number = this.config.defaultPageTimeRange?.value ?? 1;
+    const unit: TimeUnit = this.config.defaultPageTimeRange?.unit ?? TimeUnit.Hour;
+
+    return new RelativeTimeRange(new TimeDuration(value, unit));
+  }
+
+  public setTimeRangeForPage(): void {
+    const timeRange: RelativeTimeRange = this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0])!;
+    this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+  }
 }
