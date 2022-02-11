@@ -89,9 +89,9 @@ export class NavItemComponent implements OnInit {
   });
 
   public buildDefaultPageTimeRange(): RelativeTimeRange {
-    if (isNil(this.config.defaultPageTimeRange?.value) || isNil(this.config.defaultPageTimeRange?.unit)) {
-      throw Error('Time range not provided for navigation route');
-    }
+    // TODO if (isNil(this.config.defaultPageTimeRange?.value) || isNil(this.config.defaultPageTimeRange?.unit)) {
+    // TODO  throw Error('Time range not provided for navigation route');
+    // }
     const value: number = this.config.defaultPageTimeRange?.value ?? 1;
     const unit: TimeUnit = this.config.defaultPageTimeRange?.unit ?? TimeUnit.Hour;
 
