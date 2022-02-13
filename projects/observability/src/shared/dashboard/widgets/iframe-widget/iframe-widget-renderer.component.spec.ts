@@ -1,5 +1,5 @@
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { createComponentFactory, Spectator } from '@ngneat/spectator';
+import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
 
 import { IframeWidgetRendererComponent } from './iframe-widget-renderer.component';
 
