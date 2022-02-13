@@ -11,18 +11,6 @@ export class IFrameWidgetModel {
   public title: string = '';
 
   @ModelProperty({
-    key: 'height',
-    type: STRING_PROPERTY.type
-  })
-  public height: string = '';
-
-  @ModelProperty({
-    key: 'width',
-    type: STRING_PROPERTY.type
-  })
-  public width: string = '';
-
-  @ModelProperty({
     key: 'source',
     type: STRING_PROPERTY.type
   })

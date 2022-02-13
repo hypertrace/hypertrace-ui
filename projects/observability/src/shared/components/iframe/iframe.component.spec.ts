@@ -1,24 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createComponentFactory, Spectator } from '@ngneat/spectator';
 
 import { IFrameComponent } from './iframe.component';
 
-describe('IFrameComponent', () => {
-  let component: IFrameComponent;
-  let fixture: ComponentFixture<IFrameComponent>;
+describe('IFrame  Component', () => {
+  let spectator: Spectator<IFrameComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [IFrameComponent]
-    }).compileComponents();
+  const createComponent = createComponentFactory<IFrameComponent>({
+    component: IFrameComponent,
+    shallow: true
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(IFrameComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  test('should render the iframe', () => {
+    spectator = createComponent();
+    expect(spectator.query('iframe')).toExist();
   });
 });

@@ -10,7 +10,6 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 export class IFrameComponent implements OnInit {
   @Input() public source: string = '';
   @Input() public title?: string;
-  @Input() public allow?: boolean;
 
   public urlSafe?: SafeResourceUrl;
   public constructor(public sanitizer: DomSanitizer) {}

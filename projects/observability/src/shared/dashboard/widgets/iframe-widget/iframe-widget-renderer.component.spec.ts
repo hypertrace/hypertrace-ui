@@ -1,24 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createComponentFactory, Spectator } from '@ngneat/spectator';
+import { mockDashboardWidgetProviders } from '../../../../../../dashboards/src/test/dashboard-verification';
 
 import { IframeWidgetRendererComponent } from './iframe-widget-renderer.component';
 
-describe('IframeWidgetRendererComponent', () => {
-  let component: IframeWidgetRendererComponent;
-  let fixture: ComponentFixture<IframeWidgetRendererComponent>;
+describe('IFrame Widget Renderer Component', () => {
+  let spectator: Spectator<IframeWidgetRendererComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [IframeWidgetRendererComponent]
-    }).compileComponents();
+  const createComponent = createComponentFactory<IframeWidgetRendererComponent>({
+    component: IframeWidgetRendererComponent,
+    providers: [...mockDashboardWidgetProviders({})],
+    shallow: true
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(IframeWidgetRendererComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  test('should use iframe component', () => {
+    spectator = createComponent();
+    expect(spectator.query('ht-iframe')).toExist();
   });
 });
