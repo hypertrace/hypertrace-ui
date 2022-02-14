@@ -76,7 +76,7 @@ export class TimeRangeComponent {
   public showCustom: boolean = false;
 
   @Output()
-  public readonly timeRangeSelected: EventEmitter<RelativeTimeRange> = new EventEmitter();
+  public readonly timeRangeSelected: EventEmitter<TimeRange> = new EventEmitter();
 
   public constructor(private readonly timeRangeService: TimeRangeService, private readonly ngZone: NgZone) {}
 
@@ -96,6 +96,7 @@ export class TimeRangeComponent {
   }
 
   public setToFixedTimeRange(timeRange: FixedTimeRange): void {
+    this.timeRangeSelected.emit(timeRange);
     this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
     this.popoverRef!.close();
   }

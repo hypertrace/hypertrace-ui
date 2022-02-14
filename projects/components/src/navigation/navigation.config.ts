@@ -1,4 +1,4 @@
-import { Color, FeatureState, TimeUnit } from '@hypertrace/common';
+import { Color, FeatureState } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
 
@@ -17,7 +17,6 @@ export interface NavItemLinkConfig {
   trailingIconTooltip?: string;
   trailingIconColor?: Color;
   featureState$?: Observable<FeatureState>;
-  defaultPageTimeRange?: NavItemTimeRange;
 }
 
 export type FooterItemConfig = FooterItemLinkConfig;
@@ -45,9 +44,4 @@ export const enum NavItemType {
   Link = 'link',
   Divider = 'divider',
   Footer = 'footer'
-}
-
-export interface NavItemTimeRange {
-  value: number;
-  unit: TimeUnit;
 }

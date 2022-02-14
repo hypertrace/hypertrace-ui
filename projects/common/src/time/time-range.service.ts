@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
-import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { combineLatest, EMPTY, ReplaySubject } from 'rxjs';
+import { catchError, defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -64,16 +64,23 @@ export class TimeRangeService {
   }
 
   private initializeTimeRange(): void {
-    this.navigationService.navigation$
+    combineLatest([
+      this.navigationService.navigation$,
+      this.navigationService.navigation$.pipe(switchMap(activatedRoute => activatedRoute.queryParamMap))
+    ])
       .pipe(
-        take(1), // Wait for first navigation
-        // tslint:disable-next-line: no-console
-        tap(activated => console.log('## activated route: ', activated)),
-        switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
-        take(1), // Only the first set of params
-        map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-        filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
-        map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
+        map(([activeRoute, paramMap]) => {
+          const defaultPageTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
+          const timeRangeString = paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
+
+          if (typeof timeRangeString === 'string' && !isEmpty(timeRangeString)) {
+            return this.timeRangeFromUrlString(timeRangeString);
+          }
+          if (defaultPageTimeRange) {
+            return defaultPageTimeRange;
+          }
+          throw Error();
+        }),
         catchError(() => EMPTY),
         defaultIfEmpty(this.defaultTimeRange)
       )

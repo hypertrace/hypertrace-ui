@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   FeatureState,
   NavigationParams,
   NavigationParamsType,
+  NavigationService,
   PageTimeRangeService,
-  RelativeTimeRange,
-  TimeDuration,
+  QueryParamObject,
+  TimeRange,
   TimeRangeService,
-  TimeUnit
+  TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation.config';
 
@@ -19,7 +22,7 @@ import { NavItemLinkConfig } from '../navigation.config';
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link *ngIf="this.config" [paramsOrUrl]="buildNavigationParam | htMemoize: this.config">
+    <ht-link *ngIf="this.config" [paramsOrUrl]="this.buildNavigationParam(this.config)">
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
@@ -54,7 +57,11 @@ import { NavItemLinkConfig } from '../navigation.config';
     </ht-link>
   `
 })
-export class NavItemComponent implements OnInit {
+export class NavItemComponent implements OnDestroy, OnChanges {
+  private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
+  private readonly destroyed$: Subject<void> = new Subject();
+  private timeRangeQueryParam: QueryParamObject = { [NavItemComponent.TIME_RANGE_QUERY_PARAM]: undefined };
+
   @Input()
   public config!: NavItemLinkConfig;
 
@@ -64,20 +71,31 @@ export class NavItemComponent implements OnInit {
   @Input()
   public collapsed: boolean = true;
 
-  @HostListener('click')
-  public onClick(): void {
-    this.setTimeRangeForPage();
-  }
-
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly timeRangeService: TimeRangeService,
-    private readonly pageTimeRangeService: PageTimeRangeService
+    private readonly navigationService: NavigationService,
+    private readonly pageTimeRangeService: PageTimeRangeService,
+    private readonly cd: ChangeDetectorRef
   ) {}
 
-  public ngOnInit(): void {
-    if (isNil(this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0]))) {
-      this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.buildDefaultPageTimeRange());
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.config) {
+      this.pageTimeRangeService
+        .getPageTimeRange(this.config.matchPaths[0])
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(timeRange => {
+          if (isNil(timeRange)) {
+            this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.getDefaultPageTimeRange());
+          } else {
+            this.timeRangeQueryParam = {
+              ...this.timeRangeQueryParam,
+              [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+            };
+            this.cd.markForCheck();
+            this.cd.detectChanges();
+          }
+        });
     }
   }
 
@@ -85,21 +103,26 @@ export class NavItemComponent implements OnInit {
     navType: NavigationParamsType.InApp,
     path: item.matchPaths[0],
     relativeTo: this.activatedRoute,
+    queryParams: this.timeRangeQueryParam,
     replaceCurrentHistory: item.replaceCurrentHistory
   });
 
-  public buildDefaultPageTimeRange(): RelativeTimeRange {
-    // TODO if (isNil(this.config.defaultPageTimeRange?.value) || isNil(this.config.defaultPageTimeRange?.unit)) {
-    // TODO  throw Error('Time range not provided for navigation route');
-    // }
-    const value: number = this.config.defaultPageTimeRange?.value ?? 1;
-    const unit: TimeUnit = this.config.defaultPageTimeRange?.unit ?? TimeUnit.Hour;
+  public getDefaultPageTimeRange(): TimeRange {
+    const defaultTimeRange = this.navigationService.getRouteConfig(
+      [this.config.matchPaths[0]],
+      this.navigationService.rootRoute()
+    )?.data?.defaultTimeRange;
 
-    return new RelativeTimeRange(new TimeDuration(value, unit));
+    if (!defaultTimeRange) {
+      //  Use current time range as default default
+      return this.timeRangeService.getCurrentTimeRange();
+    }
+
+    return defaultTimeRange;
   }
 
-  public setTimeRangeForPage(): void {
-    const timeRange: RelativeTimeRange = this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0])!;
-    this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+  public ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
