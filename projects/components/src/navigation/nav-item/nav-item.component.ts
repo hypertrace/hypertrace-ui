@@ -99,13 +99,15 @@ export class NavItemComponent implements OnDestroy, OnChanges {
     }
   }
 
-  public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
-    navType: NavigationParamsType.InApp,
-    path: item.matchPaths[0],
-    relativeTo: this.activatedRoute,
-    queryParams: this.timeRangeQueryParam,
-    replaceCurrentHistory: item.replaceCurrentHistory
-  });
+  public buildNavigationParam(item: NavItemLinkConfig): NavigationParams {
+    return {
+      navType: NavigationParamsType.InApp,
+      path: item.matchPaths[0],
+      relativeTo: this.activatedRoute,
+      queryParams: this.timeRangeQueryParam,
+      replaceCurrentHistory: item.replaceCurrentHistory
+    };
+  }
 
   public getDefaultPageTimeRange(): TimeRange {
     const defaultTimeRange = this.navigationService.getRouteConfig(
