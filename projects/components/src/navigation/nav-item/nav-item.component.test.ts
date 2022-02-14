@@ -79,7 +79,10 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: undefined
+      replaceCurrentHistory: undefined,
+      queryParams: {
+        time: '1h'
+      }
     });
   });
 
@@ -102,7 +105,10 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
+      queryParams: {
+        time: '1h'
+      }
     });
   });
 });

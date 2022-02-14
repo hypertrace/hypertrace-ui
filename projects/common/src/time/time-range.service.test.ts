@@ -1,4 +1,5 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { RelativeTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of } from 'rxjs';
@@ -18,9 +19,10 @@ describe('Time range service', () => {
             map(
               initialTrString =>
                 // tslint:disable-next-line: no-object-literal-type-assertion
-                ({
-                  queryParamMap: of(convertToParamMap({ time: initialTrString }))
-                } as ActivatedRoute)
+                (({
+                  queryParamMap: of(convertToParamMap({ time: initialTrString })),
+                  snapshot: { data: { defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)) } }
+                } as unknown) as ActivatedRoute)
             )
           );
         }
