@@ -10,9 +10,11 @@ import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, STRING_PROPE
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { Specification } from '../../../graphql/model/schema/specifier/specification';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
+import { TableWidgetColumnsService } from './services/table-widget-columns.service';
 
 @Model({
   type: 'table-widget-column',
@@ -104,32 +106,38 @@ export class TableWidgetColumnModel {
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
+  @ModelInject(TableWidgetColumnsService)
+  private readonly tableWidgetColumnsService!: TableWidgetColumnsService;
+
   public asTableColumnDef(scope?: string): Observable<SpecificationBackedTableColumnDef> {
     return scope !== undefined
       ? this.metadataService
-          .getAttributeKeyDisplayName(scope, this.value.name)
-          .pipe(map(displayName => this.toSpecificationBackedColumnDef(displayName)))
+        .getAttribute(scope, this.value.name)
+        .pipe(
+          map(attributeMetadata => this.toSpecificationBackedColumnDef(attributeMetadata))
+        )
       : of(this.toSpecificationBackedColumnDef());
   }
 
-  private toSpecificationBackedColumnDef(displayName?: string): SpecificationBackedTableColumnDef {
+  private toSpecificationBackedColumnDef(attribute?: AttributeMetadata): SpecificationBackedTableColumnDef {
     return {
       id: this.value.resultAlias(),
       name: this.value.name,
       display: this.display,
-      title: this.title ?? displayName ?? this.value.name,
+      title: this.title ?? attribute !== undefined ? this.metadataService.getAttributeDisplayName(attribute!) : this.value.name,
       titleTooltip: this.titleTooltip,
       alignment: this.alignment,
       width: this.width,
       visible: this.visible,
       editable: true,
-      filterable: this.filterable,
+      filterable: this.filterable ?? this.tableWidgetColumnsService.isFilterable(attribute?.type),
       sort: this.sort,
       sortable: this.sortable,
       onClick: this.buildClickHandlerIfDefined(),
       specification: this.value
     };
   }
+
 
   private buildClickHandlerIfDefined(): ((row: TableRow) => void) | undefined {
     if (!this.clickHandler) {

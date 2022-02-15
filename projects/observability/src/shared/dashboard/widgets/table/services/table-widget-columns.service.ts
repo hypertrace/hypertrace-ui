@@ -55,13 +55,13 @@ export class TableWidgetColumnsService {
       width: '1',
       visible: false,
       editable: true,
-      filterable: this.isFilterable(attribute),
+      filterable: this.isFilterable(attribute.type),
       specification: new SpecificationBuilder().attributeSpecificationForKey(attribute.name)
     };
   }
 
-  private isFilterable(attribute: AttributeMetadata): boolean {
-    return this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type));
+  public isFilterable(type?: AttributeMetadataType): boolean {
+    return type === undefined ? false: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(type));
   }
 
   private lookupDisplayType(type: AttributeMetadataType): string {
