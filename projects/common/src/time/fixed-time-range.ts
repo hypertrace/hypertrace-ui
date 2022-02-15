@@ -28,6 +28,6 @@ export class FixedTimeRange implements TimeRange {
 
   public isCustom(): boolean {
     // Right now all RelativeTimeRanges are NOT custom; all FixedTimeRanges are
-    return false;
+    return true;
   }
 }

@@ -11,8 +11,8 @@ export class RelativeTimeRange implements TimeRange {
   }
 
   public isCustom(): boolean {
-    // Right now all RelativeTimeRanges are NOT custom; all FixedTimeRanges are
-    return true;
+    // Right now all RelativeTimeRanges ARE custom; all FixedTimeRanges are NOT
+    return false;
   }
 
   public toUrlString(): string {
