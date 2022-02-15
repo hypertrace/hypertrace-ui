@@ -8,6 +8,7 @@ import { LabelModule } from '../label/label.module';
 import { LoadAsyncModule } from '../load-async/load-async.module';
 import { PopoverModule } from '../popover/popover.module';
 import { TraceSearchBoxModule } from '../search-box/search-box.module';
+import { TooltipModule } from '../tooltip/tooltip.module';
 import { MultiSelectComponent } from './multi-select.component';
 
 @NgModule({
@@ -20,7 +21,8 @@ import { MultiSelectComponent } from './multi-select.component';
     TraceSearchBoxModule,
     ButtonModule,
     LoadAsyncModule,
-    TraceCheckboxModule
+    TraceCheckboxModule,
+    TooltipModule
   ],
   declarations: [MultiSelectComponent],
   exports: [MultiSelectComponent]
