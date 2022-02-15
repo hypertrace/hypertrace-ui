@@ -61,7 +61,7 @@ export class TableWidgetColumnsService {
   }
 
   private isFilterable(type?: AttributeMetadataType): boolean {
-    return type === undefined ? false: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(type));
+    return type === undefined ? false : this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(type));
   }
 
   private lookupDisplayType(type: AttributeMetadataType): string {
