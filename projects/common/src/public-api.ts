@@ -122,4 +122,4 @@ export * from './time/time-unit.type';
 export * from './time/time';
 
 // Validators
-export * from './utilities/validators/email-validator';
+export * from './utilities/validators';

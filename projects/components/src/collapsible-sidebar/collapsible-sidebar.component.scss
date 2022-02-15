@@ -1,0 +1,51 @@
+@import 'mixins';
+
+.collapsible-sidebar {
+  height: inherit;
+  width: 220px;
+  position: relative;
+  border: 1px solid $gray-2;
+  border-radius: 8px;
+  padding: 8px;
+
+  .content {
+    @include fill-container;
+  }
+
+  &.collapsed {
+    width: 40px;
+
+    .content {
+      @include center-contents;
+
+      * {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .string-label {
+    @include body-1-medium($gray-7);
+  }
+
+  .toggle {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    bottom: clamp(10px, 10%, 72px);
+    right: -12px;
+    height: 28px;
+    width: 12px;
+    border: 1px solid $gray-2;
+    border-left-color: white;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    background: white;
+    padding-right: 4px;
+
+    .icon {
+      position: relative;
+      right: 6px;
+    }
+  }
+}
