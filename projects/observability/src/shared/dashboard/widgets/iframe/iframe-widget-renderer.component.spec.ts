@@ -12,7 +12,7 @@ describe('IFrame Widget Renderer Component', () => {
     shallow: true
   });
 
-  test('should use iframe component', () => {
+  test('should use iframe', () => {
     spectator = createComponent();
     expect(spectator.query('iframe')).toExist();
   });
