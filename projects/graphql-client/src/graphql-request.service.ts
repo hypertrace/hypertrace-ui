@@ -167,7 +167,15 @@ export class GraphQlRequestService {
       .mutate<TResponse>({
         mutation: gql(`mutation ${requestString}`)
       })
-      .pipe(mergeMap(response => (response.data ? of(response.data) : EMPTY)));
+      .pipe(
+        tap(response => {
+          if (!isNil(response.errors)) {
+            // tslint:disable-next-line: no-console
+            console.error(`Mutation response error(s) for request '${requestString}'`, response.errors);
+          }
+        }),
+        mergeMap(response => (response.data ? of(response.data) : EMPTY))
+      );
   }
 
   private getResultForRequest<T>(request: GraphQlRequest): Observable<T> {
