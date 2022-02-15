@@ -14,6 +14,6 @@ describe('IFrame Widget Renderer Component', () => {
 
   test('should use iframe component', () => {
     spectator = createComponent();
-    expect(spectator.query('ht-iframe')).toExist();
+    expect(spectator.query('iframe')).toExist();
   });
 });
