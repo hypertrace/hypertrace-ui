@@ -388,7 +388,3 @@ export * from './shared/components/bar-gauge/bar-gauge.module';
 
 // Time Range utils
 export * from './shared/utils/time-range';
-
-// I-frame
-export * from './shared/components//iframe/iframe.component';
-export * from './shared/components/iframe/iframe.module';

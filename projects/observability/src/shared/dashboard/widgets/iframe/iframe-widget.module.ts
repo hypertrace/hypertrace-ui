@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
-import { IFrameModule } from '../../../components/iframe/iframe.module';
 import { IframeWidgetRendererComponent } from './iframe-widget-renderer.component';
 import { IFrameWidgetModel } from './iframe-widget.model';
 
@@ -9,7 +8,6 @@ import { IFrameWidgetModel } from './iframe-widget.model';
   declarations: [IframeWidgetRendererComponent],
   imports: [
     CommonModule,
-    IFrameModule,
 
     DashboardCoreModule.with({
       models: [IFrameWidgetModel],
