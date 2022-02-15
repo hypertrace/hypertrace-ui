@@ -1,6 +1,6 @@
 import { collapseWhitespace } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
-import { Filter, FilterValue } from '../../filter';
+import { Filter, FilterValue, IncompleteFilter } from '../../filter';
 import { FilterAttribute } from '../../filter-attribute';
 import { FilterAttributeType } from '../../filter-attribute-type';
 import { MAP_LHS_DELIMITER } from '../../filter-delimiters';
@@ -44,6 +44,30 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
       value: value,
       userString: this.buildUserFilterString(attribute, subpath, operator, value),
       urlString: this.buildUrlFilterString(attribute, subpath, operator, value)
+    };
+  }
+
+  public buildPartialFilter(
+    attribute: FilterAttribute,
+    operator?: FilterOperator,
+    value?: TValue,
+    subpath?: string
+  ): IncompleteFilter<TValue> {
+    if (
+      operator !== undefined &&
+      ((isEmpty(subpath) && !this.supportedTopLevelOperators().includes(operator)) ||
+        (!isEmpty(subpath) && !this.supportedSubpathOperators().includes(operator)))
+    ) {
+      throw Error(`Operator '${operator}' not supported for filter attribute type '${attribute.type}'`);
+    }
+
+    return {
+      metadata: attribute,
+      field: attribute.name,
+      subpath: subpath,
+      operator: operator,
+      value: value,
+      userString: this.buildUserFilterString(attribute, subpath, operator, value)
     };
   }
 

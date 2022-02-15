@@ -1,14 +1,15 @@
-import { FieldFilter, FilterValue } from './../../../../../components/src/filtering/filter/filter';
-import { TableFilter } from './../../../../../components/src/table/table-api';
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
-import { FilterOperator } from '@hypertrace/components';
+import { FieldFilter, FilterOperator, FilterValue, TableFilter } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
 
 @Injectable({ providedIn: 'root' })
 export class GraphQlFilterBuilderService {
+  /**
+   * This is a temporary method to convert the GraphQL Field filters to its UI counterpart Filter Field Object.
+   */
   public buildFiltersFromGraphQlFieldFilters(filters: GraphQlFieldFilter[]): FieldFilter[] {
     return filters.map(filter => ({
       field: typeof filter.keyOrExpression === 'string' ? filter.keyOrExpression : filter.keyOrExpression.key,
@@ -19,7 +20,7 @@ export class GraphQlFilterBuilderService {
     }));
   }
 
-  public buildGraphQlFilters(filters: FieldFilter[]): GraphQlFilter[] {
+  public buildGraphQlFieldFilters(filters: FieldFilter[]): GraphQlFieldFilter[] {
     return filters.map(
       filter =>
         new GraphQlFieldFilter(
@@ -60,8 +61,6 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.Like;
     case FilterOperator.In:
       return GraphQlOperatorType.In;
-    case FilterOperator.NotIn:
-      return GraphQlOperatorType.NotIn;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
     default:
@@ -96,7 +95,7 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
       return FilterOperator.In;
 
     case GraphQlOperatorType.NotIn:
-      return FilterOperator.NotIn;
+      throw new Error('NotIn operator is not supported');
 
     case GraphQlOperatorType.ContainsKey:
       return FilterOperator.ContainsKey;

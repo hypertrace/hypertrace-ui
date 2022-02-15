@@ -1,4 +1,3 @@
-import { FilterValue } from './../../filter/filter';
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
 import { FilterBuilderLookupService } from '../../filter/builder/filter-builder-lookup.service';
@@ -14,6 +13,7 @@ import {
   tryParseStringForAttribute
 } from '../../filter/parser/parsed-filter';
 import { AbstractFilterParser } from '../../filter/parser/types/abstract-filter-parser';
+import { FilterValue } from './../../filter/filter';
 
 @Injectable({
   providedIn: 'root'

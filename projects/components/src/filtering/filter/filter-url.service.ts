@@ -25,6 +25,16 @@ export class FilterUrlService {
     return this.navigationService.navigation$.pipe(map(() => this.getUrlFilters(attributes)));
   }
 
+  public getUrlFiltersForAttributes(attributes: FilterAttribute[]): (Filter | IncompleteFilter)[] {
+    const urlFilters = this.getUrlFilters(attributes);
+
+    return attributes.map(
+      attribute =>
+        urlFilters.find(f => f.field === attribute.name) ??
+        this.filterBuilderLookupService.lookup(attribute.type).buildPartialFilter(attribute)
+    );
+  }
+
   public getUrlFilters(attributes: FilterAttribute[]): Filter[] {
     return this.navigationService
       .getAllValuesForQueryParameter(FilterUrlService.FILTER_QUERY_PARAM)

@@ -29,8 +29,6 @@ export class FilterParserLookupService {
         return new InFilterParser();
       case FilterOperator.ContainsKey:
         return new ContainsFilterParser();
-      case FilterOperator.NotIn:
-        throw new Error('NotIn is not supported');
       default:
         return assertUnreachable(operator);
     }
