@@ -4,6 +4,9 @@
   @include time-range-button-background;
   @include body-1-medium($gray-6);
   border: 1px solid $gray-3;
+  height: 34px;
+  display: flex;
+  align-items: center;
 }
 .time-range {
   display: flex;
@@ -45,6 +48,14 @@
 
 .refresh {
   margin-left: 8px;
+
+  ::ng-deep {
+    button.button.solid {
+      height: 34px;
+      display: flex;
+      align-items: center;
+    }
+  }
   &.emphasized {
     ::ng-deep {
       button.button.solid {
