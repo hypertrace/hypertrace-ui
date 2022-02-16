@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit } from '@angular/core';
 import {
   Breadcrumb,
   isNonEmptyString,
@@ -11,6 +11,8 @@ import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
+import { HeaderContentPrimary } from '../header-content/header-content-primary.directive';
+import { HeaderContentSecondary } from '../header-content/header-content-secondary.directive';
 
 @Component({
   selector: 'ht-page-header',
@@ -23,24 +25,28 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <div [ngClass]="this.contentAlignment">
-        <div class="breadcrumb-container">
-          <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-          <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
-            <ht-icon
-              class="icon"
-              *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
-              [icon]="titlecrumb.icon"
-              [label]="titlecrumb.label"
-              size="${IconSize.Large}"
-            ></ht-icon>
+      <div class="column-alignment">
+        <div class="primary-content">
+          <div class="breadcrumb-container">
+            <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
+            <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
+              <ht-icon
+                class="icon"
+                *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
+                [icon]="titlecrumb.icon"
+                [label]="titlecrumb.label"
+                size="${IconSize.Large}"
+              ></ht-icon>
 
-            <ht-label [label]="titlecrumb.label"></ht-label>
-            <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+              <ht-label [label]="titlecrumb.label"></ht-label>
+              <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+            </div>
           </div>
+          <ng-container *ngTemplateOutlet="contentPrimary?.templateRef"></ng-container>
+          <ht-page-time-range class="time-range"></ht-page-time-range>
         </div>
 
-        <ng-content></ng-content>
+        <ng-container [ngTemplateOutlet]="contentSecondary?.templateRef"></ng-container>
       </div>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
@@ -66,8 +72,11 @@ export class PageHeaderComponent implements OnInit {
   @Input()
   public isBeta: boolean = false;
 
-  @Input()
-  public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
+  @ContentChild(HeaderContentPrimary, { static: true })
+  contentPrimary!: HeaderContentPrimary;
+
+  @ContentChild(HeaderContentSecondary, { static: true })
+  contentSecondary!: HeaderContentSecondary;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
@@ -122,7 +131,7 @@ interface PageHeaderPreferences {
   selectedTabPath?: string;
 }
 
-export const enum PageHeaderContentAlignment {
-  Column = 'column-alignment',
-  Row = 'row-alignment'
+export const enum PageHeaderContent {
+  Primary = 'page-header-primary-content',
+  Secondary = 'page-header-secondary-content'
 }

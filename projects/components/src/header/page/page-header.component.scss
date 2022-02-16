@@ -9,6 +9,38 @@
   .column-alignment {
     display: flex;
     flex-direction: column;
+
+    .primary-content {
+      display: flex;
+      justify-content: space-between;
+
+      .breadcrumb-container {
+        align-items: center;
+        margin-right: auto;
+
+        .breadcrumb-separator {
+          padding: 0 20px;
+        }
+
+        .title {
+          @include font-subtitle-medium($gray-7);
+          display: flex;
+          align-items: center;
+
+          .icon {
+            padding-right: 12px;
+          }
+
+          .beta {
+            margin-left: 12px;
+          }
+        }
+      }
+
+      .time-range {
+        margin-left: 10px;
+      }
+    }
   }
 
   .row-alignment {
@@ -19,28 +51,6 @@
   &.bottom-border {
     padding-bottom: 16px;
     border-bottom: 1px solid $color-border;
-  }
-
-  .breadcrumb-container {
-    align-items: center;
-
-    .breadcrumb-separator {
-      padding: 0 20px;
-    }
-
-    .title {
-      @include font-subtitle-medium($gray-7);
-      display: flex;
-      align-items: center;
-
-      .icon {
-        padding-right: 12px;
-      }
-
-      .beta {
-        margin-left: 12px;
-      }
-    }
   }
 
   .tabs {
