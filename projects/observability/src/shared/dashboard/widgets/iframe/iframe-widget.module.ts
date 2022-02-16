@@ -8,7 +8,6 @@ import { IFrameWidgetModel } from './iframe-widget.model';
   declarations: [IframeWidgetRendererComponent],
   imports: [
     CommonModule,
-
     DashboardCoreModule.with({
       models: [IFrameWidgetModel],
       renderers: [IframeWidgetRendererComponent]
