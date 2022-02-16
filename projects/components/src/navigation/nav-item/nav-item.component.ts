@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   FeatureState,
@@ -6,14 +6,12 @@ import {
   NavigationParamsType,
   NavigationService,
   PageTimeRangeService,
-  QueryParamObject,
   TimeRange,
-  TimeRangeService,
-  TypedSimpleChanges
+  TimeRangeService
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation.config';
 
@@ -22,7 +20,7 @@ import { NavItemLinkConfig } from '../navigation.config';
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link *ngIf="this.config" [paramsOrUrl]="this.buildNavigationParam(this.config)">
+    <ht-link *ngIf="this.config" [paramsOrUrl]="this.navItemParams$ | async">
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
@@ -57,10 +55,9 @@ import { NavItemLinkConfig } from '../navigation.config';
     </ht-link>
   `
 })
-export class NavItemComponent implements OnDestroy, OnChanges {
+export class NavItemComponent implements OnInit {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
-  private readonly destroyed$: Subject<void> = new Subject();
-  private timeRangeQueryParam: QueryParamObject = { [NavItemComponent.TIME_RANGE_QUERY_PARAM]: undefined };
+  public navItemParams$: Observable<NavigationParams | undefined> = of(undefined);
 
   @Input()
   public config!: NavItemLinkConfig;
@@ -75,38 +72,28 @@ export class NavItemComponent implements OnDestroy, OnChanges {
     private readonly activatedRoute: ActivatedRoute,
     private readonly timeRangeService: TimeRangeService,
     private readonly navigationService: NavigationService,
-    private readonly pageTimeRangeService: PageTimeRangeService,
-    private readonly cd: ChangeDetectorRef
+    private readonly pageTimeRangeService: PageTimeRangeService
   ) {}
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.config) {
-      this.pageTimeRangeService
-        .getPageTimeRange(this.config.matchPaths[0])
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(timeRange => {
-          if (isNil(timeRange)) {
-            this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.getDefaultPageTimeRange());
-          } else {
-            this.timeRangeQueryParam = {
-              ...this.timeRangeQueryParam,
+  public ngOnInit(): void {
+    this.navItemParams$ = this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0]).pipe(
+      map(timeRange => {
+        if (isNil(timeRange)) {
+          this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.getDefaultPageTimeRange());
+          return;
+        } else {
+          return {
+            navType: NavigationParamsType.InApp,
+            path: this.config.matchPaths[0],
+            relativeTo: this.activatedRoute,
+            queryParams: {
               [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-            };
-            this.cd.markForCheck();
-            this.cd.detectChanges();
-          }
-        });
-    }
-  }
-
-  public buildNavigationParam(item: NavItemLinkConfig): NavigationParams {
-    return {
-      navType: NavigationParamsType.InApp,
-      path: item.matchPaths[0],
-      relativeTo: this.activatedRoute,
-      queryParams: this.timeRangeQueryParam,
-      replaceCurrentHistory: item.replaceCurrentHistory
-    };
+            },
+            replaceCurrentHistory: this.config.replaceCurrentHistory
+          };
+        }
+      })
+    );
   }
 
   public getDefaultPageTimeRange(): TimeRange {
@@ -121,10 +108,5 @@ export class NavItemComponent implements OnDestroy, OnChanges {
     }
 
     return defaultTimeRange;
-  }
-
-  public ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }
