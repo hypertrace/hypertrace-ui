@@ -80,18 +80,19 @@ export class NavItemComponent implements OnInit {
       map(timeRange => {
         if (isNil(timeRange)) {
           this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.getDefaultPageTimeRange());
-          return;
-        } else {
-          return {
-            navType: NavigationParamsType.InApp,
-            path: this.config.matchPaths[0],
-            relativeTo: this.activatedRoute,
-            queryParams: {
-              [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-            },
-            replaceCurrentHistory: this.config.replaceCurrentHistory
-          };
+
+          return undefined;
         }
+
+        return {
+          navType: NavigationParamsType.InApp,
+          path: this.config.matchPaths[0],
+          relativeTo: this.activatedRoute,
+          queryParams: {
+            [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+          },
+          replaceCurrentHistory: this.config.replaceCurrentHistory
+        };
       })
     );
   }
