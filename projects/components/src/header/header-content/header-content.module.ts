@@ -1,12 +1,11 @@
-import { NgModule } from '@angular/core';
-
-import { HeaderContentPrimary } from './header-content-primary.directive';
-import { HeaderContentSecondary } from './header-content-secondary.directive';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { HeaderContentPrimaryDirective } from './header-content-primary.directive';
+import { HeaderContentSecondaryDirective } from './header-content-secondary.directive';
 
 @NgModule({
-  declarations: [HeaderContentPrimary, HeaderContentSecondary],
-  exports: [HeaderContentPrimary, HeaderContentSecondary],
+  declarations: [HeaderContentPrimaryDirective, HeaderContentSecondaryDirective],
+  exports: [HeaderContentPrimaryDirective, HeaderContentSecondaryDirective],
   imports: [CommonModule],
   providers: []
 })

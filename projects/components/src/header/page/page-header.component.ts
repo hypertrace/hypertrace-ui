@@ -11,8 +11,8 @@ import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
-import { HeaderContentPrimary } from '../header-content/header-content-primary.directive';
-import { HeaderContentSecondary } from '../header-content/header-content-secondary.directive';
+import { HeaderContentPrimaryDirective } from '../header-content/header-content-primary.directive';
+import { HeaderContentSecondaryDirective } from '../header-content/header-content-secondary.directive';
 
 @Component({
   selector: 'ht-page-header',
@@ -72,11 +72,11 @@ export class PageHeaderComponent implements OnInit {
   @Input()
   public isBeta: boolean = false;
 
-  @ContentChild(HeaderContentPrimary, { static: true })
-  contentPrimary!: HeaderContentPrimary;
+  @ContentChild(HeaderContentPrimaryDirective, { static: true })
+  public contentPrimary!: HeaderContentPrimaryDirective;
 
-  @ContentChild(HeaderContentSecondary, { static: true })
-  contentSecondary!: HeaderContentSecondary;
+  @ContentChild(HeaderContentSecondaryDirective, { static: true })
+  public contentSecondary!: HeaderContentSecondaryDirective;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))

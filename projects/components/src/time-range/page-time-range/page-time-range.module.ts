@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 
-import { PageTimeRangeComponent } from './page-time-range.component';
 import { CommonModule } from '@angular/common';
 import { TimeRangeModule } from '../time-range.module';
+import { PageTimeRangeComponent } from './page-time-range.component';
 
 @NgModule({
   declarations: [PageTimeRangeComponent],
