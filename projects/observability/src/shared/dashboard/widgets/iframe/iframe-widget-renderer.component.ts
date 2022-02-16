@@ -18,7 +18,7 @@ export class IframeWidgetRendererComponent extends WidgetRenderer<IFrameWidgetMo
   public urlSafe?: SafeResourceUrl;
 
   public constructor(
-    public sanitizer: DomSanitizer,
+    private readonly sanitizer: DomSanitizer,
     @Inject(RENDERER_API) api: RendererApi<IFrameWidgetModel>,
     changeDetector: ChangeDetectorRef
   ) {
