@@ -68,7 +68,7 @@ export class CheckboxComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  public writeValue(isChecked: boolean): void {
-    this.isChecked = isChecked;
+  public writeValue(isChecked: boolean | undefined): void {
+    this.isChecked = isChecked ?? false;
   }
 }
