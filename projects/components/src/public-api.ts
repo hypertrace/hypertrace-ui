@@ -332,6 +332,10 @@ export * from './time-picker/time-picker.module';
 export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
 
+// Page Time Range
+export * from './time-range/page-time-range/page-time-range.component';
+export * from './time-range/page-time-range/page-time-range.module';
+
 // Titled Content
 export {
   TitledContentComponent,
