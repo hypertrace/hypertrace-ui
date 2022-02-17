@@ -79,8 +79,16 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly renderingStrategy: RenderingStrategy,
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
-    protected readonly domRenderer: Renderer2
+    protected readonly domRenderer: Renderer2,
+    protected readonly groupId?: string
   ) {}
+
+  // tslint:disable-next-line
+  public showCrosshair(locationData: any): void {
+    const location = locationData[0].location;
+    const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
+    this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
+  }
 
   protected onBrushSelection(event: D3BrushEvent<unknown>): void {
     if (!event.selection) {
@@ -571,6 +579,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
+
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Hover) {
+        listener.onEvent(locationData);
+      }
+    });
+
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, locationData);
     }

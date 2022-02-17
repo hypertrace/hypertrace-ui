@@ -418,6 +418,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
+
             series: [
               {
                 type: 'series',
@@ -497,6 +500,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
             series: [
               {
                 type: 'series',
@@ -577,6 +582,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
             series: [
               {
                 type: 'series',

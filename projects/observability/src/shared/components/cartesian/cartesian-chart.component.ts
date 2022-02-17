@@ -21,6 +21,7 @@ import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
 import { CartesianSelectedData, ChartEvent } from './chart-interactivty';
+import { ChartSyncService } from './chart-sync-service';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
@@ -66,6 +67,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
   public selectedInterval?: IntervalValue;
 
+  @Input()
+  public groupId?: string;
+
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
@@ -84,7 +88,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
+    private readonly chartSyncService: ChartSyncService<TData>
   ) {}
 
   public ngOnChanges(): void {
@@ -97,17 +102,26 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.groupId)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      );
+      )
+      .withEventListener(ChartEvent.Hover, data => {
+        this.chartSyncService.mouseLocationChange(data, this.groupId);
+      });
 
     if (this.rangeSelectionEnabled) {
       this.chart.withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
+      });
+    }
+
+    if (this.groupId !== undefined) {
+      this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
+        this.chart?.showCrosshair(data);
       });
     }
 
