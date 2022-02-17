@@ -7,15 +7,17 @@ import { ToggleSwitchSize } from './toggle-switch-size';
   styleUrls: ['./toggle-switch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-slide-toggle
-      color="primary"
-      [checked]="this.checked"
-      [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.disabled }"
-      [disabled]="this.disabled"
-      (change)="this.onToggle($event)"
-    >
-      <div class="label">{{ this.label }}</div>
-    </mat-slide-toggle>
+    <div class="toggle-switch">
+      <mat-slide-toggle
+        color="primary"
+        [checked]="this.checked"
+        [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.disabled }"
+        [disabled]="this.disabled"
+        (change)="this.onToggle($event)"
+      >
+        <div class="label">{{ this.label }}</div>
+      </mat-slide-toggle>
+    </div>
   `
 })
 export class ToggleSwitchComponent {
