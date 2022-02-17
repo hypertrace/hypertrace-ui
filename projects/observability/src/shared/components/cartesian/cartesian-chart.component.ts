@@ -125,6 +125,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       });
     }
 
+    if (this.groupId !== undefined) {
+      this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
+        this.chart?.showCrosshair(data);
+      });
+    }
+
     if (this.bands) {
       this.chart.withBands(...this.bands);
     }
