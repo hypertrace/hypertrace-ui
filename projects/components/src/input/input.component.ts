@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance } from './input-appearance';
@@ -54,6 +62,8 @@ export class InputComponent<T extends string | number> implements ControlValueAc
 
   public placeholderValue: string = '';
 
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.placeholder) {
       this.placeholderValue = this.placeholder ?? '';
@@ -77,6 +87,7 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   public writeValue(value?: string): void {
     const coercedValue = this.coerceValueIfNeeded(value);
     this.value = coercedValue;
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value: T | undefined) => void): void {

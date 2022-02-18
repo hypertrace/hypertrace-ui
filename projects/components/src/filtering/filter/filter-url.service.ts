@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
+import { remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
@@ -23,6 +24,21 @@ export class FilterUrlService {
 
   public getUrlFiltersChanges$(attributes: FilterAttribute[]): Observable<Filter[]> {
     return this.navigationService.navigation$.pipe(map(() => this.getUrlFilters(attributes)));
+  }
+
+  public getUrlFiltersForAttributes(attributes: FilterAttribute[]): (Filter | IncompleteFilter)[] {
+    const urlFilters = this.getUrlFilters(attributes);
+
+    return attributes.map(attribute => {
+      const match = urlFilters.find(f => f.field === attribute.name);
+      if (match !== undefined) {
+        remove(urlFilters, f => f === match);
+
+        return match;
+      }
+
+      return this.filterBuilderLookupService.lookup(attribute.type).buildPartialFilter(attribute);
+    });
   }
 
   public getUrlFilters(attributes: FilterAttribute[]): Filter[] {
