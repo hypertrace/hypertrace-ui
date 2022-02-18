@@ -20,6 +20,7 @@ import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
+import { SelectTriggerDisplayMode } from '../select/select.component';
 import { MultiSelectJustify } from './multi-select-justify';
 @Component({
   selector: 'ht-multi-select',
@@ -57,7 +58,8 @@ import { MultiSelectJustify } from './multi-select-justify';
               this.triggerLabelDisplayMode,
               this.popoverOpen ? 'open' : '',
               this.size,
-              this.disabled ? 'disabled' : ''
+              this.disabled ? 'disabled' : '',
+              this.triggerDisplayMode
             ]"
             #triggerContainer
           >
@@ -172,6 +174,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
+  public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
+
+  @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
 
   @Input()
@@ -251,7 +256,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => isEqual(value, item.value)).length > 0;
+    return Array.isArray(this.selected) && this.selected.filter(value => isEqual(value, item.value)).length > 0;
   }
 
   public preventClickDefault(event: Event): void {
