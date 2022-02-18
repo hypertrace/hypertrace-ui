@@ -1,4 +1,3 @@
-import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import {
   FixedTimeRange,
   NavigationService,
@@ -10,6 +9,7 @@ import {
   TimeUnit
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
+import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 
 describe('Page time range service', () => {
   const serviceFactory = createServiceFactory({

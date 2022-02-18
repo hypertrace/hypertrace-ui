@@ -1,6 +1,4 @@
-import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
-import { FeatureConfigCheckModule, PageTimeRangeComponent, TimeRangeComponent } from '@hypertrace/components';
-import { MockComponent } from 'ng-mocks';
+import { UrlSegment } from '@angular/router';
 import {
   FeatureState,
   FeatureStateResolver,
@@ -10,12 +8,14 @@ import {
   TimeDuration,
   TimeUnit
 } from '@hypertrace/common';
+import { FeatureConfigCheckModule, PageTimeRangeComponent, TimeRangeComponent } from '@hypertrace/components';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
-import { UrlSegment } from '@angular/router';
 
 describe('Page time range component', () => {
   let spectator: SpectatorHost<PageTimeRangeComponent>;
-  let route = {
+  const route = {
     snapshot: {
       data: {
         defaultTimeRange: undefined
@@ -103,6 +103,6 @@ describe('Page time range component', () => {
 
     expect(spectator.component.savePageTimeRange).toHaveBeenCalledWith(selectedTimeRange, {
       path: 'parent-path'
-    } as UrlSegment);
+    });
   });
 });
