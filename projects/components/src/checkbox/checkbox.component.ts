@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
@@ -49,6 +49,8 @@ export class CheckboxComponent implements ControlValueAccessor {
   private onTouched!: () => void;
   private onChanged!: (value: boolean) => void;
 
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
+
   public onCheckboxChange(event: MatCheckboxChange): void {
     this.isChecked = event.checked;
     this.checkedChange.emit(this.isChecked);
@@ -66,9 +68,11 @@ export class CheckboxComponent implements ControlValueAccessor {
 
   public setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    this.cdr.markForCheck();
   }
 
   public writeValue(isChecked: boolean | undefined): void {
     this.isChecked = isChecked ?? false;
+    this.cdr.markForCheck();
   }
 }
