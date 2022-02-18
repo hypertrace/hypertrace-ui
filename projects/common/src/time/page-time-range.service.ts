@@ -4,9 +4,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, share, takeUntil } from 'rxjs/operators';
 import { PreferenceService, StorageType } from '../preference/preference.service';
 import { TimeRange } from './time-range';
-// Import {TimeRange} from "./time-range";
 import { TimeRangeService } from './time-range.service';
-// Import {TimeDuration} from "./time-duration";
 
 @Injectable({ providedIn: 'root' })
 export class PageTimeRangeService implements OnDestroy {
