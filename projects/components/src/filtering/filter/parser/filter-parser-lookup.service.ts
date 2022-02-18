@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
+import { FilterValue } from '../filter';
 import { FilterAttributeType } from '../filter-attribute-type';
 import { FilterOperator } from '../filter-operators';
 import { AbstractFilterParser } from './types/abstract-filter-parser';
@@ -14,7 +15,7 @@ export class FilterParserLookupService {
   // TODO remove the separate parsers entirely.
   // There's next to no logic left in them, and they duplicate (incorrectly) supported operators,
   // Which should be based on attribute type (as defined in filter builders)
-  public lookup(operator: FilterOperator): AbstractFilterParser<unknown> {
+  public lookup(operator: FilterOperator): AbstractFilterParser<FilterValue> {
     switch (operator) {
       case FilterOperator.Equals:
       case FilterOperator.NotEquals:
