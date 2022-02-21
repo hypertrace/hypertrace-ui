@@ -12,7 +12,7 @@ import { ToggleSwitchSize } from './toggle-switch-size';
       <mat-slide-toggle
         color="primary"
         [checked]="this.isChecked"
-        [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.disabled }"
+        [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.isDisabled }"
         [disabled]="this.isDisabled"
         (change)="this.onToggle($event)"
       >
@@ -48,8 +48,12 @@ export class ToggleSwitchComponent implements ControlValueAccessor {
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
 
-  public get checked() {
+  public get checked(): boolean {
     return this.isChecked;
+  }
+
+  public get disabled(): boolean {
+    return this.isDisabled;
   }
 
   public isChecked: boolean = false;
