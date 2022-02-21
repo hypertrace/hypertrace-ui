@@ -43,6 +43,10 @@ export class CheckboxComponent implements ControlValueAccessor {
   @Output()
   public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
 
+  public get checked(): boolean {
+    return this.isChecked;
+  }
+
   public isChecked: boolean = false;
   public isDisabled: boolean = false;
 
