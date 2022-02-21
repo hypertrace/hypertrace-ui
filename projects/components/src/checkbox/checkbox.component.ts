@@ -47,6 +47,10 @@ export class CheckboxComponent implements ControlValueAccessor {
     return this.isChecked;
   }
 
+  public get disabled(): boolean {
+    return this.isDisabled;
+  }
+
   public isChecked: boolean = false;
   public isDisabled: boolean = false;
 
