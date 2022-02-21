@@ -33,8 +33,15 @@ export class ToggleSwitchComponent implements ControlValueAccessor {
   public label?: string = '';
 
   @Input()
+  public size: ToggleSwitchSize = ToggleSwitchSize.Small;
+
+  @Input()
   public set checked(checked: boolean | undefined) {
     this.isChecked = checked ?? false;
+  }
+
+  public get checked(): boolean {
+    return this.isChecked;
   }
 
   @Input()
@@ -42,19 +49,12 @@ export class ToggleSwitchComponent implements ControlValueAccessor {
     this.isDisabled = disabled ?? false;
   }
 
-  @Input()
-  public size: ToggleSwitchSize = ToggleSwitchSize.Small;
-
-  @Output()
-  public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
-
-  public get checked(): boolean {
-    return this.isChecked;
-  }
-
   public get disabled(): boolean {
     return this.isDisabled;
   }
+
+  @Output()
+  public readonly checkedChange: EventEmitter<boolean> = new EventEmitter();
 
   public isChecked: boolean = false;
   public isDisabled: boolean = false;
