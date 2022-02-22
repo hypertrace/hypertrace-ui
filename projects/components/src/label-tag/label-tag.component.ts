@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Color } from '@hypertrace/common';
+import { IconSize } from '../icon/icon-size';
 
 @Component({
   selector: 'ht-label-tag',
@@ -7,6 +8,13 @@ import { Color } from '@hypertrace/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="label-tag" [ngStyle]="{ backgroundColor: this.backgroundColor, color: this.labelColor }">
+      <ht-icon
+        class="prefix-icon"
+        *ngIf="this.prefixIcon"
+        [icon]="this.prefixIcon"
+        size="${IconSize.Small}"
+        [color]="this.labelColor"
+      ></ht-icon>
       {{ this.label }}
     </div>
   `
@@ -20,4 +28,7 @@ export class LabelTagComponent {
 
   @Input()
   public backgroundColor?: Color;
+
+  @Input()
+  public prefixIcon?: string;
 }
