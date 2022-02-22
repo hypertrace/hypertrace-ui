@@ -1,14 +1,40 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { RelativeTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
+import {
+  NavigationService,
+  RelativeTimeRange,
+  TimeDuration,
+  TimeRange,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NavigationService } from '../navigation/navigation.service';
 import { FixedTimeRange } from './fixed-time-range';
-import { TimeRangeService } from './time-range.service';
+
+interface NavMock {
+  qpTime: string | undefined;
+  defaultTimeRange: TimeRange | undefined;
+}
 
 describe('Time range service', () => {
+  let relativeTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  const firstMockRoute: NavMock = {
+    qpTime: '1573255100253-1573255111159',
+    defaultTimeRange: relativeTimeRange
+  };
+  const secondMockRoute: NavMock = {
+    qpTime: undefined,
+    defaultTimeRange: relativeTimeRange
+  };
+  const buildMockRoute = (navMock: NavMock): ActivatedRoute =>
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    (({
+      queryParamMap: of(convertToParamMap({ time: navMock.qpTime })),
+      snapshot: { data: { defaultTimeRange: navMock.defaultTimeRange } }
+    } as unknown) as ActivatedRoute);
+
   let timeRange$: Observable<string> = NEVER;
   const buildService = createServiceFactory({
     service: TimeRangeService,
@@ -88,6 +114,32 @@ describe('Time range service', () => {
     const spectator = buildService();
     expect(spectator.service.toQueryParams(new Date(1642296703000), new Date(1642396703000))).toStrictEqual({
       ['time']: new FixedTimeRange(new Date(1642296703000), new Date(1642396703000)).toUrlString()
+    });
+  });
+
+  test('Sets time range with navigation events', () => {
+    relativeTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+    runFakeRxjs(({ cold, expectObservable }) => {
+      const spectator = buildService({
+        providers: [
+          mockProvider(NavigationService, {
+            get navigation$(): Observable<ActivatedRoute> {
+              return cold('-a-b', {
+                a: buildMockRoute(firstMockRoute),
+                b: buildMockRoute(secondMockRoute)
+              });
+            }
+          })
+        ]
+      });
+
+      // First mock route gets emitted a second time but in same frame as second mock. Believe this is because
+      // The buildMockRoute is using 'of' operator
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('-a-(bc)', {
+        a: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)),
+        b: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)),
+        c: secondMockRoute.defaultTimeRange
+      });
     });
   });
 });
