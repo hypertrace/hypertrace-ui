@@ -174,7 +174,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
-  public triggerDisplayMode?: SelectTriggerDisplayMode;
+  public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
