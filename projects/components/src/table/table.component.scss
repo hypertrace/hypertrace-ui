@@ -84,6 +84,7 @@ $header-height: 32px;
 
     &.resizable {
       cursor: col-resize;
+
       &:hover {
         padding: 0 2px;
 
@@ -117,6 +118,12 @@ $header-height: 32px;
   .data-cell-renderer {
     display: block;
     height: 100%;
+  }
+}
+
+.last-row {
+  .data-cell {
+    border-color: transparent;
   }
 }
 

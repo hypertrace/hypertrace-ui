@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { fakeAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { ToggleSwitchSize } from './toggle-switch-size';
@@ -12,7 +12,7 @@ describe('Toggle Switch Component', () => {
   const createHost = createHostFactory({
     component: ToggleSwitchComponent,
     shallow: true,
-    imports: [MatSlideToggleModule, FormsModule, CommonModule]
+    imports: [MatSlideToggleModule, FormsModule, CommonModule, ReactiveFormsModule]
   });
 
   test('should pass properties to Mat Slide toggle correctly', fakeAsync(() => {
@@ -41,4 +41,20 @@ describe('Toggle Switch Component', () => {
     spectator.triggerEventHandler(MatSlideToggle, 'change', new MatSlideToggleChange(matToggleComponent!, false));
     expect(onCheckedChangeSpy).toHaveBeenCalledWith(false);
   }));
+
+  test('should work correctly with control value accessor', () => {
+    const formControl = new FormControl(false);
+    spectator = createHost(`<ht-toggle-switch [label]="label" [formControl]="formControl"></ht-toggle-switch>`, {
+      hostProps: {
+        formControl: formControl
+      }
+    });
+    expect(spectator.component.isChecked).toBe(false);
+
+    formControl.setValue(true);
+    expect(spectator.component.isChecked).toBe(true);
+
+    formControl.disable();
+    expect(spectator.component.isDisabled).toBe(true);
+  });
 });
