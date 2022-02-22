@@ -144,12 +144,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
+          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{
             'selected-row': this.shouldHighlightRowAsSelection(row),
             'hovered-row': this.isHoveredRow(row),
+            'last-row': isLast,
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
