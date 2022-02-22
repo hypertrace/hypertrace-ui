@@ -9,7 +9,6 @@ import { IconSize } from '../icon/icon-size';
   template: `
     <div class="label-tag" [ngStyle]="{ backgroundColor: this.backgroundColor, color: this.labelColor }">
       <ht-icon
-        class="prefix-icon"
         *ngIf="this.prefixIcon"
         [icon]="this.prefixIcon"
         size="${IconSize.Small}"
