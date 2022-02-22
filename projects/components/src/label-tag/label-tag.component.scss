@@ -12,6 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
 
   // Default color. Could be overridden by the component
   background-color: $blue-1;
