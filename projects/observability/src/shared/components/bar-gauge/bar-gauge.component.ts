@@ -35,7 +35,11 @@ import {
         </div>
       </div>
       <div class="bar" [ngClass]="this.display">
-        <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
+        <div
+          #maxValueBar
+          class="max-value-bar"
+          [ngClass]="{ 'over-max-value': this.overMaxValue && this.isOverMaxBorderActive }"
+        >
           <div class="segment-bars">
             <div
               #segmentBars
@@ -84,6 +88,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public segments?: Segment[] = [];
+
+  @Input()
+  public isOverMaxBorderActive: boolean = true;
 
   @Input()
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
