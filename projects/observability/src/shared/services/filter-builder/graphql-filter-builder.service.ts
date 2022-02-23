@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
-import { FieldFilter, FilterOperator, FilterValue, TableFilter } from '@hypertrace/components';
+import { FieldFilter, Filter, FilterOperator, FilterValue, TableFilter } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
@@ -20,7 +20,7 @@ export class GraphQlFilterBuilderService {
     }));
   }
 
-  public buildGraphQlFieldFilters(filters: FieldFilter[]): GraphQlFieldFilter[] {
+  public buildGraphQlFieldFilters(filters: (Filter | FieldFilter)[]): GraphQlFieldFilter[] {
     return filters.map(
       filter =>
         new GraphQlFieldFilter(
