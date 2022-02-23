@@ -1,15 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  FeatureState,
-  NavigationParams,
-  NavigationParamsType,
-  NavigationService,
-  PageTimeRangeService,
-  TimeRange,
-  TimeRangeService
-} from '@hypertrace/common';
-import { isNil } from 'lodash-es';
+import { FeatureState, NavigationParams, NavigationParamsType, PageTimeRangeService } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
@@ -70,44 +61,20 @@ export class NavItemComponent implements OnInit {
 
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService,
-    private readonly navigationService: NavigationService,
     private readonly pageTimeRangeService: PageTimeRangeService
   ) {}
 
   public ngOnInit(): void {
     this.navItemParams$ = this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0]).pipe(
-      map(timeRange => {
-        if (isNil(timeRange)) {
-          this.pageTimeRangeService.setPageTimeRange(this.config.matchPaths[0], this.getDefaultPageTimeRange());
-
-          return undefined;
-        }
-
-        return {
-          navType: NavigationParamsType.InApp,
-          path: this.config.matchPaths[0],
-          relativeTo: this.activatedRoute,
-          queryParams: {
-            [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-          },
-          replaceCurrentHistory: this.config.replaceCurrentHistory
-        };
-      })
+      map(timeRange => ({
+        navType: NavigationParamsType.InApp,
+        path: this.config.matchPaths[0],
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+        },
+        replaceCurrentHistory: this.config.replaceCurrentHistory
+      }))
     );
-  }
-
-  public getDefaultPageTimeRange(): TimeRange {
-    const defaultTimeRange = this.navigationService.getRouteConfig(
-      [this.config.matchPaths[0]],
-      this.navigationService.rootRoute()
-    )?.data?.defaultTimeRange;
-
-    if (!defaultTimeRange) {
-      //  Use current time range as default default
-      return this.timeRangeService.getCurrentTimeRange();
-    }
-
-    return defaultTimeRange;
   }
 }

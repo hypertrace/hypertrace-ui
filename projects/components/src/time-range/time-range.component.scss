@@ -1,5 +1,13 @@
 @import 'mixins';
 
+@mixin time-range-button-background {
+  background-color: white;
+
+  &:hover {
+    background-color: $gray-1;
+  }
+}
+
 @mixin time-range-buttons() {
   @include time-range-button-background;
   @include body-1-medium($gray-6);

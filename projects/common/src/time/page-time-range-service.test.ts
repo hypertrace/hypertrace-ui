@@ -12,6 +12,7 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 
 describe('Page time range service', () => {
+  const defaultPageTimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
   const serviceFactory = createServiceFactory({
     service: PageTimeRangeService,
     providers: [mockProvider(NavigationService)]
@@ -27,13 +28,14 @@ describe('Page time range service', () => {
           })
         ]
       });
+      jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-a|', {
         a: () => spectator.service.setPageTimeRange('foo', timeRange)
       }).subscribe(update => update());
 
       expectObservable(spectator.service.getPageTimeRange('foo')).toBe('da', {
-        d: undefined,
+        d: defaultPageTimeRange,
         a: timeRange
       });
     });
@@ -49,13 +51,14 @@ describe('Page time range service', () => {
           })
         ]
       });
+      jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-b|', {
         b: () => spectator.service.setPageTimeRange('bar', timeRange)
       }).subscribe(update => update());
 
       expectObservable(spectator.service.getPageTimeRange('bar')).toBe('db', {
-        d: undefined,
+        d: defaultPageTimeRange,
         b: timeRange
       });
     });

@@ -42,11 +42,11 @@ import { HeaderContentSecondaryDirective } from '../header-content/header-conten
               <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
             </div>
           </div>
-          <ng-container *ngTemplateOutlet="contentPrimary?.templateRef"></ng-container>
+          <ng-container *ngTemplateOutlet="this.contentPrimary?.templateRef"></ng-container>
           <ht-page-time-range class="time-range"></ht-page-time-range>
         </div>
 
-        <ng-container [ngTemplateOutlet]="contentSecondary?.templateRef"></ng-container>
+        <ng-container [ngTemplateOutlet]="this.contentSecondary?.templateRef"></ng-container>
       </div>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
@@ -72,11 +72,11 @@ export class PageHeaderComponent implements OnInit {
   @Input()
   public isBeta: boolean = false;
 
-  @ContentChild(HeaderContentPrimaryDirective, { static: true })
-  public contentPrimary!: HeaderContentPrimaryDirective;
+  @ContentChild(HeaderContentPrimaryDirective)
+  public readonly contentPrimary?: HeaderContentPrimaryDirective;
 
-  @ContentChild(HeaderContentSecondaryDirective, { static: true })
-  public contentSecondary!: HeaderContentSecondaryDirective;
+  @ContentChild(HeaderContentSecondaryDirective)
+  public readonly contentSecondary?: HeaderContentSecondaryDirective;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
@@ -129,9 +129,4 @@ export class PageHeaderComponent implements OnInit {
 
 interface PageHeaderPreferences {
   selectedTabPath?: string;
-}
-
-export const enum PageHeaderContent {
-  Primary = 'page-header-primary-content',
-  Secondary = 'page-header-secondary-content'
 }

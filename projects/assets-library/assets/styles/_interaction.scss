@@ -99,11 +99,3 @@
     cursor: not-allowed;
   }
 }
-
-@mixin time-range-button-background {
-  background-color: white;
-
-  &:hover {
-    background-color: $gray-1;
-  }
-}
