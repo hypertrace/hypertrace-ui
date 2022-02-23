@@ -1,6 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatInput, MatInputModule } from '@angular/material/input';
+import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { InputComponent } from './input.component';
 
@@ -66,4 +67,30 @@ describe('Input Component', () => {
     const matInput = spectator.query(MatInput);
     expect(matInput?.placeholder).toEqual('placeholder');
   });
+
+  test('should work with arbitrary debounce time', fakeAsync(() => {
+    const spectator = hostFactory(
+      `<ht-input [type]="type" [placeholder]="placeholder" [debounceTime]="debounceTime"></ht-input>`,
+      {
+        hostProps: {
+          type: 'string',
+          placeholder: 'placeholder',
+          debounceTime: 200
+        }
+      }
+    );
+
+    const inputElement = spectator.query('input');
+    expect((inputElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
+    spectator.component.value = 'Test2';
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.valueChange).toBe('200ms x', {
+        x: 'Test2'
+      });
+
+      spectator.component.onValueChange(spectator.component.value?.toString());
+      spectator.tick();
+    });
+  }));
 });

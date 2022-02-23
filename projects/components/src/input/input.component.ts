@@ -8,7 +8,9 @@ import {
   Output
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
+import { NumberCoercer, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { InputAppearance } from './input-appearance';
 
 @Component({
@@ -20,7 +22,8 @@ import { InputAppearance } from './input-appearance';
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: InputComponent
-    }
+    },
+    SubscriptionLifecycle
   ],
   template: `
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
@@ -55,18 +58,29 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   @Input()
   public disabled: boolean = false;
 
+  @Input()
+  public debounceTime?: number;
+
   @Output()
   public readonly valueChange: EventEmitter<T | undefined> = new EventEmitter();
 
   private readonly numberCoercer: NumberCoercer = new NumberCoercer();
+  private readonly debouncedValueSubject: Subject<T | undefined> = new Subject();
 
   public placeholderValue: string = '';
 
-  public constructor(private readonly cdr: ChangeDetectorRef) {}
+  public constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
+  ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.placeholder) {
       this.placeholderValue = this.placeholder ?? '';
+    }
+
+    if (changes.debounceTime) {
+      this.setDebouncedSubscription();
     }
   }
 
@@ -76,7 +90,7 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   public onValueChange(value?: string): void {
     const coercedValue = this.coerceValueIfNeeded(value);
     this.value = coercedValue;
-    this.valueChange.emit(coercedValue);
+    this.debouncedValueSubject.next(coercedValue);
     this.propagateValueChangeToFormControl(coercedValue);
   }
 
@@ -114,5 +128,14 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   private propagateValueChangeToFormControl(value: T | undefined): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  private setDebouncedSubscription(): void {
+    this.subscriptionLifecycle.unsubscribe();
+    this.subscriptionLifecycle.add(
+      this.debouncedValueSubject
+        .pipe(debounceTime(this.debounceTime ?? 0))
+        .subscribe(value => this.valueChange.emit(value))
+    );
   }
 }
