@@ -83,7 +83,7 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
       .pipe(
         filter(expression => this.isValidExpressionToEmit(expression)),
         debounceTime(500),
-        map(expression => omit(expression, 'metadata'))
+        map(expression => (isEmpty(expression) ? undefined : omit(expression, 'metadata')))
       )
       .subscribe(this.groupByExpressionChange);
   }
