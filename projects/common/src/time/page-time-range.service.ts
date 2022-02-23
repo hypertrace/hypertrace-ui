@@ -2,10 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, share, takeUntil } from 'rxjs/operators';
+import { NavigationService } from '../navigation/navigation.service';
 import { PreferenceService, StorageType } from '../preference/preference.service';
 import { TimeRange } from './time-range';
 import { TimeRangeService } from './time-range.service';
-import { NavigationService } from '../navigation/navigation.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageTimeRangeService implements OnDestroy {
