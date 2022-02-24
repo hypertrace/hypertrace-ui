@@ -8,7 +8,7 @@ export class BooleanFilterBuilder extends AbstractFilterBuilder<boolean> {
   }
 
   public supportedTopLevelOperators(): FilterOperator[] {
-    return [FilterOperator.Equals, FilterOperator.NotEquals];
+    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In];
   }
 
   public supportedSubpathOperators(): FilterOperator[] {
