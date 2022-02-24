@@ -20,6 +20,7 @@ import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
+import { SelectTriggerDisplayMode } from '../select/select.component';
 import { MultiSelectJustify } from './multi-select-justify';
 @Component({
   selector: 'ht-multi-select',
@@ -53,15 +54,24 @@ import { MultiSelectJustify } from './multi-select-justify';
           <div
             class="trigger-content"
             [style.justify-content]="this.justify"
-            [ngClass]="[this.triggerLabelDisplayMode, this.popoverOpen ? 'open' : '', this.size]"
+            [ngClass]="[
+              this.triggerLabelDisplayMode,
+              this.popoverOpen ? 'open' : '',
+              this.size,
+              this.disabled ? 'disabled' : '',
+              this.triggerDisplayMode
+            ]"
             #triggerContainer
           >
             <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
             <ng-container *ngIf="!this.isIconOnlyMode()">
               <div class="trigger-label-container" *ngIf="this.triggerValues$ | async as triggerValues">
                 <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
-                <span *ngIf="triggerValues.selectedItemsCount > 1" class="trigger-more-items"
-                  >+{{ triggerValues.selectedItemsCount - 1 }}</span
+                <span
+                  *ngIf="triggerValues.overflowItemsCount"
+                  class="trigger-more-items"
+                  [htTooltip]="triggerValues.overflowLabel"
+                  >+{{ triggerValues.overflowItemsCount }}</span
                 >
                 <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" [size]="this.iconSize"></ht-icon>
               </div>
@@ -164,6 +174,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
+  public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
+
+  @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
 
   @Input()
@@ -243,7 +256,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => isEqual(value, item.value)).length > 0;
+    return Array.isArray(this.selected) && this.selected.filter(value => isEqual(value, item.value)).length > 0;
   }
 
   public preventClickDefault(event: Event): void {
@@ -262,6 +275,10 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
   private setSelection(selected: V[]): void {
     this.selected = selected;
     this.setTriggerLabel();
@@ -273,7 +290,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
       this.triggerValues$ = of({
         label: this.placeholder,
-        selectedItemsCount: 0
+        overflowItemsCount: 0
       });
 
       return;
@@ -282,10 +299,17 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.triggerValues$ = this.allOptions$?.pipe(
       map(options => {
         const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
+        const isMultiSelection = selectedItems.length > 1;
 
         return {
           label: this.getLabel(selectedItems),
-          selectedItemsCount: selectedItems.length
+          overflowItemsCount: isMultiSelection ? selectedItems.length - 1 : 0,
+          overflowLabel: isMultiSelection
+            ? selectedItems
+                .slice(1)
+                .map(item => item.label)
+                .join(', ')
+            : undefined
         };
       })
     );
@@ -307,7 +331,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
 interface TriggerValues {
   label: string | undefined;
-  selectedItemsCount: number;
+  overflowItemsCount: number;
+  overflowLabel?: string;
 }
 
 export const enum TriggerLabelDisplayMode {

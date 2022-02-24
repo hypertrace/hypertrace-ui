@@ -20,6 +20,10 @@ export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
 export * from './checkbox/checkbox.component';
 export * from './checkbox/checkbox.module';
 
+// Collapsible sidebar
+export * from './collapsible-sidebar/collapsible-sidebar.component';
+export * from './collapsible-sidebar/collapsible-sidebar.module';
+
 // Combo Box
 export * from './combo-box/combo-box.module';
 export * from './combo-box/combo-box.component';
@@ -283,6 +287,10 @@ export * from './summary-value/summary-value.module';
 // Summary Values
 export * from './summary-values/summary-values.component';
 export * from './summary-values/summary-values.module';
+
+// X More
+export * from './x-more/x-more.component';
+export * from './x-more/x-more.module';
 
 // Table
 export * from './table/controls/table-controls-api';

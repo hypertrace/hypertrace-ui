@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
+import { FilterValue } from '../filter';
 import { FilterAttributeType } from '../filter-attribute-type';
 import { AbstractFilterBuilder } from './types/abstract-filter-builder';
 import { BooleanFilterBuilder } from './types/boolean-filter-builder';
@@ -11,7 +12,7 @@ import { StringMapFilterBuilder } from './types/string-map-filter-builder';
   providedIn: 'root'
 })
 export class FilterBuilderLookupService {
-  public lookup(type: FilterAttributeType): AbstractFilterBuilder<unknown> {
+  public lookup(type: FilterAttributeType): AbstractFilterBuilder<FilterValue> {
     switch (type) {
       case FilterAttributeType.Boolean:
         return new BooleanFilterBuilder();

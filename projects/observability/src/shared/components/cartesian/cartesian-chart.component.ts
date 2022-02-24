@@ -60,6 +60,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public timeRange?: TimeRange;
 
   @Input()
+  public rangeSelectionEnabled: boolean = false;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
@@ -110,10 +113,13 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       )
       .withEventListener(ChartEvent.Hover, data => {
         this.chartSyncService.mouseLocationChange(data, this.groupId);
-      })
-      .withEventListener(ChartEvent.Select, selectedData => {
+      });
+
+    if (this.rangeSelectionEnabled) {
+      this.chart.withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
       });
+    }
 
     if (this.groupId !== undefined) {
       this.subscriptionLifeCycle.unsubscribe();

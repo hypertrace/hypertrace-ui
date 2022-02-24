@@ -27,6 +27,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [showXAxis]="this.model.showXAxis"
         [showYAxis]="this.model.showYAxis"
         [timeRange]="this.timeRange"
+        [rangeSelectionEnabled]="!!this.model.selectionHandler"
         [selectedInterval]="this.selectedInterval"
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"

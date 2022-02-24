@@ -144,12 +144,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
+          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{
             'selected-row': this.shouldHighlightRowAsSelection(row),
             'hovered-row': this.isHoveredRow(row),
+            'last-row': isLast,
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
@@ -306,6 +307,9 @@ export class TableComponent
 
   @Output()
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
+
+  @Output()
+  public readonly sortChange: EventEmitter<SortedColumn> = new EventEmitter<SortedColumn>();
 
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
@@ -537,10 +541,12 @@ export class TableComponent
 
   public onSortChange(direction: TableSortDirection, columnConfig: TableColumnConfigExtended): void {
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
-      this.updateSort({
+      const sortedColumn: SortedColumn = {
         column: columnConfig,
         direction: direction
-      });
+      };
+      this.sortChange.emit(sortedColumn);
+      this.updateSort(sortedColumn);
     }
 
     if (this.syncWithUrl) {
@@ -775,7 +781,7 @@ export class TableComponent
   }
 }
 
-interface SortedColumn {
+export interface SortedColumn {
   column: TableColumnConfigExtended;
   direction?: TableSortDirection;
 }
