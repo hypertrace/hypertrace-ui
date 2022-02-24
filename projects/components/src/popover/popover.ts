@@ -34,7 +34,6 @@ export interface PopoverRelativePosition {
 export interface PopoverFixedPosition {
   type: PopoverPositionType.Fixed;
   location: PopoverFixedPositionLocation;
-  boundingElement?: Element;
   customLocation?: {
     x: number;
     y: number;

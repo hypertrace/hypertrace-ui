@@ -1,33 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Band, CartesianSelectedData, Series } from '../../../public-api';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 
 @Injectable({ providedIn: 'root' })
 export class ChartSyncService<TData> {
-  private readonly locationChangeSubject: Subject<
-    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
-  > = new Subject();
-
-  private groupId?: string;
+  private readonly locationChangeSubject: Subject<{
+    groupId?: string;
+    locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+  }> = new Subject();
 
   public mouseLocationChange(
     data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
     groupId?: string
   ): void {
-    this.locationChangeSubject.next(data);
-    this.groupId = groupId;
+    this.locationChangeSubject.next({
+      groupId: groupId,
+      locationData: data as MouseLocationData<TData, Series<TData> | Band<TData>>[]
+    });
   }
 
   public getLocationChangesForGroup(
-    groupId: string
-  ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>> {
-    const selectedData = this.locationChangeSubject.pipe(
-      switchMap(async results => results),
-      filter(_result => this.groupId === groupId)
-    );
+    _groupId: string
+  ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[]> {
+    return this.locationChangeSubject.pipe(map(data => this.filterArray(data)));
+  }
 
-    return selectedData;
+  private filterArray(data: {
+    groupId?: string;
+    locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+  }): MouseLocationData<TData, Series<TData> | Band<TData>>[] {
+    return data.locationData;
   }
 }

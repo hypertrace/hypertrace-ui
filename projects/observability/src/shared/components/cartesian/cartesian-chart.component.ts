@@ -10,7 +10,7 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
+import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
 import { defaults } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
@@ -28,6 +28,7 @@ import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-d
   selector: 'ht-cartesian-chart',
   styleUrls: ['./cartesian-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
@@ -86,7 +87,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
     private readonly renderer: Renderer2,
-    private readonly chartSyncService: ChartSyncService<TData>
+    private readonly chartSyncService: ChartSyncService<TData>,
+    private readonly subscriptionLifeCycle: SubscriptionLifecycle
   ) {}
 
   public ngOnChanges(): void {
@@ -114,9 +116,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       });
 
     if (this.groupId !== undefined) {
-      this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
-        this.chart?.showCrosshair(data);
-      });
+      this.subscriptionLifeCycle.unsubscribe();
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
+          this.chart?.showCrosshair(data);
+        })
+      );
     }
 
     if (this.bands) {
@@ -155,6 +160,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   public ngOnDestroy(): void {
     this.chart && this.chart.destroy();
+    this.subscriptionLifeCycle.unsubscribe();
   }
 
   public redraw(): void {
