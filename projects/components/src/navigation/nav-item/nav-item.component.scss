@@ -10,7 +10,8 @@
   justify-content: flex-start;
   align-items: center;
 
-  border-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
   padding-left: 16px;
   padding-right: 16px;
 
@@ -27,40 +28,37 @@
   }
 
   .icon {
-    color: $gray-4;
+    color: $gray-1;
   }
 
   .label {
     flex: 1;
-    @include body-1-medium($gray-6);
+    @include body-1-medium($gray-2);
   }
 
   &.active {
-    background-color: $gray-2;
+    @include nav-primary-background;
+
+    &:hover {
+      background-color: $blue-5;
+    }
 
     .label {
-      color: $gray-9;
+      color: white;
     }
 
     .icon {
-      color: $gray-6;
-    }
-
-    &:hover {
-      background-color: $gray-1;
+      color: white;
     }
   }
 
   &:hover {
-    background-color: $gray-1;
+    @include nav-primary-background;
   }
 
   .soon-container {
     flex: 0;
-    display: flex;
-    flex-direction: row;
-    vertical-align: center;
-    align-items: center;
+    @include center-contents;
   }
 
   .soon {

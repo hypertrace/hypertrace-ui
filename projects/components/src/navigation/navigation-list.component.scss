@@ -1,10 +1,10 @@
-@import 'color-palette';
-@import 'font';
+@import 'mixins';
 
 .navigation-list {
   position: relative;
   display: flex;
   flex-direction: column;
+  @include nav-secondary-background;
 
   height: 100%;
   width: 100%;
@@ -12,7 +12,8 @@
 
   .content {
     overflow-y: auto;
-    padding: 18px 12px;
+    overflow-x: hidden;
+    padding: 18px 0 12px 12px;
 
     .nav-header {
       padding-top: 24px;
@@ -23,7 +24,7 @@
       align-items: center;
 
       .label {
-        @include overline($gray-9);
+        @include overline($blue-2);
       }
 
       .beta {
@@ -40,12 +41,10 @@
     right: -12px;
     height: 28px;
     width: 12px;
-    border: 1px solid $gray-2;
-    border-left-color: white;
     border-radius: 0 6px 6px 0;
     cursor: pointer;
-    color: $gray-7;
-    background: white;
+    color: white;
+    @include nav-secondary-background;
 
     &:hover {
       color: $gray-4;
