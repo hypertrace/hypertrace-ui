@@ -1,10 +1,10 @@
 @import 'mixins';
 
 .navigation-list {
+  @include nav-secondary-background;
   position: relative;
   display: flex;
   flex-direction: column;
-  @include nav-secondary-background;
 
   height: 100%;
   width: 100%;
@@ -34,6 +34,7 @@
   }
 
   .resize-tab-button {
+    @include nav-secondary-background;
     position: absolute;
     display: flex;
     align-items: center;
@@ -44,7 +45,6 @@
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     color: white;
-    @include nav-secondary-background;
 
     &:hover {
       color: $gray-4;
@@ -88,4 +88,55 @@
 
 .expanded {
   width: 244px;
+}
+
+// Temporary fix to maintain backward compatibility with settings, self serve, and preferences navigation.
+// Alternatively we could do this with ng-deep from parents
+// OR have multiple files in styleUrls to contain this for now ?
+:host(.settings-navigation, .preferences-navigation, .self-service-navigation) {
+  .navigation-list {
+    background: white;
+
+    .content .nav-header .label {
+      @include overline($gray-9);
+    }
+
+    .resize-tab-button {
+      border: 1px solid $gray-2;
+      border-left-color: white;
+      color: $gray-7;
+      background: white;
+    }
+    .content {
+      ::ng-deep {
+        .nav-item {
+          border-radius: 4px;
+          .icon {
+            color: $gray-4;
+          }
+          .label {
+            @include body-1-medium($gray-6);
+          }
+
+          &:hover {
+            .icon {
+              color: white;
+            }
+            .label {
+              color: white;
+            }
+          }
+
+          &.active {
+            .icon {
+              color: white;
+            }
+            .label {
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
 }
