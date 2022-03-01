@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
-import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
+import { FooterItemConfig, NavItemConfig, NavItemGroup, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Component({
   selector: 'ht-navigation-list',
@@ -40,7 +40,13 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
       </div>
 
       <div class="footer" *ngIf="this.footerItems">
-        <hr class="nav-divider" />
+        <div class="footer-item">
+          <ht-icon class="footer-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
+        </div>
+
+        <div class="footer-item">
+          <ht-label class="label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
+        </div>
 
         <div *ngFor="let footerItem of footerItems" class="footer-item">
           <ht-link class="link" [paramsOrUrl]="footerItem.url">
@@ -53,6 +59,9 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   `
 })
 export class NavigationListComponent implements OnChanges {
+  @Input()
+  public navGroup?: NavItemGroup;
+
   @Input()
   public navItems: NavItemConfig[] = [];
 
