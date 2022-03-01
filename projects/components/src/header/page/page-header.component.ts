@@ -16,7 +16,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
 import { HeaderPrimaryRowContentDirective } from '../header-content/header-primary-row-content.directive';
 import { HeaderSecondaryRowContentDirective } from '../header-content/header-secondary-row-content.directive';
 
-const enum PageTimeRangeFeature {
+export const enum PageTimeRangeFeature {
   PageTimeRange = 'ui.page-time-range'
 }
 @Component({
