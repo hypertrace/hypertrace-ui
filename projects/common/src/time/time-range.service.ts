@@ -64,18 +64,23 @@ export class TimeRangeService {
   }
 
   private initializeTimeRange(): void {
+    // This is to capture the time range changes when the user navigates, specifically when they are navigating via left nav
+    // A time range is chosen with this order of precedence:
+    // 1. Url query param
+    // 2. 'static' time range for current page. Defined in root routes in data property. Retrieved from ActivatedRoute
+    // 3. Global default time range, set in this service.
     combineLatest([
       this.navigationService.navigation$,
       this.navigationService.navigation$.pipe(switchMap(activatedRoute => activatedRoute.queryParamMap))
     ])
       .pipe(
         map(([activeRoute, paramMap]) => {
-          const defaultPageTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
           const timeRangeString = paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
-
           if (typeof timeRangeString === 'string' && !isEmpty(timeRangeString)) {
             return this.timeRangeFromUrlString(timeRangeString);
           }
+
+          const defaultPageTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
           if (defaultPageTimeRange) {
             return defaultPageTimeRange;
           }

@@ -1,10 +1,10 @@
 import {
   FixedTimeRange,
   NavigationService,
-  PageTimeRangeService,
   RelativeTimeRange,
   TimeDuration,
   TimeRange,
+  TimeRangeForPageService,
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
@@ -14,7 +14,7 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 describe('Page time range service', () => {
   const defaultPageTimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
   const serviceFactory = createServiceFactory({
-    service: PageTimeRangeService,
+    service: TimeRangeForPageService,
     providers: [mockProvider(NavigationService)]
   });
 
@@ -31,10 +31,10 @@ describe('Page time range service', () => {
       jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-a|', {
-        a: () => spectator.service.setPageTimeRange('foo', timeRange)
+        a: () => spectator.service.setTimeRangeForCurrentPage('foo', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getPageTimeRange('foo')).toBe('da', {
+      expectObservable(spectator.service.getTimeRangeForCurrentPage('foo')).toBe('da', {
         d: defaultPageTimeRange,
         a: timeRange
       });
@@ -54,10 +54,10 @@ describe('Page time range service', () => {
       jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-b|', {
-        b: () => spectator.service.setPageTimeRange('bar', timeRange)
+        b: () => spectator.service.setTimeRangeForCurrentPage('bar', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getPageTimeRange('bar')).toBe('db', {
+      expectObservable(spectator.service.getTimeRangeForCurrentPage('bar')).toBe('db', {
         d: defaultPageTimeRange,
         b: timeRange
       });

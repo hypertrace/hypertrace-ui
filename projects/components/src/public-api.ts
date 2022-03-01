@@ -126,8 +126,8 @@ export * from './header/application/application-header.module';
 export * from './header/page/page-header.component';
 export * from './header/page/page-header.module';
 export * from './header/header-content/header-content.module';
-export * from './header/header-content/header-content-primary.directive';
-export * from './header/header-content/header-content-secondary.directive';
+export * from './header/header-content/header-primary-row-content.directive';
+export * from './header/header-content/header-secondary-row-content.directive';
 
 // Icon
 export * from './icon/icon-size';
@@ -333,8 +333,8 @@ export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
 
 // Page Time Range
-export * from './time-range/page-time-range/page-time-range.component';
-export * from './time-range/page-time-range/page-time-range.module';
+export * from './time-range/time-range-for-page/time-range-for-page.component';
+export * from './time-range/time-range-for-page/time-range-for-page.module';
 
 // Titled Content
 export {

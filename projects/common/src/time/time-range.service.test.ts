@@ -14,24 +14,24 @@ import { map } from 'rxjs/operators';
 import { FixedTimeRange } from './fixed-time-range';
 
 interface NavMock {
-  qpTime: string | undefined;
+  queryParamTime: string | undefined;
   defaultTimeRange: TimeRange | undefined;
 }
 
 describe('Time range service', () => {
   let relativeTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   const firstMockRoute: NavMock = {
-    qpTime: '1573255100253-1573255111159',
+    queryParamTime: '1573255100253-1573255111159',
     defaultTimeRange: relativeTimeRange
   };
   const secondMockRoute: NavMock = {
-    qpTime: undefined,
+    queryParamTime: undefined,
     defaultTimeRange: relativeTimeRange
   };
   const buildMockRoute = (navMock: NavMock): ActivatedRoute =>
     // tslint:disable-next-line: no-object-literal-type-assertion
     (({
-      queryParamMap: of(convertToParamMap({ time: navMock.qpTime })),
+      queryParamMap: of(convertToParamMap({ time: navMock.queryParamTime })),
       snapshot: { data: { defaultTimeRange: navMock.defaultTimeRange } }
     } as unknown) as ActivatedRoute);
 

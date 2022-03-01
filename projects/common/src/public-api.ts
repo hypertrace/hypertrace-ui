@@ -120,7 +120,7 @@ export * from './time/time-range.service';
 export * from './time/time-range.type';
 export * from './time/time-unit.type';
 export * from './time/time';
-export * from './time/page-time-range.service';
+export * from './time/time-range-for-page.service';
 
 // Validators
 export * from './utilities/validators';

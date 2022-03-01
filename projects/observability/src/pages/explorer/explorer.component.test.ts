@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
+  FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
   PreferenceService,
@@ -84,6 +85,9 @@ describe('Explorer component', () => {
     providers: [
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(true))
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,

@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationParams, NavigationParamsType, PageTimeRangeService } from '@hypertrace/common';
-import { Observable, of } from 'rxjs';
+import {
+  FeatureState,
+  NavigationParams,
+  NavigationParamsType,
+  TimeRangeForPageService,
+  TypedSimpleChanges
+} from '@hypertrace/common';
+import { isNil } from 'lodash-es';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation.config';
@@ -46,12 +53,12 @@ import { NavItemLinkConfig } from '../navigation.config';
     </ht-link>
   `
 })
-export class NavItemComponent implements OnInit {
+export class NavItemComponent implements OnChanges {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
-  public navItemParams$: Observable<NavigationParams | undefined> = of(undefined);
+  public navItemParams$: Observable<NavigationParams> | undefined;
 
   @Input()
-  public config!: NavItemLinkConfig;
+  public config?: NavItemLinkConfig;
 
   @Input()
   public active: boolean = true;
@@ -61,19 +68,25 @@ export class NavItemComponent implements OnInit {
 
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly pageTimeRangeService: PageTimeRangeService
+    private readonly timeRangeForPageService: TimeRangeForPageService
   ) {}
 
-  public ngOnInit(): void {
-    this.navItemParams$ = this.pageTimeRangeService.getPageTimeRange(this.config.matchPaths[0]).pipe(
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.config && !isNil(this.config)) {
+      this.navItemParams$ = this.getNavParamsForPath(this.config.matchPaths[0]);
+    }
+  }
+
+  private getNavParamsForPath(path: string): Observable<NavigationParams> {
+    return this.timeRangeForPageService.getTimeRangeForCurrentPage(path).pipe(
       map(timeRange => ({
         navType: NavigationParamsType.InApp,
-        path: this.config.matchPaths[0],
+        path: path,
         relativeTo: this.activatedRoute,
         queryParams: {
           [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
         },
-        replaceCurrentHistory: this.config.replaceCurrentHistory
+        replaceCurrentHistory: this.config!.replaceCurrentHistory
       }))
     );
   }

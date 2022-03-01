@@ -1,8 +1,8 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 @Directive({
-  selector: '[htHeaderContentPrimary]'
+  selector: '[htHeaderPrimaryRowContent]'
 })
-export class HeaderContentPrimaryDirective {
+export class HeaderPrimaryRowContentDirective {
   public constructor(public templateRef: TemplateRef<unknown>) {}
 }

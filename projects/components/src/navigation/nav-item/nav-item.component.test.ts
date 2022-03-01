@@ -7,10 +7,10 @@ import {
   MemoizeModule,
   NavigationParamsType,
   NavigationService,
-  PageTimeRangeService,
   RelativeTimeRange,
   TimeDuration,
   TimeRange,
+  TimeRangeForPageService,
   TimeUnit
 } from '@hypertrace/common';
 import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/components';
@@ -41,8 +41,8 @@ describe('Navigation Item Component', () => {
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled)
       }),
-      mockProvider(PageTimeRangeService, {
-        getPageTimeRange: jest
+      mockProvider(TimeRangeForPageService, {
+        getTimeRangeForCurrentPage: jest
           .fn()
           .mockReturnValue(of(new FixedTimeRange(new Date('Feb 15 2022 16:00:00'), new Date('Feb 17 2022 17:32:01'))))
       }),
@@ -138,8 +138,8 @@ describe('Navigation Item Component', () => {
     spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
       hostProps: { navItem: navItem },
       providers: [
-        mockProvider(PageTimeRangeService, {
-          getPageTimeRange: jest.fn().mockReturnValue(of(timeRange))
+        mockProvider(TimeRangeForPageService, {
+          getTimeRangeForCurrentPage: jest.fn().mockReturnValue(of(timeRange))
         })
       ]
     });

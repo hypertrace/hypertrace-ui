@@ -1,4 +1,4 @@
-import { NavigationService, PreferenceService, SubscriptionLifecycle } from '@hypertrace/common';
+import { FeatureStateResolver, NavigationService, PreferenceService, SubscriptionLifecycle } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
@@ -14,6 +14,9 @@ describe('Page Header Component', () => {
       mockProvider(NavigationService),
       mockProvider(PreferenceService),
       mockProvider(SubscriptionLifecycle),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(true))
+      }),
       mockProvider(BreadcrumbsService, {
         breadcrumbs$: of([
           {

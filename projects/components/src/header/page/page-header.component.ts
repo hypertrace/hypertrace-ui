@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit } from '@angular/core';
 import {
   Breadcrumb,
+  FeatureState,
+  FeatureStateResolver,
   isNonEmptyString,
   NavigationService,
   PreferenceService,
@@ -11,9 +13,12 @@ import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
-import { HeaderContentPrimaryDirective } from '../header-content/header-content-primary.directive';
-import { HeaderContentSecondaryDirective } from '../header-content/header-content-secondary.directive';
+import { HeaderPrimaryRowContentDirective } from '../header-content/header-primary-row-content.directive';
+import { HeaderSecondaryRowContentDirective } from '../header-content/header-secondary-row-content.directive';
 
+const enum PageTimeRangeFeature {
+  PageTimeRange = 'ui.page-time-range'
+}
 @Component({
   selector: 'ht-page-header',
   styleUrls: ['./page-header.component.scss'],
@@ -42,11 +47,11 @@ import { HeaderContentSecondaryDirective } from '../header-content/header-conten
               <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
             </div>
           </div>
-          <ng-container *ngTemplateOutlet="this.contentPrimary?.templateRef"></ng-container>
-          <ht-page-time-range class="time-range"></ht-page-time-range>
+          <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
+          <ht-time-range-for-page *ngIf="this.showPageTimeRange | async" class="time-range"></ht-time-range-for-page>
         </div>
 
-        <ng-container [ngTemplateOutlet]="this.contentSecondary?.templateRef"></ng-container>
+        <ng-container [ngTemplateOutlet]="this.secondaryRowContent?.templateRef"></ng-container>
       </div>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
@@ -63,6 +68,8 @@ import { HeaderContentSecondaryDirective } from '../header-content/header-conten
   `
 })
 export class PageHeaderComponent implements OnInit {
+  public readonly showPageTimeRange: Observable<boolean>;
+
   @Input()
   public persistenceId?: string;
 
@@ -72,11 +79,11 @@ export class PageHeaderComponent implements OnInit {
   @Input()
   public isBeta: boolean = false;
 
-  @ContentChild(HeaderContentPrimaryDirective)
-  public readonly contentPrimary?: HeaderContentPrimaryDirective;
+  @ContentChild(HeaderPrimaryRowContentDirective)
+  public readonly primaryRowContent?: HeaderPrimaryRowContentDirective;
 
-  @ContentChild(HeaderContentSecondaryDirective)
-  public readonly contentSecondary?: HeaderContentSecondaryDirective;
+  @ContentChild(HeaderSecondaryRowContentDirective)
+  public readonly secondaryRowContent?: HeaderSecondaryRowContentDirective;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
@@ -90,8 +97,13 @@ export class PageHeaderComponent implements OnInit {
     protected readonly navigationService: NavigationService,
     protected readonly preferenceService: PreferenceService,
     protected readonly subscriptionLifecycle: SubscriptionLifecycle,
-    protected readonly breadcrumbsService: BreadcrumbsService
-  ) {}
+    protected readonly breadcrumbsService: BreadcrumbsService,
+    protected readonly featureResolver: FeatureStateResolver
+  ) {
+    this.showPageTimeRange = this.featureResolver
+      .getFeatureState(PageTimeRangeFeature.PageTimeRange)
+      .pipe(map(featureState => featureState === FeatureState.Enabled));
+  }
 
   public ngOnInit(): void {
     this.subscriptionLifecycle.add(
