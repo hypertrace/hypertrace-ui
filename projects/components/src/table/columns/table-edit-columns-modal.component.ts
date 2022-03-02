@@ -14,9 +14,9 @@ import { TableColumnConfigExtended } from '../table.service';
           <div class="column-item">
             <ht-checkbox
               [label]="column.title"
-              [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
+              [htTooltip]="column.titleTooltip"
               [checked]="column.visible"
-              [disabled]="!column.editable || this.isLastRemainingColumn(column)"
+              [disabled]="!column.editable"
               (checkedChange)="column.visible = $event"
             ></ht-checkbox>
           </div>

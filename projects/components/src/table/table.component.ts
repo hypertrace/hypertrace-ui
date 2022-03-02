@@ -88,7 +88,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               </div>
               <ht-table-header-cell-renderer
                 class="header-cell-renderer"
-                [editable]="!this.isTreeType()"
                 [metadata]="this.metadata"
                 [columnConfig]="columnDef"
                 [availableColumns]="this.columnConfigs$ | async"
@@ -225,6 +224,13 @@ export class TableComponent
     id: '$$detail'
   };
 
+  private readonly tableSettingsColumnConfig: TableColumnConfig = {
+    id: '$$tableSettingsColumns',
+    width: '32px',
+    visible: true,
+    editable: true
+  };
+
   @Input()
   public columnConfigs?: TableColumnConfig[];
 
@@ -284,6 +290,9 @@ export class TableComponent
 
   @Input()
   public rowHeight: string = '44px';
+
+  @Input()
+  public showTableSettings: boolean = false;
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
@@ -615,7 +624,7 @@ export class TableComponent
     }
 
     return this.tableService.buildExtendedColumnConfigs(
-      [...stateColumns, ...columnConfigs],
+      [...stateColumns, ...columnConfigs, ...[this.showTableSettings ? this.tableSettingsColumnConfig : []].flat()],
       this.dataSource,
       this.metadata || []
     );

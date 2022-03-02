@@ -51,7 +51,7 @@ import { TableColumnConfigExtended } from '../table.service';
         <ht-popover class="options-button" [closeOnClick]="true">
           <ht-popover-trigger>
             <div #trigger>
-              <ht-icon icon="${IconType.MoreHorizontal}" size="${IconSize.Small}"></ht-icon>
+              <ht-icon icon="${IconType.MoreVertical}" size="${IconSize.Small}"></ht-icon>
             </div>
           </ht-popover-trigger>
           <ht-popover-content>
@@ -71,7 +71,7 @@ import { TableColumnConfigExtended } from '../table.service';
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
+              <ng-container *ngIf="this.columnConfig?.editable">
                 <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
               </ng-container>
@@ -85,9 +85,6 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-
-  @Input()
-  public editable?: boolean = false;
 
   @Input()
   public metadata?: FilterAttribute[];
@@ -115,7 +112,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public classes: string[] = [];
 
   public isFilterable: boolean = false;
-  public isEditableAvailableColumns: boolean = false;
   public isShowOptionButton: boolean = false;
 
   @ViewChild('htmlTooltip')
@@ -134,9 +130,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
-      this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
       this.isShowOptionButton =
-        this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
+        this.isFilterable || this.columnConfig?.editable || this.columnConfig?.sortable === true;
     }
   }
 
@@ -186,18 +181,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       this.columnConfig.attribute !== undefined &&
       this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.columnConfig.attribute.type)
     );
-  }
-
-  private areAnyAvailableColumnsEditable(): boolean {
-    if (this.availableColumns === undefined) {
-      return false;
-    }
-
-    return this.availableColumns.some(column => this.isColumnEditable(column));
-  }
-
-  private isColumnEditable(columnConfig: TableColumnConfigExtended): boolean {
-    return columnConfig.editable === true;
   }
 
   public onFilterValues(): void {
