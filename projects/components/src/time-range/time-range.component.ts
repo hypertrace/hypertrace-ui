@@ -24,7 +24,7 @@ import { PopoverRef } from '../popover/popover-ref';
         <ht-popover (popoverOpen)="this.onPopoverOpen($event)" [closeOnNavigate]="false">
           <ht-popover-trigger>
             <div class="trigger">
-              <ht-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Medium}"></ht-icon>
+              <ht-icon class="trigger-icon" icon="${IconType.Calendar}" size="${IconSize.Medium}"></ht-icon>
               <ht-label class="trigger-label" [label]="timeRange.toDisplayString()"></ht-label>
               <ht-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
