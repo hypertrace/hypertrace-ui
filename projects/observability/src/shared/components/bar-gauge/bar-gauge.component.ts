@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ElementRef,
   Input,
   OnChanges,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -17,6 +19,8 @@ import {
   getPercentage,
   TypedSimpleChanges
 } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
+import { BarGaugeLegendDirective } from './bar-gauge-legend.directive';
 
 @Component({
   selector: 'ht-bar-gauge',
@@ -24,7 +28,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
-      <div *ngIf="this.display !== '${BarGaugeStyle.SingleBar}'" class="header-data" [ngClass]="this.display">
+      <div
+        *ngIf="!['${BarGaugeStyle.SingleBar}', '${BarGaugeStyle.Distribution}'].includes(this.display)"
+        class="header-data"
+        [ngClass]="this.display"
+      >
         <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
         <div class="count">
           <span>{{ this.totalValue | htDisplayNumber }}</span>
@@ -45,23 +53,33 @@ import {
               #segmentBars
               *ngFor="let segment of this.barSegments"
               class="segment-bar"
-              [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
+              [ngClass]="{ 'hide-last-divider': this.nearMaxValue, clickable: segment.hasClickHandler }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
-              htTooltip="{{ segment.label }} : {{ segment.value | htDisplayNumber }}"
+              (click)="segment?.clickHandler(segment)"
+              [htTooltip]="segment.tooltip"
+              [htTooltipContext]="{ $implicit: segment }"
             >
               <div class="divider"></div>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="this.display === '${BarGaugeStyle.Regular}'" class="legend">
-        <div class="legend-item" *ngFor="let segment of this.barSegments">
-          <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
-          <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
-          <span class="legend-label">{{ segment.label }}</span>
+      <ng-container *ngIf="['${BarGaugeStyle.SingleBar}', '${BarGaugeStyle.Distribution}'].includes(this.display)">
+        <ng-container *ngIf="customLegend; else defaultLegend">
+          <ng-container *ngTemplateOutlet="customLegend.tpl; context: { $implicit: this.barSegments }"></ng-container>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #defaultLegend>
+        <div class="legend">
+          <div class="legend-item" *ngFor="let segment of this.barSegments">
+            <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
+            <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
+            <span class="legend-label">{{ segment.label }}</span>
+          </div>
         </div>
-      </div>
+      </ng-template>
     </div>
   `
 })
@@ -73,6 +91,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @ViewChildren('segmentBars', { read: ElementRef })
   public segmentBars!: QueryList<ElementRef>;
+
+  @ContentChild(BarGaugeLegendDirective)
+  public customLegend!: BarGaugeLegendDirective;
 
   @Input()
   public title?: string;
@@ -149,7 +170,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
     return {
       ...segment,
       color: segment.color ?? color,
-      percentage: percentage
+      percentage: percentage,
+      hasClickHandler: !isNil(segment?.clickHandler),
+      tooltip: segment.tooltip ?? `${segment.label}: ${segment.value}`
     };
   }
 
@@ -162,14 +185,27 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
+  tooltip?: string | TemplateRef<SegmentContext>;
+
+  clickHandler?(segment: Segment): void;
 }
 
 interface BarSegment extends Segment {
   percentage: number;
+  hasClickHandler: boolean;
 }
 
 export const enum BarGaugeStyle {
   Regular = 'regular',
   Compact = 'compact',
-  SingleBar = 'single-bar'
+  SingleBar = 'single-bar',
+  Distribution = 'distribution'
+}
+
+export interface SegmentContext {
+  $implicit: Segment;
+}
+
+export interface CustomLegendContext {
+  $implicit: Segment[];
 }

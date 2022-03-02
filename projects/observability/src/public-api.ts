@@ -384,6 +384,7 @@ export * from './shared/components/label-detail/label-detail.module';
 
 // Bar Gauge
 export * from './shared/components/bar-gauge/bar-gauge.component';
+export * from './shared/components/bar-gauge/bar-gauge-legend.directive';
 export * from './shared/components/bar-gauge/bar-gauge.module';
 
 // Time Range utils
