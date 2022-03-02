@@ -40,11 +40,11 @@ import { FooterItemConfig, NavItemConfig, NavItemGroup, NavItemLinkConfig, NavIt
       </div>
 
       <div class="footer" *ngIf="this.footerItems">
-        <div class="footer-item">
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
           <ht-icon class="footer-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
         </div>
 
-        <div class="footer-item">
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
           <ht-label class="label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
         </div>
 
