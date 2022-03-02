@@ -15,6 +15,7 @@ import { FooterItemConfig, NavItemConfig, NavItemGroup, NavItemLinkConfig, NavIt
   template: `
     <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
+        <ng-content></ng-content>
         <ng-container *ngFor="let item of this.navItems; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
