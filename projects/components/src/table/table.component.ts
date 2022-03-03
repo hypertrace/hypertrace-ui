@@ -399,7 +399,7 @@ export class TableComponent
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
-        filter((sort): sort is Required<SortedColumn> => sort !== undefined)
+        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
       )
       .subscribe(sort => this.updateSort(sort));
   }
@@ -416,6 +416,7 @@ export class TableComponent
     if (
       changes.mode ||
       changes.data ||
+      changes.columnConfigs ||
       changes.filters ||
       changes.queryProperties ||
       changes.pageSize ||
@@ -550,7 +551,7 @@ export class TableComponent
 
   public onSortChange(direction: TableSortDirection, columnConfig: TableColumnConfigExtended): void {
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
-      const sortedColumn: SortedColumn = {
+      const sortedColumn: SortedColumn<TableColumnConfigExtended> = {
         column: columnConfig,
         direction: direction
       };
@@ -638,7 +639,7 @@ export class TableComponent
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
   }
 
-  private updateSort(sort: SortedColumn): void {
+  private updateSort(sort: SortedColumn<TableColumnConfigExtended>): void {
     sort.column.sort = sort.direction;
     this.columnStateSubject.next(sort.column);
   }
@@ -790,8 +791,8 @@ export class TableComponent
   }
 }
 
-export interface SortedColumn {
-  column: TableColumnConfigExtended;
+export interface SortedColumn<TCol extends TableColumnConfig = TableColumnConfig> {
+  column: TCol;
   direction?: TableSortDirection;
 }
 
