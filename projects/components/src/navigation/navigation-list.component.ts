@@ -6,14 +6,21 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
-import { FooterItemConfig, NavItemConfig, NavItemGroup, NavItemLinkConfig, NavItemType } from './navigation.config';
+import {
+  FooterItemConfig,
+  NavItemConfig,
+  NavItemGroup,
+  NavItemLinkConfig,
+  NavItemType,
+  NavListViewStyle
+} from './navigation.config';
 
 @Component({
   selector: 'ht-navigation-list',
   styleUrls: ['./navigation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
+    <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navVewStyle ?? '']">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
         <ng-content></ng-content>
         <ng-container *ngFor="let item of this.navItems; let id = index">
@@ -77,6 +84,9 @@ export class NavigationListComponent implements OnChanges {
 
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
+
+  @Input()
+  public readonly navVewStyle?: NavListViewStyle;
 
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 

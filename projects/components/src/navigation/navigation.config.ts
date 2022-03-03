@@ -52,3 +52,7 @@ export interface NavItemGroup {
   navItems: NavItemConfig[];
   displayNavList: boolean;
 }
+
+export const enum NavListViewStyle {
+  DarkViewStyleClass = 'navigation-list-dark'
+}

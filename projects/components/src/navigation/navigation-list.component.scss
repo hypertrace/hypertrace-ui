@@ -100,17 +100,8 @@
       border: none;
     }
   }
-}
 
-.expanded {
-  width: 244px;
-}
-
-// Temporary fix to maintain backward compatibility with settings, self serve, and preferences navigation.
-// Alternatively we could do this with ng-deep from parents
-// OR have multiple files in styleUrls to contain this for now ?
-:host(.settings-navigation, .preferences-navigation, .self-service-navigation) {
-  .navigation-list {
+  &:not(.navigation-list-dark) {
     background: white;
 
     .content .nav-header .label {
@@ -155,4 +146,8 @@
       }
     }
   }
+}
+
+.expanded {
+  width: 244px;
 }
