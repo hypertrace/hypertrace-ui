@@ -123,12 +123,10 @@ describe('Time range service', () => {
       const spectator = buildService({
         providers: [
           mockProvider(NavigationService, {
-            get navigation$(): Observable<ActivatedRoute> {
-              return cold('-a-b', {
-                a: buildMockRoute(firstMockRoute),
-                b: buildMockRoute(secondMockRoute)
-              });
-            }
+            navigation$: cold('-a-b', {
+              a: buildMockRoute(firstMockRoute),
+              b: buildMockRoute(secondMockRoute)
+            })
           })
         ]
       });

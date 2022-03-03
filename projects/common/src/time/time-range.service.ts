@@ -80,9 +80,9 @@ export class TimeRangeService {
             return this.timeRangeFromUrlString(timeRangeString);
           }
 
-          const defaultPageTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
-          if (defaultPageTimeRange) {
-            return defaultPageTimeRange;
+          const activeRouteTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
+          if (activeRouteTimeRange) {
+            return activeRouteTimeRange;
           }
           throw Error();
         }),
