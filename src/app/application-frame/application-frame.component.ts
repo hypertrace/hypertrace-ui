@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { LayoutChangeService } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
-
+import { UserTelemetryOrchestrationService } from '../shared/telemetry/user-telemetry-orchestration.service';
 @Component({
   selector: 'ht-application-frame',
   styleUrls: ['./application-frame.component.scss'],
@@ -22,4 +22,10 @@ import { IconSize } from '@hypertrace/components';
     </div>
   `
 })
-export class ApplicationFrameComponent {}
+export class ApplicationFrameComponent implements OnInit {
+  public constructor(private readonly userTelemetryOrchestrationService: UserTelemetryOrchestrationService) {}
+
+  public ngOnInit(): void {
+    this.userTelemetryOrchestrationService.initialize();
+  }
+}
