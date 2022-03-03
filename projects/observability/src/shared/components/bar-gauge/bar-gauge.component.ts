@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -48,9 +49,10 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
-              htTooltip="{{ segment.label }} : {{ segment.value | htDisplayNumber }}"
+              [htTooltip]="this.segmentsTooltip ? this.segmentsTooltip : plainTooltip"
             >
               <div class="divider"></div>
+              <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
             </div>
           </div>
         </div>
@@ -88,6 +90,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public segments?: Segment[] = [];
+
+  @Input()
+  public segmentsTooltip?: TemplateRef<Segment>;
 
   @Input()
   public isOverMaxBorderActive: boolean = true;
