@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit } from '@angular/core';
 import {
   Breadcrumb,
-  FeatureState,
-  FeatureStateResolver,
   isNonEmptyString,
   NavigationService,
   PreferenceService,
@@ -30,7 +28,9 @@ export const enum PageTimeRangeFeature {
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <div class="column-alignment">
+      <!-- With this structure, column alignment works for all use cases, but for backwards
+            compatability alignment must remain dynamic   -->
+      <div [ngClass]="this.contentAlignment">
         <div class="primary-content">
           <div class="breadcrumb-container">
             <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
@@ -48,10 +48,16 @@ export const enum PageTimeRangeFeature {
             </div>
           </div>
           <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
-          <ht-time-range-for-page *ngIf="this.showPageTimeRange | async" class="time-range"></ht-time-range-for-page>
+          <ht-time-range-for-page
+            *htIfFeature="'${PageTimeRangeFeature.PageTimeRange}' | htFeature"
+            class="time-range"
+          ></ht-time-range-for-page>
         </div>
 
-        <ng-container [ngTemplateOutlet]="this.secondaryRowContent?.templateRef"></ng-container>
+        <ng-container
+          *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'"
+          [ngTemplateOutlet]="this.secondaryRowContent?.templateRef"
+        ></ng-container>
       </div>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
@@ -68,8 +74,6 @@ export const enum PageTimeRangeFeature {
   `
 })
 export class PageHeaderComponent implements OnInit {
-  public readonly showPageTimeRange: Observable<boolean>;
-
   @Input()
   public persistenceId?: string;
 
@@ -78,6 +82,12 @@ export class PageHeaderComponent implements OnInit {
 
   @Input()
   public isBeta: boolean = false;
+
+  /**
+   * Alignment must be set to column (default) for secondaryRowContent projection,
+   * */
+  @Input()
+  public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
 
   @ContentChild(HeaderPrimaryRowContentDirective)
   public readonly primaryRowContent?: HeaderPrimaryRowContentDirective;
@@ -97,13 +107,8 @@ export class PageHeaderComponent implements OnInit {
     protected readonly navigationService: NavigationService,
     protected readonly preferenceService: PreferenceService,
     protected readonly subscriptionLifecycle: SubscriptionLifecycle,
-    protected readonly breadcrumbsService: BreadcrumbsService,
-    protected readonly featureResolver: FeatureStateResolver
-  ) {
-    this.showPageTimeRange = this.featureResolver
-      .getFeatureState(PageTimeRangeFeature.PageTimeRange)
-      .pipe(map(featureState => featureState === FeatureState.Enabled));
-  }
+    protected readonly breadcrumbsService: BreadcrumbsService
+  ) {}
 
   public ngOnInit(): void {
     this.subscriptionLifecycle.add(
@@ -141,4 +146,9 @@ export class PageHeaderComponent implements OnInit {
 
 interface PageHeaderPreferences {
   selectedTabPath?: string;
+}
+
+export const enum PageHeaderContentAlignment {
+  Column = 'column-alignment',
+  Row = 'row-alignment'
 }

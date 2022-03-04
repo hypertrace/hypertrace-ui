@@ -1,3 +1,4 @@
+import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
 import { TimeRangeForPageModule } from '../../time-range/time-range-for-page/time-range-for-page.module';
 import { HeaderContentModule } from '../header-content/header-content.module';
 
@@ -23,7 +24,8 @@ import { PageHeaderComponent } from './page-header.component';
     NavigableTabModule,
     BetaTagModule,
     TimeRangeForPageModule,
-    HeaderContentModule
+    HeaderContentModule,
+    FeatureConfigCheckModule
   ]
 })
 export class PageHeaderModule {}
