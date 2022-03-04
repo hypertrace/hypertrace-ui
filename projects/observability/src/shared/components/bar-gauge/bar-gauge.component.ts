@@ -49,7 +49,7 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
-              [htTooltip]="this.segmentsTooltip ? this.segmentsTooltip : plainTooltip"
+              [htTooltip]="segment.tooltip ?? plainTooltip"
             >
               <div class="divider"></div>
               <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
@@ -90,9 +90,6 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public segments?: Segment[] = [];
-
-  @Input()
-  public segmentsTooltip?: TemplateRef<Segment>;
 
   @Input()
   public isOverMaxBorderActive: boolean = true;
@@ -167,6 +164,7 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
+  tooltip?: TemplateRef<Segment>;
 }
 
 interface BarSegment extends Segment {
