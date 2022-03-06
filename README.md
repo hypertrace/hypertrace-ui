@@ -9,13 +9,6 @@
     <br />
     <a href="https://docs.hypertrace.org"><strong>More about hypertrace »</strong></a>
     <br />
-    <br />
-    <p align="center">
-    [![Contributors][contributors-shield]][contributors-url]
-    [![Forks][forks-shield]][forks-url]
-    [![Stargazers][stars-shield]][stars-url]
-    [![Issues][issues-shield]][issues-url]
-    </p>
   </p>
 </p>
 
