@@ -40,9 +40,9 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
-export class StringArrayWithXMoreTableCellRendererComponent extends TableCellRendererBase<StringArrayWithXMore> implements OnInit { }
+export class StringArrayWithXMoreTableCellRendererComponent extends TableCellRendererBase<StringArrayWithXMore> implements OnInit {}
 
-export interface StringArrayWithXMore {
+export interface StringArrayWithXMore{
   items: string[];
   maxToShow: number;
 }
