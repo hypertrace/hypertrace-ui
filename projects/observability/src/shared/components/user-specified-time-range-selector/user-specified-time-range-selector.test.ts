@@ -12,10 +12,10 @@ import { FeatureConfigCheckModule, TimeRangeComponent } from '@hypertrace/compon
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
-import { TimeRangeForPageComponent } from './time-range-for-page.component';
+import { UserSpecifiedTimeRangeSelector } from './user-specified-time-range-selector.component';
 
 describe('Page time range component', () => {
-  let spectator: SpectatorHost<TimeRangeForPageComponent>;
+  let spectator: SpectatorHost<UserSpecifiedTimeRangeSelector>;
   const route = {
     snapshot: {
       data: {
@@ -27,7 +27,7 @@ describe('Page time range component', () => {
 
   const createHost = createHostFactory({
     shallow: true,
-    component: TimeRangeForPageComponent,
+    component: UserSpecifiedTimeRangeSelector,
     declarations: [MockComponent(TimeRangeComponent)],
     imports: [FeatureConfigCheckModule],
     providers: [

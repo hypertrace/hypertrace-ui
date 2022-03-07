@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
-import { combineLatest, EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, map, switchMap } from 'rxjs/operators';
+import { EMPTY, ReplaySubject } from 'rxjs';
+import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -17,7 +17,7 @@ import { TimeUnit } from './time-unit.type';
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
 
-  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -64,28 +64,14 @@ export class TimeRangeService {
   }
 
   private initializeTimeRange(): void {
-    // This is to capture the time range changes when the user navigates, specifically when they are navigating via left nav
-    // A time range is chosen with this order of precedence:
-    // 1. Url query param
-    // 2. 'static' time range for current page. Defined in root routes in data property. Retrieved from ActivatedRoute
-    // 3. Global default time range, set in this service.
-    combineLatest([
-      this.navigationService.navigation$,
-      this.navigationService.navigation$.pipe(switchMap(activatedRoute => activatedRoute.queryParamMap))
-    ])
+    this.navigationService.navigation$
       .pipe(
-        map(([activeRoute, paramMap]) => {
-          const timeRangeString = paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
-          if (typeof timeRangeString === 'string' && !isEmpty(timeRangeString)) {
-            return this.timeRangeFromUrlString(timeRangeString);
-          }
-
-          const activeRouteTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
-          if (activeRouteTimeRange) {
-            return activeRouteTimeRange;
-          }
-          throw Error();
-        }),
+        take(1), // Wait for first navigation
+        switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
+        take(1), // Only the first set of params
+        map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
+        filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
+        map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
         catchError(() => EMPTY),
         defaultIfEmpty(this.defaultTimeRange)
       )
@@ -132,4 +118,9 @@ export class TimeRangeService {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     };
   }
+}
+
+// TODO consolidate these
+export const enum PageTimeRangeFeature {
+  PageTimeRange = 'ui.page-time-range'
 }

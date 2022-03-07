@@ -1,15 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  FeatureState,
-  NavigationParams,
-  NavigationParamsType,
-  TimeRangeForPageService,
-  TypedSimpleChanges
-} from '@hypertrace/common';
-import { isNil } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig } from '../navigation.config';
 
@@ -18,7 +9,7 @@ import { NavItemLinkConfig } from '../navigation.config';
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link *ngIf="this.config" [paramsOrUrl]="this.navItemParams$ | async">
+    <ht-link *ngIf="this.config" [paramsOrUrl]="buildNavigationParam | htMemoize: this.config">
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
@@ -53,10 +44,7 @@ import { NavItemLinkConfig } from '../navigation.config';
     </ht-link>
   `
 })
-export class NavItemComponent implements OnChanges {
-  private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
-  public navItemParams$: Observable<NavigationParams> | undefined;
-
+export class NavItemComponent {
   @Input()
   public config?: NavItemLinkConfig;
 
@@ -66,28 +54,22 @@ export class NavItemComponent implements OnChanges {
   @Input()
   public collapsed: boolean = true;
 
-  public constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly timeRangeForPageService: TimeRangeForPageService
-  ) {}
+  @Output()
+  public onNavItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.config && !isNil(this.config)) {
-      this.navItemParams$ = this.getNavParamsForPath(this.config.matchPaths[0]);
-    }
+  @HostListener('click')
+  public onClick(): void {
+    this.onNavItemSelected.emit(this.config);
   }
 
-  private getNavParamsForPath(path: string): Observable<NavigationParams> {
-    return this.timeRangeForPageService.getTimeRangeForCurrentPage(path).pipe(
-      map(timeRange => ({
-        navType: NavigationParamsType.InApp,
-        path: path,
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          [NavItemComponent.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-        },
-        replaceCurrentHistory: this.config!.replaceCurrentHistory
-      }))
-    );
-  }
+  public includeTimeRange: boolean = true;
+
+  public constructor(private readonly activatedRoute: ActivatedRoute) {}
+
+  public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
+    navType: NavigationParamsType.InApp,
+    path: item.matchPaths[0],
+    relativeTo: this.activatedRoute,
+    replaceCurrentHistory: item.replaceCurrentHistory
+  });
 }

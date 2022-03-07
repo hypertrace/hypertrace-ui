@@ -1,5 +1,4 @@
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
-import { TimeRangeForPageModule } from '../../time-range/time-range-for-page/time-range-for-page.module';
 import { HeaderContentModule } from '../header-content/header-content.module';
 
 import { CommonModule } from '@angular/common';
@@ -11,6 +10,7 @@ import { LabelModule } from '../../label/label.module';
 import { NavigableTabModule } from '../../tabs/navigable/navigable-tab.module';
 import { TimeRangeModule } from '../../time-range/time-range.module';
 import { PageHeaderComponent } from './page-header.component';
+import { UserSpecifiedTimeRangeSelectorModule } from '../../../../observability/src/shared/components/user-specified-time-range-selector/user-specified-time-range-selector.module';
 
 @NgModule({
   declarations: [PageHeaderComponent],
@@ -23,9 +23,9 @@ import { PageHeaderComponent } from './page-header.component';
     LabelModule,
     NavigableTabModule,
     BetaTagModule,
-    TimeRangeForPageModule,
     HeaderContentModule,
-    FeatureConfigCheckModule
+    FeatureConfigCheckModule,
+    UserSpecifiedTimeRangeSelectorModule
   ]
 })
 export class PageHeaderModule {}

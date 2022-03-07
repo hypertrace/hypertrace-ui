@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { FixedTimeRange, NavigationService, RelativeTimeRange, TimeRangeService } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -13,9 +13,13 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   styleUrls: ['./navigation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
+    <nav
+      class="navigation-list"
+      *ngIf="this.navItems$ | async as updatedNavItems"
+      [ngClass]="{ expanded: !this.collapsed }"
+    >
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
-        <ng-container *ngFor="let item of this.navItems; let id = index">
+        <ng-container *ngFor="let item of updatedNavItems; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
               <ng-container *ngSwitchCase="'${NavItemType.Header}'">
@@ -29,7 +33,12 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"></ht-nav-item>
+              <ht-nav-item
+                (onNavItemSelected)="onNavItemSelected($event)"
+                [config]="item"
+                [active]="item === activeItem"
+                [collapsed]="this.collapsed"
+              ></ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -65,19 +74,27 @@ export class NavigationListComponent implements OnChanges {
   @Input()
   public resizable?: boolean = true;
 
+  @Input()
+  public usePageLevelTimeRange: boolean = false;
+
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
+  public navItems$?: Observable<NavItemConfig[]>;
+
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly navListComponentService: NavigationListComponentService
+    private readonly navListComponentService: NavigationListComponentService,
+    private readonly timeRangeService: TimeRangeService
   ) {}
 
   public ngOnChanges(): void {
     this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
+    this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);
+
     this.activeItem$ = this.navigationService.navigation$.pipe(
       startWith(this.navigationService.getCurrentActivatedRoute()),
       map(() => this.findActiveItem(this.navItems))
@@ -93,6 +110,18 @@ export class NavigationListComponent implements OnChanges {
 
   public getResizeIcon(): IconType {
     return this.collapsed ? IconType.TriangleRight : IconType.TriangleLeft;
+  }
+
+  public onNavItemSelected(navItemLink: NavItemLinkConfig): void {
+    if (this.usePageLevelTimeRange) {
+      if (navItemLink.timeRange?.isCustom()) {
+        const timeRange: FixedTimeRange = navItemLink.timeRange;
+        this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
+      } else if (!navItemLink.timeRange?.isCustom()) {
+        const timeRange: RelativeTimeRange = navItemLink.timeRange as RelativeTimeRange;
+        this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+      }
+    }
   }
 
   private findActiveItem(navItems: NavItemConfig[]): NavItemLinkConfig | undefined {

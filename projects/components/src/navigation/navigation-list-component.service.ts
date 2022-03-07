@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver, UserSpecifiedTimeRangeService } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,7 +7,10 @@ import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } fr
 
 @Injectable({ providedIn: 'root' })
 export class NavigationListComponentService {
-  public constructor(private readonly featureStateResolver: FeatureStateResolver) {}
+  public constructor(
+    private readonly featureStateResolver: FeatureStateResolver,
+    private readonly userSpecifiedTimeRangeService: UserSpecifiedTimeRangeService
+  ) {}
 
   public resolveFeaturesAndUpdateVisibilityForNavItems(navItems: NavItemConfig[]): NavItemConfig[] {
     const updatedItems = this.updateLinkNavItemsVisibility(navItems);
@@ -24,6 +27,26 @@ export class NavigationListComponentService {
     }
 
     return updatedItems;
+  }
+
+  public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
+    return combineLatest(this.getTimeRangesForNavItems(navItems));
+  }
+
+  private getTimeRangesForNavItems(navItems: NavItemConfig[]): Observable<NavItemConfig>[] {
+    return navItems.map(navItem => {
+      if (navItem.type === NavItemType.Link) {
+        return this.userSpecifiedTimeRangeService.getUserSpecifiedTimeRangeForPage(navItem.matchPaths[0]).pipe(
+          map(timeRange => {
+            return {
+              ...navItem,
+              timeRange: timeRange
+            };
+          })
+        );
+      }
+      return of(navItem);
+    });
   }
 
   private updateHeaderNavItemsVisibility(navItems: NavItemLinkConfig[]): Observable<boolean> {

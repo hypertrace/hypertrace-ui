@@ -4,18 +4,22 @@ import {
   RelativeTimeRange,
   TimeDuration,
   TimeRange,
-  TimeRangeForPageService,
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
+import { UserSpecifiedTimeRangeService } from './user-specified-time-range.service';
 
 describe('Page time range service', () => {
   const defaultPageTimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
   const serviceFactory = createServiceFactory({
-    service: TimeRangeForPageService,
-    providers: [mockProvider(NavigationService)]
+    service: UserSpecifiedTimeRangeService,
+    providers: [
+      mockProvider(NavigationService, {
+        getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
+      })
+    ]
   });
 
   test('Setting fixed time range emits corresponding time range from preferences', () => {
@@ -28,13 +32,12 @@ describe('Page time range service', () => {
           })
         ]
       });
-      jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-a|', {
-        a: () => spectator.service.setTimeRangeForCurrentPage('foo', timeRange)
+        a: () => spectator.service.setUserSpecifiedTimeRangeForPage('foo', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getTimeRangeForCurrentPage('foo')).toBe('da', {
+      expectObservable(spectator.service.getUserSpecifiedTimeRangeForPage('foo')).toBe('da', {
         d: defaultPageTimeRange,
         a: timeRange
       });
@@ -51,13 +54,12 @@ describe('Page time range service', () => {
           })
         ]
       });
-      jest.spyOn(spectator.service, 'getDefaultPageTimeRange').mockImplementation(() => defaultPageTimeRange);
 
       cold('-b|', {
-        b: () => spectator.service.setTimeRangeForCurrentPage('bar', timeRange)
+        b: () => spectator.service.setUserSpecifiedTimeRangeForPage('bar', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getTimeRangeForCurrentPage('bar')).toBe('db', {
+      expectObservable(spectator.service.getUserSpecifiedTimeRangeForPage('bar')).toBe('db', {
         d: defaultPageTimeRange,
         b: timeRange
       });

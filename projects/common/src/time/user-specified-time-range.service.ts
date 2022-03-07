@@ -8,16 +8,17 @@ import { TimeRange } from './time-range';
 import { TimeRangeService } from './time-range.service';
 
 @Injectable({ providedIn: 'root' })
-export class TimeRangeForPageService {
-  // TODO change to local ??
+export class UserSpecifiedTimeRangeService {
   private static readonly STORAGE_TYPE: StorageType = StorageType.Session;
   private static readonly TIME_RANGE_PREFERENCE_KEY: string = 'page-time-range';
 
-  private readonly pageTimeRanges$: BehaviorSubject<PageTimeRangeMap> = new BehaviorSubject<PageTimeRangeMap>({});
+  private readonly pageTimeRangesSubject$: BehaviorSubject<PageTimeRangeMap> = new BehaviorSubject<PageTimeRangeMap>(
+    {}
+  );
   private readonly storedTimeRanges$: Observable<PageTimeRangeMap> = this.preferenceService.get<PageTimeRangeMap>(
-    TimeRangeForPageService.TIME_RANGE_PREFERENCE_KEY,
+    UserSpecifiedTimeRangeService.TIME_RANGE_PREFERENCE_KEY,
     {},
-    TimeRangeForPageService.STORAGE_TYPE
+    UserSpecifiedTimeRangeService.STORAGE_TYPE
   );
 
   public constructor(
@@ -26,10 +27,10 @@ export class TimeRangeForPageService {
     private readonly navigationService: NavigationService
   ) {
     this.storedTimeRanges$.subscribe(values => {
-      this.pageTimeRanges$.next(values);
+      this.pageTimeRangesSubject$.next(values);
     });
   }
-  public getDefaultPageTimeRange(path: string): TimeRange {
+  private getDefaultPageTimeRange(path: string): TimeRange {
     const defaultTimeRange = this.navigationService.getRouteConfig([path], this.navigationService.rootRoute())?.data
       ?.defaultTimeRange;
 
@@ -41,13 +42,13 @@ export class TimeRangeForPageService {
     return defaultTimeRange;
   }
 
-  public getTimeRangeForCurrentPage(path: string): Observable<TimeRange> {
+  public getUserSpecifiedTimeRangeForPage(path: string): Observable<TimeRange> {
     return this.storedTimeRanges$.pipe(
       distinctUntilChanged((prev, curr) => prev[path] === curr[path]),
       map(timeRanges => {
         if (isNil(timeRanges[path])) {
           const timeRangeForPath = this.getDefaultPageTimeRange(path);
-          this.setTimeRangeForCurrentPage(path, timeRangeForPath);
+          this.setUserSpecifiedTimeRangeForPage(path, timeRangeForPath);
 
           return timeRangeForPath;
         }
@@ -58,15 +59,14 @@ export class TimeRangeForPageService {
     );
   }
 
-  public setTimeRangeForCurrentPage(path: string, value: TimeRange): void {
-    const pageTimeMap: PageTimeRangeMap = this.pageTimeRanges$.getValue();
+  public setUserSpecifiedTimeRangeForPage(path: string, value: TimeRange): void {
+    const pageTimeMap: PageTimeRangeMap = this.pageTimeRangesSubject$.getValue();
 
     const newMap: PageTimeRangeMap = { ...pageTimeMap, [path]: value.toUrlString() };
-
     this.preferenceService.set(
-      TimeRangeForPageService.TIME_RANGE_PREFERENCE_KEY,
+      UserSpecifiedTimeRangeService.TIME_RANGE_PREFERENCE_KEY,
       newMap,
-      TimeRangeForPageService.STORAGE_TYPE
+      UserSpecifiedTimeRangeService.STORAGE_TYPE
     );
   }
 }

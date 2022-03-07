@@ -14,9 +14,6 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
 import { HeaderPrimaryRowContentDirective } from '../header-content/header-primary-row-content.directive';
 import { HeaderSecondaryRowContentDirective } from '../header-content/header-secondary-row-content.directive';
 
-export const enum PageTimeRangeFeature {
-  PageTimeRange = 'ui.page-time-range'
-}
 @Component({
   selector: 'ht-page-header',
   styleUrls: ['./page-header.component.scss'],
@@ -28,9 +25,12 @@ export const enum PageTimeRangeFeature {
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <!-- With this structure, column alignment works for all use cases, but for backwards
-            compatability alignment must remain dynamic   -->
-      <div [ngClass]="this.contentAlignment">
+      <!-- If PageTimeRange feature flag is enabled, consumer of this component must specify the type of content being
+           projected, primary or secondary -->
+      <div
+        *htIfFeature="'${PageTimeRangeFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
+        [ngClass]="this.contentAlignment"
+      >
         <div class="primary-content">
           <div class="breadcrumb-container">
             <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
@@ -48,10 +48,7 @@ export const enum PageTimeRangeFeature {
             </div>
           </div>
           <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
-          <ht-time-range-for-page
-            *htIfFeature="'${PageTimeRangeFeature.PageTimeRange}' | htFeature"
-            class="time-range"
-          ></ht-time-range-for-page>
+          <ht-user-specified-time-range-selector class="time-range"></ht-user-specified-time-range-selector>
         </div>
 
         <ng-container
@@ -59,6 +56,28 @@ export const enum PageTimeRangeFeature {
           [ngTemplateOutlet]="this.secondaryRowContent?.templateRef"
         ></ng-container>
       </div>
+
+      <ng-template #noTimeRangeHeaderLayoutTemplate>
+        <div [ngClass]="this.contentAlignment">
+          <div class="breadcrumb-container">
+            <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
+            <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
+              <ht-icon
+                class="icon"
+                *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
+                [icon]="titlecrumb.icon"
+                [label]="titlecrumb.label"
+                size="${IconSize.Large}"
+              ></ht-icon>
+
+              <ht-label [label]="titlecrumb.label"></ht-label>
+              <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+            </div>
+          </div>
+
+          <ng-content></ng-content>
+        </div>
+      </ng-template>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
         <ht-navigable-tab
@@ -151,4 +170,9 @@ interface PageHeaderPreferences {
 export const enum PageHeaderContentAlignment {
   Column = 'column-alignment',
   Row = 'row-alignment'
+}
+
+// TODO consolidate this
+export const enum PageTimeRangeFeature {
+  PageTimeRange = 'ui.page-time-range'
 }

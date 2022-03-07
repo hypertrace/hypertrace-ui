@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { NavigationService, TimeRange, TimeRangeForPageService } from '@hypertrace/common';
+import { NavigationService, TimeRange, UserSpecifiedTimeRangeService } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 
 @Component({
-  selector: 'ht-time-range-for-page',
+  selector: 'ht-user-specified-time-range-selector',
   template: ` <ht-time-range (timeRangeSelected)="this.onTimeRangeSelected($event)"></ht-time-range> `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimeRangeForPageComponent {
+export class UserSpecifiedTimeRangeSelector {
   public constructor(
-    private readonly timeRangeForPageService: TimeRangeForPageService,
+    private readonly userSpecifiedTimeRangeService: UserSpecifiedTimeRangeService,
     private readonly navigationService: NavigationService
   ) {}
 
@@ -29,7 +29,7 @@ export class TimeRangeForPageComponent {
 
   public savePageTimeRange(selectedTimeRange: TimeRange, segment: UrlSegment): void {
     if (!isNil(segment.path)) {
-      this.timeRangeForPageService.setTimeRangeForCurrentPage(segment.path, selectedTimeRange);
+      this.userSpecifiedTimeRangeService.setUserSpecifiedTimeRangeForPage(segment.path, selectedTimeRange);
     } else {
       throw Error('No segment provided to set page time range');
     }

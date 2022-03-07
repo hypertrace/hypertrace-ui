@@ -388,3 +388,7 @@ export * from './shared/components/bar-gauge/bar-gauge.module';
 
 // Time Range utils
 export * from './shared/utils/time-range';
+
+// User Specified TimeRange Selector
+export * from './shared/components/user-specified-time-range-selector/user-specified-time-range-selector.component';
+export * from './shared/components/user-specified-time-range-selector/user-specified-time-range-selector.module';

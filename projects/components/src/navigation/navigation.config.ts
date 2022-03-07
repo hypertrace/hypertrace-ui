@@ -1,4 +1,4 @@
-import { Color, FeatureState } from '@hypertrace/common';
+import { Color, FeatureState, TimeRange } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
 
@@ -16,6 +16,7 @@ export interface NavItemLinkConfig {
   trailingIcon?: string;
   trailingIconTooltip?: string;
   trailingIconColor?: Color;
+  timeRange?: TimeRange;
   featureState$?: Observable<FeatureState>;
 }
 

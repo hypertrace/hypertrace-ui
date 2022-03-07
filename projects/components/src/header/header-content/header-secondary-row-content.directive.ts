@@ -4,5 +4,5 @@ import { Directive, TemplateRef } from '@angular/core';
   selector: '[htHeaderSecondaryRowContent]'
 })
 export class HeaderSecondaryRowContentDirective {
-  public constructor(public templateRef: TemplateRef<unknown>) {}
+  public constructor(public readonly templateRef: TemplateRef<unknown>) {}
 }
