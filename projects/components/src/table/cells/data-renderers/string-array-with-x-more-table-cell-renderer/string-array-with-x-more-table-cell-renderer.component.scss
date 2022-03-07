@@ -3,15 +3,14 @@
 
 .string-array-cell {
   display: flex;
-  flex-direction: row;
   align-items: center;
 
-  .first-item {
+  .item {
     @include ellipsis-overflow();
     padding-right: 8px;
   }
 
-  .summary-text {
+  .tooltip-item {
     padding: 0 6px;
     background-color: $gray-2;
     border-radius: 4px;

@@ -5,7 +5,7 @@ export const enum CoreTableCellRendererType {
   Number = 'number',
   RowExpander = 'row-expander',
   RelativeTimestamp = 'relative-timestamp',
-  StringArray = 'string-array',
+  StringArrayWithXMore = 'string-array-with-x-more',
   StringEnum = 'string-enum',
   Text = 'text',
   TextWithCopyAction = 'text-with-copy-action',

@@ -9,6 +9,7 @@ import { FilterButtonModule } from '../../filtering/filter-button/filter-button.
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
 import { PopoverModule } from '../../popover/popover.module';
+import { XMoreModule } from '../../public-api';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
 import { TableCellBooleanParser } from './data-parsers/table-cell-boolean-parser';
@@ -22,7 +23,7 @@ import { StringEnumTableCellRendererComponent } from './data-renderers/enum/stri
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
 import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
-import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
+import { StringArrayWithXMoreTableCellRendererComponent } from './data-renderers/string-array-with-x-more-table-cell-renderer/string-array-with-x-more-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
 import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
@@ -52,7 +53,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     FilterButtonModule,
     FilterModalModule,
     PopoverModule,
-    CopyToClipboardModule
+    CopyToClipboardModule,
+    XMoreModule,
   ],
   exports: [
     TableHeaderCellRendererComponent,
@@ -71,7 +73,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TimestampTableCellRendererComponent,
     TimeAgoTableCellRendererComponent,
     CodeTableCellRendererComponent,
-    StringArrayTableCellRendererComponent,
+    StringArrayWithXMoreTableCellRendererComponent,
     StringEnumTableCellRendererComponent,
     TextWithCopyActionTableCellRendererComponent,
     RelativeTimestampTableCellRendererComponent
@@ -88,7 +90,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TimestampTableCellRendererComponent,
         TimeAgoTableCellRendererComponent,
         CodeTableCellRendererComponent,
-        StringArrayTableCellRendererComponent,
+        StringArrayWithXMoreTableCellRendererComponent,
         StringEnumTableCellRendererComponent,
         TextWithCopyActionTableCellRendererComponent,
         RelativeTimestampTableCellRendererComponent
