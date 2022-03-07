@@ -22,9 +22,9 @@ describe('String array table cell renderer component', () => {
   });
 
   test('should render array with multiple items as expected', () => {
-    
+
     const cellData: StringArrayWithXMore = {
-      items: ['first-item', 'second-item', 'third-item'], 
+      items: ['first-item', 'second-item', 'third-item'],
       maxToShow: 2
     }
     const spectator = buildComponent({
@@ -36,9 +36,9 @@ describe('String array table cell renderer component', () => {
   });
 
   test('should render array with no item as expected', () => {
-    
+
     const cellData: StringArrayWithXMore = {
-      items: [], 
+      items: [],
       maxToShow: 2
     }
     const spectator = buildComponent({
