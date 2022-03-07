@@ -50,6 +50,7 @@ import {
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
               [htTooltip]="segment.tooltip ?? plainTooltip"
+              [htTooltipContext]="{$implicit: segment}"
             >
               <div class="divider"></div>
               <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
