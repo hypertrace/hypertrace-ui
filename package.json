@@ -68,7 +68,7 @@
     "rxjs": "~6.6.7",
     "tslib": "^2.3.1",
     "uuid": "^8.3.2",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.5"
   },
   "devDependencies": {
     "@angular-builders/jest": "^11.2.0",
@@ -107,7 +107,7 @@
     "jest-junit": "^13.0.0",
     "jest-preset-angular": "^8.4.0",
     "lodash": "^4.17.21",
-    "ng-mocks": "^13.0.4",
+    "ng-mocks": "^13.1.0",
     "ng-packagr": "^12.2.5",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.3",
