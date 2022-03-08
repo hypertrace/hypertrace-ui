@@ -89,7 +89,7 @@ For example
 
 ## The Essentials
 
-Let's talk about the essentials for the development in the hypertrace-ui.
+Let's talk about the essentials for development in hypertrace-ui.
 
 ### Angular Specifics
 
