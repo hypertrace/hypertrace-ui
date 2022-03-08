@@ -232,7 +232,7 @@ Now let's break this down.
 - We have used decorator `ModelPropery` for defining custom properties; like in this case `upper-case`.
 - We have implemented `getData` method, and the same method is being used in the renderer component `return this.api.getData()`.
 
-Now after implemening all this we can use these as shown above and render the custom data.
+Now after implemening all this we can use these as shown above and render custom data.
 
 _Why we're doing this_? Answer is simple, once we do all this now, we can just write few lines we can render whole widget. This can be used at any place now with just few lines of code. This is a simple example foe more complex examples please check `home.dashboard.ts` and underlying all the widgets.
 
