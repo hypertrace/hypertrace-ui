@@ -127,7 +127,7 @@ public readonly defaultJson: ModelJson = {
 Now let's break this down.
 
 - It will create a dasboard for a unique location.
-- Dasboards are designed in a way that, it takes a modal json as input property and renders the corresponding widgets.
+- Dasboards are designed in a way that it takes a modal json as input property and renders the corresponding widgets.
 - There are 3 core concepts - widget , widget renderer and data source.
 
 Let's talk about these individually.
