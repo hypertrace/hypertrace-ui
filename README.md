@@ -343,7 +343,7 @@ public readonly columnConfigs: TableColumnConfig[] = [
 ];
 ```
 
-`NOTE`: We highly recommend you to check out all the existing example of table and cell renderers to learn about these more.
+`NOTE`: We highly recommend you to check out all the existing example of table and cell renderers to learn more.
 
 ## GraphQl Handlers
 
