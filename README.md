@@ -234,7 +234,7 @@ Now let's break this down.
 
 Now after implemening all this we can use these as shown above and render custom data.
 
-_Why we're doing this_? Answer is simple, once we do all this now, we can just write few lines we can render whole widget. This can be used at any place now with just few lines of code. This is a simple example foe more complex examples please check `home.dashboard.ts` and underlying all the widgets.
+_Why we're doing this_? Answer is simple, once we do all this, we can just write few lines of json to render a whole widget. For more complex examples please check `home.dashboard.ts` and its constituent widgets.
 
 ### Tables
 
