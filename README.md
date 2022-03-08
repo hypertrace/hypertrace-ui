@@ -51,7 +51,7 @@ npm start
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-To run Unit test cases (execute the unit tests via Jest)
+To run unit test cases (execute the unit tests via Jest)
 
 ```sh
 npm run test
