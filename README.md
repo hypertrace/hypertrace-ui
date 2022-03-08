@@ -284,7 +284,7 @@ Now let's break this down.
 - It will create a table with a single column (In column configs we have only mentioned one column) and two rows (in the data source we have mentioned data as array of two objects.).
 - Now if we look closely, table column config's id is same as the key we have used the key in data which is `name`. This is must for the table to render the data correctly.
 
-There is a lot there in the tables, like custom controls, configurations (for pagination and many other). We highly recommend you to check out the `table.component.ts` to learn about tables and check out all the different examples present in the application.
+There are more features in the table component, like custom controls, configurations (for pagination and many other). We highly recommend you to check out the `table.component.ts` to learn about tables and check out all the different examples present in the application.
 
 #### Cell Renderers
 
