@@ -318,7 +318,7 @@ Now let's break this down.
 - We have used decorator `TableCellRenderer` by which we're registering this cell renderer (on build) for usage.
 - `type` property is the unique string to define each cell renderer.
 - `alignment` is used for the cell alignment, could be - left, right and center
-- `parser` is used to parse the data, it is also defined in the similar way. Suppose we are getting a data as `['test1', 'test2']` and we want it be used like `{value1: 'test1', value2: 'test2'}` then we can create a custom parser and can handle this use case. For no operation we use `CoreTableCellParserType.NoOp`
+- `parser` is used to parse the data. It can also be defined similar to a cell renderer. Suppose we are getting data as `['test1', 'test2']` and we want it to be marshalled into `{value1: 'test1', value2: 'test2'}` then we can create a custom parser and can handle the transformation. For no operation we use `CoreTableCellParserType.NoOp`
 
 `Usage` : Now once this is done, we can use this in our table using `display` property. This will be same as the type of the cell renderer.
 
