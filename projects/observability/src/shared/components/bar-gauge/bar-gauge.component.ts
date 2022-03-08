@@ -165,7 +165,7 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
-  tooltip?: string | TemplateRef<Segment> | TemplateRef<{ $implicit: Segment }>;
+  tooltip?: string | TemplateRef<{ $implicit: BarSegment }>;
 }
 
 interface BarSegment extends Segment {
