@@ -397,7 +397,7 @@ export interface GraphQlHelloResponse {
 }
 ```
 
-Now let's break this down.
+Let's break this down.
 
 - We have used a unique symbol, as a type for the request.
 - Two interfaces `GraphQlHelloRequest` and `GraphQlHelloResponse` for request and response.
