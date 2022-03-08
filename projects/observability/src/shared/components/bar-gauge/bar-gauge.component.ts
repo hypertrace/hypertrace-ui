@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -48,9 +49,11 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
-              htTooltip="{{ segment.label }} : {{ segment.value | htDisplayNumber }}"
+              [htTooltip]="segment.tooltip ?? plainTooltip"
+              [htTooltipContext]="{ $implicit: segment }"
             >
               <div class="divider"></div>
+              <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
             </div>
           </div>
         </div>
@@ -162,10 +165,15 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
+  tooltip?: string | TemplateRef<SegmentContext>;
 }
 
 interface BarSegment extends Segment {
   percentage: number;
+}
+
+export interface SegmentContext {
+  $implicit: BarSegment;
 }
 
 export const enum BarGaugeStyle {
