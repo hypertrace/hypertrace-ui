@@ -320,7 +320,7 @@ Now let's break this down.
 - `alignment` is used for the cell alignment, could be - left, right and center
 - `parser` is used to parse the data. It can also be defined similar to a cell renderer. Suppose we are getting data as `['test1', 'test2']` and we want it to be marshalled into `{value1: 'test1', value2: 'test2'}` then we can create a custom parser and can handle the transformation. For no operation we use `CoreTableCellParserType.NoOp`
 
-`Usage` : Now once this is done, we can use this in our table using `display` property. This will be same as the type of the cell renderer.
+`Usage` : Once this is done, we can use this in our table using `display` property. This will be same as the type of the cell renderer.
 
 `Module import`
 
