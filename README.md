@@ -193,7 +193,7 @@ Now let's break this down.
 - We have used decorator `Renderer` by which we're registering this widget renderer (on build) for usage.
 - `modelClass` property is the same class for which we're building this renderer, in this case it is `HelloWidgetModel`.
 - Now after extending the `WidgetRenderer` class, we have access to the `name` property which we defined in the model class.
-- `fetchData` method is used to give us the access of `this.data$` observable.
+- `fetchData` method is used to give us access to `this.data$` observable.
 - `htLoadAsync` directive is used to resolve the data observable, which can be done with `async` pipe as well.
 
 How are we getting data? Now let's understand this in the next section.
