@@ -69,7 +69,7 @@ Hypertrace-ui uses `angular` as the framework. On top of angular, following tech
 
 ## Code Architecture
 
-Hypertrace-UI code is divided into many smaller projects which gives the code base a better structure. Here are the following projects.
+Hypertrace-UI code is divided into many smaller projects which gives the code base a better structure. Here are the projects.
 
 1. `Assest Library` : This consits the assests which are being used in the application. For example images, icons etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/assets-library)
 2. `Common` : This consits the common code/features such as application contants, colors, telemetry, utilities (with common angular pipes) etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/common)
