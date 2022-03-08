@@ -8,6 +8,7 @@ import {
 } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { ApplicationFeature } from '../../../../../src/app/shared/constants/application-feature';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
@@ -28,7 +29,7 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
       <!-- If PageTimeRange feature flag is enabled, consumer of this component must specify the type of content being
            projected, primary or secondary -->
       <div
-        *htIfFeature="'${PageTimeRangeFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
+        *htIfFeature="'${ApplicationFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
         [ngClass]="this.contentAlignment"
       >
         <div class="primary-content">
@@ -48,7 +49,14 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
             </div>
           </div>
           <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
-          <ht-user-specified-time-range-selector class="time-range"></ht-user-specified-time-range-selector>
+          <ht-user-specified-time-range-selector
+            class="time-range"
+            *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRange"
+          ></ht-user-specified-time-range-selector>
+
+          <ng-template #globalTimeRange>
+            <ht-time-range></ht-time-range>
+          </ng-template>
         </div>
 
         <ng-container
@@ -104,7 +112,7 @@ export class PageHeaderComponent implements OnInit {
 
   /**
    * Alignment must be set to column (default) for secondaryRowContent projection,
-   * */
+   */
   @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
 
@@ -170,9 +178,4 @@ interface PageHeaderPreferences {
 export const enum PageHeaderContentAlignment {
   Column = 'column-alignment',
   Row = 'row-alignment'
-}
-
-// TODO consolidate this
-export const enum PageTimeRangeFeature {
-  PageTimeRange = 'ui.page-time-range'
 }

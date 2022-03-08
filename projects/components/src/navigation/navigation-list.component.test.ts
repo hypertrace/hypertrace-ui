@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { MemoizeModule, NavigationService } from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver, MemoizeModule, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -11,6 +11,7 @@ import { NavItemComponent } from './nav-item/nav-item.component';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { NavigationListComponent } from './navigation-list.component';
 import { FooterItemConfig, NavItemConfig, NavItemType } from './navigation.config';
+
 describe('Navigation List Component', () => {
   let spectator: SpectatorHost<NavigationListComponent>;
   const activatedRoute = {
@@ -34,6 +35,9 @@ describe('Navigation List Component', () => {
         navigation$: EMPTY,
         navigateWithinApp: jest.fn(),
         getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute))
+      }),
+      mockProvider(FeatureStateResolver, {
+        getCombinedFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled))
       })
     ]
   });
@@ -77,7 +81,22 @@ describe('Navigation List Component', () => {
   });
 
   test('should update layout when collapsed input is updated', () => {
-    spectator = createHost(`<ht-navigation-list></ht-navigation-list>`);
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Header,
+        label: 'header 1',
+        isVisible$: of(true)
+      },
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'label',
+        matchPaths: ['']
+      }
+    ];
+    spectator = createHost(`<ht-navigation-list [navItems]="navItems"></ht-navigation-list>`, {
+      hostProps: { navItems: navItems }
+    });
     expect(spectator.query('.navigation-list')).toHaveClass('expanded');
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.TriangleLeft);
     spectator.setInput({

@@ -3,15 +3,9 @@ import { IconType } from '@hypertrace/assets-library';
 import {
   FeatureState,
   FeatureStateResolver,
-  FixedTimeRange,
   MemoizeModule,
   NavigationParamsType,
-  NavigationService,
-  RelativeTimeRange,
-  TimeDuration,
-  TimeRange,
-  TimeRangeForPageService,
-  TimeUnit
+  NavigationService
 } from '@hypertrace/common';
 import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
@@ -40,14 +34,6 @@ describe('Navigation Item Component', () => {
       }),
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled)
-      }),
-      mockProvider(TimeRangeForPageService, {
-        getTimeRangeForCurrentPage: jest
-          .fn()
-          .mockReturnValue(of(new FixedTimeRange(new Date('Feb 15 2022 16:00:00'), new Date('Feb 17 2022 17:32:01'))))
-      }),
-      mockProvider(FixedTimeRange, {
-        toUrlString: jest.fn()
       })
     ]
   });
@@ -93,10 +79,7 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: undefined,
-      queryParams: {
-        time: new FixedTimeRange(new Date('Feb 15 2022 16:00:00'), new Date('Feb 17 2022 17:32:01')).toUrlString()
-      }
+      replaceCurrentHistory: undefined
     });
   });
 
@@ -119,41 +102,7 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: true,
-      queryParams: {
-        time: new FixedTimeRange(new Date('Feb 15 2022 16:00:00'), new Date('Feb 17 2022 17:32:01')).toUrlString()
-      }
-    });
-  });
-
-  test('should set the page time range to whatever is stored.', () => {
-    const navItem: NavItemConfig = {
-      type: NavItemType.Link,
-      icon: 'icon',
-      label: 'Foo Label',
-      matchPaths: ['foo', 'bar'],
       replaceCurrentHistory: true
-    };
-    const timeRange: TimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
-    spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
-      hostProps: { navItem: navItem },
-      providers: [
-        mockProvider(TimeRangeForPageService, {
-          getTimeRangeForCurrentPage: jest.fn().mockReturnValue(of(timeRange))
-        })
-      ]
-    });
-
-    const link = spectator.query(LinkComponent);
-    expect(link).toExist();
-    expect(link?.paramsOrUrl).toEqual({
-      navType: NavigationParamsType.InApp,
-      path: 'foo',
-      relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: true,
-      queryParams: {
-        time: timeRange.toUrlString()
-      }
     });
   });
 });

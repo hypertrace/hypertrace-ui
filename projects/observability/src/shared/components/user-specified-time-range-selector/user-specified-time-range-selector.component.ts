@@ -8,7 +8,7 @@ import { isNil } from 'lodash-es';
   template: ` <ht-time-range (timeRangeSelected)="this.onTimeRangeSelected($event)"></ht-time-range> `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserSpecifiedTimeRangeSelector {
+export class UserSpecifiedTimeRangeSelectorComponent {
   public constructor(
     private readonly userSpecifiedTimeRangeService: UserSpecifiedTimeRangeService,
     private readonly navigationService: NavigationService

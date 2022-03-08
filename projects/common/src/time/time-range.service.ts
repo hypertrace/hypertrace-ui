@@ -17,7 +17,7 @@ import { TimeUnit } from './time-unit.type';
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
 
-  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
+  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -118,9 +118,4 @@ export class TimeRangeService {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     };
   }
-}
-
-// TODO consolidate these
-export const enum PageTimeRangeFeature {
-  PageTimeRange = 'ui.page-time-range'
 }

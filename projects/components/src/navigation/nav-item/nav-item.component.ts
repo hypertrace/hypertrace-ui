@@ -55,11 +55,11 @@ export class NavItemComponent {
   public collapsed: boolean = true;
 
   @Output()
-  public onNavItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+  public readonly navItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
 
   @HostListener('click')
   public onClick(): void {
-    this.onNavItemSelected.emit(this.config);
+    this.navItemSelected.emit(this.config);
   }
 
   public includeTimeRange: boolean = true;

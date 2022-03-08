@@ -37,14 +37,13 @@ export class NavigationListComponentService {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
         return this.userSpecifiedTimeRangeService.getUserSpecifiedTimeRangeForPage(navItem.matchPaths[0]).pipe(
-          map(timeRange => {
-            return {
-              ...navItem,
-              timeRange: timeRange
-            };
-          })
+          map(timeRange => ({
+            ...navItem,
+            timeRange: timeRange
+          }))
         );
       }
+
       return of(navItem);
     });
   }
