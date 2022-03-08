@@ -80,7 +80,7 @@ Hypertrace-UI code is divided into many smaller projects which gives the code ba
 7. `Test Utils` : This consists of some unit test utilities for dashboards etc.. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/test-utils)
 8. `UI App` : This is not a project but a entry point for hypertrace-ui app. This consists of the home page, routes, config module etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/src)
 
-`NOTE` : Each project, consists a barrel file named `public-api.ts`. This handles all the exports at single place which improves the importing in the app.
+`NOTE` : Each project contains a barrel file named `public-api.ts`. This handles all the exports at a single place which improves the importing in the app.
 For example
 
 ```ts
