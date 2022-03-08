@@ -288,7 +288,7 @@ There are more features in the table component, like custom controls, configurat
 
 #### Cell Renderers
 
-As we have talked about tables, now let's talk about the custom table cell renderers. in hypertrace-ui, we can create a custom table cell renderer to display the data in specifc format. These are nothing but angular component with another decorator `TableCellRenderer`
+Continuing from tables, let's talk about custom table cell renderers. In hypertrace-ui, we can create a custom table cell renderer to handle presentation of a cell data. These are nothing but angular component with another decorator `TableCellRenderer`
 <br />
 Now let's see how we can create a custom cell renderer. for example `hello-table-cell-renderer.component.ts`
 
