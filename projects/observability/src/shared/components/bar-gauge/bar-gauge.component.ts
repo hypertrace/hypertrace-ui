@@ -173,7 +173,7 @@ interface BarSegment extends Segment {
 }
 
 export interface SegmentContext {
-  $implicit: BarSegment
+  $implicit: BarSegment;
 }
 
 export const enum BarGaugeStyle {
