@@ -318,7 +318,9 @@ export class TableComponent
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
   @Output()
-  public readonly sortChange: EventEmitter<SortedColumn> = new EventEmitter<SortedColumn>();
+  public readonly sortChange: EventEmitter<SortedColumn<TableColumnConfig>> = new EventEmitter<
+    SortedColumn<TableColumnConfig>
+  >();
 
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
@@ -774,7 +776,10 @@ export class TableComponent
         };
   }
 
-  private sortDataFromUrl(params: ParamMap, columns: TableColumnConfigExtended[]): Required<SortedColumn> | undefined {
+  private sortDataFromUrl(
+    params: ParamMap,
+    columns: TableColumnConfigExtended[]
+  ): Required<SortedColumn<TableColumnConfigExtended>> | undefined {
     if (!this.syncWithUrl) {
       return undefined;
     }
@@ -791,7 +796,7 @@ export class TableComponent
   }
 }
 
-export interface SortedColumn<TCol extends TableColumnConfig = TableColumnConfig> {
+export interface SortedColumn<TCol extends TableColumnConfig> {
   column: TCol;
   direction?: TableSortDirection;
 }
