@@ -238,7 +238,7 @@ _Why we're doing this_? Answer is simple, once we do all this now, we can just w
 
 ### Tables
 
-Table is custom component in the hypertrace-ui. The following example shows how to add table inside another component.
+Table is a custom component in the hypertrace-ui. The following example shows how to add table inside another component.
 <br />
 Here is what table API Says:
 
