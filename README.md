@@ -78,7 +78,7 @@ Hypertrace-UI code is divided into many smaller projects which gives the code ba
 5. `Graphql-Client` : Hypertrace-ui uses [apollo graphql](https://www.apollographql.com/) for API calls. This is the place where all the base graphql request related code is present such as graphql arguments, resolvers, builders etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/graphql-client)
 6. `Observability` : This consists of all the different pages, components, services related to distributed tracing and observability. This project is the home for charts as well. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/observability)
 7. `Test Utils` : This consists of some unit test utilities for dashboards etc.. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/projects/test-utils)
-8. `UI App` : This is not a project but a entry point for hypertrace-ui app. This consists home page, routes, config module etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/src)
+8. `UI App` : This is not a project but a entry point for hypertrace-ui app. This consists of the home page, routes, config module etc. Check this out [here](https://github.com/hypertrace/hypertrace-ui/tree/main/src)
 
 `NOTE` : Each project, consists a barrel file named `public-api.ts`. This handles all the exports at single place which improves the importing in the app.
 For example
