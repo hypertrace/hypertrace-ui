@@ -165,11 +165,15 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
-  tooltip?: string | TemplateRef<Segment> | TemplateRef<{ $implicit: Segment }>;
+  tooltip?: string | TemplateRef<SegmentContext>;
 }
 
 interface BarSegment extends Segment {
   percentage: number;
+}
+
+export interface SegmentContext {
+  $implicit: BarSegment
 }
 
 export const enum BarGaugeStyle {
