@@ -229,7 +229,7 @@ Now let's break this down.
 
 - We have used decorator `Model` by which we're registering this data source (on build) for usage.
 - `type` property is the unique string to define each data source. If we look closely we have used the same string as a type in the model json as well for key `data`.
-- We have used decorator `ModelPropery` for defining the custom properties like in this case `upper-case`.
+- We have used decorator `ModelPropery` for defining custom properties; like in this case `upper-case`.
 - We have implemented `getData` Method, and the same menthod we're using in the renderer component `return this.api.getData()`.
 
 Now after implemening all this we can use these as shown above and render the custom data.
