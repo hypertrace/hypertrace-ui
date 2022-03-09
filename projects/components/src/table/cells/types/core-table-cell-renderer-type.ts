@@ -1,6 +1,7 @@
 export const enum CoreTableCellRendererType {
   Checkbox = 'checkbox',
   Code = 'code',
+  Duration = 'duration',
   Icon = 'icon',
   Number = 'number',
   RowExpander = 'row-expander',

@@ -36,6 +36,7 @@ import { TableCellParserConstructor } from './table-cell-parser';
 import { TableCellParserLookupService } from './table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 import { TableCellRendererLookupService } from './table-cell-renderer-lookup.service';
+import { DurationTableCellRendererComponent } from './data-renderers/duration/duration-table-cell-renderer.component';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
@@ -74,7 +75,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     StringArrayTableCellRendererComponent,
     StringEnumTableCellRendererComponent,
     TextWithCopyActionTableCellRendererComponent,
-    RelativeTimestampTableCellRendererComponent
+    RelativeTimestampTableCellRendererComponent,
+    DurationTableCellRendererComponent
   ],
   providers: [
     {
@@ -91,7 +93,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         StringArrayTableCellRendererComponent,
         StringEnumTableCellRendererComponent,
         TextWithCopyActionTableCellRendererComponent,
-        RelativeTimestampTableCellRendererComponent
+        RelativeTimestampTableCellRendererComponent,
+        DurationTableCellRendererComponent
       ],
       multi: true
     },

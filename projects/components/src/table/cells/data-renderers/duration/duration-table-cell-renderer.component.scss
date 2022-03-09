@@ -1,0 +1,8 @@
+@import 'font';
+
+.duration-cell {
+    .duration-text{
+        @include ellipsis-overflow();
+        @include font-label($gray-7);
+    }
+}
