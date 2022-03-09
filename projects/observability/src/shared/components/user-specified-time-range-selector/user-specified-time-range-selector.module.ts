@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { UserSpecifiedTimeRangeSelectorComponent } from './user-specified-time-range-selector.component';
 
 import { CommonModule } from '@angular/common';
-import { TimeRangeModule } from '../../../../../components/src/time-range/time-range.module';
+import { TimeRangeModule } from '@hypertrace/components';
 
 @NgModule({
   declarations: [UserSpecifiedTimeRangeSelectorComponent],
