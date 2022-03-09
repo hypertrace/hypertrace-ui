@@ -54,6 +54,7 @@ export * from './utilities/formatters/string/string-formatter';
 export * from './utilities/formatters/string/highlight.pipe';
 export * from './utilities/formatters/enum/display-string-enum.pipe';
 export * from './utilities/formatters/enum/display-string-enum';
+export * from './utilities/formatters/string/display-string.pipe';
 
 // Http Param Encoder
 export { HttpParamEncoder } from './utilities/http/http-param-encoder';

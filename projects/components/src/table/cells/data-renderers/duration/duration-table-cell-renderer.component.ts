@@ -14,7 +14,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="duration-cell">
-    <span class="duration-text" [htTooltip]="this.durationText">{{ this.durationText }}</span>
+    <span class="duration-text" [htTooltip]="this.durationText">{{ this.durationText | htDisplayString }}</span>
     </div>
   `,
   styleUrls: ['./duration-table-cell-renderer.component.scss']
