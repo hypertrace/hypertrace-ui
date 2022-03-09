@@ -5,7 +5,6 @@ import { HeaderSecondaryRowContentDirective } from './header-secondary-row-conte
 @NgModule({
   declarations: [HeaderPrimaryRowContentDirective, HeaderSecondaryRowContentDirective],
   exports: [HeaderPrimaryRowContentDirective, HeaderSecondaryRowContentDirective],
-  imports: [CommonModule],
-  providers: []
+  imports: [CommonModule]
 })
 export class HeaderContentModule {}

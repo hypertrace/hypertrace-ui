@@ -103,11 +103,7 @@ export class NavigationListComponent implements OnChanges {
       .getCombinedFeatureState([ApplicationFeature.PageTimeRange, ApplicationFeature.NavigationRedesign])
       .pipe(
         map(featureState => featureState === FeatureState.Enabled),
-        tap(usePageLevelTimeRange => {
-          this.usePageLevelTimeRange = usePageLevelTimeRange;
-
-          return usePageLevelTimeRange;
-        }),
+        tap(usePageLevelTimeRange => (this.usePageLevelTimeRange = usePageLevelTimeRange)),
         switchMap(usePageLevelTimeRange => {
           if (usePageLevelTimeRange) {
             return this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);

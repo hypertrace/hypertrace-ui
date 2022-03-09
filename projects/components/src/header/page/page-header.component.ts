@@ -33,28 +33,14 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
         [ngClass]="this.contentAlignment"
       >
         <div class="primary-content">
-          <div class="breadcrumb-container">
-            <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-            <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
-              <ht-icon
-                class="icon"
-                *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
-                [icon]="titlecrumb.icon"
-                [label]="titlecrumb.label"
-                size="${IconSize.Large}"
-              ></ht-icon>
-
-              <ht-label [label]="titlecrumb.label"></ht-label>
-              <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
-            </div>
-          </div>
+          <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
           <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
           <ht-user-specified-time-range-selector
             class="time-range"
-            *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRange"
+            *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRangeTemplate"
           ></ht-user-specified-time-range-selector>
 
-          <ng-template #globalTimeRange>
+          <ng-template #globalTimeRangeTemplate>
             <ht-time-range></ht-time-range>
           </ng-template>
         </div>
@@ -67,23 +53,27 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
 
       <ng-template #noTimeRangeHeaderLayoutTemplate>
         <div [ngClass]="this.contentAlignment">
-          <div class="breadcrumb-container">
-            <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-            <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
-              <ht-icon
-                class="icon"
-                *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
-                [icon]="titlecrumb.icon"
-                [label]="titlecrumb.label"
-                size="${IconSize.Large}"
-              ></ht-icon>
-
-              <ht-label [label]="titlecrumb.label"></ht-label>
-              <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
-            </div>
-          </div>
+          <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
 
           <ng-content></ng-content>
+        </div>
+      </ng-template>
+
+      <ng-template #breadCrumbContainerTemplate>
+        <div class="breadcrumb-container">
+          <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
+          <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
+            <ht-icon
+              class="icon"
+              *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
+              [icon]="titlecrumb.icon"
+              [label]="titlecrumb.label"
+              size="${IconSize.Large}"
+            ></ht-icon>
+
+            <ht-label [label]="titlecrumb.label"></ht-label>
+            <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
+          </div>
         </div>
       </ng-template>
 

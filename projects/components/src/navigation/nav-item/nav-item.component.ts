@@ -62,8 +62,6 @@ export class NavItemComponent {
     this.navItemSelected.emit(this.config);
   }
 
-  public includeTimeRange: boolean = true;
-
   public constructor(private readonly activatedRoute: ActivatedRoute) {}
 
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
