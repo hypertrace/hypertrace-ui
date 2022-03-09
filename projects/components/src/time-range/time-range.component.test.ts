@@ -106,9 +106,9 @@ describe('Time range component', () => {
     const spectator = createComponent();
     const refreshButton = spectator.query('.refresh', { read: ButtonComponent })!;
     expect(refreshButton).toExist();
-    expect(refreshButton.role).toBe(ButtonRole.Secondary);
+    expect(refreshButton.role).toBe(ButtonRole.Tertiary);
     spectator.tick(new TimeDuration(5, TimeUnit.Minute).toMillis());
-    expect(refreshButton.role).toBe(ButtonRole.Primary);
+    expect(refreshButton.role).toBe(ButtonRole.Secondary);
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');
     spectator.tick(new TimeDuration(30, TimeUnit.Second).toMillis());
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');
