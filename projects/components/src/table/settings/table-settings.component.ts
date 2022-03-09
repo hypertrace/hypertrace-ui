@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ModalSize } from '../../modal/modal';
@@ -32,12 +23,6 @@ export class TableSettingsComponent implements OnChanges {
   public readonly columnsChange: EventEmitter<TableColumnConfigExtended[]> = new EventEmitter();
 
   public isDisabled: boolean = true;
-
-  public classes: string[] = [];
-
-  @ViewChild('htmlTooltip')
-  public htmlTooltipTemplate?: TemplateRef<unknown>;
-  public sanitizedHtmlForTooltip?: string;
 
   public constructor(private readonly modalService: ModalService) {}
 
