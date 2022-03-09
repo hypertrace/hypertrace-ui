@@ -8,6 +8,7 @@ export const enum DateFormatMode {
   DateOnly,
   MonthAndDayOnly,
   MonthAndYearOnly,
+  FullMonthAndYearOnly,
   DateAndTime,
   DateAndTimeWithSeconds
 }
@@ -54,6 +55,8 @@ export class DateFormatter {
         return 'MMM d';
       case DateFormatMode.MonthAndYearOnly:
         return 'MMM yy';
+      case DateFormatMode.FullMonthAndYearOnly:
+        return 'MMMM yyyy';
       case DateFormatMode.DateOnly:
         return 'd MMM y';
       case DateFormatMode.DateAndTime:

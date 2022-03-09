@@ -26,6 +26,7 @@ export const enum Color {
   Green2 = '#c3f3db',
   Green3 = '#95eabe',
   Green5 = '#27C675',
+  Green6 = '#1f9e5c',
   Orange1 = '#FFF4EB',
   Orange3 = '#FDC088',
   Orange4 = '#fca555',

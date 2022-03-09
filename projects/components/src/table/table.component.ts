@@ -309,7 +309,9 @@ export class TableComponent
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
   @Output()
-  public readonly sortChange: EventEmitter<SortedColumn> = new EventEmitter<SortedColumn>();
+  public readonly sortChange: EventEmitter<SortedColumn<TableColumnConfig>> = new EventEmitter<
+    SortedColumn<TableColumnConfig>
+  >();
 
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
@@ -390,7 +392,7 @@ export class TableComponent
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
-        filter((sort): sort is Required<SortedColumn> => sort !== undefined)
+        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
       )
       .subscribe(sort => this.updateSort(sort));
   }
@@ -541,7 +543,7 @@ export class TableComponent
 
   public onSortChange(direction: TableSortDirection, columnConfig: TableColumnConfigExtended): void {
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
-      const sortedColumn: SortedColumn = {
+      const sortedColumn: SortedColumn<TableColumnConfigExtended> = {
         column: columnConfig,
         direction: direction
       };
@@ -629,7 +631,7 @@ export class TableComponent
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
   }
 
-  private updateSort(sort: SortedColumn): void {
+  private updateSort(sort: SortedColumn<TableColumnConfigExtended>): void {
     sort.column.sort = sort.direction;
     this.columnStateSubject.next(sort.column);
   }
@@ -764,7 +766,10 @@ export class TableComponent
         };
   }
 
-  private sortDataFromUrl(params: ParamMap, columns: TableColumnConfigExtended[]): Required<SortedColumn> | undefined {
+  private sortDataFromUrl(
+    params: ParamMap,
+    columns: TableColumnConfigExtended[]
+  ): Required<SortedColumn<TableColumnConfigExtended>> | undefined {
     if (!this.syncWithUrl) {
       return undefined;
     }
@@ -781,8 +786,8 @@ export class TableComponent
   }
 }
 
-export interface SortedColumn {
-  column: TableColumnConfigExtended;
+export interface SortedColumn<TCol extends TableColumnConfig> {
+  column: TCol;
   direction?: TableSortDirection;
 }
 
