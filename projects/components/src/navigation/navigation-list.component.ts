@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import {
+  ApplicationFeature,
   FeatureState,
   FeatureStateResolver,
   FixedTimeRange,
@@ -12,7 +13,6 @@ import {
 import { isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { ApplicationFeature } from '../../../../src/app/shared/constants/application-feature';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';

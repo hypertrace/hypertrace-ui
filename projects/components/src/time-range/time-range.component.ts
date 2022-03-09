@@ -10,7 +10,7 @@ import {
 } from '@hypertrace/common';
 import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ButtonRole, ButtonSize } from '../button/button';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 
@@ -52,15 +52,15 @@ import { PopoverRef } from '../popover/popover-ref';
           </ht-popover-content>
         </ht-popover>
       </div>
-
       <ht-button
         *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         class="refresh"
         [ngClass]="refreshButton.isEmphasized ? 'emphasized' : ''"
         [label]="refreshButton.text$ | async"
         icon="${IconType.Refresh}"
-        size="${ButtonSize.Medium}"
+        size="${ButtonSize.Small}"
         [role]="refreshButton.role"
+        [display]="'${ButtonStyle.Bordered}'"
         (click)="refreshButton.onClick()"
       >
       </ht-button>
@@ -111,7 +111,7 @@ export class TimeRangeComponent {
       return concat(
         of({
           text$: of('Refresh'),
-          role: ButtonRole.Secondary,
+          role: ButtonRole.Tertiary,
           isEmphasized: false,
           onClick: () => this.onRefresh(timeRange)
         }),
@@ -129,7 +129,7 @@ export class TimeRangeComponent {
                 ),
                 map(duration => `Refresh - updated ${duration.toString()} ago`)
               ),
-              role: ButtonRole.Primary,
+              role: ButtonRole.Secondary,
               isEmphasized: true,
               onClick: () => this.onRefresh(timeRange)
             }))

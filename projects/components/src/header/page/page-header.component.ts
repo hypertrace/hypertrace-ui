@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit } from '@angular/core';
 import {
+  ApplicationFeature,
   Breadcrumb,
   isNonEmptyString,
   NavigationService,
@@ -8,7 +9,6 @@ import {
 } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { ApplicationFeature } from '../../../../../src/app/shared/constants/application-feature';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';

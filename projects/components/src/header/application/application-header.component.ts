@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { FeatureState, FeatureStateResolver, GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
+import {
+  ApplicationFeature,
+  FeatureState,
+  FeatureStateResolver,
+  GLOBAL_HEADER_HEIGHT,
+  NavigationService
+} from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-// tslint:disable-next-line: import-blacklist
-import { ApplicationFeature } from '../../../../../src/app/shared/constants/application-feature';
 
 @Component({
   selector: 'ht-application-header',

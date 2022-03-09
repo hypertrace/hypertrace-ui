@@ -11,7 +11,7 @@ export class RelativeTimeRange implements TimeRange {
   }
 
   public isCustom(): boolean {
-    // Right now all RelativeTimeRanges ARE custom; all FixedTimeRanges are NOT
+    // Right now all RelativeTimeRanges are NOT custom; all FixedTimeRanges are
     return false;
   }
 

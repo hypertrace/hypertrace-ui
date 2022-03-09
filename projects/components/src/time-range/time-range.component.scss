@@ -11,7 +11,7 @@
 @mixin time-range-buttons() {
   @include time-range-button-background;
   @include body-1-medium($gray-6);
-  border: 1px solid $gray-3;
+  border: 1px solid $gray-2;
   height: 34px;
   display: flex;
   align-items: center;
@@ -56,45 +56,16 @@
 
 .refresh {
   margin-left: 8px;
+  background-color: white;
+  border-radius: 6px;
 
   ::ng-deep {
-    button.button.solid {
+    button.button.bordered {
       height: 34px;
-      display: flex;
-      align-items: center;
     }
   }
   &.emphasized {
-    ::ng-deep {
-      button.button.solid {
-        background-color: $gray-2;
-        border: 1px solid $gray-2;
-        &:hover {
-          background-color: $gray-1;
-        }
-        .label {
-          color: $gray-9;
-        }
-      }
-
-      .icon.leading {
-        color: $gray-6;
-      }
-    }
-  }
-
-  &:not(.emphasized) {
-    ::ng-deep {
-      button.button.solid {
-        @include time-range-button-background;
-        border: 1px solid $gray-3;
-        .label {
-          @include body-1-medium($gray-6);
-        }
-        .icon.leading {
-          color: $gray-6;
-        }
-      }
-    }
+    background-color: $gray-2;
+    border-radius: 6px;
   }
 }

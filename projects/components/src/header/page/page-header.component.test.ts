@@ -1,4 +1,5 @@
 import {
+  ApplicationFeature,
   FeatureState,
   FeatureStateResolver,
   NavigationService,
@@ -10,7 +11,6 @@ import { UserSpecifiedTimeRangeSelectorComponent } from '@hypertrace/observabili
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
-import { ApplicationFeature } from '../../../../../src/app/shared/constants/application-feature';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { PageHeaderComponent } from './page-header.component';
 
