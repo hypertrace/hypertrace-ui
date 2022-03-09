@@ -6,8 +6,11 @@ import {
   PreferenceService,
   SubscriptionLifecycle
 } from '@hypertrace/common';
-import { FeatureConfigCheckModule, TimeRangeComponent } from '@hypertrace/components';
-import { UserSpecifiedTimeRangeSelectorComponent } from '@hypertrace/observability';
+import {
+  FeatureConfigCheckModule,
+  TimeRangeComponent,
+  UserSpecifiedTimeRangeSelectorComponent
+} from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
