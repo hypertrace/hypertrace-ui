@@ -30,7 +30,7 @@
   }
 
   .options-button {
-    display: inherit;
+    display: none;
     color: $gray-7;
     cursor: pointer;
 
@@ -41,12 +41,13 @@
 
   &:hover {
     .options-button {
+      display: inherit;
     }
   }
 
   .title {
     min-width: 0;
-    //width: 100%;
+    width: 100%;
 
     &.asc,
     &.desc {

@@ -66,7 +66,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
         [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
-        class="table"
+        class="cdk-table"
       >
         <!-- Columns -->
         <div *ngFor="let columnDef of this.visibleColumnConfigs$ | async; trackBy: this.trackItem; index as index">
@@ -173,11 +173,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       </ng-container>
 
       <!-- Pagination -->
-      <div
-        class="pagination-controls"
-        *ngIf="this.pageable"
-        [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
-      >
+      <div class="pagination-controls" *ngIf="this.pageable">
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
@@ -186,6 +182,12 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           [pageIndex]="pagination?.pageIndex"
         ></ht-paginator>
       </div>
+
+      <ht-table-settings
+        *ngIf="this.showTableSettings"
+        class="table-settings"
+        [availableColumns]="this.columnConfigs$ | async"
+      ></ht-table-settings>
     </div>
   `
 })
@@ -222,13 +224,6 @@ export class TableComponent
 
   public readonly expandedDetailColumnConfig: TableColumnConfig = {
     id: '$$detail'
-  };
-
-  private readonly tableSettingsColumnConfig: TableColumnConfig = {
-    id: '$$tableSettingsColumns',
-    width: '32px',
-    visible: true,
-    editable: true
   };
 
   @Input()
@@ -627,7 +622,7 @@ export class TableComponent
     }
 
     return this.tableService.buildExtendedColumnConfigs(
-      [...stateColumns, ...columnConfigs, ...[this.showTableSettings ? this.tableSettingsColumnConfig : []].flat()],
+      [...stateColumns, ...columnConfigs],
       this.dataSource,
       this.metadata || []
     );

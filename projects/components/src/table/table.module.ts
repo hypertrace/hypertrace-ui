@@ -1,3 +1,4 @@
+import { MenuDropdownModule } from './../menu-dropdown/menu-dropdown.module';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -13,6 +14,7 @@ import { TableCellParserConstructor } from './cells/table-cell-parser';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
 import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './cells/table-cells.module';
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
+import { TableSettingsComponent } from './settings/table-settings.component';
 import { TableComponent } from './table.component';
 
 @NgModule({
@@ -27,9 +29,10 @@ import { TableComponent } from './table.component';
     LoadAsyncModule,
     LetAsyncModule,
     ButtonModule,
-    TraceCheckboxModule
+    TraceCheckboxModule,
+    MenuDropdownModule
   ],
-  declarations: [TableComponent, TableEditColumnsModalComponent],
+  declarations: [TableComponent, TableEditColumnsModalComponent, TableSettingsComponent],
   exports: [TableComponent]
 })
 // tslint:disable-next-line: no-unnecessary-class
