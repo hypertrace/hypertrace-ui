@@ -10,7 +10,7 @@ import {
 } from '@hypertrace/common';
 import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonRole, ButtonSize } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 
@@ -60,7 +60,6 @@ import { PopoverRef } from '../popover/popover-ref';
         icon="${IconType.Refresh}"
         size="${ButtonSize.Small}"
         [role]="refreshButton.role"
-        [display]="'${ButtonStyle.Bordered}'"
         (click)="refreshButton.onClick()"
       >
       </ht-button>
@@ -129,7 +128,7 @@ export class TimeRangeComponent {
                 ),
                 map(duration => `Refresh - updated ${duration.toString()} ago`)
               ),
-              role: ButtonRole.Secondary,
+              role: ButtonRole.Primary,
               isEmphasized: true,
               onClick: () => this.onRefresh(timeRange)
             }))
