@@ -4,6 +4,10 @@
   ::ng-deep .mat-checkbox-checked .mat-checkbox-background,
   .mat-checkbox-indeterminate {
     background-color: $blue-4;
+
+    .mat-checkbox-mixedmark {
+      background-color: white;
+    }
   }
 
   ::ng-deep .mat-checkbox-disabled {
