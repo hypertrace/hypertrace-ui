@@ -11,6 +11,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
       labelPosition="after"
       [checked]="this.isChecked"
       [disabled]="this.isDisabled"
+      [(indeterminate)]="this.indeterminate"
       (change)="this.onCheckboxChange($event)"
       class="ht-checkbox"
       [ngClass]="{ disabled: this.isDisabled }"
@@ -35,9 +36,12 @@ export class CheckboxComponent implements ControlValueAccessor {
     this.isChecked = checked ?? false;
   }
 
-  public get checked(): boolean {
+  public get checked(): boolean | undefined {
     return this.isChecked;
   }
+
+  @Input()
+  public indeterminate?: boolean;
 
   @Input()
   public set disabled(disabled: boolean | undefined) {

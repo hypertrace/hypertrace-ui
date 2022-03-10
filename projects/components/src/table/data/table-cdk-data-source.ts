@@ -154,6 +154,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     this.rowsChange$.next(TableCdkRowUtil.mergeRowStates(this.cachedRows, unselectedRows));
   }
 
+  public getAllRows(): StatefulTableRow[] {
+    return this.cachedRows;
+  }
+
   /****************************
    * Change Detection
    ****************************/

@@ -35,7 +35,7 @@ describe('Table Header Cell Renderer', () => {
       }
     });
 
-    expect(spectator.query('.table-header-cell-renderer')).toHaveClass('sortable');
+    expect(spectator.query('.table-header-cell-renderer > .title')).toHaveClass('sortable');
   });
 
   test('should not have sortable class, if column cannot be sorted', () => {
@@ -53,7 +53,7 @@ describe('Table Header Cell Renderer', () => {
       }
     });
 
-    expect(spectator.query('.table-header-cell-renderer')).not.toHaveClass('sortable');
+    expect(spectator.query('.table-header-cell-renderer > .title')).not.toHaveClass('sortable');
   });
 
   test('should sort column when header title is clicked', fakeAsync(() => {
