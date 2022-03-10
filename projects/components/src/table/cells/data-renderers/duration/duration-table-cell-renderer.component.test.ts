@@ -1,8 +1,8 @@
 import { FormattingModule, MemoizeModule, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
+import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { DurationTableCellRendererComponent } from './duration-table-cell-renderer.component';
-import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 
 describe('Duration table cell renderer component', () => {
   const buildComponent = createComponentFactory({

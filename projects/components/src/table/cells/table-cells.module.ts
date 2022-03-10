@@ -18,6 +18,7 @@ import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
 import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
+import { DurationTableCellRendererComponent } from './data-renderers/duration/duration-table-cell-renderer.component';
 import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
@@ -36,7 +37,6 @@ import { TableCellParserConstructor } from './table-cell-parser';
 import { TableCellParserLookupService } from './table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 import { TableCellRendererLookupService } from './table-cell-renderer-lookup.service';
-import { DurationTableCellRendererComponent } from './data-renderers/duration/duration-table-cell-renderer.component';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
