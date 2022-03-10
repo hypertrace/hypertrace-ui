@@ -74,6 +74,10 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
   private propagateValueChangeToFormControl(value?: string): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
