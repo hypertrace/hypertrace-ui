@@ -101,6 +101,12 @@
     }
   }
 
+  &:not(.expanded) {
+    .footer .footer-item .link {
+      margin-right: 0;
+    }
+  }
+
   &:not(.navigation-list-dark) {
     background: white;
 
