@@ -31,7 +31,7 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
            projected, primary or secondary -->
       <div
         *htIfFeature="'${ApplicationFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
-        [ngClass]="this.contentAlignment"
+        class="column-alignment"
       >
         <div class="primary-content">
           <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>

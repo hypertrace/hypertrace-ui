@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
@@ -53,14 +53,6 @@ export class NavItemComponent {
 
   @Input()
   public collapsed: boolean = true;
-
-  @Output()
-  public readonly navItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
-
-  @HostListener('click')
-  public onClick(): void {
-    this.navItemSelected.emit(this.config);
-  }
 
   public constructor(private readonly activatedRoute: ActivatedRoute) {}
 

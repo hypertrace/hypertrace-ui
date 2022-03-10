@@ -39,7 +39,7 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
-                (navItemSelected)="onNavItemSelected($event)"
+                (click)="this.onNavItemSelected(item)"
                 [config]="item"
                 [active]="(this.activeItem$ | async)?.matchPaths[0] === item.matchPaths[0]"
                 [collapsed]="this.collapsed"
