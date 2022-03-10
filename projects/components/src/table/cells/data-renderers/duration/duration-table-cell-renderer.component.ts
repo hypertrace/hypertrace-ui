@@ -9,6 +9,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 @Component({
   selector: 'ht-duration-table-cell-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO: Modify the htDuration pipe to also support long format display and use it here.
   template: `
     <div class="duration-cell">
       <span class="duration-text" [htTooltip]="this.getDurationString | htMemoize: this.value" >{{ this.getDurationString | htMemoize: this.value }}</span>

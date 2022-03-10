@@ -25,7 +25,6 @@ describe('Duration table cell renderer component', () => {
       providers: [tableCellDataProvider(new TimeDuration(4, TimeUnit.Hour))]
     });
 
-    console.log(spectator.component.value);
     expect(spectator.element).toHaveText('4 hours');
   });
 });
