@@ -1,38 +1,31 @@
-import { FormattingModule, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { FormattingModule, MemoizeModule, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { MockPipe } from 'ng-mocks';
-import { DisplayStringPipe } from '@hypertrace/common';
-import { TableCellTimestampParser } from '../../data-parsers/table-cell-timestamp-parser';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { DurationTableCellRendererComponent } from './duration-table-cell-renderer.component';
+import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 
 describe('Duration table cell renderer component', () => {
   const buildComponent = createComponentFactory({
     component: DurationTableCellRendererComponent,
-    imports: [FormattingModule],
+    imports: [FormattingModule, MemoizeModule],
     providers: [
       tableCellProviders(
         {
           id: 'test'
         },
-        new TableCellTimestampParser(undefined!)
+        new TableCellNoOpParser(undefined!)
       )
     ],
-    declarations: [MockPipe(DisplayStringPipe)],
     shallow: true
   });
 
-  test('Duration in defined unit', () => {
+  test('Should render duration in defined unit', () => {
+
     const spectator = buildComponent({
       providers: [tableCellDataProvider(new TimeDuration(4, TimeUnit.Hour))]
     });
 
-    expect(spectator.element).toHaveText('4 Hours');
-  });
-
-  test('renders a missing duration', () => {
-    const spectator = buildComponent();
-
-    expect(spectator.element).toHaveText('-');
+    console.log(spectator.component.value);
+    expect(spectator.element).toHaveText('4 hours');
   });
 });
