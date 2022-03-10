@@ -14,7 +14,7 @@ import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { UserSpecifiedTimeRangeSelectorComponent } from './user-specified-time-range-selector.component';
 
-describe('Page time range component', () => {
+describe('user specified time range selector component', () => {
   let spectator: SpectatorHost<UserSpecifiedTimeRangeSelectorComponent>;
   const route = {
     snapshot: {

@@ -12,7 +12,7 @@ import {
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { Observable, of } from 'rxjs';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
@@ -82,8 +82,6 @@ export class NavigationListComponent implements OnChanges {
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
-  public usePageLevelTimeRange: boolean = false;
-
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public navItems$?: Observable<NavItemConfig[]>;
@@ -103,7 +101,6 @@ export class NavigationListComponent implements OnChanges {
       .getCombinedFeatureState([ApplicationFeature.PageTimeRange, ApplicationFeature.NavigationRedesign])
       .pipe(
         map(featureState => featureState === FeatureState.Enabled),
-        tap(usePageLevelTimeRange => (this.usePageLevelTimeRange = usePageLevelTimeRange)),
         switchMap(usePageLevelTimeRange => {
           if (usePageLevelTimeRange) {
             return this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);
@@ -131,12 +128,12 @@ export class NavigationListComponent implements OnChanges {
   }
 
   public onNavItemSelected(navItemLink: NavItemLinkConfig): void {
-    if (this.usePageLevelTimeRange && !isNil(navItemLink.timeRange)) {
-      if (navItemLink.timeRange?.isCustom()) {
+    if (!isNil(navItemLink.timeRange)) {
+      if (navItemLink.timeRange instanceof FixedTimeRange) {
         const timeRange: FixedTimeRange = navItemLink.timeRange;
         this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
-      } else if (!navItemLink.timeRange?.isCustom()) {
-        const timeRange: RelativeTimeRange = navItemLink.timeRange as RelativeTimeRange;
+      } else if (navItemLink.timeRange instanceof RelativeTimeRange) {
+        const timeRange: RelativeTimeRange = navItemLink.timeRange;
         this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
       }
     }

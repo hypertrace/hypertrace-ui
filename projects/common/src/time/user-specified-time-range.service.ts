@@ -30,17 +30,6 @@ export class UserSpecifiedTimeRangeService {
       this.pageTimeRangesSubject$.next(values);
     });
   }
-  private getDefaultPageTimeRange(path: string): TimeRange {
-    const defaultTimeRange = this.navigationService.getRouteConfig([path], this.navigationService.rootRoute())?.data
-      ?.defaultTimeRange;
-
-    if (!defaultTimeRange) {
-      //  Use current time range as default default
-      return this.timeRangeService.getCurrentTimeRange();
-    }
-
-    return defaultTimeRange;
-  }
 
   public getUserSpecifiedTimeRangeForPage(path: string): Observable<TimeRange> {
     return this.storedTimeRanges$.pipe(
@@ -68,6 +57,13 @@ export class UserSpecifiedTimeRangeService {
       newMap,
       UserSpecifiedTimeRangeService.STORAGE_TYPE
     );
+  }
+
+  private getDefaultPageTimeRange(path: string): TimeRange {
+    const defaultTimeRange = this.navigationService.getRouteConfig([path], this.navigationService.rootRoute())?.data
+      ?.defaultTimeRange;
+
+    return defaultTimeRange ?? this.timeRangeService.getCurrentTimeRange();
   }
 }
 

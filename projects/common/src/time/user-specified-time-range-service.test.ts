@@ -11,7 +11,7 @@ import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { UserSpecifiedTimeRangeService } from './user-specified-time-range.service';
 
-describe('Page time range service', () => {
+describe('User specified time range service', () => {
   const defaultPageTimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
   const serviceFactory = createServiceFactory({
     service: UserSpecifiedTimeRangeService,

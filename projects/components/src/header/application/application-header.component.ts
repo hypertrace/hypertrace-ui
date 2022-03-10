@@ -23,8 +23,8 @@ import { map } from 'rxjs/operators';
         <div class="left-side-content">
           <ng-content select="[left]"></ng-content>
         </div>
-        <ng-container *ngIf="this.pageLevelTimeRangeDisabled$ | async">
-          <div class="time-range" *ngIf="this.showTimeRange">
+        <ng-container *ngIf="this.showTimeRange">
+          <div class="time-range" *ngIf="this.pageLevelTimeRangeDisabled$ | async">
             <ht-time-range></ht-time-range>
           </div>
         </ng-container>

@@ -1,10 +1,11 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { NavigationService, TimeRangeService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { NavigationService } from '../navigation/navigation.service';
 import { FixedTimeRange } from './fixed-time-range';
+import { TimeRangeService } from './time-range.service';
 
 describe('Time range service', () => {
   let timeRange$: Observable<string> = NEVER;
