@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '@hypertrace/common';
 
@@ -44,7 +52,7 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates
@@ -64,6 +72,7 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
 
   public writeValue(value?: string): void {
     this.value = value;
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {
@@ -72,6 +81,10 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
 
   public registerOnTouched(onTouch: (value?: string) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
   }
 
   private propagateValueChangeToFormControl(value?: string): void {
