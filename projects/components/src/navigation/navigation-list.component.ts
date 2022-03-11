@@ -117,11 +117,10 @@ export class NavigationListComponent implements OnChanges {
     ]).pipe(
       map(([, navItems], index) => {
         const activeItem = this.findActiveItem(navItems);
-        console.log('index', index);
-        console.log('active', activeItem);
         if (index === 0 && activeItem) {
           this.setPageTimeRangeForSelectedNavItem(activeItem);
         }
+
         return activeItem;
       })
     );

@@ -6,13 +6,13 @@ import {
   PreferenceService,
   SubscriptionLifecycle
 } from '@hypertrace/common';
-import { TimeRangeComponent } from '../../time-range/time-range.component';
-import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
-import { UserSpecifiedTimeRangeSelectorComponent } from '../../user-specified-time-range-selector/user-specified-time-range-selector.component';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
+import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
+import { TimeRangeComponent } from '../../time-range/time-range.component';
+import { UserSpecifiedTimeRangeSelectorComponent } from '../../user-specified-time-range-selector/user-specified-time-range-selector.component';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('Page Header Component', () => {
