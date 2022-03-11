@@ -94,8 +94,10 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [availableColumns]="this.columnConfigs$ | async"
                 [index]="index"
                 [sort]="columnDef.sort"
+                [indeterminateRowsSelected]="this.indeterminateRowsSelected"
                 (sortChange)="this.onSortChange($event, columnDef)"
                 (columnsChange)="this.onColumnsEdit($event)"
+                (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
@@ -380,6 +382,7 @@ export class TableComponent
   private resizeHeaderOffsetLeft: number = 0;
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
+  public indeterminateRowsSelected?: boolean;
 
   public constructor(
     private readonly elementRef: ElementRef,
@@ -564,6 +567,22 @@ export class TableComponent
     this.columnConfigsChange.emit(columnConfigs);
   }
 
+  public onHeaderAllRowsSelectionChange(allRowsSelected: boolean): void {
+    if (this.hasMultiSelect()) {
+      if (allRowsSelected) {
+        this.dataSource?.selectAllRows();
+        this.selections = this.dataSource?.getAllRows();
+      } else {
+        this.dataSource?.unselectAllRows();
+        this.selections = [];
+      }
+
+      this.selectionsChange.emit(this.selections);
+      this.indeterminateRowsSelected = false;
+      this.changeDetector.markForCheck();
+    }
+  }
+
   public onDataCellClick(row: StatefulTableRow): void {
     // NOTE: Cell Renderers generally handle their own clicks. We should only perform table actions here.
     // Propagate the cell click to the row
@@ -654,6 +673,7 @@ export class TableComponent
       this.selections = [toggledRow];
     }
     this.selectionsChange.emit(this.selections);
+    this.indeterminateRowsSelected = this.selections?.length !== this.dataSource?.getAllRows().length;
     this.changeDetector.markForCheck();
   }
 
