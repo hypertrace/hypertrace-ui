@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
 import { TimeRangeComponent } from '../../time-range/time-range.component';
-import { UserSpecifiedTimeRangeSelectorComponent } from '../../user-specified-time-range-selector/user-specified-time-range-selector.component';
+import { PageTimeRangeComponent } from '../../page-time-range/page-time-range.component';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('Page Header Component', () => {
@@ -21,7 +21,7 @@ describe('Page Header Component', () => {
   const createHost = createHostFactory({
     component: PageHeaderComponent,
     imports: [FeatureConfigCheckModule],
-    declarations: [MockComponent(UserSpecifiedTimeRangeSelectorComponent), MockComponent(TimeRangeComponent)],
+    declarations: [MockComponent(PageTimeRangeComponent), MockComponent(TimeRangeComponent)],
     shallow: true,
     providers: [
       mockProvider(NavigationService),
@@ -50,7 +50,7 @@ describe('Page Header Component', () => {
     expect(spectator.query('.beta')).not.toExist();
   });
 
-  test('should display user-specified-time-range-selector when feature flags are enabled', () => {
+  test('should display page time range component when feature flags are enabled', () => {
     spectator = createHost('<ht-page-header></ht-page-header>', {
       providers: [
         mockProvider(FeatureStateResolver, {
@@ -59,7 +59,7 @@ describe('Page Header Component', () => {
       ]
     });
 
-    expect(spectator.query(UserSpecifiedTimeRangeSelectorComponent)).toExist();
+    expect(spectator.query(PageTimeRangeComponent)).toExist();
     expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 
@@ -78,7 +78,7 @@ describe('Page Header Component', () => {
       ]
     });
 
-    expect(spectator.query(UserSpecifiedTimeRangeSelectorComponent)).not.toExist();
+    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
     expect(spectator.query(TimeRangeComponent)).toExist();
   });
 });

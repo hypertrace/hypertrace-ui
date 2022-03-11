@@ -8,11 +8,10 @@ import {
 } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-// tslint:disable-next-line: import-blacklist
-import { ApplicationFeature } from '../../../../common/src/constants/application-constants';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
+import { ApplicationFeature } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-page-header',
@@ -36,10 +35,10 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
-          <ht-user-specified-time-range-selector
+          <ht-page-time-range
             class="time-range"
             *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRangeTemplate"
-          ></ht-user-specified-time-range-selector>
+          ></ht-page-time-range>
 
           <ng-template #globalTimeRangeTemplate>
             <ht-time-range></ht-time-range>

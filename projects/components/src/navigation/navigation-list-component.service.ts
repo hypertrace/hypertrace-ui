@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver, UserSpecifiedTimeRangeService } from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver, PageTimeRangePreferenceService } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } fr
 export class NavigationListComponentService {
   public constructor(
     private readonly featureStateResolver: FeatureStateResolver,
-    private readonly userSpecifiedTimeRangeService: UserSpecifiedTimeRangeService
+    private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService
   ) {}
 
   public resolveFeaturesAndUpdateVisibilityForNavItems(navItems: NavItemConfig[]): NavItemConfig[] {
@@ -36,7 +36,7 @@ export class NavigationListComponentService {
   private getTimeRangesForNavItems(navItems: NavItemConfig[]): Observable<NavItemConfig>[] {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
-        return this.userSpecifiedTimeRangeService.getUserSpecifiedTimeRangeForPage(navItem.matchPaths[0]).pipe(
+        return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
           map(timeRange => ({
             ...navItem,
             timeRange: timeRange

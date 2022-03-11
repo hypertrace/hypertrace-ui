@@ -7,7 +7,7 @@ import { IconModule } from '../../icon/icon.module';
 import { LabelModule } from '../../label/label.module';
 import { NavigableTabModule } from '../../tabs/navigable/navigable-tab.module';
 import { TimeRangeModule } from '../../time-range/time-range.module';
-import { UserSpecifiedTimeRangeSelectorModule } from '../../user-specified-time-range-selector/user-specified-time-range-selector.module';
+import { PageTimeRangeModule } from '../../page-time-range/page-time-range.module';
 import { PageHeaderComponent } from './page-header.component';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { PageHeaderComponent } from './page-header.component';
     NavigableTabModule,
     BetaTagModule,
     FeatureConfigCheckModule,
-    UserSpecifiedTimeRangeSelectorModule
+    PageTimeRangeModule
   ]
 })
 export class PageHeaderModule {}

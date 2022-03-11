@@ -9,12 +9,12 @@ import {
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { UserSpecifiedTimeRangeService } from './user-specified-time-range.service';
+import { PageTimeRangePreferenceService } from './page-time-range-preference.service';
 
-describe('User specified time range service', () => {
+describe('Page time range preference service', () => {
   const defaultPageTimeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
   const serviceFactory = createServiceFactory({
-    service: UserSpecifiedTimeRangeService,
+    service: PageTimeRangePreferenceService,
     providers: [
       mockProvider(NavigationService, {
         getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
@@ -34,10 +34,10 @@ describe('User specified time range service', () => {
       });
 
       cold('-a|', {
-        a: () => spectator.service.setUserSpecifiedTimeRangeForPage('foo', timeRange)
+        a: () => spectator.service.setTimeRangePreferenceForPage('foo', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getUserSpecifiedTimeRangeForPage('foo')).toBe('da', {
+      expectObservable(spectator.service.getTimeRangePreferenceForPage('foo')).toBe('da', {
         d: defaultPageTimeRange,
         a: timeRange
       });
@@ -56,10 +56,10 @@ describe('User specified time range service', () => {
       });
 
       cold('-b|', {
-        b: () => spectator.service.setUserSpecifiedTimeRangeForPage('bar', timeRange)
+        b: () => spectator.service.setTimeRangePreferenceForPage('bar', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getUserSpecifiedTimeRangeForPage('bar')).toBe('db', {
+      expectObservable(spectator.service.getTimeRangePreferenceForPage('bar')).toBe('db', {
         d: defaultPageTimeRange,
         b: timeRange
       });

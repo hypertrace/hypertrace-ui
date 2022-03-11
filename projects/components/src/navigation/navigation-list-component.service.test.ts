@@ -1,10 +1,10 @@
 import {
   FeatureState,
   FeatureStateResolver,
+  PageTimeRangePreferenceService,
   RelativeTimeRange,
   TimeDuration,
-  TimeUnit,
-  UserSpecifiedTimeRangeService
+  TimeUnit
 } from '@hypertrace/common';
 import { NavItemConfig, NavItemType } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -46,8 +46,8 @@ describe('Navigation List Component Service', () => {
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
       }),
-      mockProvider(UserSpecifiedTimeRangeService, {
-        getUserSpecifiedTimeRangeForPage: jest.fn().mockReturnValue(of(mockTimeRange))
+      mockProvider(PageTimeRangePreferenceService, {
+        getTimeRangePreferenceForPage: jest.fn().mockReturnValue(of(mockTimeRange))
       })
     ]
   });

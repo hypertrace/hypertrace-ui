@@ -3,19 +3,18 @@ import {
   FeatureState,
   FeatureStateResolver,
   NavigationService,
+  PageTimeRangePreferenceService,
   RelativeTimeRange,
   TimeDuration,
-  TimeUnit,
-  UserSpecifiedTimeRangeService
+  TimeUnit
 } from '@hypertrace/common';
-import { FeatureConfigCheckModule, TimeRangeComponent } from '@hypertrace/components';
+import { FeatureConfigCheckModule, PageTimeRangeComponent, TimeRangeComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
-import { UserSpecifiedTimeRangeSelectorComponent } from './user-specified-time-range-selector.component';
 
-describe('user specified time range selector component', () => {
-  let spectator: SpectatorHost<UserSpecifiedTimeRangeSelectorComponent>;
+describe('Page time range component', () => {
+  let spectator: SpectatorHost<PageTimeRangeComponent>;
   const route = {
     snapshot: {
       data: {
@@ -27,14 +26,14 @@ describe('user specified time range selector component', () => {
 
   const createHost = createHostFactory({
     shallow: true,
-    component: UserSpecifiedTimeRangeSelectorComponent,
+    component: PageTimeRangeComponent,
     declarations: [MockComponent(TimeRangeComponent)],
     imports: [FeatureConfigCheckModule],
     providers: [
       mockProvider(NavigationService, {
         getCurrentActivatedRoute: jest.fn().mockReturnValue(route)
       }),
-      mockProvider(UserSpecifiedTimeRangeService),
+      mockProvider(PageTimeRangePreferenceService),
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled)
       })
@@ -42,7 +41,7 @@ describe('user specified time range selector component', () => {
   });
 
   test('should not attempt to save time range when route does not have default range', () => {
-    spectator = createHost(`<ht-user-specified-time-range-selector></ht-user-specified-time-range-selector>`);
+    spectator = createHost(`<ht-page-time-range></ht-page-time-range>`);
     const timeRange = new RelativeTimeRange(new TimeDuration(2, TimeUnit.Hour));
 
     const timeRangeComponent = spectator.query(TimeRangeComponent);
@@ -54,7 +53,7 @@ describe('user specified time range selector component', () => {
   });
 
   test('should not attempt to save time range when route is not a first level route', () => {
-    spectator = createHost(`<ht-user-specified-time-range-selector></ht-user-specified-time-range-selector>`, {
+    spectator = createHost(`<ht-page-time-range></ht-page-time-range>`, {
       providers: [
         mockProvider(NavigationService, {
           getCurrentActivatedRoute: jest.fn().mockReturnValue({
@@ -79,7 +78,7 @@ describe('user specified time range selector component', () => {
   });
 
   test('should save time range when route is first level, and the defaultTimeRange property is present', () => {
-    spectator = createHost(`<ht-user-specified-time-range-selector></ht-user-specified-time-range-selector>`, {
+    spectator = createHost(`<ht-page-time-range></ht-page-time-range>`, {
       providers: [
         mockProvider(NavigationService, {
           getCurrentActivatedRoute: jest.fn().mockReturnValue({

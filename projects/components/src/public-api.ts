@@ -362,5 +362,5 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 export * from './filtering/filter/filter-url.service';
 
 // User Specified TimeRange Selector
-export * from './user-specified-time-range-selector/user-specified-time-range-selector.component';
-export * from './user-specified-time-range-selector/user-specified-time-range-selector.module';
+export * from './page-time-range/page-time-range.component';
+export * from './page-time-range/page-time-range.module';
