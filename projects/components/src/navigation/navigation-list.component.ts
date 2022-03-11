@@ -12,7 +12,7 @@ import {
   NavItemGroup,
   NavItemLinkConfig,
   NavItemType,
-  NavListViewStyle
+  NavViewStyle
 } from './navigation.config';
 
 @Component({
@@ -37,7 +37,12 @@ import {
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"></ht-nav-item>
+              <ht-nav-item
+                [navItemVewStyle]="this.navVewStyle"
+                [config]="item"
+                [active]="item === activeItem"
+                [collapsed]="this.collapsed"
+              ></ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -86,7 +91,7 @@ export class NavigationListComponent implements OnChanges {
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
   @Input()
-  public readonly navVewStyle?: NavListViewStyle;
+  public readonly navVewStyle?: NavViewStyle;
 
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 

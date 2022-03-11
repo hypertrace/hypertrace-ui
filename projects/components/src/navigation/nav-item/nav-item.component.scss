@@ -69,6 +69,36 @@
     font-weight: 600;
     padding: 2px 4px;
   }
+
+  &:not(.navigation-dark) {
+    border-radius: 4px;
+    .icon {
+      color: $gray-4;
+    }
+    .label {
+      @include body-1-medium($gray-6);
+    }
+
+    &:hover {
+      background-color: $gray-1;
+    }
+
+    &.active {
+      background-color: $gray-2;
+
+      .label {
+        color: $gray-9;
+      }
+
+      .icon {
+        color: $gray-6;
+      }
+
+      &:hover {
+        background-color: $gray-1;
+      }
+    }
+  }
 }
 
 :hover {

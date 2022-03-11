@@ -107,7 +107,7 @@
     }
   }
 
-  &:not(.navigation-list-dark) {
+  &:not(.navigation-dark) {
     background: white;
 
     .content .nav-header .label {
@@ -119,37 +119,6 @@
       border-left-color: white;
       color: $gray-7;
       background: white;
-    }
-    .content {
-      ::ng-deep {
-        .nav-item {
-          border-radius: 4px;
-          .icon {
-            color: $gray-4;
-          }
-          .label {
-            @include body-1-medium($gray-6);
-          }
-
-          &:hover {
-            .icon {
-              color: white;
-            }
-            .label {
-              color: white;
-            }
-          }
-
-          &.active {
-            .icon {
-              color: white;
-            }
-            .label {
-              color: white;
-            }
-          }
-        }
-      }
     }
   }
 }
