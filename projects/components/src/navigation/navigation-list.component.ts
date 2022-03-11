@@ -11,8 +11,8 @@ import {
   TimeRangeService
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { Observable, of } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
@@ -23,7 +23,7 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
-      <div class="content" [htLayoutChangeTrigger]="this.collapsed">
+      <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
         <ng-container *ngFor="let item of this.navItems$ | async; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
@@ -39,9 +39,9 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
-                (click)="this.onNavItemSelected(item)"
+                (click)="this.setPageTimeRangeForSelectedNavItem(item)"
                 [config]="item"
-                [active]="(this.activeItem$ | async)?.matchPaths[0] === item.matchPaths[0]"
+                [active]="item === activeItem"
                 [collapsed]="this.collapsed"
               ></ht-nav-item>
             </ng-container>
@@ -107,12 +107,23 @@ export class NavigationListComponent implements OnChanges {
           }
 
           return of(this.navItems);
-        })
+        }),
+        shareReplay()
       );
 
-    this.activeItem$ = this.navigationService.navigation$.pipe(
-      startWith(this.navigationService.getCurrentActivatedRoute()),
-      map(() => this.findActiveItem(this.navItems))
+    this.activeItem$ = combineLatest([
+      this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute())),
+      this.navItems$
+    ]).pipe(
+      map(([, navItems], index) => {
+        const activeItem = this.findActiveItem(navItems);
+        console.log('index', index);
+        console.log('active', activeItem);
+        if (index === 0 && activeItem) {
+          this.setPageTimeRangeForSelectedNavItem(activeItem);
+        }
+        return activeItem;
+      })
     );
   }
 
@@ -127,7 +138,7 @@ export class NavigationListComponent implements OnChanges {
     return this.collapsed ? IconType.TriangleRight : IconType.TriangleLeft;
   }
 
-  public onNavItemSelected(navItemLink: NavItemLinkConfig): void {
+  public setPageTimeRangeForSelectedNavItem(navItemLink: NavItemLinkConfig): void {
     if (!isNil(navItemLink.timeRange)) {
       if (navItemLink.timeRange instanceof FixedTimeRange) {
         const timeRange: FixedTimeRange = navItemLink.timeRange;

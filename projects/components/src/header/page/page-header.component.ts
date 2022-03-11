@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import {
   Breadcrumb,
   isNonEmptyString,
@@ -13,8 +13,6 @@ import { ApplicationFeature } from '../../../../common/src/constants/application
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
-import { HeaderPrimaryRowContentDirective } from '../header-content/header-primary-row-content.directive';
-import { HeaderSecondaryRowContentDirective } from '../header-content/header-secondary-row-content.directive';
 
 @Component({
   selector: 'ht-page-header',
@@ -27,15 +25,17 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <!-- If PageTimeRange feature flag is enabled, consumer of this component must specify the type of content being
-           projected, primary or secondary -->
+      <!--      Code Path 1-->
       <div
         *htIfFeature="'${ApplicationFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
         class="column-alignment"
       >
-        <div class="primary-content">
+        <div class="primary-row">
           <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
-          <ng-container *ngTemplateOutlet="this.primaryRowContent?.templateRef"></ng-container>
+
+          <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
+            <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
+          </ng-container>
           <ht-user-specified-time-range-selector
             class="time-range"
             *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRangeTemplate"
@@ -45,19 +45,33 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
             <ht-time-range></ht-time-range>
           </ng-template>
         </div>
-
-        <ng-container
-          *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'"
-          [ngTemplateOutlet]="this.secondaryRowContent?.templateRef"
-        ></ng-container>
+        <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
+          <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
+        </ng-container>
       </div>
 
+      <!--      Code Path 2-->
       <ng-template #noTimeRangeHeaderLayoutTemplate>
         <div [ngClass]="this.contentAlignment">
           <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
 
-          <ng-content></ng-content>
+          <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
         </div>
+      </ng-template>
+
+      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
+        <ht-navigable-tab
+          *ngFor="let tab of this.tabs"
+          [path]="tab.path"
+          [hidden]="tab.hidden"
+          [features]="tab.features"
+        >
+          {{ tab.label }}
+        </ht-navigable-tab>
+      </ht-navigable-tab-group>
+
+      <ng-template #projectedContentTemplate>
+        <ng-content></ng-content>
       </ng-template>
 
       <ng-template #breadCrumbContainerTemplate>
@@ -77,17 +91,6 @@ import { HeaderSecondaryRowContentDirective } from '../header-content/header-sec
           </div>
         </div>
       </ng-template>
-
-      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
-        <ht-navigable-tab
-          *ngFor="let tab of this.tabs"
-          [path]="tab.path"
-          [hidden]="tab.hidden"
-          [features]="tab.features"
-        >
-          {{ tab.label }}
-        </ht-navigable-tab>
-      </ht-navigable-tab-group>
     </div>
   `
 })
@@ -101,17 +104,8 @@ export class PageHeaderComponent implements OnInit {
   @Input()
   public isBeta: boolean = false;
 
-  /**
-   * Alignment must be set to column (default) for secondaryRowContent projection,
-   */
   @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
-
-  @ContentChild(HeaderPrimaryRowContentDirective)
-  public readonly primaryRowContent?: HeaderPrimaryRowContentDirective;
-
-  @ContentChild(HeaderSecondaryRowContentDirective)
-  public readonly secondaryRowContent?: HeaderSecondaryRowContentDirective;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))

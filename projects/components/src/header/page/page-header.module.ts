@@ -1,7 +1,5 @@
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
 import { UserSpecifiedTimeRangeSelectorModule } from '../../user-specified-time-range-selector/user-specified-time-range-selector.module';
-import { HeaderContentModule } from '../header-content/header-content.module';
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BetaTagModule } from '../../beta-tag/beta-tag.module';
@@ -23,7 +21,6 @@ import { PageHeaderComponent } from './page-header.component';
     LabelModule,
     NavigableTabModule,
     BetaTagModule,
-    HeaderContentModule,
     FeatureConfigCheckModule,
     UserSpecifiedTimeRangeSelectorModule
   ]

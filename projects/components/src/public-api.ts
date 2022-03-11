@@ -125,9 +125,6 @@ export * from './header/application/application-header.component';
 export * from './header/application/application-header.module';
 export * from './header/page/page-header.component';
 export * from './header/page/page-header.module';
-export * from './header/header-content/header-content.module';
-export * from './header/header-content/header-primary-row-content.directive';
-export * from './header/header-content/header-secondary-row-content.directive';
 
 // Icon
 export * from './icon/icon-size';
