@@ -2,6 +2,12 @@
 
 :host {
   ::ng-deep {
+    &.disabled {
+      background-color: $gray-2;
+      color: $gray-5;
+      cursor: not-allowed;
+    }
+
     &.mat-form-field {
       display: block;
       height: 100%;
