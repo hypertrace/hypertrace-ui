@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { includes, uniq } from 'lodash-es';
+import { includes, isNil, uniq } from 'lodash-es';
 import { defer, EMPTY, Observable, Observer, of, Subject, zip } from 'rxjs';
-import { buffer, catchError, debounceTime, filter, map, mergeMap, take } from 'rxjs/operators';
+import { buffer, catchError, debounceTime, filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import {
   GraphQlHandler,
   GraphQlHandlerType,
@@ -151,7 +151,15 @@ export class GraphQlRequestService {
         errorPolicy: 'all',
         fetchPolicy: options.cacheability
       })
-      .pipe(map(response => response.data));
+      .pipe(
+        tap(response => {
+          if (!isNil(response.errors)) {
+            // tslint:disable-next-line: no-console
+            console.error(`Query response error(s) for request '${requestString}'`, response.errors);
+          }
+        }),
+        map(response => response.data)
+      );
   }
 
   private executeMutation<TResponse extends { [key: string]: unknown }>(requestString: string): Observable<TResponse> {
@@ -159,7 +167,15 @@ export class GraphQlRequestService {
       .mutate<TResponse>({
         mutation: gql(`mutation ${requestString}`)
       })
-      .pipe(mergeMap(response => (response.data ? of(response.data) : EMPTY)));
+      .pipe(
+        tap(response => {
+          if (!isNil(response.errors)) {
+            // tslint:disable-next-line: no-console
+            console.error(`Mutation response error(s) for request '${requestString}'`, response.errors);
+          }
+        }),
+        mergeMap(response => (response.data ? of(response.data) : EMPTY))
+      );
   }
 
   private getResultForRequest<T>(request: GraphQlRequest): Observable<T> {

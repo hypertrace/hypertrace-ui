@@ -1,6 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { FieldFilter } from '../filtering/filter/filter';
+import { FieldFilter, FilterValue } from '../filtering/filter/filter';
 import { FilterOperator } from '../filtering/filter/filter-operators';
 import { TableCellAlignmentType } from './cells/types/table-cell-alignment-type';
 
@@ -60,7 +60,7 @@ export interface RowStateChange {
 
 export interface TableFilter extends FieldFilter {
   operator: FilterOperator;
-  value: unknown;
+  value: FilterValue;
 }
 
 export const enum TableSortDirection {

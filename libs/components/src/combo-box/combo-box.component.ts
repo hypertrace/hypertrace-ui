@@ -445,6 +445,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public writeValue(text?: string): void {
     this.text = text;
+    this.changeDetectorRef.markForCheck();
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {

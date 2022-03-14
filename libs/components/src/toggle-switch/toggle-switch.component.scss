@@ -1,7 +1,10 @@
 @import 'color-palette';
 @import 'font';
 
-:host {
+.toggle-switch {
+  display: flex;
+  align-items: center;
+
   ::ng-deep {
     .mat-slide-toggle {
       &.disabled {

@@ -1,4 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { CheckboxComponent } from './checkbox.component';
@@ -9,7 +10,7 @@ describe('Checkbox component', () => {
 
   const createHost = createHostFactory({
     component: CheckboxComponent,
-    imports: [TraceCheckboxModule, RouterTestingModule],
+    imports: [TraceCheckboxModule, RouterTestingModule, ReactiveFormsModule],
     providers: [],
     declareComponent: false
   });
@@ -52,12 +53,32 @@ describe('Checkbox component', () => {
 
     // Click will toggle the values to true
     spectator.click(inputElement);
-    expect(spectator.component.checked).toBe(true);
+    expect(spectator.component.isChecked).toBe(true);
     expect(checkboxChangeSpy).toHaveBeenCalledWith(true);
 
     // Click will toggle the values to false
     spectator.click(inputElement);
-    expect(spectator.component.checked).toBe(false);
+    expect(spectator.component.isChecked).toBe(false);
     expect(checkboxChangeSpy).toHaveBeenCalledWith(false);
   }));
+
+  test('should work correctly with control value accessor', () => {
+    const formControl = new FormControl(false);
+    spectator = createHost(
+      `<ht-checkbox [label]="label" [formControl]="formControl">
+    </ht-checkbox>`,
+      {
+        hostProps: {
+          formControl: formControl
+        }
+      }
+    );
+    expect(spectator.component.isChecked).toBe(false);
+
+    formControl.setValue(true);
+    expect(spectator.component.isChecked).toBe(true);
+
+    formControl.disable();
+    expect(spectator.component.isDisabled).toBe(true);
+  });
 });

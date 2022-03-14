@@ -56,6 +56,14 @@ describe('Filter Builder Lookup service', () => {
         value: false,
         userString: 'Boolean Attribute != false',
         urlString: 'booleanAttribute_neq_false'
+      },
+      {
+        metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
+        field: getTestFilterAttribute(FilterAttributeType.Boolean).name,
+        operator: FilterOperator.In,
+        value: false,
+        userString: 'Boolean Attribute IN false',
+        urlString: 'booleanAttribute_in_false'
       }
     ]);
 

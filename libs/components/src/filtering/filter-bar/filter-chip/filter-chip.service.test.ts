@@ -161,6 +161,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.NotEquals,
         userString: `${attribute.displayName} ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName} ${FilterOperator.In}`
       }
     ]);
   });

@@ -62,7 +62,7 @@ describe('Table Widget Column service', () => {
             alignment: 'left',
             display: 'text',
             editable: true,
-            filterable: false,
+            filterable: true,
             id: 'stringArrayAttribute',
             name: 'stringArrayAttribute',
             specification: expect.objectContaining({

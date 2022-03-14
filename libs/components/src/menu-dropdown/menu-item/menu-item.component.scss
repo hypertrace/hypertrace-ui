@@ -1,6 +1,7 @@
-@import 'interaction';
+@import 'mixins';
 
 .menu-item {
   @include popover-menu-item;
+  @include body-1-regular;
   @include disableable;
 }

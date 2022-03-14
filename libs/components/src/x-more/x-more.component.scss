@@ -1,0 +1,19 @@
+@import 'color-palette';
+
+.ht-x-more {
+  .summary-text {
+    padding: 0 6px;
+    margin-left: 8px;
+    border-radius: 4px;
+  }
+
+  .plain {
+    color: $gray-7;
+    margin-left: 0px;
+    background-color: white;
+  }
+
+  .gray {
+    background-color: $gray-2;
+  }
+}

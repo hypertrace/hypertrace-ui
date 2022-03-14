@@ -13,9 +13,11 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
 import { SelectGroupPosition } from './select-group-position';
 import { SelectJustify } from './select-justify';
@@ -119,12 +121,23 @@ import { SelectSize } from './select-size';
                 >
                 </ht-label
               ></ng-template>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
+            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}'">
+              <ht-event-blocker event="click" [enabled]="true">
+                <ht-search-box
+                  class="search-bar"
+                  (valueChange)="this.searchOptions($event)"
+                  [debounceTime]="200"
+                  displayMode="${SearchBoxDisplayMode.NoBorder}"
+                ></ht-search-box>
+              </ht-event-blocker>
+              <ht-divider class="divider"></ht-divider>
+            </ng-container>
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
@@ -213,8 +226,14 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   @Input()
   public highlightSelected: boolean = true;
 
+  @Input()
+  public searchMode: SelectSearchMode = SelectSearchMode.Disabled;
+
   @Output()
   public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
+
+  @Output()
+  public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
@@ -240,10 +259,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     return this.showBorder ? SelectJustify.Left : SelectJustify.Right;
   }
 
-  public constructor(
-    private readonly loggerService: LoggerService,
-    private readonly changeDetector: ChangeDetectorRef
-  ) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
@@ -265,12 +281,20 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected === item.value;
+    return isEqual(this.selected, item.value);
   }
 
   public updateGroupPosition(position: SelectGroupPosition): void {
     this.groupPosition = position;
-    this.changeDetector.markForCheck();
+    this.cdr.markForCheck();
+  }
+
+  public searchOptions(searchText: string): void {
+    if (this.searchMode === SelectSearchMode.Disabled) {
+      return;
+    }
+
+    this.searchValueChange.emit(searchText);
   }
 
   private buildObservableOfSelected(): Observable<SelectOption<V> | undefined> {
@@ -321,6 +345,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public writeValue(value?: V): void {
     this.setSelection(value);
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value: V | undefined) => void): void {
@@ -345,4 +370,9 @@ export const enum SelectTriggerDisplayMode {
   MenuWithBorder = 'menu-with-border',
   MenuWithBackground = 'menu-with-background',
   Icon = 'icon'
+}
+
+export const enum SelectSearchMode {
+  Disabled = 'disabled', // Search is not available
+  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }
