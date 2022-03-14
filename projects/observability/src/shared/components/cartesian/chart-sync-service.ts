@@ -37,6 +37,7 @@ export class ChartSyncService<TData> {
     if (groupId === data.groupId) {
       return data.locationData;
     }
+
     return [];
   }
 }
