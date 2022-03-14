@@ -10,7 +10,7 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="notification-container">
+    <div class="notification-container" role="alert" aria-live="polite" [attr.data-alert-type]="this.data.mode">
       <ht-icon
         [ngClass]="this.data.mode"
         class="status-icon"
