@@ -252,10 +252,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     return this.showBorder ? SelectJustify.Left : SelectJustify.Right;
   }
 
-  public constructor(
-    private readonly loggerService: LoggerService,
-    private readonly changeDetector: ChangeDetectorRef
-  ) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
@@ -282,7 +279,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public updateGroupPosition(position: SelectGroupPosition): void {
     this.groupPosition = position;
-    this.changeDetector.markForCheck();
+    this.cdr.markForCheck();
   }
 
   public searchOptions(searchText: string): void {
@@ -341,6 +338,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public writeValue(value?: V): void {
     this.setSelection(value);
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value: V | undefined) => void): void {

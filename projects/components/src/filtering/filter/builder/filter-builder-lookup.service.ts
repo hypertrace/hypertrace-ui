@@ -5,6 +5,7 @@ import { FilterAttributeType } from '../filter-attribute-type';
 import { AbstractFilterBuilder } from './types/abstract-filter-builder';
 import { BooleanFilterBuilder } from './types/boolean-filter-builder';
 import { NumberFilterBuilder } from './types/number-filter-builder';
+import { StringArrayFilterBuilder } from './types/string-array-filter-builder';
 import { StringFilterBuilder } from './types/string-filter-builder';
 import { StringMapFilterBuilder } from './types/string-map-filter-builder';
 
@@ -22,7 +23,8 @@ export class FilterBuilderLookupService {
         return new StringFilterBuilder();
       case FilterAttributeType.StringMap:
         return new StringMapFilterBuilder();
-      case FilterAttributeType.StringArray: // Unsupported
+      case FilterAttributeType.StringArray:
+        return new StringArrayFilterBuilder();
       case FilterAttributeType.Timestamp: // Unsupported
         throw new Error(`Filter builder not found for attribute of type '${type}'.`);
       default:
