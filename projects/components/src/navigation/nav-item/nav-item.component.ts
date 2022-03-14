@@ -46,7 +46,7 @@ import { NavItemLinkConfig } from '../navigation.config';
 })
 export class NavItemComponent {
   @Input()
-  public config?: NavItemLinkConfig;
+  public config!: NavItemLinkConfig;
 
   @Input()
   public active: boolean = true;
@@ -54,12 +54,12 @@ export class NavItemComponent {
   @Input()
   public collapsed: boolean = true;
 
-  public constructor(private readonly activatedRoute: ActivatedRoute) {}
-
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
     navType: NavigationParamsType.InApp,
     path: item.matchPaths[0],
     relativeTo: this.activatedRoute,
     replaceCurrentHistory: item.replaceCurrentHistory
   });
+
+  public constructor(private readonly activatedRoute: ActivatedRoute) {}
 }

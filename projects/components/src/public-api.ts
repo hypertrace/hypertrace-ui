@@ -361,6 +361,6 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 // Filter Url Service
 export * from './filtering/filter/filter-url.service';
 
-// User Specified TimeRange Selector
+// User Page Time Range
 export * from './page-time-range/page-time-range.component';
 export * from './page-time-range/page-time-range.module';

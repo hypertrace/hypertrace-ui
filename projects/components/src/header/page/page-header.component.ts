@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import {
+  ApplicationFeature,
   Breadcrumb,
   isNonEmptyString,
   NavigationService,
@@ -11,7 +12,6 @@ import { first, map } from 'rxjs/operators';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { IconSize } from '../../icon/icon-size';
 import { NavigableTab } from '../../tabs/navigable/navigable-tab';
-import { ApplicationFeature } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-page-header',

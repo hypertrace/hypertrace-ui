@@ -11,8 +11,8 @@ import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
-import { TimeRangeComponent } from '../../time-range/time-range.component';
 import { PageTimeRangeComponent } from '../../page-time-range/page-time-range.component';
+import { TimeRangeComponent } from '../../time-range/time-range.component';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('Page Header Component', () => {
@@ -80,5 +80,18 @@ describe('Page Header Component', () => {
 
     expect(spectator.query(PageTimeRangeComponent)).not.toExist();
     expect(spectator.query(TimeRangeComponent)).toExist();
+  });
+
+  test('should not display any time range if FF is disabled', () => {
+    spectator = createHost('<ht-page-header></ht-page-header>', {
+      providers: [
+        mockProvider(FeatureStateResolver, {
+          getCombinedFeatureState: () => of(FeatureState.Disabled)
+        })
+      ]
+    });
+
+    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
+    expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 });

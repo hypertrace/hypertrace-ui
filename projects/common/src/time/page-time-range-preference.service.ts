@@ -27,7 +27,6 @@ export class PageTimeRangePreferenceService {
       map(pageTimeRangeStringDictionary => {
         if (isNil(pageTimeRangeStringDictionary[path])) {
           const timeRangeForPath = this.getDefaultPageTimeRange(path);
-          this.setPreferenceServicePageTimeRange(pageTimeRangeStringDictionary ?? {}, path, timeRangeForPath);
 
           return timeRangeForPath;
         }
@@ -40,8 +39,8 @@ export class PageTimeRangePreferenceService {
   public setTimeRangePreferenceForPage(path: string, value: TimeRange): void {
     this.getPageTimeRangeStringDictionary()
       .pipe(take(1))
-      .subscribe(currentPageTimeRanges => {
-        this.setPreferenceServicePageTimeRange(currentPageTimeRanges, path, value);
+      .subscribe(currentPageTimeRangeDictionary => {
+        this.setPreferenceServicePageTimeRange(currentPageTimeRangeDictionary, path, value);
       });
   }
 
