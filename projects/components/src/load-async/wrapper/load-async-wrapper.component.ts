@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, InjectionToken, TemplateRef
 import { IconType } from '@hypertrace/assets-library';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { NotificationMode } from '../../notification/notification.component';
 import { LoadAsyncStateType } from '../load-async-state.type';
 import { AsyncState, LoadAsyncConfig, LoadAsyncContext, LoaderType } from '../load-async.service';
 
@@ -23,7 +24,11 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
         <ht-message-display
           aria-live="polite"
           role="alert"
-          [attr.data-alert-type]="state.type === '${LoadAsyncStateType.GenericError}' ? 'failure' : 'no-data'"
+          [attr.data-alert-type]="
+            state.type === '${LoadAsyncStateType.GenericError}'
+              ? '${NotificationMode.Failure}'
+              : '${NotificationMode.Info}'
+          "
           [icon]="this.icon"
           [title]="this.title"
           [description]="this.description"
