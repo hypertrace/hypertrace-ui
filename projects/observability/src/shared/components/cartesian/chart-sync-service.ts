@@ -22,15 +22,21 @@ export class ChartSyncService<TData> {
   }
 
   public getLocationChangesForGroup(
-    _groupId: string
+    groupId: string
   ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[]> {
-    return this.locationChangeSubject.pipe(map(data => this.filterArray(data)));
+    return this.locationChangeSubject.pipe(map(data => this.filterLocationDataByGroup(data, groupId)));
   }
 
-  private filterArray(data: {
-    groupId?: string;
-    locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
-  }): MouseLocationData<TData, Series<TData> | Band<TData>>[] {
-    return data.locationData;
+  private filterLocationDataByGroup(
+    data: {
+      groupId?: string;
+      locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+    },
+    groupId?: string
+  ): MouseLocationData<TData, Series<TData> | Band<TData>>[] {
+    if (groupId === data.groupId) {
+      return data.locationData;
+    }
+    return [];
   }
 }
