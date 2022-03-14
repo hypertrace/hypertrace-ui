@@ -21,6 +21,9 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
       </ng-container>
       <ng-container *ngSwitchDefault>
         <ht-message-display
+          aria-live="polite"
+          role="alert"
+          [attr.data-alert-type]="state.type === '${LoadAsyncStateType.GenericError}' ? 'failure' : 'no-data'"
           [icon]="this.icon"
           [title]="this.title"
           [description]="this.description"
