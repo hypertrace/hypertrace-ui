@@ -22,7 +22,7 @@ import { LoggerService } from '@hypertrace/common';
     }
   ],
   template: `
-    <mat-form-field class="fill-container" floatLabel="never">
+    <mat-form-field class="fill-container" [ngClass]="{ disabled: this.disabled }" floatLabel="never">
       <textarea
         class="textarea"
         matInput
