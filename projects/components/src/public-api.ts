@@ -66,9 +66,9 @@ export * from './divider/divider.component';
 export * from './divider/divider.module';
 
 // Draggable list
-export { DraggableListPanelComponent } from './draggable-list/draggable-list-panel.component';
-export { DraggableItemPanelComponent } from './draggable-list/draggable-list-item/draggable-item-panel.component';
-export { DraggableListPanelModule } from './draggable-list/draggable-list-panel.module';
+export { DraggableListComponent } from './draggable-list/draggable-list.component';
+export { DraggableItemComponent } from './draggable-list/draggable-item/draggable-item.component';
+export { DraggableListModule } from './draggable-list/draggable-list.module';
 
 // Dropdown menu
 export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
