@@ -1,12 +1,6 @@
 @import 'mixins';
 
 :host {
-  .disabled {
-    background-color: $gray-2;
-    color: $gray-5;
-    cursor: not-allowed;
-  }
-
   ::ng-deep {
     &.mat-form-field {
       display: block;
@@ -75,4 +69,10 @@
 .textarea {
   height: 100%;
   width: 100%;
+}
+
+.disabled {
+  background-color: $gray-2;
+  color: $gray-5;
+  cursor: not-allowed;
 }
