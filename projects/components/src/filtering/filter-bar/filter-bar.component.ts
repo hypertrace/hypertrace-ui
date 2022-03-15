@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEmpty, isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
@@ -108,6 +108,18 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.filters) {
+      if (changes.attributes) {
+        this.onFiltersChanged(this.filters || [], false, this.syncWithUrl);
+        this.attributeSubject$.next(this.attributes || []);
+
+        return;
+      }
+
+      // The local state should be in sync with the state passed by parent
+      this.internalFiltersSubject$.next(changes.filters.currentValue || []);
+    }
+
     if (changes.attributes) {
       this.attributeSubject$.next(this.attributes || []);
       this.syncWithUrl ? this.readFromUrlFilters() : this.onFiltersChanged(this.filters || [], false);
@@ -131,14 +143,15 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private onFiltersChanged(filters: Filter[], emit: boolean = true, writeIfSyncEnabled: boolean = true): void {
-    this.internalFiltersSubject$.next([...filters]);
+    const newFilters: Filter[] = [...filters];
+    this.internalFiltersSubject$.next(newFilters);
     this.changeDetector.markForCheck();
 
     if (writeIfSyncEnabled && this.syncWithUrl && !!this.attributes) {
-      this.writeToUrlFilter();
+      this.writeToUrlFilter(newFilters);
     }
 
-    emit && this.filtersChange.emit(this.internalFiltersSubject$.value);
+    emit && this.filtersChange.emit(newFilters);
   }
 
   private readFromUrlFilters(): void {
@@ -146,12 +159,17 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
     this.onFiltersChanged(filters, true, false);
   }
 
-  private writeToUrlFilter(): void {
-    this.filterUrlService.setUrlFilters(this.internalFiltersSubject$.value);
+  private writeToUrlFilter(filters: Filter[]): void {
+    this.filterUrlService.setUrlFilters(filters);
   }
 
   public onInputApply(filter: Filter): void {
-    this.onFiltersChanged(this.filterBarService.addFilter(this.internalFiltersSubject$.value, filter));
+    this.onFiltersChanged(
+      this.filterBarService.addFilter(
+        isEmpty(this.internalFiltersSubject$.value) ? [] : this.internalFiltersSubject$.value,
+        filter
+      )
+    );
     this.resetFocus();
   }
 
@@ -175,10 +193,10 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private updateFilter(oldFilter: Filter, newFilter: Filter): void {
-    this.onFiltersChanged(this.filterBarService.updateFilter(this.internalFiltersSubject$.value, oldFilter, newFilter));
+    this.onFiltersChanged(this.filterBarService.updateFilter(this.filters || [], oldFilter, newFilter));
   }
 
   private deleteFilter(filter: Filter): void {
-    this.onFiltersChanged(this.filterBarService.deleteFilter(this.internalFiltersSubject$.value, filter));
+    this.onFiltersChanged(this.filterBarService.deleteFilter(this.filters || [], filter));
   }
 }
