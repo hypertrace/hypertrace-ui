@@ -1,6 +1,5 @@
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -195,7 +194,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 export class TableComponent
   implements
     OnChanges,
-    AfterViewInit,
     OnDestroy,
     ColumnConfigProvider,
     TableDataSourceProvider,
@@ -412,6 +410,7 @@ export class TableComponent
     if (
       changes.mode ||
       changes.data ||
+      changes.columnConfigs ||
       changes.filters ||
       changes.queryProperties ||
       changes.pageSize ||
@@ -424,13 +423,6 @@ export class TableComponent
     if (changes.selections) {
       this.toggleRowSelections(this.selections);
     }
-  }
-
-  public ngAfterViewInit(): void {
-    setTimeout(() => {
-      !this.dataSource && this.initializeData();
-      this.initializeColumns();
-    });
   }
 
   public ngOnDestroy(): void {
