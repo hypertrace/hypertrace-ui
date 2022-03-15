@@ -22,32 +22,32 @@ export class PageTimeRangePreferenceService {
     this.pageTimeRangeStringDictionary$ = this.buildPageTimeRangeObservable();
   }
 
-  public getTimeRangePreferenceForPage(path: string): Observable<TimeRange | undefined> {
+  public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRange | undefined> {
     return this.pageTimeRangeStringDictionary$.pipe(
       map(pageTimeRangeStringDictionary => {
-        if (isNil(pageTimeRangeStringDictionary[path])) {
-          return this.getDefaultPageTimeRange(path);
+        if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
+          return this.getDefaultPageTimeRange(rootLevelPath);
         }
 
-        return this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[path]);
+        return this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
       })
     );
   }
 
-  public setTimeRangePreferenceForPage(path: string, value: TimeRange): void {
+  public setTimeRangePreferenceForPage(rootLevelPath: string, value: TimeRange): void {
     this.pageTimeRangeStringDictionary$.pipe(take(1)).subscribe(currentPageTimeRangeDictionary => {
-      this.setPreferenceServicePageTimeRange(currentPageTimeRangeDictionary, path, value);
+      this.setPreferenceServicePageTimeRange(currentPageTimeRangeDictionary, rootLevelPath, value);
     });
   }
 
   private setPreferenceServicePageTimeRange(
     currentTimeRangeDictionary: PageTimeRangeStringDictionary,
-    path: string,
+    rootLevelPath: string,
     timeRange: TimeRange
   ): void {
     this.preferenceService.set(
       PageTimeRangePreferenceService.TIME_RANGE_PREFERENCE_KEY,
-      { ...currentTimeRangeDictionary, [path]: timeRange.toUrlString() },
+      { ...currentTimeRangeDictionary, [rootLevelPath]: timeRange.toUrlString() },
       PageTimeRangePreferenceService.STORAGE_TYPE
     );
   }

@@ -19,7 +19,7 @@ export class PageTimeRangeComponent {
     const activatedRoute = this.navigationService.getCurrentActivatedRoute();
     const urlSegments: UrlSegment[] = activatedRoute.pathFromRoot.flatMap(activeRoute => activeRoute.snapshot.url);
 
-    if (urlSegments.length === 1 && this.shouldSavePageTimeRange(activatedRoute)) {
+    if (this.shouldSavePageTimeRange(activatedRoute)) {
       this.savePageTimeRange(selectedTimeRange, urlSegments[0]);
     }
   }

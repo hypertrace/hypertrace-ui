@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
@@ -121,5 +121,9 @@ export class TimeRangeService {
     return {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     };
+  }
+
+  public isInitialized(): boolean {
+    return !isNil(this.currentTimeRange);
   }
 }

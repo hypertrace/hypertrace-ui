@@ -70,8 +70,6 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   `
 })
 export class NavigationListComponent implements OnChanges {
-  private static readonly TIME_RANGE_QUERY_PARAM_KEY: string = 'time';
-
   private readonly defaultTimeRange: RelativeTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
 
   @Input()
@@ -128,16 +126,10 @@ export class NavigationListComponent implements OnChanges {
         this.navItems$,
         this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute()))
       ]).pipe(
-        map(([navItems], index) => {
+        map(([navItems]) => {
           const activeItem = this.findActiveItem(navItems);
-          if (index === 0) {
-            const timeRangeQueryParamValue = this.navigationService.getQueryParameter(
-              NavigationListComponent.TIME_RANGE_QUERY_PARAM_KEY,
-              ''
-            );
-            if (timeRangeQueryParamValue === '') {
-              this.timeRangeService.setDefaultTimeRange(activeItem?.timeRange ?? this.defaultTimeRange);
-            }
+          if (!this.timeRangeService.isInitialized()) {
+            this.timeRangeService.setDefaultTimeRange(activeItem?.timeRange ?? this.defaultTimeRange);
           }
 
           return activeItem;
