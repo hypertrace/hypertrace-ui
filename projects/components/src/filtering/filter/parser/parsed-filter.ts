@@ -52,10 +52,19 @@ export const tryParseStringForAttribute = (
   nameFields: KeysWithType<FilterAttribute, string>[] = ['displayName']
 ): FilterAttributeExpression | undefined => {
   const [stringContainingFullAttribute] = text.trim().split(MAP_LHS_DELIMITER, 1);
-  // The string to the left of any delimeter must start with the attribute otherwise no match
-  const matchingNameField = nameFields.find(nameField =>
-    stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase())
+
+  // Check if there is an exact match for the string left of the delimeter and attribute
+  let matchingNameField = nameFields.find(
+    nameField => stringContainingFullAttribute.toLowerCase() === attributeToTest[nameField].toLowerCase()
   );
+
+  // If there is no exact match, the string to the left of any delimeter must start with the attribute otherwise no match
+  if (!matchingNameField) {
+    matchingNameField = nameFields.find(nameField =>
+      stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase())
+    );
+  }
+
   if (!matchingNameField) {
     return undefined;
   }
