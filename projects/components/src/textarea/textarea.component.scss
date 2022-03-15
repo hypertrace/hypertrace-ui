@@ -1,13 +1,13 @@
 @import 'mixins';
 
 :host {
-  ::ng-deep {
-    &.disabled {
-      background-color: $gray-2;
-      color: $gray-5;
-      cursor: not-allowed;
-    }
+  .disabled {
+    background-color: $gray-2;
+    color: $gray-5;
+    cursor: not-allowed;
+  }
 
+  ::ng-deep {
     &.mat-form-field {
       display: block;
       height: 100%;
