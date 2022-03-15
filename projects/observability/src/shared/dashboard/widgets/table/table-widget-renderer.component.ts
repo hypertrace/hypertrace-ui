@@ -615,7 +615,7 @@ export class TableWidgetRendererComponent
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {
     const existingSelectFiltersWithChangedRemoved = this.removeFilters(tableFilter.field);
 
-    return [...existingSelectFiltersWithChangedRemoved, tableFilter].filter(f => f.value !== undefined); // Remove filters that are unset
+    return [...existingSelectFiltersWithChangedRemoved, tableFilter];
   }
 
   private removeFilters(field: string): TableFilter[] {

@@ -35,7 +35,7 @@
     }
 
     &.extra-small {
-      height: 30px;
+      height: 24px;
     }
 
     &.small {
@@ -96,6 +96,10 @@
     }
 
     &:hover {
+      background-color: $gray-1;
+    }
+
+    &.menu-with-background {
       background-color: $gray-1;
     }
   }

@@ -47,6 +47,6 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
   ): TableDataResponse<TableRow>;
 
   protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {
-    return this.graphQlFilterBuilderService.buildGraphQlFilters(tableFilters);
+    return this.graphQlFilterBuilderService.buildGraphQlFiltersFromTableFilters(tableFilters);
   }
 }

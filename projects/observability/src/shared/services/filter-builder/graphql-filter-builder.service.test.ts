@@ -32,7 +32,7 @@ describe('Graphql filter builder service', () => {
     const spectator = serviceFactory();
 
     expect(
-      spectator.service.buildGraphQlFilters([
+      spectator.service.buildGraphQlFieldFilters([
         buildFilter(attribute2, FilterOperator.Equals, 'foo'),
         buildFilter(attribute2, FilterOperator.NotEquals, 'bar'),
         buildFilter(attribute1, FilterOperator.GreaterThan, 5),

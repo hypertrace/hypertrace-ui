@@ -94,8 +94,10 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [availableColumns]="this.columnConfigs$ | async"
                 [index]="index"
                 [sort]="columnDef.sort"
+                [indeterminateRowsSelected]="this.indeterminateRowsSelected"
                 (sortChange)="this.onSortChange($event, columnDef)"
                 (columnsChange)="this.onColumnsEdit($event)"
+                (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
@@ -144,12 +146,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async"
+          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{
             'selected-row': this.shouldHighlightRowAsSelection(row),
             'hovered-row': this.isHoveredRow(row),
+            'last-row': isLast,
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
@@ -307,6 +310,11 @@ export class TableComponent
   @Output()
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
+  @Output()
+  public readonly sortChange: EventEmitter<SortedColumn<TableColumnConfig>> = new EventEmitter<
+    SortedColumn<TableColumnConfig>
+  >();
+
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
 
@@ -374,6 +382,7 @@ export class TableComponent
   private resizeHeaderOffsetLeft: number = 0;
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
+  public indeterminateRowsSelected?: boolean;
 
   public constructor(
     private readonly elementRef: ElementRef,
@@ -386,7 +395,7 @@ export class TableComponent
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
-        filter((sort): sort is Required<SortedColumn> => sort !== undefined)
+        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
       )
       .subscribe(sort => this.updateSort(sort));
   }
@@ -537,10 +546,12 @@ export class TableComponent
 
   public onSortChange(direction: TableSortDirection, columnConfig: TableColumnConfigExtended): void {
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
-      this.updateSort({
+      const sortedColumn: SortedColumn<TableColumnConfigExtended> = {
         column: columnConfig,
         direction: direction
-      });
+      };
+      this.sortChange.emit(sortedColumn);
+      this.updateSort(sortedColumn);
     }
 
     if (this.syncWithUrl) {
@@ -554,6 +565,22 @@ export class TableComponent
   public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
     this.initializeColumns(columnConfigs);
     this.columnConfigsChange.emit(columnConfigs);
+  }
+
+  public onHeaderAllRowsSelectionChange(allRowsSelected: boolean): void {
+    if (this.hasMultiSelect()) {
+      if (allRowsSelected) {
+        this.dataSource?.selectAllRows();
+        this.selections = this.dataSource?.getAllRows();
+      } else {
+        this.dataSource?.unselectAllRows();
+        this.selections = [];
+      }
+
+      this.selectionsChange.emit(this.selections);
+      this.indeterminateRowsSelected = false;
+      this.changeDetector.markForCheck();
+    }
   }
 
   public onDataCellClick(row: StatefulTableRow): void {
@@ -623,7 +650,7 @@ export class TableComponent
     return new TableCdkDataSource(this, this, this, this, this, this.paginator);
   }
 
-  private updateSort(sort: SortedColumn): void {
+  private updateSort(sort: SortedColumn<TableColumnConfigExtended>): void {
     sort.column.sort = sort.direction;
     this.columnStateSubject.next(sort.column);
   }
@@ -646,6 +673,7 @@ export class TableComponent
       this.selections = [toggledRow];
     }
     this.selectionsChange.emit(this.selections);
+    this.indeterminateRowsSelected = this.selections?.length !== this.dataSource?.getAllRows().length;
     this.changeDetector.markForCheck();
   }
 
@@ -758,7 +786,10 @@ export class TableComponent
         };
   }
 
-  private sortDataFromUrl(params: ParamMap, columns: TableColumnConfigExtended[]): Required<SortedColumn> | undefined {
+  private sortDataFromUrl(
+    params: ParamMap,
+    columns: TableColumnConfigExtended[]
+  ): Required<SortedColumn<TableColumnConfigExtended>> | undefined {
     if (!this.syncWithUrl) {
       return undefined;
     }
@@ -775,8 +806,8 @@ export class TableComponent
   }
 }
 
-interface SortedColumn {
-  column: TableColumnConfigExtended;
+export interface SortedColumn<TCol extends TableColumnConfig> {
+  column: TCol;
   direction?: TableSortDirection;
 }
 

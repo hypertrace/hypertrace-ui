@@ -20,6 +20,10 @@ export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
 export * from './checkbox/checkbox.component';
 export * from './checkbox/checkbox.module';
 
+// Collapsible sidebar
+export * from './collapsible-sidebar/collapsible-sidebar.component';
+export * from './collapsible-sidebar/collapsible-sidebar.module';
+
 // Combo Box
 export * from './combo-box/combo-box.module';
 export * from './combo-box/combo-box.component';

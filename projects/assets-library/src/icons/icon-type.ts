@@ -23,6 +23,7 @@ export const enum IconType {
   ChevronLeft = 'svg:chevron-left',
   ChevronRight = 'svg:chevron-right',
   ChevronUp = 'svg:chevron-up',
+  Clear = 'clear',
   Close = 'svg:close',
   CloseCircle = 'svg:close-circle',
   CloseCircleFilled = 'svg:close-circle-filled',

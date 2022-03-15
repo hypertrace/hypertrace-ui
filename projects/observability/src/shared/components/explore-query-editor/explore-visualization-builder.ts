@@ -128,7 +128,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       selections: state.series.map(series => series.specification),
       context: state.context,
       interval: this.resolveInterval(state.interval),
-      filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFilters(state.filters),
+      filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
       groupBy: state.groupBy,
       limit: state.resultLimit
     });
@@ -178,7 +178,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       traceType: traceType,
       properties: specifications,
       limit: 100,
-      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFilters(filters)
+      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(filters)
     };
   }
 
@@ -190,7 +190,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       requestType: SPANS_GQL_REQUEST,
       properties: specifications,
       limit: 100,
-      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFilters(filters)
+      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(filters)
     };
   }
 

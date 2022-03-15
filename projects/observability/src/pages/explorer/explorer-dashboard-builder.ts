@@ -304,6 +304,7 @@ export class ExplorerDashboardBuilder {
             title: 'API Boundary Type',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiBoundaryType'
@@ -317,6 +318,7 @@ export class ExplorerDashboardBuilder {
             title: 'API Discovery State',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiDiscoveryState'
@@ -330,6 +332,7 @@ export class ExplorerDashboardBuilder {
             title: 'API ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiId'
@@ -343,6 +346,7 @@ export class ExplorerDashboardBuilder {
             title: 'Entry Span ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiTraceId'
@@ -356,6 +360,7 @@ export class ExplorerDashboardBuilder {
             title: 'Service ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'serviceId'
@@ -369,6 +374,7 @@ export class ExplorerDashboardBuilder {
             title: 'Trace ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
@@ -382,6 +388,7 @@ export class ExplorerDashboardBuilder {
             title: 'Request URL',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'requestUrl'
@@ -504,6 +511,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
