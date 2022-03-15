@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -24,6 +24,7 @@ export class TimeRangeService {
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService
   ) {
+    this.initializeTimeRange();
     this.navigationService.registerGlobalQueryParamKey(TimeRangeService.TIME_RANGE_QUERY_PARAM);
   }
 
@@ -61,7 +62,7 @@ export class TimeRangeService {
     this.setTimeRange(this.getCurrentTimeRange());
   }
 
-  public initializeTimeRange(defaultTimeRange: TimeRange): void {
+  private initializeTimeRange(): void {
     this.navigationService.navigation$
       .pipe(
         take(1), // Wait for first navigation
@@ -70,8 +71,7 @@ export class TimeRangeService {
         map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
         filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
-        catchError(() => EMPTY),
-        defaultIfEmpty(defaultTimeRange)
+        catchError(() => EMPTY)
       )
       .subscribe(timeRange => {
         this.setTimeRange(timeRange);
@@ -99,6 +99,12 @@ export class TimeRangeService {
     });
 
     return this;
+  }
+
+  public setDefaultTimeRange(timeRange: TimeRange): void {
+    if (!this.currentTimeRange) {
+      this.setTimeRange(timeRange);
+    }
   }
 
   public static toRelativeTimeRange(value: number, unit: TimeUnit): RelativeTimeRange {
