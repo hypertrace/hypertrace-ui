@@ -17,7 +17,6 @@ import { TimeUnit } from './time-unit.type';
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
 
-  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -25,7 +24,6 @@ export class TimeRangeService {
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService
   ) {
-    this.initializeTimeRange();
     this.navigationService.registerGlobalQueryParamKey(TimeRangeService.TIME_RANGE_QUERY_PARAM);
   }
 
@@ -63,7 +61,7 @@ export class TimeRangeService {
     this.setTimeRange(this.getCurrentTimeRange());
   }
 
-  private initializeTimeRange(): void {
+  public initializeTimeRange(defaultTimeRange: TimeRange): void {
     this.navigationService.navigation$
       .pipe(
         take(1), // Wait for first navigation
@@ -73,7 +71,7 @@ export class TimeRangeService {
         filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
         catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultTimeRange)
+        defaultIfEmpty(defaultTimeRange)
       )
       .subscribe(timeRange => {
         this.setTimeRange(timeRange);

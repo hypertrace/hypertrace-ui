@@ -1,16 +1,46 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver, PageTimeRangePreferenceService } from '@hypertrace/common';
+import {
+  FeatureState,
+  FeatureStateResolver,
+  NavigationService,
+  PageTimeRangePreferenceService,
+  RelativeTimeRange,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationListComponentService {
+  public timeRangeHasInitialized$: Observable<boolean | undefined>;
   public constructor(
     private readonly featureStateResolver: FeatureStateResolver,
-    private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService
-  ) {}
+    private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService,
+    private readonly timeRangeService: TimeRangeService,
+    private readonly navigationService: NavigationService
+  ) {
+    // Doesn't init early enough. Throws error at ApplicationInsightsDataSourceModel.getTimeRangeOrThrow
+    this.timeRangeHasInitialized$ = this.navigationService.navigation$.pipe(
+      startWith(this.navigationService.getCurrentActivatedRoute()),
+      take(1),
+      map(activeRoute => {
+        if (activeRoute) {
+          const defaultTimeRange = activeRoute.snapshot.data?.defaultTimeRange;
+          this.timeRangeService.initializeTimeRange(
+            defaultTimeRange ?? new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
+          );
+          return true;
+        }
+      })
+    );
+
+    // Works, doesn't need to wait for navigation service
+    // this.timeRangeService.initializeTimeRange(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)));
+  }
 
   public resolveFeaturesAndUpdateVisibilityForNavItems(navItems: NavItemConfig[]): NavItemConfig[] {
     const updatedItems = this.updateLinkNavItemsVisibility(navItems);

@@ -9,7 +9,7 @@ import { TimeRangeService } from './time-range.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageTimeRangePreferenceService {
-  private static readonly STORAGE_TYPE: StorageType = StorageType.Session;
+  private static readonly STORAGE_TYPE: StorageType = StorageType.Local;
   private static readonly TIME_RANGE_PREFERENCE_KEY: string = 'page-time-range';
 
   private readonly pageTimeRangeStringDictionary$: Observable<PageTimeRangeStringDictionary>;
@@ -26,9 +26,7 @@ export class PageTimeRangePreferenceService {
     return this.pageTimeRangeStringDictionary$.pipe(
       map(pageTimeRangeStringDictionary => {
         if (isNil(pageTimeRangeStringDictionary[path])) {
-          const timeRangeForPath = this.getDefaultPageTimeRange(path);
-
-          return timeRangeForPath;
+          return this.getDefaultPageTimeRange(path);
         }
 
         return this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[path]);
@@ -37,11 +35,9 @@ export class PageTimeRangePreferenceService {
   }
 
   public setTimeRangePreferenceForPage(path: string, value: TimeRange): void {
-    this.getPageTimeRangeStringDictionary()
-      .pipe(take(1))
-      .subscribe(currentPageTimeRangeDictionary => {
-        this.setPreferenceServicePageTimeRange(currentPageTimeRangeDictionary, path, value);
-      });
+    this.pageTimeRangeStringDictionary$.pipe(take(1)).subscribe(currentPageTimeRangeDictionary => {
+      this.setPreferenceServicePageTimeRange(currentPageTimeRangeDictionary, path, value);
+    });
   }
 
   private setPreferenceServicePageTimeRange(
@@ -54,10 +50,6 @@ export class PageTimeRangePreferenceService {
       { ...currentTimeRangeDictionary, [path]: timeRange.toUrlString() },
       PageTimeRangePreferenceService.STORAGE_TYPE
     );
-  }
-
-  private getPageTimeRangeStringDictionary(): Observable<PageTimeRangeStringDictionary> {
-    return this.pageTimeRangeStringDictionary$;
   }
 
   private buildPageTimeRangeObservable(): Observable<PageTimeRangeStringDictionary> {

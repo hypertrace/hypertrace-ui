@@ -8,7 +8,8 @@ import {
   FixedTimeRange,
   NavigationService,
   RelativeTimeRange,
-  TimeRangeService
+  TimeRangeService,
+  TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
@@ -94,36 +95,32 @@ export class NavigationListComponent implements OnChanges {
     private readonly featureStateResolver: FeatureStateResolver
   ) {}
 
-  public ngOnChanges(): void {
-    this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.navItems) {
+      this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
-    this.navItems$ = this.featureStateResolver
-      .getCombinedFeatureState([ApplicationFeature.PageTimeRange, ApplicationFeature.NavigationRedesign])
-      .pipe(
-        map(featureState => featureState === FeatureState.Enabled),
-        switchMap(usePageLevelTimeRange => {
-          if (usePageLevelTimeRange) {
-            return this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);
-          }
+      // If the FFs are enabled, decorate the nav items with the corresponding time ranges.
+      // The time ranges in nav items are streams that get the most recent value from page time range preference service
+      this.navItems$ = this.featureStateResolver
+        .getCombinedFeatureState([ApplicationFeature.PageTimeRange, ApplicationFeature.NavigationRedesign])
+        .pipe(
+          map(featureState => featureState === FeatureState.Enabled),
+          switchMap(usePageLevelTimeRange => {
+            if (usePageLevelTimeRange) {
+              return this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);
+            }
 
-          return of(this.navItems);
-        }),
-        shareReplay()
-      );
+            return of(this.navItems);
+          }),
+          shareReplay()
+        );
 
-    this.activeItem$ = combineLatest([
-      this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute())),
-      this.navItems$
-    ]).pipe(
-      map(([, navItems], index) => {
-        const activeItem = this.findActiveItem(navItems);
-        if (index === 0 && activeItem) {
-          this.setPageTimeRangeForSelectedNavItem(activeItem);
-        }
-
-        return activeItem;
-      })
-    );
+      // For each nav, find the possibly new, active nav item
+      this.activeItem$ = combineLatest([
+        this.navItems$,
+        this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute()))
+      ]).pipe(map(([navItems]) => this.findActiveItem(navItems)));
+    }
   }
 
   public toggleView(): void {
