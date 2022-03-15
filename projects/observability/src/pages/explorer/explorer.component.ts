@@ -8,7 +8,7 @@ import {
   TimeDuration,
   TimeDurationService
 } from '@hypertrace/common';
-import { Filter, IncompleteFilter, ToggleItem, FilterChipService } from '@hypertrace/components';
+import { Filter, FilterAttribute, FilterChipService, IncompleteFilter, ToggleItem } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
 import { BehaviorSubject, concat, EMPTY, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -198,16 +198,17 @@ export class ExplorerComponent {
     }
   }
 
-  private convertToFilterAttributes(attrArray: AttributeMetadata[]) {
+  private convertToFilterAttributes(attrArray: AttributeMetadata[]): FilterAttribute[] {
     return attrArray.map(({ name, displayName, units, type, onlySupportsAggregation, onlySupportsGrouping }) => {
       const applicableType = toFilterAttributeType(type);
+
       return {
-        name,
-        displayName,
-        units,
+        name: name,
+        displayName: displayName,
+        units: units,
         type: applicableType,
-        onlySupportsAggregation,
-        onlySupportsGrouping
+        onlySupportsAggregation: onlySupportsAggregation,
+        onlySupportsGrouping: onlySupportsGrouping
       };
     });
   }
@@ -217,16 +218,15 @@ export class ExplorerComponent {
     const listener = this.attributes$.subscribe(attributes => {
       const lastTab = this.contextChangeSubject.getValue();
       const newFilters = this.filters.map(eachFilter => {
-        // if the given filter has a different name for the selected tab, update the filter value
+        // If the given filter has a different name for the selected tab, update the filter value
         if (eachFilter.field in contextMapObject[lastTab]) {
-          let newFilter = this.filterChipService.autocompleteFilters(
+          const newFilter = this.filterChipService.autocompleteFilters(
             this.convertToFilterAttributes(attributes),
             eachFilter.userString
           );
-          if (newFilter && newFilter.length !== 0) {
-            if (this.isValidFilter(newFilter[0])) {
-              return newFilter[0];
-            }
+
+          if (!isEmpty(newFilter) && this.isValidFilter(newFilter[0])) {
+            return newFilter[0];
           }
         }
 
@@ -239,7 +239,7 @@ export class ExplorerComponent {
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
   }
 
-  private isValidFilter(incompleteFilter: IncompleteFilter<unknown>): incompleteFilter is Filter<unknown> {
+  private isValidFilter(incompleteFilter: IncompleteFilter): incompleteFilter is Filter {
     return incompleteFilter.operator !== undefined && incompleteFilter.value !== undefined;
   }
 
