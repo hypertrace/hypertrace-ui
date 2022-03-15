@@ -8,9 +8,9 @@ import {
   TimeDuration,
   TimeDurationService
 } from '@hypertrace/common';
-import { Filter, ToggleItem } from '@hypertrace/components';
+import { Filter, IncompleteFilter, ToggleItem, FilterChipService } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
-import { concat, EMPTY, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, concat, EMPTY, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
@@ -20,7 +20,7 @@ import {
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
-import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { AttributeMetadata, toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
@@ -52,6 +52,7 @@ import {
         class="explorer-filter-bar"
         [attributes]="this.attributes$ | async"
         [syncWithUrl]="true"
+        [filters]="this.filters"
         (filtersChange)="this.onFiltersUpdated($event)"
       ></ht-filter-bar>
       <div class="explorer-content">
@@ -145,13 +146,16 @@ export class ExplorerComponent {
   public visualizationExpanded$: Observable<boolean>;
   public resultsExpanded$: Observable<boolean>;
 
-  private readonly contextChangeSubject: Subject<ExplorerGeneratedDashboardContext> = new Subject();
+  private readonly contextChangeSubject: BehaviorSubject<ExplorerGeneratedDashboardContext> = new BehaviorSubject(
+    ObservabilityTraceType.Api as ExplorerGeneratedDashboardContext
+  );
 
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
+    private readonly filterChipService: FilterChipService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
   ) {
@@ -194,9 +198,49 @@ export class ExplorerComponent {
     }
   }
 
+  private convertToFilterAttributes(attrArray: AttributeMetadata[]) {
+    return attrArray.map(({ name, displayName, units, type, onlySupportsAggregation, onlySupportsGrouping }) => {
+      const applicableType = toFilterAttributeType(type);
+      return {
+        name,
+        displayName,
+        units,
+        type: applicableType,
+        onlySupportsAggregation,
+        onlySupportsGrouping
+      };
+    });
+  }
+
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
     this.attributes$ = this.metadataService.getFilterAttributes(contextWrapper.dashboardContext);
+    const listener = this.attributes$.subscribe(attributes => {
+      const lastTab = this.contextChangeSubject.getValue();
+      const newFilters = this.filters.map(eachFilter => {
+        // if the given filter has a different name for the selected tab, update the filter value
+        if (eachFilter.field in contextMapObject[lastTab]) {
+          let newFilter = this.filterChipService.autocompleteFilters(
+            this.convertToFilterAttributes(attributes),
+            eachFilter.userString
+          );
+          if (newFilter && newFilter.length !== 0) {
+            if (this.isValidFilter(newFilter[0])) {
+              return newFilter[0];
+            }
+          }
+        }
+
+        return eachFilter;
+      });
+
+      this.filters = newFilters;
+    });
+    listener.unsubscribe();
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
+  }
+
+  private isValidFilter(incompleteFilter: IncompleteFilter<unknown>): incompleteFilter is Filter<unknown> {
+    return incompleteFilter.operator !== undefined && incompleteFilter.value !== undefined;
   }
 
   public onVisualizationExpandedChange(expanded: boolean): void {
@@ -327,6 +371,12 @@ interface ExplorerContextScope {
   scopeQueryParam: ScopeQueryParam;
 }
 
+type contextMap = {
+  [key in ExplorerGeneratedDashboardContext]: {
+    [key: string]: string;
+  };
+};
+
 export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
@@ -339,3 +389,18 @@ const enum ExplorerQueryParam {
   GroupLimit = 'limit',
   Series = 'series'
 }
+
+const contextMapObject: contextMap = {
+  API_TRACE: {
+    protocol: 'protocolName',
+    requestMethod: 'spanRequestMethod',
+    requestUrl: 'spanRequestUrl',
+    tags: 'spanTags'
+  },
+  SPAN: {
+    protocolName: 'protocol',
+    spanRequestMethod: 'requestMethod',
+    spanRequestUrl: 'requestUrl',
+    spanTags: 'tags'
+  }
+};
