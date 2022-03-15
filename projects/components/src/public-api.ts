@@ -356,3 +356,4 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 
 // Filter Url Service
 export * from './filtering/filter/filter-url.service';
+export * from './filtering/filter-bar/filter-chip/filter-chip.service';
