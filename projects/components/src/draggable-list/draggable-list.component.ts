@@ -33,9 +33,9 @@ export class DraggableListComponent implements AfterContentInit {
   @Output()
   public readonly listOrderChange: EventEmitter<DraggableItemComponent[]> = new EventEmitter();
 
-  @ContentChildren(DraggableItemComponent) 
+  @ContentChildren(DraggableItemComponent)
   public draggableItemsRef!: QueryList<DraggableItemComponent>;
-  
+
   public draggableItems: DraggableItemComponent[] = [];
 
   public ngAfterContentInit(): void {
