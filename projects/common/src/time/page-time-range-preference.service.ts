@@ -22,7 +22,7 @@ export class PageTimeRangePreferenceService {
     this.pageTimeRangeStringDictionary$ = this.buildPageTimeRangeObservable();
   }
 
-  public getTimeRangePreferenceForPage(path: string): Observable<TimeRange> {
+  public getTimeRangePreferenceForPage(path: string): Observable<TimeRange | undefined> {
     return this.pageTimeRangeStringDictionary$.pipe(
       map(pageTimeRangeStringDictionary => {
         if (isNil(pageTimeRangeStringDictionary[path])) {
@@ -62,11 +62,11 @@ export class PageTimeRangePreferenceService {
       .pipe(shareReplay(1));
   }
 
-  private getDefaultPageTimeRange(path: string): TimeRange {
+  private getDefaultPageTimeRange(path: string): TimeRange | undefined {
     const defaultTimeRange = this.navigationService.getRouteConfig([path], this.navigationService.rootRoute())?.data
       ?.defaultTimeRange;
 
-    return defaultTimeRange ?? this.timeRangeService.getCurrentTimeRange();
+    return defaultTimeRange;
   }
 }
 

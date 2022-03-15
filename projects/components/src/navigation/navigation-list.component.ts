@@ -15,7 +15,7 @@ import {
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
 import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
@@ -121,22 +121,26 @@ export class NavigationListComponent implements OnChanges {
           shareReplay()
         );
 
-      // For each nav, find the possibly new, active nav item
-      // Time range is set when it has yet to be. If page level TR is available because FF is enabled, uses that,
-      // otherwise the default
+      // For each nav item, find the (possibly new) active nav item
+      // Time range is set on component load, when it isn't already
+      // If page level TR is available because FF is enabled, uses that, otherwise the default
       this.activeItem$ = combineLatest([
         this.navItems$,
         this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute()))
       ]).pipe(
-        map(([navItems]) => this.findActiveItem(navItems)),
-        tap(activeItem => {
-          const timeRangeQueryParamValue = this.navigationService.getQueryParameter(
-            NavigationListComponent.TIME_RANGE_QUERY_PARAM_KEY,
-            ''
-          );
-          if (!timeRangeQueryParamValue) {
-            this.timeRangeService.setDefaultTimeRange(activeItem?.timeRange ?? this.defaultTimeRange);
+        map(([navItems], index) => {
+          const activeItem = this.findActiveItem(navItems);
+          if (index === 0) {
+            const timeRangeQueryParamValue = this.navigationService.getQueryParameter(
+              NavigationListComponent.TIME_RANGE_QUERY_PARAM_KEY,
+              ''
+            );
+            if (timeRangeQueryParamValue === '') {
+              this.timeRangeService.setDefaultTimeRange(activeItem?.timeRange ?? this.defaultTimeRange);
+            }
           }
+
+          return activeItem;
         })
       );
     }
