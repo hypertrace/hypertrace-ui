@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -9,7 +10,6 @@ import {
   QueryList
 } from '@angular/core';
 import { DraggableItemComponent } from './draggable-item/draggable-item.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ht-draggable-list',
@@ -33,7 +33,9 @@ export class DraggableListComponent implements AfterContentInit {
   @Output()
   public readonly listOrderChange: EventEmitter<DraggableItemComponent[]> = new EventEmitter();
 
-  @ContentChildren(DraggableItemComponent) draggableItemsRef!: QueryList<DraggableItemComponent>;
+  @ContentChildren(DraggableItemComponent) 
+  public draggableItemsRef!: QueryList<DraggableItemComponent>;
+  
   public draggableItems: DraggableItemComponent[] = [];
 
   public ngAfterContentInit(): void {
