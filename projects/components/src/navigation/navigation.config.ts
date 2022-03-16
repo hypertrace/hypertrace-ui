@@ -17,6 +17,7 @@ export interface NavItemLinkConfig {
   trailingIconTooltip?: string;
   trailingIconColor?: Color;
   timeRange?: TimeRange;
+  pageLevelTimeRangeIsEnabled?: boolean;
   featureState$?: Observable<FeatureState>;
 }
 

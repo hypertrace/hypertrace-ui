@@ -3,18 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import {
   ApplicationFeature,
-  FeatureState,
   FeatureStateResolver,
   FixedTimeRange,
   NavigationService,
   RelativeTimeRange,
-  TimeDuration,
   TimeRangeService,
-  TimeUnit,
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
@@ -70,8 +67,6 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   `
 })
 export class NavigationListComponent implements OnChanges {
-  private readonly defaultTimeRange: RelativeTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
-
   @Input()
   public navItems: NavItemConfig[] = [];
 
@@ -103,33 +98,28 @@ export class NavigationListComponent implements OnChanges {
     if (changes.navItems) {
       this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
-      // If the FFs are enabled, decorate the nav items with the corresponding time ranges.
+      // Decorate the nav items with the corresponding time ranges, depending on the FF state.
       // The time ranges in nav items are streams that get the most recent value from page time range preference service
       this.navItems$ = this.featureStateResolver
         .getCombinedFeatureState([ApplicationFeature.PageTimeRange, ApplicationFeature.NavigationRedesign])
         .pipe(
-          map(featureState => featureState === FeatureState.Enabled),
-          switchMap(usePageLevelTimeRange => {
-            if (usePageLevelTimeRange) {
-              return this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems);
-            }
-
-            return of(this.navItems);
-          }),
+          switchMap(pageLevelTimeRangeFeature =>
+            this.navListComponentService.resolveNavItemConfigTimeRanges(this.navItems, pageLevelTimeRangeFeature)
+          ),
           shareReplay()
         );
 
       // For each nav item, find the (possibly new) active nav item
       // Time range is set on component load, when it isn't already
-      // If page level TR is available because FF is enabled, uses that, otherwise the default
+      // Depending on FF status, the TR will be either global or page level for the init
       this.activeItem$ = combineLatest([
         this.navItems$,
         this.navigationService.navigation$.pipe(startWith(this.navigationService.getCurrentActivatedRoute()))
       ]).pipe(
         map(([navItems]) => {
           const activeItem = this.findActiveItem(navItems);
-          if (!this.timeRangeService.isInitialized()) {
-            this.timeRangeService.setDefaultTimeRange(activeItem?.timeRange ?? this.defaultTimeRange);
+          if (!this.timeRangeService.isInitialized() && activeItem) {
+            this.timeRangeService.setDefaultTimeRange(activeItem.timeRange!);
           }
 
           return activeItem;
@@ -150,7 +140,7 @@ export class NavigationListComponent implements OnChanges {
   }
 
   public setPageTimeRangeForSelectedNavItem(navItemLink: NavItemLinkConfig): void {
-    if (!isNil(navItemLink.timeRange)) {
+    if (!isNil(navItemLink.timeRange) && navItemLink.pageLevelTimeRangeIsEnabled) {
       if (navItemLink.timeRange instanceof FixedTimeRange) {
         const timeRange: FixedTimeRange = navItemLink.timeRange;
         this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);

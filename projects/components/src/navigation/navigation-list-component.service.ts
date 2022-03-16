@@ -29,17 +29,24 @@ export class NavigationListComponentService {
     return updatedItems;
   }
 
-  public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
-    return combineLatest(this.getTimeRangesForNavItems(navItems));
+  public resolveNavItemConfigTimeRanges(
+    navItems: NavItemConfig[],
+    pageLevelTimeRangeFeatureState: FeatureState
+  ): Observable<NavItemConfig[]> {
+    return combineLatest(this.getTimeRangesForNavItems(navItems, pageLevelTimeRangeFeatureState));
   }
 
-  private getTimeRangesForNavItems(navItems: NavItemConfig[]): Observable<NavItemConfig>[] {
+  private getTimeRangesForNavItems(
+    navItems: NavItemConfig[],
+    pageLevelTimeRangeFeatureState: FeatureState
+  ): Observable<NavItemConfig>[] {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
         return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
           map(timeRange => ({
             ...navItem,
-            timeRange: timeRange
+            timeRange: timeRange,
+            pageLevelTimeRangeIsEnabled: pageLevelTimeRangeFeatureState === FeatureState.Enabled
           }))
         );
       }
