@@ -121,11 +121,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       });
     }
 
+    this.subscriptionLifeCycle.unsubscribe();
+
     if (this.groupId !== undefined) {
-      this.subscriptionLifeCycle.unsubscribe();
       this.subscriptionLifeCycle.add(
         this.chartSyncService?.getLocationChangesForGroup(this.groupId).subscribe(data => {
-          this.chart?.showCrosshair(data);
+          this.chart?.showCrosshair(data.locationData);
         })
       );
     }
@@ -166,7 +167,6 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   public ngOnDestroy(): void {
     this.chart && this.chart.destroy();
-    this.subscriptionLifeCycle.unsubscribe();
   }
 
   public redraw(): void {

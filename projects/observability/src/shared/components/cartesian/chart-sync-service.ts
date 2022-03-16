@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Band, CartesianSelectedData, Series } from '../../../public-api';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 
 @Injectable({ providedIn: 'root' })
 export class ChartSyncService<TData> {
-  private readonly locationChangeSubject: Subject<{
-    groupId?: string;
-    locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
-  }> = new Subject();
+  private readonly locationChangeSubject: Subject<ChartHoverData<TData>> = new Subject();
 
   public mouseLocationChange(
     data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
@@ -21,23 +18,12 @@ export class ChartSyncService<TData> {
     });
   }
 
-  public getLocationChangesForGroup(
-    groupId: string
-  ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[]> {
-    return this.locationChangeSubject.pipe(map(data => this.filterLocationDataByGroup(data, groupId)));
+  public getLocationChangesForGroup(groupId: string): Observable<ChartHoverData<TData>> {
+    return this.locationChangeSubject.pipe(filter(data => data.groupId === groupId));
   }
+}
 
-  private filterLocationDataByGroup(
-    data: {
-      groupId?: string;
-      locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
-    },
-    groupId?: string
-  ): MouseLocationData<TData, Series<TData> | Band<TData>>[] {
-    if (groupId === data.groupId) {
-      return data.locationData;
-    }
-
-    return [];
-  }
+interface ChartHoverData<TData> {
+  groupId?: string;
+  locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
 }
