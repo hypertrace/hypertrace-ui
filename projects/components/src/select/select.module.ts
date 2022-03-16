@@ -15,6 +15,7 @@ import { SelectControlOptionComponent } from './select-control-option.component'
 import { SelectGroupComponent } from './select-group.component';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectComponent } from './select.component';
+import { ButtonModule } from '../button/button.module';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { SelectComponent } from './select.component';
     DividerModule,
     MemoizeModule,
     TraceSearchBoxModule,
-    EventBlockerModule
+    EventBlockerModule,
+    ButtonModule
   ],
   declarations: [
     SelectComponent,

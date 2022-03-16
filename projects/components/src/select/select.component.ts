@@ -24,6 +24,7 @@ import { SelectJustify } from './select-justify';
 import { SelectOption } from './select-option';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectSize } from './select-size';
+import { ButtonRole, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-select',
@@ -134,6 +135,15 @@ import { SelectSize } from './select-size';
               </ht-event-blocker>
               <ht-divider class="divider"></ht-divider>
             </ng-container>
+            <ht-button
+              class="clear-selected"
+              *ngIf="this.selected !== undefined"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              label="Clear Selected"
+              (click)="this.onClearSelected()"
+            ></ht-button>
+
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
@@ -309,6 +319,10 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     this.setSelection(item.value);
     this.selectedChange.emit(this.selected);
     this.propagateValueChangeToFormControl(this.selected);
+  }
+
+  public onClearSelected(): void {
+    this.setSelection();
   }
 
   private setSelection(value?: V): void {
