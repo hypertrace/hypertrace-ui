@@ -65,6 +65,11 @@ export * from './description/description.module';
 export * from './divider/divider.component';
 export * from './divider/divider.module';
 
+// Draggable list
+export { DraggableListComponent } from './draggable-list/draggable-list.component';
+export { DraggableItemComponent } from './draggable-list/draggable-item/draggable-item.component';
+export { DraggableListModule } from './draggable-list/draggable-list.module';
+
 // Dropdown menu
 export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
