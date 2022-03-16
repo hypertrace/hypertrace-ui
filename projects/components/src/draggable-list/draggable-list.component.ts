@@ -29,17 +29,17 @@ import { DraggableItemComponent } from './draggable-item/draggable-item.componen
     </div>
   `
 })
-export class DraggableListComponent implements AfterContentInit {
+export class DraggableListComponent<T> implements AfterContentInit {
   @Input()
   public disabled: boolean = false;
 
   @Output()
-  public readonly draggableListChange: EventEmitter<unknown> = new EventEmitter();
+  public readonly draggableListChange: EventEmitter<T[]> = new EventEmitter();
 
   @ContentChildren(DraggableItemComponent)
-  public draggableItemsRef!: QueryList<DraggableItemComponent<unknown>>;
+  public draggableItemsRef!: QueryList<DraggableItemComponent<T>>;
 
-  public draggableItems: DraggableItemComponent<unknown>[] = [];
+  public draggableItems: DraggableItemComponent<T>[] = [];
 
   public ngAfterContentInit(): void {
     this.draggableItems = this.draggableItemsRef.toArray();
@@ -47,8 +47,6 @@ export class DraggableListComponent implements AfterContentInit {
 
   public dropList(event: CdkDragDrop<DraggableItemComponent<unknown>[]>): void {
     moveItemInArray(this.draggableItems, event.previousIndex, event.currentIndex);
-    this.draggableListChange.emit(
-      this.draggableItems.find((_dragabbleItem, index) => event.currentIndex === index)?.data
-    );
+    this.draggableListChange.emit(this.draggableItems.map(dragabbleItem => dragabbleItem.data!));
   }
 }
