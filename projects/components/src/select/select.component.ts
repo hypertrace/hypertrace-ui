@@ -24,7 +24,7 @@ import { SelectJustify } from './select-justify';
 import { SelectOption } from './select-option';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectSize } from './select-size';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-select',
@@ -140,6 +140,7 @@ import { ButtonRole, ButtonStyle } from '../button/button';
               *ngIf="this.selected !== undefined"
               role="${ButtonRole.Primary}"
               display="${ButtonStyle.Text}"
+              size="${ButtonSize.ExtraSmall}"
               label="Clear Selected"
               (click)="this.onClearSelected()"
             ></ht-button>
