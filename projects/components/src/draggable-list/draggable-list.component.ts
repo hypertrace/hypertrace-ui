@@ -14,11 +14,14 @@ import { DraggableItemComponent } from './draggable-item/draggable-item.componen
 @Component({
   selector: 'ht-draggable-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./draggable-list.component.scss'],
   template: `
-    <div cdkDropList class="example-list" (cdkDropListDropped)="dropList($event)">
+    <div cdkDropList class="draggable-list" (cdkDropListDropped)="this.dropList($event)">
       <div
         *ngFor="let draggableItem of this.draggableItems"
         cdkDrag
+        class="draggable-item"
+        [ngClass]="{ disabled: disabled || draggableItem.disabled }"
         [cdkDragDisabled]="disabled || draggableItem.disabled"
       >
         <ng-container *ngTemplateOutlet="draggableItem.content"></ng-container>
@@ -31,19 +34,21 @@ export class DraggableListComponent implements AfterContentInit {
   public disabled: boolean = false;
 
   @Output()
-  public readonly listOrderChange: EventEmitter<DraggableItemComponent[]> = new EventEmitter();
+  public readonly draggableListChange: EventEmitter<unknown> = new EventEmitter();
 
   @ContentChildren(DraggableItemComponent)
-  public draggableItemsRef!: QueryList<DraggableItemComponent>;
+  public draggableItemsRef!: QueryList<DraggableItemComponent<unknown>>;
 
-  public draggableItems: DraggableItemComponent[] = [];
+  public draggableItems: DraggableItemComponent<unknown>[] = [];
 
   public ngAfterContentInit(): void {
     this.draggableItems = this.draggableItemsRef.toArray();
   }
 
-  public dropList(event: CdkDragDrop<DraggableItemComponent[]>): void {
+  public dropList(event: CdkDragDrop<DraggableItemComponent<unknown>[]>): void {
     moveItemInArray(this.draggableItems, event.previousIndex, event.currentIndex);
-    this.listOrderChange.emit(this.draggableItems);
+    this.draggableListChange.emit(
+      this.draggableItems.find((_dragabbleItem, index) => event.currentIndex === index)?.data
+    );
   }
 }

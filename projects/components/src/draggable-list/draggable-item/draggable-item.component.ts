@@ -1,18 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../public-api';
 
 @Component({
   selector: 'ht-draggable-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <ng-template #draggableItem>
-      <ng-content></ng-content>
-    </ng-template>
-  `
+  template: CONTENT_HOLDER_TEMPLATE
 })
-export class DraggableItemComponent {
-  @ViewChild('draggableItem', { static: true })
-  public content!: TemplateRef<unknown>;
-
+export class DraggableItemComponent<T> extends ContentHolder {
   @Input()
   public disabled: boolean = false;
+
+  @Input()
+  public data?: T;
 }
