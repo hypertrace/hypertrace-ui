@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MemoizeModule } from '@hypertrace/common';
+import { ButtonModule } from '../button/button.module';
 import { DividerModule } from '../divider/divider.module';
 import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 import { IconModule } from '../icon/icon.module';
@@ -15,7 +16,6 @@ import { SelectControlOptionComponent } from './select-control-option.component'
 import { SelectGroupComponent } from './select-group.component';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectComponent } from './select.component';
-import { ButtonModule } from '../button/button.module';
 
 @NgModule({
   imports: [

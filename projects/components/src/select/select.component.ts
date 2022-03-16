@@ -16,6 +16,7 @@ import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimple
 import { isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
@@ -24,7 +25,6 @@ import { SelectJustify } from './select-justify';
 import { SelectOption } from './select-option';
 import { SelectOptionComponent } from './select-option.component';
 import { SelectSize } from './select-size';
-import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-select',
