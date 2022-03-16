@@ -314,7 +314,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   private setSelection(value?: V): void {
     this.selected = value;
     this.selected$ = this.buildObservableOfSelected();
-    this.changeDetector.markForCheck();
+    this.cdr.markForCheck();
   }
 
   private findItem(value: V | undefined): SelectOption<V> | undefined {
