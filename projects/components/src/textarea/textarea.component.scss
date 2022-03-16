@@ -70,3 +70,9 @@
   height: 100%;
   width: 100%;
 }
+
+.disabled {
+  background-color: $gray-2;
+  color: $gray-5;
+  cursor: not-allowed;
+}
