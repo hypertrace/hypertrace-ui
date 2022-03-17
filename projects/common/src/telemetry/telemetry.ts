@@ -20,6 +20,7 @@ export interface UserTelemetryProvider<TInitConfig = unknown> {
 
 export interface TelemetryProviderConfig {
   orgId: string;
+  orgTrackingURL?: string;
 }
 
 export interface UserTraits extends Dictionary<unknown> {
