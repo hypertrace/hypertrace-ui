@@ -1,0 +1,11 @@
+@import 'color-palette';
+
+.draggable-list .draggable-item {
+  cursor: move;
+
+  &.disabled {
+    background-color: $gray-2;
+    color: $gray-5;
+    cursor: not-allowed;
+  }
+}

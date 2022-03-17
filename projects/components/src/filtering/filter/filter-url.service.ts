@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationService } from '@hypertrace/common';
-import { remove } from 'lodash-es';
+import { isEmpty, remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
@@ -15,6 +15,7 @@ import { splitFilterStringByOperator } from './parser/parsed-filter';
 })
 export class FilterUrlService {
   private static readonly FILTER_QUERY_PARAM: string = 'filter';
+  private static readonly GROUP_BY_QUERY_PARAM: string = 'group-by';
 
   public constructor(
     private readonly navigationService: NavigationService,
@@ -52,6 +53,19 @@ export class FilterUrlService {
     this.navigationService.addQueryParametersToUrl({
       [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString)
     });
+  }
+
+  public setUrlGroupBy(groupBy?: string[]): void {
+    this.navigationService.addQueryParametersToUrl({
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.toString()]
+    });
+  }
+
+  public getUrlGroupBy(): string[] {
+    return this.navigationService
+      .getAllValuesForQueryParameter(FilterUrlService.GROUP_BY_QUERY_PARAM)
+      .map(groupByString => groupByString.split(',').map(attributeName => attributeName.trim()))
+      .flat();
   }
 
   public addUrlFilter(attributes: FilterAttribute[], filter: Filter): void {
