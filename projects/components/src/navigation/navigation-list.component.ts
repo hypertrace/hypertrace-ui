@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, TimeRangeService, TypedSimpleChanges } from '@hypertrace/common';
+import { NavigationService, TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -76,28 +76,26 @@ export class NavigationListComponent implements OnChanges {
   @Output()
   public readonly navItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
 
+  @Output()
+  public readonly activeItemChange: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly navListComponentService: NavigationListComponentService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly navListComponentService: NavigationListComponentService
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.navItems) {
       this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
-      // Initialize the time range service
-      // Depending on FF status, the TR will be either global or page level for the init
       this.activeItem$ = this.navigationService.navigation$.pipe(
         startWith(this.navigationService.getCurrentActivatedRoute()),
         map(() => {
           const activeItem = this.findActiveItem(this.navItems);
-          if (!this.timeRangeService.isInitialized() && activeItem?.timeRangeResolver) {
-            this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver());
-          }
+          this.activeItemChange.emit(activeItem);
 
           return activeItem;
         })

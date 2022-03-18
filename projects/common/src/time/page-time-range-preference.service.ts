@@ -78,14 +78,16 @@ export class PageTimeRangePreferenceService {
       .pipe(shareReplay(1));
   }
 
-  public getDefaultTimeRangeForCurrentRoute = (): TimeRange => {
+  public getDefaultTimeRangeForCurrentRoute(): TimeRange {
     const currentRoute: ActivatedRoute = this.navigationService.getCurrentActivatedRoute();
     // Right side for when FF is enabled but 'defaultTimeRange' is not set on AR data
 
     return currentRoute.snapshot.data?.defaultTimeRange ?? this.getGlobalDefaultTimeRange();
-  };
+  }
 
-  public getGlobalDefaultTimeRange = (): TimeRange => new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  public getGlobalDefaultTimeRange(): TimeRange {
+    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  }
 }
 
 interface PageTimeRangeStringDictionary {
