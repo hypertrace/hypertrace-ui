@@ -29,4 +29,12 @@ export class DefaultSheetRef extends SheetRef {
     }
     this.popoverRef?.close();
   }
+
+  public show(): void {
+    this.popoverRef?.show();
+  }
+
+  public hide(): void {
+    this.popoverRef?.hide();
+  }
 }

@@ -23,6 +23,22 @@ export class FilterUrlService {
     private readonly filterParserLookupService: FilterParserLookupService
   ) {}
 
+  public getUrlFilteringStateChanges$(attributes: FilterAttribute[]): Observable<UrlFilteringState> {
+    return this.navigationService.navigation$.pipe(
+      map(() => ({
+        filters: this.getUrlFilters(attributes),
+        groupBy: this.getUrlGroupBy()
+      }))
+    );
+  }
+
+  public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: string[]): void {
+    this.navigationService.addQueryParametersToUrl({
+      [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.toString()]
+    });
+  }
+
   public getUrlFiltersChanges$(attributes: FilterAttribute[]): Observable<Filter[]> {
     return this.navigationService.navigation$.pipe(map(() => this.getUrlFilters(attributes)));
   }
@@ -118,4 +134,9 @@ export class FilterUrlService {
       })
       .find(splitFilter => splitFilter !== undefined);
   }
+}
+
+export interface UrlFilteringState {
+  filters: Filter[];
+  groupBy: string[];
 }

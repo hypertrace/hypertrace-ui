@@ -137,7 +137,7 @@ import { SelectSize } from './select-size';
             </ng-container>
             <ht-button
               class="clear-selected"
-              *ngIf="this.selected !== undefined"
+              *ngIf="this.showClearSelected && this.selected !== undefined"
               role="${ButtonRole.Primary}"
               display="${ButtonStyle.Text}"
               size="${ButtonSize.ExtraSmall}"
@@ -231,6 +231,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public highlightSelected: boolean = true;
 
   @Input()
+  public showClearSelected: boolean = false;
+
+  @Input()
   public searchMode: SelectSearchMode = SelectSearchMode.Disabled;
 
   @Output()
@@ -318,12 +321,12 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     }
 
     this.setSelection(item.value);
-    this.selectedChange.emit(this.selected);
-    this.propagateValueChangeToFormControl(this.selected);
+    this.propagateValue();
   }
 
   public onClearSelected(): void {
     this.setSelection();
+    this.propagateValue();
   }
 
   private setSelection(value?: V): void {
@@ -366,6 +369,11 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public setDisabledState(isDisabled?: boolean): void {
     this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValue(): void {
+    this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private propagateValueChangeToFormControl(value: V | undefined): void {
