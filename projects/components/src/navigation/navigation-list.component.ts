@@ -95,9 +95,10 @@ export class NavigationListComponent implements OnChanges {
         startWith(this.navigationService.getCurrentActivatedRoute()),
         map(() => {
           const activeItem = this.findActiveItem(this.navItems);
-          if (!this.timeRangeService.isInitialized() && activeItem?.resolveTimeRange) {
-            this.timeRangeService.setDefaultTimeRange(activeItem.resolveTimeRange());
+          if (!this.timeRangeService.isInitialized() && activeItem?.timeRangeResolver) {
+            this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver());
           }
+
           return activeItem;
         })
       );

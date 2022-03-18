@@ -47,9 +47,9 @@ export class NavigationListComponentService {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
         return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
-          map(resolveTimeRange => ({
+          map(timeRangeResolver => ({
             ...navItem,
-            resolveTimeRange: resolveTimeRange,
+            timeRangeResolver: timeRangeResolver,
             pageLevelTimeRangeIsEnabled: pageLevelTimeRangeFeatureState === FeatureState.Enabled
           }))
         );

@@ -30,7 +30,7 @@ export class PageTimeRangePreferenceService {
     this.pageTimeRangeStringDictionary$ = this.buildPageTimeRangeObservable();
   }
 
-  public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRangeCallback> {
+  public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRangeResolver> {
     return combineLatest([
       this.pageTimeRangeStringDictionary$,
       this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange)
@@ -38,14 +38,14 @@ export class PageTimeRangePreferenceService {
       map(([pageTimeRangeStringDictionary, featureState]) => {
         if (featureState === FeatureState.Enabled) {
           if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
-            return this.getDefaultTimeRangeForCurrentRoute;
+            return () => this.getDefaultTimeRangeForCurrentRoute();
           }
 
           return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
         }
 
         // When FF is disabled
-        return this.getGlobalDefaultTimeRange;
+        return () => this.getGlobalDefaultTimeRange();
       })
     );
   }
@@ -81,15 +81,14 @@ export class PageTimeRangePreferenceService {
   public getDefaultTimeRangeForCurrentRoute = (): TimeRange => {
     const currentRoute: ActivatedRoute = this.navigationService.getCurrentActivatedRoute();
     // Right side for when FF is enabled but 'defaultTimeRange' is not set on AR data
+
     return currentRoute.snapshot.data?.defaultTimeRange ?? this.getGlobalDefaultTimeRange();
   };
 
-  public getGlobalDefaultTimeRange = (): TimeRange => {
-    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
-  };
+  public getGlobalDefaultTimeRange = (): TimeRange => new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
 }
 
 interface PageTimeRangeStringDictionary {
   [path: string]: string;
 }
-export type TimeRangeCallback = () => TimeRange;
+export type TimeRangeResolver = () => TimeRange;
