@@ -44,7 +44,8 @@ describe('Navigation List Component Service', () => {
     service: NavigationListComponentService,
     providers: [
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+        getCombinedFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
       }),
       mockProvider(PageTimeRangePreferenceService, {
         getTimeRangePreferenceForPage: jest.fn().mockReturnValue(of(mockTimeRange))

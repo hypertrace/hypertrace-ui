@@ -35,14 +35,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
-          <ht-page-time-range
-            class="time-range"
-            *htIfFeature="'${ApplicationFeature.NavigationRedesign}' | htFeature; else globalTimeRangeTemplate"
-          ></ht-page-time-range>
-
-          <ng-template #globalTimeRangeTemplate>
-            <ht-time-range></ht-time-range>
-          </ng-template>
+          <ht-page-time-range class="time-range"></ht-page-time-range>
         </div>
         <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
           <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>

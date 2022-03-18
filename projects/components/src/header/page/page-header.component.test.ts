@@ -1,5 +1,4 @@
 import {
-  ApplicationFeature,
   FeatureState,
   FeatureStateResolver,
   NavigationService,
@@ -12,7 +11,6 @@ import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
 import { PageTimeRangeComponent } from '../../page-time-range/page-time-range.component';
-import { TimeRangeComponent } from '../../time-range/time-range.component';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('Page Header Component', () => {
@@ -21,7 +19,7 @@ describe('Page Header Component', () => {
   const createHost = createHostFactory({
     component: PageHeaderComponent,
     imports: [FeatureConfigCheckModule],
-    declarations: [MockComponent(PageTimeRangeComponent), MockComponent(TimeRangeComponent)],
+    declarations: [MockComponent(PageTimeRangeComponent)],
     shallow: true,
     providers: [
       mockProvider(NavigationService),
@@ -50,7 +48,7 @@ describe('Page Header Component', () => {
     expect(spectator.query('.beta')).not.toExist();
   });
 
-  test('should display page time range component when feature flags are enabled', () => {
+  test('should display page time range component when feature flag is enabled', () => {
     spectator = createHost('<ht-page-header></ht-page-header>', {
       providers: [
         mockProvider(FeatureStateResolver, {
@@ -60,26 +58,6 @@ describe('Page Header Component', () => {
     });
 
     expect(spectator.query(PageTimeRangeComponent)).toExist();
-    expect(spectator.query(TimeRangeComponent)).not.toExist();
-  });
-
-  test('should display time-range component when navigation feature flag is disabled and page time range is enabled', () => {
-    spectator = createHost('<ht-page-header></ht-page-header>', {
-      providers: [
-        mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: jest.fn().mockImplementation(([feature]) => {
-            if (feature === ApplicationFeature.NavigationRedesign) {
-              return of(FeatureState.Disabled);
-            }
-
-            return of(FeatureState.Enabled);
-          })
-        })
-      ]
-    });
-
-    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
-    expect(spectator.query(TimeRangeComponent)).toExist();
   });
 
   test('should not display any time range if FF is disabled', () => {
@@ -92,6 +70,5 @@ describe('Page Header Component', () => {
     });
 
     expect(spectator.query(PageTimeRangeComponent)).not.toExist();
-    expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 });

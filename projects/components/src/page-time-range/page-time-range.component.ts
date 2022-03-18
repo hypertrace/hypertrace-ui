@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { UrlSegment } from '@angular/router';
 import { LoggerService, NavigationService, PageTimeRangePreferenceService, TimeRange } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 
@@ -19,13 +19,15 @@ export class PageTimeRangeComponent {
     const activatedRoute = this.navigationService.getCurrentActivatedRoute();
     const urlSegments: UrlSegment[] = activatedRoute.pathFromRoot.flatMap(activeRoute => activeRoute.snapshot.url);
 
-    if (this.shouldSavePageTimeRange(activatedRoute)) {
+    if (this.shouldSavePageTimeRange()) {
       this.savePageTimeRange(selectedTimeRange, urlSegments[0]);
     }
   }
 
-  public shouldSavePageTimeRange(route: ActivatedRoute): boolean {
-    return !isNil(route.snapshot.data?.defaultTimeRange);
+  public shouldSavePageTimeRange(): boolean {
+    const currentRoute = this.navigationService.getCurrentActivatedRoute();
+
+    return !isNil(currentRoute.snapshot.data?.defaultTimeRange);
   }
 
   public savePageTimeRange(selectedTimeRange: TimeRange, segment: UrlSegment): void {

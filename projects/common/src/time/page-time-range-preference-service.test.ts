@@ -1,4 +1,6 @@
 import {
+  FeatureState,
+  FeatureStateResolver,
   FixedTimeRange,
   NavigationService,
   RelativeTimeRange,
@@ -9,6 +11,7 @@ import {
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
 import { PageTimeRangePreferenceService } from './page-time-range-preference.service';
 
 describe('Page time range preference service', () => {
@@ -18,6 +21,9 @@ describe('Page time range preference service', () => {
     providers: [
       mockProvider(NavigationService, {
         getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
+      }),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
       })
     ]
   });
