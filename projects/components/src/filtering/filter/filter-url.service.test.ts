@@ -62,7 +62,8 @@ describe('Filter URL service', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
-        addQueryParametersToUrl: (paramObject: QueryParamObject) => (testQueryParamObject = paramObject),
+        addQueryParametersToUrl: (paramObject: QueryParamObject) =>
+          (testQueryParamObject = { ...testQueryParamObject, ...paramObject }),
         getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
       })
     ]
@@ -359,6 +360,25 @@ describe('Filter URL service', () => {
 
     expect(testQueryParamObject).toEqual({
       filter: ['numberAttribute_neq_217', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
+    });
+  });
+
+  test('correctly gets filters and group by from url', () => {
+    testQueryParamObject = {
+      ...expectedQueryParamObject,
+      ['group-by']: ['field1,field2']
+    };
+    expect(spectator.service.getUrlFilters(attributes)).toEqual(filters);
+    expect(spectator.service.getUrlGroupBy()).toEqual(['field1', 'field2']);
+  });
+
+  test('correctly sets filters and group by in url', () => {
+    spectator.service.setUrlGroupBy(['field1', 'field2']);
+    spectator.service.setUrlFilters(filters);
+
+    expect(testQueryParamObject).toEqual({
+      ...expectedQueryParamObject,
+      ['group-by']: ['field1,field2']
     });
   });
 });
