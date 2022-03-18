@@ -69,9 +69,9 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBorderTriggerTemplate"
               ></ng-container>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
-              <ng-template #defaultMenuWithBorderTriggerTemplate
-                ><ht-icon
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ng-template #defaultMenuWithBorderTriggerTemplate>
+                <ht-icon
                   *ngIf="this.getPrefixIcon(selected)"
                   class="trigger-prefix-icon"
                   [icon]="this.getPrefixIcon(selected)"
@@ -111,14 +111,14 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
               ></ng-container>
-              <ng-template #defaultMenuWithBackgroundTriggerTemplate
-                ><ht-label
+              <ng-template #defaultMenuWithBackgroundTriggerTemplate>
+                <ht-label
                   class="trigger-label"
                   [label]="selected?.selectedLabel || selected?.label || this.placeholder"
                 >
-                </ht-label
-              ></ng-template>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+                </ht-label>
+              </ng-template>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
@@ -137,7 +137,7 @@ import { SelectSize } from './select-size';
             </ng-container>
             <ht-button
               class="clear-selected"
-              *ngIf="this.selected !== undefined"
+              *ngIf="this.showClearSelected && this.selected !== undefined"
               role="${ButtonRole.Primary}"
               display="${ButtonStyle.Text}"
               size="${ButtonSize.ExtraSmall}"
@@ -178,8 +178,8 @@ import { SelectSize } from './select-size';
             </div>
           </ng-template>
 
-          <ng-template #defaultSelectOptionTemplate let-item
-            ><div class="select-option-info">
+          <ng-template #defaultSelectOptionTemplate let-item>
+            <div class="select-option-info">
               <ht-icon
                 *ngIf="item.icon"
                 class="icon"
@@ -223,6 +223,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   @Input()
   public showBorder: boolean = false;
+
+  @Input()
+  public showClearSelected: boolean = true;
 
   @Input()
   public justify?: SelectJustify;
