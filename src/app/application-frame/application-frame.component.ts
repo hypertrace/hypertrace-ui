@@ -3,6 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { LayoutChangeService, TimeRange, TimeRangeService } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { UserTelemetryOrchestrationService } from '../shared/telemetry/user-telemetry-orchestration.service';
 @Component({
   selector: 'ht-application-frame',
@@ -30,7 +31,7 @@ export class ApplicationFrameComponent implements OnInit {
     private readonly userTelemetryOrchestrationService: UserTelemetryOrchestrationService,
     private readonly timeRangeService: TimeRangeService
   ) {
-    this.timeRangeHasInit$ = this.timeRangeService.getTimeRangeAndChanges();
+    this.timeRangeHasInit$ = this.timeRangeService.getTimeRangeAndChanges().pipe(take(1));
   }
 
   public ngOnInit(): void {

@@ -12,6 +12,7 @@ import {
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { PageTimeRangePreferenceService } from './page-time-range-preference.service';
 
 describe('Page time range preference service', () => {
@@ -20,7 +21,9 @@ describe('Page time range preference service', () => {
     service: PageTimeRangePreferenceService,
     providers: [
       mockProvider(NavigationService, {
-        getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
+        getCurrentActivatedRoute: jest
+          .fn()
+          .mockReturnValue({ snapshot: { data: { defaultTimeRange: defaultPageTimeRange } } })
       }),
       mockProvider(FeatureStateResolver, {
         getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
@@ -43,7 +46,11 @@ describe('Page time range preference service', () => {
         a: () => spectator.service.setTimeRangePreferenceForPage('foo', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getTimeRangePreferenceForPage('foo')).toBe('da', {
+      const recordedTimeRanges$ = spectator.service
+        .getTimeRangePreferenceForPage('foo')
+        .pipe(map(timeRangeResolver => timeRangeResolver()));
+
+      expectObservable(recordedTimeRanges$).toBe('da', {
         d: defaultPageTimeRange,
         a: timeRange
       });
@@ -52,7 +59,7 @@ describe('Page time range preference service', () => {
 
   test('Setting relative time range emits corresponding time range from preferences', () => {
     runFakeRxjs(({ expectObservable, cold }) => {
-      const timeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+      const timeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
       const spectator = serviceFactory({
         providers: [
           mockProvider(TimeRangeService, {
@@ -65,7 +72,11 @@ describe('Page time range preference service', () => {
         b: () => spectator.service.setTimeRangePreferenceForPage('bar', timeRange)
       }).subscribe(update => update());
 
-      expectObservable(spectator.service.getTimeRangePreferenceForPage('bar')).toBe('db', {
+      const recordedTimeRanges$ = spectator.service
+        .getTimeRangePreferenceForPage('bar')
+        .pipe(map(timeRangeResolver => timeRangeResolver()));
+
+      expectObservable(recordedTimeRanges$).toBe('db', {
         d: defaultPageTimeRange,
         b: timeRange
       });

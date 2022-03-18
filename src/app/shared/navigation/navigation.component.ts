@@ -12,7 +12,6 @@ import {
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-navigation',
@@ -25,7 +24,7 @@ import { shareReplay } from 'rxjs/operators';
         *htLetAsync="this.isCollapsed$ as isCollapsed"
         [collapsed]="isCollapsed"
         (collapsedChange)="this.onViewToggle($event)"
-        (navItemSelected)="this.setPageTimeRangeForSelectedNavItem($event)"
+        (navItemClick)="this.setPageTimeRangeForSelectedNavItem($event)"
         (activeItemChange)="this.updateDefaultTimeRangeIfUnset($event)"
       ></ht-navigation-list>
     </div>
@@ -97,7 +96,7 @@ export class NavigationComponent {
     );
     // Decorate the nav items with the corresponding time ranges, depending on the FF state.
     // The time ranges in nav items are streams that get the most recent value from page time range preference service
-    this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(navItems).pipe(shareReplay());
+    this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(navItems);
 
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }

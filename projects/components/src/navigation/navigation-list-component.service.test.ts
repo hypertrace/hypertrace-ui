@@ -38,7 +38,7 @@ describe('Navigation List Component Service', () => {
     }
   ];
 
-  const mockTimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  const mockTimeRangeResolver = () => new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
 
   const createService = createServiceFactory({
     service: NavigationListComponentService,
@@ -48,7 +48,7 @@ describe('Navigation List Component Service', () => {
         getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
       }),
       mockProvider(PageTimeRangePreferenceService, {
-        getTimeRangePreferenceForPage: jest.fn().mockReturnValue(of(mockTimeRange))
+        getTimeRangePreferenceForPage: jest.fn().mockReturnValue(of(mockTimeRangeResolver))
       })
     ]
   });
@@ -107,14 +107,16 @@ describe('Navigation List Component Service', () => {
             label: 'label-1',
             features: ['feature'],
             matchPaths: [''],
-            timeRange: mockTimeRange
+            timeRangeResolver: mockTimeRangeResolver,
+            pageLevelTimeRangeIsEnabled: true
           },
           {
             type: NavItemType.Link,
             icon: 'icon',
             label: 'label-2',
             matchPaths: [''],
-            timeRange: mockTimeRange
+            timeRangeResolver: mockTimeRangeResolver,
+            pageLevelTimeRangeIsEnabled: true
           },
           {
             type: NavItemType.Header,

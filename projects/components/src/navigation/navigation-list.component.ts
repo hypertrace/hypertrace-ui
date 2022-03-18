@@ -30,7 +30,7 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
-                (click)="this.navItemSelected.emit(item)"
+                (click)="this.navItemClick.emit(item)"
                 [config]="item"
                 [active]="item === activeItem"
                 [collapsed]="this.collapsed"
@@ -74,7 +74,7 @@ export class NavigationListComponent implements OnChanges {
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
   @Output()
-  public readonly navItemSelected: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+  public readonly navItemClick: EventEmitter<NavItemLinkConfig> = new EventEmitter();
 
   @Output()
   public readonly activeItemChange: EventEmitter<NavItemLinkConfig> = new EventEmitter();
@@ -91,6 +91,7 @@ export class NavigationListComponent implements OnChanges {
     if (changes.navItems) {
       this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
+      // Must remain subscribed to in template to maintain time range functionality for activeItemChange.
       this.activeItem$ = this.navigationService.navigation$.pipe(
         startWith(this.navigationService.getCurrentActivatedRoute()),
         map(() => {
