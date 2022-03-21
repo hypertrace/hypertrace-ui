@@ -1,7 +1,7 @@
 import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, RelativeTimeRange, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -30,6 +30,9 @@ describe('Service detail breadcrumb resolver', () => {
       }),
       mockProvider(EntityIconLookupService, {
         forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Service)
+      }),
+      mockProvider(TimeRangeService, {
+        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
       })
     ],
     imports: [
