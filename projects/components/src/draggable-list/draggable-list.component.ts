@@ -9,6 +9,9 @@ import {
   Output,
   QueryList
 } from '@angular/core';
+import { queryListAndChanges$ } from '@hypertrace/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DraggableItemComponent } from './draggable-item/draggable-item.component';
 
 @Component({
@@ -16,13 +19,18 @@ import { DraggableItemComponent } from './draggable-item/draggable-item.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./draggable-list.component.scss'],
   template: `
-    <div cdkDropList class="draggable-list" (cdkDropListDropped)="this.dropList($event)">
+    <div
+      class="draggable-list"
+      *ngIf="this.draggableItems$ | async as draggableItems"
+      cdkDropList
+      (cdkDropListDropped)="this.dropList($event, draggableItems)"
+    >
       <div
-        *ngFor="let draggableItem of this.draggableItems"
-        cdkDrag
+        *ngFor="let draggableItem of draggableItems"
         class="draggable-item"
-        [ngClass]="{ disabled: disabled || draggableItem.disabled }"
-        [cdkDragDisabled]="disabled || draggableItem.disabled"
+        [ngClass]="{ disabled: this.disabled || draggableItem.disabled }"
+        [cdkDragDisabled]="this.disabled || draggableItem.disabled"
+        cdkDrag
       >
         <ng-container *ngTemplateOutlet="draggableItem.content"></ng-container>
       </div>
@@ -39,14 +47,19 @@ export class DraggableListComponent<T> implements AfterContentInit {
   @ContentChildren(DraggableItemComponent)
   public draggableItemsRef!: QueryList<DraggableItemComponent<T>>;
 
-  public draggableItems: DraggableItemComponent<T>[] = [];
+  public draggableItems$!: Observable<DraggableItemComponent<T>[]>;
 
   public ngAfterContentInit(): void {
-    this.draggableItems = this.draggableItemsRef.toArray();
+    this.draggableItems$ = queryListAndChanges$(this.draggableItemsRef).pipe(
+      map(draggableItems => draggableItems.toArray())
+    );
   }
 
-  public dropList(event: CdkDragDrop<DraggableItemComponent<unknown>[]>): void {
-    moveItemInArray(this.draggableItems, event.previousIndex, event.currentIndex);
-    this.draggableListChange.emit(this.draggableItems.map(dragabbleItem => dragabbleItem.data!));
+  public dropList(
+    event: CdkDragDrop<DraggableItemComponent<unknown>[]>,
+    draggableItems: DraggableItemComponent<T>[]
+  ): void {
+    moveItemInArray(draggableItems, event.previousIndex, event.currentIndex);
+    this.draggableListChange.emit(draggableItems.map(dragabbleItem => dragabbleItem.data!));
   }
 }
