@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { queryListAndChanges$ } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DraggableItemComponent } from './draggable-item/draggable-item.component';
 
 @Component({
@@ -19,9 +19,14 @@ import { DraggableItemComponent } from './draggable-item/draggable-item.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./draggable-list.component.scss'],
   template: `
-    <div class="draggable-list" cdkDropList (cdkDropListDropped)="this.dropList($event)">
+    <div
+      class="draggable-list"
+      *ngIf="this.draggableItems$ | async as draggableItems"
+      cdkDropList
+      (cdkDropListDropped)="this.dropList($event, draggableItems)"
+    >
       <div
-        *ngFor="let draggableItem of this.draggableItems$ | async"
+        *ngFor="let draggableItem of draggableItems"
         class="draggable-item"
         [ngClass]="{ disabled: this.disabled || draggableItem.disabled }"
         [cdkDragDisabled]="this.disabled || draggableItem.disabled"
@@ -48,14 +53,14 @@ export class DraggableListComponent<T> implements AfterContentInit {
     this.draggableItems$ = queryListAndChanges$(this.draggableItemsRef).pipe(
       map(draggableItems => draggableItems.toArray())
     );
+    ``;
   }
 
-  public dropList(event: CdkDragDrop<DraggableItemComponent<unknown>[]>): void {
-    this.draggableItems$ = this.draggableItems$.pipe(
-      tap(draggableItems => {
-        moveItemInArray(draggableItems, event.previousIndex, event.currentIndex);
-        this.draggableListChange.emit(draggableItems.map(dragabbleItem => dragabbleItem.data!));
-      })
-    );
+  public dropList(
+    event: CdkDragDrop<DraggableItemComponent<unknown>[]>,
+    draggableItems: DraggableItemComponent<T>[]
+  ): void {
+    moveItemInArray(draggableItems, event.previousIndex, event.currentIndex);
+    this.draggableListChange.emit(draggableItems.map(dragabbleItem => dragabbleItem.data!));
   }
 }
