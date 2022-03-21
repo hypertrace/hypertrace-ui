@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { Band, CartesianSelectedData, Series } from '../../../public-api';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
+import { CartesianChartComponent } from './cartesian-chart.component';
 
 @Injectable({ providedIn: 'root' })
 export class ChartSyncService<TData> {
@@ -10,20 +10,23 @@ export class ChartSyncService<TData> {
 
   public mouseLocationChange(
     data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
-    groupId?: string
+    groupId?: string,
+    chartId?: CartesianChartComponent<TData>
   ): void {
     this.locationChangeSubject.next({
       groupId: groupId,
-      locationData: data as MouseLocationData<TData, Series<TData> | Band<TData>>[]
+      locationData: data as MouseLocationData<TData, Series<TData> | Band<TData>>[],
+      chartId: chartId
     });
   }
 
-  public getLocationChangesForGroup(groupId: string): Observable<ChartHoverData<TData>> {
-    return this.locationChangeSubject.pipe(filter(data => data.groupId === groupId));
+  public getLocationChangesForGroup(): Observable<ChartHoverData<TData>> {
+    return this.locationChangeSubject;
   }
 }
 
 interface ChartHoverData<TData> {
   groupId?: string;
   locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[];
+  chartId?: CartesianChartComponent<TData>;
 }
