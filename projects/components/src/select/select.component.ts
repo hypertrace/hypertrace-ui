@@ -234,9 +234,6 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public highlightSelected: boolean = true;
 
   @Input()
-  public showClearSelected: boolean = false;
-
-  @Input()
   public searchMode: SelectSearchMode = SelectSearchMode.Disabled;
 
   @Output()
