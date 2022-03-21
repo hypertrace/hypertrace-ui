@@ -1,9 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { PreferenceService } from '@hypertrace/common';
-import { NavigationListService, NavItemConfig, NavItemType } from '@hypertrace/components';
+import { FixedTimeRange, PreferenceService, RelativeTimeRange, TimeRangeService } from '@hypertrace/common';
+import {
+  NavigationListComponentService,
+  NavigationListService,
+  NavItemConfig,
+  NavItemLinkConfig,
+  NavItemType
+} from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -13,17 +20,21 @@ import { Observable } from 'rxjs';
   template: `
     <div class="navigation">
       <ht-navigation-list
-        [navItems]="this.navItems"
+        [navItems]="this.navItems$ | async"
         *htLetAsync="this.isCollapsed$ as isCollapsed"
         [collapsed]="isCollapsed"
         (collapsedChange)="this.onViewToggle($event)"
+        (navItemClick)="this.setPageTimeRangeForSelectedNavItem($event)"
+        (activeItemChange)="this.updateDefaultTimeRangeIfUnset($event)"
       ></ht-navigation-list>
     </div>
   `
 })
 export class NavigationComponent {
   private static readonly COLLAPSED_PREFERENCE: string = 'app-navigation.collapsed';
-  public readonly navItems: NavItemConfig[];
+
+  public navItems$?: Observable<NavItemConfig[]>;
+
   public readonly isCollapsed$: Observable<boolean>;
 
   private readonly navItemDefinitions: NavItemConfig[] = [
@@ -76,12 +87,37 @@ export class NavigationComponent {
   public constructor(
     private readonly navigationListService: NavigationListService,
     private readonly preferenceService: PreferenceService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly navListComponentService: NavigationListComponentService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly timeRangeService: TimeRangeService
   ) {
-    this.navItems = this.navItemDefinitions.map(definition =>
+    const navItems = this.navItemDefinitions.map(definition =>
       this.navigationListService.decorateNavItem(definition, this.activatedRoute)
     );
+    // Decorate the nav items with the corresponding time ranges, depending on the FF state.
+    // The time ranges in nav items are streams that get the most recent value from page time range preference service
+    this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(navItems);
+
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
+  }
+
+  public setPageTimeRangeForSelectedNavItem(navItemLink: NavItemLinkConfig): void {
+    if (!isNil(navItemLink.timeRangeResolver) && navItemLink.pageLevelTimeRangeIsEnabled) {
+      const timeRange = navItemLink.timeRangeResolver();
+      if (timeRange instanceof FixedTimeRange) {
+        this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
+      } else if (timeRange instanceof RelativeTimeRange) {
+        this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+      }
+    }
+  }
+
+  public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig): void {
+    // Initialize the time range service
+    // Depending on FF status, the TR will be either global or page level for the init
+    if (!this.timeRangeService.isInitialized()) {
+      this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver!());
+    }
   }
 
   public onViewToggle(collapsed: boolean): void {

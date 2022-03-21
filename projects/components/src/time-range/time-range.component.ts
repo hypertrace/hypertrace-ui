@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, NgZone, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
   FixedTimeRange,
@@ -24,7 +24,7 @@ import { PopoverRef } from '../popover/popover-ref';
         <ht-popover (popoverOpen)="this.onPopoverOpen($event)" [closeOnNavigate]="false">
           <ht-popover-trigger>
             <div class="trigger">
-              <ht-icon class="trigger-icon" icon="${IconType.Time}" size="${IconSize.Medium}"></ht-icon>
+              <ht-icon class="trigger-icon" icon="${IconType.Calendar}" size="${IconSize.Medium}"></ht-icon>
               <ht-label class="trigger-label" [label]="timeRange.toDisplayString()"></ht-label>
               <ht-icon class="trigger-caret" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
             </div>
@@ -52,14 +52,13 @@ import { PopoverRef } from '../popover/popover-ref';
           </ht-popover-content>
         </ht-popover>
       </div>
-
       <ht-button
         *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         class="refresh"
         [ngClass]="refreshButton.isEmphasized ? 'emphasized' : ''"
         [label]="refreshButton.text$ | async"
         icon="${IconType.Refresh}"
-        size="${ButtonSize.Medium}"
+        size="${ButtonSize.Small}"
         [role]="refreshButton.role"
         (click)="refreshButton.onClick()"
       >
@@ -75,6 +74,9 @@ export class TimeRangeComponent {
 
   public showCustom: boolean = false;
 
+  @Output()
+  public readonly timeRangeSelected: EventEmitter<TimeRange> = new EventEmitter();
+
   public constructor(private readonly timeRangeService: TimeRangeService, private readonly ngZone: NgZone) {}
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
@@ -88,10 +90,12 @@ export class TimeRangeComponent {
 
   public setToRelativeTimeRange(timeRange: RelativeTimeRange): void {
     this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+    this.timeRangeSelected.emit(timeRange);
     this.popoverRef!.close();
   }
 
   public setToFixedTimeRange(timeRange: FixedTimeRange): void {
+    this.timeRangeSelected.emit(timeRange);
     this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
     this.popoverRef!.close();
   }
@@ -106,7 +110,7 @@ export class TimeRangeComponent {
       return concat(
         of({
           text$: of('Refresh'),
-          role: ButtonRole.Secondary,
+          role: ButtonRole.Tertiary,
           isEmphasized: false,
           onClick: () => this.onRefresh(timeRange)
         }),

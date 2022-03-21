@@ -74,7 +74,7 @@ describe('API Trace detail data source model', () => {
       expect.objectContaining({
         requestType: TRACE_GQL_REQUEST,
         traceId: 'test',
-        spanLimit: 0,
+        spanLimit: 1000,
         timestamp: undefined,
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
@@ -94,7 +94,7 @@ describe('API Trace detail data source model', () => {
       expect.objectContaining({
         requestType: TRACE_GQL_REQUEST,
         traceId: 'test',
-        spanLimit: 0,
+        spanLimit: 1000,
         timestamp: new Date(1576364117792),
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
