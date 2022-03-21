@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import {
+  ApplicationFeature,
   Breadcrumb,
   isNonEmptyString,
   NavigationService,
@@ -23,7 +24,49 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <div [ngClass]="this.contentAlignment">
+      <!--      Code Path 1-->
+      <div
+        *htIfFeature="'${ApplicationFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
+        class="column-alignment"
+      >
+        <div class="primary-row">
+          <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
+
+          <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
+            <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
+          </ng-container>
+          <ht-page-time-range class="time-range"></ht-page-time-range>
+        </div>
+        <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
+          <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
+        </ng-container>
+      </div>
+
+      <!--      Code Path 2-->
+      <ng-template #noTimeRangeHeaderLayoutTemplate>
+        <div [ngClass]="this.contentAlignment">
+          <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
+
+          <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
+        </div>
+      </ng-template>
+
+      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
+        <ht-navigable-tab
+          *ngFor="let tab of this.tabs"
+          [path]="tab.path"
+          [hidden]="tab.hidden"
+          [features]="tab.features"
+        >
+          {{ tab.label }}
+        </ht-navigable-tab>
+      </ht-navigable-tab-group>
+
+      <ng-template #projectedContentTemplate>
+        <ng-content></ng-content>
+      </ng-template>
+
+      <ng-template #breadCrumbContainerTemplate>
         <div class="breadcrumb-container">
           <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
           <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
@@ -39,20 +82,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
             <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
           </div>
         </div>
-
-        <ng-content></ng-content>
-      </div>
-
-      <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
-        <ht-navigable-tab
-          *ngFor="let tab of this.tabs"
-          [path]="tab.path"
-          [hidden]="tab.hidden"
-          [features]="tab.features"
-        >
-          {{ tab.label }}
-        </ht-navigable-tab>
-      </ht-navigable-tab-group>
+      </ng-template>
     </div>
   `
 })

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -39,6 +39,7 @@ import {
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
                 [navItemVewStyle]="this.navVewStyle"
+                (click)="this.navItemClick.emit(item)"
                 [config]="item"
                 [active]="item === activeItem"
                 [collapsed]="this.collapsed"
@@ -93,6 +94,12 @@ export class NavigationListComponent implements OnChanges {
   @Input()
   public readonly navVewStyle?: NavViewStyle;
 
+  @Output()
+  public readonly navItemClick: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+
+  @Output()
+  public readonly activeItemChange: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public constructor(
@@ -101,12 +108,21 @@ export class NavigationListComponent implements OnChanges {
     private readonly navListComponentService: NavigationListComponentService
   ) {}
 
-  public ngOnChanges(): void {
-    this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
-    this.activeItem$ = this.navigationService.navigation$.pipe(
-      startWith(this.navigationService.getCurrentActivatedRoute()),
-      map(() => this.findActiveItem(this.navItems))
-    );
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.navItems) {
+      this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
+
+      // Must remain subscribed to in template to maintain time range functionality for activeItemChange.
+      this.activeItem$ = this.navigationService.navigation$.pipe(
+        startWith(this.navigationService.getCurrentActivatedRoute()),
+        map(() => {
+          const activeItem = this.findActiveItem(this.navItems);
+          this.activeItemChange.emit(activeItem);
+
+          return activeItem;
+        })
+      );
+    }
   }
 
   public toggleView(): void {
