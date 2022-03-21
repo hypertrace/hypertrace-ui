@@ -24,18 +24,24 @@ export class FilterUrlService {
   ) {}
 
   public getUrlFilteringStateChanges$(attributes: FilterAttribute[]): Observable<UrlFilteringState> {
-    return this.navigationService.navigation$.pipe(
-      map(() => ({
-        filters: this.getUrlFilters(attributes),
-        groupBy: this.getUrlGroupBy()
-      }))
-    );
+    return this.navigationService.navigation$.pipe(map(() => this.getUrlFilteringState(attributes)));
   }
 
-  public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: string[]): void {
+  public getUrlFilteringState(attributes: FilterAttribute[]): UrlFilteringState {
+    const attributeMap = new Map(attributes.map(attribute => [attribute.name, attribute]));
+
+    return {
+      filters: this.getUrlFilters(attributes),
+      groupBy: this.getUrlGroupBy()
+        .map(attributeName => attributeMap.get(attributeName))
+        .filter((attribute): attribute is FilterAttribute => attribute !== undefined)
+    };
+  }
+
+  public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: FilterAttribute[]): void {
     this.navigationService.addQueryParametersToUrl({
       [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
-      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.toString()]
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.map(g => g.name).toString()]
     });
   }
 
@@ -138,5 +144,5 @@ export class FilterUrlService {
 
 export interface UrlFilteringState {
   filters: Filter[];
-  groupBy: string[];
+  groupBy: FilterAttribute[];
 }
