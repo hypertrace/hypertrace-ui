@@ -42,7 +42,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       requestType: TRACE_GQL_REQUEST,
       traceType: this.trace[traceTypeKey],
       traceId: this.trace[traceIdKey],
-      spanLimit: 0,
+      spanLimit: 1000,
       timestamp: this.dateCoercer.coerce(this.startTime ?? this.trace.startTime),
       traceProperties: this.getTraceAttributes().map(attribute =>
         this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
