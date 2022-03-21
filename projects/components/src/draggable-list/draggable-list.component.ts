@@ -53,7 +53,6 @@ export class DraggableListComponent<T> implements AfterContentInit {
     this.draggableItems$ = queryListAndChanges$(this.draggableItemsRef).pipe(
       map(draggableItems => draggableItems.toArray())
     );
-    ``;
   }
 
   public dropList(
