@@ -225,7 +225,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public showBorder: boolean = false;
 
   @Input()
-  public showClearSelected: boolean = true;
+  public showClearSelected: boolean = false;
 
   @Input()
   public justify?: SelectJustify;
