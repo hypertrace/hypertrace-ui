@@ -20,7 +20,7 @@ import {
   styleUrls: ['./navigation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navVewStyle ?? '']">
+    <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navViewStyle ?? '']">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
         <ng-content></ng-content>
         <ng-container *ngFor="let item of this.navItems; let id = index">
@@ -38,7 +38,7 @@ import {
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
-                [navItemVewStyle]="this.navVewStyle"
+                [navItemVewStyle]="this.navViewStyle"
                 (click)="this.navItemClick.emit(item)"
                 [config]="item"
                 [active]="item === activeItem"
@@ -92,7 +92,7 @@ export class NavigationListComponent implements OnChanges {
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
   @Input()
-  public readonly navVewStyle?: NavViewStyle;
+  public readonly navViewStyle?: NavViewStyle;
 
   @Output()
   public readonly navItemClick: EventEmitter<NavItemLinkConfig> = new EventEmitter();
