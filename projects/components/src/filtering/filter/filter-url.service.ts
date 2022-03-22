@@ -23,6 +23,28 @@ export class FilterUrlService {
     private readonly filterParserLookupService: FilterParserLookupService
   ) {}
 
+  public getUrlFilteringStateChanges$(attributes: FilterAttribute[]): Observable<UrlFilteringState> {
+    return this.navigationService.navigation$.pipe(map(() => this.getUrlFilteringState(attributes)));
+  }
+
+  public getUrlFilteringState(attributes: FilterAttribute[]): UrlFilteringState {
+    const attributeMap = new Map(attributes.map(attribute => [attribute.name, attribute]));
+
+    return {
+      filters: this.getUrlFilters(attributes),
+      groupBy: this.getUrlGroupBy()
+        .map(attributeName => attributeMap.get(attributeName))
+        .filter((attribute): attribute is FilterAttribute => attribute !== undefined)
+    };
+  }
+
+  public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: FilterAttribute[]): void {
+    this.navigationService.addQueryParametersToUrl({
+      [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()]
+    });
+  }
+
   public getUrlFiltersChanges$(attributes: FilterAttribute[]): Observable<Filter[]> {
     return this.navigationService.navigation$.pipe(map(() => this.getUrlFilters(attributes)));
   }
@@ -118,4 +140,9 @@ export class FilterUrlService {
       })
       .find(splitFilter => splitFilter !== undefined);
   }
+}
+
+export interface UrlFilteringState {
+  filters: Filter[];
+  groupBy: FilterAttribute[];
 }

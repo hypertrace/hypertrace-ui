@@ -321,12 +321,12 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     }
 
     this.setSelection(item.value);
-    this.selectedChange.emit(this.selected);
-    this.propagateValueChangeToFormControl(this.selected);
+    this.propagateValue();
   }
 
   public onClearSelected(): void {
     this.setSelection();
+    this.propagateValue();
   }
 
   private setSelection(value?: V): void {
@@ -369,6 +369,11 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public setDisabledState(isDisabled?: boolean): void {
     this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValue(): void {
+    this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private propagateValueChangeToFormControl(value: V | undefined): void {
