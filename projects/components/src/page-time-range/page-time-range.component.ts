@@ -2,13 +2,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { LoggerService, NavigationService, PageTimeRangePreferenceService, TimeRange } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
+import { PopoverRelativePositionLocation } from '../popover/popover';
 
 @Component({
   selector: 'ht-page-time-range',
-  template: ` <ht-time-range (timeRangeSelected)="this.onTimeRangeSelected($event)"></ht-time-range> `,
+  template: `
+    <ht-time-range
+      [dropdownLocation]="this.dropdownLocation"
+      (timeRangeSelected)="this.onTimeRangeSelected($event)"
+    ></ht-time-range>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageTimeRangeComponent {
+  public readonly dropdownLocation: PopoverRelativePositionLocation[] = [
+    PopoverRelativePositionLocation.BelowRightAligned
+  ];
+
   public constructor(
     private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService,
     private readonly navigationService: NavigationService,

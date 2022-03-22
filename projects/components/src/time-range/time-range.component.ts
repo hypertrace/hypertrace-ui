@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, NgZone, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
   FixedTimeRange,
@@ -12,6 +12,7 @@ import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonSize } from '../button/button';
 import { IconSize } from '../icon/icon-size';
+import { PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 
 @Component({
@@ -21,7 +22,11 @@ import { PopoverRef } from '../popover/popover-ref';
   template: `
     <div class="time-range" *ngIf="this.timeRange$ | async as timeRange">
       <div class="time-range-selector">
-        <ht-popover (popoverOpen)="this.onPopoverOpen($event)" [closeOnNavigate]="false">
+        <ht-popover
+          (popoverOpen)="this.onPopoverOpen($event)"
+          [closeOnNavigate]="false"
+          [locationPreferences]="this.dropdownLocation"
+        >
           <ht-popover-trigger>
             <div class="trigger">
               <ht-icon class="trigger-icon" icon="${IconType.Calendar}" size="${IconSize.Medium}"></ht-icon>
@@ -67,6 +72,12 @@ import { PopoverRef } from '../popover/popover-ref';
   `
 })
 export class TimeRangeComponent {
+  @Input()
+  public dropdownLocation: PopoverRelativePositionLocation[] = [
+    PopoverRelativePositionLocation.BelowLeftAligned,
+    PopoverRelativePositionLocation.BelowRightAligned
+  ];
+
   public timeRange$: Observable<TimeRange> = this.timeRangeService.getTimeRangeAndChanges();
 
   private popoverRef: PopoverRef | undefined;
