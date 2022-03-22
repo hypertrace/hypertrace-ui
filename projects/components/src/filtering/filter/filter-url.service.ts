@@ -41,7 +41,7 @@ export class FilterUrlService {
   public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: FilterAttribute[]): void {
     this.navigationService.addQueryParametersToUrl({
       [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
-      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.map(g => g.name).toString()]
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()]
     });
   }
 
