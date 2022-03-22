@@ -13,7 +13,6 @@ import {
 import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
 import { defaults } from 'lodash-es';
-import { filter } from 'rxjs/operators';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -126,12 +125,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
     if (this.groupId !== undefined) {
       this.subscriptionLifeCycle.add(
-        this.chartSyncService
-          ?.getLocationChangesForGroup(this)
-          .pipe(filter(data => data.groupId === this.groupId))
-          .subscribe(data => {
-            this.chart?.showCrosshair(data.locationData);
-          })
+        this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
+          this.chart?.showCrosshair(data);
+        })
       );
     }
 
