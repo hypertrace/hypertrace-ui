@@ -8,14 +8,14 @@ import { PopoverRelativePositionLocation } from '../popover/popover';
   selector: 'ht-page-time-range',
   template: `
     <ht-time-range
-      [dropdownLocation]="this.dropdownLocation"
+      [dropdownLocationPreference]="this.dropdownLocationPreference"
       (timeRangeSelected)="this.onTimeRangeSelected($event)"
     ></ht-time-range>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageTimeRangeComponent {
-  public readonly dropdownLocation: PopoverRelativePositionLocation[] = [
+  public readonly dropdownLocationPreference: PopoverRelativePositionLocation[] = [
     PopoverRelativePositionLocation.BelowRightAligned
   ];
 
