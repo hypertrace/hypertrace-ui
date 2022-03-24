@@ -13,7 +13,7 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
-        [ngClass]="[this.active ? 'active' : '', this.navItemVewStyle ?? '']"
+        [ngClass]="[this.active ? 'active' : '', this.navItemViewStyle ?? '']"
       >
         <ht-icon
           class="icon"
@@ -55,7 +55,7 @@ export class NavItemComponent {
   public collapsed: boolean = true;
 
   @Input()
-  public readonly navItemVewStyle?: NavViewStyle;
+  public readonly navItemViewStyle?: NavViewStyle;
 
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
     navType: NavigationParamsType.InApp,

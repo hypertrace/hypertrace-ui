@@ -38,7 +38,7 @@ import {
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
-                [navItemVewStyle]="this.navViewStyle"
+                [navItemViewStyle]="this.navViewStyle"
                 (click)="this.navItemClick.emit(item)"
                 [config]="item"
                 [active]="item === activeItem"
