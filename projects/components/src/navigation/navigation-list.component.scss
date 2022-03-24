@@ -110,6 +110,10 @@
   &:not(.navigation-dark) {
     background: white;
 
+    .content {
+      padding: 18px 12px;
+    }
+
     .content .nav-header .label {
       @include overline($gray-9);
     }
