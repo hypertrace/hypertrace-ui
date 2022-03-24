@@ -25,6 +25,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.ArrowUpLeft, url: `${iconsRootPath}/arrow-up-left.svg` },
         { key: IconType.ArrowUpRight, url: `${iconsRootPath}/arrow-up-right.svg` },
         { key: IconType.Calls, url: `${iconsRootPath}/calls.svg` },
+        { key: IconType.Calendar, url: `${iconsRootPath}/calendar-dates.svg` },
         { key: IconType.CheckCircle, url: `${iconsRootPath}/check-circle.svg` },
         { key: IconType.CheckCircleFill, url: `${iconsRootPath}/check-circle-fill.svg` },
         { key: IconType.ChevronDown, url: `${iconsRootPath}/chevron-down.svg` },

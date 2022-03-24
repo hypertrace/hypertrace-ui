@@ -1,6 +1,7 @@
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
@@ -201,6 +202,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   private propagateControlValueChange?: (value: V[] | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: V[] | undefined) => void;
 
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
+
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
@@ -265,6 +268,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public writeValue(value?: V[]): void {
     this.setSelection(value ?? []);
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value: V[] | undefined) => void): void {
