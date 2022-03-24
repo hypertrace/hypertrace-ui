@@ -22,7 +22,8 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
       case FilterAttributeType.Number:
         return this.parseNumberArrayValue(splitFilter.rhs);
       case FilterAttributeType.Boolean: // Unsupported
-      case FilterAttributeType.StringArray: // Unsupported
+      case FilterAttributeType.StringArray:
+        return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
       default:
