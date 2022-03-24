@@ -55,13 +55,14 @@ import {
 
       <div class="footer" *ngIf="this.footerItems">
         <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
-          <ht-icon class="footer-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
+          <ht-icon class="nav-group-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
         </div>
 
         <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
-          <ht-label class="label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
+          <ht-label class="nav-group-label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
         </div>
 
+        <hr class="nav-divider" />
         <div *ngFor="let footerItem of footerItems" class="footer-item">
           <ht-link class="link" [paramsOrUrl]="footerItem.url">
             <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
