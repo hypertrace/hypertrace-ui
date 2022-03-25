@@ -166,7 +166,7 @@ describe('Sheet Overlay component', () => {
       }
     });
 
-    expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toBe({
+    expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toEqual({
       navType: NavigationParamsType.External,
       url: '/test',
       windowHandling: ExternalNavigationWindowHandling.NewWindow
