@@ -13,7 +13,7 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
-        [ngClass]="[this.active ? 'active' : '', this.navItemViewStyle ?? '']"
+        [ngClass]="[this.active ? 'active' : '', this.navItemViewStyle ?? '', this.collapsed ? 'collapsed' : '']"
       >
         <ht-icon
           class="icon"

@@ -15,6 +15,10 @@
   padding-left: 16px;
   padding-right: 16px;
 
+  &.collapsed {
+    border-radius: 0;
+  }
+
   .label-container {
     flex-grow: 1;
     margin-left: 14px;

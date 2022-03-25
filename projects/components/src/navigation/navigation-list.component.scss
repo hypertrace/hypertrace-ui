@@ -105,6 +105,10 @@
     .footer .nav-divider {
       margin: 8px auto;
     }
+
+    .content {
+      padding: 18px 0 12px 0;
+    }
   }
 
   &:not(.navigation-dark) {
@@ -112,6 +116,11 @@
 
     .content {
       padding: 18px 12px;
+    }
+    &:not(.expanded) {
+      .content {
+        padding: 18px 12px;
+      }
     }
 
     .content .nav-header .label {
