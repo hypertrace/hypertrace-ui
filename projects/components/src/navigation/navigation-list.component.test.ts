@@ -144,4 +144,52 @@ describe('Navigation List Component', () => {
     expect(spectator.queryAll('.nav-header')).toHaveLength(1);
     expect(spectator.queryAll('.nav-header .label')[0]).toHaveText('header 1');
   });
+
+  test('should render nav group label and icon if provided', () => {
+    const navItems: NavItemConfig[] = [
+      {
+        type: NavItemType.Header,
+        label: 'header 1',
+        isVisible$: of(true)
+      },
+      {
+        type: NavItemType.Link,
+        icon: 'icon',
+        label: 'label',
+        matchPaths: ['']
+      }
+    ];
+    const footerItems: FooterItemConfig[] = [
+      {
+        url: 'http://test',
+        label: 'Footer item',
+        icon: 'icon'
+      }
+    ];
+    const navGroup = {
+      label: 'TEST LABEL',
+      icon: IconType.StatusCode,
+      displayNavList: true,
+      navItems: navItems
+    };
+    spectator = createHost(
+      `<ht-navigation-list [navGroup]="navGroup" [navItems]="navItems" [footerItems]="footerItems"></ht-navigation-list>`,
+      {
+        hostProps: { navItems: navItems, navGroup: navGroup, footerItems: footerItems },
+        providers: [
+          mockProvider(ActivatedRoute, activatedRoute),
+          mockProvider(NavigationListComponentService, {
+            resolveFeaturesAndUpdateVisibilityForNavItems: jest.fn().mockReturnValue(navItems)
+          }),
+          mockProvider(NavigationService, {
+            navigation$: EMPTY,
+            navigateWithinApp: jest.fn(),
+            getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute))
+          })
+        ]
+      }
+    );
+    expect(spectator.query('.nav-group-icon')).toExist();
+    expect(spectator.query('.nav-group-label')).toExist();
+  });
 });

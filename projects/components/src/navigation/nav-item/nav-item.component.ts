@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
-import { NavItemLinkConfig } from '../navigation.config';
+import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
 
 @Component({
   selector: 'ht-nav-item',
@@ -13,7 +13,7 @@ import { NavItemLinkConfig } from '../navigation.config';
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
-        [ngClass]="{ active: this.active }"
+        [ngClass]="[this.active ? 'active' : '', this.navItemViewStyle ?? '', this.collapsed ? 'collapsed' : '']"
       >
         <ht-icon
           class="icon"
@@ -53,6 +53,9 @@ export class NavItemComponent {
 
   @Input()
   public collapsed: boolean = true;
+
+  @Input()
+  public readonly navItemViewStyle?: NavViewStyle;
 
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
     navType: NavigationParamsType.InApp,
