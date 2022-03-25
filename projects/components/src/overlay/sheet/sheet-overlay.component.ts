@@ -19,7 +19,10 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
           <div *ngIf="this.showHeader" class="header">
             <h3 class="header-title">{{ sheetTitle }}</h3>
             <div class="action-buttons">
-              <ht-open-in-new-tab *ngIf="this.navigationParams" [paramsOrUrl]="this.navigationParams"></ht-open-in-new-tab>
+              <ht-open-in-new-tab
+                *ngIf="this.navigationParams"
+                [paramsOrUrl]="this.navigationParams"
+              ></ht-open-in-new-tab>
               <ht-button
                 class="close-button"
                 icon="${IconType.CloseCircle}"
@@ -29,7 +32,6 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
               >
               </ht-button>
             </div>
-
           </div>
           <div class="content-wrapper">
             <div class="content">

@@ -177,5 +177,5 @@ describe('Sheet Overlay component', () => {
     spectator = createConfiguredHost();
 
     expect(spectator.query(OpenInNewTabComponent)).not.toExist();
-  })
+  });
 });
