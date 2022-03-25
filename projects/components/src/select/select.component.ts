@@ -16,6 +16,7 @@ import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimple
 import { isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
@@ -134,6 +135,16 @@ import { SelectSize } from './select-size';
               </ht-event-blocker>
               <ht-divider class="divider"></ht-divider>
             </ng-container>
+            <ht-button
+              class="clear-selected"
+              *ngIf="this.selected !== undefined"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              size="${ButtonSize.ExtraSmall}"
+              label="Clear Selected"
+              (click)="this.onClearSelected()"
+            ></ht-button>
+
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
@@ -309,6 +320,10 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     this.setSelection(item.value);
     this.selectedChange.emit(this.selected);
     this.propagateValueChangeToFormControl(this.selected);
+  }
+
+  public onClearSelected(): void {
+    this.setSelection();
   }
 
   private setSelection(value?: V): void {
