@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TimeUnit } from './../../../public-api';
-import { TimeDuration, UnitStringType } from './../../../public-api';
+import { TimeDuration, TimeUnit, UnitStringType } from './../../../public-api';
 import { durationFormatter } from './duration-formatter';
 
 
@@ -17,6 +16,6 @@ export class DisplayDurationPipe implements PipeTransform {
     return durationFormatter(millis);
   }
 
-    return new TimeDuration(millis!, TimeUnit.Millisecond).toMultiUnitString(TimeUnit.Second, true, UnitStringType.Long);
+    return new TimeDuration(millis, TimeUnit.Millisecond).toMultiUnitString(TimeUnit.Second, true, UnitStringType.Long);
   }
 }
