@@ -80,10 +80,12 @@
       }
 
       .mat-radio-container .mat-radio-outer-circle {
+        cursor: not-allowed;
         background: $gray-1;
       }
 
       .radio-button-label {
+        cursor: not-allowed;
         color: $gray-5;
       }
     }
