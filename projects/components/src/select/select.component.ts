@@ -341,7 +341,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
       return undefined;
     }
 
-    return this.items.find(item => item.value === value);
+    return this.items.find(item => isEqual(item.value, value));
   }
 
   public getStyleClassesForSelectItem(size: SelectSize, item: SelectOptionComponent<V>): string[] {
