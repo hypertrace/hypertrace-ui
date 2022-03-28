@@ -1,7 +1,7 @@
 @import 'font';
 
 .duration-cell {
-  .duration-text{
+  .duration-text {
     @include ellipsis-overflow();
     @include body-1-regular();
   }

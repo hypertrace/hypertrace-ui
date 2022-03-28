@@ -23,7 +23,6 @@ describe('Duration table cell renderer component', () => {
   });
 
   test('Should render duration text', () => {
-
     const spectator = buildComponent();
 
     expect(spectator.query('.duration-cell')).toExist();
