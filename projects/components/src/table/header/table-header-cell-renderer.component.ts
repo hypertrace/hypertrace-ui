@@ -199,8 +199,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     return this.indeterminateRowsSelected
       ? 'Some rows are selected'
       : this.allRowsSelected
-      ? 'All rows in the current page are selected'
-      : 'None of the rows in the current page are selected';
+      ? 'All rows in the table are selected'
+      : 'None of the rows in the table are selected';
   }
 
   private buildClasses(): string[] {
