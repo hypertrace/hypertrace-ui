@@ -47,3 +47,14 @@ export const enum NavItemType {
   Divider = 'divider',
   Footer = 'footer'
 }
+
+export interface NavItemGroup {
+  label: string;
+  icon: string;
+  navItems: NavItemConfig[];
+  displayNavList: boolean;
+}
+
+export const enum NavViewStyle {
+  DarkViewStyleClass = 'navigation-dark'
+}
