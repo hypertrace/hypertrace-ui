@@ -18,6 +18,7 @@ import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
 import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
+import { DurationTableCellRendererComponent } from './data-renderers/duration/duration-table-cell-renderer.component';
 import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
@@ -74,7 +75,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     StringArrayTableCellRendererComponent,
     StringEnumTableCellRendererComponent,
     TextWithCopyActionTableCellRendererComponent,
-    RelativeTimestampTableCellRendererComponent
+    RelativeTimestampTableCellRendererComponent,
+    DurationTableCellRendererComponent
   ],
   providers: [
     {
@@ -91,7 +93,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         StringArrayTableCellRendererComponent,
         StringEnumTableCellRendererComponent,
         TextWithCopyActionTableCellRendererComponent,
-        RelativeTimestampTableCellRendererComponent
+        RelativeTimestampTableCellRendererComponent,
+        DurationTableCellRendererComponent
       ],
       multi: true
     },
