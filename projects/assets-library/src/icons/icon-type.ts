@@ -97,6 +97,7 @@ export const enum IconType {
   Refresh = 'refresh',
   Remove = 'remove',
   RemoveCircle = 'remove_circle',
+  Restore = 'restore',
   Search = 'svg:search',
   Settings = 'settings',
   Share = 'share',
