@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
 import { ToggleItem } from '@hypertrace/components';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
@@ -122,8 +122,10 @@ export class SpanDetailComponent implements OnChanges {
 
   public tabs: ToggleItem<SpanDetailTab>[] = [];
 
-  private readonly activeTabSubject = new BehaviorSubject<ToggleItem<SpanDetailTab> | undefined>(undefined);
-  public readonly activeTab$ = this.activeTabSubject.asObservable();
+  private readonly activeTabSubject: BehaviorSubject<ToggleItem<SpanDetailTab> | undefined> = new BehaviorSubject<
+    ToggleItem<SpanDetailTab> | undefined
+  >(undefined);
+  public readonly activeTab$: Observable<ToggleItem<SpanDetailTab> | undefined> = this.activeTabSubject.asObservable();
 
   private readonly templateSubject: BehaviorSubject<TemplateRef<unknown> | undefined> = new BehaviorSubject<
     TemplateRef<unknown> | undefined
@@ -158,7 +160,7 @@ export class SpanDetailComponent implements OnChanges {
   public tabChange(tab: ToggleItem<SpanDetailTab>): void {
     this.activeTabLabelChange.emit(tab.value);
     this.activeTabSubject.next(tab);
-    if (tab.value) {
+    if (!isNil(tab.value)) {
       const template = this.getTemplateForTab(tab.value);
       if (template) {
         this.templateSubject.next(template);

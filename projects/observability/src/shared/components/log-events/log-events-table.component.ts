@@ -41,7 +41,7 @@ export const enum LogEventsTableViewType {
         <ht-list-view
           [records]="this.getLogEventAttributeRecords | htMemoize: row.attributes"
           [header]="this.header"
-          [display]="'${ListViewDisplay.Plain}'"
+          display="${ListViewDisplay.Plain}"
           data-sensitive-pii
         ></ht-list-view>
       </div>

@@ -23,7 +23,7 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
           <span>{{ this.header.valueLabel }}</span>
         </div>
       </div>
-      <div class="data-row" [class]="this.display.toLowerCase()" *ngFor="let record of this.records">
+      <div class="data-row" [class]="this.display" *ngFor="let record of this.records">
         <div class="key">
           <ng-container
             *ngTemplateOutlet="
@@ -72,6 +72,6 @@ export interface ListViewRecord {
 }
 
 export enum ListViewDisplay {
-  Plain = 'PLAIN',
-  Striped = 'STRIPED'
+  Plain = 'plain',
+  Striped = 'striped'
 }

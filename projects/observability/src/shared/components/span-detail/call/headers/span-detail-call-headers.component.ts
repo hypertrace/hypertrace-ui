@@ -13,7 +13,7 @@ import { EMPTY, Observable, of } from 'rxjs';
       <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container" data-sensitive-pii>
         <ng-container *htLoadAsync="this.records$ as records">
-          <ht-list-view [records]="records" [display]="'${ListViewDisplay.Plain}'"></ht-list-view>
+          <ht-list-view [records]="records" display="${ListViewDisplay.Plain}"></ht-list-view>
         </ng-container>
       </div>
     </div>

@@ -13,7 +13,7 @@ import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
   template: `
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
-        <ht-list-view [records]="tagRecords" [display]="'${ListViewDisplay.Plain}'" data-sensitive-pii>
+        <ht-list-view [records]="tagRecords" display="${ListViewDisplay.Plain}" data-sensitive-pii>
           <div class="tag-value" *htListViewValueRenderer="let record">
             <div class="value">{{ record.value }}</div>
             <ht-explore-filter-link
