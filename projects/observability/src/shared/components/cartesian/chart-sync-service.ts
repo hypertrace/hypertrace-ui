@@ -10,7 +10,7 @@ export class ChartSyncService<TData> {
   private readonly locationChangeSubject: Subject<ChartHoverData<TData>> = new Subject();
 
   public mouseLocationChange(
-    data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
+    data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData> | null,
     groupId?: string,
     chartId?: CartesianChartComponent<TData>
   ): void {

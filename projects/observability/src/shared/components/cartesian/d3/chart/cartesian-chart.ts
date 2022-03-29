@@ -84,10 +84,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   ) {}
 
   public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
-    if (locationData.length > 0) {
+    if (locationData && locationData.length > 0) {
       const location = locationData[0].location;
       const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
       this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
+    } else {
+      this.renderedAxes.forEach(axis => axis.onMouseLeave());
     }
   }
 
@@ -598,6 +600,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     if (this.tooltip) {
       this.tooltip.hide();
     }
+
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Hover) {
+        listener.onEvent(null);
+      }
+    });
 
     this.renderedAxes.forEach(axis => axis.onMouseLeave());
   }
