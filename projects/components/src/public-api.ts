@@ -24,6 +24,10 @@ export * from './checkbox/checkbox.module';
 export * from './collapsible-sidebar/collapsible-sidebar.component';
 export * from './collapsible-sidebar/collapsible-sidebar.module';
 
+// Collapsible sidebar
+export * from './code-viewer/code-viewer.component';
+export * from './code-viewer/code-viewer.module';
+
 // Combo Box
 export * from './combo-box/combo-box.module';
 export * from './combo-box/combo-box.component';
@@ -75,9 +79,9 @@ export { MenuDropdownComponent } from './menu-dropdown/menu-dropdown.component';
 export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component';
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 
-// Download JSON
-export * from './download-json/download-json.component';
-export * from './download-json/download-json.module';
+// Download File
+export * from './download-file/download-file.component';
+export * from './download-file/download-file.module';
 
 // Dynamic label
 export * from './highlighted-label/highlighted-label.component';
