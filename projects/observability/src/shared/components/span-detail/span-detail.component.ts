@@ -8,10 +8,10 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
 import { ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -43,42 +43,41 @@ import { SpanDetailTab } from './span-detail-tab';
       >
       </ht-toggle-group>
 
-      <div class="tab-container">
-        <ng-container *ngTemplateOutlet="this.template$ | async"></ng-container>
+      <div class="tab-container" *ngIf="this.template$ | async as template">
+        <ng-container *ngTemplateOutlet="template"></ng-container>
       </div>
-
-      <ng-template #requestTemplate>
-        <ht-span-request-detail
-          class="request"
-          [layout]="this.layout"
-          [requestHeaders]="this.spanData.requestHeaders"
-          [requestCookies]="this.spanData.requestCookies"
-          [requestBody]="this.spanData.requestBody"
-        ></ht-span-request-detail>
-      </ng-template>
-
-      <ng-template #responseTemplate>
-        <ht-span-response-detail
-          class="response"
-          [layout]="this.layout"
-          [responseHeaders]="this.spanData.responseHeaders"
-          [responseCookies]="this.spanData.responseCookies"
-          [responseBody]="this.spanData.responseBody"
-        ></ht-span-response-detail>
-      </ng-template>
-
-      <ng-template #attributesTemplate>
-        <ht-span-tags-detail [tags]="this.spanData.tags"></ht-span-tags-detail>
-      </ng-template>
-
-      <ng-template #exitCallsTemplate>
-        <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
-      </ng-template>
-
-      <ng-template #logEventsTemplate>
-        <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
-      </ng-template>
     </div>
+    <ng-template #requestTemplate>
+      <ht-span-request-detail
+        class="request"
+        [layout]="this.layout"
+        [requestHeaders]="this.spanData?.requestHeaders"
+        [requestCookies]="this.spanData?.requestCookies"
+        [requestBody]="this.spanData?.requestBody"
+      ></ht-span-request-detail>
+    </ng-template>
+
+    <ng-template #responseTemplate>
+      <ht-span-response-detail
+        class="response"
+        [layout]="this.layout"
+        [responseHeaders]="this.spanData?.responseHeaders"
+        [responseCookies]="this.spanData?.responseCookies"
+        [responseBody]="this.spanData?.responseBody"
+      ></ht-span-response-detail>
+    </ng-template>
+
+    <ng-template #attributesTemplate>
+      <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
+    </ng-template>
+
+    <ng-template #exitCallsTemplate>
+      <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
+    </ng-template>
+
+    <ng-template #logEventsTemplate>
+      <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
+    </ng-template>
   `
 })
 export class SpanDetailComponent implements OnChanges {
@@ -100,20 +99,20 @@ export class SpanDetailComponent implements OnChanges {
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
 
-  @ViewChild('requestTemplate')
-  public requestTemplate?: TemplateRef<unknown>;
+  @ViewChild('requestTemplate', { static: true })
+  public requestTemplate!: TemplateRef<unknown>;
 
-  @ViewChild('responseTemplate')
-  public responseTemplate?: TemplateRef<unknown>;
+  @ViewChild('responseTemplate', { static: true })
+  public responseTemplate!: TemplateRef<unknown>;
 
-  @ViewChild('attributesTemplate')
-  public attributesTemplate?: TemplateRef<unknown>;
+  @ViewChild('attributesTemplate', { static: true })
+  public attributesTemplate!: TemplateRef<unknown>;
 
-  @ViewChild('exitCallsTemplate')
-  public exitCallsTemplate?: TemplateRef<unknown>;
+  @ViewChild('exitCallsTemplate', { static: true })
+  public exitCallsTemplate!: TemplateRef<unknown>;
 
-  @ViewChild('logEventsTemplate')
-  public logEventsTemplate?: TemplateRef<unknown>;
+  @ViewChild('logEventsTemplate', { static: true })
+  public logEventsTemplate!: TemplateRef<unknown>;
 
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
@@ -121,17 +120,15 @@ export class SpanDetailComponent implements OnChanges {
   public showLogEventsTab?: boolean;
   public totalLogEvents?: number;
 
-  public readonly tabs: ToggleItem<SpanDetailTab>[] = [
-    { label: SpanDetailTab.Request, value: SpanDetailTab.Request },
-    { label: SpanDetailTab.Response, value: SpanDetailTab.Response },
-    { label: SpanDetailTab.Attributes, value: SpanDetailTab.Attributes }
-  ];
+  public tabs: ToggleItem<SpanDetailTab>[] = [];
 
-  private readonly activeTabSubject = new BehaviorSubject<ToggleItem<SpanDetailTab>>(this.tabs[0]);
+  private readonly activeTabSubject = new BehaviorSubject<ToggleItem<SpanDetailTab> | undefined>(undefined);
   public readonly activeTab$ = this.activeTabSubject.asObservable();
 
-  private readonly templateSubject = new Subject<TemplateRef<unknown>>();
-  public readonly template$ = this.templateSubject.asObservable();
+  private readonly templateSubject: BehaviorSubject<TemplateRef<unknown> | undefined> = new BehaviorSubject<
+    TemplateRef<unknown> | undefined
+  >(undefined);
+  public readonly template$: Observable<TemplateRef<unknown> | undefined> = this.templateSubject.asObservable();
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
@@ -146,27 +143,21 @@ export class SpanDetailComponent implements OnChanges {
       this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
       this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
-      if (this.showExitCallsTab && this.tabs.findIndex(({ value }) => value === SpanDetailTab.ExitCalls) === -1) {
-        this.tabs.push({ label: SpanDetailTab.ExitCalls, value: SpanDetailTab.ExitCalls });
-      }
-      if (this.showLogEventsTab && this.tabs.findIndex(({ value }) => value === SpanDetailTab.Logs) === -1) {
-        this.tabs.push({ label: SpanDetailTab.Logs, value: SpanDetailTab.Logs });
-      }
+      this.tabs = this.buildTabs();
     }
     if (changes.activeTabLabel) {
       const tab = this.tabs.find(({ value }) => value === this.activeTabLabel);
       if (tab) {
-        this.activeTabSubject.next(tab);
+        this.tabChange(tab);
       }
+    } else {
+      this.tabChange(this.tabs[0]);
     }
   }
 
-  public onActiveTabLabelChange(tabLabel: SpanDetailTab): void {
-    this.activeTabLabel = tabLabel;
-    this.activeTabLabelChange.emit(tabLabel);
-  }
-
   public tabChange(tab: ToggleItem<SpanDetailTab>): void {
+    this.activeTabLabelChange.emit(tab.value);
+    this.activeTabSubject.next(tab);
     if (tab.value) {
       const template = this.getTemplateForTab(tab.value);
       if (template) {
@@ -175,7 +166,7 @@ export class SpanDetailComponent implements OnChanges {
     }
   }
 
-  public getTemplateForTab(tab: SpanDetailTab): TemplateRef<unknown> | undefined {
+  private getTemplateForTab(tab: SpanDetailTab): TemplateRef<unknown> {
     switch (tab) {
       case SpanDetailTab.Request:
         return this.requestTemplate;
@@ -187,6 +178,35 @@ export class SpanDetailComponent implements OnChanges {
         return this.exitCallsTemplate;
       case SpanDetailTab.Logs:
         return this.logEventsTemplate;
+      default:
+        return assertUnreachable(tab);
     }
+  }
+
+  /**
+   * Tabs are added in order:
+   * 1. Request
+   * 2. Response
+   * 3. Attributes
+   * 4. Exit calls
+   * 5. Log events
+   */
+  private buildTabs(): ToggleItem<SpanDetailTab>[] {
+    const tabs: ToggleItem<SpanDetailTab>[] = [];
+    if (this.showRequestTab) {
+      tabs.push({ label: SpanDetailTab.Request, value: SpanDetailTab.Request });
+    }
+    if (this.showResponseTab) {
+      tabs.push({ label: SpanDetailTab.Response, value: SpanDetailTab.Response });
+    }
+    tabs.push({ label: SpanDetailTab.Attributes, value: SpanDetailTab.Attributes });
+    if (this.showExitCallsTab) {
+      tabs.push({ label: SpanDetailTab.ExitCalls, value: SpanDetailTab.ExitCalls });
+    }
+    if (this.showLogEventsTab) {
+      tabs.push({ label: SpanDetailTab.Logs, value: SpanDetailTab.Logs });
+    }
+
+    return tabs;
   }
 }
