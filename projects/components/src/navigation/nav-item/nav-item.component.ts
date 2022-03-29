@@ -58,18 +58,22 @@ export class NavItemComponent {
   public readonly navItemViewStyle?: NavViewStyle;
 
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => {
-    const timeRange = this.config.timeRangeResolver ? this.config.timeRangeResolver() : undefined;
-
-    return {
+    let navParams: NavigationParams = {
       navType: NavigationParamsType.InApp,
       path: item.matchPaths[0],
       relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.replaceCurrentHistory,
-      queryParams:
-        timeRange && this.config.pageLevelTimeRangeIsEnabled
-          ? this.timeRangeService.toQueryParams(timeRange.startTime, timeRange.endTime, timeRange)
-          : undefined
+      replaceCurrentHistory: item.replaceCurrentHistory
     };
+
+    if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
+      const timeRange = this.config.timeRangeResolver();
+      navParams = {
+        ...navParams,
+        queryParams: this.timeRangeService.toQueryParams(timeRange)
+      };
+    }
+
+    return navParams;
   };
 
   public constructor(

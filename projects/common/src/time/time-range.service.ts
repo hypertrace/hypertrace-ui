@@ -66,7 +66,7 @@ export class TimeRangeService {
     this.setTimeRange(this.getCurrentTimeRange());
   }
 
-  private globalTimeRangeInitialization(): Observable<TimeRange> {
+  private globalTimeRangeInitConfigAndChanges(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       take(1), // Wait for first navigation
       switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
@@ -78,15 +78,12 @@ export class TimeRangeService {
     );
   }
 
-  private pageTimeRangeInitialization(): Observable<TimeRange> {
+  private pageTimeRangeInitConfigAndChanges(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
-      filter(
-        activatedRoute => !isNil(activatedRoute.snapshot.queryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))
-      ),
-      map(activeRoute => {
-        const timeRangeQueryParamString = activeRoute.snapshot.queryParamMap.get(
-          TimeRangeService.TIME_RANGE_QUERY_PARAM
-        );
+      switchMap(activeRoute => activeRoute.queryParamMap),
+      filter(queryParmaMap => !isNil(queryParmaMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
+      map(queryParmaMap => {
+        const timeRangeQueryParamString = queryParmaMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
 
         return this.timeRangeFromUrlString(timeRangeQueryParamString!);
       })
@@ -99,10 +96,10 @@ export class TimeRangeService {
       .pipe(
         switchMap(featureState => {
           if (featureState === FeatureState.Enabled) {
-            return this.pageTimeRangeInitialization();
+            return this.pageTimeRangeInitConfigAndChanges();
           }
 
-          return this.globalTimeRangeInitialization();
+          return this.globalTimeRangeInitConfigAndChanges();
         })
       )
       .subscribe(timeRange => {
@@ -147,16 +144,9 @@ export class TimeRangeService {
     return new FixedTimeRange(startTime, endTime);
   }
 
-  public toQueryParams(startTime: Date, endTime: Date, timeRangeIfRelative?: TimeRange): QueryParamObject {
-    if (timeRangeIfRelative && timeRangeIfRelative instanceof RelativeTimeRange) {
-      return {
-        [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRangeIfRelative.toUrlString()
-      };
-    }
-    const newFixedTimeRange = new FixedTimeRange(startTime, endTime);
-
+  public toQueryParams(timeRange: TimeRange): QueryParamObject {
     return {
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newFixedTimeRange.toUrlString()
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
   }
 

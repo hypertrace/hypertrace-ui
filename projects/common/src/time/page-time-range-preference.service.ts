@@ -37,7 +37,7 @@ export class PageTimeRangePreferenceService {
       map(([pageTimeRangeStringDictionary, featureState]) => {
         if (featureState === FeatureState.Enabled) {
           if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
-            return () => this.getDefaultTimeRangeForCurrentRoute(rootLevelPath);
+            return () => this.getDefaultTimeRangeForPath(rootLevelPath);
           }
 
           return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
@@ -77,7 +77,7 @@ export class PageTimeRangePreferenceService {
       .pipe(shareReplay(1));
   }
 
-  public getDefaultTimeRangeForCurrentRoute(rootLevelPath: string): TimeRange {
+  public getDefaultTimeRangeForPath(rootLevelPath: string): TimeRange {
     const routeConfigForPath = this.navigationService.getRouteConfig(
       [rootLevelPath],
       this.navigationService.rootRoute()
