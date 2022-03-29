@@ -29,7 +29,7 @@ export const enum LogEventsTableViewType {
       <ht-table
         [columnConfigs]="this.columnConfigs"
         [data]="this.dataSource"
-        [pageable]="true"
+        [pageable]="false"
         [resizable]="false"
         mode=${TableMode.Detail}
         [detailContent]="detailContent"
