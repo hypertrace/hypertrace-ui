@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { FilterOperator, IconSize } from '@hypertrace/components';
+import { DownloadFileMetadata, FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
-import { DownloadFileMetadata } from '../../../../components/src/download-file/download-file-metadata';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ApiTraceDetails } from '../api-trace-detail/api-trace-detail.service';
 import { ExplorerService } from '../explorer/explorer-service';

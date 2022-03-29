@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
-import { isEmpty, isNil } from 'lodash-es';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
+import { isEmpty, isNil } from 'lodash-es';
 import { DownloadFileMetadata } from '../download-file/download-file-metadata';
 
 @Component({
@@ -46,7 +46,7 @@ import { DownloadFileMetadata } from '../download-file/download-file-metadata';
     </div>
   `
 })
-export class CodeViewerComponent {
+export class CodeViewerComponent implements OnChanges {
   @Input()
   public code: string[] = []; // Pre-formatted code lines as string
 
@@ -104,6 +104,7 @@ export class CodeViewerComponent {
           value => `<span class="searched" style="background-color: ${Color.Yellow4}">${value}</span>`
         )
       : codeLine;
+
     return `<pre>${resultString}</pre>`;
   }
 }
