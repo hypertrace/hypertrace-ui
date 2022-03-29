@@ -30,6 +30,7 @@ export class CartesianAxisCrosshair {
       position,
       locationData.map(data => data.location)
     );
+    // tslint:disable-next-line
     crosshairSelection.attr('hidden', null);
   }
 

@@ -76,7 +76,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   @Output()
   public readonly selectionChange: EventEmitter<
-    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData> | null
+    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData> | undefined
   > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
