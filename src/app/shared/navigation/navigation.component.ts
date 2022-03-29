@@ -24,8 +24,7 @@ import { Observable } from 'rxjs';
         *htLetAsync="this.isCollapsed$ as isCollapsed"
         [collapsed]="isCollapsed"
         (collapsedChange)="this.onViewToggle($event)"
-        (navItemClick)="this.setPageTimeRangeForSelectedNavItem($event)"
-        (activeItemChange)="this.updateDefaultTimeRangeIfUnset($event)"
+        (activeItemChange)="this.setPageTimeRangeForActiveNavItem($event)"
       ></ht-navigation-list>
     </div>
   `
@@ -101,7 +100,7 @@ export class NavigationComponent {
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }
 
-  public setPageTimeRangeForSelectedNavItem(navItemLink: NavItemLinkConfig): void {
+  public setPageTimeRangeForActiveNavItem(navItemLink: NavItemLinkConfig): void {
     if (!isNil(navItemLink.timeRangeResolver) && navItemLink.pageLevelTimeRangeIsEnabled) {
       const timeRange = navItemLink.timeRangeResolver();
       if (timeRange instanceof FixedTimeRange) {
@@ -109,14 +108,6 @@ export class NavigationComponent {
       } else if (timeRange instanceof RelativeTimeRange) {
         this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
       }
-    }
-  }
-
-  public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig): void {
-    // Initialize the time range service
-    // Depending on FF status, the TR will be either global or page level for the init
-    if (!this.timeRangeService.isInitialized()) {
-      this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver!());
     }
   }
 

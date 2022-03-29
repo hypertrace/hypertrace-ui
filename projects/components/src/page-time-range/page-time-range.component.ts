@@ -35,7 +35,7 @@ export class PageTimeRangeComponent {
   }
 
   public shouldSavePageTimeRange(currentRoute: ActivatedRoute): boolean {
-    return !isNil(currentRoute.snapshot.data?.defaultTimeRange);
+    return !isNil(currentRoute.snapshot.data?.shouldSavePageTimeRange);
   }
 
   public savePageTimeRange(selectedTimeRange: TimeRange, segment: UrlSegment): void {

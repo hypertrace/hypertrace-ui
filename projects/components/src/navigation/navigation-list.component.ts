@@ -39,7 +39,6 @@ import {
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
               <ht-nav-item
                 [navItemViewStyle]="this.navViewStyle"
-                (click)="this.navItemClick.emit(item)"
                 [config]="item"
                 [active]="item === activeItem"
                 [collapsed]="this.collapsed"
@@ -94,9 +93,6 @@ export class NavigationListComponent implements OnChanges {
 
   @Input()
   public readonly navViewStyle?: NavViewStyle;
-
-  @Output()
-  public readonly navItemClick: EventEmitter<NavItemLinkConfig> = new EventEmitter();
 
   @Output()
   public readonly activeItemChange: EventEmitter<NavItemLinkConfig> = new EventEmitter();
