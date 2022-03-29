@@ -34,15 +34,16 @@ import { SpanDetailTab } from './span-detail-tab';
       <div class="summary-container">
         <ng-content></ng-content>
       </div>
+
       <ht-toggle-group
-        class="traffic-type-toggle"
+        class="toggle-group"
         [activeItem]="activeTab$ | async"
         [items]="this.tabs"
         (activeItemChange)="this.tabChange($event)"
       >
       </ht-toggle-group>
 
-      <div>
+      <div class="tab-container">
         <ng-container *ngTemplateOutlet="this.template$ | async"></ng-container>
       </div>
 
