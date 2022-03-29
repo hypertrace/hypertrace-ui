@@ -110,7 +110,6 @@ export const getPercentage = (numerator: number | undefined, denominator: number
   return (numerator / denominator) * 100;
 };
 
-
 // Trying to recreate Java hashcode
 export const hashCode = (str: string): number =>
   // tslint:disable-next-line: no-bitwise
