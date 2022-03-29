@@ -65,7 +65,7 @@ export class CodeViewerComponent {
   @Input()
   public additionalHeaderContent?: TemplateRef<unknown>;
 
-  public codeLineElements?: HTMLElement[];
+  private codeLineElements?: HTMLElement[];
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.code) {
@@ -99,7 +99,10 @@ export class CodeViewerComponent {
   private getReplacedHtmlString(codeLine: string, searchText: string): string {
     const searchRegex: RegExp = new RegExp(searchText, 'gi');
     const resultString: string = !isEmpty(searchText)
-      ? codeLine.replace(searchRegex, value => `<span style="background-color: ${Color.Yellow4}">${value}</span>`)
+      ? codeLine.replace(
+          searchRegex,
+          value => `<span class="searched" style="background-color: ${Color.Yellow4}">${value}</span>`
+        )
       : codeLine;
     return `<pre>${resultString}</pre>`;
   }
