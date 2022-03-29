@@ -162,7 +162,7 @@ export class SpanDetailComponent implements OnChanges {
     this.activeTabSubject.next(tab);
     if (!isNil(tab.value)) {
       const template = this.getTemplateForTab(tab.value);
-      if (template) {
+      if (!isNil(template)) {
         this.templateSubject.next(template);
       }
     }

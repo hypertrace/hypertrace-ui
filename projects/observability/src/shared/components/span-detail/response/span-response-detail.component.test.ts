@@ -24,7 +24,7 @@ describe('Span response detail component', () => {
     expect(headerTitleElement).not.toBeNull();
     expect(headerTitleElement!.textContent!.trim()).toEqual('Headers');
 
-    const titleElement = spectator.query<HTMLElement>('.call-body > .title');
+    const titleElement = spectator.query<HTMLElement>('.call-body  > .header > .title');
     expect(titleElement).not.toBeNull();
     expect(titleElement!.textContent!.trim()).toEqual('Body');
   });
