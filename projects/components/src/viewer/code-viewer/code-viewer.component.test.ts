@@ -40,16 +40,16 @@ describe('Code Viewer Component', () => {
     expect(spectator.query('.title')).toHaveText('Code Viewer');
     expect(spectator.queryAll('.line-number').length).toBe(3);
     expect(spectator.queryAll('.code-line').length).toBe(3);
-    expect(spectator.queryAll('.line-number.highlight').length).toBe(0);
-    expect(spectator.queryAll('.code-line.highlight').length).toBe(0);
+    expect(spectator.queryAll('.line-number.line-highlight').length).toBe(0);
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(0);
 
     // Highlight text
     spectator.setInput({
       highlightText: 'key'
     });
 
-    expect(spectator.queryAll('.code-line.highlight').length).toBe(1);
-    expect(spectator.queryAll('.code-line.highlight').length).toBe(1);
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
 
     // Download
     spectator.setInput({
