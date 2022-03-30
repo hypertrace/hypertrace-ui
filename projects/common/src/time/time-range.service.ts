@@ -67,7 +67,7 @@ export class TimeRangeService {
     this.setTimeRange(this.getCurrentTimeRange());
   }
 
-  private globalTimeRangeInitConfigAndChanges(): Observable<TimeRange> {
+  private getInitialTimeRange(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       take(1), // Wait for first navigation
       switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
@@ -79,7 +79,7 @@ export class TimeRangeService {
     );
   }
 
-  private pageTimeRangeInitConfigAndChanges(): Observable<TimeRange> {
+  private getPageTimeRangeChanges(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       switchMap(activeRoute => activeRoute.queryParamMap),
       filter(queryParamMap => !isNil(queryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
@@ -107,10 +107,10 @@ export class TimeRangeService {
       .pipe(
         switchMap(featureState => {
           if (featureState === FeatureState.Enabled) {
-            return this.pageTimeRangeInitConfigAndChanges();
+            return this.getPageTimeRangeChanges();
           }
 
-          return this.globalTimeRangeInitConfigAndChanges();
+          return this.getInitialTimeRange();
         })
       )
       .subscribe(timeRange => {
