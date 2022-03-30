@@ -156,7 +156,7 @@ export class TimeRangeService {
     return new FixedTimeRange(startTime, endTime);
   }
 
-  public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam: boolean): QueryParamObject {
+  public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam?: boolean): QueryParamObject {
     let queryParams: QueryParamObject = {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
