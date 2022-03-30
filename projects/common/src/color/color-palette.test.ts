@@ -37,20 +37,20 @@ describe('Color palette', () => {
     expect(palette.getColorCombinations(2)).toEqual([
       {
         background: 'rgb(255, 251, 235)',
-        foreground: '#080909',
+        foreground: '#080909'
       },
       {
         background: 'rgb(20, 3, 0)',
-        foreground: '#FFFFFF',
+        foreground: '#FFFFFF'
       }
     ]);
-  })
+  });
 
   test('should generate color for a string as expected from a limited set', () => {
     const palette = new ColorPalette(['#fffbeb', '#140300', '#789ab7']);
     expect(palette.getColorCombinationForId(2, 'test')).toEqual({
       background: 'rgb(255, 251, 235)',
-      foreground: '#080909',
+      foreground: '#080909'
     });
-  })
+  });
 });
