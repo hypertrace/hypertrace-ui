@@ -16,8 +16,7 @@ export class ColorPalette {
     return this.forNColors(count).map(color => ({ background: color, foreground: this.getContrast(color) }));
   }
 
-  public getColorCombinationForId(id: string, colorPaletteSize?: number): ColorCombination {
-    const colorSetSize = colorPaletteSize ?? this.basisColors.length;
+  public getColorCombinationForId(id: string, colorSetSize: number = this.basisColors.length): ColorCombination {
 
     return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
   }
