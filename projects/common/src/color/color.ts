@@ -66,7 +66,7 @@ export interface ColorCombination {
   foreground: string;
 }
 
-export const getRgbColorForString = (id: string) => {
+export const getHexColorForString = (id: string): string => {
   const hash = hashCode(id);
   let rgb = '#';
   for (let i = 0; i < 3; i++) {
