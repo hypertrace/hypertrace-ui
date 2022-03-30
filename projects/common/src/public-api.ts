@@ -124,3 +124,6 @@ export * from './time/page-time-range-preference.service';
 
 // Validators
 export * from './utilities/validators';
+
+// Color Palette
+export * from './color/color-palette';
