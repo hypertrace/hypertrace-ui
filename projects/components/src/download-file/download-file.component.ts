@@ -1,18 +1,18 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, Renderer2 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { IconSize } from '@hypertrace/components';
-import { Observable } from 'rxjs';
 import { catchError, finalize, take } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle } from '../button/button';
+import { IconSize } from '../icon/icon-size';
 import { NotificationService } from '../notification/notification.service';
+import { DownloadFileMetadata } from './download-file-metadata';
 
 @Component({
-  selector: 'ht-download-json',
+  selector: 'ht-download-file',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./download-json.component.scss'],
+  styleUrls: ['./download-file.component.scss'],
   template: `
-    <div class="download-json" (click)="this.triggerDownload()">
+    <div *ngIf="this.metadata" class="download-file" (click)="this.triggerDownload()">
       <ht-button
         *ngIf="!this.dataLoading"
         class="download-button"
@@ -24,12 +24,9 @@ import { NotificationService } from '../notification/notification.service';
     </div>
   `
 })
-export class DownloadJsonComponent {
+export class DownloadFileComponent {
   @Input()
-  public dataSource!: Observable<unknown>;
-
-  @Input()
-  public fileName: string = 'download.json';
+  public metadata?: DownloadFileMetadata;
 
   public dataLoading: boolean = false;
   private readonly dlJsonAnchorElement: HTMLAnchorElement;
@@ -45,31 +42,25 @@ export class DownloadJsonComponent {
 
   public triggerDownload(): void {
     this.dataLoading = true;
-    this.dataSource
-      .pipe(
-        take(1),
-        catchError(() => this.notificationService.createFailureToast('Download failed')),
-        finalize(() => {
-          this.dataLoading = false;
-          this.changeDetector.detectChanges();
-        })
-      )
-      .subscribe((data: unknown) => {
-        if (typeof data === 'string') {
-          this.downloadData(data);
-        } else {
-          this.downloadData(JSON.stringify(data));
-        }
-      });
+    this.metadata!.dataSource.pipe(
+      take(1),
+      catchError(() => this.notificationService.createFailureToast('Download failed')),
+      finalize(() => {
+        this.dataLoading = false;
+        this.changeDetector.detectChanges();
+      })
+    ).subscribe((data: string) => {
+      this.downloadData(data);
+    });
   }
 
   private downloadData(data: string): void {
     this.renderer.setAttribute(
       this.dlJsonAnchorElement,
       'href',
-      `data:text/json;charset=utf-8,${encodeURIComponent(data)}`
+      `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`
     );
-    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', this.fileName);
+    this.renderer.setAttribute(this.dlJsonAnchorElement, 'download', this.metadata!.fileName);
     this.renderer.setAttribute(this.dlJsonAnchorElement, 'display', 'none');
     this.dlJsonAnchorElement.click();
   }
