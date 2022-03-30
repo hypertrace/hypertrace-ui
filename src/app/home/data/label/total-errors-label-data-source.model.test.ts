@@ -64,7 +64,7 @@ describe('Total Errors label data source model', () => {
         results: [
           {
             'sum(errorCount)': {
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               value: 23
             }
           }

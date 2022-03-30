@@ -66,7 +66,8 @@ export class TableWidgetColumnsService {
 
   private lookupDisplayType(type: AttributeMetadataType): string {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
         return CoreTableCellRendererType.Number;
       case AttributeMetadataType.Timestamp:
         return CoreTableCellRendererType.Timestamp;
@@ -77,7 +78,8 @@ export class TableWidgetColumnsService {
 
   private lookupAlignment(type: AttributeMetadataType): TableCellAlignmentType {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
       case AttributeMetadataType.Timestamp:
         return TableCellAlignmentType.Right;
       default:

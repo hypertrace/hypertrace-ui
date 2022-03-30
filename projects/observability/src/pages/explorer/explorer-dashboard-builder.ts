@@ -154,7 +154,8 @@ export class ExplorerDashboardBuilder {
 
   private getRendererForType(type: AttributeMetadataType): string {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
         return CoreTableCellRendererType.Number;
       case AttributeMetadataType.Timestamp:
         return CoreTableCellRendererType.Timestamp;
