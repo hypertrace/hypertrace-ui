@@ -25,8 +25,8 @@ export * from './collapsible-sidebar/collapsible-sidebar.component';
 export * from './collapsible-sidebar/collapsible-sidebar.module';
 
 // Collapsible sidebar
-export * from './code-viewer/code-viewer.component';
-export * from './code-viewer/code-viewer.module';
+export * from './viewer/code-viewer/code-viewer.component';
+export * from './viewer/code-viewer/code-viewer.module';
 
 // Combo Box
 export * from './combo-box/combo-box.module';
@@ -276,10 +276,6 @@ export { OverlayService } from './overlay/overlay.service';
 export * from './overlay/overlay';
 export * from './overlay/overlay.module';
 export * from './overlay/sheet/sheet';
-
-// Snippet
-export { SnippetViewerComponent } from './viewer/snippet-viewer/snippet-viewer.component';
-export { SnippetViewerModule } from './viewer/snippet-viewer/snippet-viewer.module';
 
 // Spinner
 export * from './spinner/spinner.component';

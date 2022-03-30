@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { Color, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -11,19 +11,13 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
   template: `
-    <div
-      class="ht-search-box"
-      [ngClass]="this.displayMode"
-      [class.focused]="this.isFocused"
-      [style.backgroundColor]="this.backgroundColor"
-    >
+    <div class="ht-search-box" [ngClass]="this.displayMode" [class.focused]="this.isFocused">
       <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="onSubmit()"></ht-icon>
       <input
         class="input"
         type="text"
         [placeholder]="placeholder"
         [(ngModel)]="value"
-        [style.backgroundColor]="this.backgroundColor"
         (input)="this.onValueChange()"
         (keyup.enter)="this.onSubmit()"
         (focus)="this.isFocused = true"
@@ -51,9 +45,6 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   @Input()
   public displayMode: SearchBoxDisplayMode = SearchBoxDisplayMode.Border;
-
-  @Input()
-  public backgroundColor: Color = Color.Transparent;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();

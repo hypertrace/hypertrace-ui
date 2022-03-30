@@ -35,6 +35,7 @@
 
       .search-box {
         width: 140px;
+        background-color: white;
       }
     }
   }
@@ -45,6 +46,7 @@
     overflow-y: auto;
     display: grid;
     grid-template-columns: 40px auto;
+    position: relative;
 
     .line-numbers {
       width: 100%;
@@ -67,6 +69,19 @@
         @include line-base;
         white-space: break-spaces;
       }
+    }
+
+    .copy-to-clipboard {
+      position: absolute;
+      color: $gray-9;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  ::ng-deep {
+    mark {
+      background-color: $yellow-4;
     }
   }
 }
