@@ -56,6 +56,5 @@ describe('Color palette', () => {
       background: 'rgb(20, 3, 0)',
       foreground: '#FFFFFF'
     });
-
   });
 });
