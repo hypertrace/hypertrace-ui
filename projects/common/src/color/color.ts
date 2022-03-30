@@ -58,7 +58,9 @@ export const enum Color {
   Yellow6 = '#facf00',
   Yellow7 = '#bd9d00',
   Yellow8 = '#6d5b00',
-  Yellow9 = '#181400'
+  Yellow9 = '#181400',
+  Transparent = 'transparent',
+  OffWhite = '#f6f6f64d'
 }
 
 export interface ColorCombination {

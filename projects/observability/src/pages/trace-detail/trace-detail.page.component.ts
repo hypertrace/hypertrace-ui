@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { FilterOperator, IconSize } from '@hypertrace/components';
+import { DownloadFileMetadata, FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ApiTraceDetails } from '../api-trace-detail/api-trace-detail.service';
@@ -53,12 +53,11 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
 
           <ht-copy-shareable-link-to-clipboard class="share"></ht-copy-shareable-link-to-clipboard>
 
-          <ht-download-json
+          <ht-download-file
             class="download"
-            [dataSource]="this.exportSpans$"
-            fileName="{{ traceDetails.id }}.json"
+            [metadata]="this.getDownloadTraceDetailsJsonMetadata | htMemoize: traceDetails.id"
             htTooltip="Download Trace as Json"
-          ></ht-download-json>
+          ></ht-download-file>
         </div>
       </div>
 
@@ -91,6 +90,11 @@ export class TraceDetailPageComponent {
     this.exportSpans$ = this.traceDetailService.fetchExportSpans();
     this.logEvents$ = this.traceDetailService.fetchLogEvents();
   }
+
+  public getDownloadTraceDetailsJsonMetadata = (traceId: string): DownloadFileMetadata => ({
+    dataSource: this.exportSpans$,
+    fileName: `${traceId}.json`
+  });
 
   public onClickBack(): void {
     this.navigationService.navigateBack();
