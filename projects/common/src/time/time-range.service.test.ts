@@ -19,9 +19,9 @@ describe('Time range service', () => {
             map(
               initialTrString =>
                 // tslint:disable-next-line: no-object-literal-type-assertion
-                (({
-                  snapshot: { queryParamMap: convertToParamMap({ time: initialTrString }) }
-                } as unknown) as ActivatedRoute)
+                ({
+                  queryParamMap: of(convertToParamMap({ time: initialTrString, refresh: 'true' }))
+                } as ActivatedRoute)
             )
           );
         }
