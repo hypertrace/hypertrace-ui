@@ -108,7 +108,7 @@ export class CodeViewerComponent {
   }
 
   public get codeLines(): string[] {
-    return isEmpty(this.code) ? [] : this.code!.split(this.lineSplitter);
+    return isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
   }
 
   public get lineNumbers(): number[] {
