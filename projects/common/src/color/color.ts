@@ -1,3 +1,5 @@
+import { hashCode } from '../utilities/math/math-utilities';
+
 export const enum Color {
   Blue1 = '#f0f6ff',
   Blue2 = '#b8d3ff',
@@ -58,3 +60,20 @@ export const enum Color {
   Yellow8 = '#6d5b00',
   Yellow9 = '#181400'
 }
+
+export interface ColorCombination {
+  background: string;
+  foreground: string;
+}
+
+export const getHexColorForString = (id: string): string => {
+  const hash = hashCode(id);
+  let rgb = '#';
+  for (let i = 0; i < 3; i++) {
+    // tslint:disable-next-line: no-bitwise
+    const value = (hash >> (i * 8)) & 0xff;
+    rgb += `00${value.toString(16)}`.substr(-2);
+  }
+
+  return rgb;
+};

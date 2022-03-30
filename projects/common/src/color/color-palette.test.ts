@@ -31,4 +31,30 @@ describe('Color palette', () => {
     expect(() => new ColorPalette(['black'])).toThrow();
     expect(() => new ColorPalette(['white', 'black'])).not.toThrow();
   });
+
+  test('should return color combinations correctly', () => {
+    const palette = new ColorPalette(['#fffbeb', '#140300']);
+    expect(palette.getColorCombinations(2)).toEqual([
+      {
+        background: 'rgb(255, 251, 235)',
+        foreground: '#080909'
+      },
+      {
+        background: 'rgb(20, 3, 0)',
+        foreground: '#FFFFFF'
+      }
+    ]);
+  });
+
+  test('should generate color for a string as expected from a limited set', () => {
+    const palette = new ColorPalette(['#fffbeb', '#140300', '#789ab7']);
+    expect(palette.getColorCombinationForId('test', 2)).toEqual({
+      background: 'rgb(255, 251, 235)',
+      foreground: '#080909'
+    });
+    expect(palette.getColorCombinationForId('test')).toEqual({
+      background: 'rgb(20, 3, 0)',
+      foreground: '#FFFFFF'
+    });
+  });
 });
