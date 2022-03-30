@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { ParamMap } from '@angular/router';
 import { isEmpty, isNil } from 'lodash-es';
 import { EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, filter, map, pairwise, switchMap, take } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, switchMap, take } from 'rxjs/operators';
 import { ApplicationFeature } from '../constants/application-constants';
 import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
 import { FeatureState } from '../feature/state/feature.state';
@@ -83,21 +84,21 @@ export class TimeRangeService {
     return this.navigationService.navigation$.pipe(
       switchMap(activeRoute => activeRoute.queryParamMap),
       filter(queryParamMap => !isNil(queryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
-      pairwise(),
-      filter(([prevParamMap, currParamMap]) => {
-        const refreshQueryParam = currParamMap.get(TimeRangeService.REFRESH_ON_NAVIGATION);
-
-        return (
-          prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) !==
-            currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ||
-          (isEmpty(refreshQueryParam) ? false : JSON.parse(refreshQueryParam!))
-        );
-      }),
-      map(([, currQueryParamMap]) => {
+      distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
+      map(currQueryParamMap => {
         const timeRangeQueryParamString = currQueryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
 
         return this.timeRangeFromUrlString(timeRangeQueryParamString!);
       })
+    );
+  }
+
+  private shouldNotUpdateTimeRange(prevParamMap: ParamMap, currParamMap: ParamMap): boolean {
+    const refreshQueryParam = currParamMap.get(TimeRangeService.REFRESH_ON_NAVIGATION);
+
+    return (
+      prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ===
+        currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) && isEmpty(refreshQueryParam)
     );
   }
 
@@ -155,16 +156,16 @@ export class TimeRangeService {
     return new FixedTimeRange(startTime, endTime);
   }
 
-  public toQueryParams(timeRange: TimeRange): QueryParamObject {
-    return {
+  public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam: boolean): QueryParamObject {
+    let queryParams: QueryParamObject = {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
-  }
 
-  public getRefreshTimeRangeQueryParam(): QueryParamObject {
-    return {
-      [TimeRangeService.REFRESH_ON_NAVIGATION]: true
-    };
+    if (refreshTimeOnNavigationParam) {
+      queryParams = { ...queryParams, [TimeRangeService.REFRESH_ON_NAVIGATION]: true };
+    }
+
+    return queryParams;
   }
 
   public isInitialized(): boolean {

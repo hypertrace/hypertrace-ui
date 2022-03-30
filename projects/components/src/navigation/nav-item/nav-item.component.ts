@@ -67,14 +67,12 @@ export class NavItemComponent {
 
     if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
       const timeRange = this.config.timeRangeResolver();
-      const timeRangeQueryParam = this.timeRangeService.toQueryParams(timeRange);
-      const timeRangeRefreshQueryParam = this.timeRangeService.getRefreshTimeRangeQueryParam();
+      const timeRangeQueryParam = this.timeRangeService.toQueryParams(timeRange, true);
 
       navParams = {
         ...navParams,
         queryParams: {
-          ...timeRangeQueryParam,
-          ...timeRangeRefreshQueryParam
+          ...timeRangeQueryParam
         }
       };
     }
