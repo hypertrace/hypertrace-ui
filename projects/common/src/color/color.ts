@@ -63,108 +63,17 @@ export const enum Color {
 
 export interface ColorCombination {
   background: string;
-  text: string;
+  foreground: string;
 }
 
-export const getColorCombinationForId = (id: string): ColorCombination =>
-  predefinedColorCombinations[Math.abs(hashCode(id)) % predefinedColorCombinations.length];
-
-// Predefined set of 25 compatible color combinations.
-const predefinedColorCombinations: ColorCombination[] = [
-  {
-    background: '#CD5C5C',
-    text: Color.White
-  },
-  {
-    background: '#FFA07A',
-    text: Color.Gray9
-  },
-  {
-    background: '#F08080',
-    text: Color.Gray9
-  },
-  {
-    background: '#FFB6C1',
-    text: Color.Gray9
-  },
-  {
-    background: '#C71585',
-    text: Color.White
-  },
-  {
-    background: '#DB7093',
-    text: Color.White
-  },
-  {
-    background: '#FF6347',
-    text: Color.White
-  },
-  {
-    background: '#FF8C00',
-    text: Color.White
-  },
-  {
-    background: '#FFD700',
-    text: Color.Gray9
-  },
-  {
-    background: '#FFDAB9',
-    text: Color.Gray9
-  },
-  {
-    background: '#F0E68C',
-    text: Color.Gray9
-  },
-  {
-    background: '#BDB76B',
-    text: Color.White
-  },
-  {
-    background: '#DDA0DD',
-    text: Color.White
-  },
-  {
-    background: '#9370DB',
-    text: Color.White
-  },
-  {
-    background: '#4B0082',
-    text: Color.White
-  },
-  {
-    background: '#32CD32',
-    text: Color.White
-  },
-  {
-    background: '#90EE90',
-    text: Color.Gray9
-  },
-  {
-    background: '#9ACD32',
-    text: Color.White
-  },
-  {
-    background: '#66CDAA',
-    text: Color.White
-  },
-  {
-    background: '#808000',
-    text: Color.White
-  },
-  {
-    background: '#F4A460',
-    text: Color.White
-  },
-  {
-    background: '#6B8E23',
-    text: Color.White
-  },
-  {
-    background: '#D2691E',
-    text: Color.White
-  },
-  {
-    background: Color.Yellow2,
-    text: Color.Gray9
+export const getRgbColorForString = (id: string) => {
+  const hash = hashCode(id);
+  let rgb = '#';
+  for (let i = 0; i < 3; i++) {
+    // tslint:disable-next-line: no-bitwise
+    const value = (hash >> (i * 8)) & 0xff;
+    rgb += `00${value.toString(16)}`.substr(-2);
   }
-];
+
+  return rgb;
+}
