@@ -17,7 +17,6 @@ export class ColorPalette {
   }
 
   public getColorCombinationForId(id: string, colorSetSize: number = this.basisColors.length): ColorCombination {
-
     return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
   }
 
