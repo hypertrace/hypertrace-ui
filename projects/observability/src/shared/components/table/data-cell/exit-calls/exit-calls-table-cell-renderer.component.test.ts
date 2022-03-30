@@ -5,7 +5,7 @@ import {
   TooltipDirective
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { MockComponent } from 'ng-mocks';
+import { MockDirective } from 'ng-mocks';
 import { ExitCallsTableCellRendererComponent } from './exit-calls-table-cell-renderer.component';
 
 describe('Exit Calls table cell renderer component', () => {
@@ -19,7 +19,7 @@ describe('Exit Calls table cell renderer component', () => {
         new TableCellNoOpParser(undefined!)
       )
     ],
-    declarations: [MockComponent(TooltipDirective)],
+    declarations: [MockDirective(TooltipDirective)],
     shallow: true
   });
 
