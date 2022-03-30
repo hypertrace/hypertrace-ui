@@ -16,8 +16,10 @@ export class ColorPalette {
     return this.forNColors(count).map(color => ({ background: color, foreground: this.getContrast(color) }));
   }
 
-  public getColorCombinationForId(colorCount: number, id: string): ColorCombination {
-    return this.getColorCombinations(colorCount)[Math.abs(hashCode(id)) % colorCount];
+  public getColorCombinationForId(id: string, colorPaletteSize?: number): ColorCombination {
+    const colorSetSize = colorPaletteSize ?? this.basisColors.length;
+
+    return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
   }
 
   private getContrast(rgbColorString: string): string {
