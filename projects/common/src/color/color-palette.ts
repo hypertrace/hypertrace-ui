@@ -13,7 +13,7 @@ export class ColorPalette {
   }
 
   public getColorCombinations(count: number): ColorCombination[] {
-    return this.forNColors(count).map(color => ({background: color, foreground: this.getContrast(color)}));
+    return this.forNColors(count).map(color => ({ background: color, foreground: this.getContrast(color) }));
   }
 
   public getColorCombinationForId(colorCount: number, id: string): ColorCombination {
@@ -25,11 +25,11 @@ export class ColorPalette {
     const rgbColor = rgb(rgbColorString);
 
     // Get YIQ ratio
-    const yiq = ((rgbColor.r*299)+(rgbColor.g*587)+(rgbColor.b*114))/1000;
+    const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
 
     // Check contrast
-    return (yiq >= 128) ? Color.Gray9 : Color.White;
-  };
+    return yiq >= 128 ? Color.Gray9 : Color.White;
+  }
 
   public forNColors(count: number): string[] {
     if (count === this.basisColors.length) {

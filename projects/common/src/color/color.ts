@@ -76,4 +76,4 @@ export const getHexColorForString = (id: string): string => {
   }
 
   return rgb;
-}
+};
