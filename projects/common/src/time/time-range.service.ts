@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty, isNil } from 'lodash-es';
 import { EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, pairwise, switchMap, take } from 'rxjs/operators';
 import { ApplicationFeature } from '../constants/application-constants';
 import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
 import { FeatureState } from '../feature/state/feature.state';
@@ -19,6 +19,7 @@ import { TimeUnit } from './time-unit.type';
 })
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
+  private static readonly REFRESH_ON_NAVIGATION: string = 'refresh';
 
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
@@ -81,9 +82,19 @@ export class TimeRangeService {
   private pageTimeRangeInitConfigAndChanges(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       switchMap(activeRoute => activeRoute.queryParamMap),
-      filter(queryParmaMap => !isNil(queryParmaMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
-      map(queryParmaMap => {
-        const timeRangeQueryParamString = queryParmaMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
+      filter(queryParamMap => !isNil(queryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
+      pairwise(),
+      filter(([prevParamMap, currParamMap]) => {
+        const refreshQueryParam = currParamMap.get(TimeRangeService.REFRESH_ON_NAVIGATION);
+
+        return (
+          prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) !==
+            currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ||
+          (isEmpty(refreshQueryParam) ? false : JSON.parse(refreshQueryParam!))
+        );
+      }),
+      map(([, currQueryParamMap]) => {
+        const timeRangeQueryParamString = currQueryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
 
         return this.timeRangeFromUrlString(timeRangeQueryParamString!);
       })
@@ -147,6 +158,12 @@ export class TimeRangeService {
   public toQueryParams(timeRange: TimeRange): QueryParamObject {
     return {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+    };
+  }
+
+  public getRefreshTimeRangeQueryParam(): QueryParamObject {
+    return {
+      [TimeRangeService.REFRESH_ON_NAVIGATION]: true
     };
   }
 
