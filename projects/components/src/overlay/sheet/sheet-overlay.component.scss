@@ -28,6 +28,12 @@ $box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08)
       @include header-4($gray-7);
       margin: 0;
     }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
   }
 
   .content-wrapper {

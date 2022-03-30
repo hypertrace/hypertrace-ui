@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
+import { ExternalNavigationParams, GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
 import { ButtonStyle } from '../../button/button';
 import { IconSize } from '../../icon/icon-size';
 import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
@@ -18,14 +18,20 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
         <ng-container *ngIf="!this.isViewCollapsed">
           <div *ngIf="this.showHeader" class="header">
             <h3 class="header-title">{{ sheetTitle }}</h3>
-            <ht-button
-              class="close-button"
-              icon="${IconType.CloseCircle}"
-              display="${ButtonStyle.Outlined}"
-              htTooltip="Close Sheet"
-              (click)="this.close()"
-            >
-            </ht-button>
+            <div class="action-buttons">
+              <ht-open-in-new-tab
+                *ngIf="this.navigationParams"
+                [paramsOrUrl]="this.navigationParams"
+              ></ht-open-in-new-tab>
+              <ht-button
+                class="close-button"
+                icon="${IconType.CloseCircle}"
+                display="${ButtonStyle.Outlined}"
+                htTooltip="Close Sheet"
+                (click)="this.close()"
+              >
+              </ht-button>
+            </div>
           </div>
           <div class="content-wrapper">
             <div class="content">
@@ -61,6 +67,7 @@ export class SheetOverlayComponent {
   public readonly closeOnEscape: boolean;
   public readonly attachedTriggerTemplate?: TemplateRef<unknown>;
   public isViewCollapsed: boolean;
+  public navigationParams: ExternalNavigationParams | undefined;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -80,7 +87,7 @@ export class SheetOverlayComponent {
     this.renderer = sheetConfig.content;
     this.popoverRef.height(this.getHeightForPopover(globalHeaderHeight, sheetConfig.position));
     this.setWidth();
-
+    this.navigationParams = sheetConfig.pageNavParams;
     this.rendererInjector = Injector.create({
       providers: [
         {
