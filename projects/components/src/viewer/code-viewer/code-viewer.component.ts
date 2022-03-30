@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
-import { Color } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
+import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
@@ -32,7 +32,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
           <div
             *ngFor="let lineNumber of this.lineNumbers"
             class="line-number"
-            [ngClass]="{ highlight: this.isHighlighted(lineNumber - 1) }"
+            [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
           >
             {{ lineNumber }}
           </div>
@@ -41,7 +41,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
           <div
             *ngFor="let codeLine of this.codeLines; let index = index"
             class="code-line"
-            [ngClass]="{ highlight: this.isHighlighted(index) }"
+            [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
           >
             <pre
               [innerHtml]="
@@ -61,7 +61,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
     </div>
   `
 })
-export class CodeViewerComponent {
+export class CodeViewerComponent implements OnChanges {
   @Input()
   public code: string = ''; // Pre-formatted code string
 
@@ -90,7 +90,7 @@ export class CodeViewerComponent {
   public showHeader: boolean = true;
 
   @Input()
-  public downloadFileName?: string;
+  public downloadFileName: string = '';
 
   @Input()
   public additionalHeaderContent?: TemplateRef<unknown>;
@@ -98,24 +98,26 @@ export class CodeViewerComponent {
   @Input()
   public lineSplitter: RegExp = new RegExp('\r\n|\r|\n');
 
+  public codeLines: string[] = [];
+  public downloadCodeMetadata?: DownloadFileMetadata;
+  public lineNumbers: number[] = [];
   public searchText: string = '';
 
-  public get downloadCodeMetadata(): DownloadFileMetadata {
-    return {
-      dataSource: of(this.code),
-      fileName: this.downloadFileName!
-    };
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.code) {
+      this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
+      this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
+    }
+
+    if (changes.code || changes.downloadFileName) {
+      this.downloadCodeMetadata = {
+        dataSource: of(this.code),
+        fileName: this.downloadFileName
+      };
+    }
   }
 
-  public get codeLines(): string[] {
-    return isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
-  }
-
-  public get lineNumbers(): number[] {
-    return new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
-  }
-
-  public isHighlighted(lineNum: number): boolean {
+  public isLineHighlighted(lineNum: number): boolean {
     return (
       !isEmpty(this.highlightText) && this.codeLines[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
     );
