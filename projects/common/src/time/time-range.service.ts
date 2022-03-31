@@ -157,12 +157,12 @@ export class TimeRangeService {
   }
 
   public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam?: boolean): QueryParamObject {
-    let queryParams: QueryParamObject = {
+    const queryParams: QueryParamObject = {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
 
     if (refreshTimeOnNavigationParam) {
-      queryParams = { ...queryParams, [TimeRangeService.REFRESH_ON_NAVIGATION]: true };
+      return { ...queryParams, [TimeRangeService.REFRESH_ON_NAVIGATION]: true };
     }
 
     return queryParams;
