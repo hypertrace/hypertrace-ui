@@ -76,7 +76,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   @Output()
   public readonly selectionChange: EventEmitter<
-    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData> | undefined
+    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
   > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
@@ -113,6 +113,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       )
       .withEventListener(ChartEvent.Hover, data => {
         this.chartSyncService.mouseLocationChange(data, this.groupId, this);
+      })
+      .withEventListener(ChartEvent.MouseLeave, data => {
+        this.chartSyncService.mouseLocationChange(data, this.groupId, this);
       });
 
     if (this.rangeSelectionEnabled) {
@@ -126,7 +129,11 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     if (this.groupId !== undefined) {
       this.subscriptionLifeCycle.add(
         this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
-          this.chart?.showCrosshair(data);
+          if (data !== undefined) {
+            this.chart?.showCrosshair(data);
+          } else {
+            this.chart?.hideCrosshair();
+          }
         })
       );
     }

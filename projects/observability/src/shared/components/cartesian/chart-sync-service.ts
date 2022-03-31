@@ -24,7 +24,7 @@ export class ChartSyncService<TData> {
   public getLocationChangesForGroup(
     groupId: string,
     chartId: CartesianChartComponent<TData>
-  ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[]> {
+  ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[] | undefined> {
     return this.locationChangeSubject.pipe(
       filter(data => data.chartId !== chartId && data.groupId === groupId),
       map(data => data.locationData)

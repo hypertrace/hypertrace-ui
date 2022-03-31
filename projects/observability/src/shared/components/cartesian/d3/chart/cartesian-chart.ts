@@ -83,14 +83,16 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly groupId?: string
   ) {}
 
-  public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[] | undefined): void {
-    if (locationData !== undefined && locationData.length > 0) {
+  public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+    if (locationData.length > 0) {
       const location = locationData[0].location;
       const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
       this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
-    } else {
-      this.renderedAxes.forEach(axis => axis.onMouseLeave());
     }
+  }
+
+  public hideCrosshair(): void {
+    this.renderedAxes.forEach(axis => axis.onMouseLeave());
   }
 
   protected onBrushSelection(event: D3BrushEvent<unknown>): void {
@@ -602,11 +604,11 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     }
 
     this.eventListeners.forEach(listener => {
-      if (listener.event === ChartEvent.Hover) {
+      if (listener.event === ChartEvent.MouseLeave) {
         listener.onEvent(undefined);
       }
     });
 
-    this.renderedAxes.forEach(axis => axis.onMouseLeave());
+    this.hideCrosshair();
   }
 }

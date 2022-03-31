@@ -7,7 +7,8 @@ export const enum ChartEvent {
   DoubleClick,
   RightClick,
   Hover,
-  Select
+  Select,
+  MouseLeave
 }
 
 export type ChartEventListener<TData> = (
