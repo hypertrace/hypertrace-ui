@@ -68,5 +68,6 @@ export const enum LegendPosition {
   TopRight = 'top-right',
   TopLeft = 'top-left',
   Top = 'top',
+  Left = 'left',
   None = 'none'
 }

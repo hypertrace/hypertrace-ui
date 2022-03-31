@@ -117,6 +117,8 @@ export abstract class D3VisualizationBuilderService<
         return 'column-reverse';
       case LegendPosition.Right:
         return 'row';
+      case LegendPosition.Left:
+        return 'row-reverse';
       case LegendPosition.None:
         return '';
       default:
@@ -222,7 +224,7 @@ export abstract class D3VisualizationBuilderService<
 
     const isLegendVisible = this.isLegendVisible(config);
     const isTopOrBottomLegend = this.isTopOrBottomLegend(config);
-    const isSideLegend = config.legend === LegendPosition.Right;
+    const isSideLegend = config.legend === LegendPosition.Right || config.legend === LegendPosition.Left;
     let legendWidth = isLegendVisible
       ? 0
       : isSideLegend
@@ -312,6 +314,7 @@ export abstract class D3VisualizationBuilderService<
   protected getLegendLayout(configuration: TInternalConfig): LegendLayout {
     switch (configuration.legend) {
       case LegendPosition.Right:
+      case LegendPosition.Left:
         return LegendLayout.Column;
       case LegendPosition.Top:
       case LegendPosition.TopRight:
