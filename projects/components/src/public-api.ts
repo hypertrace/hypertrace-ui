@@ -199,6 +199,11 @@ export * from './load-async/load-async-state.type';
 export { MessageDisplayComponent } from './message-display/message-display.component';
 export { MessageDisplayModule } from './message-display/message-display.module';
 
+// Metric Card
+export * from './metric-card/metric-card';
+export * from './metric-card/metric-card.component';
+export * from './metric-card/metric-card.module';
+
 // Modal
 export * from './modal/modal';
 export * from './modal/modal.module';
