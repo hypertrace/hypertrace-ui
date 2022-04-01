@@ -1,4 +1,4 @@
-import { LegendPosition } from '../legend/legend.component';
+import { LegendFontSize, LegendPosition } from '../legend/legend.component';
 import { TooltipOption } from '../utils/d3/d3-visualization-builder.service';
 
 export interface Donut {
@@ -12,6 +12,7 @@ export interface DonutConfiguration {
   legendPosition?: LegendPosition;
   tooltipOption?: TooltipOption;
   displayLegendCounts?: boolean;
+  legendFontSize?: LegendFontSize;
 }
 
 export interface DonutSeriesResults {

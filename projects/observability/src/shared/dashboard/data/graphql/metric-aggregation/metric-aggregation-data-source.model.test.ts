@@ -49,7 +49,7 @@ describe('Metric aggregation data source model', () => {
               {
                 [callCountSpec.resultAlias()]: {
                   value: 10,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 }
               }
             ]

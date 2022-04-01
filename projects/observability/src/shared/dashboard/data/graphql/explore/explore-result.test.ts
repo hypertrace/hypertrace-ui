@@ -10,21 +10,21 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
         },
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(2)
         }
@@ -53,7 +53,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -63,7 +63,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
@@ -73,7 +73,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'third',
@@ -96,7 +96,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -106,7 +106,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: '__Other',
@@ -128,7 +128,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -139,7 +139,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -150,7 +150,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
@@ -161,7 +161,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 25,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
