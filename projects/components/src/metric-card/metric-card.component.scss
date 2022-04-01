@@ -1,0 +1,34 @@
+@import 'mixins';
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid;
+  padding: 10px;
+  border-radius: 6px;
+
+  .indicator-and-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .indicator {
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+    }
+
+    .title-text {
+      @include chart-small-regular($gray-7);
+      text-transform: uppercase;
+    }
+  }
+
+  .value {
+    @include header-5($gray-7);
+    margin-left: 14px;
+  }
+}
