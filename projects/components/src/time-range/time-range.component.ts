@@ -125,7 +125,7 @@ export class TimeRangeComponent {
           text$: of('Refresh'),
           role: ButtonRole.Tertiary,
           isEmphasized: false,
-          onClick: () => this.onRefresh(timeRange)
+          onClick: () => this.onRefresh()
         }),
         this.ngZone.runOutsideAngular(() =>
           // Long running timer will prevent zone from stabilizing
@@ -143,7 +143,7 @@ export class TimeRangeComponent {
               ),
               role: ButtonRole.Primary,
               isEmphasized: true,
-              onClick: () => this.onRefresh(timeRange)
+              onClick: () => this.onRefresh()
             }))
           )
         )
@@ -153,8 +153,8 @@ export class TimeRangeComponent {
     return EMPTY;
   };
 
-  private onRefresh(timeRange: RelativeTimeRange): void {
-    this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
+  private onRefresh(): void {
+    this.timeRangeService.refresh();
   }
 }
 
