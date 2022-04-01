@@ -1,9 +1,9 @@
+import { IconType } from '@hypertrace/assets-library';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { IconType } from '@hypertrace/assets-library';
 import { IconComponent } from '../icon/icon.component';
-import { MetricCardComponent } from './metric-card.component';
 import { MetricCardIndicatorType } from './metric-card';
+import { MetricCardComponent } from './metric-card.component';
 
 describe('Metric Card Component', () => {
   const createComponent = createComponentFactory({
