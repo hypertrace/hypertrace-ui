@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ParamMap } from '@angular/router';
-import { isEmpty, isNil } from 'lodash-es';
+import { isEmpty, isNil, omit } from 'lodash-es';
 import { concat, EMPTY, Observable, ReplaySubject } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
@@ -94,15 +94,15 @@ export class TimeRangeService {
 
   private initializeTimeRange(): void {
     concat(this.getInitialTimeRange(), this.getPageTimeRangeChanges()).subscribe(timeRange => {
-      if (
-        this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '') !==
-        timeRange.toUrlString()
-      ) {
-        console.log('from init CALLING setTimeRangeInUrl');
+      if (!this.timeRangeMatchesCurrentUrl(timeRange)) {
         this.setTimeRangeInUrl(timeRange);
       } else {
-        console.log('from init CALLING applyTimeRangeChange');
         this.applyTimeRangeChange(timeRange);
+
+        const queryParams = this.navigationService.getCurrentActivatedRoute().snapshot.queryParams;
+        if (TimeRangeService.REFRESH_ON_NAVIGATION in queryParams) {
+          this.navigationService.replaceQueryParametersInUrl(omit(queryParams, TimeRangeService.REFRESH_ON_NAVIGATION));
+        }
       }
     });
   }
@@ -130,7 +130,6 @@ export class TimeRangeService {
   }
 
   private applyTimeRangeChange(newTimeRange: TimeRange): this {
-    console.log('Emitting');
     this.currentTimeRange = newTimeRange;
     this.timeRangeSubject$.next(newTimeRange);
 
@@ -138,7 +137,6 @@ export class TimeRangeService {
   }
 
   private setTimeRangeInUrl(timeRange: TimeRange): this {
-    console.log('Adding query params');
     this.navigationService.addQueryParametersToUrl({
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     });
@@ -170,6 +168,12 @@ export class TimeRangeService {
     }
 
     return queryParams;
+  }
+
+  private timeRangeMatchesCurrentUrl(timeRange: TimeRange): boolean {
+    return (
+      this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '') === timeRange.toUrlString()
+    );
   }
 
   public isInitialized(): boolean {
