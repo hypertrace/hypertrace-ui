@@ -60,7 +60,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
 
   private fetchAndRunChangeDetection(): void {
     this.data$ = this.fetchData().pipe(
-      shareReplay(),
+      shareReplay({ bufferSize: 1, refCount: true }),
       takeUntil(this.destroyed$),
       tap(() => this.changeDetector.markForCheck())
     );

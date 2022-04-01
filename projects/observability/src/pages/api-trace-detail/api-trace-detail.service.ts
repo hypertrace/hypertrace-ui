@@ -40,7 +40,7 @@ export class ApiTraceDetailService implements OnDestroy {
         startTime: paramMap.get(ApiTraceDetailService.START_TIME_PARAM_NAME) as string | undefined
       })),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -62,7 +62,7 @@ export class ApiTraceDetailService implements OnDestroy {
           .pipe(map(durationAttribute => this.constructTraceDetails(trace, durationAttribute)))
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -77,7 +77,7 @@ export class ApiTraceDetailService implements OnDestroy {
       ),
       map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 

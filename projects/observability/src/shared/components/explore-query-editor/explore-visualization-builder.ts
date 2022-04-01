@@ -48,7 +48,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       debounceTime(10),
       map(requestState => this.buildRequest(requestState)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 

@@ -33,7 +33,7 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
     this.entityId$ = route.paramMap.pipe(
       map(paramMap => paramMap.get(this.getEntityIdParamName())!),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
 
     this.entity$ = combineLatest([this.entityId$, this.timeRangeService.getTimeRangeAndChanges()]).pipe(
@@ -47,7 +47,7 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
         })
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
 
     this.entityFilter$ = this.entityId$.pipe(map(id => new GraphQlEntityFilter(id, this.getEntityType())));

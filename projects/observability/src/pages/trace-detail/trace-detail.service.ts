@@ -43,7 +43,7 @@ export class TraceDetailService implements OnDestroy {
         startTime: paramMap.get(this.getStartTimeParamName()) ?? undefined
       })),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -84,7 +84,7 @@ export class TraceDetailService implements OnDestroy {
         )
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -99,7 +99,7 @@ export class TraceDetailService implements OnDestroy {
         })
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -110,7 +110,7 @@ export class TraceDetailService implements OnDestroy {
       ),
       map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
