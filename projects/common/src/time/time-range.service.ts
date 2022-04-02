@@ -53,12 +53,10 @@ export class TimeRangeService {
   }
 
   public setRelativeRange(value: number, unit: TimeUnit): this {
-    // return this.setTimeRange(TimeRangeService.toRelativeTimeRange(value, unit));
     return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
   }
 
   public setFixedRange(startTime: Date, endTime: Date): this {
-    // return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
     return this.setTimeRangeInUrl(TimeRangeService.toFixedTimeRange(startTime, endTime));
   }
 
