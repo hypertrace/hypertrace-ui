@@ -21,9 +21,7 @@ describe('Page time range preference service', () => {
     service: PageTimeRangePreferenceService,
     providers: [
       mockProvider(NavigationService, {
-        getCurrentActivatedRoute: jest
-          .fn()
-          .mockReturnValue({ snapshot: { data: { defaultTimeRange: defaultPageTimeRange } } })
+        getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
       }),
       mockProvider(FeatureStateResolver, {
         getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
