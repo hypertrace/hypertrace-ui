@@ -9,7 +9,7 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link *ngIf="this.config" [paramsOrUrl]="this.buildNavigationParam(this.config)">
+    <ht-link *ngIf="this.config" [paramsOrUrl]="buildNavigationParam | htMemoize: this.config">
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
@@ -57,7 +57,7 @@ export class NavItemComponent {
   @Input()
   public readonly navItemViewStyle?: NavViewStyle;
 
-  public buildNavigationParam(item: NavItemLinkConfig): NavigationParams {
+  public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => {
     const navParams: NavigationParams = {
       navType: NavigationParamsType.InApp,
       path: item.matchPaths[0],
@@ -73,7 +73,7 @@ export class NavItemComponent {
     }
 
     return navParams;
-  }
+  };
 
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
