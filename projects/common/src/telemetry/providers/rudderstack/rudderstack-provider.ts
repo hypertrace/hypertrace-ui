@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '../../../utilities/types/types';
 
-import * as rudderanalytics from 'rudder-sdk-js';
+import { apiObject, identify, load, page, track } from 'rudder-sdk-js';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
 
+export interface RudderStackConfig extends TelemetryProviderConfig {
+  writeKey: string;
+}
+
 @Injectable({ providedIn: 'root' })
-export class RudderStackTelemetry<InitConfig extends TelemetryProviderConfig>
-  implements UserTelemetryProvider<InitConfig> {
-  public initialize(config: InitConfig): void {
-    rudderanalytics.load(config.orgId, config.orgTrackingURL!);
+export class RudderStackTelemetry implements UserTelemetryProvider<RudderStackConfig> {
+  public initialize(config: RudderStackConfig): void {
+    load(config.writeKey, config.orgId, { configUrl: config.orgId });
   }
 
   public identify(userTraits: UserTraits): void {
-    rudderanalytics.identify(undefined, userTraits as rudderanalytics.apiObject);
+    identify(undefined, userTraits as apiObject);
   }
 
   public trackEvent(name: string, eventData: Dictionary<unknown>): void {
-    rudderanalytics.track(name, eventData as rudderanalytics.apiObject);
+    track(name, eventData as apiObject);
   }
 
   public trackPage(name: string, eventData: Dictionary<unknown>): void {
-    rudderanalytics.page(name, name, eventData as rudderanalytics.apiObject);
+    page(name, name, eventData as apiObject);
   }
 
   public trackError(name: string, eventData: Dictionary<unknown>): void {
