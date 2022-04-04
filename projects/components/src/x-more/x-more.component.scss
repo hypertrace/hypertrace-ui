@@ -1,19 +1,21 @@
-@import 'color-palette';
+@import 'mixins';
 
 .ht-x-more {
+  @include body-2-regular($gray-7);
+
   .summary-text {
     padding: 0 6px;
     margin-left: 8px;
     border-radius: 4px;
-  }
 
-  .plain {
-    color: $gray-7;
-    margin-left: 0px;
-    background-color: white;
-  }
+    &.plain {
+      color: $gray-7;
+      margin-left: 0;
+      background-color: white;
+    }
 
-  .gray {
-    background-color: $gray-2;
+    &.gray {
+      background-color: $gray-2;
+    }
   }
 }
