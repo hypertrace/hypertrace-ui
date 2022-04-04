@@ -48,7 +48,7 @@ describe('Explore cartesian data source model', () => {
               name: name,
               displayName: 'Duration',
               units: 'ms',
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               scope: context,
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,
@@ -99,14 +99,14 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               }
@@ -168,7 +168,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'first',
@@ -178,7 +178,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'second',
@@ -232,7 +232,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'first',
@@ -243,7 +243,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'first',
@@ -254,7 +254,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 20,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'second',
@@ -265,7 +265,7 @@ describe('Explore cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 25,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 },
                 baz: {
                   value: 'second',

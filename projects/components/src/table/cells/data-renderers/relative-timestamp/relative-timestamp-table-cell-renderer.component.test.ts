@@ -6,7 +6,7 @@ import {
   TooltipDirective
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { MockComponent, MockPipe } from 'ng-mocks';
+import { MockDirective, MockPipe } from 'ng-mocks';
 import { tableCellDataProvider } from '../../test/cell-providers';
 import {
   RelativeTimestampTableCellRendererComponent,
@@ -24,7 +24,7 @@ describe('relative timestamp table cell renderer component', () => {
         new TableCellNoOpParser(undefined!)
       )
     ],
-    declarations: [MockComponent(TooltipDirective), MockPipe(DisplayDatePipe)],
+    declarations: [MockDirective(TooltipDirective), MockPipe(DisplayDatePipe)],
     shallow: true
   });
 

@@ -35,7 +35,10 @@ export class OverlayService {
       data: metadata
     });
 
-    popover.closeOnNavigation();
+    if (config.closeOnNavigation !== false) {
+      popover.closeOnNavigation();
+    }
+
     sheetRef.initialize(popover);
 
     this.setActiveSheetPopover(popover);
@@ -71,7 +74,6 @@ export class OverlayService {
     this.activeSheetPopover?.close();
 
     this.activeSheetPopover = popover;
-    this.activeSheetPopover.closeOnNavigation();
     this.sheetCloseSubscription = this.activeSheetPopover.closed$.subscribe(
       () => (this.activeSheetPopover = undefined)
     );

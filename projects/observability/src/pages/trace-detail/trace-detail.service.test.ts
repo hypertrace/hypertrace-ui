@@ -64,7 +64,7 @@ describe('TraceDetailService', () => {
               name: attributeKey,
               displayName: 'Latency',
               units: 'ms',
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               scope: scope,
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,

@@ -27,8 +27,9 @@ import { RadioOption } from './radio-option';
       <mat-radio-button
         class="radio-button"
         *ngFor="let option of options"
-        [ngClass]="[this.optionsDirection, this.disabled ? 'disabled' : '']"
+        [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
+        [disabled]="option.disabled"
       >
         <ng-container
           *ngTemplateOutlet="

@@ -1,5 +1,7 @@
 import { rgb } from 'd3-color';
 import { interpolateRgbBasis, quantize } from 'd3-interpolate';
+import { hashCode } from '../utilities/math/math-utilities';
+import { Color, ColorCombination } from './color';
 
 export class ColorPalette {
   private readonly basisColors: string[];
@@ -8,6 +10,25 @@ export class ColorPalette {
       throw Error('A color palette must consist of at least 2 colors');
     }
     this.basisColors = basisColors.map(color => rgb(color).toString());
+  }
+
+  public getColorCombinations(count: number): ColorCombination[] {
+    return this.forNColors(count).map(color => ({ background: color, foreground: this.getContrast(color) }));
+  }
+
+  public getColorCombinationForId(id: string, colorSetSize: number = this.basisColors.length): ColorCombination {
+    return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
+  }
+
+  private getContrast(rgbColorString: string): string {
+    // Convert to RGB value
+    const rgbColor = rgb(rgbColorString);
+
+    // Get YIQ ratio
+    const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
+
+    // Check contrast
+    return yiq >= 128 ? Color.Gray9 : Color.White;
   }
 
   public forNColors(count: number): string[] {

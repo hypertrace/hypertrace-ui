@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import {
+  ApplicationFeature,
+  FeatureState,
+  FeatureStateResolver,
+  PageTimeRangePreferenceService
+} from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationListComponentService {
-  public constructor(private readonly featureStateResolver: FeatureStateResolver) {}
+  public constructor(
+    private readonly featureStateResolver: FeatureStateResolver,
+    private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService
+  ) {}
 
   public resolveFeaturesAndUpdateVisibilityForNavItems(navItems: NavItemConfig[]): NavItemConfig[] {
     const updatedItems = this.updateLinkNavItemsVisibility(navItems);
@@ -24,6 +32,31 @@ export class NavigationListComponentService {
     }
 
     return updatedItems;
+  }
+
+  public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
+    return this.featureStateResolver
+      .getFeatureState(ApplicationFeature.PageTimeRange)
+      .pipe(switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))));
+  }
+
+  private getTimeRangesForNavItems(
+    navItems: NavItemConfig[],
+    pageLevelTimeRangeFeatureState: FeatureState
+  ): Observable<NavItemConfig>[] {
+    return navItems.map(navItem => {
+      if (navItem.type === NavItemType.Link) {
+        return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
+          map(timeRangeResolver => ({
+            ...navItem,
+            timeRangeResolver: timeRangeResolver,
+            pageLevelTimeRangeIsEnabled: pageLevelTimeRangeFeatureState === FeatureState.Enabled
+          }))
+        );
+      }
+
+      return of(navItem);
+    });
   }
 
   private updateHeaderNavItemsVisibility(navItems: NavItemLinkConfig[]): Observable<boolean> {
