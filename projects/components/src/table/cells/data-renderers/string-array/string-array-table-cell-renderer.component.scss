@@ -2,9 +2,16 @@
 @import 'color-palette';
 
 .string-array-cell {
+  @include ellipsis-overflow();
+  @include body-1-regular($gray-7);
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+
+  &.first-column {
+    @include body-1-medium($gray-9);
+  }
 
   .first-item {
     @include ellipsis-overflow();

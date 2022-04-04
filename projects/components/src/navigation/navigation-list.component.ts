@@ -1,20 +1,28 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, TypedSimpleChanges } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
-import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
+import {
+  FooterItemConfig,
+  NavItemConfig,
+  NavItemGroup,
+  NavItemLinkConfig,
+  NavItemType,
+  NavViewStyle
+} from './navigation.config';
 
 @Component({
   selector: 'ht-navigation-list',
   styleUrls: ['./navigation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="navigation-list" [ngClass]="{ expanded: !this.collapsed }">
+    <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navViewStyle ?? '']">
       <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
+        <ng-content></ng-content>
         <ng-container *ngFor="let item of this.navItems; let id = index">
           <ng-container [ngSwitch]="item.type">
             <div *ngIf="!this.collapsed">
@@ -29,7 +37,13 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
             <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
 
             <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item [config]="item" [active]="item === activeItem" [collapsed]="this.collapsed"></ht-nav-item>
+              <ht-nav-item
+                [navItemViewStyle]="this.navViewStyle"
+                (click)="this.navItemClick.emit(item)"
+                [config]="item"
+                [active]="item === activeItem"
+                [collapsed]="this.collapsed"
+              ></ht-nav-item>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -40,8 +54,15 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
       </div>
 
       <div class="footer" *ngIf="this.footerItems">
-        <hr class="nav-divider" />
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
+          <ht-icon class="nav-group-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
+        </div>
 
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
+          <ht-label class="nav-group-label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
+        </div>
+
+        <hr class="nav-divider" />
         <div *ngFor="let footerItem of footerItems" class="footer-item">
           <ht-link class="link" [paramsOrUrl]="footerItem.url">
             <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
@@ -53,6 +74,9 @@ import { FooterItemConfig, NavItemConfig, NavItemLinkConfig, NavItemType } from 
   `
 })
 export class NavigationListComponent implements OnChanges {
+  @Input()
+  public navGroup?: NavItemGroup;
+
   @Input()
   public navItems: NavItemConfig[] = [];
 
@@ -68,6 +92,15 @@ export class NavigationListComponent implements OnChanges {
   @Output()
   public readonly collapsedChange: EventEmitter<boolean> = new EventEmitter();
 
+  @Input()
+  public readonly navViewStyle?: NavViewStyle;
+
+  @Output()
+  public readonly navItemClick: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+
+  @Output()
+  public readonly activeItemChange: EventEmitter<NavItemLinkConfig> = new EventEmitter();
+
   public activeItem$?: Observable<NavItemLinkConfig | undefined>;
 
   public constructor(
@@ -76,12 +109,21 @@ export class NavigationListComponent implements OnChanges {
     private readonly navListComponentService: NavigationListComponentService
   ) {}
 
-  public ngOnChanges(): void {
-    this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
-    this.activeItem$ = this.navigationService.navigation$.pipe(
-      startWith(this.navigationService.getCurrentActivatedRoute()),
-      map(() => this.findActiveItem(this.navItems))
-    );
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.navItems) {
+      this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
+
+      // Must remain subscribed to in template to maintain time range functionality for activeItemChange.
+      this.activeItem$ = this.navigationService.navigation$.pipe(
+        startWith(this.navigationService.getCurrentActivatedRoute()),
+        map(() => {
+          const activeItem = this.findActiveItem(this.navItems);
+          this.activeItemChange.emit(activeItem);
+
+          return activeItem;
+        })
+      );
+    }
   }
 
   public toggleView(): void {

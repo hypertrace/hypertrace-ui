@@ -346,7 +346,7 @@ describe('Select Component', () => {
   test('should show clear selected button', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-select [selected]="selected">
+    <ht-select [selected]="selected" [showClearSelected]="true">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [selectedLabel]="option.selectedLabel">
       </ht-select-option>
     </ht-select>`,

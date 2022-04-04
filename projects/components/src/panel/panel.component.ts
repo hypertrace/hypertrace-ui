@@ -11,6 +11,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import { Color } from '@hypertrace/common';
 import { PanelBodyComponent } from './body/panel-body.component';
 import { PanelHeaderComponent } from './header/panel-header.component';
 
@@ -19,7 +20,12 @@ import { PanelHeaderComponent } from './header/panel-header.component';
   styleUrls: ['./panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-panel fill-container" [htLayoutChangeTrigger]="this.expanded">
+    <div
+      class="ht-panel fill-container"
+      [htLayoutChangeTrigger]="this.expanded"
+      [style.backgroundColor]="this.backgroundColor"
+      [ngClass]="{ bordered: this.showBorder }"
+    >
       <div *ngIf="this.header" [ngClass]="{ disabled: this.disabled, expanded: this.expanded }" class="header">
         <ng-container #headerContainer></ng-container>
       </div>
@@ -35,6 +41,12 @@ export class PanelComponent implements AfterViewInit {
 
   @Input()
   public disabled: boolean = false;
+
+  @Input()
+  public backgroundColor: string = Color.White;
+
+  @Input()
+  public showBorder: boolean = false;
 
   @Output()
   public readonly expandedChange: EventEmitter<boolean> = new EventEmitter();
