@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { FixedTimeRange, PreferenceService, RelativeTimeRange, TimeRangeService } from '@hypertrace/common';
+import { PreferenceService, TimeRangeService } from '@hypertrace/common';
 import {
   NavigationListComponentService,
   NavigationListService,
@@ -10,7 +10,6 @@ import {
   NavItemType
 } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
-import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -24,7 +23,6 @@ import { Observable } from 'rxjs';
         *htLetAsync="this.isCollapsed$ as isCollapsed"
         [collapsed]="isCollapsed"
         (collapsedChange)="this.onViewToggle($event)"
-        (navItemClick)="this.setPageTimeRangeForSelectedNavItem($event)"
         (activeItemChange)="this.updateDefaultTimeRangeIfUnset($event)"
       ></ht-navigation-list>
     </div>
@@ -99,17 +97,6 @@ export class NavigationComponent {
     this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(navItems);
 
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
-  }
-
-  public setPageTimeRangeForSelectedNavItem(navItemLink: NavItemLinkConfig): void {
-    if (!isNil(navItemLink.timeRangeResolver) && navItemLink.pageLevelTimeRangeIsEnabled) {
-      const timeRange = navItemLink.timeRangeResolver();
-      if (timeRange instanceof FixedTimeRange) {
-        this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
-      } else if (timeRange instanceof RelativeTimeRange) {
-        this.timeRangeService.setRelativeRange(timeRange.duration.value, timeRange.duration.unit);
-      }
-    }
   }
 
   public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig): void {
