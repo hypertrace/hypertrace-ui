@@ -41,10 +41,10 @@ export class ExploreSpecificationBuilder {
     aggregation?: MetricAggregationType
   ): ExploreSpecification {
     const expressionString = this.attributeExpressionAsString(expression).replaceAll('.', '_');
-    const queryAlias = aggregation === undefined ? expressionString : `${aggregation}_${expressionString}`;
+    const queryAlias = this.buildResultAlias(expression, aggregation);
 
     return {
-      resultAlias: () => this.buildResultAlias(expression, aggregation),
+      resultAlias: () => queryAlias,
       name: expressionString,
       aggregation: aggregation,
       asGraphQlSelections: () => ({
@@ -77,9 +77,9 @@ export class ExploreSpecificationBuilder {
   }
 
   protected buildResultAlias(expression: AttributeExpression, aggregation?: MetricAggregationType): string {
-    const expressionString = this.attributeExpressionAsString(expression);
+    const expressionString = this.attributeExpressionAsString(expression).replaceAll('.', '_');
 
-    return aggregation === undefined ? expressionString : `${aggregation}(${expressionString})`;
+    return aggregation === undefined ? expressionString : `${aggregation}_${expressionString}`;
   }
 
   protected aggregationAsEnum(aggregation: MetricAggregationType): GraphQlEnumArgument<GraphQlMetricAggregationType> {
