@@ -26,5 +26,4 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp
 })
-export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {
-}
+export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {}

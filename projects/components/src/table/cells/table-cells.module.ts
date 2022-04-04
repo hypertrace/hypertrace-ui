@@ -23,24 +23,14 @@ import { DurationTableCellRendererComponent } from './data-renderers/duration/du
 import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
-import {
-  RelativeTimestampTableCellRendererComponent
-} from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
-import {
-  StringArrayTableCellRendererComponent
-} from './data-renderers/string-array/string-array-table-cell-renderer.component';
+import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
+import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
-import {
-  TextWithCopyActionTableCellRendererComponent
-} from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
+import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
 import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
-import {
-  TimestampTableCellRendererComponent
-} from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
-import {
-  TableExpandedDetailRowCellRendererComponent
-} from './expanded-detail/table-expanded-detail-row-cell-renderer.component';
+import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
+import { TableExpandedDetailRowCellRendererComponent } from './expanded-detail/table-expanded-detail-row-cell-renderer.component';
 import { TableCellStateParser } from './state-parsers/table-cell-state-parser';
 import { TableCheckboxCellRendererComponent } from './state-renderers/checkbox/table-checkbox-cell-renderer.component';
 import { TableExpanderCellRendererComponent } from './state-renderers/expander/table-expander-cell-renderer.component';
