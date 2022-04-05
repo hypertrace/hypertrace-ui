@@ -45,8 +45,6 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
   `
 })
 export class NavItemComponent {
-  private static readonly QUERY_PARAM_HANDLING_STRATEGY = 'merge';
-
   @Input()
   public config!: NavItemLinkConfig;
 
@@ -70,7 +68,6 @@ export class NavItemComponent {
     if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
       return {
         ...navParams,
-        queryParamsHandling: NavItemComponent.QUERY_PARAM_HANDLING_STRATEGY,
         queryParams: this.timeRangeService.toQueryParams(this.config.timeRangeResolver(), true)
       };
     }
