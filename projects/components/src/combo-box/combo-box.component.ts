@@ -34,7 +34,12 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
     }
   ],
   template: `
-    <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
+    <ht-popover
+      class="combo-box"
+      [disabled]="this.disabled"
+      (popoverOpen)="this.onPopoverOpen($event)"
+      (popoverClose)="this.onPopoverClose()"
+    >
       <ht-popover-trigger>
         <div
           #trigger
@@ -42,7 +47,8 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
           [ngClass]="{
             input: this.mode === '${ComboBoxMode.Input}',
             chip: this.mode === '${ComboBoxMode.Chip}',
-            'show-border': this.showBorder
+            'show-border': this.showBorder,
+            disabled: this.disabled
           }"
           [class.has-text]="this.text"
           [class.input-focused]="input.matches(':focus')"
@@ -79,6 +85,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
 
           <!-- Clear Button -->
           <div
+            *ngIf="!this.disabled"
             [class.has-text]="this.text"
             [class.input-focused]="input.matches(':focus')"
             [ngClass]="this.mode"
@@ -427,6 +434,10 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
     });
   }
 
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
   private propagateValueChangeToFormControl(value?: string): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
@@ -434,6 +445,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public writeValue(text?: string): void {
     this.text = text;
+    this.changeDetectorRef.markForCheck();
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {

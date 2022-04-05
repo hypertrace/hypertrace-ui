@@ -8,7 +8,7 @@ import {
 import { BOOLEAN_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
-import { CartesianSelectedData } from '../../../../../../public-api';
+import { CartesianSelectedData } from '../../../../../components/cartesian/chart-interactivty';
 import { InteractionHandler } from '../../../../interaction/interaction-handler';
 import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-context-menu/cartesian-explorer-context-menu.component';
 

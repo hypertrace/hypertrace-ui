@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { AbstractStorage } from '../utilities/browser/storage/abstract-storage';
+import { InMemoryStorage } from '../utilities/browser/storage/in-memory-storage';
 import { LocalStorage } from '../utilities/browser/storage/local-storage';
 import { SessionStorage } from '../utilities/browser/storage/session-storage';
 import { BooleanCoercer } from '../utilities/coercers/boolean-coercer';
@@ -9,7 +10,8 @@ import { NumberCoercer } from '../utilities/coercers/number-coercer';
 
 export const enum StorageType {
   Local = 'local',
-  Session = 'session'
+  Session = 'session',
+  InMemory = 'in-memory'
 }
 
 @Injectable({
@@ -24,7 +26,11 @@ export class PreferenceService {
   private readonly numberCoercer: NumberCoercer = new NumberCoercer();
   private readonly booleanCoercer: BooleanCoercer = new BooleanCoercer();
 
-  public constructor(private readonly localStorage: LocalStorage, private readonly sessionStorage: SessionStorage) {}
+  public constructor(
+    private readonly localStorage: LocalStorage,
+    private readonly sessionStorage: SessionStorage,
+    private readonly inMemoryStorage: InMemoryStorage
+  ) {}
 
   /**
    * Returns the current storage value if defined, else the default value. The observable
@@ -94,6 +100,8 @@ export class PreferenceService {
     switch (type) {
       case StorageType.Session:
         return this.sessionStorage;
+      case StorageType.InMemory:
+        return this.inMemoryStorage;
       case StorageType.Local:
       default:
         return this.localStorage;

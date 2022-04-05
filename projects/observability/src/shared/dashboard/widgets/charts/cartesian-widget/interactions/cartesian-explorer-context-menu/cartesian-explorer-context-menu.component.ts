@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { TimeRangeService } from '@hypertrace/common';
 import { ButtonStyle, POPOVER_DATA } from '@hypertrace/components';
 import { CartesianSelectedData } from '../../../../../../components/cartesian/chart-interactivty';
 import { CartesainExplorerNavigationService } from '../cartesian-explorer-navigation.service';
@@ -12,12 +13,7 @@ import { CartesainExplorerNavigationService } from '../cartesian-explorer-naviga
     <div class="context-menu-container">
       <div *ngFor="let menu of menus">
         <div class="context-menu">
-          <ht-button
-            [label]="menu.name"
-            [icon]="menu.icon"
-            [display]="display"
-            (click)="menuSelectHandler(menu)"
-          ></ht-button>
+          <ht-button [label]="menu.name" [icon]="menu.icon" [display]="display" (click)="menu.onClick()"></ht-button>
         </div>
 
         <ht-divider></ht-divider>
@@ -28,8 +24,14 @@ import { CartesainExplorerNavigationService } from '../cartesian-explorer-naviga
 export class CartesianExplorerContextMenuComponent<TData> {
   public menus?: ContextMenu[] = [
     {
+      name: 'Set Time Range',
+      icon: IconType.Alarm,
+      onClick: () => this.setTimeRangeHandler()
+    },
+    {
       name: 'Explore',
-      icon: IconType.ArrowUpRight
+      icon: IconType.ArrowUpRight,
+      onClick: () => this.explorerNavigationHandler()
     }
   ];
 
@@ -38,20 +40,26 @@ export class CartesianExplorerContextMenuComponent<TData> {
 
   public constructor(
     @Inject(POPOVER_DATA) data: CartesianSelectedData<TData>,
-    private readonly cartesainExplorerNavigationService: CartesainExplorerNavigationService
+    private readonly cartesainExplorerNavigationService: CartesainExplorerNavigationService,
+    private readonly timeRangeService: TimeRangeService
   ) {
     this.selectionData = data;
   }
 
-  public menuSelectHandler = (_menu: ContextMenu): void => {
+  public readonly explorerNavigationHandler = () => {
     this.cartesainExplorerNavigationService.navigateToExplorer(
       this.selectionData.timeRange.startTime,
       this.selectionData.timeRange.endTime
     );
+  };
+
+  public readonly setTimeRangeHandler = () => {
+    this.timeRangeService.setFixedRange(this.selectionData.timeRange.startTime, this.selectionData.timeRange.endTime);
   };
 }
 
 interface ContextMenu {
   name: string;
   icon: string;
+  onClick(): void;
 }

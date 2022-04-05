@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -17,7 +17,6 @@ import { TimeUnit } from './time-unit.type';
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
 
-  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -72,15 +71,14 @@ export class TimeRangeService {
         map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
         filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
-        catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultTimeRange)
+        catchError(() => EMPTY)
       )
       .subscribe(timeRange => {
         this.setTimeRange(timeRange);
       });
   }
 
-  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);
@@ -103,6 +101,12 @@ export class TimeRangeService {
     return this;
   }
 
+  public setDefaultTimeRange(timeRange: TimeRange): void {
+    if (!this.currentTimeRange) {
+      this.setTimeRange(timeRange);
+    }
+  }
+
   public static toRelativeTimeRange(value: number, unit: TimeUnit): RelativeTimeRange {
     return new RelativeTimeRange(new TimeDuration(value, unit));
   }
@@ -112,11 +116,14 @@ export class TimeRangeService {
   }
 
   public toQueryParams(startTime: Date, endTime: Date): QueryParamObject {
-    const newTimeRange = TimeRangeService.toFixedTimeRange(startTime, endTime);
-    this.timeRangeSubject$.next(newTimeRange);
+    const newTimeRange = new FixedTimeRange(startTime, endTime);
 
     return {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     };
+  }
+
+  public isInitialized(): boolean {
+    return !isNil(this.currentTimeRange);
   }
 }

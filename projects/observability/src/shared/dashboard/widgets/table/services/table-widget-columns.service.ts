@@ -55,18 +55,19 @@ export class TableWidgetColumnsService {
       width: '1',
       visible: false,
       editable: true,
-      filterable: this.isFilterable(attribute),
+      filterable: this.isFilterable(attribute.type),
       specification: new SpecificationBuilder().attributeSpecificationForKey(attribute.name)
     };
   }
 
-  private isFilterable(attribute: AttributeMetadata): boolean {
-    return this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type));
+  private isFilterable(type?: AttributeMetadataType): boolean {
+    return type === undefined ? false : this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(type));
   }
 
   private lookupDisplayType(type: AttributeMetadataType): string {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
         return CoreTableCellRendererType.Number;
       case AttributeMetadataType.Timestamp:
         return CoreTableCellRendererType.Timestamp;
@@ -77,7 +78,8 @@ export class TableWidgetColumnsService {
 
   private lookupAlignment(type: AttributeMetadataType): TableCellAlignmentType {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
       case AttributeMetadataType.Timestamp:
         return TableCellAlignmentType.Right;
       default:

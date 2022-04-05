@@ -120,6 +120,10 @@ export * from './time/time-range.service';
 export * from './time/time-range.type';
 export * from './time/time-unit.type';
 export * from './time/time';
+export * from './time/page-time-range-preference.service';
 
 // Validators
-export * from './utilities/validators/email-validator';
+export * from './utilities/validators';
+
+// Color Palette
+export * from './color/color-palette';

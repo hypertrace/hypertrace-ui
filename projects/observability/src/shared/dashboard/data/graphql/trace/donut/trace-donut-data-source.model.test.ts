@@ -96,7 +96,7 @@ describe('Donut data source model', () => {
             {
               'sum(foo)': {
                 value: 10,
-                type: AttributeMetadataType.Number
+                type: AttributeMetadataType.Long
               },
               bar: {
                 value: 'first',
@@ -106,7 +106,7 @@ describe('Donut data source model', () => {
             {
               'sum(foo)': {
                 value: 15,
-                type: AttributeMetadataType.Number
+                type: AttributeMetadataType.Long
               },
               bar: {
                 value: 'second',

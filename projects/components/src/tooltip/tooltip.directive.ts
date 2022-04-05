@@ -16,6 +16,9 @@ export class TooltipDirective implements OnDestroy {
   @Input('htTooltip')
   public content?: TemplateRef<unknown> | string | number;
 
+  @Input('htTooltipContext')
+  public context?: unknown;
+
   private readonly mouseEnter$: Subject<MouseEvent> = new Subject();
   private readonly mouseLeave$: Subject<MouseEvent> = new Subject();
 
@@ -55,7 +58,7 @@ export class TooltipDirective implements OnDestroy {
 
     this.popover = this.popoverService.drawPopover({
       componentOrTemplate: TooltipContentContainerComponent,
-      data: this.content,
+      data: { content: this.content, context: this.context ?? {} },
       position: {
         type: PopoverPositionType.Relative,
         origin: this.host,

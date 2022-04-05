@@ -45,6 +45,13 @@
     }
   }
 
+  &.disabled {
+    background-color: $gray-2;
+    .trigger-input {
+      color: black;
+    }
+  }
+
   .trigger-control {
     height: 100%;
     width: 24px;

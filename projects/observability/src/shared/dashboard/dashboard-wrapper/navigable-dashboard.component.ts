@@ -110,7 +110,10 @@ export class NavigableDashboardComponent implements OnChanges {
     const rootDataSource = dashboard.getRootDataSource<GraphQlFilterDataSourceModel>();
     rootDataSource
       ?.clearFilters()
-      .addFilters(...this.implicitFilters, ...this.graphQlFilterBuilderService.buildGraphQlFilters(explicitFilters));
+      .addFilters(
+        ...this.implicitFilters,
+        ...this.graphQlFilterBuilderService.buildGraphQlFieldFilters(explicitFilters)
+      );
     dashboard.refresh();
   }
 }

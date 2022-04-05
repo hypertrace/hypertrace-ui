@@ -13,6 +13,7 @@ import {
   tryParseStringForAttribute
 } from '../../filter/parser/parsed-filter';
 import { AbstractFilterParser } from '../../filter/parser/types/abstract-filter-parser';
+import { FilterValue } from './../../filter/filter';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,7 @@ export class FilterChipService {
 
   private buildIncompleteFiltersForAttribute(
     text: string,
-    filterBuilder: AbstractFilterBuilder<unknown>,
+    filterBuilder: AbstractFilterBuilder<FilterValue>,
     attributeExpression: FilterAttributeExpression
   ): IncompleteFilter[] {
     const topLevelOperatorFilters = filterBuilder.supportedTopLevelOperators().map(operator => ({
@@ -95,8 +96,8 @@ export class FilterChipService {
   }
 
   private buildIncompleteFilterForAttributeAndOperator(
-    filterBuilder: AbstractFilterBuilder<unknown>,
-    filterParser: AbstractFilterParser<unknown>,
+    filterBuilder: AbstractFilterBuilder<FilterValue>,
+    filterParser: AbstractFilterParser<FilterValue>,
     splitFilter: SplitFilter<FilterOperator>,
     text: string
   ): IncompleteFilter {
@@ -132,7 +133,7 @@ export class FilterChipService {
   }
 
   private buildIncompleteFilterForPartialAttributeMatch(
-    filterBuilder: AbstractFilterBuilder<unknown>,
+    filterBuilder: AbstractFilterBuilder<FilterValue>,
     attribute: FilterAttribute
   ): IncompleteFilter {
     return {

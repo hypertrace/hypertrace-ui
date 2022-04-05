@@ -594,14 +594,14 @@ export class TableWidgetRendererComponent
   private getSessionPreferences(): Observable<TableWidgetSessionPreferences> {
     return isNonEmptyString(this.model.getId())
       ? this.preferenceService
-          .get<TableWidgetSessionPreferences>(this.model.getId()!, {}, StorageType.Session)
+          .get<TableWidgetSessionPreferences>(this.model.getId()!, {}, StorageType.InMemory)
           .pipe(first())
       : of({});
   }
 
   private setSessionPreferences(preferences: TableWidgetSessionPreferences): void {
     if (isNonEmptyString(this.model.getId())) {
-      this.preferenceService.set(this.model.getId()!, preferences, StorageType.Session);
+      this.preferenceService.set(this.model.getId()!, preferences, StorageType.InMemory);
     }
   }
 
@@ -615,7 +615,7 @@ export class TableWidgetRendererComponent
   private mergeFilters(tableFilter: TableFilter): TableFilter[] {
     const existingSelectFiltersWithChangedRemoved = this.removeFilters(tableFilter.field);
 
-    return [...existingSelectFiltersWithChangedRemoved, tableFilter].filter(f => f.value !== undefined); // Remove filters that are unset
+    return [...existingSelectFiltersWithChangedRemoved, tableFilter];
   }
 
   private removeFilters(field: string): TableFilter[] {

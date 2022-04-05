@@ -2,7 +2,13 @@ import { ElementRef, Injector, Renderer2, TemplateRef, Type } from '@angular/cor
 import { assertUnreachable, DomElementMeasurerService, DynamicComponentService, selector } from '@hypertrace/common';
 import { ContainerElement, mouse, Selection } from 'd3-selection';
 import { isEqual } from 'lodash-es';
-import { LegendComponent, LegendLayout, LegendPosition, LegendSeries } from '../../legend/legend.component';
+import {
+  LegendComponent,
+  LegendFontSize,
+  LegendLayout,
+  LegendPosition,
+  LegendSeries
+} from '../../legend/legend.component';
 import { ChartTooltipBuilderService, ChartTooltipDataMapper } from '../chart-tooltip/chart-tooltip-builder.service';
 import { ChartTooltipRef } from '../chart-tooltip/chart-tooltip-popover';
 import { MouseDataLookupStrategy } from '../mouse-tracking/mouse-tracking';
@@ -117,6 +123,8 @@ export abstract class D3VisualizationBuilderService<
         return 'column-reverse';
       case LegendPosition.Right:
         return 'row';
+      case LegendPosition.Left:
+        return 'row-reverse';
       case LegendPosition.None:
         return '';
       default:
@@ -135,6 +143,7 @@ export abstract class D3VisualizationBuilderService<
       LegendComponent.buildProviders({
         position: config.legend,
         layout: this.getLegendLayout(config),
+        fontSize: this.getLegendFontSize(config),
         series: this.getLegendEntries(config)
       })
     );
@@ -222,7 +231,7 @@ export abstract class D3VisualizationBuilderService<
 
     const isLegendVisible = this.isLegendVisible(config);
     const isTopOrBottomLegend = this.isTopOrBottomLegend(config);
-    const isSideLegend = config.legend === LegendPosition.Right;
+    const isSideLegend = config.legend === LegendPosition.Right || config.legend === LegendPosition.Left;
     let legendWidth = isLegendVisible
       ? 0
       : isSideLegend
@@ -312,6 +321,7 @@ export abstract class D3VisualizationBuilderService<
   protected getLegendLayout(configuration: TInternalConfig): LegendLayout {
     switch (configuration.legend) {
       case LegendPosition.Right:
+      case LegendPosition.Left:
         return LegendLayout.Column;
       case LegendPosition.Top:
       case LegendPosition.TopRight:
@@ -322,6 +332,10 @@ export abstract class D3VisualizationBuilderService<
       default:
         return assertUnreachable(configuration.legend);
     }
+  }
+
+  protected getLegendFontSize(configuration: TInternalConfig): LegendFontSize {
+    return configuration.legendFontSize ?? LegendFontSize.ExtraSmall;
   }
 
   protected getMaxLegendWidth(): number {
@@ -368,6 +382,7 @@ export interface Chart {
 
 export interface ChartConfig {
   legend: LegendPosition;
+  legendFontSize?: LegendFontSize;
   tooltipOption?: TooltipOption;
 }
 

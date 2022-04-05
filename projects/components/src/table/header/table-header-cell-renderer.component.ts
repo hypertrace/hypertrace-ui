@@ -31,17 +31,41 @@ import { TableColumnConfigExtended } from '../table.service';
   template: `
     <div
       *ngIf="this.columnConfig"
-      [ngClass]="this.classes"
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
     >
-      <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
-        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
+      <ng-container *ngIf="!this.isStateColumn; else stateColumnTemplate">
+        <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
+          <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
+        </ng-container>
+        <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">
+          <span>{{ this.columnConfig.title }}</span>
+          <ng-container *ngIf="this.sort">
+            <ht-icon
+              class="sort-icon"
+              [icon]="
+                this.sort === '${TableSortDirection.Descending}' ? '${IconType.ArrowDown}' : '${IconType.ArrowUp}'
+              "
+              size="${IconSize.ExtraSmall}"
+            ></ht-icon>
+          </ng-container>
+        </div>
+
+        <ng-container *ngIf="this.isShowOptionButton && !this.leftAlignFilterButton">
+          <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
+        </ng-container>
       </ng-container>
-      <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">{{ this.columnConfig.title }}</div>
-      <ng-container *ngIf="this.isShowOptionButton && !this.leftAlignFilterButton">
-        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
-      </ng-container>
+
+      <ng-template #stateColumnTemplate>
+        <ng-container *ngIf="this.isMultipleSelectionStateColumn">
+          <ht-checkbox
+            class="state-checkbox"
+            [htTooltip]="this.getHeaderCheckboxTooltip()"
+            [indeterminate]="this.indeterminateRowsSelected"
+            (checkedChange)="this.onToggleAllSelectedChange($event)"
+          ></ht-checkbox>
+        </ng-container>
+      </ng-template>
 
       <ng-template #htmlTooltip>
         <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
@@ -104,11 +128,17 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   @Input()
   public sort?: TableSortDirection;
 
+  @Input()
+  public indeterminateRowsSelected?: boolean;
+
   @Output()
   public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
 
   @Output()
   public readonly columnsChange: EventEmitter<TableColumnConfigExtended[]> = new EventEmitter();
+
+  @Output()
+  public readonly allRowsSelectionChange: EventEmitter<boolean> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
@@ -117,6 +147,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public isFilterable: boolean = false;
   public isEditableAvailableColumns: boolean = false;
   public isShowOptionButton: boolean = false;
+  public isStateColumn: boolean = false;
+  public isMultipleSelectionStateColumn: boolean = false;
+  private allRowsSelected: boolean = false;
 
   @ViewChild('htmlTooltip')
   public htmlTooltipTemplate?: TemplateRef<unknown>;
@@ -137,6 +170,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
       this.isShowOptionButton =
         this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
+      this.isStateColumn = this.columnConfig?.id === '$$selected' || this.columnConfig?.id === '$$expanded';
+      this.isMultipleSelectionStateColumn = this.columnConfig?.id === '$$selected';
     }
   }
 
@@ -153,6 +188,19 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     this.alignment = this.columnConfig.alignment ?? this.columnConfig.renderer.alignment;
     this.leftAlignFilterButton = this.alignment === TableCellAlignmentType.Right;
     this.classes = this.buildClasses();
+  }
+
+  public onToggleAllSelectedChange(allSelected: boolean): void {
+    this.allRowsSelected = allSelected;
+    this.allRowsSelectionChange.emit(allSelected);
+  }
+
+  public getHeaderCheckboxTooltip(): string {
+    return this.indeterminateRowsSelected
+      ? 'Some rows are selected'
+      : this.allRowsSelected
+      ? 'All rows in the table are selected'
+      : 'None of the rows in the table are selected';
   }
 
   private buildClasses(): string[] {

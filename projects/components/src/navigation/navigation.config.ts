@@ -1,4 +1,4 @@
-import { Color, FeatureState } from '@hypertrace/common';
+import { Color, FeatureState, TimeRangeResolver } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
 
@@ -16,6 +16,8 @@ export interface NavItemLinkConfig {
   trailingIcon?: string;
   trailingIconTooltip?: string;
   trailingIconColor?: Color;
+  timeRangeResolver?: TimeRangeResolver;
+  pageLevelTimeRangeIsEnabled?: boolean;
   featureState$?: Observable<FeatureState>;
 }
 
@@ -44,4 +46,15 @@ export const enum NavItemType {
   Link = 'link',
   Divider = 'divider',
   Footer = 'footer'
+}
+
+export interface NavItemGroup {
+  label: string;
+  icon: string;
+  navItems: NavItemConfig[];
+  displayNavList: boolean;
+}
+
+export const enum NavViewStyle {
+  DarkViewStyleClass = 'navigation-dark'
 }

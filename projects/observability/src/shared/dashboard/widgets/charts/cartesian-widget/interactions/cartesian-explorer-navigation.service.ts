@@ -11,6 +11,7 @@ export class CartesainExplorerNavigationService {
   ) {}
 
   public navigateToExplorer(start: Date, end: Date): void {
+    this.timeRangeService.setFixedRange(start, end);
     const params = this.timeRangeService.toQueryParams(start, end);
 
     this.navigationService.navigate({

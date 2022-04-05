@@ -58,6 +58,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public timeRange?: TimeRange;
 
   @Input()
+  public rangeSelectionEnabled: boolean = false;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
@@ -67,7 +70,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
   @Output()
-  public readonly selectionChange: EventEmitter<CartesianSelectedData<TData>> = new EventEmitter();
+  public readonly selectionChange: EventEmitter<
+    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
+  > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
@@ -102,6 +107,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       .withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData as CartesianSelectedData<TData>);
       });
+
+    if (this.rangeSelectionEnabled) {
+      this.chart.withEventListener(ChartEvent.Select, selectedData => {
+        this.selectionChange.emit(selectedData);
+      });
+    }
 
     if (this.bands) {
       this.chart.withBands(...this.bands);

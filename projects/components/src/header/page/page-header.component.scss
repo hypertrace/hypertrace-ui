@@ -16,12 +16,14 @@
     justify-content: space-between;
   }
 
-  &.bottom-border {
-    padding-bottom: 16px;
-    border-bottom: 1px solid $color-border;
+  .primary-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
   }
 
   .breadcrumb-container {
+    margin-right: auto;
     align-items: center;
 
     .breadcrumb-separator {
@@ -41,6 +43,20 @@
         margin-left: 12px;
       }
     }
+  }
+
+  .time-range {
+    margin-left: 10px;
+  }
+
+  .row-alignment {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &.bottom-border {
+    padding-bottom: 16px;
+    border-bottom: 1px solid $color-border;
   }
 
   .tabs {

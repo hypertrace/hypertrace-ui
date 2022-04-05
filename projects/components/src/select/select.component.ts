@@ -13,9 +13,12 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
+import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
 import { SelectGroupPosition } from './select-group-position';
 import { SelectJustify } from './select-justify';
@@ -66,9 +69,9 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBorderTriggerTemplate"
               ></ng-container>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
-              <ng-template #defaultMenuWithBorderTriggerTemplate
-                ><ht-icon
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ng-template #defaultMenuWithBorderTriggerTemplate>
+                <ht-icon
                   *ngIf="this.getPrefixIcon(selected)"
                   class="trigger-prefix-icon"
                   [icon]="this.getPrefixIcon(selected)"
@@ -108,19 +111,40 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
               ></ng-container>
-              <ng-template #defaultMenuWithBackgroundTriggerTemplate
-                ><<ht-label
+              <ng-template #defaultMenuWithBackgroundTriggerTemplate>
+                <ht-label
                   class="trigger-label"
                   [label]="selected?.selectedLabel || selected?.label || this.placeholder"
                 >
-                </ht-label
-              ></ng-template>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"> </ht-icon>
+                </ht-label>
+              </ng-template>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
+            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}'">
+              <ht-event-blocker event="click" [enabled]="true">
+                <ht-search-box
+                  class="search-bar"
+                  (valueChange)="this.searchOptions($event)"
+                  [debounceTime]="200"
+                  displayMode="${SearchBoxDisplayMode.NoBorder}"
+                ></ht-search-box>
+              </ht-event-blocker>
+              <ht-divider class="divider"></ht-divider>
+            </ng-container>
+            <ht-button
+              class="clear-selected"
+              *ngIf="this.showClearSelected && this.selected !== undefined"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              size="${ButtonSize.ExtraSmall}"
+              label="Clear Selected"
+              (click)="this.onClearSelected()"
+            ></ht-button>
+
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
@@ -154,8 +178,8 @@ import { SelectSize } from './select-size';
             </div>
           </ng-template>
 
-          <ng-template #defaultSelectOptionTemplate let-item
-            ><div class="select-option-info">
+          <ng-template #defaultSelectOptionTemplate let-item>
+            <div class="select-option-info">
               <ht-icon
                 *ngIf="item.icon"
                 class="icon"
@@ -201,13 +225,22 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public showBorder: boolean = false;
 
   @Input()
+  public showClearSelected: boolean = false;
+
+  @Input()
   public justify?: SelectJustify;
 
   @Input()
   public highlightSelected: boolean = true;
 
+  @Input()
+  public searchMode: SelectSearchMode = SelectSearchMode.Disabled;
+
   @Output()
   public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
+
+  @Output()
+  public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ContentChildren(SelectOptionComponent)
   public items?: QueryList<SelectOptionComponent<V>>;
@@ -233,10 +266,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     return this.showBorder ? SelectJustify.Left : SelectJustify.Right;
   }
 
-  public constructor(
-    private readonly loggerService: LoggerService,
-    private readonly changeDetector: ChangeDetectorRef
-  ) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngAfterContentInit(): void {
     this.selected$ = this.buildObservableOfSelected();
@@ -258,12 +288,20 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected === item.value;
+    return isEqual(this.selected, item.value);
   }
 
   public updateGroupPosition(position: SelectGroupPosition): void {
     this.groupPosition = position;
-    this.changeDetector.markForCheck();
+    this.cdr.markForCheck();
+  }
+
+  public searchOptions(searchText: string): void {
+    if (this.searchMode === SelectSearchMode.Disabled) {
+      return;
+    }
+
+    this.searchValueChange.emit(searchText);
   }
 
   private buildObservableOfSelected(): Observable<SelectOption<V> | undefined> {
@@ -283,8 +321,12 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     }
 
     this.setSelection(item.value);
-    this.selectedChange.emit(this.selected);
-    this.propagateValueChangeToFormControl(this.selected);
+    this.propagateValue();
+  }
+
+  public onClearSelected(): void {
+    this.setSelection();
+    this.propagateValue();
   }
 
   private setSelection(value?: V): void {
@@ -299,7 +341,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
       return undefined;
     }
 
-    return this.items.find(item => item.value === value);
+    return this.items.find(item => isEqual(item.value, value));
   }
 
   public getStyleClassesForSelectItem(size: SelectSize, item: SelectOptionComponent<V>): string[] {
@@ -314,6 +356,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public writeValue(value?: V): void {
     this.setSelection(value);
+    this.cdr.markForCheck();
   }
 
   public registerOnChange(onChange: (value: V | undefined) => void): void {
@@ -322,6 +365,15 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public registerOnTouched(onTouch: (value: V | undefined) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValue(): void {
+    this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private propagateValueChangeToFormControl(value: V | undefined): void {
@@ -334,4 +386,9 @@ export const enum SelectTriggerDisplayMode {
   MenuWithBorder = 'menu-with-border',
   MenuWithBackground = 'menu-with-background',
   Icon = 'icon'
+}
+
+export const enum SelectSearchMode {
+  Disabled = 'disabled', // Search is not available
+  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }

@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -35,7 +36,11 @@ import {
         </div>
       </div>
       <div class="bar" [ngClass]="this.display">
-        <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
+        <div
+          #maxValueBar
+          class="max-value-bar"
+          [ngClass]="{ 'over-max-value': this.overMaxValue && this.isOverMaxBorderActive }"
+        >
           <div class="segment-bars">
             <div
               #segmentBars
@@ -44,8 +49,11 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
+              [htTooltip]="segment.tooltip ?? plainTooltip"
+              [htTooltipContext]="{ $implicit: segment }"
             >
               <div class="divider"></div>
+              <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
             </div>
           </div>
         </div>
@@ -83,6 +91,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public segments?: Segment[] = [];
+
+  @Input()
+  public isOverMaxBorderActive: boolean = true;
 
   @Input()
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
@@ -154,10 +165,15 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
+  tooltip?: string | TemplateRef<SegmentContext>;
 }
 
 interface BarSegment extends Segment {
   percentage: number;
+}
+
+export interface SegmentContext {
+  $implicit: BarSegment;
 }
 
 export const enum BarGaugeStyle {

@@ -132,7 +132,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
         locationPreferences: [PopoverRelativePositionLocation.AboveCentered]
       },
       componentOrTemplate: this.notificationTemplate,
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.None
     });
 
     return of(popoverRef).pipe(
