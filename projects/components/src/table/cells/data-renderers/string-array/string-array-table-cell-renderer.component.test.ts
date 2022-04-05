@@ -1,12 +1,14 @@
 import { FormattingModule } from '@hypertrace/common';
-import { TableCellNoOpParser } from '@hypertrace/components';
+import { TableCellNoOpParser, XMoreComponent } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
+import { MockComponent } from 'ng-mocks';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { StringArrayTableCellRendererComponent } from './string-array-table-cell-renderer.component';
 
 describe('String array table cell renderer component', () => {
   const buildComponent = createComponentFactory({
     component: StringArrayTableCellRendererComponent,
+    declarations: [MockComponent(XMoreComponent)],
     imports: [FormattingModule],
     providers: [
       tableCellProviders(
@@ -26,7 +28,7 @@ describe('String array table cell renderer component', () => {
     });
 
     expect(spectator.query('.first-item')).toHaveText('first-item');
-    expect(spectator.query('.summary-text')).toHaveText('');
+    expect(spectator.query(XMoreComponent)?.count).toBe(0);
   });
 
   test('should render an empty array as expected', () => {
@@ -35,7 +37,7 @@ describe('String array table cell renderer component', () => {
     });
 
     expect(spectator.query('.first-item')).toHaveText('-');
-    expect(spectator.query('.summary-text')).toHaveText('');
+    expect(spectator.query(XMoreComponent)?.count).toBe(0);
   });
 
   test('should render array with multiple items as expected', () => {
@@ -44,6 +46,6 @@ describe('String array table cell renderer component', () => {
     });
 
     expect(spectator.query('.first-item')).toHaveText('first-item');
-    expect(spectator.query('.summary-text')).toHaveText('+2');
+    expect(spectator.query(XMoreComponent)?.count).toBe(2);
   });
 });

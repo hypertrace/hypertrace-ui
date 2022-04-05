@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import { ApplicationFeature, FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class FeatureResolverService extends FeatureStateResolver {
-  public getFeatureState(_: string): Observable<FeatureState> {
-    return of(FeatureState.Enabled);
+  public getFeatureState(flag: string): Observable<FeatureState> {
+    switch (flag) {
+      case ApplicationFeature.PageTimeRange:
+        return of(FeatureState.Disabled);
+      default:
+        return of(FeatureState.Enabled);
+    }
   }
 }

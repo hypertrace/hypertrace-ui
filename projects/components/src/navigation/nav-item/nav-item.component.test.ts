@@ -33,7 +33,8 @@ describe('Navigation Item Component', () => {
         getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute))
       }),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Enabled)
+        getCombinedFeatureState: () => of(FeatureState.Enabled),
+        getFeatureState: () => of(FeatureState.Enabled)
       })
     ]
   });
