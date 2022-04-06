@@ -128,3 +128,6 @@ export * from './utilities/validators';
 
 // Color Palette
 export * from './color/color-palette';
+
+// Global header height provider
+export * from './global-header-height/global-header-height-provider.service';
