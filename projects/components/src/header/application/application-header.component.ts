@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {
   ApplicationFeature,
   FeatureState,
   FeatureStateResolver,
-  GLOBAL_HEADER_HEIGHT,
+  GlobalHeaderHeightProviderService,
   NavigationService
 } from '@hypertrace/common';
 import { Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./application-header.component.scss'],
   template: `
-    <div class="ht-header" [style.height]="this.height">
+    <div class="ht-header" [style.height]="this.headerHeightProvider.globalHeaderHeight">
       <div class="left-side">
         <div class="logo" (click)="this.onLogoClick()">
           <ng-content select="[logo]"></ng-content>
@@ -43,7 +43,7 @@ export class ApplicationHeaderComponent {
   public pageLevelTimeRangeDisabled$: Observable<boolean>;
 
   public constructor(
-    @Inject(GLOBAL_HEADER_HEIGHT) public readonly height: string,
+    public readonly headerHeightProvider: GlobalHeaderHeightProviderService,
     private readonly navigationService: NavigationService,
     private readonly featureStateResolver: FeatureStateResolver
   ) {

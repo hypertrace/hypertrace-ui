@@ -128,7 +128,7 @@ export class NavigationService {
     return {
       path: params.path,
       extras: {
-        queryParams: params?.queryParams ?? this.buildQueryParam(),
+        queryParams: { ...this.buildQueryParam(), ...(params?.queryParams ?? {}) },
         queryParamsHandling: params?.queryParamsHandling,
         replaceUrl: params?.replaceCurrentHistory,
         relativeTo: params?.relativeTo

@@ -18,7 +18,7 @@ describe('Page time range component', () => {
   const route = {
     snapshot: {
       data: {
-        defaultTimeRange: undefined
+        shouldSavePageTimeRange: undefined
       }
     },
     pathFromRoot: { flatMap: jest.fn().mockReturnValue(['foo']) }
@@ -52,14 +52,14 @@ describe('Page time range component', () => {
     expect(spectator.component.savePageTimeRange).not.toHaveBeenCalled();
   });
 
-  test('should not attempt to save time range when route is not a first level route', () => {
+  test('should not attempt to save time range when saving flag property is not set', () => {
     spectator = createHost(`<ht-page-time-range></ht-page-time-range>`, {
       providers: [
         mockProvider(NavigationService, {
           getCurrentActivatedRoute: jest.fn().mockReturnValue({
             snapshot: {
               data: {
-                defaultTimeRange: undefined
+                shouldSavePageTimeRange: undefined
               }
             },
             pathFromRoot: { flatMap: jest.fn().mockReturnValue(['parent-path', 'child-path']) }
@@ -77,14 +77,14 @@ describe('Page time range component', () => {
     expect(spectator.component.savePageTimeRange).not.toHaveBeenCalled();
   });
 
-  test('should save time range when route is first level, and the defaultTimeRange property is present', () => {
+  test('should save time range when route has truthy property shouldSavePageTimeRange', () => {
     spectator = createHost(`<ht-page-time-range></ht-page-time-range>`, {
       providers: [
         mockProvider(NavigationService, {
           getCurrentActivatedRoute: jest.fn().mockReturnValue({
             snapshot: {
               data: {
-                defaultTimeRange: new RelativeTimeRange(new TimeDuration(30, TimeUnit.Minute))
+                shouldSavePageTimeRange: true
               }
             },
             pathFromRoot: { flatMap: () => [{ path: 'parent-path' }] as UrlSegment[] }

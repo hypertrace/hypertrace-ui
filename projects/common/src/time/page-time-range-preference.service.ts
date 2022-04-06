@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { isNil } from 'lodash-es';
 import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take } from 'rxjs/operators';
@@ -38,7 +37,7 @@ export class PageTimeRangePreferenceService {
       map(([pageTimeRangeStringDictionary, featureState]) => {
         if (featureState === FeatureState.Enabled) {
           if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
-            return () => this.getDefaultTimeRangeForCurrentRoute();
+            return () => this.getDefaultTimeRangeForPath(rootLevelPath);
           }
 
           return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
@@ -78,11 +77,14 @@ export class PageTimeRangePreferenceService {
       .pipe(shareReplay(1));
   }
 
-  public getDefaultTimeRangeForCurrentRoute(): TimeRange {
-    const currentRoute: ActivatedRoute = this.navigationService.getCurrentActivatedRoute();
-    // Right side for when FF is enabled but 'defaultTimeRange' is not set on AR data
+  public getDefaultTimeRangeForPath(rootLevelPath: string): TimeRange {
+    const routeConfigForPath = this.navigationService.getRouteConfig(
+      [rootLevelPath],
+      this.navigationService.rootRoute()
+    );
 
-    return currentRoute.snapshot.data?.defaultTimeRange ?? this.getGlobalDefaultTimeRange();
+    // Right side for when FF is enabled but 'defaultTimeRange' is not set on AR data
+    return routeConfigForPath?.data?.defaultTimeRange ?? this.getGlobalDefaultTimeRange();
   }
 
   public getGlobalDefaultTimeRange(): TimeRange {

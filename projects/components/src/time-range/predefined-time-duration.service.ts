@@ -20,9 +20,7 @@ export class PredefinedTimeDurationService {
       new TimeDuration(3, TimeUnit.Hour),
       new TimeDuration(6, TimeUnit.Hour),
       new TimeDuration(12, TimeUnit.Hour),
-      new TimeDuration(1, TimeUnit.Day),
-      new TimeDuration(3, TimeUnit.Day),
-      new TimeDuration(1, TimeUnit.Week)
+      new TimeDuration(1, TimeUnit.Day)
     ];
   }
 
