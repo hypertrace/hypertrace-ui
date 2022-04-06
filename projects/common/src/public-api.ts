@@ -107,6 +107,7 @@ export * from './telemetry/telemetry';
 export { FullStoryTelemetry } from './telemetry/providers/fullstory/full-story-provider';
 export { FreshPaintTelemetry } from './telemetry/providers/freshpaint/freshpaint-provider';
 export { MixPanelTelemetry } from './telemetry/providers/mixpanel/mixpanel-provider';
+export { RudderStackTelemetry } from './telemetry/providers/rudderstack/rudderstack-provider';
 export { TrackDirective } from './telemetry/track/track.directive';
 
 // Time
