@@ -35,7 +35,7 @@ describe('Overlay service', () => {
       }),
       mockProvider(GlobalHeaderHeightProviderService, {
         globalHeaderHeight: '56px'
-      }),
+      })
     ],
     template: `<host></host>`
   });
