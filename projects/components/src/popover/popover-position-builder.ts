@@ -116,7 +116,7 @@ export class PopoverPositionBuilder {
           .top(`${popoverPosition.customLocation!.y}px`);
       case PopoverFixedPositionLocation.RightUnderHeader:
       default:
-        return globalPosition.right('0').top(this.headerHeightProvider?.globalHeaderHeight ?? '0');
+        return globalPosition.right('0').top(this.headerHeightProvider.globalHeaderHeight ?? '0');
     }
   }
 }
