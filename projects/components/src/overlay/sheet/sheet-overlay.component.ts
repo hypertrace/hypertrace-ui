@@ -85,7 +85,9 @@ export class SheetOverlayComponent {
 
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
-    this.popoverRef.height(this.getHeightForPopover(this.globalHeaderHeightProvider.globalHeaderHeight, sheetConfig.position));
+    this.popoverRef.height(
+      this.getHeightForPopover(this.globalHeaderHeightProvider.globalHeaderHeight, sheetConfig.position)
+    );
     this.setWidth();
     this.navigationParams = sheetConfig.pageNavParams;
     this.rendererInjector = Injector.create({
