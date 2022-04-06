@@ -328,11 +328,19 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private paginateRows(rows: TableRow[], pageConfig: PageEvent): TableRow[] {
     /*
-     * The "rows" here are the results that are fetched. Since they are fetched with an offset in the request, we just
-     * index off the start of the result rows.
+     * With server-side pagination, the "rows" here are the results that are fetched. Since they are fetched with an
+     * offset in the request, we just index off the start of the result rows.
+     *
+     * However for when the backend APIs do not support pagination, the backend will return all results. In this case
+     * we can see if there are more results than we requested. If so, paginate within those results here.
+     *
+     * Historical Note & Warning:
+     * In the distant past for even server-side pagination we would prefetch additional rows, cache them, and
+     * paginate within those results. This caching will no longer work. In fact, it will break the below logic
+     * due to the `length > pageSize` comparison we are doing here.
      */
-    const start = 0;
-    const end = pageConfig.pageSize;
+    const start = rows.length > pageConfig.pageSize ? pageConfig.pageSize * pageConfig.pageIndex : 0;
+    const end = start + pageConfig.pageSize;
 
     return rows.slice(start, end);
   }

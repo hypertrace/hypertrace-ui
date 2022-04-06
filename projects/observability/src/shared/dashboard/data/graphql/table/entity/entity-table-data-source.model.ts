@@ -63,7 +63,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: this.entityType,
       properties: request.columns.map(column => column.specification).concat(...this.additionalSpecifications),
-      limit: this.limit !== undefined ? this.limit : request.position.limit * 2, // Prefetch 2 pages
+      limit: this.limit !== undefined ? this.limit : request.position.limit,
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
