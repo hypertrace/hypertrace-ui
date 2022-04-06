@@ -6,6 +6,7 @@ export const enum ChartEvent {
   Click,
   DoubleClick,
   RightClick,
+  Hover,
   Select
 }
 
