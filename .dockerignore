@@ -1,0 +1,18 @@
+   
+# editor configs
+**/.idea/
+**/.vscode/
+**/.gradle/
+**/.DS_Store/
+
+.git/
+
+# logs
+*-debug.log
+*-error.log
+
+**/node_modules/
+
+# build directories
+**/build/
+**/lib/
