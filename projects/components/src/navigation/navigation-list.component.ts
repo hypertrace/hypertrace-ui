@@ -21,8 +21,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navViewStyle ?? '']">
-      <div class="vertical-scroll-container">
-        <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
+      <div
+        class="content-container"
+        *htLetAsync="this.activeItem$ as activeItem"
+        [htLayoutChangeTrigger]="this.collapsed"
+      >
+        <div class="content">
           <ng-content></ng-content>
           <ng-container *ngFor="let item of this.navItems; let id = index">
             <ng-container [ngSwitch]="item.type">
@@ -48,27 +52,27 @@ import {
             </ng-container>
           </ng-container>
         </div>
+      </div>
 
-        <div class="resize-tab-button" (click)="this.toggleView()" *ngIf="this.resizable">
-          <ht-icon class="resize-icon" [icon]="this.getResizeIcon()" size="${IconSize.Small}"></ht-icon>
+      <div class="resize-tab-button" (click)="this.toggleView()" *ngIf="this.resizable">
+        <ht-icon class="resize-icon" [icon]="this.getResizeIcon()" size="${IconSize.Small}"></ht-icon>
+      </div>
+
+      <div class="footer" *ngIf="this.footerItems">
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
+          <ht-icon class="nav-group-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
         </div>
 
-        <div class="footer" *ngIf="this.footerItems">
-          <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
-            <ht-icon class="nav-group-icon" [icon]="this.navGroup?.icon" [size]="'${IconSize.Inherit}'"></ht-icon>
-          </div>
+        <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
+          <ht-label class="nav-group-label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
+        </div>
 
-          <div class="footer-item" *ngIf="this.navGroup && !this.collapsed">
-            <ht-label class="nav-group-label" [label]="this.navGroup?.label" [wrap]="true"></ht-label>
-          </div>
-
-          <hr class="nav-divider" />
-          <div *ngFor="let footerItem of footerItems" class="footer-item">
-            <ht-link class="link" [paramsOrUrl]="footerItem.url">
-              <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
-              <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>
-            </ht-link>
-          </div>
+        <hr class="nav-divider" />
+        <div *ngFor="let footerItem of footerItems" class="footer-item">
+          <ht-link class="link" [paramsOrUrl]="footerItem.url">
+            <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
+            <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>
+          </ht-link>
         </div>
       </div>
     </nav>
