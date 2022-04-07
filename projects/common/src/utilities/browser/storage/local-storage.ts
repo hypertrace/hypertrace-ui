@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
-import { AbstractStorage, ScopedStorageConfiguration } from './abstract-storage';
 import { Observable } from 'rxjs';
+import { AbstractStorage, ScopedStorageConfiguration } from './abstract-storage';
 
 @Injectable({ providedIn: 'root' })
 export class LocalStorage extends AbstractStorage {
