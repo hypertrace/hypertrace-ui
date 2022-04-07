@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
 import {
   ExternalNavigationWindowHandling,
-  GLOBAL_HEADER_HEIGHT,
+  GlobalHeaderHeightProviderService,
   LayoutChangeService,
   NavigationParamsType
 } from '@hypertrace/common';
@@ -38,10 +38,9 @@ describe('Sheet Overlay component', () => {
   </ht-sheet-overlay>
     `,
     providers: [
-      {
-        provide: GLOBAL_HEADER_HEIGHT,
-        useValue: 20
-      },
+      mockProvider(GlobalHeaderHeightProviderService, {
+        globalHeaderHeight: '56px'
+      }),
       mockProvider(LayoutChangeService)
     ]
   });

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ExternalNavigationParams, LayoutChangeService } from '@hypertrace/common';
+import { ExternalNavigationParams, GlobalHeaderHeightProviderService, LayoutChangeService } from '@hypertrace/common';
 import { ButtonStyle } from '../../button/button';
 import { IconSize } from '../../icon/icon-size';
-import { POPOVER_DATA } from '../../popover/popover';
+import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
 import { PopoverRef } from '../../popover/popover-ref';
 import { SheetConstructionData } from '../overlay.service';
 import { SheetOverlayConfig, SheetSize } from './sheet';
@@ -71,6 +71,7 @@ export class SheetOverlayComponent {
 
   public constructor(
     private readonly popoverRef: PopoverRef,
+    private readonly globalHeaderHeightProvider: GlobalHeaderHeightProviderService,
     @Inject(POPOVER_DATA) sheetData: SheetConstructionData,
     layoutChange: LayoutChangeService
   ) {
@@ -84,7 +85,9 @@ export class SheetOverlayComponent {
 
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
-    this.popoverRef.height('100vh');
+    this.popoverRef.height(
+      this.getHeightForPopover(this.globalHeaderHeightProvider.globalHeaderHeight, sheetConfig.position)
+    );
     this.setWidth();
     this.navigationParams = sheetConfig.pageNavParams;
     this.rendererInjector = Injector.create({
@@ -135,5 +138,9 @@ export class SheetOverlayComponent {
       default:
         return '100%';
     }
+  }
+
+  private getHeightForPopover(globalHeaderHeight: string, position?: PopoverFixedPositionLocation): string {
+    return position === PopoverFixedPositionLocation.Right ? '100vh' : `calc(100vh - ${globalHeaderHeight})`;
   }
 }

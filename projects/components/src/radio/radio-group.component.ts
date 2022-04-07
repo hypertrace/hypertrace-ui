@@ -85,6 +85,10 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
     this.setSelection(value);
   }
 
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
   public registerOnChange(onChange: (value?: string) => void): void {
     this.propagateControlValueChange = onChange;
   }
