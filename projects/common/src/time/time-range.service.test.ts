@@ -78,10 +78,7 @@ describe('Time range(TR) service', () => {
                 }
               } as unknown) as ActivatedRoute
             }),
-            getQueryParameter: jest
-              .fn()
-              .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
-              .mockReturnValue(secondArrivingTimeRange.toUrlString()),
+            getQueryParameter: jest.fn().mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
               (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
           })
@@ -92,8 +89,8 @@ describe('Time range(TR) service', () => {
 
       expect(() => spectator.service.getCurrentTimeRange()).toThrow();
 
-      expectObservable(recordedTimeRanges).toBe('-x----y', {
-        x: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)),
+      expectObservable(recordedTimeRanges).toBe('-x---y', {
+        x: firstArrivingTimeRange,
         y: secondArrivingTimeRange
       });
     });
