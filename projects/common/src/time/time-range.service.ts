@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import { isEmpty, isNil, omit } from 'lodash-es';
-import { concat, EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, switchMap, take } from 'rxjs/operators';
+import { EMPTY, Observable, ReplaySubject } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, skip, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -80,8 +80,9 @@ export class TimeRangeService {
   private getPageTimeRangeChanges(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       map(activeRoute => activeRoute.snapshot.queryParamMap),
-      filter(queryParamMap => !isNil(queryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM))),
       distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
+      skip(1), // Skip the first nav, this is handled by initializeTimeRange, but we want to populate prev for distinctUntilChanged
+      filter(queryParamMap => queryParamMap.has(TimeRangeService.TIME_RANGE_QUERY_PARAM)),
       map(currQueryParamMap => {
         const timeRangeQueryParamString = currQueryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
 
@@ -91,7 +92,9 @@ export class TimeRangeService {
   }
 
   private initializeTimeRange(): void {
-    concat(this.getInitialTimeRange(), this.getPageTimeRangeChanges()).subscribe(timeRange => {
+    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => this.applyTimeRangeChange(timeRangeFromInitialUrl));
+
+    this.getPageTimeRangeChanges().subscribe(timeRange => {
       if (!this.timeRangeMatchesCurrentUrl(timeRange)) {
         this.setTimeRangeInUrl(timeRange);
       } else {
