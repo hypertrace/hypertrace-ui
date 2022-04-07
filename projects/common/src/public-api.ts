@@ -9,6 +9,7 @@ export { DynamicComponentService } from './utilities/angular/dynamic-component.s
 // Browser
 export { CookieService } from './utilities/browser/cookies/cookie.service';
 export { LocalStorage } from './utilities/browser/storage/local-storage';
+export * from './utilities/browser/storage/abstract-storage';
 
 // Coercers
 export * from './utilities/coercers/boolean-coercer';
