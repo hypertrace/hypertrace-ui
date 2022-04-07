@@ -10,9 +10,16 @@
   width: 100%;
   justify-content: space-between;
 
-  .content {
+  .vertical-scroll-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .content {
     padding: 18px 0 12px 12px;
 
     .nav-header {
@@ -29,6 +36,20 @@
 
       .beta {
         margin-left: 4px;
+      }
+    }
+  }
+
+  &.navigation-dark {
+    .vertical-scroll-container {
+      scrollbar-width: thin;
+      &::-webkit-scrollbar {
+        @include nav-secondary-background;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: $gray-6;
+        border: 3px solid $blue-9;
       }
     }
   }
