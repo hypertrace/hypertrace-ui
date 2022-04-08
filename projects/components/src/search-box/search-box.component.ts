@@ -90,7 +90,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.add(
       this.debouncedValueSubject
         .pipe(debounceTime(this.debounceTime ?? 0))
-        .subscribe(value => this.valueChange.emit(value))
+        .subscribe(value => this.valueChange.emit(value.trim()))
     );
   }
 }
