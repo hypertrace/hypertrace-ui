@@ -18,7 +18,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
   styleUrls: ['./code-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div *ngIf="this.code" class="code-viewer" [style.backgroundColor]="this.backgroundColor">
+    <div class="code-viewer" [style.backgroundColor]="this.backgroundColor">
       <div *ngIf="this.showHeader" class="header">
         <div class="title">{{ this.titleText }}</div>
         <div class="header-content">
@@ -37,36 +37,40 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
         </div>
       </div>
       <div id="code-viewer-content" class="content">
-        <div class="line-numbers">
-          <div
-            *ngFor="let lineNumber of this.lineNumbers"
-            class="line-number"
-            [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
-          >
-            {{ lineNumber }}
+        <ng-container *ngIf="this.code"
+          ><div class="line-numbers">
+            <div
+              *ngFor="let lineNumber of this.lineNumbers"
+              class="line-number"
+              [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
+            >
+              {{ lineNumber }}
+            </div>
           </div>
-        </div>
-        <div class="code-lines">
-          <div
-            *ngFor="let codeLine of this.codeLines; let index = index"
-            class="code-line"
-            [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
-          >
-            <pre
-              class="code-line-text"
-              [innerHtml]="
-                this.searchText ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' }) : codeLine
-              "
-            ></pre>
+          <div class="code-lines">
+            <div
+              *ngFor="let codeLine of this.codeLines; let index = index"
+              class="code-line"
+              [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
+            >
+              <pre
+                class="code-line-text"
+                [innerHtml]="
+                  this.searchText
+                    ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' })
+                    : codeLine
+                "
+              ></pre>
+            </div>
           </div>
-        </div>
-        <ht-copy-to-clipboard
-          *ngIf="this.enableCopy"
-          class="copy-to-clipboard"
-          [tooltip]="this.copyTooltip"
-          [label]="this.copyLabel"
-          [text]="this.code"
-        ></ht-copy-to-clipboard>
+          <ht-copy-to-clipboard
+            *ngIf="this.enableCopy"
+            class="copy-to-clipboard"
+            [tooltip]="this.copyTooltip"
+            [label]="this.copyLabel"
+            [text]="this.code"
+          ></ht-copy-to-clipboard>
+        </ng-container>
       </div>
     </div>
   `
@@ -127,7 +131,6 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     if (changes.code) {
       this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
       this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
-      this.observeDomMutations();
     }
 
     if (changes.code || changes.downloadFileName) {
@@ -154,15 +157,12 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   private observeDomMutations(): void {
     const codeViewerContentElement = this.element.nativeElement.querySelector('#code-viewer-content') as Node;
-    if (codeViewerContentElement) {
-      this.domMutationObserver.disconnect();
-      this.domMutationObserver.observe(codeViewerContentElement, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        attributeFilter: ['class']
-      });
-    }
+    this.domMutationObserver.observe(codeViewerContentElement, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
   }
 
   private onDomMutation(mutations: MutationRecord[]): void {
