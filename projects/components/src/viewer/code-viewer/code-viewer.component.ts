@@ -120,7 +120,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public constructor(private readonly element: ElementRef) {}
 
   public ngAfterViewInit(): void {
-    const codeViewerContentElement: Node = this.element.nativeElement.querySelector('#code-viewer-content');
+    const codeViewerContentElement: Node = this.element.nativeElement.querySelector('#code-viewer-content') as Node;
     this.domMutationObserver.observe(codeViewerContentElement, {
       subtree: true,
       childList: true,
