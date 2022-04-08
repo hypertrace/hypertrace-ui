@@ -5,11 +5,18 @@ import { DictionaryStorageImpl } from './dictionary-storage-impl';
 // A small abstraction on browser's storage for mocking and cleaning up the API a bit
 export abstract class AbstractStorage {
   private readonly changeSubject: Subject<string> = new Subject();
-  private readonly scopedStorage?: DictionaryStorageImpl;
+  private scopeConfig?: ScopedStorageConfiguration;
+  private scopedStorage?: DictionaryStorageImpl;
 
-  public constructor(private readonly storage: Storage, private readonly scopeConfig?: ScopedStorageConfiguration) {
-    if (scopeConfig) {
-      this.scopedStorage = DictionaryStorageImpl.fromString(storage.getItem(scopeConfig.scopeKey) ?? '{}');
+  public constructor(
+    private readonly storage: Storage,
+    private readonly scopeConfig$?: Observable<ScopedStorageConfiguration>
+  ) {
+    if (this.scopeConfig$) {
+      this.scopeConfig$.subscribe(scopeConfig => {
+        this.scopeConfig = scopeConfig;
+        this.scopedStorage = DictionaryStorageImpl.fromString(storage.getItem(scopeConfig.scopeKey) ?? '{}');
+      });
     }
   }
 

@@ -1,4 +1,5 @@
 import { runFakeRxjs } from '@hypertrace/test-utils';
+import { of } from 'rxjs';
 import { AbstractStorage } from './abstract-storage';
 import { DictionaryStorageImpl } from './dictionary-storage-impl';
 
@@ -38,9 +39,12 @@ describe('Abstract storage', () => {
   test('should support scoped storage with no fallback', () => {
     const globalDictionary = new DictionaryStorageImpl({ foo: 'bad-foo' });
 
-    const scopedStorage = new (class extends AbstractStorage {})(globalDictionary, {
-      scopeKey: 'test-scope'
-    });
+    const scopedStorage = new (class extends AbstractStorage {})(
+      globalDictionary,
+      of({
+        scopeKey: 'test-scope'
+      })
+    );
 
     expect(scopedStorage.get('foo')).toBeUndefined();
     expect(scopedStorage.contains('foo')).toBe(false);
@@ -58,10 +62,13 @@ describe('Abstract storage', () => {
   test('should support scoped storage with readonly fallback', () => {
     const globalDictionary = new DictionaryStorageImpl({ foo: 'original-foo' });
 
-    const scopedStorage = new (class extends AbstractStorage {})(globalDictionary, {
-      scopeKey: 'test-scope',
-      fallbackPolicy: 'read-only'
-    });
+    const scopedStorage = new (class extends AbstractStorage {})(
+      globalDictionary,
+      of({
+        scopeKey: 'test-scope',
+        fallbackPolicy: 'read-only'
+      })
+    );
 
     expect(scopedStorage.get('foo')).toBe('original-foo');
     expect(scopedStorage.contains('foo')).toBe(true);
@@ -77,10 +84,13 @@ describe('Abstract storage', () => {
   test('should migrate on read if configured', () => {
     const globalDictionary = new DictionaryStorageImpl({ foo: 'original-foo' });
 
-    const scopedStorage = new (class extends AbstractStorage {})(globalDictionary, {
-      scopeKey: 'test-scope',
-      fallbackPolicy: 'read-and-migrate'
-    });
+    const scopedStorage = new (class extends AbstractStorage {})(
+      globalDictionary,
+      of({
+        scopeKey: 'test-scope',
+        fallbackPolicy: 'read-and-migrate'
+      })
+    );
 
     expect(scopedStorage.get('foo')).toBe('original-foo');
     expect(scopedStorage.contains('foo')).toBe(true);
