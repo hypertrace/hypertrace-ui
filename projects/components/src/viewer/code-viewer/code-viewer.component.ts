@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  TemplateRef
+} from '@angular/core';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
@@ -27,7 +36,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
           ></ht-download-file>
         </div>
       </div>
-      <div class="content">
+      <div id="code-viewer-content" class="content">
         <div class="line-numbers">
           <div
             *ngFor="let lineNumber of this.lineNumbers"
@@ -44,6 +53,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
             [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
           >
             <pre
+              class="code-line-text"
               [innerHtml]="
                 this.searchText ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' }) : codeLine
               "
@@ -61,7 +71,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
     </div>
   `
 })
-export class CodeViewerComponent implements OnChanges {
+export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
   public code: string = ''; // Pre-formatted code string
 
@@ -103,6 +113,22 @@ export class CodeViewerComponent implements OnChanges {
   public lineNumbers: number[] = [];
   public searchText: string = '';
 
+  private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
+    this.onDomMutation(mutations)
+  );
+
+  public constructor(private readonly element: ElementRef) {}
+
+  public ngAfterViewInit(): void {
+    const codeViewerContentElement: Node = this.element.nativeElement.querySelector('#code-viewer-content');
+    this.domMutationObserver.observe(codeViewerContentElement, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.code) {
       this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
@@ -117,6 +143,10 @@ export class CodeViewerComponent implements OnChanges {
     }
   }
 
+  public ngOnDestroy(): void {
+    this.domMutationObserver.disconnect();
+  }
+
   public isLineHighlighted(lineNum: number): boolean {
     return (
       !isEmpty(this.highlightText) && this.codeLines[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
@@ -125,5 +155,17 @@ export class CodeViewerComponent implements OnChanges {
 
   public onSearch(searchText: string): void {
     this.searchText = searchText;
+  }
+
+  private onDomMutation(mutations: MutationRecord[]): void {
+    const mutationType: MutationRecordType = mutations[0].type;
+
+    if (mutationType === 'childList') {
+      const markElement: HTMLElement = this.element.nativeElement.querySelector('mark');
+      markElement?.scrollIntoView();
+    } else if (mutationType === 'attributes') {
+      const highlightedCodeLineElement: HTMLElement = this.element.nativeElement.querySelector('.line-highlight');
+      highlightedCodeLineElement?.scrollIntoView();
+    }
   }
 }
