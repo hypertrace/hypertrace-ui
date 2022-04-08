@@ -120,19 +120,14 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public constructor(private readonly element: ElementRef) {}
 
   public ngAfterViewInit(): void {
-    const codeViewerContentElement: Node = this.element.nativeElement.querySelector('#code-viewer-content') as Node;
-    this.domMutationObserver.observe(codeViewerContentElement, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ['class']
-    });
+    this.observeDomMutations();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.code) {
       this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
       this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
+      this.observeDomMutations();
     }
 
     if (changes.code || changes.downloadFileName) {
@@ -155,6 +150,19 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   public onSearch(searchText: string): void {
     this.searchText = searchText;
+  }
+
+  private observeDomMutations(): void {
+    const codeViewerContentElement = this.element.nativeElement.querySelector('#code-viewer-content') as Node;
+    if (codeViewerContentElement) {
+      this.domMutationObserver.disconnect();
+      this.domMutationObserver.observe(codeViewerContentElement, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
   }
 
   private onDomMutation(mutations: MutationRecord[]): void {
