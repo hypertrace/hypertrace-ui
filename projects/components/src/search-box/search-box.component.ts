@@ -69,11 +69,11 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onSubmit(): void {
-    this.submit.emit(this.value);
+    this.submit.emit(this.value.trim());
   }
 
   public onValueChange(): void {
-    this.debouncedValueSubject.next(this.value);
+    this.debouncedValueSubject.next(this.value.trim());
   }
 
   public clearValue(): void {
@@ -90,7 +90,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.add(
       this.debouncedValueSubject
         .pipe(debounceTime(this.debounceTime ?? 0))
-        .subscribe(value => this.valueChange.emit(value.trim()))
+        .subscribe(value => this.valueChange.emit(value))
     );
   }
 }
