@@ -73,6 +73,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onValueChange(): void {
+    this.value = this.value.trim();
     this.debouncedValueSubject.next(this.value);
   }
 
