@@ -69,11 +69,12 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onSubmit(): void {
-    this.submit.emit(this.value.trim());
+    this.submit.emit(this.value);
   }
 
   public onValueChange(): void {
-    this.debouncedValueSubject.next(this.value.trim());
+    this.value = this.value.trim();
+    this.debouncedValueSubject.next(this.value);
   }
 
   public clearValue(): void {
