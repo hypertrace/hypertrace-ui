@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { PreferenceService, TimeRangeService } from '@hypertrace/common';
+import { LoggerService, PageTimeRangePreferenceService, PreferenceService, TimeRangeService } from '@hypertrace/common';
 import {
   NavigationListComponentService,
   NavigationListService,
@@ -87,7 +87,9 @@ export class NavigationComponent {
     private readonly preferenceService: PreferenceService,
     private readonly navListComponentService: NavigationListComponentService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
+    private readonly pageTimeRangeService: PageTimeRangePreferenceService,
+    private readonly loggerService: LoggerService
   ) {
     const navItems = this.navItemDefinitions.map(definition =>
       this.navigationListService.decorateNavItem(definition, this.activatedRoute)
@@ -99,11 +101,17 @@ export class NavigationComponent {
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }
 
-  public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig): void {
+  public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig | undefined): void {
     // Initialize the time range service
     // Depending on FF status, the TR will be either global or page level for the init
     if (!this.timeRangeService.isInitialized()) {
-      this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver!());
+      if (activeItem?.timeRangeResolver) {
+        this.timeRangeService.setDefaultTimeRange(activeItem.timeRangeResolver());
+      } else {
+        // Fallback for pages that don't have/are a parent navItem page in the routes tree
+        this.timeRangeService.setDefaultTimeRange(this.pageTimeRangeService.getGlobalDefaultTimeRange());
+        this.loggerService.warn('Time range fallback triggered, global default time range set');
+      }
     }
   }
 
