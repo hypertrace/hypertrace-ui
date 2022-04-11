@@ -1,17 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
-import { assertUnreachable, TypedSimpleChanges } from '@hypertrace/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { TypedSimpleChanges } from '@hypertrace/common';
 import { ToggleItem } from '@hypertrace/components';
-import { isEmpty, isNil } from 'lodash-es';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { isEmpty } from 'lodash-es';
+import { Observable, ReplaySubject } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -37,47 +28,44 @@ import { SpanDetailTab } from './span-detail-tab';
 
       <ht-toggle-group
         class="toggle-group"
-        [activeItem]="activeTab$ | async"
+        [activeItem]="this.activeTab$ | async"
         [items]="this.tabs"
         (activeItemChange)="this.tabChange($event)"
       >
       </ht-toggle-group>
 
-      <div class="tab-container" *ngIf="this.template$ | async as template">
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+      <div class="tab-container" *ngIf="this.activeTab$ | async as activeTab">
+        <ng-container [ngSwitch]="activeTab?.value">
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Request}'">
+            <ht-span-request-detail
+              class="request"
+              [layout]="this.layout"
+              [requestHeaders]="this.spanData?.requestHeaders"
+              [requestCookies]="this.spanData?.requestCookies"
+              [requestBody]="this.spanData?.requestBody"
+            ></ht-span-request-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
+            <ht-span-response-detail
+              class="response"
+              [layout]="this.layout"
+              [responseHeaders]="this.spanData?.responseHeaders"
+              [responseCookies]="this.spanData?.responseCookies"
+              [responseBody]="this.spanData?.responseBody"
+            ></ht-span-response-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
+            <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
+            <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Logs}'">
+            <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
-    <ng-template #requestTemplate>
-      <ht-span-request-detail
-        class="request"
-        [layout]="this.layout"
-        [requestHeaders]="this.spanData?.requestHeaders"
-        [requestCookies]="this.spanData?.requestCookies"
-        [requestBody]="this.spanData?.requestBody"
-      ></ht-span-request-detail>
-    </ng-template>
-
-    <ng-template #responseTemplate>
-      <ht-span-response-detail
-        class="response"
-        [layout]="this.layout"
-        [responseHeaders]="this.spanData?.responseHeaders"
-        [responseCookies]="this.spanData?.responseCookies"
-        [responseBody]="this.spanData?.responseBody"
-      ></ht-span-response-detail>
-    </ng-template>
-
-    <ng-template #attributesTemplate>
-      <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
-    </ng-template>
-
-    <ng-template #exitCallsTemplate>
-      <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
-    </ng-template>
-
-    <ng-template #logEventsTemplate>
-      <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
-    </ng-template>
   `
 })
 export class SpanDetailComponent implements OnChanges {
@@ -99,21 +87,6 @@ export class SpanDetailComponent implements OnChanges {
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
 
-  @ViewChild('requestTemplate', { static: true })
-  public requestTemplate!: TemplateRef<unknown>;
-
-  @ViewChild('responseTemplate', { static: true })
-  public responseTemplate!: TemplateRef<unknown>;
-
-  @ViewChild('attributesTemplate', { static: true })
-  public attributesTemplate!: TemplateRef<unknown>;
-
-  @ViewChild('exitCallsTemplate', { static: true })
-  public exitCallsTemplate!: TemplateRef<unknown>;
-
-  @ViewChild('logEventsTemplate', { static: true })
-  public logEventsTemplate!: TemplateRef<unknown>;
-
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
   public showExitCallsTab?: boolean;
@@ -122,15 +95,10 @@ export class SpanDetailComponent implements OnChanges {
 
   public tabs: ToggleItem<SpanDetailTab>[] = [];
 
-  private readonly activeTabSubject: BehaviorSubject<ToggleItem<SpanDetailTab> | undefined> = new BehaviorSubject<
-    ToggleItem<SpanDetailTab> | undefined
-  >(undefined);
-  public readonly activeTab$: Observable<ToggleItem<SpanDetailTab> | undefined> = this.activeTabSubject.asObservable();
-
-  private readonly templateSubject: BehaviorSubject<TemplateRef<unknown> | undefined> = new BehaviorSubject<
-    TemplateRef<unknown> | undefined
-  >(undefined);
-  public readonly template$: Observable<TemplateRef<unknown> | undefined> = this.templateSubject.asObservable();
+  private readonly activeTabSubject: ReplaySubject<ToggleItem<SpanDetailTab>> = new ReplaySubject<
+    ToggleItem<SpanDetailTab>
+  >(1);
+  public readonly activeTab$: Observable<ToggleItem<SpanDetailTab>> = this.activeTabSubject.asObservable();
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
@@ -160,29 +128,6 @@ export class SpanDetailComponent implements OnChanges {
   public tabChange(tab: ToggleItem<SpanDetailTab>): void {
     this.activeTabLabelChange.emit(tab.value);
     this.activeTabSubject.next(tab);
-    if (!isNil(tab.value)) {
-      const template = this.getTemplateForTab(tab.value);
-      if (!isNil(template)) {
-        this.templateSubject.next(template);
-      }
-    }
-  }
-
-  private getTemplateForTab(tab: SpanDetailTab): TemplateRef<unknown> {
-    switch (tab) {
-      case SpanDetailTab.Request:
-        return this.requestTemplate;
-      case SpanDetailTab.Response:
-        return this.responseTemplate;
-      case SpanDetailTab.Attributes:
-        return this.attributesTemplate;
-      case SpanDetailTab.ExitCalls:
-        return this.exitCallsTemplate;
-      case SpanDetailTab.Logs:
-        return this.logEventsTemplate;
-      default:
-        return assertUnreachable(tab);
-    }
   }
 
   /**
