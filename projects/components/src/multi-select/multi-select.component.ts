@@ -91,6 +91,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (valueChange)="this.searchOptions($event)"
                   [debounceTime]="200"
                   displayMode="${SearchBoxDisplayMode.NoBorder}"
+                  *ngIf="allOptions.length > 5"
                 ></ht-search-box>
                 <ht-divider class="divider"></ht-divider>
 
