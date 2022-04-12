@@ -9,6 +9,7 @@
 
   .content {
     @include fill-container;
+    cursor: pointer;
   }
 
   &.collapsed {
