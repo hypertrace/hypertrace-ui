@@ -38,6 +38,20 @@ describe('Log Events Service', () => {
     ]
   };
 
+  const mockTraceWithoutLogEvents: Trace = {
+    [traceIdKey]: 'test-id',
+    [traceTypeKey]: 'TRACE',
+    spans: [
+      {
+        [spanIdKey]: 'test-span',
+        serviceName: 'service',
+        displaySpanName: 'span',
+        protocolName: 'protocol',
+        startTime: 1608151401295
+      }
+    ]
+  };
+
   const createService = createServiceFactory({
     service: LogEventsService,
     providers: [
@@ -114,5 +128,9 @@ describe('Log Events Service', () => {
       }
     ];
     expect(spectator.service.mapLogEvents(mockTraceWithLogEvents)).toMatchObject(mappedLogEvents);
+  });
+  test('should return empty array for log events', () => {
+    const spectator = createService();
+    expect(spectator.service.mapLogEvents(mockTraceWithoutLogEvents)).toMatchObject([]);
   });
 });

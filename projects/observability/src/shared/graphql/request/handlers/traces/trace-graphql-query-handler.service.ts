@@ -73,23 +73,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         children: [
           {
             path: 'results',
-            children: [
-              { path: 'id' },
-              ...(!isEmpty(request.logEventProperties)
-                ? [
-                    {
-                      path: 'logEvents',
-                      children: [
-                        {
-                          path: 'results',
-                          children: this.selectionBuilder.fromSpecifications(request.logEventProperties!)
-                        }
-                      ]
-                    }
-                  ]
-                : []),
-              ...this.selectionBuilder.fromSpecifications(request.spanProperties!)
-            ]
+            children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.spanProperties!)]
           }
         ]
       };
