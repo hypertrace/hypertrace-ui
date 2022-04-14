@@ -22,6 +22,7 @@ export interface GraphQlExploreRequest {
   orderBy?: GraphQlSortBySpecification[];
   filters?: GraphQlFilter[];
   groupBy?: GraphQlGroupBy;
+  ignoreGlobalFilters?: boolean;
 }
 
 export interface GraphQlExploreResponse {
