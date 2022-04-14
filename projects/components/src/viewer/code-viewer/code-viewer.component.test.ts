@@ -26,7 +26,8 @@ describe('Code Viewer Component', () => {
         code: ''
       }
     });
-    expect(spectator.query('.code-viewer')).not.toExist();
+    expect(spectator.query('.line-numbers')).not.toExist();
+    expect(spectator.query('.code-lines')).not.toExist();
 
     // Set code
     spectator.setInput({
