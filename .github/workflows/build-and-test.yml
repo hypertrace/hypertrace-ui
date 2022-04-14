@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - rzp_main
+      - '!main'
 jobs:
   npm-install-if-needed:
     runs-on: ubuntu-20.04
