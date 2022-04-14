@@ -12,7 +12,7 @@ export class GlobalGraphQlFilterService {
   public mergeGlobalFiltersIfNeeded(
     scope: string,
     localFilters: GraphQlFilter[] = [],
-    ignoreGlobalFilters: boolean = true
+    ignoreGlobalFilters: boolean = false
   ): GraphQlFilter[] {
     if (ignoreGlobalFilters) {
       return localFilters;
