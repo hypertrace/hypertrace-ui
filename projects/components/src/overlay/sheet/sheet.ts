@@ -1,5 +1,5 @@
 import { InjectionToken, TemplateRef } from '@angular/core';
-import { ExternalNavigationParams } from '@hypertrace/common';
+import { NavigationParams } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { PopoverFixedPositionLocation } from '../../popover/popover';
 import { OverlayConfig } from './../overlay';
@@ -11,7 +11,7 @@ export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   closeOnEscapeKey?: boolean;
   closeOnNavigation?: boolean;
   attachedTriggerTemplate?: TemplateRef<unknown>;
-  pageNavParams?: ExternalNavigationParams;
+  pageNavParams?: NavigationParams;
 }
 
 export const enum SheetSize {
