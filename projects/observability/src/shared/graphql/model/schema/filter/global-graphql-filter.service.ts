@@ -9,7 +9,15 @@ export class GlobalGraphQlFilterService {
     return Array.from(this.filterRules.values()).flatMap(rule => rule.filtersForScope(scope));
   }
 
-  public mergeGlobalFilters(scope: string, localFilters: GraphQlFilter[] = []): GraphQlFilter[] {
+  public mergeGlobalFiltersIfNeeded(
+    scope: string,
+    localFilters: GraphQlFilter[] = [],
+    ignoreGlobalFilters: boolean = true
+  ): GraphQlFilter[] {
+    if (ignoreGlobalFilters) {
+      return localFilters;
+    }
+
     return [...localFilters, ...this.getGlobalFilters(scope)];
   }
 

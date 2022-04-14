@@ -42,7 +42,11 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), request.filters)
+          this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
+            resolveTraceType(request.traceType),
+            request.filters,
+            request.ignoreGlobalFilters
+          )
         )
       ],
       children: [
@@ -116,6 +120,7 @@ export interface GraphQlTracesRequest {
   offset?: number;
   sort?: GraphQlSortBySpecification;
   filters?: GraphQlFilter[];
+  ignoreGlobalFilters?: boolean;
 }
 
 export interface TracesResponse {

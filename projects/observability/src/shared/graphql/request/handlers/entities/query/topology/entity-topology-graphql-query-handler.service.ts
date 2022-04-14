@@ -39,7 +39,11 @@ export class EntityTopologyGraphQlQueryHandlerService
         this.argBuilder.forLimit(request.rootNodeLimit),
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFilters(request.rootNodeType, request.rootNodeFilters)
+          this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
+            request.rootNodeType,
+            request.rootNodeFilters,
+            request.ignoreGlobalFilters
+          )
         )
       ],
       children: [
@@ -265,6 +269,7 @@ export interface GraphQlEntityTopologyRequest {
   downstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   upstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   edgeSpecification: TopologySpecification;
+  ignoreGlobalFilters?: boolean;
 }
 
 interface TopologySpecification {

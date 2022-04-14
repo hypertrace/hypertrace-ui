@@ -36,9 +36,11 @@ export class ExportSpansGraphQlQueryHandlerService
         this.argBuilder.forLimit(request.limit),
         this.argBuilder.forTimeRange(timeRange),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), [
-            this.buildTraceIdFilter(request)
-          ])
+          this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
+            resolveTraceType(request.traceType),
+            [this.buildTraceIdFilter(request)],
+            request.ignoreGlobalFilters
+          )
         )
       ],
       children: [
@@ -74,6 +76,7 @@ export interface GraphQlExportSpansRequest {
   traceId: string;
   limit: number;
   timestamp?: Date;
+  ignoreGlobalFilters?: boolean;
 }
 
 export interface ExportSpansResponse {
