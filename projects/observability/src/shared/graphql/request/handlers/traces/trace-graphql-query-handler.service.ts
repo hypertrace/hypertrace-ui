@@ -45,11 +45,9 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forLimit(1),
         this.argBuilder.forTimeRange(timeRange),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
-            resolveTraceType(request.traceType),
-            [this.buildTraceIdFilter(request)],
-            request.ignoreGlobalFilters
-          )
+          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), [
+            this.buildTraceIdFilter(request)
+          ])
         )
       ],
       children: [
@@ -69,11 +67,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
           this.argBuilder.forLimit(request.spanLimit),
           this.argBuilder.forTimeRange(timeRange),
           ...this.argBuilder.forFilters(
-            this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
-              SPAN_SCOPE,
-              this.buildSpansFilter(request),
-              request.ignoreGlobalFilters
-            )
+            this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, this.buildSpansFilter(request))
           )
         ],
         children: [
@@ -199,7 +193,6 @@ export interface GraphQlTraceRequest {
   spanId?: string;
   spanProperties?: Specification[];
   logEventProperties?: Specification[];
-  ignoreGlobalFilters?: boolean;
 }
 
 interface TraceServerResponse {

@@ -41,13 +41,7 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
-        ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
-            SPAN_SCOPE,
-            request.filters,
-            request.ignoreGlobalFilters
-          )
-        )
+        ...this.argBuilder.forFilters(this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, request.filters))
       ],
       children: [
         {
@@ -119,7 +113,6 @@ export interface GraphQlSpansRequest {
   offset?: number;
   sort?: GraphQlSortBySpecification;
   filters?: GraphQlFilter[];
-  ignoreGlobalFilters?: boolean;
 }
 
 export interface SpansResponse {

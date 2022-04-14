@@ -44,11 +44,9 @@ export class EntitiesGraphqlQueryBuilderService {
 
   protected buildFilters(request: GraphQlEntitiesRequest): GraphQlArgument[] {
     return this.argBuilder.forFilters(
-      this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
-        request.entityType,
-        request.filters,
-        request.ignoreGlobalFilters
-      )
+      request.ignoreGlobalFilters ?? false
+        ? this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters)
+        : request.filters ?? []
     );
   }
 

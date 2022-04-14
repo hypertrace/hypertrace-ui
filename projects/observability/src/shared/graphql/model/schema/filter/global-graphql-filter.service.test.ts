@@ -50,12 +50,9 @@ describe('Global graphql filter serivce', () => {
       filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : [])
     });
 
-    expect(spectator.service.mergeGlobalFiltersIfNeeded(SPAN_SCOPE)).toEqual([firstFilter]);
+    expect(spectator.service.mergeGlobalFilters(SPAN_SCOPE)).toEqual([firstFilter]);
 
-    expect(spectator.service.mergeGlobalFiltersIfNeeded('fake', [secondFilter])).toEqual([secondFilter]);
-    expect(spectator.service.mergeGlobalFiltersIfNeeded(SPAN_SCOPE, [secondFilter])).toEqual([
-      secondFilter,
-      firstFilter
-    ]);
+    expect(spectator.service.mergeGlobalFilters('fake', [secondFilter])).toEqual([secondFilter]);
+    expect(spectator.service.mergeGlobalFilters(SPAN_SCOPE, [secondFilter])).toEqual([secondFilter, firstFilter]);
   });
 });

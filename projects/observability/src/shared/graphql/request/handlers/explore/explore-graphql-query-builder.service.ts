@@ -45,11 +45,9 @@ export class ExploreGraphqlQueryBuilderService {
 
   protected buildFilters(request: GraphQlExploreRequest): GraphQlArgument[] {
     return this.argBuilder.forFilters(
-      this.globalGraphQlFilterService.mergeGlobalFiltersIfNeeded(
-        request.context,
-        request.filters,
-        request.ignoreGlobalFilters
-      )
+      request.ignoreGlobalFilters ?? false
+        ? this.globalGraphQlFilterService.mergeGlobalFilters(request.context, request.filters)
+        : request.filters ?? []
     );
   }
 
