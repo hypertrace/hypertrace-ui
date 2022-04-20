@@ -65,13 +65,10 @@ export class ColorPickerComponent implements ControlValueAccessor {
   }
 
   public selectColor(color: string): void {
-    if (this.selected === color) {
-      this.selected = undefined;
-    } else {
-      this.selected = color;
-    }
-    this.selectedChange.emit(this.selected);
-    this.propagateValueChangeToFormControl(this.selected);
+    const clickedColor = this.selected === color ? undefined : color;
+    this.selected = clickedColor;
+    this.selectedChange.emit(clickedColor);
+    this.propagateValueChangeToFormControl(clickedColor);
   }
 
   private propagateValueChangeToFormControl(value?: string): void {
