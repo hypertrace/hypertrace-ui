@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, TemplateRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  TemplateRef
+} from '@angular/core';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
@@ -9,7 +18,7 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
   styleUrls: ['./code-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div *ngIf="this.code" class="code-viewer" [style.backgroundColor]="this.backgroundColor">
+    <div class="code-viewer" [style.backgroundColor]="this.backgroundColor">
       <div *ngIf="this.showHeader" class="header">
         <div class="title">{{ this.titleText }}</div>
         <div class="header-content">
@@ -27,41 +36,46 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
           ></ht-download-file>
         </div>
       </div>
-      <div class="content">
-        <div class="line-numbers">
-          <div
-            *ngFor="let lineNumber of this.lineNumbers"
-            class="line-number"
-            [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
-          >
-            {{ lineNumber }}
+      <div id="code-viewer-content" class="content">
+        <ng-container *ngIf="this.code"
+          ><div class="line-numbers">
+            <div
+              *ngFor="let lineNumber of this.lineNumbers"
+              class="line-number"
+              [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
+            >
+              {{ lineNumber }}
+            </div>
           </div>
-        </div>
-        <div class="code-lines">
-          <div
-            *ngFor="let codeLine of this.codeLines; let index = index"
-            class="code-line"
-            [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
-          >
-            <pre
-              [innerHtml]="
-                this.searchText ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' }) : codeLine
-              "
-            ></pre>
+          <div class="code-lines">
+            <div
+              *ngFor="let codeLine of this.codeLines; let index = index"
+              class="code-line"
+              [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
+            >
+              <pre
+                class="code-line-text"
+                [innerHtml]="
+                  this.searchText
+                    ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' })
+                    : codeLine
+                "
+              ></pre>
+            </div>
           </div>
-        </div>
-        <ht-copy-to-clipboard
-          *ngIf="this.enableCopy"
-          class="copy-to-clipboard"
-          [tooltip]="this.copyTooltip"
-          [label]="this.copyLabel"
-          [text]="this.code"
-        ></ht-copy-to-clipboard>
+          <ht-copy-to-clipboard
+            *ngIf="this.enableCopy"
+            class="copy-to-clipboard"
+            [tooltip]="this.copyTooltip"
+            [label]="this.copyLabel"
+            [text]="this.code"
+          ></ht-copy-to-clipboard>
+        </ng-container>
       </div>
     </div>
   `
 })
-export class CodeViewerComponent implements OnChanges {
+export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
   public code: string = ''; // Pre-formatted code string
 
@@ -103,6 +117,16 @@ export class CodeViewerComponent implements OnChanges {
   public lineNumbers: number[] = [];
   public searchText: string = '';
 
+  private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
+    this.onDomMutation(mutations)
+  );
+
+  public constructor(private readonly element: ElementRef) {}
+
+  public ngAfterViewInit(): void {
+    this.observeDomMutations();
+  }
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.code) {
       this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
@@ -117,6 +141,10 @@ export class CodeViewerComponent implements OnChanges {
     }
   }
 
+  public ngOnDestroy(): void {
+    this.domMutationObserver.disconnect();
+  }
+
   public isLineHighlighted(lineNum: number): boolean {
     return (
       !isEmpty(this.highlightText) && this.codeLines[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
@@ -125,5 +153,27 @@ export class CodeViewerComponent implements OnChanges {
 
   public onSearch(searchText: string): void {
     this.searchText = searchText;
+  }
+
+  private observeDomMutations(): void {
+    const codeViewerContentElement = this.element.nativeElement.querySelector('#code-viewer-content') as Node;
+    this.domMutationObserver.observe(codeViewerContentElement, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
+
+  private onDomMutation(mutations: MutationRecord[]): void {
+    const mutationType: MutationRecordType = mutations[0].type;
+
+    if (mutationType === 'childList') {
+      const markElement: HTMLElement = this.element.nativeElement.querySelector('mark');
+      markElement?.scrollIntoView();
+    } else if (mutationType === 'attributes') {
+      const highlightedCodeLineElement: HTMLElement = this.element.nativeElement.querySelector('.line-highlight');
+      highlightedCodeLineElement?.scrollIntoView();
+    }
   }
 }
