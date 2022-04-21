@@ -43,12 +43,12 @@ describe('Multi Select Component', () => {
   let spectator: SpectatorHost<MultiSelectComponent<string>>;
 
   const selectionOptions = [
-    { label: 'first', value: 'first-value' },
-    { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value' },
-    { label: 'fourth', value: 'fourth-value' },
-    { label: 'fifth', value: 'fifth-value' },
-    { label: 'sixth', value: 'sixth-value' }
+    { label: '1first', value: 'first-value' },
+    { label: '2second', value: 'second-value' },
+    { label: '3third', value: 'third-value' },
+    { label: '4fourth', value: 'fourth-value' },
+    { label: '5fifth', value: 'fifth-value' },
+    { label: '6sixth', value: 'sixth-value' }
   ];
 
   test('should display initial selections', fakeAsync(() => {
@@ -118,7 +118,7 @@ describe('Multi Select Component', () => {
         x: {
           label: selectionOptions[1].label,
           overflowItemsCount: 1,
-          overflowLabel: 'third'
+          overflowLabel: '3third'
         }
       });
     });
@@ -160,9 +160,9 @@ describe('Multi Select Component', () => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
-          label: 'second',
+          label: '2second',
           overflowItemsCount: 1,
-          overflowLabel: 'third'
+          overflowLabel: '3third'
         }
       });
     });
@@ -197,7 +197,7 @@ describe('Multi Select Component', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[0].value]);
-    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+    expect(spectator.query(LabelComponent)?.label).toEqual('1first');
     flush();
   }));
 
@@ -229,14 +229,14 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query('.trigger-more-items')).toExist();
-    expect(spectator.query(LabelComponent)?.label).toEqual('second');
+    expect(spectator.query(LabelComponent)?.label).toEqual('2second');
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
-          label: 'second',
+          label: '2second',
           overflowItemsCount: 1,
-          overflowLabel: 'third'
+          overflowLabel: '3third'
         }
       });
     });
@@ -321,7 +321,7 @@ describe('Multi Select Component', () => {
     expect(selectedCheckboxElements.length).toBe(6);
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
-    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+    expect(spectator.query(LabelComponent)?.label).toEqual('1first');
 
     expect(spectator.query('.trigger-more-items')).toHaveText('+5');
 
@@ -455,7 +455,7 @@ describe('Multi Select Component', () => {
 
     let options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(2);
-    expect(options[0]).toContainText('first');
+    expect(options[0]).toContainText('1first');
 
     spectator.component.searchOptions('i');
     spectator.tick();
@@ -463,8 +463,8 @@ describe('Multi Select Component', () => {
 
     options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(4);
-    expect(options[0]).toContainText('first');
-    expect(options[1]).toContainText('third');
+    expect(options[0]).toContainText('1first');
+    expect(options[1]).toContainText('3third');
 
     expect(spectator.query('.divider', { root: true })).toExist();
     expect(spectator.query('.clear-selected', { root: true })).not.toExist(); // Due to initial selection
@@ -553,10 +553,10 @@ describe('Multi Select Component', () => {
       {
         hostProps: {
           options: [
-            { label: 'first', value: 'first-value' },
-            { label: 'second', value: 'second-value', disabled: true },
+            { label: '1first', value: 'first-value' },
+            { label: '2second', value: 'second-value', disabled: true },
             {
-              label: 'third',
+              label: '3third',
               value: 'third-value',
               selectedLabel: 'Third Value!!!',
               icon: 'test-icon',
