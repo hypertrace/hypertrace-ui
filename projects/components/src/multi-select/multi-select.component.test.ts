@@ -167,8 +167,13 @@ describe('Multi Select Component', () => {
       });
     });
 
-    optionElements.forEach((element, index) => {
-      expect(element).toHaveText(selectionOptions[index].label);
+    expect(optionElements[0]).toHaveText('2second');
+    expect(optionElements[1]).toHaveText('3third');
+    expect(optionElements[2]).toHaveText('1first');
+    expect(optionElements[3]).toHaveText('4fourth');
+    expect(optionElements[4]).toHaveText('5fifth');
+    expect(optionElements[5]).toHaveText('6sixth');
+    optionElements.forEach((element) => {
       expect(element.querySelector('ht-icon')).toExist();
     });
   }));
