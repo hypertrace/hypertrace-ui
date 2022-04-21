@@ -13,7 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEqual, sortBy } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -23,6 +23,7 @@ import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
 import { MultiSelectJustify } from './multi-select-justify';
+
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
@@ -210,7 +211,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
       map(([options, searchText]) =>
         options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
-      )
+      ),
+      map(options => sortBy(options, 'label')),
+      map(options => sortBy(options, (option: SelectOptionComponent<V>) => !this.selected?.includes(option.value)))
     );
     this.setTriggerLabel();
   }
