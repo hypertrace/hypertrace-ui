@@ -173,7 +173,7 @@ describe('Multi Select Component', () => {
     expect(optionElements[3]).toHaveText('4fourth');
     expect(optionElements[4]).toHaveText('5fifth');
     expect(optionElements[5]).toHaveText('6sixth');
-    optionElements.forEach((element) => {
+    optionElements.forEach(element => {
       expect(element.querySelector('ht-icon')).toExist();
     });
   }));
