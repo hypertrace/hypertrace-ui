@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { isArray } from 'lodash-es';
 import { assertUnreachable } from '../../lang/lang-utils';
 
-// TODO: Currently htHighlight does not escape reserved regex characters
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
   private escapeReserveRegExpCharacters(str: string): string {
