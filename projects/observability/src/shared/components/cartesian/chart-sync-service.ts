@@ -22,8 +22,8 @@ export class ChartSyncService<TData> {
     });
   }
 
-  public mouseLeave(groupId?: string, chartId?: CartesianChartComponent<TData>) {
-    return this.mouseLeaveSubject.next({
+  public mouseLeave(groupId?: string, chartId?: CartesianChartComponent<TData>): void {
+    this.mouseLeaveSubject.next({
       groupId: groupId,
       chartId: chartId
     });
@@ -39,7 +39,10 @@ export class ChartSyncService<TData> {
     );
   }
 
-  public getMouseLeave(groupId: string, chartId: CartesianChartComponent<TData>) {
+  public getMouseLeave(
+    groupId: string,
+    chartId: CartesianChartComponent<TData>
+  ): Observable<ChartMouseLeaveData<TData>> {
     return this.mouseLeaveSubject.pipe(
       filter(data => data.chartId !== chartId && data.groupId === groupId),
       map(data => data)
