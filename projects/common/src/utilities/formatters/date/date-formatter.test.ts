@@ -14,4 +14,12 @@ describe('Date formatter', () => {
       }).format(dateString)
     ).toEqual('Aug 21');
   });
+
+  test('can format a date string with full month and year only', () => {
+    expect(
+      new DateFormatter({
+        mode: DateFormatMode.FullMonthAndYearOnly
+      }).format(dateString)
+    ).toEqual('August 2021');
+  });
 });

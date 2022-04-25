@@ -30,7 +30,7 @@ describe('Interactions graphql query handler', () => {
             name: attributeKey,
             displayName: 'Duration',
             units: 'ms',
-            type: AttributeMetadataType.Number,
+            type: AttributeMetadataType.Long,
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,

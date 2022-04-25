@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MemoizeModule } from '@hypertrace/common';
+import { ButtonModule } from '../button/button.module';
 import { DividerModule } from '../divider/divider.module';
 import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 import { IconModule } from '../icon/icon.module';
@@ -28,7 +29,8 @@ import { SelectComponent } from './select.component';
     DividerModule,
     MemoizeModule,
     TraceSearchBoxModule,
-    EventBlockerModule
+    EventBlockerModule,
+    ButtonModule
   ],
   declarations: [
     SelectComponent,

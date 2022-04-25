@@ -1,6 +1,14 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
+import {
+  FeatureState,
+  FeatureStateResolver,
+  FixedTimeRange,
+  IntervalDurationService,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
@@ -27,6 +35,9 @@ describe('Explore visualization builder', () => {
       }),
       mockProvider(IntervalDurationService, {
         getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: () => of(FeatureState.Enabled)
       })
     ]
   });

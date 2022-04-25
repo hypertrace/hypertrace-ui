@@ -13,6 +13,14 @@
     }
   }
 
+  &.row-reverse {
+    flex-direction: row-reverse;
+    .chart-legend-container {
+      margin-left: 12px;
+      margin-right: 36px;
+    }
+  }
+
   &.column {
     flex-direction: column;
     .chart-legend-container {

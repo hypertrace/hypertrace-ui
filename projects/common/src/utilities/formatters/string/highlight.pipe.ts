@@ -4,6 +4,10 @@ import { assertUnreachable } from '../../lang/lang-utils';
 
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
+  private escapeReserveRegExpCharacters(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  }
+
   public transform(fullText: string, highlightSnippets: TextHighlightConfig | TextHighlightConfig[]): string {
     const snippetsToHighlight: TextHighlightConfig[] = isArray(highlightSnippets)
       ? highlightSnippets
@@ -13,7 +17,7 @@ export class HighlightPipe implements PipeTransform {
       const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
 
       return highlightedText.replace(
-        new RegExp(highlightConfig.text, 'ig'),
+        new RegExp(this.escapeReserveRegExpCharacters(highlightConfig.text), 'ig'),
         `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`
       );
     }, fullText);

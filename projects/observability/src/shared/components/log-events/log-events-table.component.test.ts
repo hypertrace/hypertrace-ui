@@ -51,7 +51,7 @@ describe('LogEventsTableComponent', () => {
         id: 'summary'
       })
     ]);
-    expect(spectator.query(TableComponent)!.pageable).toBe(true);
+    expect(spectator.query(TableComponent)!.pageable).toBe(false);
     expect(spectator.query(TableComponent)!.detailContent).not.toBeNull();
 
     runFakeRxjs(({ expectObservable }) => {

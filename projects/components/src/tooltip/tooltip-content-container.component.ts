@@ -8,18 +8,23 @@ import { POPOVER_DATA } from '../popover/popover';
   template: `
     <div class="tooltip-container">
       <ng-container *ngIf="this.isComplexContent; else simpleContent">
-        <ng-container *ngTemplateOutlet="this.content"> </ng-container>
+        <ng-container *ngTemplateOutlet="this.templateRef; context: this.data.context"></ng-container>
       </ng-container>
 
       <ng-template #simpleContent>
-        {{ this.content }}
+        {{ this.data.content }}
       </ng-template>
     </div>
   `
 })
 export class TooltipContentContainerComponent {
   public readonly isComplexContent: boolean;
-  public constructor(@Inject(POPOVER_DATA) public readonly content: string | TemplateRef<unknown>) {
-    this.isComplexContent = content instanceof TemplateRef;
+  public readonly templateRef: TemplateRef<unknown>;
+
+  public constructor(
+    @Inject(POPOVER_DATA) public readonly data: { content: string | TemplateRef<unknown>; context: unknown }
+  ) {
+    this.isComplexContent = data.content instanceof TemplateRef;
+    this.templateRef = data.content as TemplateRef<unknown>;
   }
 }

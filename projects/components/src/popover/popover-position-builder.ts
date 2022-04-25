@@ -1,6 +1,6 @@
 import { ConnectionPositionPair, GlobalPositionStrategy, Overlay, PositionStrategy } from '@angular/cdk/overlay';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { assertUnreachable, GLOBAL_HEADER_HEIGHT } from '@hypertrace/common';
+import { Injectable } from '@angular/core';
+import { assertUnreachable, GlobalHeaderHeightProviderService } from '@hypertrace/common';
 import {
   PopoverFixedPosition,
   PopoverFixedPositionLocation,
@@ -15,7 +15,7 @@ import { MousePositionStrategy } from './position-strategy/mouse-position-strate
 export class PopoverPositionBuilder {
   public constructor(
     private readonly overlay: Overlay,
-    @Optional() @Inject(GLOBAL_HEADER_HEIGHT) private readonly headerHeight?: string
+    private readonly headerHeightProvider: GlobalHeaderHeightProviderService
   ) {}
 
   public buildPositionStrategy(position: PopoverPosition): PositionStrategy | undefined {
@@ -116,7 +116,7 @@ export class PopoverPositionBuilder {
           .top(`${popoverPosition.customLocation!.y}px`);
       case PopoverFixedPositionLocation.RightUnderHeader:
       default:
-        return globalPosition.right('0').top(this.headerHeight ?? '0');
+        return globalPosition.right('0').top(this.headerHeightProvider.globalHeaderHeight ?? '0');
     }
   }
 }

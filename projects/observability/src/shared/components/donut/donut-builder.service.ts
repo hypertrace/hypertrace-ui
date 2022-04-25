@@ -9,7 +9,7 @@ import {
 import { BaseType, Selection } from 'd3-selection';
 import { arc, pie, PieArcDatum } from 'd3-shape';
 import { isEmpty } from 'lodash-es';
-import { LegendPosition, LegendSeries } from '../legend/legend.component';
+import { LegendFontSize, LegendPosition, LegendSeries } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
 import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/default-chart-tooltip.component';
 import { D3UtilService } from '../utils/d3/d3-util.service';
@@ -166,7 +166,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       center: provided.center,
       legend: provided.legendPosition === undefined ? LegendPosition.None : provided.legendPosition,
       tooltipOption: provided.tooltipOption === undefined ? { title: '' } : provided.tooltipOption,
-      displayLegendCounts: provided.displayLegendCounts ?? true
+      displayLegendCounts: provided.displayLegendCounts ?? true,
+      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall
     };
   }
 

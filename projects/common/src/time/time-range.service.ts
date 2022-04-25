@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { isEmpty } from 'lodash-es';
-import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
+import { ParamMap } from '@angular/router';
+import { isEmpty, isNil, omit } from 'lodash-es';
+import { EMPTY, Observable, ReplaySubject } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, skip, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -16,8 +17,8 @@ import { TimeUnit } from './time-unit.type';
 })
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
+  private static readonly REFRESH_ON_NAVIGATION: string = 'refresh';
 
-  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -52,35 +53,71 @@ export class TimeRangeService {
   }
 
   public setRelativeRange(value: number, unit: TimeUnit): this {
-    return this.setTimeRange(TimeRangeService.toRelativeTimeRange(value, unit));
+    return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
   }
 
   public setFixedRange(startTime: Date, endTime: Date): this {
-    return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
+    return this.setTimeRangeInUrl(TimeRangeService.toFixedTimeRange(startTime, endTime));
   }
 
   public refresh(): void {
-    this.setTimeRange(this.getCurrentTimeRange());
+    const currentStringTimeRange = this.getCurrentTimeRange().toUrlString();
+    this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
+  }
+
+  private getInitialTimeRange(): Observable<TimeRange> {
+    return this.navigationService.navigation$.pipe(
+      take(1), // Wait for first navigation
+      switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
+      take(1), // Only the first set of params
+      map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
+      filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
+      map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
+      catchError(() => EMPTY)
+    );
+  }
+
+  private getPageTimeRangeChanges(): Observable<TimeRange> {
+    return this.navigationService.navigation$.pipe(
+      map(activeRoute => activeRoute.snapshot.queryParamMap),
+      distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
+      skip(1), // Skip the first nav, this is handled by initializeTimeRange, but we want to populate prev for distinctUntilChanged
+      filter(queryParamMap => queryParamMap.has(TimeRangeService.TIME_RANGE_QUERY_PARAM)),
+      map(currQueryParamMap => {
+        const timeRangeQueryParamString = currQueryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
+
+        return this.timeRangeFromUrlString(timeRangeQueryParamString!);
+      })
+    );
   }
 
   private initializeTimeRange(): void {
-    this.navigationService.navigation$
-      .pipe(
-        take(1), // Wait for first navigation
-        switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
-        take(1), // Only the first set of params
-        map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-        filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
-        map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
-        catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultTimeRange)
-      )
-      .subscribe(timeRange => {
-        this.setTimeRange(timeRange);
-      });
+    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => this.applyTimeRangeChange(timeRangeFromInitialUrl));
+
+    this.getPageTimeRangeChanges().subscribe(timeRange => {
+      if (!this.timeRangeMatchesCurrentUrl(timeRange)) {
+        this.setTimeRangeInUrl(timeRange);
+      } else {
+        this.applyTimeRangeChange(timeRange);
+
+        const queryParams = this.navigationService.getCurrentActivatedRoute().snapshot.queryParams;
+        if (TimeRangeService.REFRESH_ON_NAVIGATION in queryParams) {
+          this.navigationService.replaceQueryParametersInUrl(omit(queryParams, TimeRangeService.REFRESH_ON_NAVIGATION));
+        }
+      }
+    });
   }
 
-  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  private shouldNotUpdateTimeRange(prevParamMap: ParamMap, currParamMap: ParamMap): boolean {
+    const refreshQueryParam = currParamMap.get(TimeRangeService.REFRESH_ON_NAVIGATION);
+
+    return (
+      prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ===
+        currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) && isEmpty(refreshQueryParam)
+    );
+  }
+
+  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);
@@ -93,14 +130,25 @@ export class TimeRangeService {
     throw new Error(); // Caught in observable
   }
 
-  private setTimeRange(newTimeRange: TimeRange): this {
+  private applyTimeRangeChange(newTimeRange: TimeRange): this {
     this.currentTimeRange = newTimeRange;
     this.timeRangeSubject$.next(newTimeRange);
+
+    return this;
+  }
+
+  private setTimeRangeInUrl(timeRange: TimeRange): this {
     this.navigationService.addQueryParametersToUrl({
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     });
 
     return this;
+  }
+
+  public setDefaultTimeRange(timeRange: TimeRange): void {
+    if (!this.currentTimeRange) {
+      this.setTimeRangeInUrl(timeRange);
+    }
   }
 
   public static toRelativeTimeRange(value: number, unit: TimeUnit): RelativeTimeRange {
@@ -111,11 +159,25 @@ export class TimeRangeService {
     return new FixedTimeRange(startTime, endTime);
   }
 
-  public toQueryParams(startTime: Date, endTime: Date): QueryParamObject {
-    const newTimeRange = new FixedTimeRange(startTime, endTime);
-
-    return {
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
+  public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam?: boolean): QueryParamObject {
+    const queryParams: QueryParamObject = {
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
+
+    if (refreshTimeOnNavigationParam) {
+      return { ...queryParams, [TimeRangeService.REFRESH_ON_NAVIGATION]: true };
+    }
+
+    return queryParams;
+  }
+
+  private timeRangeMatchesCurrentUrl(timeRange: TimeRange): boolean {
+    return (
+      this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '') === timeRange.toUrlString()
+    );
+  }
+
+  public isInitialized(): boolean {
+    return !isNil(this.currentTimeRange);
   }
 }
