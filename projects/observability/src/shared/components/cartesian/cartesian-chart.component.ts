@@ -134,7 +134,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       );
 
       this.subscriptionLifeCycle.add(
-        this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(_data => {
+        this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(() => {
           this.chart?.hideCrosshair();
         })
       );
