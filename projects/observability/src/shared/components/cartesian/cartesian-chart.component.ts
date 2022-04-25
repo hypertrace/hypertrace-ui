@@ -112,10 +112,10 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         )
       )
       .withEventListener(ChartEvent.Hover, data => {
-        this.chartSyncService.mouseLocationChange(data, this.groupId, this);
+        this.chartSyncService.mouseLocationChange(data!, this.groupId, this);
       })
-      .withEventListener(ChartEvent.MouseLeave, data => {
-        this.chartSyncService.mouseLocationChange(data, this.groupId, this);
+      .withEventListener(ChartEvent.MouseLeave, _data => {
+        this.chartSyncService.mouseLeave(this.groupId, this);
       });
 
     if (this.rangeSelectionEnabled) {
@@ -129,11 +129,13 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     if (this.groupId !== undefined) {
       this.subscriptionLifeCycle.add(
         this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
-          if (data !== undefined) {
-            this.chart?.showCrosshair(data);
-          } else {
-            this.chart?.hideCrosshair();
-          }
+          this.chart?.showCrosshair(data);
+        })
+      );
+
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(_data => {
+          this.chart?.hideCrosshair();
         })
       );
     }

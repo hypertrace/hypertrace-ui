@@ -12,7 +12,7 @@ export const enum ChartEvent {
 }
 
 export type ChartEventListener<TData> = (
-  data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData> | undefined
+  data?: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
 ) => void;
 
 export interface ChartTooltipTrackingOptions {

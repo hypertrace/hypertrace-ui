@@ -605,7 +605,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.eventListeners.forEach(listener => {
       if (listener.event === ChartEvent.MouseLeave) {
-        listener.onEvent(undefined);
+        listener.onEvent();
       }
     });
 
