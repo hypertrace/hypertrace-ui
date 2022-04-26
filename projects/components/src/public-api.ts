@@ -25,7 +25,6 @@ export * from './collapsible-sidebar/collapsible-sidebar.component';
 export * from './collapsible-sidebar/collapsible-sidebar.module';
 
 // Collapsible sidebar
-export * from './viewer/code-viewer/code-language';
 export * from './viewer/code-viewer/code-viewer.component';
 export * from './viewer/code-viewer/code-viewer.module';
 
