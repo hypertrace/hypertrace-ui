@@ -148,6 +148,12 @@ export class CartesianWidgetModel<TInterval> {
   public maxSeriesDataPoints?: number;
 
   @ModelProperty({
+    key: 'sync-group-id',
+    type: STRING_PROPERTY.type
+  })
+  public syncGroupId?: string;
+
+  @ModelProperty({
     key: 'selection-handler',
     displayName: 'Selection Handler',
     type: ModelPropertyType.TYPE
