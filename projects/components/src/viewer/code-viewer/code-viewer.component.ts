@@ -10,10 +10,11 @@ import {
   TemplateRef,
   ViewChildren
 } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
+import * as HighlightJs from 'highlight.js';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
-import * as HighlightJs from 'highlight.js';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
 import { CodeLanguage } from './code-language';
 
@@ -40,8 +41,8 @@ import { CodeLanguage } from './code-language';
           ></ht-download-file>
         </div>
       </div>
-      <div id="code-viewer-content" class="content">
-        <ng-container *ngIf="this.code"
+      <div id="code-viewer-content" class="content" [ngClass]="{ 'no-data': this.isCodeEmpty }">
+        <ng-container *ngIf="!this.isCodeEmpty; else noDataTemplate"
           ><div class="line-numbers">
             <div
               *ngFor="let lineNumber of this.lineNumbers"
@@ -69,6 +70,9 @@ import { CodeLanguage } from './code-language';
             [text]="this.code"
           ></ht-copy-to-clipboard>
         </ng-container>
+        <ng-template #noDataTemplate>
+          <ht-message-display icon="${IconType.NoData}" [title]="this.noDataMessage"></ht-message-display>
+        </ng-template>
       </div>
     </div>
   `
@@ -85,6 +89,9 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   @Input()
   public titleText: string = 'Code Viewer';
+
+  @Input()
+  public noDataMessage: string = 'No code available';
 
   @Input()
   public backgroundColor: string = Color.OffWhite;
@@ -150,6 +157,10 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   public ngOnDestroy(): void {
     this.domMutationObserver.disconnect();
+  }
+
+  public get isCodeEmpty(): boolean {
+    return isEmpty(this.code);
   }
 
   public isLineHighlighted(lineNum: number): boolean {

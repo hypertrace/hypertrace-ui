@@ -23,7 +23,8 @@
         "@hypertrace/graphql-client",
         "@hypertrace/test-utils",
         "@hypertrace/observability",
-        "ng-mocks"
+        "ng-mocks",
+        "highlight.js"
       ]
     ],
     "no-lifecycle-call": true,
