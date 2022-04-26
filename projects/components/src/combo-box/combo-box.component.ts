@@ -113,7 +113,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
               class="popover-item"
             >
               <ht-icon class="option-icon" [icon]="option.icon" *ngIf="option.icon"></ht-icon>
-              <div [innerHtml]="option.text | htHighlight: { text: this.text!, highlightType: 'mark' }"></div>
+              <div [innerHtml]="option.text | htHighlight: { text: this.text, highlightType: 'mark' }"></div>
             </div>
           </div>
           <div
