@@ -67,23 +67,21 @@
 
       .code-line {
         @include line-base;
+        width: min-content;
         white-space: break-spaces;
+        position: relative;
+
+        .code-line-background {
+          @include fill-container;
+          position: absolute;
+          z-index: 1;
+        }
 
         .code-line-text {
           padding-right: 4px;
           height: 20px;
-        }
-
-        &.line-highlight {
-          .code-line-text {
-            background-color: $blue-2;
-          }
-        }
-
-        ::ng-deep {
-          mark {
-            background-color: $yellow-4;
-          }
+          z-index: 2;
+          letter-spacing: initial;
         }
       }
     }
