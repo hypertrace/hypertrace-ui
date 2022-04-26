@@ -175,50 +175,53 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     const codeTexts = this.codeTexts.map(text => text.toLowerCase());
 
     // Remove existing child background elements
-    this.codeLineBackgroundElements.forEach(codeLineBackgroundElement => {
-      const codeLineBackgroundElemNode: Node = codeLineBackgroundElement.nativeElement;
-
-      while (codeLineBackgroundElemNode.firstChild) {
-        codeLineBackgroundElemNode.removeChild(codeLineBackgroundElemNode.firstChild);
-      }
-    });
+    this.codeLineBackgroundElements.forEach(
+      codeLineBackgroundElement => (codeLineBackgroundElement.nativeElement.innerHTML = '')
+    );
 
     const searchLen: number = searchText.length;
     if (searchLen === 0) {
       return;
     }
 
-    const searchedPositions: Position[][] = Array.from(Array(codeTexts.length), () => new Array(0));
+    const searchedPositions: Position[][] = Array.from(Array(codeTexts.length), () => []);
 
     // Get all searched text positions
     codeTexts.forEach((codeText, index) => {
       for (let i = 0; i <= codeText.length - searchLen; i++) {
-        if (codeText.substr(i, searchLen) === searchText) {
-          searchedPositions[index].push({ start: i, end: i + searchLen });
-          i = i + searchLen - 1;
+        const searchedIndex = codeText.indexOf(searchText, i);
+        if (searchedIndex > -1) {
+          searchedPositions[index].push({ start: searchedIndex, end: searchedIndex + searchLen });
+          i = searchedIndex + searchLen - 1;
+        } else {
+          break;
         }
       }
     });
 
     // Add background elements for searched positions
     this.codeLineBackgroundElements.forEach((codeLineBackgroundElement, index) => {
-      searchedPositions[index].forEach(searchedPosition =>
-        (codeLineBackgroundElement.nativeElement as Node).appendChild(this.getBackgroundElement(searchedPosition))
-      );
+      codeLineBackgroundElement.nativeElement.appendChild(this.getBackgroundElements(searchedPositions[index]));
     });
   }
 
-  // Background element for search
-  private getBackgroundElement(position: Position): HTMLDivElement {
-    const backgroundElem = document.createElement('div');
-    backgroundElem.className = 'bg-searched';
-    backgroundElem.style.height = '100%';
-    backgroundElem.style.width = `${position.end - position.start}ch`;
-    backgroundElem.style.backgroundColor = Color.Yellow4;
-    backgroundElem.style.position = 'absolute';
-    backgroundElem.style.left = `${position.start}ch`;
+  // Background elements for search
+  private getBackgroundElements(positions: Position[]): DocumentFragment {
+    const backgroundElemDocFragment: DocumentFragment = document.createDocumentFragment();
 
-    return backgroundElem;
+    positions.forEach(position => {
+      const backgroundElem = document.createElement('div');
+      backgroundElem.className = 'bg-searched';
+      backgroundElem.style.height = '100%';
+      backgroundElem.style.width = `${position.end - position.start}ch`;
+      backgroundElem.style.backgroundColor = Color.Yellow4;
+      backgroundElem.style.position = 'absolute';
+      backgroundElem.style.left = `${position.start}ch`;
+
+      backgroundElemDocFragment.appendChild(backgroundElem);
+    });
+
+    return backgroundElemDocFragment;
   }
 
   private observeDomMutations(): void {
