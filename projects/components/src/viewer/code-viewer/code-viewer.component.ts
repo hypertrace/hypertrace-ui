@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
-import HighlightJs from 'highlight.js';
+import hljs from 'highlight.js';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
@@ -141,7 +141,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.code || changes.codeLanguage) {
       this.codeTexts = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
-      this.codeLines = this.codeTexts.map(codeStr => HighlightJs.highlight(codeStr, { language: this.language }).value);
+      this.codeLines = this.codeTexts.map(codeStr => hljs.highlight(codeStr, { language: this.language }).value);
       this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
     }
 
