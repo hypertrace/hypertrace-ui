@@ -4,8 +4,8 @@ import { assertUnreachable } from '../../lang/lang-utils';
 
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
-  private escapeReserveRegExpCharacters(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  private escapeReserveRegExpCharacters(str?: string): string {
+    return str === undefined ? '' : str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
   }
 
   public transform(fullText: string, highlightSnippets: TextHighlightConfig | TextHighlightConfig[]): string {
@@ -27,7 +27,7 @@ export class HighlightPipe implements PipeTransform {
 export type HighlightType = 'mark' | 'bold' | 'italic';
 
 export interface TextHighlightConfig {
-  text: string;
+  text?: string;
   highlightType: HighlightType;
 }
 
