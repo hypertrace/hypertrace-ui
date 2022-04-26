@@ -1,8 +1,8 @@
-import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { CopyToClipboardComponent } from '../../copy-to-clipboard/copy-to-clipboard.component';
 import { DownloadFileComponent } from '../../download-file/download-file.component';
+import { MessageDisplayComponent } from '../../message-display/message-display.component';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
 import { CodeViewerComponent } from './code-viewer.component';
 
@@ -12,9 +12,9 @@ describe('Code Viewer Component', () => {
     declarations: [
       MockComponent(SearchBoxComponent),
       MockComponent(DownloadFileComponent),
-      MockComponent(CopyToClipboardComponent)
+      MockComponent(CopyToClipboardComponent),
+      MockComponent(MessageDisplayComponent)
     ],
-    imports: [FormattingModule],
     shallow: true
   });
   const code = `{\n "key": "value" \n }`;
@@ -28,6 +28,7 @@ describe('Code Viewer Component', () => {
     });
     expect(spectator.query('.line-numbers')).not.toExist();
     expect(spectator.query('.code-lines')).not.toExist();
+    expect(spectator.query(MessageDisplayComponent)).toExist();
 
     // Set code
     spectator.setInput({
@@ -69,6 +70,6 @@ describe('Code Viewer Component', () => {
 
     // Search
     spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'e');
-    expect(spectator.queryAll('mark').length).toBe(2);
+    expect(spectator.queryAll('.bg-searched').length).toBe(2);
   });
 });
