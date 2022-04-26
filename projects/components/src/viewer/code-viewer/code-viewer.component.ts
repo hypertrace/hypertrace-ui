@@ -6,12 +6,16 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  TemplateRef
+  QueryList,
+  TemplateRef,
+  ViewChildren
 } from '@angular/core';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
+import * as HighlightJs from 'highlight.js';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
+import { CodeLanguage } from './code-language';
 
 @Component({
   selector: 'ht-code-viewer',
@@ -53,14 +57,8 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
               class="code-line"
               [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
             >
-              <pre
-                class="code-line-text"
-                [innerHtml]="
-                  this.searchText
-                    ? (codeLine | htHighlight: { text: this.searchText, highlightType: 'mark' })
-                    : codeLine
-                "
-              ></pre>
+              <pre class="code-line-text" [innerHtml]="codeLine"></pre>
+              <div #codeLineBackground class="code-line-background"></div>
             </div>
           </div>
           <ht-copy-to-clipboard
@@ -78,6 +76,9 @@ import { DownloadFileMetadata } from '../../download-file/download-file-metadata
 export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
   public code: string = ''; // Pre-formatted code string
+
+  @Input()
+  public language: CodeLanguage = CodeLanguage.Yaml; // Need a default language by highlight.js
 
   @Input()
   public highlightText: string = ''; // To highlight the entire line
@@ -112,10 +113,13 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   @Input()
   public lineSplitter: RegExp = new RegExp('\r\n|\r|\n');
 
-  public codeLines: string[] = [];
+  @ViewChildren('codeLineBackground', { read: ElementRef })
+  private readonly codeLineBackgroundElements!: QueryList<ElementRef>;
+
+  public codeTexts: string[] = [];
+  public codeLines: string[] = []; // HTML strings after syntax highlighting
   public downloadCodeMetadata?: DownloadFileMetadata;
   public lineNumbers: number[] = [];
-  public searchText: string = '';
 
   private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
     this.onDomMutation(mutations)
@@ -128,8 +132,11 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.code) {
-      this.codeLines = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
+    if (changes.code || changes.codeLanguage) {
+      this.codeTexts = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
+      this.codeLines = this.codeTexts.map(
+        codeStr => HighlightJs.default.highlight(codeStr, { language: this.language }).value
+      );
       this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
     }
 
@@ -151,8 +158,56 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     );
   }
 
-  public onSearch(searchText: string): void {
-    this.searchText = searchText;
+  public onSearch(searchString: string): void {
+    // For case-insensitive search
+    const searchText = searchString.toLowerCase();
+    const codeTexts = this.codeTexts.map(text => text.toLowerCase());
+
+    // Remove existing child background elements
+    this.codeLineBackgroundElements.forEach(codeLineBackgroundElement => {
+      const codeLineBackgroundElemNode: Node = codeLineBackgroundElement.nativeElement;
+
+      while (codeLineBackgroundElemNode.firstChild) {
+        codeLineBackgroundElemNode.removeChild(codeLineBackgroundElemNode.firstChild);
+      }
+    });
+
+    const searchLen: number = searchText.length;
+    if (searchLen === 0) {
+      return;
+    }
+
+    const searchedPositions: Position[][] = Array.from(Array(codeTexts.length), () => new Array(0));
+
+    // Get all searched text positions
+    codeTexts.forEach((codeText, index) => {
+      for (let i = 0; i <= codeText.length - searchLen; i++) {
+        if (codeText.substr(i, searchLen) === searchText) {
+          searchedPositions[index].push({ start: i, end: i + searchLen });
+          i = i + searchLen - 1;
+        }
+      }
+    });
+
+    // Add background elements for searched positions
+    this.codeLineBackgroundElements.forEach((codeLineBackgroundElement, index) => {
+      searchedPositions[index].forEach(searchedPosition =>
+        (codeLineBackgroundElement.nativeElement as Node).appendChild(this.getBackgroundElement(searchedPosition))
+      );
+    });
+  }
+
+  // Background element for search
+  private getBackgroundElement(position: Position): HTMLDivElement {
+    const backgroundElem = document.createElement('div');
+    backgroundElem.className = 'bg-searched';
+    backgroundElem.style.height = '100%';
+    backgroundElem.style.width = `${position.end - position.start}ch`;
+    backgroundElem.style.backgroundColor = Color.Yellow4;
+    backgroundElem.style.position = 'absolute';
+    backgroundElem.style.left = `${position.start}ch`;
+
+    return backgroundElem;
   }
 
   private observeDomMutations(): void {
@@ -169,11 +224,16 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     const mutationType: MutationRecordType = mutations[0].type;
 
     if (mutationType === 'childList') {
-      const markElement: HTMLElement = this.element.nativeElement.querySelector('mark');
-      markElement?.scrollIntoView();
+      const searchedElement: HTMLElement = this.element.nativeElement.querySelector('.bg-searched');
+      searchedElement?.scrollIntoView();
     } else if (mutationType === 'attributes') {
       const highlightedCodeLineElement: HTMLElement = this.element.nativeElement.querySelector('.line-highlight');
       highlightedCodeLineElement?.scrollIntoView();
     }
   }
+}
+
+interface Position {
+  start: number;
+  end: number;
 }
