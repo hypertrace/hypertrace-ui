@@ -1,10 +1,11 @@
-import { createComponentFactory } from '@ngneat/spectator/jest';
+import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { CopyToClipboardComponent } from '../../copy-to-clipboard/copy-to-clipboard.component';
 import { DownloadFileComponent } from '../../download-file/download-file.component';
 import { MessageDisplayComponent } from '../../message-display/message-display.component';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
 import { CodeViewerComponent } from './code-viewer.component';
+import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighter.service';
 
 describe('Code Viewer Component', () => {
   const createComponent = createComponentFactory({
@@ -14,6 +15,11 @@ describe('Code Viewer Component', () => {
       MockComponent(DownloadFileComponent),
       MockComponent(CopyToClipboardComponent),
       MockComponent(MessageDisplayComponent)
+    ],
+    providers: [
+      mockProvider(SyntaxHighlighterService, {
+        highlight: jest.fn().mockReturnValueOnce('{').mockReturnValueOnce(`"key": "value"`).mockReturnValueOnce('}')
+      })
     ],
     shallow: true
   });
