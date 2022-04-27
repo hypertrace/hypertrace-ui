@@ -42,7 +42,7 @@ describe('Highlight pipe', () => {
       'full text to test highlight on'
     );
   });
-  
+
   test('highlights with an array of highlightConfig correctly', () => {
     expect(
       pipe.transform('full text to test highlight on', [
