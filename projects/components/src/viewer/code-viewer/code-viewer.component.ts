@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
-import hljs from 'highlight.js';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
 import { CodeLanguage } from './code-language';
+import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighter.service';
 
 @Component({
   selector: 'ht-code-viewer',
@@ -132,16 +132,19 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.onDomMutation(mutations)
   );
 
-  public constructor(private readonly element: ElementRef) {}
+  public constructor(
+    private readonly element: ElementRef,
+    private readonly syntaxHighlighter: SyntaxHighlighterService
+  ) {}
 
   public ngAfterViewInit(): void {
     this.observeDomMutations();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.code || changes.codeLanguage) {
+    if (changes.code || changes.language) {
       this.codeTexts = isEmpty(this.code) ? [] : this.code.split(this.lineSplitter);
-      this.codeLines = this.codeTexts.map(codeStr => hljs.highlight(codeStr, { language: this.language }).value);
+      this.codeLines = this.codeTexts.map(codeStr => this.syntaxHighlighter.highlight(codeStr, this.language));
       this.lineNumbers = new Array(this.codeLines.length).fill(0).map((_, index) => index + 1);
     }
 
