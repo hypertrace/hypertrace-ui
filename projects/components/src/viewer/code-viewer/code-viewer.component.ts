@@ -189,14 +189,12 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
     // Get all searched text positions
     codeTexts.forEach((codeText, index) => {
-      for (let i = 0; i <= codeText.length - searchLen; i++) {
-        const searchedIndex = codeText.indexOf(searchText, i);
-        if (searchedIndex > -1) {
-          searchedPositions[index].push({ start: searchedIndex, end: searchedIndex + searchLen });
-          i = searchedIndex + searchLen - 1;
-        } else {
-          break;
-        }
+      let searchStartPosition = 0;
+      let searchedIndex = codeText.indexOf(searchText, searchStartPosition);
+      while (searchedIndex > -1 && searchStartPosition <= codeText.length - searchLen) {
+        searchedPositions[index].push({ start: searchedIndex, end: searchedIndex + searchLen });
+        searchStartPosition = searchedIndex + searchLen;
+        searchedIndex = codeText.indexOf(searchText, searchStartPosition);
       }
     });
 
