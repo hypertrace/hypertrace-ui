@@ -166,7 +166,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   public isLineHighlighted(lineNum: number): boolean {
     return (
-      !isEmpty(this.highlightText) && this.codeLines[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
+      !isEmpty(this.highlightText) && this.codeTexts[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
     );
   }
 
