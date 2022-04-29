@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
@@ -37,7 +37,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class ColorPickerComponent implements ControlValueAccessor, OnInit {
+export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public selected?: string;
 
@@ -58,7 +58,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnInit {
   private propagateControlValueChange?: (value: string | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
 
-  public ngOnInit(): void {
+  public ngOnChanges(): void {
     this.initSelectedColor();
   }
 
@@ -92,7 +92,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnInit {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
-  private initSelectedColor() {
+  private initSelectedColor(): void {
     if (this.selected && !this.paletteSet.has(this.selected)) {
       this.addNewColorToPalette(this.selected);
     }
