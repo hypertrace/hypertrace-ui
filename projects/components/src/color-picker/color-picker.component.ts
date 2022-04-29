@@ -60,7 +60,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.selected) {
-        this.initSelectedColor();
+      this.initSelectedColor();
     }
   }
 
