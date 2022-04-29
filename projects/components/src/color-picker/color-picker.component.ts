@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
@@ -37,7 +37,7 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class ColorPickerComponent implements ControlValueAccessor {
+export class ColorPickerComponent implements ControlValueAccessor, OnInit {
   @Input()
   public selected?: string;
 
@@ -58,9 +58,12 @@ export class ColorPickerComponent implements ControlValueAccessor {
   private propagateControlValueChange?: (value: string | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
 
+  public ngOnInit(): void {
+    this.initSelectedColor();
+  }
+
   public onAddColorToPalette(color: string): void {
-    this.paletteSet.add(color);
-    this.paletteColors = Array.from(this.paletteSet);
+    this.addNewColorToPalette(color);
     this.selectColor(color);
   }
 
@@ -78,6 +81,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   public writeValue(color?: string): void {
     this.selected = color;
+    this.initSelectedColor();
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {
@@ -86,5 +90,16 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   public registerOnTouched(onTouch: (value?: string) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  private initSelectedColor() {
+    if (this.selected && !this.paletteSet.has(this.selected)) {
+      this.addNewColorToPalette(this.selected);
+    }
+  }
+
+  private addNewColorToPalette(color: string): void {
+    this.paletteSet.add(color);
+    this.paletteColors = Array.from(this.paletteSet);
   }
 }
