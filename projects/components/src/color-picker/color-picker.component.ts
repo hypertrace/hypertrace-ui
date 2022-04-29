@@ -93,7 +93,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   }
 
   private initSelectedColor(): void {
-    if (this.selected && !this.paletteSet.has(this.selected)) {
+    if (this.selected !== undefined && !this.paletteSet.has(this.selected)) {
       this.addNewColorToPalette(this.selected);
     }
   }
