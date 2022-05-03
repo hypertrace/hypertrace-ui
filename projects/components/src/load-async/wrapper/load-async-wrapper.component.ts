@@ -66,12 +66,12 @@ export class LoadAsyncWrapperComponent {
         this.loaderType = this.config?.load?.loaderType;
         break;
       case LoadAsyncStateType.NoData:
-        this.icon = this.config?.noData?.icon ?? IconType.NoData;
+        this.icon = this.config?.noData?.showIcon ?? true ? this.config?.noData?.icon ?? IconType.NoData : undefined;
         this.title = this.config?.noData?.title ?? 'No Data';
         this.description = this.config?.noData?.description ?? '';
         break;
       case LoadAsyncStateType.GenericError:
-        this.icon = this.config?.error?.icon ?? IconType.Error;
+        this.icon = this.config?.error?.showIcon ?? true ? this.config?.error?.icon ?? IconType.Error : undefined;
         this.title = this.config?.error?.title ?? 'Error';
         this.description = state.description ?? this.config?.error?.description ?? '';
         break;
