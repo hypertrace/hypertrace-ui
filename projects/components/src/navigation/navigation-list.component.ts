@@ -21,31 +21,37 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="navigation-list" [ngClass]="[!this.collapsed ? 'expanded' : '', this.navViewStyle ?? '']">
-      <div class="content" *htLetAsync="this.activeItem$ as activeItem" [htLayoutChangeTrigger]="this.collapsed">
-        <ng-content></ng-content>
-        <ng-container *ngFor="let item of this.navItems; let id = index">
-          <ng-container [ngSwitch]="item.type">
-            <div *ngIf="!this.collapsed">
-              <ng-container *ngSwitchCase="'${NavItemType.Header}'">
-                <div *ngIf="item.isVisible$ | async" class="nav-header">
-                  <div class="label">{{ item.label }}</div>
-                  <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
-                </div>
+      <div
+        class="content-container"
+        *htLetAsync="this.activeItem$ as activeItem"
+        [htLayoutChangeTrigger]="this.collapsed"
+      >
+        <div class="content">
+          <ng-content></ng-content>
+          <ng-container *ngFor="let item of this.navItems; let id = index">
+            <ng-container [ngSwitch]="item.type">
+              <div *ngIf="!this.collapsed">
+                <ng-container *ngSwitchCase="'${NavItemType.Header}'">
+                  <div *ngIf="item.isVisible$ | async" class="nav-header">
+                    <div class="label">{{ item.label }}</div>
+                    <ht-beta-tag *ngIf="item.isBeta" class="beta"></ht-beta-tag>
+                  </div>
+                </ng-container>
+              </div>
+
+              <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
+
+              <ng-container *ngSwitchCase="'${NavItemType.Link}'">
+                <ht-nav-item
+                  [navItemViewStyle]="this.navViewStyle"
+                  [config]="item"
+                  [active]="item === activeItem"
+                  [collapsed]="this.collapsed"
+                ></ht-nav-item>
               </ng-container>
-            </div>
-
-            <hr *ngSwitchCase="'${NavItemType.Divider}'" class="nav-divider" />
-
-            <ng-container *ngSwitchCase="'${NavItemType.Link}'">
-              <ht-nav-item
-                [navItemViewStyle]="this.navViewStyle"
-                [config]="item"
-                [active]="item === activeItem"
-                [collapsed]="this.collapsed"
-              ></ht-nav-item>
             </ng-container>
           </ng-container>
-        </ng-container>
+        </div>
       </div>
 
       <div class="resize-tab-button" (click)="this.toggleView()" *ngIf="this.resizable">

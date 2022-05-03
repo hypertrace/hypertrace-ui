@@ -10,7 +10,7 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
+import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
 import { defaults } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
@@ -21,12 +21,14 @@ import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
 import { CartesianSelectedData, ChartEvent } from './chart-interactivty';
+import { ChartSyncService } from './chart-sync-service';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
   selector: 'ht-cartesian-chart',
   styleUrls: ['./cartesian-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
@@ -66,6 +68,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
   public selectedInterval?: IntervalValue;
 
+  @Input()
+  public groupId?: string;
+
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
@@ -84,7 +89,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
+    private readonly chartSyncService: ChartSyncService<TData>,
+    private readonly subscriptionLifeCycle: SubscriptionLifecycle
   ) {}
 
   public ngOnChanges(): void {
@@ -97,18 +104,40 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.groupId)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
-      );
+      )
+      .withEventListener(ChartEvent.Hover, data => {
+        this.chartSyncService.mouseLocationChange(data!, this.groupId, this);
+      })
+      .withEventListener(ChartEvent.MouseLeave, _data => {
+        this.chartSyncService.mouseLeave(this.groupId, this);
+      });
 
     if (this.rangeSelectionEnabled) {
       this.chart.withEventListener(ChartEvent.Select, selectedData => {
         this.selectionChange.emit(selectedData);
       });
+    }
+
+    this.subscriptionLifeCycle.unsubscribe();
+
+    if (this.groupId !== undefined) {
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
+          this.chart?.showCrosshair(data);
+        })
+      );
+
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(() => {
+          this.chart?.hideCrosshair();
+        })
+      );
     }
 
     if (this.bands) {

@@ -10,10 +10,9 @@
   width: 100%;
   justify-content: space-between;
 
-  .content {
-    overflow-y: auto;
-    overflow-x: hidden;
+  .content-container {
     padding: 18px 0 12px 12px;
+    height: 100%;
 
     .nav-header {
       padding-top: 24px;
@@ -29,6 +28,26 @@
 
       .beta {
         margin-left: 4px;
+      }
+    }
+  }
+
+  &.navigation-dark {
+    .content-container {
+      .content {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        scrollbar-width: thin;
+        &::-webkit-scrollbar {
+          @include nav-secondary-background;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background-color: $gray-6;
+          border: 3px solid $blue-9;
+        }
       }
     }
   }
@@ -61,7 +80,7 @@
     flex-direction: column;
     position: relative;
     color: $gray-5;
-    padding: 8px 12px 18px;
+    padding: 0px 12px 18px;
 
     .footer-item {
       display: flex;
@@ -75,7 +94,7 @@
       }
 
       .nav-group-label {
-        margin: 10px auto 0 0;
+        margin: 0 auto 0 0;
         padding-right: 20px;
         font-size: 24px;
         font-weight: bold;
@@ -106,7 +125,7 @@
       margin: 8px auto;
     }
 
-    .content {
+    .content-container {
       padding: 18px 0 12px 0;
     }
   }
@@ -114,16 +133,18 @@
   &:not(.navigation-dark) {
     background: white;
 
-    .content {
+    .content-container {
       padding: 18px 12px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     &:not(.expanded) {
-      .content {
+      .content-container {
         padding: 18px 12px;
       }
     }
 
-    .content .nav-header .label {
+    .content-container .nav-header .label {
       @include overline($gray-9);
     }
 
