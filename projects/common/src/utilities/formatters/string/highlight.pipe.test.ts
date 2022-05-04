@@ -31,6 +31,18 @@ describe('Highlight pipe', () => {
     );
   });
 
+  test('works as expected when text to highlight is empty', () => {
+    expect(pipe.transform(`full text to test highlight on`, { text: '', highlightType: 'bold' })).toBe(
+      'full text to test highlight on'
+    );
+  });
+
+  test('works as expected when text to highlight is undefined', () => {
+    expect(pipe.transform(`full text to test highlight on`, { text: undefined, highlightType: 'bold' })).toBe(
+      'full text to test highlight on'
+    );
+  });
+
   test('highlights with an array of highlightConfig correctly', () => {
     expect(
       pipe.transform('full text to test highlight on', [

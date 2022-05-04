@@ -71,7 +71,7 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+              idScope: TRACE_SCOPE
             }
           ]
         }
@@ -108,7 +108,7 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+              idScope: TRACE_SCOPE
             }
           ]
         }
@@ -154,7 +154,7 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+              idScope: TRACE_SCOPE
             }
           ]
         }
@@ -191,7 +191,7 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idType: new GraphQlEnumArgument(TRACE_SCOPE)
+              idScope: TRACE_SCOPE
             }
           ]
         }

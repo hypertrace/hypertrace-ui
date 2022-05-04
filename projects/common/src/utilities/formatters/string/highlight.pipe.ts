@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isArray } from 'lodash-es';
+import { isArray, isEmpty } from 'lodash-es';
 import { assertUnreachable } from '../../lang/lang-utils';
 
 @Pipe({ name: 'htHighlight' })
 export class HighlightPipe implements PipeTransform {
-  private escapeReserveRegExpCharacters(str?: string): string {
-    return str === undefined ? '' : str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  private escapeReserveRegExpCharacters(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
   }
 
   public transform(fullText: string, highlightSnippets: TextHighlightConfig | TextHighlightConfig[]): string {
@@ -15,6 +15,10 @@ export class HighlightPipe implements PipeTransform {
 
     return snippetsToHighlight.reduce((highlightedText, highlightConfig) => {
       const highlightHtmlTag = getHtmlTagForHighlightType(highlightConfig.highlightType);
+
+      if (highlightConfig.text === undefined || isEmpty(highlightConfig.text)) {
+        return highlightedText;
+      }
 
       return highlightedText.replace(
         new RegExp(this.escapeReserveRegExpCharacters(highlightConfig.text), 'ig'),
