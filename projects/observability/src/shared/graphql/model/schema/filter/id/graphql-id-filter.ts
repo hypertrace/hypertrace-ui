@@ -16,7 +16,7 @@ export class GraphQlIdFilter implements GraphQlFilter {
         operator: new GraphQlEnumArgument(this.operator),
         value: this.id,
         type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-        idType: new GraphQlEnumArgument(this.idScope)
+        idScope: this.idScope
       }
     ];
   }
@@ -27,5 +27,5 @@ type GraphQlIdFilterArgument = {
   value: GraphQlArgumentValue;
   operator: GraphQlEnumArgument<GraphQlOperatorType>;
   type: GraphQlEnumArgument<GraphQlFilterType.Id>;
-  idType: GraphQlEnumArgument<string>;
+  idScope: string;
 };

@@ -7,7 +7,7 @@ import {
 } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
@@ -35,9 +35,10 @@ export class NavigationListComponentService {
   }
 
   public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
-    return this.featureStateResolver
-      .getFeatureState(ApplicationFeature.PageTimeRange)
-      .pipe(switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))));
+    return this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange).pipe(
+      switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))),
+      defaultIfEmpty<NavItemConfig[]>([])
+    );
   }
 
   private getTimeRangesForNavItems(
