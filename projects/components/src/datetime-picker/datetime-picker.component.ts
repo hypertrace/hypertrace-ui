@@ -69,7 +69,15 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnChanges 
   private propagateControlValueChangeOnTouch?: (value?: Date) => void;
 
   public getInputDate(): string {
-    return this.date?.toISOString().slice(0, 10) ?? '';
+    return this.date
+      ? `${this.date.getFullYear()}-${this.padMonthOrDay(this.date.getMonth() + 1)}-${this.padMonthOrDay(
+          this.date.getDate()
+        )}`
+      : '';
+  }
+
+  public padMonthOrDay(monthOrdDay: number): number | string {
+    return monthOrdDay < 10 ? `0${monthOrdDay}` : monthOrdDay;
   }
 
   public writeValue(value?: Date): void {
@@ -105,7 +113,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnChanges 
 
   public onTimeChange(time: Time): void {
     this.time = time;
-    this.date?.setUTCHours(time.hours, time.minutes, time.seconds, time.milliseconds);
+    this.date?.setHours(time.hours, time.minutes, time.seconds, time.milliseconds);
     this.dateChange.emit(this.date);
     this.propagateValueChangeToFormControl(this.date);
   }
