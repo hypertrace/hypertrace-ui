@@ -13,8 +13,8 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
+import { isEmpty, isEqual } from 'lodash-es';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -91,7 +91,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (valueChange)="this.searchOptions($event)"
                   [debounceTime]="200"
                   displayMode="${SearchBoxDisplayMode.NoBorder}"
-                  *ngIf="allOptions.length > 5"
+                  *ngIf="allOptions.length > 5 || !(this.isSearchTextPresent$ | async)"
                 ></ht-search-box>
                 <ht-divider class="divider"></ht-divider>
 
@@ -197,7 +197,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
-  private readonly searchSubject: Subject<string> = new BehaviorSubject('');
+  private readonly searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  public isSearchTextPresent$: Observable<boolean> = this.searchSubject.pipe(map(searchText => !isEmpty(searchText)));
 
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
