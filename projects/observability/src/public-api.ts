@@ -388,3 +388,7 @@ export * from './shared/components/bar-gauge/bar-gauge.module';
 
 // Time Range utils
 export * from './shared/utils/time-range';
+
+// User Agent
+export * from './shared/components/user-agent-icon/user-agent-icon.component';
+export * from './shared/components/user-agent-icon/user-agent-icon.module';
