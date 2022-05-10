@@ -83,7 +83,7 @@ describe('Explore graphql query handler', () => {
     expect(spectator.service.convertRequest(buildRequest())).toEqual({
       path: 'explore',
       arguments: [
-        { name: 'context', value: new GraphQlEnumArgument(ObservabilityTraceType.Api) },
+        { name: 'scope', value: ObservabilityTraceType.Api },
         { name: 'limit', value: 4 },
         {
           name: 'between',
@@ -93,7 +93,10 @@ describe('Explore graphql query handler', () => {
           }
         },
         { name: 'offset', value: 0 },
-        { name: 'interval', value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) } },
+        {
+          name: 'interval',
+          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+        },
         {
           name: 'filterBy',
           value: [
@@ -146,7 +149,10 @@ describe('Explore graphql query handler', () => {
               alias: 'avg_duration',
               arguments: [
                 { name: 'expression', value: { key: 'duration' } },
-                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
+                {
+                  name: 'aggregation',
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
+                }
               ],
               children: [{ path: 'value' }, { path: 'type' }]
             },
@@ -155,7 +161,10 @@ describe('Explore graphql query handler', () => {
               alias: 'avgrate_min_duration',
               arguments: [
                 { name: 'expression', value: { key: 'duration' } },
-                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate) },
+                {
+                  name: 'aggregation',
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate)
+                },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                 { name: 'size', value: 1 }
               ],
@@ -178,7 +187,7 @@ describe('Explore graphql query handler', () => {
     expect(spectator.service.convertRequest(request)).toEqual({
       path: 'explore',
       arguments: [
-        { name: 'context', value: new GraphQlEnumArgument(ObservabilityEntityType.Api) },
+        { name: 'scope', value: ObservabilityEntityType.Api },
         { name: 'limit', value: 4 },
         {
           name: 'between',
@@ -188,7 +197,10 @@ describe('Explore graphql query handler', () => {
           }
         },
         { name: 'offset', value: 0 },
-        { name: 'interval', value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) } },
+        {
+          name: 'interval',
+          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+        },
         {
           name: 'filterBy',
           value: [
@@ -241,7 +253,10 @@ describe('Explore graphql query handler', () => {
               alias: 'avg_duration',
               arguments: [
                 { name: 'expression', value: { key: 'duration' } },
-                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
+                {
+                  name: 'aggregation',
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
+                }
               ],
               children: [{ path: 'value' }, { path: 'type' }]
             },
@@ -250,7 +265,10 @@ describe('Explore graphql query handler', () => {
               alias: 'avgrate_min_duration',
               arguments: [
                 { name: 'expression', value: { key: 'duration' } },
-                { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate) },
+                {
+                  name: 'aggregation',
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate)
+                },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                 { name: 'size', value: 1 }
               ],
