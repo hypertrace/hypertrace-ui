@@ -124,7 +124,7 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}'">
+            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}' && this.items?.length > 5">
               <ht-event-blocker event="click" [enabled]="true">
                 <ht-search-box
                   class="search-bar"

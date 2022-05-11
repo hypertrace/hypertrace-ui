@@ -79,8 +79,21 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly renderingStrategy: RenderingStrategy,
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
-    protected readonly domRenderer: Renderer2
+    protected readonly domRenderer: Renderer2,
+    protected readonly groupId?: string
   ) {}
+
+  public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+    if (locationData.length > 0) {
+      const location = locationData[0].location;
+      const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
+      this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
+    }
+  }
+
+  public hideCrosshair(): void {
+    this.renderedAxes.forEach(axis => axis.onMouseLeave());
+  }
 
   protected onBrushSelection(event: D3BrushEvent<unknown>): void {
     if (!event.selection) {
@@ -571,6 +584,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
+
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Hover) {
+        listener.onEvent(locationData);
+      }
+    });
+
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, locationData);
     }
@@ -583,6 +603,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       this.tooltip.hide();
     }
 
-    this.renderedAxes.forEach(axis => axis.onMouseLeave());
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.MouseLeave) {
+        listener.onEvent();
+      }
+    });
+
+    this.hideCrosshair();
   }
 }

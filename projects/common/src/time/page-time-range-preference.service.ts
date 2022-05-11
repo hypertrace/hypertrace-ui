@@ -88,7 +88,7 @@ export class PageTimeRangePreferenceService {
   }
 
   public getGlobalDefaultTimeRange(): TimeRange {
-    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
   }
 }
 

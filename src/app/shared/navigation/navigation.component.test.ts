@@ -1,6 +1,8 @@
 import { ActivatedRoute } from '@angular/router';
 import {
+  LoggerService,
   NavigationService,
+  PageTimeRangePreferenceService,
   PreferenceService,
   RelativeTimeRange,
   TimeDuration,
@@ -50,7 +52,9 @@ describe('NavigationComponent', () => {
         decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))
       }),
       mockProvider(ActivatedRoute),
-      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })
+      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),
+      mockProvider(PageTimeRangePreferenceService),
+      mockProvider(LoggerService)
     ]
   });
   test('should decorate the config list', () => {

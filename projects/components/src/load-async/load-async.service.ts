@@ -91,6 +91,7 @@ interface LoadingStateConfig {
 
 interface NoDataOrErrorStateConfig {
   icon?: IconType;
+  showIcon?: boolean;
   title?: string;
   description?: string;
 }

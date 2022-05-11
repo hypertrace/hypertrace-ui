@@ -91,6 +91,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (valueChange)="this.searchOptions($event)"
                   [debounceTime]="200"
                   displayMode="${SearchBoxDisplayMode.NoBorder}"
+                  *ngIf="allOptions.length > 5"
                 ></ht-search-box>
                 <ht-divider class="divider"></ht-divider>
 
@@ -114,28 +115,30 @@ import { MultiSelectJustify } from './multi-select-justify';
               </ng-container>
             </ng-container>
 
-            <div class="multi-select-options" *htLoadAsync="this.filteredOptions$ as filteredOptions">
-              <div
-                *ngFor="let item of filteredOptions"
-                (click)="this.onSelectionChange(item)"
-                class="multi-select-option"
-                [ngClass]="{ disabled: item.disabled }"
-              >
-                <ht-checkbox
-                  class="checkbox"
-                  (click)="this.preventClickDefault($event)"
-                  [checked]="this.isSelectedItem(item)"
-                  [disabled]="item.disabled"
-                ></ht-checkbox>
-                <ht-icon
-                  class="icon"
-                  *ngIf="item.icon"
-                  [icon]="item.icon"
-                  size="${IconSize.ExtraSmall}"
-                  [color]="item.iconColor"
-                ></ht-icon>
-                <span class="label">{{ item.label }}</span>
-              </div>
+            <div class="multi-select-options">
+              <ng-container *htLoadAsync="this.filteredOptions$ as filteredOptions">
+                <div
+                  *ngFor="let item of filteredOptions"
+                  (click)="this.onSelectionChange(item)"
+                  class="multi-select-option"
+                  [ngClass]="{ disabled: item.disabled }"
+                >
+                  <ht-checkbox
+                    class="checkbox"
+                    (click)="this.preventClickDefault($event)"
+                    [checked]="this.isSelectedItem(item)"
+                    [disabled]="item.disabled"
+                  ></ht-checkbox>
+                  <ht-icon
+                    class="icon"
+                    *ngIf="item.icon"
+                    [icon]="item.icon"
+                    size="${IconSize.ExtraSmall}"
+                    [color]="item.iconColor"
+                  ></ht-icon>
+                  <span class="label">{{ item.label }}</span>
+                </div>
+              </ng-container>
             </div>
           </div>
         </ht-popover-content>
