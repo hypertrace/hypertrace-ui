@@ -30,7 +30,7 @@ import { SpanDetailTab } from './span-detail-tab';
         class="toggle-group"
         [activeItem]="this.activeTab$ | async"
         [items]="this.tabs"
-        (activeItemChange)="this.tabChange($event)"
+        (activeItemChange)="this.changeTab($event)"
       >
       </ht-toggle-group>
 
@@ -118,14 +118,14 @@ export class SpanDetailComponent implements OnChanges {
     if (changes.activeTabLabel) {
       const tab = this.tabs.find(({ value }) => value === this.activeTabLabel);
       if (tab) {
-        this.tabChange(tab);
+        this.changeTab(tab);
       }
     } else {
-      this.tabChange(this.tabs[0]);
+      this.changeTab(this.tabs[0]);
     }
   }
 
-  public tabChange(tab: ToggleItem<SpanDetailTab>): void {
+  public changeTab(tab: ToggleItem<SpanDetailTab>): void {
     this.activeTabLabelChange.emit(tab.value);
     this.activeTabSubject.next(tab);
   }
