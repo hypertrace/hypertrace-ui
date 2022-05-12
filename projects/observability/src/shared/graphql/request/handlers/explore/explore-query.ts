@@ -23,6 +23,7 @@ export interface GraphQlExploreRequest {
   filters?: GraphQlFilter[];
   groupBy?: GraphQlGroupBy;
   ignoreGlobalFilters?: boolean;
+  useScope?: boolean;
 }
 
 export interface GraphQlExploreResponse {

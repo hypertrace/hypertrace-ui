@@ -29,10 +29,12 @@ export class ExploreGraphqlQueryBuilderService {
 
   public buildRequestArguments(request: GraphQlExploreRequest): GraphQlArgument[] {
     return [
-      {
-        name: 'context',
-        value: new GraphQlEnumArgument(request.context)
-      },
+      request.useScope
+        ? { name: 'scope', value: request.context }
+        : {
+            name: 'context',
+            value: new GraphQlEnumArgument(request.context)
+          },
       this.argBuilder.forLimit(request.limit),
       this.argBuilder.forTimeRange(request.timeRange),
       ...this.argBuilder.forOffset(request.offset),
