@@ -79,17 +79,17 @@ describe('Explore graphql query handler', () => {
 
   test('consumes useScope correctly', () => {
     const spectator = createService();
-    expect(spectator.service.convertRequest({
-      requestType: EXPLORE_GQL_REQUEST,
-      context: 'SCOPE_VALUE',
-      useScope: true,
-      limit: 1,
-      timeRange: testTimeRange,
-      selections: [
-        specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average),
-      ],
-      includeTotal: true,
-    })).toEqual({
+    expect(
+      spectator.service.convertRequest({
+        requestType: EXPLORE_GQL_REQUEST,
+        context: 'SCOPE_VALUE',
+        useScope: true,
+        limit: 1,
+        timeRange: testTimeRange,
+        selections: [specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average)],
+        includeTotal: true
+      })
+    ).toEqual({
       path: 'explore',
       arguments: [
         { name: 'scope', value: 'SCOPE_VALUE' },
@@ -100,7 +100,7 @@ describe('Explore graphql query handler', () => {
             startTime: new Date(testTimeRange.from),
             endTime: new Date(testTimeRange.to)
           }
-        },
+        }
       ],
       children: [
         {
@@ -114,16 +114,15 @@ describe('Explore graphql query handler', () => {
                 { name: 'aggregation', value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average) }
               ],
               children: [{ path: 'value' }, { path: 'type' }]
-            },
-
+            }
           ]
         },
         {
           path: 'total'
         }
       ]
-    })
-  })
+    });
+  });
 
   test('produces expected graphql', () => {
     const spectator = createService();
