@@ -97,7 +97,7 @@ describe('Time range(TR) service', () => {
   });
 
   test('Emits default TR when set, then subsequent first and second TRs from query param changes', () => {
-    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
+    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
     const firstArrivingTimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
     const secondArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573455111990));
     const mockNavigation$ = new Subject();
