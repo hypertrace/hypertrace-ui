@@ -65,8 +65,8 @@ export class TimeRangeService {
     this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
   }
 
-  private isValidTimeRangeString(timeRangeString: string): boolean {
-    return !isEmpty(timeRangeString) && timeRangeString.charAt(0) !== '0';
+  private isValidTimeRange(timeRange: TimeRange): boolean {
+    return timeRange.endTime.getTime() - timeRange.startTime.getTime() > 0;
   }
 
   private getInitialTimeRange(): Observable<TimeRange> {
@@ -75,8 +75,9 @@ export class TimeRangeService {
       switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
       take(1), // Only the first set of params
       map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-      filter((timeRangeString): timeRangeString is string => this.isValidTimeRangeString(timeRangeString ?? '')), // Only valid time ranges
+      filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
       map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
+      filter(timeRange => this.isValidTimeRange(timeRange)),
       catchError(() => EMPTY)
     );
   }
@@ -131,6 +132,7 @@ export class TimeRangeService {
       return fixedTimeRange;
     }
 
+    console.log('Throwing');
     throw new Error(); // Caught in observable
   }
 
