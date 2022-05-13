@@ -65,13 +65,17 @@ export class TimeRangeService {
     this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
   }
 
+  private isValidTimeRangeString(timeRangeString: string): boolean {
+    return !isEmpty(timeRangeString) && timeRangeString.charAt(0) !== '0';
+  }
+
   private getInitialTimeRange(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       take(1), // Wait for first navigation
       switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
       take(1), // Only the first set of params
       map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-      filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
+      filter((timeRangeString): timeRangeString is string => this.isValidTimeRangeString(timeRangeString ?? '')), // Only valid time ranges
       map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
       catchError(() => EMPTY)
     );
