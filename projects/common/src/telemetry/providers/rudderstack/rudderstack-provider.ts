@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '../../../utilities/types/types';
 
+import { HttpClient } from '@angular/common/http';
 import { apiObject, identify, load, page, track } from 'rudder-sdk-js';
 import { TelemetryProviderConfig, UserTelemetryProvider, UserTraits } from '../../telemetry';
 
@@ -10,6 +11,8 @@ export interface RudderStackConfig extends TelemetryProviderConfig {
 
 @Injectable({ providedIn: 'root' })
 export class RudderStackTelemetry implements UserTelemetryProvider<RudderStackConfig> {
+  public constructor(private readonly http: HttpClient) {}
+
   public initialize(config: RudderStackConfig): void {
     try {
       load(config.writeKey, config.orgId, { configUrl: config.orgId });
@@ -24,7 +27,17 @@ export class RudderStackTelemetry implements UserTelemetryProvider<RudderStackCo
   }
 
   public identify(userTraits: UserTraits): void {
-    identify(undefined, userTraits as apiObject);
+    this.http.get<UserTraits>('/user-info').subscribe(
+      (data: UserTraits) => {
+        // tslint:disable-next-line: no-console
+        console.log('user data here ', data);
+        identify(userTraits.email, { email: userTraits.email, name: userTraits.name });
+      },
+      () => {
+        // tslint:disable-next-line: no-console
+        console.error('something went wrong in identify');
+      }
+    );
   }
 
   public trackEvent(name: string, eventData: Dictionary<unknown>): void {
