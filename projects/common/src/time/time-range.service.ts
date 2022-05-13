@@ -132,7 +132,6 @@ export class TimeRangeService {
       return fixedTimeRange;
     }
 
-    console.log('Throwing');
     throw new Error(); // Caught in observable
   }
 
