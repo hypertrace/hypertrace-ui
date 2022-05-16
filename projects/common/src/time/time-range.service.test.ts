@@ -119,7 +119,6 @@ describe('Time range(TR) service', () => {
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
             getQueryParameter: jest
               .fn()
-              .mockReturnValueOnce('')
               .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
               .mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
@@ -151,7 +150,7 @@ describe('Time range(TR) service', () => {
     const invalidTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
     const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
     const mockNavigation$ = new Subject();
-    runFakeRxjs(({ expectObservable, cold }) => {
+    runFakeRxjs(({ expectObservable }) => {
       const spectator = buildService({
         providers: [
           mockProvider(NavigationService, {
@@ -167,17 +166,14 @@ describe('Time range(TR) service', () => {
               )
             ),
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
-            getQueryParameter: jest.fn().mockReturnValueOnce('').mockReturnValueOnce(defaultTimeRange.toUrlString()),
-            getCurrentActivatedRoute: () =>
-              (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
-            replaceQueryParametersInUrl: jest.fn()
+            getQueryParameter: jest.fn().mockReturnValue(defaultTimeRange.toUrlString())
           })
         ]
       });
 
-      cold('u').subscribe(() => mockNavigation$.next(invalidTimeRange.toUrlString()));
+      mockNavigation$.next(invalidTimeRange.toUrlString());
 
-      cold('x').subscribe(() => spectator.service.setDefaultTimeRange(defaultTimeRange));
+      spectator.service.setDefaultTimeRange(defaultTimeRange);
 
       expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x', {
         x: defaultTimeRange
