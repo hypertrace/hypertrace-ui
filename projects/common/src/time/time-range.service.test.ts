@@ -97,6 +97,7 @@ describe('Time range(TR) service', () => {
   });
 
   test('Emits default TR when set, then subsequent first and second TRs from query param changes', () => {
+    const invalidTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
     const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
     const firstArrivingTimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
     const secondArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573455111990));
@@ -119,15 +120,18 @@ describe('Time range(TR) service', () => {
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
             getQueryParameter: jest
               .fn()
-              .mockReturnValueOnce('1573277100277-1573277100277')
-              .mockReturnValueOnce('1573255100253-1573255111159')
-              .mockReturnValue('1573255111159-1573455111990'),
+              .mockReturnValueOnce(invalidTimeRange.toUrlString())
+              .mockReturnValueOnce(defaultTimeRange.toUrlString())
+              .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
+              .mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
               (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
             replaceQueryParametersInUrl: jest.fn()
           })
         ]
       });
+
+      cold('u').subscribe(() => spectator.service.setDefaultTimeRange(invalidTimeRange));
 
       cold('x').subscribe(() => spectator.service.setDefaultTimeRange(defaultTimeRange));
 
