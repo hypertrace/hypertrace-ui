@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import { ListViewRecord } from '@hypertrace/components';
+import { ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { EMPTY, Observable, of } from 'rxjs';
       <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container" data-sensitive-pii>
         <ng-container *htLoadAsync="this.records$ as records">
-          <ht-list-view [records]="records"></ht-list-view>
+          <ht-list-view [records]="records" display="${ListViewDisplay.Plain}"></ht-list-view>
         </ng-container>
       </div>
     </div>

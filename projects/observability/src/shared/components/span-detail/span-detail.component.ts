@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
+import { Observable, ReplaySubject } from 'rxjs';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -24,39 +26,45 @@ import { SpanDetailTab } from './span-detail-tab';
         <ng-content></ng-content>
       </div>
 
-      <ht-tab-group
-        class="tabs-group"
-        [activeTabLabel]="this.activeTabLabel"
-        (activeTabLabelChange)="this.onActiveTabLabelChange($event)"
+      <ht-toggle-group
+        class="toggle-group"
+        [activeItem]="this.activeTab$ | async"
+        [items]="this.tabs"
+        (activeItemChange)="this.changeTab($event)"
       >
-        <ht-tab label="${SpanDetailTab.Request}" *ngIf="this.showRequestTab">
-          <ht-span-request-detail
-            class="request"
-            [layout]="this.layout"
-            [requestHeaders]="this.spanData.requestHeaders"
-            [requestCookies]="this.spanData.requestCookies"
-            [requestBody]="this.spanData.requestBody"
-          ></ht-span-request-detail>
-        </ht-tab>
-        <ht-tab label="${SpanDetailTab.Response}" *ngIf="this.showResponseTab">
-          <ht-span-response-detail
-            class="response"
-            [layout]="this.layout"
-            [responseHeaders]="this.spanData.responseHeaders"
-            [responseCookies]="this.spanData.responseCookies"
-            [responseBody]="this.spanData.responseBody"
-          ></ht-span-response-detail>
-        </ht-tab>
-        <ht-tab label="${SpanDetailTab.Attributes}" class="attributes">
-          <ht-span-tags-detail [tags]="this.spanData.tags"></ht-span-tags-detail>
-        </ht-tab>
-        <ht-tab label="${SpanDetailTab.ExitCalls}" *ngIf="this.showExitCallsTab">
-          <ht-span-exit-calls [exitCalls]="this.spanData.exitCallsBreakup"></ht-span-exit-calls>
-        </ht-tab>
-        <ht-tab *ngIf="this.showLogEventsTab" label="Logs" [labelTag]="this.totalLogEvents">
-          <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
-        </ht-tab>
-      </ht-tab-group>
+      </ht-toggle-group>
+
+      <div class="tab-container" *ngIf="this.activeTab$ | async as activeTab">
+        <ng-container [ngSwitch]="activeTab?.value">
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Request}'">
+            <ht-span-request-detail
+              class="request"
+              [layout]="this.layout"
+              [requestHeaders]="this.spanData?.requestHeaders"
+              [requestCookies]="this.spanData?.requestCookies"
+              [requestBody]="this.spanData?.requestBody"
+            ></ht-span-request-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
+            <ht-span-response-detail
+              class="response"
+              [layout]="this.layout"
+              [responseHeaders]="this.spanData?.responseHeaders"
+              [responseCookies]="this.spanData?.responseCookies"
+              [responseBody]="this.spanData?.responseBody"
+            ></ht-span-response-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
+            <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
+            <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
+          </ng-container>
+          <ng-container *ngSwitchCase="'${SpanDetailTab.Logs}'">
+            <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
+          </ng-container>
+        </ng-container>
+      </div>
     </div>
   `
 })
@@ -85,6 +93,13 @@ export class SpanDetailComponent implements OnChanges {
   public showLogEventsTab?: boolean;
   public totalLogEvents?: number;
 
+  public tabs: ToggleItem<SpanDetailTab>[] = [];
+
+  private readonly activeTabSubject: ReplaySubject<ToggleItem<SpanDetailTab>> = new ReplaySubject<
+    ToggleItem<SpanDetailTab>
+  >(1);
+  public readonly activeTab$: Observable<ToggleItem<SpanDetailTab>> = this.activeTabSubject.asObservable();
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
       this.showRequestTab =
@@ -98,11 +113,47 @@ export class SpanDetailComponent implements OnChanges {
       this.showExitCallsTab = !isEmpty(this.spanData?.exitCallsBreakup);
       this.showLogEventsTab = !isEmpty(this.spanData?.logEvents);
       this.totalLogEvents = (this.spanData?.logEvents ?? []).length;
+      this.tabs = this.buildTabs();
+    }
+    if (changes.activeTabLabel) {
+      const tab = this.tabs.find(({ value }) => value === this.activeTabLabel);
+      if (tab) {
+        this.changeTab(tab);
+      }
+    } else {
+      this.changeTab(this.tabs[0]);
     }
   }
 
-  public onActiveTabLabelChange(tabLabel: SpanDetailTab): void {
-    this.activeTabLabel = tabLabel;
-    this.activeTabLabelChange.emit(tabLabel);
+  public changeTab(tab: ToggleItem<SpanDetailTab>): void {
+    this.activeTabLabelChange.emit(tab.value);
+    this.activeTabSubject.next(tab);
+  }
+
+  /**
+   * Tabs are added in order:
+   * 1. Request
+   * 2. Response
+   * 3. Attributes
+   * 4. Exit calls
+   * 5. Log events
+   */
+  private buildTabs(): ToggleItem<SpanDetailTab>[] {
+    const tabs: ToggleItem<SpanDetailTab>[] = [];
+    if (this.showRequestTab) {
+      tabs.push({ label: SpanDetailTab.Request, value: SpanDetailTab.Request });
+    }
+    if (this.showResponseTab) {
+      tabs.push({ label: SpanDetailTab.Response, value: SpanDetailTab.Response });
+    }
+    tabs.push({ label: SpanDetailTab.Attributes, value: SpanDetailTab.Attributes });
+    if (this.showExitCallsTab) {
+      tabs.push({ label: SpanDetailTab.ExitCalls, value: SpanDetailTab.ExitCalls });
+    }
+    if (this.showLogEventsTab) {
+      tabs.push({ label: SpanDetailTab.Logs, value: SpanDetailTab.Logs });
+    }
+
+    return tabs;
   }
 }
