@@ -155,7 +155,7 @@ export class SvgUtilService {
           currentLine.pop();
           tspan.text(currentLine.join(' '));
           currentLine = [word];
-          tspan = textSelection.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * 1.1 + dy}em`).text(word)
+          tspan = appendTSpan().attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * 1.1 + dy}em`).text(word)
         }
       }
     }
