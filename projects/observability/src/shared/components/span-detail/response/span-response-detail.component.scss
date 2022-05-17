@@ -7,6 +7,18 @@
   overflow: auto;
   grid-gap: 24px;
 
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-item {
+    border: 1px solid $gray-2;
+    border-radius: 8px;
+    padding: 16px;
+  }
+
   &.vertical {
     grid-template-columns: auto;
   }

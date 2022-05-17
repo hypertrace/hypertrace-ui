@@ -12,6 +12,7 @@ export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   closeOnNavigation?: boolean;
   attachedTriggerTemplate?: TemplateRef<unknown>;
   pageNavParams?: ExternalNavigationParams;
+  hasDefaultPadding?: boolean;
 }
 
 export const enum SheetSize {
@@ -26,7 +27,10 @@ export const SHEET_DATA = new InjectionToken<unknown>('SHEET_DATA');
 
 export abstract class SheetRef<TResult = unknown> {
   public abstract readonly closed$: Observable<TResult>;
+
   public abstract close(result?: TResult): void;
+
   public abstract show(): void;
+
   public abstract hide(): void;
 }

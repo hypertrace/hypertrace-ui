@@ -3,10 +3,12 @@
 .tags-details {
   display: flex;
   flex-direction: column;
-  padding-top: 24px;
   height: 100%;
   width: 100%;
   overflow: auto;
+  border: 1px solid $gray-2;
+  border-radius: 8px;
+  padding: 16px;
 
   .tag-value {
     width: 100%;

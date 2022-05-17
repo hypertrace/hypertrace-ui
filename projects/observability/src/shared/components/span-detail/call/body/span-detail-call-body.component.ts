@@ -9,18 +9,19 @@ import { ToggleViewMode } from '@hypertrace/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="call-body">
-      <ht-label label="Body" class="title"></ht-label>
-      <div class="content">
+      <header class="header">
+        <ht-label label="Body" class="title"></ht-label>
         <div class="toggle-button">
           <ht-toggle-button-group [(selectedLabel)]="this.selectedTab" viewMode="${ToggleViewMode.Text}">
             <ht-toggle-button [label]="this.parsedLabel"></ht-toggle-button>
             <ht-toggle-button [label]="this.rawLabel"></ht-toggle-button>
           </ht-toggle-button-group>
         </div>
-
+      </header>
+      <div class="content">
         <div class="body-viewer" [ngSwitch]="this.selectedTab" data-sensitive-pii>
           <section *ngSwitchCase="this.parsedLabel">
-            <ht-json-viewer *ngIf="this.isParsable()" [json]="this.parsedBody"> </ht-json-viewer>
+            <ht-json-viewer *ngIf="this.isParsable()" [json]="this.parsedBody"></ht-json-viewer>
             <ht-message-display
               *ngIf="!this.isParsable()"
               [icon]="this.icon"
