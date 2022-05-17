@@ -5,6 +5,7 @@ export const enum IconType {
   AddCircleOutline = 'add_circle_outline',
   Alarm = 'svg:alarm',
   Alert = 'svg:alert',
+  AlertFill = 'svg:alert-fill',
   Application = 'device_hub',
   ArrowDown = 'svg:arrow-down',
   ArrowDownLeft = 'svg:arrow-down-left',
