@@ -34,8 +34,8 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
   protected readonly entitySpecBuilder: EntitySpecificationBuilder = new EntitySpecificationBuilder();
 
   public buildEntitySpecification(
-    idKey: string,
-    nameKey: string,
+    idKey: string = 'id',
+    nameKey: string = 'name',
     entityType?: EntityType,
     additionalAttributes?: string[],
     additionalSpecifications: Specification[] = []
