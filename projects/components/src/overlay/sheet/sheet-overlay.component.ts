@@ -14,7 +14,7 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *ngIf="this.visible">
-      <div class="sheet-overlay">
+      <div class="sheet-overlay" [style.padding.px]="this.hasDefaultPadding ? 24 : 0">
         <ng-container *ngIf="!this.isViewCollapsed">
           <div *ngIf="this.showHeader" class="header">
             <h3 class="header-title">{{ sheetTitle }}</h3>
@@ -60,6 +60,7 @@ export class SheetOverlayComponent {
   public readonly sheetTitle: string;
   public readonly showHeader: boolean = true;
   public readonly size: SheetSize = SheetSize.Small;
+  public readonly hasDefaultPadding: boolean = true;
   public readonly isComponentSheet: boolean;
   public readonly renderer: TemplateRef<unknown> | Type<unknown>;
   public readonly rendererInjector: Injector;
@@ -76,6 +77,7 @@ export class SheetOverlayComponent {
     layoutChange: LayoutChangeService
   ) {
     const sheetConfig: SheetOverlayConfig = sheetData.config;
+    this.hasDefaultPadding = sheetConfig.hasDefaultPadding ?? true;
     this.showHeader = sheetConfig.showHeader === true;
     this.sheetTitle = sheetConfig.title === undefined ? '' : sheetConfig.title;
     this.size = sheetConfig.size;
