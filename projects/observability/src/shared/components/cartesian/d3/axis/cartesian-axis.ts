@@ -3,7 +3,7 @@ import { BaseType, select, Selection } from 'd3-selection';
 import { defaultsDeep } from 'lodash-es';
 import { MouseLocationData } from '../../../utils/mouse-tracking/mouse-tracking';
 import { SvgUtilService } from '../../../utils/svg/svg-util.service';
-import { Axis, AxisLocation, AxisType } from '../../chart';
+import { Axis, AxisLocation, AxisType, LabelOverflow } from '../../chart';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { ScaleInitializationData } from '../scale/cartesian-scale';
 import { AnyCartesianScale, CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
@@ -81,8 +81,13 @@ export class CartesianAxis<TData = {}> {
 
     if (this.configuration.location === AxisLocation.Bottom) {
       const maxTextTickTextLength = this.getMaxTickTextLength(selection);
-      const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
-      this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+
+      if (this.configuration.labelOverflow === LabelOverflow.Wrap) {
+        this.tickTextWrap(selection, maxTextTickTextLength);
+      } else {
+        const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
+        this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+      }
     } else {
       this.maybeTruncateAxisTicks(selection);
     }
@@ -137,6 +142,22 @@ export class CartesianAxis<TData = {}> {
     });
   }
 
+  private tickTextWrap(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>, maxTextLength: number): void {
+    
+    const ticksSelection = axisSvgSelection.selectAll('text');
+    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+
+    if (maxTextLength > tickBandwidth) {
+      axisSvgSelection
+        .selectAll('.tick text')
+        .style('font-size', '100%')
+        .attr('y', '3')
+        .each((_, index, nodes) =>
+          this.svgUtilService.wrapTextIfNeeded(nodes[index] as SVGTextElement, tickBandwidth)
+        )
+    }
+  }
+
   private rotateAxisTicks(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
     maxTextLength: number
@@ -153,7 +174,7 @@ export class CartesianAxis<TData = {}> {
         .style('text-anchor', 'end')
         .style('font-size', '100%')
         .attr('y', '3')
-        .attr('transform', `rotate(-35)`);
+        .attr('transform', `rotate(-35)`)
     }
 
     return isLabelRotate;
@@ -239,4 +260,4 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount'>;
+type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow'>;
