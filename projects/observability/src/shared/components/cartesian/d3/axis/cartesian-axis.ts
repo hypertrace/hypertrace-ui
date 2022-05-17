@@ -174,7 +174,7 @@ export class CartesianAxis<TData = {}> {
         .style('text-anchor', 'end')
         .style('font-size', '100%')
         .attr('y', '3')
-        .attr('transform', `rotate(-35)`); 
+        .attr('transform', `rotate(-35)`);
     }
 
     return isLabelRotate;
