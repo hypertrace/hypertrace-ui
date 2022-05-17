@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, NavigationParams, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterOperator, ListViewRecord } from '@hypertrace/components';
+import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
@@ -13,7 +13,7 @@ import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
   template: `
     <div class="tags-details">
       <ng-container *htLoadAsync="this.tagRecords$ as tagRecords">
-        <ht-list-view [records]="tagRecords" data-sensitive-pii>
+        <ht-list-view [records]="tagRecords" display="${ListViewDisplay.Plain}" data-sensitive-pii>
           <div class="tag-value" *htListViewValueRenderer="let record">
             <div class="value">{{ record.value }}</div>
             <ht-explore-filter-link
