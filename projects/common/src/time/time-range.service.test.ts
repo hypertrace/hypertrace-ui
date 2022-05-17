@@ -97,7 +97,7 @@ describe('Time range(TR) service', () => {
   });
 
   test('Emits default TR when set, then subsequent first and second TRs from query param changes', () => {
-    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
+    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
     const firstArrivingTimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
     const secondArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573455111990));
     const mockNavigation$ = new Subject();
@@ -119,9 +119,8 @@ describe('Time range(TR) service', () => {
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
             getQueryParameter: jest
               .fn()
-              .mockReturnValueOnce('1573277100277-1573277100277')
-              .mockReturnValueOnce('1573255100253-1573255111159')
-              .mockReturnValue('1573255111159-1573455111990'),
+              .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
+              .mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
               (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
             replaceQueryParametersInUrl: jest.fn()
@@ -143,6 +142,41 @@ describe('Time range(TR) service', () => {
         x: defaultTimeRange,
         y: firstArrivingTimeRange,
         z: secondArrivingTimeRange
+      });
+    });
+  });
+
+  test('Skips invalid URL time range and emits default TR when set', () => {
+    const invalidTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
+    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
+    const mockNavigation$ = new Subject();
+    runFakeRxjs(({ expectObservable }) => {
+      const spectator = buildService({
+        providers: [
+          mockProvider(NavigationService, {
+            navigation$: mockNavigation$.asObservable().pipe(
+              map(
+                timeRangeString =>
+                  (({
+                    queryParamMap: of(convertToParamMap({ time: timeRangeString, refresh: 'true' })),
+                    snapshot: {
+                      queryParamMap: convertToParamMap({ time: timeRangeString, refresh: 'true' })
+                    }
+                  } as unknown) as ActivatedRoute)
+              )
+            ),
+            addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
+            getQueryParameter: jest.fn().mockReturnValue(defaultTimeRange.toUrlString())
+          })
+        ]
+      });
+
+      mockNavigation$.next(invalidTimeRange.toUrlString());
+
+      spectator.service.setDefaultTimeRange(defaultTimeRange);
+
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x', {
+        x: defaultTimeRange
       });
     });
   });
