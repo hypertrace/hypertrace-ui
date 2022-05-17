@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
+  ListViewDisplay,
   ListViewHeader,
   ListViewRecord,
   TableColumnConfig,
@@ -40,6 +41,7 @@ export const enum LogEventsTableViewType {
         <ht-list-view
           [records]="this.getLogEventAttributeRecords | htMemoize: row.attributes"
           [header]="this.header"
+          display="${ListViewDisplay.Plain}"
           data-sensitive-pii
         ></ht-list-view>
       </div>
