@@ -21,6 +21,7 @@ export class CartesianAxis<TData = {}> {
 
   public constructor(
     configuration: Axis,
+    private readonly axisDimension: AxisDimension,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
     protected readonly svgUtilService: SvgUtilService
   ) {
@@ -79,7 +80,7 @@ export class CartesianAxis<TData = {}> {
       selection.selectAll('.tick text').remove();
     }
 
-    if (this.configuration.location === AxisLocation.Bottom) {
+    if (this.configuration.location === AxisLocation.Bottom || this.configuration.location === AxisLocation.Top) {
       const maxTextTickTextLength = this.getMaxTickTextLength(selection);
       const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
       this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
@@ -102,10 +103,9 @@ export class CartesianAxis<TData = {}> {
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
-    const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
     ticksSelection.each((_, index, nodes) =>
-      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
+      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, this.axisDimension.yAxisWidth)
     );
   }
 
@@ -240,3 +240,9 @@ export class CartesianAxis<TData = {}> {
 }
 
 type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount'>;
+
+export interface AxisDimension {
+  xAxisHeight: number;
+  yAxisWidth: number;
+  margin: number;
+}
