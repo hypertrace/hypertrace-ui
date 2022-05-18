@@ -29,7 +29,7 @@ export class SvgUtilService {
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly d3UtilService: D3UtilService
-  ) { }
+  ) {}
 
   public addDefinitionDeclarationToSvgIfNotExists(element: SVGGraphicsElement, domRenderer: Renderer2): SVGDefsElement {
     return this.d3UtilService
@@ -150,16 +150,17 @@ export class SvgUtilService {
           this.truncateText(tspan.node()!, width);
         } else {
           // Move this word to next line
-          const y = textSelection.attr("y");
-          const dy = parseFloat(textSelection.attr("dy"));
+          const y = textSelection.attr('y');
+          const dy = parseFloat(textSelection.attr('dy'));
+
           currentLine.pop();
           tspan.text(currentLine.join(' '));
           currentLine = [word];
           tspan = appendTSpan()
-            .attr("x", 0)
-            .attr("y", y)
-            .attr("dy", `${++lineNumber * 1.1 + dy}em`)
-            .text(word)
+            .attr('x', 0)
+            .attr('y', y)
+            .attr('dy', `${++lineNumber * 1.1 + dy}em`)
+            .text(word);
         }
       }
     }
