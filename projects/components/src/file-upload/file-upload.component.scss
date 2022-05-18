@@ -1,0 +1,38 @@
+@import 'mixins';
+
+.file-upload {
+  width: 100%;
+  border: 1px solid $gray-2; // Remove this
+  margin: 20px; // Remove this
+
+  .upload-section {
+    @include center-contents;
+    flex-direction: column;
+    width: 100%;
+    min-height: 140px;
+
+    .title {
+      @include body-2-regular;
+      display: flex;
+      align-items: center;
+
+      .click-to-upload {
+        color: $blue-4;
+        padding-right: 4px;
+        cursor: pointer;
+
+        &:hover {
+          color: $blue-5;
+        }
+      }
+    }
+
+    .sub-text {
+      @include body-2-regular($gray-4);
+    }
+
+    &.drag-over {
+      border: 1px dashed $blue-4;
+    }
+  }
+}

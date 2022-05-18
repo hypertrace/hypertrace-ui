@@ -102,6 +102,11 @@ export * from './feature-check/feature-config-check.module';
 export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
+// File Upload
+export * from './file-upload/drop-zone/drop-zone.directive';
+export * from './file-upload/file-upload.component';
+export * from './file-upload/file-upload.module';
+
 // Filter
 export * from './filtering/filter/filter';
 export * from './filtering/filter/filter-attribute';
