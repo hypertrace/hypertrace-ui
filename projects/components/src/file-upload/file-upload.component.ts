@@ -36,7 +36,7 @@ import { IconSize } from '../icon/icon-size';
           <div class="file-info">
             <div class="basic-detail">
               <div class="file-name">{{ file.data.name }}</div>
-              <div class="file-size">{{ file.data.name }}</div>
+              <div class="file-size">{{ file.data.size | htDisplayFileSize }}</div>
             </div>
             <div class="progress">
               <div class="progress-bar"><div class="bar" [style.width]="file.progress + '%'"></div></div>
