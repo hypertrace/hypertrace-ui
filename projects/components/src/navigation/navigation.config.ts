@@ -53,6 +53,7 @@ export interface NavItemGroup {
   icon: string;
   navItems: NavItemConfig[];
   displayNavList: boolean;
+  hideNavGroup?: boolean;
 }
 
 export const enum NavViewStyle {
