@@ -45,7 +45,7 @@ import { IconSize } from '../icon/icon-size';
           </div>
           <ht-icon
             class="delete-icon"
-            icon="${IconType.Delete}"
+            icon="${IconType.Trash}"
             size="${IconSize.Large}"
             color="${Color.Gray4}"
             (click)="this.deleteFile(index)"
