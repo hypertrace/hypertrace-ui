@@ -87,6 +87,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Spinner, url: `${iconsRootPath}/spinner.svg` },
         { key: IconType.StatusCode, url: `${iconsRootPath}/status-code.svg` },
         { key: IconType.TraceId, url: `${iconsRootPath}/trace-id.svg` },
+        { key: IconType.Trash, url: `${iconsRootPath}/trash.svg` },
         { key: IconType.TriangleDown, url: `${iconsRootPath}/triangle-down.svg` },
         { key: IconType.TriangleLeft, url: `${iconsRootPath}/triangle-left.svg` },
         { key: IconType.TriangleRight, url: `${iconsRootPath}/triangle-right.svg` },

@@ -112,6 +112,7 @@ export const enum IconType {
   StatusCode = 'svg:status-code',
   Time = 'schedule',
   TraceId = 'svg:trace-id',
+  Trash = 'svg:trash',
   TriangleDown = 'svg:triangle-down',
   TriangleLeft = 'svg:triangle-left',
   TriangleRight = 'svg:triangle-right',
