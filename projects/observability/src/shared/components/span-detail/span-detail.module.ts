@@ -9,6 +9,7 @@ import {
   LoadAsyncModule,
   TabModule,
   ToggleButtonModule,
+  ToggleGroupModule,
   TooltipModule
 } from '@hypertrace/components';
 import { LogEventsTableModule } from '../log-events/log-events-table.module';
@@ -36,7 +37,8 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     ListViewModule,
     SpanDetailTitleHeaderModule,
     SpanExitCallsModule,
-    LogEventsTableModule
+    LogEventsTableModule,
+    ToggleGroupModule
   ],
   declarations: [SpanDetailComponent],
   exports: [SpanDetailComponent]
