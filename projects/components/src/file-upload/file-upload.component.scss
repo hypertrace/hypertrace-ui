@@ -1,8 +1,10 @@
 @import 'mixins';
 
 .file-upload {
-  width: 100%;
-  border: 1px solid $gray-2; // Remove this
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   margin: 20px; // Remove this
 
   .upload-section {
@@ -10,6 +12,8 @@
     flex-direction: column;
     width: 100%;
     min-height: 140px;
+    border: 1px solid $gray-2;
+    border-radius: 8px;
 
     .title {
       @include body-2-regular;
@@ -33,6 +37,83 @@
 
     &.drag-over {
       border: 1px dashed $blue-4;
+    }
+  }
+
+  .files-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .file {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border: 1px solid $gray-2;
+      border-radius: 6px;
+
+      .file-info {
+        min-width: 0;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .basic-detail {
+          width: 100%;
+          display: flex;
+          align-items: center;
+
+          .file-name {
+            @include body-1-regular($gray-7);
+            @include ellipsis-overflow;
+            padding-right: 8px;
+            border-right: 1px solid $gray-4;
+          }
+
+          .file-size {
+            @include body-small($gray-3);
+            padding-left: 8px;
+          }
+        }
+
+        .progress {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .progress-bar {
+            height: 8px;
+            min-width: 0;
+            flex: 1 1 auto;
+            border-radius: 4px;
+            background-color: $gray-3;
+            overflow: hidden;
+
+            .bar {
+              height: 100%;
+              background-color: $blue-4;
+            }
+          }
+
+          .progress-percentage {
+            @include body-small($gray-6);
+          }
+        }
+      }
+
+      .delete-icon {
+        cursor: pointer;
+
+        &:hover {
+          background-color: $gray-1;
+          box-shadow: 0 0 0 8px $gray-1;
+          border-radius: 50%;
+        }
+      }
     }
   }
 }
