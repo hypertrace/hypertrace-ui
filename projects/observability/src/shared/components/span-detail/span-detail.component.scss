@@ -11,6 +11,10 @@
   display: flex;
   flex-direction: column;
 
+  .toggle-group {
+    margin-top: 18px;
+  }
+
   .title-header {
     flex: 0;
   }
@@ -22,11 +26,8 @@
     flex: 0;
   }
 
-  .tabs-group {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    isolation: isolate;
-    margin-top: 18px;
+  .tab-container {
+    margin-top: 24px;
+    overflow-y: auto;
   }
 }

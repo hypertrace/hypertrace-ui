@@ -21,6 +21,7 @@ export class CartesianAxis<TData = {}> {
 
   public constructor(
     configuration: Axis,
+    private readonly axisDimension: AxisDimension,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
     protected readonly svgUtilService: SvgUtilService
   ) {
@@ -79,7 +80,7 @@ export class CartesianAxis<TData = {}> {
       selection.selectAll('.tick text').remove();
     }
 
-    if (this.configuration.location === AxisLocation.Bottom) {
+    if (this.configuration.location === AxisLocation.Bottom || this.configuration.location === AxisLocation.Top) {
       const maxTextTickTextLength = this.getMaxTickTextLength(selection);
 
       if (this.configuration.labelOverflow === LabelOverflow.Wrap) {
@@ -107,10 +108,9 @@ export class CartesianAxis<TData = {}> {
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
-    const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
     ticksSelection.each((_, index, nodes) =>
-      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
+      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, this.axisDimension.yAxisWidth)
     );
   }
 
@@ -142,8 +142,10 @@ export class CartesianAxis<TData = {}> {
     });
   }
 
-  private tickTextWrap(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>, maxTextLength: number): void {
-    
+  private tickTextWrap(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextLength: number
+  ): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
     const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
@@ -152,9 +154,7 @@ export class CartesianAxis<TData = {}> {
         .selectAll('.tick text')
         .style('font-size', '100%')
         .attr('y', '3')
-        .each((_, index, nodes) =>
-          this.svgUtilService.wrapTextIfNeeded(nodes[index] as SVGTextElement, tickBandwidth)
-        )
+        .each((_, index, nodes) => this.svgUtilService.wrapTextIfNeeded(nodes[index] as SVGTextElement, tickBandwidth));
     }
   }
 
@@ -260,4 +260,11 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow'>;
+type DefaultedAxisConfig = Axis &
+  Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow'>;
+
+export interface AxisDimension {
+  xAxisHeight: number;
+  yAxisWidth: number;
+  margin: number;
+}
