@@ -28,6 +28,7 @@ export const enum IconType {
   Close = 'svg:close',
   CloseCircle = 'svg:close-circle',
   CloseCircleFilled = 'svg:close-circle-filled',
+  CloudUpload = 'svg:cloud-upload',
   CollapseAll = 'svg:collapse-all',
   Collapsed = 'svg:plus-square',
   Compare = 'svg:compare',
