@@ -41,6 +41,7 @@ import {
   template: `
     <div class="explorer" *htLetAsync="this.initialState$ as initialState">
       <ht-page-header class="explorer-header"></ht-page-header>
+      <ht-file-upload class="fu"></ht-file-upload>
       <ht-toggle-group
         class="explorer-data-toggle"
         [items]="this.contextItems"

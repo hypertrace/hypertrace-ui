@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FactorySansProvider, ModuleWithProviders, NgModule } from '@angular/core';
 import {
+  FileUploadModule,
   FilterBarModule,
   LetAsyncModule,
   PageHeaderModule,
@@ -21,7 +22,8 @@ import { ExplorerComponent } from './explorer.component';
     PanelModule,
     PageHeaderModule,
     ToggleGroupModule,
-    LetAsyncModule
+    LetAsyncModule,
+    FileUploadModule
   ],
   declarations: [ExplorerComponent]
 })
