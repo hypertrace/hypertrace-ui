@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormattingModule } from '../../../common/src/public-api';
+import { FormattingModule } from '@hypertrace/common';
 import { IconModule } from '../icon/icon.module';
 import { ProgressBarModule } from '../progress-bar/progress-bar.module';
 import { FileDisplayComponent } from './file-display.component';

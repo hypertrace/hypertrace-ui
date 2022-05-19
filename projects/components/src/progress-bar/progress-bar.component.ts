@@ -16,7 +16,7 @@ import { Color } from '@hypertrace/common';
 })
 export class ProgressBarComponent {
   @Input()
-  public progress: number = 0; // progress in percentage
+  public progress: number = 0; // Progress in percentage
 
   @Input()
   public backgroundColor: Color = Color.Gray3;

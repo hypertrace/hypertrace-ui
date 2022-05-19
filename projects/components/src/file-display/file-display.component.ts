@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { FileItem } from './file-item';
 
