@@ -76,7 +76,7 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       context: this.context,
       selections: request.columns.map(column => column.specification),
       interval: this.interval?.getDuration(),
-      limit: request.position.limit,
+      limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       orderBy: request.sort && [
         {

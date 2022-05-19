@@ -15,7 +15,7 @@ import {
   TableDataSourceProvider
 } from './table-cdk-data-source-api';
 import { TableCdkRowUtil } from './table-cdk-row-util';
-import { TableDataRequest } from './table-data-source';
+import { TableDataRequest, TablePagePosition } from './table-data-source';
 
 type WatchedObservables = [
   TableColumnConfigExtended[],
@@ -31,7 +31,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private readonly columnConfigs: Map<string, TableColumnConfigExtended> = new Map<string, TableColumnConfigExtended>();
   private cachedRows: StatefulTableRow[] = [];
-  private cachedPageEvent?: PageEvent;
+  private cachedPosition?: TablePagePosition;
   private readonly cachedValues: Map<string, unknown[]> = new Map<string, unknown[]>();
   private lastRowChange: StatefulTableRow | undefined;
   private readonly rowsChange$: Subject<StatefulTableRow[]> = new Subject<StatefulTableRow[]>();
@@ -90,13 +90,13 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.cachedValues.has(field) ? this.cachedValues.get(field)! : [];
   }
 
-  private cacheRows(rows: StatefulTableRow[], pageEvent: PageEvent): void {
+  private cacheRows(rows: StatefulTableRow[], position: TablePagePosition): void {
     this.cachedRows = rows.map(TableCdkRowUtil.cloneRow);
-    const isPaginationHonored = rows.length <= pageEvent.pageIndex * pageEvent.pageSize;
+    const isPaginationHonored = rows.length <= position.startIndex * position.limit;
 
     if (isPaginationHonored) {
       // If the API is returning more results than requested, we don't want to cache the pageEvent as it is ignored.
-      this.cachedPageEvent = pageEvent;
+      this.cachedPosition = position;
     }
   }
 
@@ -285,28 +285,29 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
     return this.hasCachedRowsForPageEvent(pageEvent)
       ? this.fetchCachedData(pageEvent)
-      : this.fetchNewData(this.buildRequest(columnConfigs, pageEvent, filters, queryProperties), pageEvent);
+      : this.fetchNewData(this.buildRequest(columnConfigs, pageEvent, filters, queryProperties));
   }
 
   private hasCachedRowsForPageEvent(pageEvent: PageEvent): boolean {
-    if (this.cachedRows.length <= pageEvent.pageSize) {
+    if (this.cachedRows.length < pageEvent.pageSize) {
+      // Sanity check if we have enough cached data for what we request
       return false;
     }
 
     const offsetWithinCachedRows = this.calcOffsetWithinCachedRows(pageEvent);
 
-    return offsetWithinCachedRows + pageEvent.pageSize <= this.cachedRows.length;
+    // Check if requested startOffset + limit is within the cached data
+    return offsetWithinCachedRows >= 0 && offsetWithinCachedRows + pageEvent.pageSize <= this.cachedRows.length;
   }
 
   private calcOffsetWithinCachedRows(pageEvent: PageEvent): number {
-    const cachedOffset =
-      this.cachedPageEvent === undefined ? 0 : this.cachedPageEvent.pageIndex * this.cachedPageEvent.pageSize;
+    const cachedOffset = this.cachedPosition?.startIndex ?? 0;
     const currentOffset = pageEvent.pageIndex * pageEvent.pageSize;
 
     return currentOffset - cachedOffset;
   }
 
-  private fetchNewData(request: TableDataRequest, pageEvent: PageEvent): Observable<StatefulTableRow[]> {
+  private fetchNewData(request: TableDataRequest): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
     }
@@ -320,13 +321,13 @@ export class TableCdkDataSource implements DataSource<TableRow> {
           ? TableCdkRowUtil.expandAllRows(rows)
           : rows
       ),
-      tap(rows => this.cacheRows(rows, pageEvent)),
-      map(rows => this.paginateRows(rows, pageEvent))
+      tap(rows => this.cacheRows(rows, request.position)),
+      map(rows => this.paginateRows(rows, request.position))
     );
   }
 
   private fetchCachedData(pageEvent: PageEvent): Observable<StatefulTableRow[]> {
-    if (this.cachedRows.length <= pageEvent.pageSize) {
+    if (this.cachedRows.length < pageEvent.pageSize) {
       return of([]);
     }
 
@@ -372,10 +373,13 @@ export class TableCdkDataSource implements DataSource<TableRow> {
    * Pagination
    ****************************/
 
-  private paginateRows(rows: StatefulTableRow[], pageEvent: PageEvent): StatefulTableRow[] {
-    const offset = pageEvent.pageIndex * pageEvent.pageSize;
+  private paginateRows(rows: StatefulTableRow[], position: TablePagePosition): StatefulTableRow[] {
+    if (position === this.cachedPosition && position.limit >= this.cachedRows.length) {
+      // If server is honoring pagination, just return the rows we've already cached
+      return rows;
+    }
 
-    return rows.slice(offset, offset + pageEvent.pageSize);
+    return rows.slice(position.startIndex, position.startIndex + position.limit);
   }
 
   private updatePaginationTotalCount(totalItems: number): void {
