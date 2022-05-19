@@ -31,6 +31,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private readonly columnConfigs: Map<string, TableColumnConfigExtended> = new Map<string, TableColumnConfigExtended>();
   private cachedRows: StatefulTableRow[] = [];
+  private cachedPageEvent?: PageEvent;
   private readonly cachedValues: Map<string, unknown[]> = new Map<string, unknown[]>();
   private lastRowChange: StatefulTableRow | undefined;
   private readonly rowsChange$: Subject<StatefulTableRow[]> = new Subject<StatefulTableRow[]>();
@@ -69,7 +70,6 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       .subscribe(this.rowsChange$);
 
     return this.rowsChange$.pipe(
-      tap(rows => this.cacheRows(rows)),
       tap(rows => this.cacheFilterableValues(rows)),
       tap(rows => this.loadingStateSubject.next({ loading$: of(rows), hide: rows.length > 0 })),
       catchError(error => {
@@ -90,8 +90,14 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.cachedValues.has(field) ? this.cachedValues.get(field)! : [];
   }
 
-  private cacheRows(rows: StatefulTableRow[]): void {
+  private cacheRows(rows: StatefulTableRow[], pageEvent: PageEvent): void {
     this.cachedRows = rows.map(TableCdkRowUtil.cloneRow);
+    const isPaginationHonored = rows.length <= pageEvent.pageIndex * pageEvent.pageSize;
+
+    if (isPaginationHonored) {
+      // If the API is returning more results than requested, we don't want to cache the pageEvent as it is ignored.
+      this.cachedPageEvent = pageEvent;
+    }
   }
 
   private cacheFilterableValues(rows: StatefulTableRow[]): void {
@@ -185,7 +191,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private pageChange(): Observable<PageEvent> {
     return this.paginationProvider
       ? this.paginationProvider.pageEvent$.pipe(
-          startWith({ pageSize: this.paginationProvider.pageSize, pageIndex: this.paginationProvider.pageIndex })
+          startWith({
+            pageSize: this.paginationProvider.pageSize,
+            pageIndex: this.paginationProvider.pageIndex
+          })
         )
       : of({ pageSize: TableCdkDataSource.DEFAULT_PAGE_SIZE, pageIndex: 0 });
   }
@@ -238,7 +247,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       TableCdkColumnUtil.unsortOtherColumns(changedColumn, columnConfigs);
     }
 
-    return this.fetchNewData(columnConfigs, pageEvent, filters, queryProperties);
+    return this.fetchData(columnConfigs, pageEvent, filters, queryProperties);
   }
 
   private fetchAndAppendNewChildren(stateChanges: RowStateChange[]): Observable<StatefulTableRow[]> {
@@ -264,7 +273,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     );
   }
 
-  private fetchNewData(
+  private fetchData(
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
     filters: TableFilter[],
@@ -274,19 +283,56 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return of([]);
     }
 
-    return this.tableDataSourceProvider.data
-      .getData(this.buildRequest(columnConfigs, pageEvent, filters, queryProperties))
-      .pipe(
-        tap(response => this.updatePaginationTotalCount(response.totalCount)),
-        map(response => response.data),
-        map(rows => this.paginateRows(rows, pageEvent)),
-        map(TableCdkRowUtil.buildInitialRowStates),
-        map(rows =>
-          this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
-            ? TableCdkRowUtil.expandAllRows(rows)
-            : rows
-        )
-      );
+    return this.hasCachedRowsForPageEvent(pageEvent)
+      ? this.fetchCachedData(pageEvent)
+      : this.fetchNewData(this.buildRequest(columnConfigs, pageEvent, filters, queryProperties), pageEvent);
+  }
+
+  private hasCachedRowsForPageEvent(pageEvent: PageEvent): boolean {
+    if (this.cachedRows.length <= pageEvent.pageSize) {
+      return false;
+    }
+
+    const offsetWithinCachedRows = this.calcOffsetWithinCachedRows(pageEvent);
+
+    return offsetWithinCachedRows + pageEvent.pageSize <= this.cachedRows.length;
+  }
+
+  private calcOffsetWithinCachedRows(pageEvent: PageEvent): number {
+    const cachedOffset =
+      this.cachedPageEvent === undefined ? 0 : this.cachedPageEvent.pageIndex * this.cachedPageEvent.pageSize;
+    const currentOffset = pageEvent.pageIndex * pageEvent.pageSize;
+
+    return currentOffset - cachedOffset;
+  }
+
+  private fetchNewData(request: TableDataRequest, pageEvent: PageEvent): Observable<StatefulTableRow[]> {
+    if (this.tableDataSourceProvider.data === undefined) {
+      return of([]);
+    }
+
+    return this.tableDataSourceProvider.data.getData(request).pipe(
+      tap(response => this.updatePaginationTotalCount(response.totalCount)),
+      map(response => response.data),
+      map(TableCdkRowUtil.buildInitialRowStates),
+      map(rows =>
+        this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
+          ? TableCdkRowUtil.expandAllRows(rows)
+          : rows
+      ),
+      tap(rows => this.cacheRows(rows, pageEvent)),
+      map(rows => this.paginateRows(rows, pageEvent))
+    );
+  }
+
+  private fetchCachedData(pageEvent: PageEvent): Observable<StatefulTableRow[]> {
+    if (this.cachedRows.length <= pageEvent.pageSize) {
+      return of([]);
+    }
+
+    const offsetWithinCachedRows = this.calcOffsetWithinCachedRows(pageEvent);
+
+    return of(this.cachedRows.slice(offsetWithinCachedRows, offsetWithinCachedRows + pageEvent.pageSize));
   }
 
   private buildRequest(
@@ -326,23 +372,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
    * Pagination
    ****************************/
 
-  private paginateRows(rows: TableRow[], pageConfig: PageEvent): TableRow[] {
-    /*
-     * With server-side pagination, the "rows" here are the results that are fetched. Since they are fetched with an
-     * offset in the request, we just index off the start of the result rows.
-     *
-     * However for when the backend APIs do not support pagination, the backend will return all results. In this case
-     * we can see if there are more results than we requested. If so, paginate within those results here.
-     *
-     * Historical Note & Warning:
-     * In the distant past for even server-side pagination we would prefetch additional rows, cache them, and
-     * paginate within those results. This caching will no longer work. In fact, it will break the below logic
-     * due to the `length > pageSize` comparison we are doing here.
-     */
-    const start = rows.length > pageConfig.pageSize ? pageConfig.pageSize * pageConfig.pageIndex : 0;
-    const end = start + pageConfig.pageSize;
+  private paginateRows(rows: StatefulTableRow[], pageEvent: PageEvent): StatefulTableRow[] {
+    const offset = pageEvent.pageIndex * pageEvent.pageSize;
 
-    return rows.slice(start, end);
+    return rows.slice(offset, offset + pageEvent.pageSize);
   }
 
   private updatePaginationTotalCount(totalItems: number): void {
