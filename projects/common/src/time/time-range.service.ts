@@ -65,6 +65,10 @@ export class TimeRangeService {
     this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
   }
 
+  private isValidTimeRange(timeRange: TimeRange): boolean {
+    return timeRange.endTime.getTime() - timeRange.startTime.getTime() > 0;
+  }
+
   private getInitialTimeRange(): Observable<TimeRange> {
     return this.navigationService.navigation$.pipe(
       take(1), // Wait for first navigation
@@ -73,6 +77,7 @@ export class TimeRangeService {
       map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
       filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
       map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
+      filter(timeRange => this.isValidTimeRange(timeRange)),
       catchError(() => EMPTY)
     );
   }

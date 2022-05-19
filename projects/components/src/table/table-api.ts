@@ -17,6 +17,7 @@ export interface TableColumnConfig {
   filterable?: boolean; // Can the column be filtered
   alignment?: TableCellAlignmentType;
   width?: number | string;
+  minWidth?: number | string;
   onClick?(row: TableRow, column: TableColumnConfig): void;
 }
 

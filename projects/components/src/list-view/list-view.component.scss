@@ -51,14 +51,16 @@ $horizontal-offset: 12px;
       align-items: center;
       padding: 0 $horizontal-offset;
     }
+
     .key {
       font-weight: 500;
     }
   }
 
-  .data-row:nth-child(odd) {
+  .data-row.striped:nth-child(odd) {
     background: $gray-1;
   }
+
   .data-row:nth-child(even) {
     background: #fff;
   }

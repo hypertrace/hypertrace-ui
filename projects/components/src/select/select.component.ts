@@ -13,7 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEmpty, isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
@@ -124,7 +124,12 @@ import { SelectSize } from './select-size';
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}' && this.items?.length > 5">
+            <ng-container
+              *ngIf="
+                this.searchMode === '${SelectSearchMode.EmitOnly}' &&
+                (this.items?.length > 5 || !(this.isSearchTextPresent$ | async))
+              "
+            >
               <ht-event-blocker event="click" [enabled]="true">
                 <ht-search-box
                   class="search-bar"
@@ -255,6 +260,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
+  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
+    map(searchText => !isEmpty(searchText))
+  );
 
   public popoverOpen: boolean = false;
 

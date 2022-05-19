@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DateCoercer, Dictionary } from '@hypertrace/common';
-import { GraphQlArgument, GraphQlEnumArgument, GraphQlSelection } from '@hypertrace/graphql-client';
+import { GraphQlArgument, GraphQlSelection } from '@hypertrace/graphql-client';
 import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
 import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
@@ -30,8 +30,8 @@ export class ExploreGraphqlQueryBuilderService {
   public buildRequestArguments(request: GraphQlExploreRequest): GraphQlArgument[] {
     return [
       {
-        name: 'context',
-        value: new GraphQlEnumArgument(request.context)
+        name: 'scope',
+        value: request.context
       },
       this.argBuilder.forLimit(request.limit),
       this.argBuilder.forTimeRange(request.timeRange),
