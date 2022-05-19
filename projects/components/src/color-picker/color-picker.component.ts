@@ -106,8 +106,8 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
-  public setDisabledState(isDisabled?: boolean): void {
-    this.disabled = isDisabled ?? false;
+  public setDisabledState(isDisabled: boolean = false): void {
+    this.disabled = isDisabled;
   }
 
   private initSelectedColor(): void {
