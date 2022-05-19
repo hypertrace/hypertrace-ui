@@ -5,10 +5,10 @@ import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 })
 export class DropZoneDirective {
   @Output()
-  private readonly dropped: EventEmitter<FileList> = new EventEmitter();
+  public readonly dropped: EventEmitter<FileList> = new EventEmitter();
 
   @Output()
-  private readonly dragOver: EventEmitter<boolean> = new EventEmitter();
+  public readonly dragOver: EventEmitter<boolean> = new EventEmitter();
 
   @HostListener('drop', ['$event'])
   public onDrop(event: DragEvent): void {
