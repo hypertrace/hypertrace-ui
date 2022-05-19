@@ -47,7 +47,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   public selected?: string;
 
   @Input()
-  public disabled: boolean = false;
+  public disabled?: boolean = false;
 
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
