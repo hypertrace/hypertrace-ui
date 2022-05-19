@@ -151,7 +151,7 @@ export class SvgUtilService {
         } else {
           // Move this word to next line
           const y = textSelection.attr('y');
-          const dy = parseFloat(textSelection.attr('dy'));
+          const dy = +textSelection.attr('dy') ?? 0;
 
           currentLine.pop();
           tspan.text(currentLine.join(' '));
