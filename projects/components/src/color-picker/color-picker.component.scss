@@ -16,10 +16,20 @@
     &.selected {
       border: 2px solid $blue-4;
     }
+
+    &.disabled {
+      cursor: not-allowed;
+    }
   }
 
   .add-icon {
     cursor: pointer;
+    user-select: none;
+
+    &.disabled {
+      color: $gray-5;
+      cursor: not-allowed;
+    }
   }
 }
 
