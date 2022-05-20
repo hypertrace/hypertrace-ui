@@ -38,6 +38,12 @@
     &.drag-over {
       border: 1px dashed $blue-4;
     }
+
+    &.disabled {
+      pointer-events: none;
+      background-color: $gray-1;
+      opacity: 0.8;
+    }
   }
 
   .files-section {

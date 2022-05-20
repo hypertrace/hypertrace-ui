@@ -33,7 +33,7 @@ describe('File Display Component', () => {
     spectator.setInput({ file: { data: new File([new Blob(['text'])], 'file.txt'), progress: 40 } });
     expect(spectator.query(ProgressBarComponent)?.progress).toBe(40);
 
-    // in progress is true
+    // In progress is true
     spectator.setInput({ file: { data: new File([new Blob(['text'])], 'file.txt'), progress: 40, inProgress: true } });
     expect(spectator.query('.delete-icon.disabled')).toExist();
   });

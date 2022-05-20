@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
@@ -9,11 +10,18 @@ import { IconSize } from '../icon/icon-size';
   selector: 'ht-file-upload',
   styleUrls: ['./file-upload.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: FileUploadComponent
+    }
+  ],
   template: `
     <div class="file-upload">
       <div
         class="upload-section"
-        [ngClass]="{ 'drag-over': this.isDragOver }"
+        [ngClass]="{ 'drag-over': this.isDragOver, disabled: this.disabled }"
         htDropZone
         (dragOver)="this.onDragOver($event)"
         (dropped)="this.onDrop($event)"
@@ -42,12 +50,35 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class FileUploadComponent {
+export class FileUploadComponent implements ControlValueAccessor {
   @Input()
   public subText: string = 'max size 2 GB';
 
-  public isDragOver: boolean = false;
+  @Input()
+  public disabled: boolean = false;
+
   public readonly files: FileItem[] = [];
+  public isDragOver: boolean = false;
+
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
+
+  public writeValue(value?: FileItem[]): void {
+    this.files.splice(0).push(...(value ?? []));
+    this.cdr.detectChanges();
+  }
+
+  public registerOnChange(onChange: (value?: FileItem[]) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: FileItem[]) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+    this.cdr.detectChanges();
+  }
 
   public onDragOver(isDragOver: boolean): void {
     this.isDragOver = isDragOver;
@@ -62,10 +93,19 @@ export class FileUploadComponent {
    */
   public deleteFile(fileIndex: number): void {
     this.files.splice(fileIndex, 1);
+    this.propagateValueChangeToFormControl(this.files);
   }
 
   public onFilesSelection(event: Event): void {
     this.updateFileSelection((event.target as HTMLInputElement)?.files ?? undefined);
+  }
+
+  private propagateControlValueChange?: (value?: FileItem[]) => void;
+  private propagateControlValueChangeOnTouch?: (value?: FileItem[]) => void;
+
+  private propagateValueChangeToFormControl(value?: FileItem[]): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 
   /**
@@ -73,6 +113,7 @@ export class FileUploadComponent {
    */
   private updateFileSelection(files?: FileList): void {
     this.files.push(...this.getFilesFromFileList(files));
+    this.propagateValueChangeToFormControl(this.files);
   }
 
   /**

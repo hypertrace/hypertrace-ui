@@ -7,6 +7,8 @@ import { UploadFileType } from './upload-file-type';
  * @description
  * Provides a set of validators specifically for file upload component that can be used by form controls.
  */
+// tslint:disable:no-null-keyword
+// tslint:disable:no-unnecessary-class
 export class FileUploadValidators {
   /**
    * @description
@@ -95,6 +97,36 @@ export class FileUploadValidators {
    */
   public static maxTotalSize = (maxTotalSize: number) => (control: AbstractControl) =>
     sumBy(getFileItemsFromControl(control), file => file.data.size) > maxTotalSize ? { maxTotalSize: true } : null;
+
+  /**
+   * @description
+   * Validator that requires the max file count in control-value's files to be less than provided count.
+   *
+   * @usageNotes
+   *
+   * ### Validate against 1 as maximum file count
+   *
+   * ```typescript
+   * const files = [
+   *    {
+   *        data: new File([new Blob(['data'], {type: 'text'})], 'file.txt') // file size is 4
+   *    },
+   *    {
+   *        data: new File([new Blob(['data12'], {type: 'text'})], 'file.txt') // file size is 6
+   *    }
+   * ] // Total size is 10
+   * const control = new FormControl(files, FileUploadValidators.maxFileCount(1));
+   *
+   * console.log(control.errors); // {maxFileCount: true}
+   * ```
+   *
+   * @returns A validator function that returns an error map with the
+   * `maxFileCount` property if the validation check fails, otherwise `null`.
+   *
+   *
+   */
+  public static maxFileCount = (maxFileCount: number) => (control: AbstractControl) =>
+    getFileItemsFromControl(control).length > maxFileCount ? { maxFileCount: true } : null;
 }
 
 // Converts the control value into the FileItem[]
