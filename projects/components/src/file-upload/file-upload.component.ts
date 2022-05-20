@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
@@ -57,7 +57,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   @Input()
   public disabled: boolean = false;
 
-  @Input()
+  @Output()
   private readonly fileUpload: EventEmitter<FileItem[]> = new EventEmitter();
 
   public readonly files: FileItem[] = [];
