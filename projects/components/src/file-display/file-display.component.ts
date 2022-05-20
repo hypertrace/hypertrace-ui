@@ -35,7 +35,7 @@ export class FileDisplayComponent implements OnChanges {
   public file?: FileItem;
 
   @Output()
-  private readonly deleteClick: EventEmitter<void> = new EventEmitter();
+  public readonly deleteClick: EventEmitter<void> = new EventEmitter();
 
   public showProgressBar: boolean = true;
   public isDeleteDisabled: boolean = false;
