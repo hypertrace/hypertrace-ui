@@ -48,7 +48,7 @@ describe('File Upload Component', () => {
     expect(formControl.value).toMatchObject([fileItem, fileItem]);
 
     // Testing delete
-    spectator.triggerEventHandler(FileDisplayComponent, 'deleteClick', void 1);
+    spectator.triggerEventHandler(FileDisplayComponent, 'deleteClick', undefined);
     expect(formControl.value).toMatchObject([fileItem]);
 
     // Testing disabled

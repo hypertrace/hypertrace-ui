@@ -52,6 +52,9 @@ import { IconSize } from '../icon/icon-size';
 })
 export class FileUploadComponent implements ControlValueAccessor {
   @Input()
+  public files: FileItem[] = []; // Can be used to update progress
+
+  @Input()
   public subText: string = 'max size 2 GB';
 
   @Input()
@@ -60,7 +63,6 @@ export class FileUploadComponent implements ControlValueAccessor {
   @Output()
   private readonly fileUpload: EventEmitter<FileItem[]> = new EventEmitter();
 
-  public readonly files: FileItem[] = [];
   public isDragOver: boolean = false;
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
