@@ -132,6 +132,11 @@ export interface Axis {
    * Determine the tick count labels
    */
   tickCount?: number;
+
+  /**
+   * What to do if label overflows
+   */
+  labelOverflow?: LabelOverflow;
 }
 
 export interface AxisCrosshair {
@@ -145,4 +150,9 @@ export enum ScaleType {
   Linear = 'linear',
   Time = 'time',
   Band = 'band'
+}
+
+export enum LabelOverflow {
+  Wrap = 'wrap',
+  Rotate = 'rotate'
 }

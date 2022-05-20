@@ -216,7 +216,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.filteredOptions$ = combineLatest([this.allOptions$, this.caseInsensitiveSearchSubject]).pipe(
       map(([options, searchText]) =>
         isEmpty(searchText)
-          ? options.map(option => option)
+          ? options.toArray()
           : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
       )
     );

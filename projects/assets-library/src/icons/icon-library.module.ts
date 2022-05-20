@@ -16,6 +16,7 @@ const iconsRootPath = 'assets/icons';
       useValue: [
         { key: IconType.Alarm, url: `${iconsRootPath}/alarm.svg` },
         { key: IconType.Alert, url: `${iconsRootPath}/alert.svg` },
+        { key: IconType.AlertFill, url: `${iconsRootPath}/alert-fill.svg` },
         { key: IconType.ArrowDown, url: `${iconsRootPath}/arrow-down.svg` },
         { key: IconType.ArrowDownLeft, url: `${iconsRootPath}/arrow-down-left.svg` },
         { key: IconType.ArrowDownRight, url: `${iconsRootPath}/arrow-down-right.svg` },
