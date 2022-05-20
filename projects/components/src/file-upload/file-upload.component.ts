@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
@@ -57,6 +57,9 @@ export class FileUploadComponent implements ControlValueAccessor {
   @Input()
   public disabled: boolean = false;
 
+  @Input()
+  private readonly fileUpload: EventEmitter<FileItem[]> = new EventEmitter();
+
   public readonly files: FileItem[] = [];
   public isDragOver: boolean = false;
 
@@ -64,6 +67,7 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   public writeValue(value?: FileItem[]): void {
     this.files.splice(0).push(...(value ?? []));
+    this.fileUpload.emit(this.files);
     this.cdr.detectChanges();
   }
 
@@ -93,6 +97,7 @@ export class FileUploadComponent implements ControlValueAccessor {
    */
   public deleteFile(fileIndex: number): void {
     this.files.splice(fileIndex, 1);
+    this.fileUpload.emit(this.files);
     this.propagateValueChangeToFormControl(this.files);
   }
 
@@ -113,6 +118,7 @@ export class FileUploadComponent implements ControlValueAccessor {
    */
   private updateFileSelection(files?: FileList): void {
     this.files.push(...this.getFilesFromFileList(files));
+    this.fileUpload.emit(this.files);
     this.propagateValueChangeToFormControl(this.files);
   }
 

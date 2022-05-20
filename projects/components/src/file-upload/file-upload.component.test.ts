@@ -47,6 +47,10 @@ describe('File Upload Component', () => {
     spectator.triggerEventHandler('.upload-section', 'dragOver', false);
     expect(formControl.value).toMatchObject([fileItem, fileItem]);
 
+    // Testing delete
+    spectator.triggerEventHandler(FileDisplayComponent, 'deleteClick', void 1);
+    expect(formControl.value).toMatchObject([fileItem]);
+
     // Testing disabled
     formControl.disable();
     expect(spectator.query('.upload-section.disabled')).toExist();
