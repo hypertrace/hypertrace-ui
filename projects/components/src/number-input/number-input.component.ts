@@ -67,7 +67,7 @@ export class NumberInputComponent implements ControlValueAccessor {
     this.value = value;
 
     this.enforceMinMaxAndEmit();
-    this.propagateValueChangeToFormControl(value);
+    this.propagateValueChangeToFormControl(this.value);
   }
 
   public writeValue(value?: number): void {
