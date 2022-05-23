@@ -20,13 +20,18 @@ import { IconSize } from '../icon/icon-size';
       <div
         class="color"
         *ngFor="let color of this.paletteColors"
-        [ngClass]="{ selected: color === this.selected }"
+        [ngClass]="{ selected: color === this.selected, disabled: this.disabled }"
         [style.backgroundColor]="color"
         (click)="this.selectColor(color)"
       ></div>
-      <ht-popover>
+      <ht-popover [disabled]="this.disabled">
         <ht-popover-trigger>
-          <ht-icon class="add-icon" icon="${IconType.Add}" size="${IconSize.Small}"></ht-icon>
+          <ht-icon
+            class="add-icon"
+            [ngClass]="{ disabled: this.disabled }"
+            icon="${IconType.Add}"
+            size="${IconSize.Small}"
+          ></ht-icon>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="container">
@@ -40,6 +45,9 @@ import { IconSize } from '../icon/icon-size';
 export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public selected?: string;
+
+  @Input()
+  public disabled?: boolean = false;
 
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
@@ -70,6 +78,10 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   }
 
   public selectColor(color: string): void {
+    if (this.disabled) {
+      return;
+    }
+
     const clickedColor = this.selected === color ? undefined : color;
     this.selected = clickedColor;
     this.selectedChange.emit(clickedColor);
@@ -92,6 +104,10 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
 
   public registerOnTouched(onTouch: (value?: string) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled: boolean = false): void {
+    this.disabled = isDisabled;
   }
 
   private initSelectedColor(): void {
