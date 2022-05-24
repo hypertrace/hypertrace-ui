@@ -4,4 +4,5 @@ export interface RadioOption {
   value: string;
   label: string | TemplateRef<unknown>;
   description?: string;
+  disabled?: boolean;
 }

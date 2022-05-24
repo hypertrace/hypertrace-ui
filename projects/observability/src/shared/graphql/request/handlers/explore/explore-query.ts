@@ -22,6 +22,7 @@ export interface GraphQlExploreRequest {
   orderBy?: GraphQlSortBySpecification[];
   filters?: GraphQlFilter[];
   groupBy?: GraphQlGroupBy;
+  ignoreGlobalFilters?: boolean;
 }
 
 export interface GraphQlExploreResponse {
@@ -34,7 +35,7 @@ export interface GraphQlExploreResult {
   [key: string]: GraphQlExploreResultValue;
 }
 
-type GraphQlExploreValueType = number | string | boolean | undefined;
+type GraphQlExploreValueType = number | string | string[] | boolean | undefined;
 
 export interface GraphQlExploreResultValue extends ExploreValue<GraphQlExploreValueType> {
   units?: string;

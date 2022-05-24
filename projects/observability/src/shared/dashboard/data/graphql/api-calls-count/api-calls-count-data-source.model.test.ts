@@ -40,7 +40,7 @@ describe('API call count data source model', () => {
               {
                 [numCallsSpec.resultAlias()]: {
                   value: 100,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 }
               }
             ]

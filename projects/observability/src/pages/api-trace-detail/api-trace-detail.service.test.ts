@@ -50,7 +50,7 @@ describe('Api TraceDetailService', () => {
             name: attributeKey,
             displayName: 'Duration',
             units: 'ms',
-            type: AttributeMetadataType.Number,
+            type: AttributeMetadataType.Long,
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,

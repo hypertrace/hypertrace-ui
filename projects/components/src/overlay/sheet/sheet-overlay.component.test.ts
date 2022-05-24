@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
-import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
-import { POPOVER_DATA } from '@hypertrace/components';
+import {
+  ExternalNavigationWindowHandling,
+  GlobalHeaderHeightProviderService,
+  LayoutChangeService,
+  NavigationParamsType
+} from '@hypertrace/common';
+import { OpenInNewTabComponent, POPOVER_DATA } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { ButtonComponent } from '../../button/button.component';
@@ -26,17 +31,16 @@ describe('Sheet Overlay component', () => {
 
   const createHost = createHostFactory({
     component: SheetOverlayComponent,
-    declarations: [MockComponent(ButtonComponent), TestComponent],
+    declarations: [MockComponent(ButtonComponent), TestComponent, MockComponent(OpenInNewTabComponent)],
     shallow: true,
     template: `
   <ht-sheet-overlay>
   </ht-sheet-overlay>
     `,
     providers: [
-      {
-        provide: GLOBAL_HEADER_HEIGHT,
-        useValue: 20
-      },
+      mockProvider(GlobalHeaderHeightProviderService, {
+        globalHeaderHeight: '56px'
+      }),
       mockProvider(LayoutChangeService)
     ]
   });
@@ -150,5 +154,27 @@ describe('Sheet Overlay component', () => {
     });
 
     expect(spectator.query(TestComponent)?.data).toBe(42);
+  });
+
+  test('should show open in new tab button if applicable', () => {
+    spectator = createConfiguredHost({
+      pageNavParams: {
+        navType: NavigationParamsType.External,
+        url: '/test',
+        windowHandling: ExternalNavigationWindowHandling.NewWindow
+      }
+    });
+
+    expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toEqual({
+      navType: NavigationParamsType.External,
+      url: '/test',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    });
+  });
+
+  test('should not show open in new tab button if config is empty', () => {
+    spectator = createConfiguredHost();
+
+    expect(spectator.query(OpenInNewTabComponent)).not.toExist();
   });
 });

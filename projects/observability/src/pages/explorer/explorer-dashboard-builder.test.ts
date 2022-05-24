@@ -77,7 +77,7 @@ describe('Explorer dashboard builder', () => {
           of({
             name: name,
             displayName: capitalize(name),
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           })
       } as MetadataService,
       MockService(FilterBuilderLookupService)

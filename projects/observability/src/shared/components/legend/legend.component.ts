@@ -8,7 +8,12 @@ export const LEGEND_DATA = new InjectionToken<LegendData<unknown>>('LEGEND DATA'
   styleUrls: ['./legend.component.scss'],
   template: `
     <div class="legend-entries fill-container" [ngClass]="this.layoutClass">
-      <div *ngFor="let entry of this.entries" class="legend-entry" [htTooltip]="entry.name">
+      <div
+        *ngFor="let entry of this.entries"
+        class="legend-entry"
+        [ngClass]="this.fontSizeClass"
+        [htTooltip]="entry.name"
+      >
         <span class="legend-symbol" [style.backgroundColor]="entry.color"></span>
         <span class="legend-label">{{ entry.name }}</span>
         <span *ngIf="entry.data.value !== undefined" class="legend-value">{{ entry.data.value }}</span>
@@ -29,6 +34,10 @@ export class LegendComponent {
 
   public get entries(): LegendSeries<unknown>[] {
     return this.legendData.series;
+  }
+
+  public get fontSizeClass(): string {
+    return `font-size-${this.legendData.fontSize}`;
   }
 
   public get layoutClass(): string {
@@ -53,12 +62,18 @@ export interface LegendSeries<T> {
 export interface LegendData<T> {
   position: LegendPosition;
   layout: LegendLayout;
+  fontSize: LegendFontSize;
   series: LegendSeries<T>[];
 }
 
 export const enum LegendLayout {
   Row = 'row',
   Column = 'column'
+}
+
+export const enum LegendFontSize {
+  ExtraSmall = 'extra-small',
+  Small = 'small'
 }
 
 export const enum LegendPosition {
@@ -68,5 +83,6 @@ export const enum LegendPosition {
   TopRight = 'top-right',
   TopLeft = 'top-left',
   Top = 'top',
+  Left = 'left',
   None = 'none'
 }

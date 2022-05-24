@@ -470,15 +470,35 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.clear-selected', { root: true })).not.toExist(); // Due to initial selection
     expect(spectator.query('.select-all', { root: true })).toExist();
 
-    // Set options list to less than 1 and search control buttons should be hidden
+    // Set options list to less than 5 and search control buttons should be hidden
+    spectator.component.searchOptions('');
     spectator.setHostInput({
       options: []
     });
 
-    expect(spectator.query('.search-bar', { root: true })).toExist();
+    spectator.tick(2);
+    spectator.detectChanges();
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
     expect(spectator.query('.clear-selected', { root: true })).not.toExist();
     expect(spectator.query('.select-all', { root: true })).not.toExist();
+
+    // Set options list to less than 5 and search control buttons should be hidden
+    spectator.setHostInput({
+      options: selectionOptions.slice(0, 3)
+    });
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
     flush();
   }));
 
@@ -519,12 +539,42 @@ describe('Multi Select Component', () => {
     options = spectator.queryAll('.multi-select-option', { root: true });
     expect(options.length).toBe(6);
 
-    // Set selected options to less than 5 and search box and buttons should still be visible
+    // Set selected options to less than 5 with search text and search box and buttons should still be visible
     spectator.setHostInput({
       options: selectionOptions.slice(0, 3)
     });
+    spectator.tick();
+    spectator.detectChanges();
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
+    });
+
+    spectator.component.searchOptions('asdasd');
+    spectator.tick();
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: true });
+    });
 
     expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
+    // Set selected options to less than 5 with empty search text. search box and buttons should not be visible
+    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', '');
+    spectator.component.searchOptions('');
+    spectator.tick();
+    spectator.detectChanges();
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
     expect(spectator.query('.clear-selected', { root: true })).not.toExist();
     expect(spectator.query('.select-all', { root: true })).toExist();

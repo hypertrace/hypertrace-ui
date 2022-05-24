@@ -10,7 +10,6 @@ $box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08)
   width: 100%;
   overflow: hidden;
 
-  padding: 24px;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -27,6 +26,12 @@ $box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08)
     .header-title {
       @include header-4($gray-7);
       margin: 0;
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 24px;
     }
   }
 

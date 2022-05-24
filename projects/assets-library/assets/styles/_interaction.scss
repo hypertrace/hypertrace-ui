@@ -99,3 +99,18 @@
     cursor: not-allowed;
   }
 }
+
+@mixin nav-primary-background {
+  background: $blue-6;
+  opacity: 0.95;
+}
+
+@mixin nav-primary-background-hover {
+  background: $blue-8;
+  opacity: 0.95;
+}
+
+@mixin nav-secondary-background {
+  background: $blue-9;
+  opacity: 0.95;
+}

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
+import { GlobalHeaderHeightProviderService, NavigationService } from '@hypertrace/common';
 import { OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
@@ -33,10 +33,9 @@ describe('Overlay service', () => {
       mockProvider(NavigationService, {
         navigation$: EMPTY
       }),
-      {
-        provide: GLOBAL_HEADER_HEIGHT,
-        useValue: 100
-      }
+      mockProvider(GlobalHeaderHeightProviderService, {
+        globalHeaderHeight: '56px'
+      })
     ],
     template: `<host></host>`
   });

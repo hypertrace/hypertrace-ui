@@ -9,6 +9,8 @@ export { DynamicComponentService } from './utilities/angular/dynamic-component.s
 // Browser
 export { CookieService } from './utilities/browser/cookies/cookie.service';
 export { LocalStorage } from './utilities/browser/storage/local-storage';
+export { SessionStorage } from './utilities/browser/storage/session-storage';
+export * from './utilities/browser/storage/abstract-storage';
 
 // Coercers
 export * from './utilities/coercers/boolean-coercer';
@@ -107,6 +109,7 @@ export * from './telemetry/telemetry';
 export { FullStoryTelemetry } from './telemetry/providers/fullstory/full-story-provider';
 export { FreshPaintTelemetry } from './telemetry/providers/freshpaint/freshpaint-provider';
 export { MixPanelTelemetry } from './telemetry/providers/mixpanel/mixpanel-provider';
+export { RudderStackTelemetry } from './telemetry/providers/rudderstack/rudderstack-provider';
 export { TrackDirective } from './telemetry/track/track.directive';
 
 // Time
@@ -120,6 +123,13 @@ export * from './time/time-range.service';
 export * from './time/time-range.type';
 export * from './time/time-unit.type';
 export * from './time/time';
+export * from './time/page-time-range-preference.service';
 
 // Validators
 export * from './utilities/validators';
+
+// Color Palette
+export * from './color/color-palette';
+
+// Global header height provider
+export * from './global-header-height/global-header-height-provider.service';

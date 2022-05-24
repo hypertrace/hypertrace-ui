@@ -8,8 +8,12 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="collapsible-sidebar" [ngClass]="{ collapsed: !this.isExpanded }">
-      <div class="content">
-        <ng-container *ngIf="this.isExpanded; else labelTemplate"><ng-content></ng-content></ng-container>
+      <div class="content" (click)="this.toggleCollapseExpandFromLabel()">
+        <ng-container *ngIf="this.isExpanded; else labelTemplate">
+          <ht-event-blocker event="click">
+            <ng-content></ng-content>
+          </ht-event-blocker>
+        </ng-container>
       </div>
       <ng-template #stringLabelTemplate
         ><span class="string-label">{{ this.label }}</span></ng-template
@@ -17,6 +21,7 @@ import { IconSize } from '../icon/icon-size';
       <ng-template #labelTemplate
         ><ng-container *ngTemplateOutlet="this.isLabelATemplate ? this.label : stringLabelTemplate"></ng-container
       ></ng-template>
+
       <div class="toggle" (click)="this.toggleCollapseExpand()">
         <ht-icon
           class="icon"
@@ -46,5 +51,14 @@ export class CollapsibleSidebarComponent implements OnChanges {
 
   public toggleCollapseExpand(): void {
     this.isExpanded = !this.isExpanded;
+  }
+
+  public toggleCollapseExpandFromLabel(): void {
+    /**
+     * Make the collapsed header clickable and expand the sidebar when clicked.
+     */
+    if (!this.isExpanded) {
+      this.isExpanded = !this.isExpanded;
+    }
   }
 }

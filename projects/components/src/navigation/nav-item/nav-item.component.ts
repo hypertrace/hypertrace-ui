@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import { FeatureState, NavigationParams, NavigationParamsType, TimeRangeService } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
-import { NavItemLinkConfig } from '../navigation.config';
+import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
 
 @Component({
   selector: 'ht-nav-item',
@@ -13,7 +13,7 @@ import { NavItemLinkConfig } from '../navigation.config';
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"
-        [ngClass]="{ active: this.active }"
+        [ngClass]="[this.active ? 'active' : '', this.navItemViewStyle ?? '', this.collapsed ? 'collapsed' : '']"
       >
         <ht-icon
           class="icon"
@@ -54,12 +54,29 @@ export class NavItemComponent {
   @Input()
   public collapsed: boolean = true;
 
-  public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => ({
-    navType: NavigationParamsType.InApp,
-    path: item.matchPaths[0],
-    relativeTo: this.activatedRoute,
-    replaceCurrentHistory: item.replaceCurrentHistory
-  });
+  @Input()
+  public readonly navItemViewStyle?: NavViewStyle;
 
-  public constructor(private readonly activatedRoute: ActivatedRoute) {}
+  public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => {
+    const navParams: NavigationParams = {
+      navType: NavigationParamsType.InApp,
+      path: item.matchPaths[0],
+      relativeTo: this.activatedRoute,
+      replaceCurrentHistory: item.replaceCurrentHistory
+    };
+
+    if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
+      return {
+        ...navParams,
+        queryParams: this.timeRangeService.toQueryParams(this.config.timeRangeResolver(), true)
+      };
+    }
+
+    return navParams;
+  };
+
+  public constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly timeRangeService: TimeRangeService
+  ) {}
 }

@@ -17,7 +17,8 @@ export const enum AttributeMetadataType {
   // Duplicated for FilterAttributeType in filter-attribute-type.ts
   Boolean = 'BOOLEAN',
   String = 'STRING',
-  Number = 'LONG',
+  Long = 'LONG',
+  Double = 'DOUBLE',
   StringArray = 'STRING_ARRAY',
   StringMap = 'STRING_MAP',
   Timestamp = 'TIMESTAMP'
@@ -27,7 +28,8 @@ export const toFilterAttributeType = (type: AttributeMetadataType): FilterAttrib
   switch (type) {
     case AttributeMetadataType.Boolean:
       return FilterAttributeType.Boolean;
-    case AttributeMetadataType.Number:
+    case AttributeMetadataType.Long:
+    case AttributeMetadataType.Double:
       return FilterAttributeType.Number;
     case AttributeMetadataType.String:
       return FilterAttributeType.String;

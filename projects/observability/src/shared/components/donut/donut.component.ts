@@ -9,7 +9,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { LegendPosition } from '../legend/legend.component';
+import { LegendFontSize, LegendPosition } from '../legend/legend.component';
 import { TooltipOption } from '../utils/d3/d3-visualization-builder.service';
 import { Donut, DonutAlignmentStyle, DonutCenter, DonutSeries } from './donut';
 import { DonutBuilderService } from './donut-builder.service';
@@ -36,6 +36,9 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   @Input()
   public legendPosition?: LegendPosition;
+
+  @Input()
+  public legendFontSize?: LegendFontSize;
 
   @Input()
   public tooltipOption?: TooltipOption;
@@ -70,7 +73,8 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
       center: this.center,
       legendPosition: this.legendPosition,
       tooltipOption: this.tooltipOption,
-      displayLegendCounts: this.displayLegendCounts
+      displayLegendCounts: this.displayLegendCounts,
+      legendFontSize: this.legendFontSize
     });
   }
 

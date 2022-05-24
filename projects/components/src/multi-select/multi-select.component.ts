@@ -13,9 +13,9 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { isEmpty, isEqual } from 'lodash-es';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
+import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
@@ -85,57 +85,58 @@ import { MultiSelectJustify } from './multi-select-justify';
             [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
           >
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
-              <ng-container *ngIf="this.allOptions$ | async as allOptions">
-                <ht-search-box
-                  class="search-bar"
-                  (valueChange)="this.searchOptions($event)"
-                  [debounceTime]="200"
-                  displayMode="${SearchBoxDisplayMode.NoBorder}"
-                ></ht-search-box>
-                <ht-divider class="divider"></ht-divider>
+              <ht-search-box
+                class="search-bar"
+                (valueChange)="this.searchOptions($event)"
+                [debounceTime]="200"
+                displayMode="${SearchBoxDisplayMode.NoBorder}"
+                *ngIf="(this.allOptions$ | async)?.length > 5 || (this.isSearchTextPresent$ | async)"
+              ></ht-search-box>
+              <ht-divider class="divider"></ht-divider>
 
-                <ht-button
-                  class="clear-selected"
-                  *ngIf="this.isAnyOptionSelected()"
-                  role="${ButtonRole.Primary}"
-                  display="${ButtonStyle.Text}"
-                  label="Clear Selected"
-                  (click)="this.onClearSelected()"
-                ></ht-button>
+              <ht-button
+                class="clear-selected"
+                *ngIf="this.isAnyOptionSelected()"
+                role="${ButtonRole.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Clear Selected"
+                (click)="this.onClearSelected()"
+              ></ht-button>
 
-                <ht-button
-                  class="select-all"
-                  *ngIf="allOptions.length > 0 && !this.isAnyOptionSelected()"
-                  role="${ButtonRole.Primary}"
-                  display="${ButtonStyle.Text}"
-                  label="Select All"
-                  (click)="this.onSelectAll()"
-                ></ht-button>
-              </ng-container>
+              <ht-button
+                class="select-all"
+                *ngIf="(this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
+                role="${ButtonRole.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Select All"
+                (click)="this.onSelectAll()"
+              ></ht-button>
             </ng-container>
 
-            <div class="multi-select-options" *htLoadAsync="this.filteredOptions$ as filteredOptions">
-              <div
-                *ngFor="let item of filteredOptions"
-                (click)="this.onSelectionChange(item)"
-                class="multi-select-option"
-                [ngClass]="{ disabled: item.disabled }"
-              >
-                <ht-checkbox
-                  class="checkbox"
-                  (click)="this.preventClickDefault($event)"
-                  [checked]="this.isSelectedItem(item)"
-                  [disabled]="item.disabled"
-                ></ht-checkbox>
-                <ht-icon
-                  class="icon"
-                  *ngIf="item.icon"
-                  [icon]="item.icon"
-                  size="${IconSize.ExtraSmall}"
-                  [color]="item.iconColor"
-                ></ht-icon>
-                <span class="label">{{ item.label }}</span>
-              </div>
+            <div class="multi-select-options">
+              <ng-container *htLoadAsync="this.filteredOptions$ as filteredOptions">
+                <div
+                  *ngFor="let item of filteredOptions"
+                  (click)="this.onSelectionChange(item)"
+                  class="multi-select-option"
+                  [ngClass]="{ disabled: item.disabled }"
+                >
+                  <ht-checkbox
+                    class="checkbox"
+                    (click)="this.preventClickDefault($event)"
+                    [checked]="this.isSelectedItem(item)"
+                    [disabled]="item.disabled"
+                  ></ht-checkbox>
+                  <ht-icon
+                    class="icon"
+                    *ngIf="item.icon"
+                    [icon]="item.icon"
+                    size="${IconSize.ExtraSmall}"
+                    [color]="item.iconColor"
+                  ></ht-icon>
+                  <span class="label">{{ item.label }}</span>
+                </div>
+              </ng-container>
             </div>
           </div>
         </ht-popover-content>
@@ -194,7 +195,13 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
-  private readonly searchSubject: Subject<string> = new BehaviorSubject('');
+  private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+
+  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
+    map(searchText => !isEmpty(searchText)),
+    startWith(false),
+    shareReplay(1)
+  );
 
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
@@ -206,9 +213,11 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
-    this.filteredOptions$ = combineLatest([this.allOptions$, this.searchSubject]).pipe(
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.caseInsensitiveSearchSubject]).pipe(
       map(([options, searchText]) =>
-        options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+        isEmpty(searchText)
+          ? options.toArray()
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
       )
     );
     this.setTriggerLabel();
@@ -224,7 +233,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     }
 
     if (this.searchMode === MultiSelectSearchMode.CaseInsensitive) {
-      this.searchSubject.next(searchText);
+      this.caseInsensitiveSearchSubject.next(searchText);
     }
 
     this.searchValueChange.emit(searchText);

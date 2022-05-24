@@ -13,9 +13,10 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEmpty, isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
@@ -68,9 +69,9 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBorderTriggerTemplate"
               ></ng-container>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
-              <ng-template #defaultMenuWithBorderTriggerTemplate
-                ><ht-icon
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ng-template #defaultMenuWithBorderTriggerTemplate>
+                <ht-icon
                   *ngIf="this.getPrefixIcon(selected)"
                   class="trigger-prefix-icon"
                   [icon]="this.getPrefixIcon(selected)"
@@ -110,20 +111,25 @@ import { SelectSize } from './select-size';
               <ng-container
                 [ngTemplateOutlet]="selected?.selectOptionRenderer?.getTemplateRef() ?? defaultMenuWithBackgroundTriggerTemplate"
               ></ng-container>
-              <ng-template #defaultMenuWithBackgroundTriggerTemplate
-                ><ht-label
+              <ng-template #defaultMenuWithBackgroundTriggerTemplate>
+                <ht-label
                   class="trigger-label"
                   [label]="selected?.selectedLabel || selected?.label || this.placeholder"
                 >
-                </ht-label
-              ></ng-template>
-              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"> </ht-icon>
+                </ht-label>
+              </ng-template>
+              <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.ExtraSmall}"></ht-icon>
             </div>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.searchMode === '${SelectSearchMode.EmitOnly}'">
+            <ng-container
+              *ngIf="
+                this.searchMode === '${SelectSearchMode.EmitOnly}' &&
+                (this.items?.length > 5 || !(this.isSearchTextPresent$ | async))
+              "
+            >
               <ht-event-blocker event="click" [enabled]="true">
                 <ht-search-box
                   class="search-bar"
@@ -134,6 +140,16 @@ import { SelectSize } from './select-size';
               </ht-event-blocker>
               <ht-divider class="divider"></ht-divider>
             </ng-container>
+            <ht-button
+              class="clear-selected"
+              *ngIf="this.showClearSelected && this.selected !== undefined"
+              role="${ButtonRole.Primary}"
+              display="${ButtonStyle.Text}"
+              size="${ButtonSize.ExtraSmall}"
+              label="Clear Selected"
+              (click)="this.onClearSelected()"
+            ></ht-button>
+
             <ng-container *htLetAsync="this.topControlItems$ as topControlItems">
               <div *ngIf="topControlItems?.length !== 0">
                 <ng-container
@@ -167,8 +183,8 @@ import { SelectSize } from './select-size';
             </div>
           </ng-template>
 
-          <ng-template #defaultSelectOptionTemplate let-item
-            ><div class="select-option-info">
+          <ng-template #defaultSelectOptionTemplate let-item>
+            <div class="select-option-info">
               <ht-icon
                 *ngIf="item.icon"
                 class="icon"
@@ -214,6 +230,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public showBorder: boolean = false;
 
   @Input()
+  public showClearSelected: boolean = false;
+
+  @Input()
   public justify?: SelectJustify;
 
   @Input()
@@ -241,6 +260,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
+  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
+    map(searchText => !isEmpty(searchText))
+  );
 
   public popoverOpen: boolean = false;
 
@@ -307,8 +329,12 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     }
 
     this.setSelection(item.value);
-    this.selectedChange.emit(this.selected);
-    this.propagateValueChangeToFormControl(this.selected);
+    this.propagateValue();
+  }
+
+  public onClearSelected(): void {
+    this.setSelection();
+    this.propagateValue();
   }
 
   private setSelection(value?: V): void {
@@ -323,7 +349,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
       return undefined;
     }
 
-    return this.items.find(item => item.value === value);
+    return this.items.find(item => isEqual(item.value, value));
   }
 
   public getStyleClassesForSelectItem(size: SelectSize, item: SelectOptionComponent<V>): string[] {
@@ -351,6 +377,11 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public setDisabledState(isDisabled?: boolean): void {
     this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValue(): void {
+    this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private propagateValueChangeToFormControl(value: V | undefined): void {
