@@ -62,6 +62,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   template: `
     <div class="table">
       <cdk-table
+        recycleRows
         *ngIf="this.dataSource"
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
