@@ -62,8 +62,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   template: `
     <div class="table">
       <cdk-table
-        recycleRows
-        [trackBy]="this.trackRows"
         *ngIf="this.dataSource"
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
@@ -447,10 +445,6 @@ export class TableComponent
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
     return `${column.id}-${column.width}`;
-  }
-
-  public trackRows(index: number): number {
-    return index;
   }
 
   public queryHeaderCellElement(index: number): HTMLElement {
