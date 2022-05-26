@@ -127,8 +127,10 @@ export class SheetOverlayComponent {
   }
 
   private handleCloseOnEscape(): void {
-    if (!isNil(this.attachedTriggerTemplate) && !this.isViewCollapsed) {
-      this.toggleCollapseExpand();
+    if (!isNil(this.attachedTriggerTemplate)) {
+      if (!this.isViewCollapsed) {
+        this.toggleCollapseExpand();
+      }
     } else {
       this.close();
     }
