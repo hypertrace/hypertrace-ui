@@ -9,8 +9,10 @@ import {
   Output,
   QueryList
 } from '@angular/core';
-import { Color } from '@hypertrace/common';
+import { Color, queryListAndChanges$ } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { TabComponent } from './tab/tab.component';
 
 @Component({
@@ -25,7 +27,7 @@ import { TabComponent } from './tab/tab.component';
         (selectedTabChange)="this.onSelectedTabChange($event.index)"
         [selectedIndex]="this.activeTabIndex"
       >
-        <mat-tab *ngFor="let tab of this.tabs; index as i">
+        <mat-tab *ngFor="let tab of this.tabs$ | async; index as i">
           <ng-template mat-tab-label>
             <div class="tab-label" [ngClass]="{ active: this.activeTabIndex === i }">
               {{ tab.label }}
@@ -50,7 +52,7 @@ import { TabComponent } from './tab/tab.component';
 })
 export class TabGroupComponent implements OnChanges, AfterViewInit {
   @ContentChildren(TabComponent)
-  public tabs!: QueryList<TabComponent>;
+  private readonly tabs!: QueryList<TabComponent>;
 
   @Input()
   public activeTabLabel?: string;
@@ -60,12 +62,15 @@ export class TabGroupComponent implements OnChanges, AfterViewInit {
 
   public activeTabIndex: number = 0;
 
+  public tabs$?: Observable<TabComponent[]>;
+
   public ngOnChanges(): void {
     this.setActiveTabIndexBasedOnLabel();
   }
 
   public ngAfterViewInit(): void {
     this.setActiveTabIndexBasedOnLabel();
+    this.tabs$ = queryListAndChanges$(this.tabs).pipe(map(list => list.toArray()));
   }
 
   public onSelectedTabChange(index: number): void {
