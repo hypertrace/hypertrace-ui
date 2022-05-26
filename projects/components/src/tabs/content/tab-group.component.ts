@@ -52,7 +52,7 @@ import { TabComponent } from './tab/tab.component';
 })
 export class TabGroupComponent implements OnChanges, AfterViewInit {
   @ContentChildren(TabComponent)
-  private tabs!: QueryList<TabComponent>;
+  private readonly tabs!: QueryList<TabComponent>;
 
   @Input()
   public activeTabLabel?: string;
