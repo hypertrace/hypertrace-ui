@@ -104,6 +104,7 @@ export * from './feature-check/if-feature.directive';
 
 // Filter
 export * from './filtering/filter/filter';
+export * from './filtering/filter/filter-attribute-icon';
 export * from './filtering/filter/filter-attribute';
 export * from './filtering/filter/filter-attribute-type';
 export * from './filtering/filter/filter-operators';
