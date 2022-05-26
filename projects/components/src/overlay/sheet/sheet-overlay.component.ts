@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ExternalNavigationParams, GlobalHeaderHeightProviderService, LayoutChangeService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { ButtonStyle } from '../../button/button';
 import { IconSize } from '../../icon/icon-size';
 import { PopoverFixedPositionLocation, POPOVER_DATA } from '../../popover/popover';
@@ -106,7 +107,7 @@ export class SheetOverlayComponent {
   @HostListener('document:keydown.escape', ['$event'])
   public onKeydownHandler(): void {
     if (this.closeOnEscape) {
-      this.close();
+      this.handleCloseOnEscape();
     }
   }
 
@@ -123,6 +124,14 @@ export class SheetOverlayComponent {
 
   private setWidth(): void {
     this.popoverRef.width(this.isViewCollapsed ? '0px' : this.getWidthForPopover());
+  }
+
+  private handleCloseOnEscape(): void {
+    if (!isNil(this.attachedTriggerTemplate) && !this.isViewCollapsed) {
+      this.toggleCollapseExpand();
+    } else {
+      this.close();
+    }
   }
 
   private getWidthForPopover(): string {
