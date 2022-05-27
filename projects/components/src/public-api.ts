@@ -116,6 +116,7 @@ export * from './file-upload/file-upload.module';
 
 // Filter
 export * from './filtering/filter/filter';
+export * from './filtering/filter/filter-attribute-icon';
 export * from './filtering/filter/filter-attribute';
 export * from './filtering/filter/filter-attribute-type';
 export * from './filtering/filter/filter-operators';

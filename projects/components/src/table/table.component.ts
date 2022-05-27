@@ -593,6 +593,7 @@ export class TableComponent
 
   public onDataRowClick(row: StatefulTableRow): void {
     this.rowClicked.emit(row);
+    this.toggleRowSelected(row);
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {
