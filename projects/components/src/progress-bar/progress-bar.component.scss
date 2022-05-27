@@ -15,10 +15,12 @@
 
     .bar {
       height: 100%;
+      transition: all 0.2s;
     }
   }
 
   .progress-percentage {
     @include body-small($gray-6);
+    width: 32px;
   }
 }
