@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { FileItem } from '../file-display/file-item';
+import { FileUploadState } from '../file-display/file-display';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -39,10 +39,12 @@ import { IconSize } from '../icon/icon-size';
         </div>
         <div class="sub-text">{{ this.subText }}</div>
       </div>
+      <ht-progress-bar *ngIf="this.showProgress" class="bulk-progress-bar" [progress]="this.progress"></ht-progress-bar>
       <div class="files-section">
         <ht-file-display
           *ngFor="let file of this.files; let index = index"
           [file]="file"
+          [showDelete]="this.uploadState === '${FileUploadState.NotStarted}'"
           (deleteClick)="this.deleteFile(index)"
         >
         </ht-file-display>
@@ -52,32 +54,39 @@ import { IconSize } from '../icon/icon-size';
 })
 export class FileUploadComponent implements ControlValueAccessor {
   @Input()
-  public files: FileItem[] = []; // Can be used to update progress
-
-  @Input()
-  public subText: string = 'max size 2 GB';
+  public subText: string = '';
 
   @Input()
   public disabled: boolean = false;
 
-  @Output()
-  private readonly fileUpload: EventEmitter<FileItem[]> = new EventEmitter();
+  @Input()
+  public showProgress: boolean = true; // To show bulk upload progress
 
+  @Input()
+  public progress: number = 0; // Bulk upload progress
+
+  @Input()
+  public uploadState: FileUploadState = FileUploadState.NotStarted;
+
+  @Output()
+  public readonly fileUpload: EventEmitter<File[]> = new EventEmitter();
+
+  public files: File[] = [];
   public isDragOver: boolean = false;
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
 
-  public writeValue(value?: FileItem[]): void {
+  public writeValue(value?: File[]): void {
     this.files.splice(0).push(...(value ?? []));
     this.fileUpload.emit(this.files);
     this.cdr.detectChanges();
   }
 
-  public registerOnChange(onChange: (value?: FileItem[]) => void): void {
+  public registerOnChange(onChange: (value?: File[]) => void): void {
     this.propagateControlValueChange = onChange;
   }
 
-  public registerOnTouched(onTouch: (value?: FileItem[]) => void): void {
+  public registerOnTouched(onTouch: (value?: File[]) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
@@ -95,7 +104,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   }
 
   /**
-   * Removes the file from FileItem[]
+   * Removes the file from File[]
    */
   public deleteFile(fileIndex: number): void {
     this.files.splice(fileIndex, 1);
@@ -107,10 +116,10 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.updateFileSelection((event.target as HTMLInputElement)?.files ?? undefined);
   }
 
-  private propagateControlValueChange?: (value?: FileItem[]) => void;
-  private propagateControlValueChangeOnTouch?: (value?: FileItem[]) => void;
+  private propagateControlValueChange?: (value?: File[]) => void;
+  private propagateControlValueChangeOnTouch?: (value?: File[]) => void;
 
-  private propagateValueChangeToFormControl(value?: FileItem[]): void {
+  private propagateValueChangeToFormControl(value?: File[]): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
   }
@@ -125,9 +134,9 @@ export class FileUploadComponent implements ControlValueAccessor {
   }
 
   /**
-   * Converts the FileList into FileItem[]
+   * Converts the FileList into File[]
    */
-  private getFilesFromFileList(files?: FileList): FileItem[] {
-    return !isNil(files) ? Array.from(files).map(fileData => ({ data: fileData })) : [];
+  private getFilesFromFileList(files?: FileList): File[] {
+    return !isNil(files) ? Array.from(files) : [];
   }
 }

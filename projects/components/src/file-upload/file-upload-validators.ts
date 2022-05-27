@@ -1,7 +1,18 @@
 import { AbstractControl } from '@angular/forms';
 import { sumBy } from 'lodash-es';
-import { FileItem } from '../file-display/file-item';
-import { UploadFileType } from './upload-file-type';
+
+/**
+ * @description
+ * Current set of upload file types
+ *
+ * @usageNotes
+ * This is used to provide supported file types as array into `FileUploadValidators.supportedFileTypes(<>)`
+ *
+ */
+export const enum UploadFileType {
+  Json = 'application/json',
+  Yaml = 'application/x-yaml'
+}
 
 /**
  * @description
@@ -19,9 +30,7 @@ export class FileUploadValidators {
    * ### Validate against [FileType.Json] as supported file types
    *
    * ```typescript
-   * const files = [{
-   *    data: new File([new Blob(['data'], {type: 'text'})], 'file.txt')
-   * }]
+   * const files = [new File([new Blob(['data'], {type: 'text'})], 'file.txt')]
    * const control = new FormControl(files, FileUploadValidators.supportedFileTypes([FileType.Json]));
    *
    * console.log(control.errors); // {supportedFileTypes: true}
@@ -33,8 +42,8 @@ export class FileUploadValidators {
    *
    */
   public static supportedFileTypes = (fileTypes: UploadFileType[]) => (control: AbstractControl) =>
-    getFileItemsFromControl(control)
-      .map(file => file.data.type as UploadFileType)
+    getFilesFromControl(control)
+      .map(file => file.type as UploadFileType)
       .some(type => !fileTypes.includes(type))
       ? { supportedFileTypes: true }
       : null;
@@ -48,9 +57,7 @@ export class FileUploadValidators {
    * ### Validate against 3 as maximum size
    *
    * ```typescript
-   * const files = [{
-   *    data: new File([new Blob(['data'], {type: 'text'})], 'file.txt') // file size is 4
-   * }]
+   * const files = [new File([new Blob(['data'], {type: 'text'})], 'file.txt')] // file size is 4
    * const control = new FormControl(files, FileUploadValidators.maxFileSize(3));
    *
    * console.log(control.errors); // {maxFileSize: true}
@@ -62,8 +69,8 @@ export class FileUploadValidators {
    *
    */
   public static maxFileSize = (maxSize: number) => (control: AbstractControl) =>
-    getFileItemsFromControl(control)
-      .map(file => file.data.size)
+    getFilesFromControl(control)
+      .map(file => file.size)
       .some(size => size > maxSize)
       ? { maxFileSize: true }
       : null;
@@ -78,12 +85,8 @@ export class FileUploadValidators {
    *
    * ```typescript
    * const files = [
-   *    {
-   *        data: new File([new Blob(['data'], {type: 'text'})], 'file.txt') // file size is 4
-   *    },
-   *    {
-   *        data: new File([new Blob(['data12'], {type: 'text'})], 'file.txt') // file size is 6
-   *    }
+   *  new File([new Blob(['data'], {type: 'text'})], 'file.txt'), // file size is 4
+   *  new File([new Blob(['data12'], {type: 'text'})], 'file.txt') // file size is 6
    * ] // Total size is 10
    * const control = new FormControl(files, FileUploadValidators.maxTotalSize(9));
    *
@@ -96,7 +99,7 @@ export class FileUploadValidators {
    *
    */
   public static maxTotalSize = (maxTotalSize: number) => (control: AbstractControl) =>
-    sumBy(getFileItemsFromControl(control), file => file.data.size) > maxTotalSize ? { maxTotalSize: true } : null;
+    sumBy(getFilesFromControl(control), file => file.size) > maxTotalSize ? { maxTotalSize: true } : null;
 
   /**
    * @description
@@ -126,8 +129,8 @@ export class FileUploadValidators {
    *
    */
   public static maxFileCount = (maxFileCount: number) => (control: AbstractControl) =>
-    getFileItemsFromControl(control).length > maxFileCount ? { maxFileCount: true } : null;
+    getFilesFromControl(control).length > maxFileCount ? { maxFileCount: true } : null;
 }
 
-// Converts the control value into the FileItem[]
-const getFileItemsFromControl = (control: AbstractControl) => (control.value ?? []) as FileItem[];
+// Converts the control value into the File[]
+const getFilesFromControl = (control: AbstractControl) => (control.value ?? []) as File[];
