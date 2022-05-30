@@ -10,9 +10,9 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
+import { Color, DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
-import { defaults } from 'lodash-es';
+import { defaults, isNumber } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -210,14 +210,29 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       return undefined;
     }
 
+    const labeledValues = data.map(singleValue => ({
+      label: singleValue.context.name,
+      value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
+      units: singleValue.context.units,
+      color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
+    }))
+
+    if(labeledValues.length > 1 && isNumber(labeledValues[0].value)){
+
+      labeledValues.push(
+        {label: 'Total',
+      value: labeledValues.map(item => item.value as number).reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        0
+      ),
+      units: labeledValues[0].units,
+      color: Color.Gray9}
+      )
+    }
+
     return {
       title: this.resolveTooltipTitle(data[0]),
-      labeledValues: data.map(singleValue => ({
-        label: singleValue.context.name,
-        value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
-        units: singleValue.context.units,
-        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
-      }))
+      labeledValues: labeledValues
     };
   }
 
