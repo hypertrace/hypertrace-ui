@@ -27,7 +27,7 @@ import { FileUploadState } from './file-display';
             ></ht-icon></ng-container
           ><ng-container *ngSwitchCase="'${FileUploadState.Failure}'"
             ><ht-icon
-              class="success-icon"
+              class="failure-icon"
               icon="${IconType.Alert}"
               color="${Color.Red6}"
               [htTooltip]="this.errorStateTooltipText"
@@ -50,7 +50,7 @@ export class FileDisplayComponent {
   public file?: File;
 
   @Input()
-  public state?: FileUploadState;
+  public state: FileUploadState = FileUploadState.NotStarted;
 
   @Input()
   public showState: boolean = false;
