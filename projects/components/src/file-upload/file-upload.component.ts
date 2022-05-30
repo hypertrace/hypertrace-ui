@@ -44,7 +44,7 @@ import { IconSize } from '../icon/icon-size';
         <ht-file-display
           *ngFor="let file of this.files; let index = index"
           [file]="file"
-          [showDelete]="this.uploadState === '${FileUploadState.NotStarted}'"
+          [state]="this.uploadState"
           (deleteClick)="this.deleteFile(index)"
         >
         </ht-file-display>
@@ -66,7 +66,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   public progress: number = 0; // Bulk upload progress
 
   @Input()
-  public uploadState: FileUploadState = FileUploadState.NotStarted;
+  public uploadState: FileUploadState = FileUploadState.InProgress;
 
   @Output()
   public readonly fileUpload: EventEmitter<File[]> = new EventEmitter();
