@@ -92,7 +92,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     private readonly renderer: Renderer2,
     private readonly chartSyncService: ChartSyncService<TData>,
     private readonly subscriptionLifeCycle: SubscriptionLifecycle
-  ) {}
+  ) { }
 
   public ngOnChanges(): void {
     // TODO reuse chart if possible
@@ -217,16 +217,18 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
     }))
 
-    if(labeledValues.length > 1 && isNumber(labeledValues[0].value)){
+    if (labeledValues.length > 1 && isNumber(labeledValues[0].value)) {
 
       labeledValues.push(
-        {label: 'Total',
-      value: labeledValues.map(item => item.value as number).reduce(
-        (previousValue, currentValue) => previousValue + currentValue,
-        0
-      ),
-      units: labeledValues[0].units,
-      color: Color.Gray9}
+        {
+          label: 'Total',
+          value: labeledValues.map(item => item.value as number).reduce(
+            (previousValue, currentValue) => previousValue + currentValue,
+            0
+          ),
+          units: labeledValues[0].units,
+          color: Color.Gray9
+        }
       )
     }
 
