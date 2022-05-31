@@ -66,7 +66,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   public progress: number = 0; // Bulk upload progress
 
   @Input()
-  public uploadState: FileUploadState = FileUploadState.InProgress;
+  public uploadState: FileUploadState = FileUploadState.NotStarted;
 
   @Output()
   public readonly fileUpload: EventEmitter<File[]> = new EventEmitter();
