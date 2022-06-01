@@ -1,9 +1,9 @@
-import { StringArrayDisplayComponent } from './../../../../string-array/string-array-display.component';
 import { FormattingModule } from '@hypertrace/common';
 import { TableCellNoOpParser } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
+import { StringArrayDisplayComponent } from './../../../../string-array/string-array-display.component';
 import { StringArrayTableCellRendererComponent } from './string-array-table-cell-renderer.component';
 
 describe('String array table cell renderer component', () => {
