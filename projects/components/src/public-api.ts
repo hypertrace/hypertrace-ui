@@ -102,6 +102,12 @@ export * from './feature-check/feature-config-check.module';
 export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
+// File Upload
+export * from './file-upload/file-upload-validators';
+export * from './file-upload/file-display/file-display';
+export * from './file-upload/file-upload.component';
+export * from './file-upload/file-upload.module';
+
 // Filter
 export * from './filtering/filter/filter';
 export * from './filtering/filter/filter-attribute-icon';
@@ -248,6 +254,10 @@ export * from './popover/popover-ref';
 export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
+
+// Progress Bar
+export * from './progress-bar/progress-bar.component';
+export * from './progress-bar/progress-bar.module';
 
 // Radio
 export * from './radio/radio-group.component';
