@@ -288,6 +288,10 @@ export * from './overlay/sheet/sheet';
 export * from './spinner/spinner.component';
 export * from './spinner/spinner.module';
 
+// String array display
+export * from './string-array/string-array-display.component';
+export * from './string-array/string-array-display.module';
+
 // Summary Card
 export * from './summay-card/summary-card';
 export * from './summay-card/summary-card.component';
