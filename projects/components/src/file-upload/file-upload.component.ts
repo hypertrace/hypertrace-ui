@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { FileUploadState } from '../file-display/file-display';
+import { FileUploadState } from './file-display/file-display';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -21,9 +21,9 @@ import { IconSize } from '../icon/icon-size';
     <div class="file-upload">
       <div
         class="upload-section"
-        [ngClass]="{ 'drag-over': this.isDragOver, disabled: this.disabled }"
+        [ngClass]="{ 'drag-hover': this.isDragHover, disabled: this.disabled }"
         htDropZone
-        (dragOver)="this.onDragOver($event)"
+        (dragHover)="this.onDragHover($event)"
         (dropped)="this.onDrop($event)"
       >
         <ht-icon
@@ -72,7 +72,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   public readonly fileUpload: EventEmitter<File[]> = new EventEmitter();
 
   public files: File[] = [];
-  public isDragOver: boolean = false;
+  public isDragHover: boolean = false;
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
 
@@ -95,8 +95,8 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.cdr.detectChanges();
   }
 
-  public onDragOver(isDragOver: boolean): void {
-    this.isDragOver = isDragOver;
+  public onDragHover(isDragHover: boolean): void {
+    this.isDragHover = isDragHover;
   }
 
   public onDrop(files: FileList): void {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
-import { IconSize } from '../icon/icon-size';
+import { IconSize } from '../../icon/icon-size';
 import { FileUploadState } from './file-display';
 
 @Component({

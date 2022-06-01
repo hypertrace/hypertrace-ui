@@ -1,7 +1,7 @@
 import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { IconComponent } from '../icon/icon.component';
+import { IconComponent } from '../../icon/icon.component';
 import { FileUploadState } from './file-display';
 import { FileDisplayComponent } from './file-display.component';
 

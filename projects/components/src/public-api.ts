@@ -102,14 +102,9 @@ export * from './feature-check/feature-config-check.module';
 export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
-// File Display
-export * from './file-display/file-display';
-export * from './file-display/file-display.component';
-export * from './file-display/file-display.module';
-
 // File Upload
-export * from './file-upload/drop-zone/drop-zone.directive';
 export * from './file-upload/file-upload-validators';
+export * from './file-upload/file-display/file-display';
 export * from './file-upload/file-upload.component';
 export * from './file-upload/file-upload.module';
 

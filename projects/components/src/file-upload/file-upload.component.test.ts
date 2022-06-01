@@ -3,9 +3,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { FileDisplayComponent } from '../file-display/file-display.component';
+import { FileDisplayComponent } from './file-display/file-display.component';
 import { IconComponent } from '../icon/icon.component';
-import { FileUploadValidators, UploadFileType } from './file-upload-validators';
+import {
+  maxFileCountValidator,
+  maxFileSizeValidator,
+  maxTotalSizeValidator,
+  supportedFileTypesValidator,
+  UploadFileType
+} from './file-upload-validators';
 import { FileUploadComponent } from './file-upload.component';
 import { FileUploadModule } from './file-upload.module';
 
@@ -35,13 +41,13 @@ describe('File Upload Component', () => {
     expect(spectator.queryAll(FileDisplayComponent).length).toBe(1);
     expect(formControl.value).toMatchObject([file]);
 
-    // Testing drag over
-    spectator.triggerEventHandler('.upload-section', 'dragOver', true);
-    expect(spectator.query('.upload-section.drag-over')).toExist();
+    // Testing drag hover
+    spectator.triggerEventHandler('.upload-section', 'dragHover', true);
+    expect(spectator.query('.upload-section.drag-hover')).toExist();
 
     // Testing drop
     spectator.triggerEventHandler('.upload-section', 'dropped', fileList);
-    spectator.triggerEventHandler('.upload-section', 'dragOver', false);
+    spectator.triggerEventHandler('.upload-section', 'dragHover', false);
     expect(formControl.value).toMatchObject([file, file]);
 
     // Testing delete
@@ -56,10 +62,10 @@ describe('File Upload Component', () => {
     const formControlWithValidators = new FormControl(
       [file, file],
       [
-        FileUploadValidators.supportedFileTypes([UploadFileType.Json]),
-        FileUploadValidators.maxFileSize(3),
-        FileUploadValidators.maxTotalSize(7),
-        FileUploadValidators.maxFileCount(1)
+        supportedFileTypesValidator([UploadFileType.Json]),
+        maxFileSizeValidator(3),
+        maxTotalSizeValidator(7),
+        maxFileCountValidator(1)
       ]
     );
     spectator.setHostInput({ formControl: formControlWithValidators });

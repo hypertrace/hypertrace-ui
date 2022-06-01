@@ -34,7 +34,7 @@
       @include body-2-regular($gray-4);
     }
 
-    &.drag-over {
+    &.drag-hover {
       border: 1px dashed $blue-4;
     }
 
