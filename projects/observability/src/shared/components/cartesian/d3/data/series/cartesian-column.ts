@@ -11,8 +11,8 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly COLUMN_ROUNDING_RADIUS: number = 2;
 
   public drawSvg(element: BaseType): void {
-    if(this.series.hide === true) {
-      return
+    if (this.series.hide === true) {
+      return;
     }
     const seriesGroup = select(element).append('g').classed(CartesianColumn.CSS_CLASS, true);
 
