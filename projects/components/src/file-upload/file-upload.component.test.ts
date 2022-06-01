@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { FileDisplayComponent } from './file-display/file-display.component';
 import { IconComponent } from '../icon/icon.component';
+import { FileDisplayComponent } from './file-display/file-display.component';
 import {
   maxFileCountValidator,
   maxFileSizeValidator,

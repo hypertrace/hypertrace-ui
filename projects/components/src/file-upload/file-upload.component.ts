@@ -3,8 +3,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { FileUploadState } from './file-display/file-display';
 import { IconSize } from '../icon/icon-size';
+import { FileUploadState } from './file-display/file-display';
 
 @Component({
   selector: 'ht-file-upload',
@@ -69,7 +69,7 @@ export class FileUploadComponent implements ControlValueAccessor {
   public uploadState: FileUploadState = FileUploadState.NotStarted;
 
   @Output()
-  public readonly fileUpload: EventEmitter<File[]> = new EventEmitter();
+  public readonly selectedFileChanges: EventEmitter<File[]> = new EventEmitter();
 
   public files: File[] = [];
   public isDragHover: boolean = false;
@@ -78,7 +78,7 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   public writeValue(value?: File[]): void {
     this.files.splice(0).push(...(value ?? []));
-    this.fileUpload.emit(this.files);
+    this.selectedFileChanges.emit(this.files);
     this.cdr.detectChanges();
   }
 
@@ -108,7 +108,7 @@ export class FileUploadComponent implements ControlValueAccessor {
    */
   public deleteFile(fileIndex: number): void {
     this.files.splice(fileIndex, 1);
-    this.fileUpload.emit(this.files);
+    this.selectedFileChanges.emit(this.files);
     this.propagateValueChangeToFormControl(this.files);
   }
 
@@ -129,7 +129,7 @@ export class FileUploadComponent implements ControlValueAccessor {
    */
   private updateFileSelection(files?: FileList): void {
     this.files.push(...this.getFilesFromFileList(files));
-    this.fileUpload.emit(this.files);
+    this.selectedFileChanges.emit(this.files);
     this.propagateValueChangeToFormControl(this.files);
   }
 
