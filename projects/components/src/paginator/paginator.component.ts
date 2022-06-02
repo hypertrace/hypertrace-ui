@@ -47,13 +47,15 @@ import { PaginationProvider } from './paginator-api';
         >
         </ht-button>
       </div>
-      <ht-label class="label" label="Rows per Page:"></ht-label>
-      <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
-        <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
-          <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
-          </ht-select-option>
-        </ht-select>
-      </div>
+      <ng-container *ngIf="this.showPageSizeSelector">
+        <ht-label class="label" label="Rows per Page:"></ht-label>
+        <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
+          <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
+            <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
+            </ht-select-option>
+          </ht-select>
+        </div>
+      </ng-container>
     </div>
   `
 })
@@ -62,21 +64,28 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public pageSizeOptions: number[] = [25, 50, 100];
 
   @Input()
+  public showPageSizeSelector: boolean = true;
+
+  @Input()
   public set pageIndex(pageIndex: number) {
     this._pageIndex = pageIndex;
   }
+
   public get pageIndex(): number {
     return this._pageIndex ?? 0;
   }
+
   private _pageIndex?: number;
 
   @Input()
   public set pageSize(pageSize: number) {
     this._pageSize = pageSize;
   }
+
   public get pageSize(): number {
     return this._pageSize ?? 50;
   }
+
   private _pageSize?: number;
 
   @Input()
@@ -85,9 +94,11 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     // This is for supporting the programmatic usage of paginator for the Table chart. This should go away with the Table refactor
     this.changeDetectorRef.markForCheck();
   }
+
   public get totalItems(): number {
     return this._totalItems;
   }
+
   private _totalItems: number = 0;
 
   private readonly pageSizeInputSubject: Subject<PageEvent> = new Subject();
