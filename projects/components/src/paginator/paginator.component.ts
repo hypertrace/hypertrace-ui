@@ -60,7 +60,7 @@ import { PaginationProvider } from './paginator-api';
           [selected]="this.pageSize"
           size="${SelectSize.Small}"
           (selectedChange)="this.onPageSizeChange($event)"
-          showBorder="true"
+          [showBorder]="true"
         >
           <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
           </ht-select-option>
