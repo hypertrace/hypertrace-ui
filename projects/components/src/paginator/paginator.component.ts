@@ -11,6 +11,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { merge, Observable, Subject } from 'rxjs';
 import { ButtonSize, ButtonStyle } from '../button/button';
+import { SelectSize } from '../select/select-size';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
 
@@ -19,7 +20,11 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="paginator" *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]">
+    <div
+      class="paginator"
+      [class.compact]="this.showCompactView"
+      *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]"
+    >
       <ht-label
         class="label"
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
@@ -47,15 +52,20 @@ import { PaginationProvider } from './paginator-api';
         >
         </ht-button>
       </div>
-      <ng-container *ngIf="this.showPageSizeSelector">
+      <ng-container *ngIf="!this.showCompactView">
         <ht-label class="label" label="Rows per Page:"></ht-label>
-        <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
-          <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
-            <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
-            </ht-select-option>
-          </ht-select>
-        </div>
       </ng-container>
+      <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
+        <ht-select
+          [selected]="this.pageSize"
+          size="${SelectSize.Small}"
+          (selectedChange)="this.onPageSizeChange($event)"
+          showBorder="true"
+        >
+          <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
+          </ht-select-option>
+        </ht-select>
+      </div>
     </div>
   `
 })
@@ -64,7 +74,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public pageSizeOptions: number[] = [25, 50, 100];
 
   @Input()
-  public showPageSizeSelector: boolean = true;
+  public showCompactView: boolean = false;
 
   @Input()
   public set pageIndex(pageIndex: number) {
