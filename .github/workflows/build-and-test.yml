@@ -65,59 +65,6 @@ jobs:
 
       - name: Prettier Check
         run: npm run prettier:check
-  setup-test-batches:
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed]
-    env:
-      PARALLELISM: 4
-    outputs:
-      test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
-      test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-
-      - id: set-test-chunks
-        name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM "[_nwise(length / $PARALLELISM | ceil)]")"
-
-      - id: set-test-chunk-ids
-        name: Set Chunk IDs
-        run: echo "::set-output name=test-chunk-ids::$(echo $CHUNKS | jq -cM 'to_entries | map(.key)')"
-        env:
-          CHUNKS: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
-  test:
-    name: test (chunk ${{ matrix.chunk }})
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed, setup-test-batches]
-    strategy:
-      fail-fast: false
-      matrix:
-        chunk: ${{ fromJson(needs['setup-test-batches'].outputs['test-chunk-ids']) }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        # Used by CCI uploader to detect base commit
-        with:
-          fetch-depth: 0
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Test
-        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
-        env:
-          CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
-
   test-all:
     name: Test All
     runs-on: ubuntu-20.04

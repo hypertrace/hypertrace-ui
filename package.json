@@ -19,7 +19,7 @@
     "lint:affected": "nx affected --target=lint --parallel --maxParallel=3",
     "lint:affected:lint": "npm run lint:affected -- --fix",
     "lint:fix": "npm run lint -- --fix",
-    "prettier:check": "nx format:check --all",
+    "prettier:check": "nx format:check",
     "prettier:write:uncommitted": "nx format:write --uncommitted=true",
     "test:ci": "nx run-many --target=test --all --ci --coverage --no-cache",
     "check:ci": "npm run test:ci && npm run build:ci && npm run lint && npm run prettier:check",

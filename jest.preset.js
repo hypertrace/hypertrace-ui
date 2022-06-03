@@ -9,5 +9,13 @@ module.exports = {
   },
   maxWorkers: 2,
   testRunner: 'jest-jasmine2',
-  watchPathIgnorePatterns: ['test-results']
+  watchPathIgnorePatterns: ['test-results'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!**/*.d.ts',
+    '!src/main.ts',
+    '!src/environments/**',
+    '!**/*/test/**',
+    '!src/app/routes/**/*.ts'
+  ]
 };
