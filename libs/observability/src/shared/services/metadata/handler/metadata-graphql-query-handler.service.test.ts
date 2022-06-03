@@ -68,7 +68,7 @@ describe('Metadata graphql query handler service', () => {
         scope: SPAN_SCOPE,
         displayName: 'First',
         units: 'ms',
-        type: AttributeMetadataType.Number,
+        type: AttributeMetadataType.Long,
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         supportedAggregations: [
@@ -112,7 +112,7 @@ describe('Metadata graphql query handler service', () => {
         scope: SPAN_SCOPE,
         displayName: 'First',
         units: 'ms',
-        type: AttributeMetadataType.Number,
+        type: AttributeMetadataType.Long,
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         allowedAggregations: [

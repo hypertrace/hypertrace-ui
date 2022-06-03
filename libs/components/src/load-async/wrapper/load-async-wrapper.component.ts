@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, InjectionToken, TemplateRef
 import { IconType } from '@hypertrace/assets-library';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { NotificationMode } from '../../notification/notification.component';
 import { LoadAsyncStateType } from '../load-async-state.type';
 import { AsyncState, LoadAsyncConfig, LoadAsyncContext, LoaderType } from '../load-async.service';
 
@@ -21,6 +22,13 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
       </ng-container>
       <ng-container *ngSwitchDefault>
         <ht-message-display
+          aria-live="polite"
+          role="alert"
+          [attr.data-alert-type]="
+            state.type === '${LoadAsyncStateType.GenericError}'
+              ? '${NotificationMode.Failure}'
+              : '${NotificationMode.Info}'
+          "
           [icon]="this.icon"
           [title]="this.title"
           [description]="this.description"
@@ -58,12 +66,12 @@ export class LoadAsyncWrapperComponent {
         this.loaderType = this.config?.load?.loaderType;
         break;
       case LoadAsyncStateType.NoData:
-        this.icon = this.config?.noData?.icon ?? IconType.NoData;
+        this.icon = this.showNoDataIcon() ? this.getNoDataIcon() : undefined;
         this.title = this.config?.noData?.title ?? 'No Data';
         this.description = this.config?.noData?.description ?? '';
         break;
       case LoadAsyncStateType.GenericError:
-        this.icon = this.config?.error?.icon ?? IconType.Error;
+        this.icon = this.showErrorIcon() ? this.getErrorIcon() : undefined;
         this.title = this.config?.error?.title ?? 'Error';
         this.description = state.description ?? this.config?.error?.description ?? '';
         break;
@@ -72,6 +80,22 @@ export class LoadAsyncWrapperComponent {
         this.title = '';
         this.description = '';
     }
+  }
+
+  private getNoDataIcon(): IconType {
+    return this.config?.noData?.icon ?? IconType.NoData;
+  }
+
+  private getErrorIcon(): IconType {
+    return this.config?.error?.icon ?? IconType.Error;
+  }
+
+  private showNoDataIcon(): boolean {
+    return this.config?.noData?.showIcon ?? true;
+  }
+
+  private showErrorIcon(): boolean {
+    return this.config?.error?.showIcon ?? true;
   }
 }
 

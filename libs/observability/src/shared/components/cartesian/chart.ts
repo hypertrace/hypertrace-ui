@@ -1,6 +1,7 @@
 import { TimeRange } from '@hypertrace/common';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
+import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
 import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.component';
 
@@ -16,6 +17,8 @@ export interface CartesianChart<TInterval> {
   withIntervalData(intervalData: CartesianIntervalData): this;
   withTooltip(tooltip: ChartTooltipRef<TInterval>): this;
   withTimeRange(timeRange: TimeRange): this;
+  showCrosshair(locationData: MouseLocationData<TInterval, Series<TInterval> | Band<TInterval>>[]): void;
+  hideCrosshair(): void;
 }
 
 export interface Series<TInterval> {
@@ -129,6 +132,11 @@ export interface Axis {
    * Determine the tick count labels
    */
   tickCount?: number;
+
+  /**
+   * What to do if label overflows
+   */
+  labelOverflow?: LabelOverflow;
 }
 
 export interface AxisCrosshair {
@@ -142,4 +150,9 @@ export enum ScaleType {
   Linear = 'linear',
   Time = 'time',
   Band = 'band'
+}
+
+export enum LabelOverflow {
+  Wrap = 'wrap',
+  Rotate = 'rotate'
 }

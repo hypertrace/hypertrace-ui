@@ -25,6 +25,24 @@ describe('Highlight pipe', () => {
     );
   });
 
+  test('highlights string with regex reserve chars correctly', () => {
+    expect(pipe.transform(`full text($ to test highlight on`, { text: 'text($', highlightType: 'bold' })).toBe(
+      'full <b>text($</b> to test highlight on'
+    );
+  });
+
+  test('works as expected when text to highlight is empty', () => {
+    expect(pipe.transform(`full text to test highlight on`, { text: '', highlightType: 'bold' })).toBe(
+      'full text to test highlight on'
+    );
+  });
+
+  test('works as expected when text to highlight is undefined', () => {
+    expect(pipe.transform(`full text to test highlight on`, { text: undefined, highlightType: 'bold' })).toBe(
+      'full text to test highlight on'
+    );
+  });
+
   test('highlights with an array of highlightConfig correctly', () => {
     expect(
       pipe.transform('full text to test highlight on', [

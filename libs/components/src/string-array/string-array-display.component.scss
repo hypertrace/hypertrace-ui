@@ -1,0 +1,16 @@
+@import 'font';
+@import 'color-palette';
+
+.string-array-cell {
+  @include ellipsis-overflow();
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .first-item {
+    @include ellipsis-overflow();
+    padding-right: 8px;
+  }
+}

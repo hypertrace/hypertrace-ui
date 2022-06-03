@@ -21,7 +21,7 @@ import {
   Summary
 } from '../../chart';
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
-import { CartesianAxis } from '../axis/cartesian-axis';
+import { AxisDimension, CartesianAxis } from '../axis/cartesian-axis';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { CartesianBand } from '../data/band/cartesian-band';
 import { CartesianData } from '../data/cartesian-data';
@@ -41,9 +41,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
   public static CHART_VISUALIZATION_CLASS: string = 'chart-visualization';
 
-  protected readonly margin: number = 16;
-  protected readonly axisHeight: number = 16;
-  protected readonly axisWidth: number = 32; // Untested. We don't use Y-Axis anywhere and the number should really be dynamic
+  // Using these as default, can be taken as property in future.
+  protected readonly axisDimension: AxisDimension = {
+    xAxisHeight: 16,
+    yAxisWidth: 48,
+    margin: 16
+  };
 
   // Updated on draw
   protected chartContainerElement?: Element;
@@ -79,8 +82,21 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly renderingStrategy: RenderingStrategy,
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
-    protected readonly domRenderer: Renderer2
+    protected readonly domRenderer: Renderer2,
+    protected readonly groupId?: string
   ) {}
+
+  public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
+    if (locationData.length > 0) {
+      const location = locationData[0].location;
+      const currentLocation = this.allSeriesData.flatMap(viz => viz.dataForLocation({ x: location.x, y: location.y }));
+      this.renderedAxes.forEach(axis => axis.onMouseMove(currentLocation));
+    }
+  }
+
+  public hideCrosshair(): void {
+    this.renderedAxes.forEach(axis => axis.onMouseLeave());
+  }
 
   protected onBrushSelection(event: D3BrushEvent<unknown>): void {
     if (!event.selection) {
@@ -285,10 +301,15 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     switch (axisType) {
       case AxisType.Y:
-        return [this.hasXAxis() ? height - (this.margin + this.axisHeight) : height - this.margin, this.margin];
+        return [
+          this.hasXAxis()
+            ? height - (this.axisDimension.margin + this.axisDimension.xAxisHeight)
+            : height - this.axisDimension.margin,
+          this.axisDimension.margin
+        ];
       default:
       case AxisType.X:
-        return [this.hasYAxis() ? this.axisWidth : 0, width];
+        return [this.hasYAxis() ? this.axisDimension.yAxisWidth : 0, width];
     }
   }
 
@@ -399,7 +420,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     select(this.chartBackgroundSvgElement).selectAll(CartesianAxis.CSS_SELECTOR).remove();
 
     this.renderedAxes = this.requestedAxes.map(
-      requestedAxis => new CartesianAxis<TData>(requestedAxis, this.scaleBuilder, this.svgUtilService)
+      requestedAxis =>
+        new CartesianAxis<TData>(requestedAxis, this.axisDimension, this.scaleBuilder, this.svgUtilService)
     );
 
     const axisElements = select(this.chartBackgroundSvgElement)
@@ -571,6 +593,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private onMouseMove(): void {
     const locationData = this.getMouseDataForCurrentEvent();
+
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.Hover) {
+        listener.onEvent(locationData);
+      }
+    });
+
     if (this.tooltip) {
       this.tooltip.showWithData(this.mouseEventContainer!, locationData);
     }
@@ -583,6 +612,12 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       this.tooltip.hide();
     }
 
-    this.renderedAxes.forEach(axis => axis.onMouseLeave());
+    this.eventListeners.forEach(listener => {
+      if (listener.event === ChartEvent.MouseLeave) {
+        listener.onEvent();
+      }
+    });
+
+    this.hideCrosshair();
   }
 }

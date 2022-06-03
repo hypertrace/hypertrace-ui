@@ -342,4 +342,33 @@ describe('Select Component', () => {
     expect(onChange).not.toHaveBeenCalled();
     flush();
   }));
+
+  test('should show clear selected button', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-select [selected]="selected" [showClearSelected]="true">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [selectedLabel]="option.selectedLabel">
+      </ht-select-option>
+    </ht-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: selectionOptions[1].value
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const clearSelectedButton = spectator.query('.clear-selected', { root: true });
+    expect(clearSelectedButton).toExist();
+    spectator.click(clearSelectedButton!);
+
+    spectator.tick();
+    expect(spectator.component.selected).toBe(undefined);
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+
+    flush();
+  }));
 });

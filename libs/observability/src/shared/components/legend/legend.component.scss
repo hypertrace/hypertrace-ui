@@ -46,15 +46,33 @@
     }
 
     .legend-label {
-      @include chart-small-regular($gray-4);
       @include ellipsis-overflow();
       flex: 1;
       min-width: 24px;
     }
 
     .legend-value {
-      @include chart-small-regular($gray-9);
       padding-left: 16px;
+    }
+
+    &.font-size-extra-small {
+      .legend-label {
+        @include chart-small-regular($gray-4);
+      }
+
+      .legend-value {
+        @include chart-small-regular($gray-9);
+      }
+    }
+
+    &.font-size-small {
+      .legend-label {
+        @include body-small($gray-4);
+      }
+
+      .legend-value {
+        @include body-small($gray-9);
+      }
     }
   }
 }

@@ -76,6 +76,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width"
               class="header-cell"
             >
               <div
@@ -104,6 +105,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             <cdk-cell
               *cdkCellDef="let row"
               [style.flex-basis]="columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width"
               [style.max-width]="columnDef.width"
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
@@ -591,6 +593,7 @@ export class TableComponent
 
   public onDataRowClick(row: StatefulTableRow): void {
     this.rowClicked.emit(row);
+    this.toggleRowSelected(row);
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {

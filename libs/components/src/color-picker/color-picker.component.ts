@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
-import { Color } from '@hypertrace/common';
+import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -20,13 +20,18 @@ import { IconSize } from '../icon/icon-size';
       <div
         class="color"
         *ngFor="let color of this.paletteColors"
-        [ngClass]="{ selected: color === this.selected }"
+        [ngClass]="{ selected: color === this.selected, disabled: this.disabled }"
         [style.backgroundColor]="color"
         (click)="this.selectColor(color)"
       ></div>
-      <ht-popover>
+      <ht-popover [disabled]="this.disabled">
         <ht-popover-trigger>
-          <ht-icon class="add-icon" icon="${IconType.Add}" size="${IconSize.Small}"></ht-icon>
+          <ht-icon
+            class="add-icon"
+            [ngClass]="{ disabled: this.disabled }"
+            icon="${IconType.Add}"
+            size="${IconSize.Small}"
+          ></ht-icon>
         </ht-popover-trigger>
         <ht-popover-content>
           <div class="container">
@@ -37,9 +42,12 @@ import { IconSize } from '../icon/icon-size';
     </div>
   `
 })
-export class ColorPickerComponent implements ControlValueAccessor {
+export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public selected?: string;
+
+  @Input()
+  public disabled?: boolean = false;
 
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
@@ -58,16 +66,26 @@ export class ColorPickerComponent implements ControlValueAccessor {
   private propagateControlValueChange?: (value: string | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
 
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.selected) {
+      this.initSelectedColor();
+    }
+  }
+
   public onAddColorToPalette(color: string): void {
-    this.paletteSet.add(color);
-    this.paletteColors = Array.from(this.paletteSet);
+    this.addNewColorToPalette(color);
     this.selectColor(color);
   }
 
   public selectColor(color: string): void {
-    this.selected = color;
-    this.selectedChange.emit(color);
-    this.propagateValueChangeToFormControl(color);
+    if (this.disabled) {
+      return;
+    }
+
+    const clickedColor = this.selected === color ? undefined : color;
+    this.selected = clickedColor;
+    this.selectedChange.emit(clickedColor);
+    this.propagateValueChangeToFormControl(clickedColor);
   }
 
   private propagateValueChangeToFormControl(value?: string): void {
@@ -77,6 +95,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   public writeValue(color?: string): void {
     this.selected = color;
+    this.initSelectedColor();
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {
@@ -85,5 +104,20 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   public registerOnTouched(onTouch: (value?: string) => void): void {
     this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled: boolean = false): void {
+    this.disabled = isDisabled;
+  }
+
+  private initSelectedColor(): void {
+    if (this.selected !== undefined && !this.paletteSet.has(this.selected)) {
+      this.addNewColorToPalette(this.selected);
+    }
+  }
+
+  private addNewColorToPalette(color: string): void {
+    this.paletteSet.add(color);
+    this.paletteColors = Array.from(this.paletteSet);
   }
 }

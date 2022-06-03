@@ -3,9 +3,9 @@ import { TooltipDirective } from './../../../../tooltip/tooltip.directive';
 import { tableCellRowDataProvider } from './../../test/cell-providers';
 
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { MockComponent, MockPipe } from 'ng-mocks';
 import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
+import { MockDirective, MockPipe } from 'ng-mocks';
 import {
   RelativeTimestampTableCellRendererComponent,
   RowData
@@ -22,7 +22,7 @@ describe('relative timestamp table cell renderer component', () => {
         new TableCellNoOpParser(undefined!)
       )
     ],
-    declarations: [MockComponent(TooltipDirective), MockPipe(DisplayDatePipe)],
+    declarations: [MockDirective(TooltipDirective), MockPipe(DisplayDatePipe)],
     shallow: true
   });
 

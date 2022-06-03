@@ -21,8 +21,10 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
         return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Number:
         return this.parseNumberArrayValue(splitFilter.rhs);
-      case FilterAttributeType.Boolean: // Unsupported
-      case FilterAttributeType.StringArray: // Unsupported
+      case FilterAttributeType.Boolean:
+        return this.parseBooleanArrayValue(splitFilter.rhs);
+      case FilterAttributeType.StringArray:
+        return this.parseStringArrayValue(splitFilter.rhs);
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
       default:
@@ -32,6 +34,10 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
 
   private parseStringArrayValue(valueString: string): string[] {
     return valueString.split(ARRAY_DELIMITER).map(str => str.trim());
+  }
+
+  private parseBooleanArrayValue(valueString: string): boolean[] {
+    return valueString.split(ARRAY_DELIMITER).map(str => str.trim().toLowerCase() === 'true');
   }
 
   private parseNumberArrayValue(valueString: string): number[] | undefined {
@@ -45,4 +51,4 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 }
 
-type PossibleValuesTypes = string[] | number[];
+type PossibleValuesTypes = string[] | number[] | boolean[];

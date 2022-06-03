@@ -27,8 +27,9 @@ import { RadioOption } from './radio-option';
       <mat-radio-button
         class="radio-button"
         *ngFor="let option of options"
-        [ngClass]="[this.optionsDirection, this.disabled ? 'disabled' : '']"
+        [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
+        [disabled]="option.disabled"
       >
         <ng-container
           *ngTemplateOutlet="
@@ -82,6 +83,10 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
 
   public writeValue(value?: string): void {
     this.setSelection(value);
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
   }
 
   public registerOnChange(onChange: (value?: string) => void): void {

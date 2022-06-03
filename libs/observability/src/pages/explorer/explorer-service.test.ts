@@ -20,7 +20,7 @@ describe('Explorer service', () => {
             name: 'duration',
             displayName: 'Duration',
             units: 'ms',
-            type: AttributeMetadataType.Number,
+            type: AttributeMetadataType.Long,
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,

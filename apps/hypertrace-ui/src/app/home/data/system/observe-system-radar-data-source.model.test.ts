@@ -62,19 +62,19 @@ describe('Observe System radar data source model', () => {
         results: [
           {
             'p99(duration)': {
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               value: 23
             },
             'avgrate_sec(calls)': {
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               value: 33
             },
             'avg(duration)': {
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               value: 43
             },
             'avgrate_sec(errorCount)': {
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               value: 53
             }
           }

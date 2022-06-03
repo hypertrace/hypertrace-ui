@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
 import { ListViewKeyRendererDirective } from './list-view-key-renderer.directive';
 import { ListViewValueRendererDirective } from './list-view-value-renderer.directive';
+
 @Component({
   selector: 'ht-list-view',
   styleUrls: ['./list-view.component.scss'],
@@ -22,7 +23,7 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
           <span>{{ this.header.valueLabel }}</span>
         </div>
       </div>
-      <div class="data-row" *ngFor="let record of this.records">
+      <div class="data-row" [class]="this.display" *ngFor="let record of this.records">
         <div class="key">
           <ng-container
             *ngTemplateOutlet="
@@ -50,6 +51,9 @@ export class ListViewComponent {
   @Input()
   public records?: ListViewRecord[];
 
+  @Input()
+  public display: ListViewDisplay = ListViewDisplay.Striped;
+
   @ContentChild(ListViewValueRendererDirective)
   public valueRenderer?: ListViewValueRendererDirective;
 
@@ -65,4 +69,9 @@ export interface ListViewHeader {
 export interface ListViewRecord {
   key: string;
   value: string | number;
+}
+
+export enum ListViewDisplay {
+  Plain = 'plain',
+  Striped = 'striped'
 }

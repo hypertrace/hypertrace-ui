@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
 import { IconModule } from '../icon/icon.module';
 import { NotificationModule } from '../notification/notification.module';
-import { DownloadJsonComponent } from './download-json.component';
+import { DownloadFileComponent } from './download-file.component';
 
 @NgModule({
-  declarations: [DownloadJsonComponent],
+  declarations: [DownloadFileComponent],
   imports: [CommonModule, ButtonModule, NotificationModule, IconModule],
-  exports: [DownloadJsonComponent]
+  exports: [DownloadFileComponent]
 })
-export class DownloadJsonModule {}
+export class DownloadFileModule {}

@@ -182,6 +182,18 @@ describe('Filter Parser Lookup service', () => {
 
     expect(
       spectator.service.lookup(FilterOperator.In).parseSplitFilter({
+        attribute: getTestFilterAttribute(FilterAttributeType.StringArray),
+        operator: FilterOperator.In,
+        rhs: 'myStr, myString'
+      })
+    ).toEqual({
+      field: 'stringArrayAttribute',
+      operator: FilterOperator.In,
+      value: ['myStr', 'myString']
+    });
+
+    expect(
+      spectator.service.lookup(FilterOperator.In).parseSplitFilter({
         attribute: getTestFilterAttribute(FilterAttributeType.String),
         operator: FilterOperator.In,
         rhs: 'myStr, myString'

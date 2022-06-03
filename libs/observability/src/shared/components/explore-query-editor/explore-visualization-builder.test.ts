@@ -1,9 +1,18 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
+import {
+  FeatureState,
+  FeatureStateResolver,
+  FixedTimeRange,
+  IntervalDurationService,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
@@ -27,6 +36,9 @@ describe('Explore visualization builder', () => {
       }),
       mockProvider(IntervalDurationService, {
         getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: () => of(FeatureState.Enabled)
       })
     ]
   });
@@ -105,6 +117,42 @@ describe('Explore visualization builder', () => {
 
       expectObservable(recordedRequests).toBe('10ms x', {
         x: expectedQuery()
+      });
+    });
+  });
+
+  test('emits new request with updated interval when time range changes', () => {
+    runFakeRxjs(({ expectObservable, cold }) => {
+      spectator.inject(IntervalDurationService).castToWritable().getAutoDuration = jest.fn(timeRange => {
+        if (timeRange?.toUrlString() === '1h') {
+          return new TimeDuration(1, TimeUnit.Minute);
+        }
+        if (timeRange?.toUrlString() === '1d') {
+          return new TimeDuration(1, TimeUnit.Hour);
+        }
+
+        // Should never be reached
+        return new TimeDuration(0, TimeUnit.Minute);
+      });
+
+      // Send first time range immediately, then change it 50ms later
+      cold('x 50ms y', {
+        x: new TimeDuration(1, TimeUnit.Hour),
+        y: new TimeDuration(1, TimeUnit.Day)
+      }).subscribe(duration => timeRangeService.setRelativeRange(duration.value, duration.unit));
+
+      const recordedIntervals = recordObservable(
+        spectator.service.visualizationRequest$.pipe(
+          switchMap(request => request.exploreQuery$),
+          map(query => query.interval)
+        )
+      );
+      spectator.service.setSeries([buildSeries('test1')]);
+
+      // First time range is 10ms due to debounced explorer emission, but interval will update as soon as time range changes (50ms total)
+      expectObservable(recordedIntervals).toBe('10ms x 40ms y', {
+        x: new TimeDuration(1, TimeUnit.Minute),
+        y: new TimeDuration(1, TimeUnit.Hour)
       });
     });
   });

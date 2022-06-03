@@ -27,7 +27,7 @@ describe('Metadata Service', () => {
       name: 'attr2',
       displayName: 'Attribute 2',
       units: 'ms',
-      type: AttributeMetadataType.Number,
+      type: AttributeMetadataType.Long,
       scope: SPAN_SCOPE,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
       onlySupportsAggregation: false,
@@ -38,7 +38,7 @@ describe('Metadata Service', () => {
       name: 'attr3',
       displayName: 'Attribute 3',
       units: '',
-      type: AttributeMetadataType.Number,
+      type: AttributeMetadataType.Long,
       scope: SPAN_SCOPE,
       allowedAggregations: [],
       onlySupportsAggregation: false,
@@ -66,7 +66,7 @@ describe('Metadata Service', () => {
       }),
       mockProvider(FilterBuilderLookupService, {
         isBuildableType: (type: AttributeMetadataType) =>
-          type === AttributeMetadataType.String || type === AttributeMetadataType.Number
+          type === AttributeMetadataType.String || type === AttributeMetadataType.Long
       })
     ]
   });
