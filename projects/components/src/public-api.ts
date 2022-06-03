@@ -102,8 +102,15 @@ export * from './feature-check/feature-config-check.module';
 export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
+// File Upload
+export * from './file-upload/file-upload-validators';
+export * from './file-upload/file-display/file-display';
+export * from './file-upload/file-upload.component';
+export * from './file-upload/file-upload.module';
+
 // Filter
 export * from './filtering/filter/filter';
+export * from './filtering/filter/filter-attribute-icon';
 export * from './filtering/filter/filter-attribute';
 export * from './filtering/filter/filter-attribute-type';
 export * from './filtering/filter/filter-operators';
@@ -248,6 +255,10 @@ export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
 
+// Progress Bar
+export * from './progress-bar/progress-bar.component';
+export * from './progress-bar/progress-bar.module';
+
 // Radio
 export * from './radio/radio-group.component';
 export * from './radio/radio-option';
@@ -286,6 +297,10 @@ export * from './overlay/sheet/sheet';
 // Spinner
 export * from './spinner/spinner.component';
 export * from './spinner/spinner.module';
+
+// String array display
+export * from './string-array/string-array-display.component';
+export * from './string-array/string-array-display.module';
 
 // Summary Card
 export * from './summay-card/summary-card';

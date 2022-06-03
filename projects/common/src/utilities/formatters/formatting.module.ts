@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { DisplayDatePipe } from './date/display-date.pipe';
 import { DisplayDurationPipe } from './duration/display-duration.pipe';
 import { DisplayStringEnumPipe } from './enum/display-string-enum.pipe';
+import { DisplayFileSizePipe } from './file-size/display-file-size.pipe';
 import { DisplayNumberPipe } from './numeric/display-number.pipe';
 import { OrdinalPipe } from './ordinal/ordinal.pipe';
 import { DisplayStringPipe } from './string/display-string.pipe';
@@ -19,7 +20,8 @@ import { DisplayTimeAgo } from './time/display-time-ago.pipe';
     HighlightPipe,
     DisplayTitlePipe,
     OrdinalPipe,
-    DisplayStringEnumPipe
+    DisplayStringEnumPipe,
+    DisplayFileSizePipe
   ],
   exports: [
     DisplayNumberPipe,
@@ -30,7 +32,8 @@ import { DisplayTimeAgo } from './time/display-time-ago.pipe';
     HighlightPipe,
     DisplayTitlePipe,
     OrdinalPipe,
-    DisplayStringEnumPipe
+    DisplayStringEnumPipe,
+    DisplayFileSizePipe
   ]
 })
 export class FormattingModule {}

@@ -1,0 +1,51 @@
+@import 'mixins';
+
+.file-display {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px;
+  border: 1px solid $gray-2;
+  border-radius: 6px;
+  position: relative;
+  z-index: 0;
+
+  .file-info {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .basic-detail {
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      .file-name {
+        @include body-1-regular($gray-7);
+        @include ellipsis-overflow;
+        padding-right: 8px;
+        border-right: 1px solid $gray-4;
+      }
+
+      .file-size {
+        @include body-small($gray-3);
+        padding-left: 8px;
+      }
+    }
+  }
+
+  .delete-icon {
+    cursor: pointer;
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    z-index: 1;
+  }
+
+  &.error {
+    border-color: $red-4;
+    background-color: $red-1;
+  }
+}
