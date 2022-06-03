@@ -1,10 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, Renderer2 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-<<<<<<< HEAD:libs/components/src/download-json/download-json.component.ts
-import { Observable } from 'rxjs';
-=======
->>>>>>> main:libs/components/src/download-file/download-file.component.ts
 import { catchError, finalize, take } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';

@@ -17,6 +17,6 @@ export const getFilterAttributeIcon = (attributeType: FilterAttributeType) => {
     case FilterAttributeType.Timestamp:
       return IconType.DateAttribute;
     default:
-      assertUnreachable(attributeType);
+      return assertUnreachable(attributeType);
   }
 };

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../public-api';
+import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-holder';
 
 @Component({
   selector: 'ht-draggable-item',

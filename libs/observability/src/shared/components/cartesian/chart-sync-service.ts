@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Band, CartesianSelectedData, Series } from '../../../public-api';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { CartesianChartComponent } from './cartesian-chart.component';
+import { Band, Series } from './chart';
+import { CartesianSelectedData } from './chart-interactivty';
 
 @Injectable({ providedIn: 'root' })
 export class ChartSyncService<TData> {

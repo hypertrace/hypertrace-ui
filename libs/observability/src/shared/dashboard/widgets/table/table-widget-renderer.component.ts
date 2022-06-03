@@ -291,6 +291,8 @@ export class TableWidgetRendererComponent
         if (f.field === filterOption.field && f.operator === FilterOperator.In) {
           return Array.isArray(f.value) && f.value.find(value => value === filterOption.value);
         }
+
+        return undefined;
       }) !== undefined
     );
   }

@@ -10,6 +10,6 @@ import { FileUploadComponent } from './file-upload.component';
 @NgModule({
   imports: [CommonModule, IconModule, FileDisplayModule, FormsModule, ProgressBarModule],
   declarations: [FileUploadComponent, DropZoneDirective],
-  exports: [FileUploadComponent, DropZoneDirective]
+  exports: [FileUploadComponent]
 })
 export class FileUploadModule {}

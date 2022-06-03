@@ -1,10 +1,10 @@
 import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { XMoreComponent } from '../../../../x-more/x-more.component';
 import { MockComponent } from 'ng-mocks';
+import { XMoreComponent } from '../../../../x-more/x-more.component';
+import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
 import { StringArrayTableCellRendererComponent } from './string-array-table-cell-renderer.component';
-import { TableCellNoOpParser } from '../../data-parsers/table-cell-no-op-parser';
 
 describe('String array table cell renderer component', () => {
   const buildComponent = createComponentFactory({
