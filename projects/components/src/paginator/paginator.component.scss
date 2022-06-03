@@ -46,4 +46,10 @@
       }
     }
   }
+
+  &.compact {
+    .pagination-buttons {
+      margin: 0 12px;
+    }
+  }
 }

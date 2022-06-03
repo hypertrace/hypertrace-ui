@@ -11,6 +11,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { merge, Observable, Subject } from 'rxjs';
 import { ButtonSize, ButtonStyle } from '../button/button';
+import { SelectSize } from '../select/select-size';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
 
@@ -19,7 +20,11 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="paginator" *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]">
+    <div
+      class="paginator"
+      [class.compact]="this.showCompactView"
+      *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]"
+    >
       <ht-label
         class="label"
         label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
@@ -47,9 +52,16 @@ import { PaginationProvider } from './paginator-api';
         >
         </ht-button>
       </div>
-      <ht-label class="label" label="Rows per Page:"></ht-label>
+      <ng-container *ngIf="!this.showCompactView">
+        <ht-label class="label" label="Rows per Page:"></ht-label>
+      </ng-container>
       <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
-        <ht-select [selected]="this.pageSize" (selectedChange)="this.onPageSizeChange($event)" showBorder="true">
+        <ht-select
+          [selected]="this.pageSize"
+          size="${SelectSize.Small}"
+          (selectedChange)="this.onPageSizeChange($event)"
+          [showBorder]="true"
+        >
           <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
           </ht-select-option>
         </ht-select>
@@ -62,21 +74,28 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public pageSizeOptions: number[] = [25, 50, 100];
 
   @Input()
+  public showCompactView: boolean = false;
+
+  @Input()
   public set pageIndex(pageIndex: number) {
     this._pageIndex = pageIndex;
   }
+
   public get pageIndex(): number {
     return this._pageIndex ?? 0;
   }
+
   private _pageIndex?: number;
 
   @Input()
   public set pageSize(pageSize: number) {
     this._pageSize = pageSize;
   }
+
   public get pageSize(): number {
     return this._pageSize ?? 50;
   }
+
   private _pageSize?: number;
 
   @Input()
@@ -85,9 +104,11 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     // This is for supporting the programmatic usage of paginator for the Table chart. This should go away with the Table refactor
     this.changeDetectorRef.markForCheck();
   }
+
   public get totalItems(): number {
     return this._totalItems;
   }
+
   private _totalItems: number = 0;
 
   private readonly pageSizeInputSubject: Subject<PageEvent> = new Subject();

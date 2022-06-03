@@ -1,0 +1,26 @@
+@import 'mixins';
+
+.progress {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .progress-bar {
+    height: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .bar {
+      height: 100%;
+      transition: all 0.2s;
+    }
+  }
+
+  .progress-percentage {
+    @include body-small($gray-6);
+    width: 32px;
+  }
+}
