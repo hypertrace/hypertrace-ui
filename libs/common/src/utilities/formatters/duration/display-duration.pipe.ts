@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TimeDuration, TimeUnit, UnitStringType } from './../../../public-api';
+import { TimeDuration, UnitStringType } from '../../../time/time-duration';
+import { TimeUnit } from '../../../time/time-unit.type';
 import { durationFormatter } from './duration-formatter';
 
 @Pipe({
