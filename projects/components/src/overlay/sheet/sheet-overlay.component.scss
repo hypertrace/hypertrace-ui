@@ -19,12 +19,12 @@ $box-shadow: -3px 0px 24px rgba(0, 0, 0, 0.12), -1px 0px 8px rgba(0, 0, 0, 0.08)
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap-reverse;
-
     padding-bottom: 20px;
 
     .header-title {
       @include header-4($gray-7);
+      padding-right: 8px;
+      word-break: break-word;
       margin: 0;
     }
 
