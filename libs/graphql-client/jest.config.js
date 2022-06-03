@@ -14,13 +14,13 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'test-results/hypertrace-ui/libs/graphql-client'
+        outputDirectory: 'test-results/libs/graphql-client'
       }
     ],
     [
       'jest-html-reporter',
       {
-        outputPath: 'test-results/hypertrace-ui/libs/graphql-client/test-report.html'
+        outputPath: 'test-results/libs/graphql-client/test-report.html'
       }
     ]
   ],

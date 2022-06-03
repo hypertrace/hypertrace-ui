@@ -14,13 +14,13 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'test-results/hypertrace-ui/libs/assets-library'
+        outputDirectory: 'test-results/libs/assets-library'
       }
     ],
     [
       'jest-html-reporter',
       {
-        outputPath: 'test-results/hypertrace-ui/libs/assets-library/test-report.html'
+        outputPath: 'test-results/libs/assets-library/test-report.html'
       }
     ]
   ],

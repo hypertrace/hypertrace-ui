@@ -26,7 +26,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/assets-library"],
+          "outputs": ["coverage/libs/assets-library", "test-results/libs/assets-library"],
           "options": {
             "jestConfig": "libs/assets-library/jest.config.js",
             "passWithNoTests": true
@@ -66,7 +66,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/common"],
+          "outputs": ["coverage/libs/common", "test-results/libs/common"],
           "options": {
             "jestConfig": "libs/common/jest.config.js",
             "passWithNoTests": true
@@ -106,7 +106,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/components"],
+          "outputs": ["coverage/libs/components", "test-results/libs/components"],
           "options": {
             "jestConfig": "libs/components/jest.config.js",
             "passWithNoTests": true
@@ -146,7 +146,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/dashboards"],
+          "outputs": ["coverage/libs/dashboards", "test-results/libs/dashboards"],
           "options": {
             "jestConfig": "libs/dashboards/jest.config.js",
             "passWithNoTests": true
@@ -186,7 +186,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/graphql-client"],
+          "outputs": ["coverage/libs/graphql-client", "test-results/libs/graphql-client"],
           "options": {
             "jestConfig": "libs/graphql-client/jest.config.js",
             "passWithNoTests": true
@@ -296,7 +296,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/hypertrace-ui"],
+          "outputs": ["coverage/apps/hypertrace-ui", "test-results/apps/hypertrace-ui"],
           "options": {
             "jestConfig": "apps/hypertrace-ui/jest.config.js",
             "passWithNoTests": true
@@ -335,7 +335,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/observability"],
+          "outputs": ["coverage/libs/observability", "test-results/libs/observability"],
           "options": {
             "jestConfig": "libs/observability/jest.config.js",
             "passWithNoTests": true
@@ -375,7 +375,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/test-utils"],
+          "outputs": ["coverage/libs/test-utils", "test-results/libs/test-utils"],
           "options": {
             "jestConfig": "libs/test-utils/jest.config.js",
             "passWithNoTests": true
