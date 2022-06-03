@@ -65,8 +65,8 @@ jobs:
 
       - name: Prettier Check
         run: npm run prettier:check
-  test-all:
-    name: Test All
+  test:
+    name: Test
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     strategy:
