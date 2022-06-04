@@ -17,5 +17,6 @@ module.exports = {
     '!src/environments/**',
     '!**/*/test/**',
     '!src/app/routes/**/*.ts'
-  ]
+  ],
+  coverageReporters: ['clover', 'json', 'lcov', ['text', { skipFull: true }]]
 };
