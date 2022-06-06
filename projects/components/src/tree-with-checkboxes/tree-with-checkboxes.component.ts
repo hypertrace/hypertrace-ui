@@ -5,8 +5,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ButtonStyle } from '../button/button';
-import { TodoItemFlatNode } from './todo-item-flat-node';
-import { TodoItemNode } from './todo-item-node';
+import { TodoItemFlatNode, TodoItemNode } from './types';
 
 @Component({
   selector: 'ht-tree-with-checkboxes',
@@ -126,10 +125,11 @@ export class TreeWithCheckboxesComponent implements OnChanges{
    */
   private transformer = (node: TodoItemNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children?.length;
+    const flatNode = existingNode && existingNode.item === node.item ? existingNode : {
+      item: node.item,
+      level: level,
+      expandable: !!node.children?.length
+    }
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
