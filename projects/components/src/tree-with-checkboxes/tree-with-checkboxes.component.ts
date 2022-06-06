@@ -1,9 +1,10 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { remove } from 'lodash';
 import { ButtonStyle } from '../button/button';
 import { TodoItemFlatNode, TodoItemNode } from './types';
 
@@ -17,7 +18,7 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         <ht-checkbox
           class="checklist-leaf-node"
           [checked]="this.checklistSelection.isSelected(node)"
-          (checkedChange)="this.todoLeafItemSelectionToggle(node)"
+          (checkedChange)="this.todoLeafItemSelectionToggle(node, $event)"
           [label]="node.item"
         ></ht-checkbox>
       </mat-tree-node>
@@ -32,17 +33,19 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         <ht-checkbox
           [checked]="this.descendantsAllSelected(node)"
           [indeterminate]="this.descendantsPartiallySelected(node)"
-          (checkedChange)="this.todoItemSelectionToggle(node)"
+          (checkedChange)="this.todoItemSelectionToggle(node, $event)"
           [label]="node.item"
         ></ht-checkbox>
       </mat-tree-node>
     </mat-tree>
   `
 })
-export class TreeWithCheckboxesComponent implements OnChanges{
-
+export class TreeWithCheckboxesComponent implements OnChanges {
   @Input()
   public data: TodoItemNode[] = [];
+
+  @Output()
+  public readonly onSelection: EventEmitter<boolean> = new EventEmitter();
 
   public dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
 
@@ -59,6 +62,8 @@ export class TreeWithCheckboxesComponent implements OnChanges{
 
   private treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
 
+  private selections: { item: string; parent: string | undefined }[] = [];
+
   public constructor() {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -66,16 +71,15 @@ export class TreeWithCheckboxesComponent implements OnChanges{
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if(changes.data){
+    if (changes.data) {
       this.dataSource.data = this.data;
     }
   }
 
   /** Whether all the descendants of the node are selected. */
   public descendantsAllSelected(node: TodoItemFlatNode): boolean {
-
     const descendants = this.treeControl.getDescendants(node);
-    
+
     const descAllSelected =
       descendants.length > 0 &&
       descendants.every(child => {
@@ -92,7 +96,13 @@ export class TreeWithCheckboxesComponent implements OnChanges{
   }
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  public todoItemSelectionToggle(node: TodoItemFlatNode): void {
+  public todoItemSelectionToggle(node: TodoItemFlatNode, event: boolean): void {
+    if (event === true) {
+      this.insertIntoSelections(node);
+      console.log(this.selections);
+    } else {
+      this.removeFromSelections(node);
+    }
 
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -106,7 +116,14 @@ export class TreeWithCheckboxesComponent implements OnChanges{
   }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  public todoLeafItemSelectionToggle(node: TodoItemFlatNode): void {
+  public todoLeafItemSelectionToggle(node: TodoItemFlatNode, event: boolean): void {
+    if (event === true) {
+      this.insertIntoSelections(node);
+      console.log(this.selections);
+    } else {
+      this.removeFromSelections(node);
+    }
+
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
   }
@@ -119,17 +136,48 @@ export class TreeWithCheckboxesComponent implements OnChanges{
 
   private getChildren = (node: TodoItemNode): TodoItemNode[] => node.children ?? [];
 
+  private insertIntoSelections(node: TodoItemFlatNode): void {
+    if (node.expandable) {
+      this.treeControl.getDescendants(node).forEach(node =>
+        this.selections.push({
+          item: node.item,
+          parent: this.getParentNode(node)?.item
+        })
+      );
+    } else {
+      this.selections.push({
+        item: node.item,
+        parent: this.getParentNode(node)?.item
+      });
+    }
+  }
+
+  private removeFromSelections(node: TodoItemFlatNode): void {
+    if (node.expandable) {
+      console.log('ttt');
+      const descendants = this.treeControl.getDescendants(node).map(node => node.item);
+      this.selections.filter(selection => {
+        console.log(descendants);
+        return !descendants.includes(selection.item);
+      });
+    } else {
+      remove(this.selections, selection => selection.item === node.item);
+    }
+  }
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
   private transformer = (node: TodoItemNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.item === node.item ? existingNode : {
-      item: node.item,
-      level: level,
-      expandable: !!node.children?.length
-    }
+    const flatNode =
+      existingNode && existingNode.item === node.item
+        ? existingNode
+        : {
+            item: node.item,
+            level: level,
+            expandable: !!node.children?.length
+          };
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
