@@ -1,6 +1,7 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, TemplateRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Directive, ElementRef, HostListener, Inject, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
-import { Subject, Subscription } from 'rxjs';
+import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
@@ -21,20 +22,31 @@ export class TooltipDirective implements OnDestroy {
 
   private readonly mouseEnter$: Subject<MouseEvent> = new Subject();
   private readonly mouseLeave$: Subject<MouseEvent> = new Subject();
+  /**
+   * When tooltip is inside another overlay, and when user clicks on the items which has the
+   * tooltip, the mouseleave event will not be fired and hence the tooltip stays on the screen even
+   * after the overlay is closed.
+   */
+  private readonly click$: Observable<MouseEvent> = fromEvent<MouseEvent>(this.document, 'click');
+  private readonly hideTooltip$: Observable<MouseEvent> = merge(this.mouseLeave$, this.click$);
 
   private readonly subscriptions: Subscription = new Subscription();
 
   private popover?: PopoverRef;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {
-    this.subscriptions.add(this.mouseLeave$.subscribe(() => this.removeTooltip()));
+  public constructor(
+    private readonly popoverService: PopoverService,
+    private readonly host: ElementRef,
+    @Inject(DOCUMENT) private readonly document: Document
+  ) {
+    this.subscriptions.add(this.hideTooltip$.subscribe(() => this.removeTooltip()));
   }
 
   @HostListener('mouseenter', ['$event'])
   public onHover(event: MouseEvent): void {
     this.subscriptions.add(
       this.mouseEnter$
-        .pipe(debounceTime(TooltipDirective.DEFAULT_HOVER_DELAY_MS), takeUntil(this.mouseLeave$))
+        .pipe(debounceTime(TooltipDirective.DEFAULT_HOVER_DELAY_MS), takeUntil(this.hideTooltip$))
         .subscribe(() => this.showTooltip())
     );
 
