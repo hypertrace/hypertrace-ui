@@ -1,9 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { forkJoinSafeEmpty, IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  IntervalDurationService,
+  isEqualIgnoreFunctions,
+  TimeDuration,
+  TimeRangeService
+} from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { debounceTime, defaultIfEmpty, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
@@ -40,7 +46,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   public constructor(
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
     private readonly metadataService: MetadataService,
-    private readonly intervalDurationService: IntervalDurationService
+    private readonly intervalDurationService: IntervalDurationService,
+    private readonly timeRangeService: TimeRangeService
   ) {
     this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest()); // Todo: Revisit first request without knowing the context
 
@@ -123,15 +130,17 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private mapStateToExploreQuery(state: ExploreRequestState): Observable<TimeUnaware<GraphQlExploreRequest>> {
-    return of({
-      requestType: EXPLORE_GQL_REQUEST,
-      selections: state.series.map(series => series.specification),
-      context: state.context,
-      interval: this.resolveInterval(state.interval),
-      filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
-      groupBy: state.groupBy,
-      limit: state.resultLimit
-    });
+    return this.resolveInterval(state.interval).pipe(
+      map(interval => ({
+        requestType: EXPLORE_GQL_REQUEST,
+        selections: state.series.map(series => series.specification),
+        context: state.context,
+        interval: interval,
+        filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
+        groupBy: state.groupBy,
+        limit: state.resultLimit
+      }))
+    );
   }
 
   private mapStateToResultsQuery(
@@ -215,8 +224,15 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     };
   }
 
-  private resolveInterval(interval?: TimeDuration | 'AUTO'): TimeDuration | undefined {
-    return interval === 'AUTO' ? this.intervalDurationService.getAutoDuration() : interval;
+  private resolveInterval(interval?: TimeDuration | 'AUTO'): Observable<TimeDuration | undefined> {
+    if (interval === 'AUTO') {
+      return this.timeRangeService.getTimeRangeAndChanges().pipe(
+        map(timeRange => this.intervalDurationService.getAutoDuration(timeRange)),
+        distinctUntilChanged(isEqualIgnoreFunctions)
+      );
+    }
+
+    return of(interval);
   }
 }
 
