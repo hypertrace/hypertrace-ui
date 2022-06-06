@@ -1,6 +1,5 @@
 import { NavigationService } from '@hypertrace/common';
-import { mockProvider, Spectator } from '@ngneat/spectator';
-import { createHostFactory } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
