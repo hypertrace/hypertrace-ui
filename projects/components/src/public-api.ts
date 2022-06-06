@@ -391,3 +391,7 @@ export * from './filtering/filter/filter-url.service';
 // User Page Time Range
 export * from './page-time-range/page-time-range.component';
 export * from './page-time-range/page-time-range.module';
+
+// Tree With Checkboxes
+export * from './tree-with-checkboxes/tree-with-checkboxes.component';
+export * from './tree-with-checkboxes/tree-with-checkboxes.module';
