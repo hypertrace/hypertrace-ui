@@ -234,7 +234,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     changedRow: StatefulTableRow | undefined
   ): Observable<StatefulTableRow[]> {
     if (changedRow !== undefined) {
-      return of(this.cachedData?.rows || []).pipe(
+      return of(this.cachedData.rows).pipe(
         map(cachedRows => TableCdkRowUtil.buildRowStateChanges(cachedRows, changedRow)),
         switchMap(stateChanges => this.fetchAndAppendNewChildren(stateChanges)),
         map(TableCdkRowUtil.removeCollapsedRows)
