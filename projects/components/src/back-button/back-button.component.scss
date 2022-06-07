@@ -3,14 +3,12 @@
 
 .back {
   display: flex;
-  height: 26px;
-  width: 64px;
   align-items: center;
   color: $color-text-emphasis;
   cursor: pointer;
+  gap: 8px;
 
   .label {
     @include body-2-medium($color-text-emphasis);
-    margin-left: 8px;
   }
 }

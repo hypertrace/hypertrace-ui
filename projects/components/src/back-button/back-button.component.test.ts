@@ -10,7 +10,6 @@ describe('Back Button Component', () => {
 
   const createHost = createHostFactory({
     component: BackButtonComponent,
-    imports: [],
     declarations: [MockComponent(IconComponent), MockComponent(LabelComponent)],
     providers: [mockProvider(NavigationService)],
     shallow: true
