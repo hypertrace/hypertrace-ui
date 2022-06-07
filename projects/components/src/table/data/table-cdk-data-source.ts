@@ -317,7 +317,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return of([]);
     }
 
-    let total: number = 0;
+    let total = 0;
 
     return this.tableDataSourceProvider.data.getData(request).pipe(
       tap(response => this.updatePaginationTotalCount(response.totalCount)),
