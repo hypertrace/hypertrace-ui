@@ -36,18 +36,21 @@ import { NavigableTabComponent } from './navigable-tab.component';
                 [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab"
                 class="tab-link"
               >
-                <ng-container *ngTemplateOutlet="tab.content"></ng-container>
-                <ng-container *ngIf="tab.labelTag">
-                  <ht-label-tag
-                    class="tab-label-tag"
-                    [label]="tab.labelTag"
-                    [backgroundColor]="this.getBackgroundColor(activeTab, tab)"
-                    [labelColor]="this.getLabelColor(activeTab, tab)"
-                  ></ht-label-tag>
-                </ng-container>
-                <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
-                  <span class="soon">SOON</span>
-                </span>
+                <div class="tab-link-content">
+                  <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+                  <ng-container *ngIf="tab.labelTag">
+                    <ht-label-tag
+                      class="tab-label-tag"
+                      [label]="tab.labelTag"
+                      [backgroundColor]="this.getBackgroundColor(activeTab, tab)"
+                      [labelColor]="this.getLabelColor(activeTab, tab)"
+                    ></ht-label-tag>
+                  </ng-container>
+                  <ht-info-icon [info]="tab.info"> </ht-info-icon>
+                  <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
+                    <span class="soon">SOON</span>
+                  </span>
+                </div>
               </ht-link>
               <div class="ink-bar" [ngClass]="{ active: activeTab === tab }"></div>
             </div>
