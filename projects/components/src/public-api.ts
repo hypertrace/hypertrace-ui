@@ -16,6 +16,10 @@ export { ButtonComponent } from './button/button.component';
 export { ButtonModule } from './button/button.module';
 export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
 
+// Back Button
+export { BackButtonComponent } from './back-button/back-button.component';
+export { BackButtonModule } from './back-button/back-button.module';
+
 // Checkbox
 export * from './checkbox/checkbox.component';
 export * from './checkbox/checkbox.module';
