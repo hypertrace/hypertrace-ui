@@ -6,7 +6,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { isNumber } from 'lodash-es';
 import { ButtonStyle } from '../button/button';
-import { TodoItemFlatNode, TodoItemNode } from './types';
+import { TreeItemFlatNode, TreeItemNode } from './tree-node-types';
 
 @Component({
   selector: 'ht-tree-with-checkboxes',
@@ -63,7 +63,7 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
 })
 export class TreeWithCheckboxesComponent implements OnChanges {
   @Input()
-  public data: TodoItemNode[] = [];
+  public data: TreeItemNode[] = [];
 
   @Input()
   public checkboxes: boolean = false;
@@ -71,26 +71,26 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   @Output()
   public readonly onSelectionToggle: EventEmitter<{ label: string; parent: string | undefined }[]> = new EventEmitter();
 
-  public dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  public dataSource: MatTreeFlatDataSource<TreeItemNode, TreeItemFlatNode>;
 
-  public treeControl: FlatTreeControl<TodoItemFlatNode>;
+  public treeControl: FlatTreeControl<TreeItemFlatNode>;
 
   /** The selection for checklist */
-  public checklistSelection: SelectionModel<TodoItemFlatNode> = new SelectionModel<TodoItemFlatNode>(
+  public checklistSelection: SelectionModel<TreeItemFlatNode> = new SelectionModel<TreeItemFlatNode>(
     true /* multiple */
   );
 
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
-  private readonly flatNodeMap: Map<TodoItemFlatNode, TodoItemNode> = new Map<TodoItemFlatNode, TodoItemNode>();
+  private readonly flatNodeMap: Map<TreeItemFlatNode, TreeItemNode> = new Map<TreeItemFlatNode, TreeItemNode>();
 
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  private readonly nestedNodeMap: Map<TodoItemNode, TodoItemFlatNode> = new Map<TodoItemNode, TodoItemFlatNode>();
+  private readonly nestedNodeMap: Map<TreeItemNode, TreeItemFlatNode> = new Map<TreeItemNode, TreeItemFlatNode>();
 
-  private readonly treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  private readonly treeFlattener: MatTreeFlattener<TreeItemNode, TreeItemFlatNode>;
 
   public constructor() {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    this.treeControl = new FlatTreeControl<TreeItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
@@ -101,7 +101,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /** Whether all the descendants of the node are selected. */
-  public descendantsAllSelected(node: TodoItemFlatNode): boolean {
+  public descendantsAllSelected(node: TreeItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
 
     const descAllSelected =
@@ -111,7 +111,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /** Whether part of the descendants are selected */
-  public descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
+  public descendantsPartiallySelected(node: TreeItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
 
@@ -119,7 +119,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  public todoItemSelectionToggle(node: TodoItemFlatNode): void {
+  public todoItemSelectionToggle(node: TreeItemFlatNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
     this.checklistSelection.isSelected(node)
@@ -139,7 +139,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  public todoLeafItemSelectionToggle(node: TodoItemFlatNode): void {
+  public todoLeafItemSelectionToggle(node: TreeItemFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
     this.onSelectionToggle.emit(
@@ -154,18 +154,18 @@ export class TreeWithCheckboxesComponent implements OnChanges {
     return typeof item === 'string';
   }
 
-  public hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+  public hasChild = (_: number, _nodeData: TreeItemFlatNode) => _nodeData.expandable;
 
-  private readonly getLevel = (node: TodoItemFlatNode) => node.level;
+  private readonly getLevel = (node: TreeItemFlatNode) => node.level;
 
-  private readonly isExpandable = (node: TodoItemFlatNode) => node.expandable;
+  private readonly isExpandable = (node: TreeItemFlatNode) => node.expandable;
 
-  private readonly getChildren = (node: TodoItemNode): TodoItemNode[] => node.children ?? [];
+  private readonly getChildren = (node: TreeItemNode): TreeItemNode[] => node.children ?? [];
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
-  private readonly transformer = (node: TodoItemNode, level: number) => {
+  private readonly transformer = (node: TreeItemNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode =
       existingNode && existingNode.item === node.item
@@ -183,8 +183,8 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   };
 
   /* Checks all the parents when a leaf node is selected/unselected */
-  private checkAllParentsSelection(node: TodoItemFlatNode): void {
-    let parent: TodoItemFlatNode | undefined = this.getParentNode(node);
+  private checkAllParentsSelection(node: TreeItemFlatNode): void {
+    let parent: TreeItemFlatNode | undefined = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
@@ -192,7 +192,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /** Check root node checked state and change it accordingly */
-  private checkRootNodeSelection(node: TodoItemFlatNode): void {
+  private checkRootNodeSelection(node: TreeItemFlatNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected =
@@ -205,7 +205,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   }
 
   /* Get the parent node of a node */
-  private getParentNode(node: TodoItemFlatNode): TodoItemFlatNode | undefined {
+  private getParentNode(node: TreeItemFlatNode): TreeItemFlatNode | undefined {
     const currentLevel = this.getLevel(node);
 
     if (currentLevel < 1) {
