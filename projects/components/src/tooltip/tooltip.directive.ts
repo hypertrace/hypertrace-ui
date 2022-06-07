@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, HostListener, Inject, Input, OnDestroy, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -27,18 +26,13 @@ export class TooltipDirective implements OnDestroy {
    * tooltip, the mouseleave event will not be fired and hence the tooltip stays on the screen even
    * after the overlay is closed.
    */
-  private readonly click$: Observable<MouseEvent> = fromEvent<MouseEvent>(this.document, 'click');
+  private readonly click$: Observable<MouseEvent> = fromEvent<MouseEvent>(this.host.nativeElement, 'click');
   private readonly hideTooltip$: Observable<MouseEvent> = merge(this.mouseLeave$, this.click$);
-
   private readonly subscriptions: Subscription = new Subscription();
 
   private popover?: PopoverRef;
 
-  public constructor(
-    private readonly popoverService: PopoverService,
-    private readonly host: ElementRef,
-    @Inject(DOCUMENT) private readonly document: Document
-  ) {
+  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {
     this.subscriptions.add(this.hideTooltip$.subscribe(() => this.removeTooltip()));
   }
 
