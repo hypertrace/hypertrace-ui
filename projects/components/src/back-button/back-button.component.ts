@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { IconSize } from '../icon/icon-size';
+import { ButtonRole, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-back-button',
   template: `
-    <div (click)="this.onClickBack()" class="back">
-      <ht-icon icon="${IconType.ArrowLeft}" size="${IconSize.Small}" class="arrow"></ht-icon>
-      <ht-label label="Back" class="label"></ht-label>
-    </div>
+    <ht-button
+      (click)="this.onClickBack()"
+      class="back"
+      role="${ButtonRole.Primary}"
+      display="${ButtonStyle.PlainText}"
+      icon="${IconType.ArrowLeft}"
+      label="Back"
+    ></ht-button>
   `,
   styleUrls: ['./back-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

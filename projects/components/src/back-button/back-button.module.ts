@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { IconModule } from '../icon/icon.module';
-import { LabelModule } from '../label/label.module';
+import { ButtonModule } from '../public-api';
 import { BackButtonComponent } from './back-button.component';
 
 @NgModule({
-  imports: [IconModule, LabelModule],
+  imports: [ButtonModule],
   declarations: [BackButtonComponent],
   exports: [BackButtonComponent]
 })

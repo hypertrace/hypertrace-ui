@@ -1,8 +1,9 @@
+import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { IconComponent } from '../icon/icon.component';
-import { LabelComponent } from '../label/label.component';
+import { ButtonRole } from '../button/button';
+import { ButtonComponent } from '../button/button.component';
 import { BackButtonComponent } from './back-button.component';
 
 describe('Back Button Component', () => {
@@ -10,7 +11,7 @@ describe('Back Button Component', () => {
 
   const createHost = createHostFactory({
     component: BackButtonComponent,
-    declarations: [MockComponent(IconComponent), MockComponent(LabelComponent)],
+    declarations: [MockComponent(ButtonComponent)],
     providers: [mockProvider(NavigationService)],
     shallow: true
   });
@@ -18,9 +19,9 @@ describe('Back Button Component', () => {
   test('should render the button correctly', () => {
     spectator = createHost(`<ht-back-button></ht-back-button>`);
 
-    expect(spectator.query('.back')).toExist();
-    expect(spectator.query(IconComponent)).toExist();
-    expect(spectator.query(LabelComponent)).toExist();
+    expect(spectator.query(ButtonComponent)).toExist();
+    expect(spectator.query(ButtonComponent)?.role).toBe(ButtonRole.Primary);
+    expect(spectator.query(ButtonComponent)?.icon).toBe(IconType.ArrowLeft);
   });
 
   test('should navigate back on click event', () => {
