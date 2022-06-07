@@ -69,7 +69,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public checkboxes: boolean = false;
 
   @Output()
-  public readonly onSelectionToggle: EventEmitter<{ label: string; parent: string | undefined }[]> = new EventEmitter();
+  public readonly selectionToggle: EventEmitter<{ label: string; parent: string | undefined }[]> = new EventEmitter();
 
   public dataSource: MatTreeFlatDataSource<TreeItemNode, TreeItemFlatNode>;
 
@@ -130,7 +130,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
     descendants.forEach(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
-    this.onSelectionToggle.emit(
+    this.selectionToggle.emit(
       this.checklistSelection.selected.map(selection => ({
         label: selection.label,
         parent: this.getParentNode(selection)?.label
@@ -142,7 +142,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public todoLeafItemSelectionToggle(node: TreeItemFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
-    this.onSelectionToggle.emit(
+    this.selectionToggle.emit(
       this.checklistSelection.selected.map(selection => ({
         label: selection.label,
         parent: this.getParentNode(selection)?.label
