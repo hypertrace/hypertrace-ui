@@ -19,9 +19,10 @@ describe('Back Button Component', () => {
   test('should render the button correctly', () => {
     spectator = createHost(`<ht-back-button></ht-back-button>`);
 
-    expect(spectator.query(ButtonComponent)).toExist();
-    expect(spectator.query(ButtonComponent)?.role).toBe(ButtonRole.Primary);
-    expect(spectator.query(ButtonComponent)?.icon).toBe(IconType.ArrowLeft);
+    const button = spectator.query(ButtonComponent);
+    expect(button).toExist();
+    expect(button?.role).toBe(ButtonRole.Primary);
+    expect(button?.icon).toBe(IconType.ArrowLeft);
   });
 
   test('should navigate back on click event', () => {
