@@ -46,7 +46,7 @@ import { NavigableTabComponent } from './navigable-tab.component';
                       [labelColor]="this.getLabelColor(activeTab, tab)"
                     ></ht-label-tag>
                   </ng-container>
-                  <ht-info-icon [info]="tab.info"> </ht-info-icon>
+                  <ht-info-icon *ngIf="tab.info" [info]="tab.info"></ht-info-icon>
                   <span *ngIf="featureState === '${FeatureState.Preview}'" class="soon-container">
                     <span class="soon">SOON</span>
                   </span>

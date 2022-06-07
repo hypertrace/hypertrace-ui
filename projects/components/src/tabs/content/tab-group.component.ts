@@ -31,7 +31,7 @@ import { TabComponent } from './tab/tab.component';
           <ng-template mat-tab-label>
             <div class="tab-label" [ngClass]="{ active: this.activeTabIndex === i }">
               {{ tab.label }}
-              <ht-info-icon [info]="tab.info"></ht-info-icon>
+              <ht-info-icon *ngIf="tab.info" [info]="tab.info"></ht-info-icon>
               <ng-container *ngIf="tab.labelTag">
                 <ht-label-tag
                   class="tab-label-tag"
