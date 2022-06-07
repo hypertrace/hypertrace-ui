@@ -16,11 +16,16 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
     <mat-tree [dataSource]="this.dataSource" [treeControl]="this.treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <ht-checkbox
+          *ngIf="this.getType(node) === 'string'; else elseBlock"
           class="checklist-leaf-node"
           [checked]="this.checklistSelection.isSelected(node)"
           (checkedChange)="this.todoLeafItemSelectionToggle(node)"
           [label]="node.item"
         ></ht-checkbox>
+
+        <ng-template #elseBlock>
+          <ng-container *ngTemplateOutlet="node.item; context: { $implicit: node.item }"></ng-container>
+        </ng-template>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: this.hasChild" matTreeNodePadding>
@@ -31,11 +36,16 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         >
         </ht-button>
         <ht-checkbox
+          *ngIf="this.getType(node) === 'string'; else elseBlock"
           [checked]="this.descendantsAllSelected(node)"
           [indeterminate]="this.descendantsPartiallySelected(node)"
           (checkedChange)="this.todoItemSelectionToggle(node)"
           [label]="node.item"
         ></ht-checkbox>
+
+        <ng-template #elseBlock>
+          <ng-container *ngTemplateOutlet="node.item; context: { $implicit: node.item }"></ng-container>
+        </ng-template>
       </mat-tree-node>
     </mat-tree>
   `
@@ -45,7 +55,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public data: TodoItemNode[] = [];
 
   @Output()
-  public readonly onSelectionToggle: EventEmitter<{ item: string; parent: string | undefined }[]> = new EventEmitter();
+  public readonly onSelectionToggle: EventEmitter<{ label: string; parent: string | undefined }[]> = new EventEmitter();
 
   public dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
 
@@ -74,6 +84,10 @@ export class TreeWithCheckboxesComponent implements OnChanges {
     if (changes.data) {
       this.dataSource.data = this.data;
     }
+  }
+
+  public getType(node: TodoItemFlatNode): string {
+    return typeof node.item;
   }
 
   /** Whether all the descendants of the node are selected. */
@@ -108,8 +122,8 @@ export class TreeWithCheckboxesComponent implements OnChanges {
 
     this.onSelectionToggle.emit(
       this.checklistSelection.selected.map(selection => ({
-        item: selection.item,
-        parent: this.getParentNode(selection)?.item
+        label: selection.label,
+        parent: this.getParentNode(selection)?.label
       }))
     );
   }
@@ -120,8 +134,8 @@ export class TreeWithCheckboxesComponent implements OnChanges {
     this.checkAllParentsSelection(node);
     this.onSelectionToggle.emit(
       this.checklistSelection.selected.map(selection => ({
-        item: selection.item,
-        parent: this.getParentNode(selection)?.item
+        label: selection.label,
+        parent: this.getParentNode(selection)?.label
       }))
     );
   }
@@ -143,6 +157,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
       existingNode && existingNode.item === node.item
         ? existingNode
         : {
+            label: node.label,
             item: node.item,
             level: level,
             expandable: isNumber(node.children?.length) ? true : false

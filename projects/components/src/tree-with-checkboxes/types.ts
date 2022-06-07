@@ -1,6 +1,9 @@
+import { TemplateRef } from '@angular/core';
+
 /** Flat to-do item node with expandable and level information */
 export interface TodoItemFlatNode {
-  item: string;
+  label: string;
+  item: string | TemplateRef<unknown>;
   level: number;
   expandable: boolean;
 }
@@ -8,6 +11,7 @@ export interface TodoItemFlatNode {
 /* Node for to-do item
  */
 export interface TodoItemNode {
+  label: string;
   children?: TodoItemNode[];
-  item: string;
+  item: string | TemplateRef<unknown>;
 }
