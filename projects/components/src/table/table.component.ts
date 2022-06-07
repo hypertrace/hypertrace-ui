@@ -66,6 +66,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
         [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
+        [style.gap]="this.rowGap"
         class="table"
       >
         <!-- Columns -->
@@ -113,6 +114,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 'detail-expanded': this.isDetailExpanded(row),
                 'hide-divider': this.isDetailList()
               }"
+              [ngClass]="{ 'show-border': !this.showBorderedRows }"
               class="data-cell"
             >
               <ht-table-data-cell-renderer
@@ -155,7 +157,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             'selected-row': this.shouldHighlightRowAsSelection(row),
             'hovered-row': this.isHoveredRow(row),
             'last-row': isLast,
-            selectable: this.supportsRowSelection()
+            selectable: this.supportsRowSelection(),
+            'show-border': this.showBorderedRows
           }"
           class="data-row"
           [style.minHeight]="this.rowHeight"
@@ -288,6 +291,12 @@ export class TableComponent
 
   @Input()
   public rowHeight: string = '44px';
+
+  @Input()
+  public showBorderedRows: boolean = false;
+
+  @Input()
+  public rowGap: string = '0px';
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();

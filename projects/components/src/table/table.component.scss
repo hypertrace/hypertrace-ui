@@ -42,6 +42,10 @@ $header-height: 32px;
   flex-direction: row;
   min-height: 44px;
 
+  &.show-border {
+    border: 1px solid $gray-1;
+  }
+
   &.selectable {
     cursor: pointer;
   }
@@ -51,10 +55,18 @@ $header-height: 32px;
     border-bottom: 1px solid $blue-2;
     border-top: 1px solid $blue-2;
 
+    &.show-border {
+      border: 1px solid $blue-2;
+    }
+
     &.hovered-row {
       background: $blue-2;
       border-bottom: 1px solid $blue-5;
       border-top: 1px solid $blue-5;
+
+      &.show-border {
+        border: 1px solid $blue-5;
+      }
     }
   }
 
@@ -99,7 +111,10 @@ $header-height: 32px;
 .data-cell {
   flex: 1 1;
   overflow: hidden;
-  border-bottom: 1px solid $gray-1;
+
+  &.show-border {
+    border-bottom: 1px solid $gray-1;
+  }
 
   &.detail-expanded {
     border-bottom: unset;
