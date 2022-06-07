@@ -283,10 +283,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
     const request = this.buildRequest(columnConfigs, pageEvent, filters, queryProperties);
 
-    return this.hasCachedRowsForPageEvent(request) ? this.fetchCachedData(request) : this.fetchNewData(request);
+    return this.hasCachedRowsForRequest(request) ? this.fetchCachedData(request) : this.fetchNewData(request);
   }
 
-  private hasCachedRowsForPageEvent(request: TableDataRequest): boolean {
+  private hasCachedRowsForRequest(request: TableDataRequest): boolean {
     if (this.cachedData.rows.length !== 0 && this.cachedData.rows.length === this.cachedData.total) {
       // Check if we already have all available results cached
       return true;
