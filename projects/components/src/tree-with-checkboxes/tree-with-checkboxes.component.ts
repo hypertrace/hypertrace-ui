@@ -45,7 +45,7 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public data: TodoItemNode[] = [];
 
   @Output()
-  public readonly onSelection: EventEmitter<boolean> = new EventEmitter();
+  public readonly onSelectionToggle: EventEmitter<{ item: string; parent: string | undefined }[]> = new EventEmitter();
 
   public dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
 
@@ -99,10 +99,11 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public todoItemSelectionToggle(node: TodoItemFlatNode, event: boolean): void {
     if (event === true) {
       this.insertIntoSelections(node);
-      console.log(this.selections);
     } else {
       this.removeFromSelections(node);
     }
+
+    this.onSelectionToggle.emit(this.selections);
 
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -119,10 +120,11 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   public todoLeafItemSelectionToggle(node: TodoItemFlatNode, event: boolean): void {
     if (event === true) {
       this.insertIntoSelections(node);
-      console.log(this.selections);
     } else {
       this.removeFromSelections(node);
     }
+
+    this.onSelectionToggle.emit(this.selections);
 
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
@@ -137,12 +139,19 @@ export class TreeWithCheckboxesComponent implements OnChanges {
   private getChildren = (node: TodoItemNode): TodoItemNode[] => node.children ?? [];
 
   private insertIntoSelections(node: TodoItemFlatNode): void {
+
     if (node.expandable) {
       this.treeControl.getDescendants(node).forEach(node =>
-        this.selections.push({
-          item: node.item,
-          parent: this.getParentNode(node)?.item
-        })
+        {
+          const selection = {
+            item: node.item,
+            parent: this.getParentNode(node)?.item
+          };
+
+          if(!this.selections.map(data => JSON.stringify(data)).includes(JSON.stringify(selection))){
+            this.selections.push(selection)
+          }
+        }
       );
     } else {
       this.selections.push({
@@ -154,11 +163,9 @@ export class TreeWithCheckboxesComponent implements OnChanges {
 
   private removeFromSelections(node: TodoItemFlatNode): void {
     if (node.expandable) {
-      console.log('ttt');
-      const descendants = this.treeControl.getDescendants(node).map(node => node.item);
-      this.selections.filter(selection => {
-        console.log(descendants);
-        return !descendants.includes(selection.item);
+      const descendants = this.treeControl.getDescendants(node).map(node => JSON.stringify({item: node.item, parent: this.getParentNode(node)?.item}));
+      this.selections = this.selections.filter(selection => {
+        return !descendants.includes(JSON.stringify(selection));
       });
     } else {
       remove(this.selections, selection => selection.item === node.item);
