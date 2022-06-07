@@ -23,8 +23,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
             role="${ButtonRole.Quaternary}"
             display="${ButtonStyle.Solid}"
             size="${ButtonSize.ExtraSmall}"
-            icon="${IconType.ChevronRight}"
-            [trailingIcon]="true"
+            trailingIcon="${IconType.ChevronRight}"
           ></ht-button>
         </ht-link>
         <div *ngIf="!!this.headerControl" class="controls">
