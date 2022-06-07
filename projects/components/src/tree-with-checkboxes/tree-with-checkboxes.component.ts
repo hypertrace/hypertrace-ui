@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, TemplateRef } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -16,7 +16,7 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
     <mat-tree [dataSource]="this.dataSource" [treeControl]="this.treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <ht-checkbox
-          *ngIf="this.getType(node) === 'string'; else elseBlock"
+          *ngIf="this.checkboxes; else elseBlock"
           class="checklist-leaf-node"
           [checked]="this.checklistSelection.isSelected(node)"
           (checkedChange)="this.todoLeafItemSelectionToggle(node)"
@@ -24,7 +24,12 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         ></ht-checkbox>
 
         <ng-template #elseBlock>
-          <ng-container *ngTemplateOutlet="node.item; context: { $implicit: node.item }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              this.isItemAString(node.item) ? defaultItem : node.item;
+              context: { $implicit: node.item }
+            "
+          ></ng-container>
         </ng-template>
       </mat-tree-node>
 
@@ -36,7 +41,7 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         >
         </ht-button>
         <ht-checkbox
-          *ngIf="this.getType(node) === 'string'; else elseBlock"
+          *ngIf="this.checkboxes; else elseBlock"
           [checked]="this.descendantsAllSelected(node)"
           [indeterminate]="this.descendantsPartiallySelected(node)"
           (checkedChange)="this.todoItemSelectionToggle(node)"
@@ -44,15 +49,24 @@ import { TodoItemFlatNode, TodoItemNode } from './types';
         ></ht-checkbox>
 
         <ng-template #elseBlock>
-          <ng-container *ngTemplateOutlet="node.item; context: { $implicit: node.item }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              this.isItemAString(node.item) ? defaultItem : node.item;
+              context: { $implicit: node.item }
+            "
+          ></ng-container>
         </ng-template>
       </mat-tree-node>
     </mat-tree>
+    <ng-template #defaultItem let-item><ht-label [label]="item"></ht-label></ng-template>
   `
 })
 export class TreeWithCheckboxesComponent implements OnChanges {
   @Input()
   public data: TodoItemNode[] = [];
+
+  @Input()
+  public checkboxes: boolean = false;
 
   @Output()
   public readonly onSelectionToggle: EventEmitter<{ label: string; parent: string | undefined }[]> = new EventEmitter();
@@ -84,10 +98,6 @@ export class TreeWithCheckboxesComponent implements OnChanges {
     if (changes.data) {
       this.dataSource.data = this.data;
     }
-  }
-
-  public getType(node: TodoItemFlatNode): string {
-    return typeof node.item;
   }
 
   /** Whether all the descendants of the node are selected. */
@@ -138,6 +148,10 @@ export class TreeWithCheckboxesComponent implements OnChanges {
         parent: this.getParentNode(selection)?.label
       }))
     );
+  }
+
+  public isItemAString(item: string | TemplateRef<unknown>): boolean {
+    return typeof item === 'string';
   }
 
   public hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
