@@ -1,13 +1,13 @@
 import { fakeAsync } from '@angular/core/testing';
 import { createHostFactory } from '@ngneat/spectator/jest';
 
-import { CheckboxComponent, InputComponent, InputModule, TraceCheckboxModule } from '@hypertrace/components';
+import { CheckboxComponent, InputComponent, InputModule, CheckboxModule } from '@hypertrace/components';
 import { ExploreQueryLimitEditorComponent } from './explore-query-limit-editor.component';
 
 describe('Explore Query Limit Editor component', () => {
   const hostBuilder = createHostFactory({
     component: ExploreQueryLimitEditorComponent,
-    imports: [InputModule, TraceCheckboxModule],
+    imports: [InputModule, CheckboxModule],
     shallow: true
   });
 
