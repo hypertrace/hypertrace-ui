@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../../content/content-holder';
 
 @Component({
@@ -13,4 +13,7 @@ export class TabComponent extends ContentHolder {
 
   @Input()
   public labelTag?: string;
+
+  @Input()
+  public info?: string | TemplateRef<unknown>;
 }

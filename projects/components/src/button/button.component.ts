@@ -18,21 +18,21 @@ import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
         [type]="this.type"
       >
         <ht-icon
-          *ngIf="this.icon && !this.trailingIcon"
+          *ngIf="this.icon"
           [icon]="this.icon"
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon leading"
         ></ht-icon>
 
-        <div class="conditional-padding leading" *ngIf="this.label && this.icon && !this.trailingIcon"></div>
+        <div class="conditional-padding leading" *ngIf="this.label && this.icon"></div>
 
         <ht-label *ngIf="this.label" [label]="label" class="label"></ht-label>
 
-        <div class="conditional-padding trailing" *ngIf="this.label && this.icon && this.trailingIcon"></div>
+        <div class="conditional-padding trailing" *ngIf="this.label && this.trailingIcon"></div>
         <ht-icon
-          *ngIf="this.icon && this.trailingIcon"
-          [icon]="this.icon"
+          *ngIf="this.trailingIcon"
+          [icon]="this.trailingIcon"
           [label]="this.label"
           [size]="this.getIconSizeClass()"
           class="icon trailing"
@@ -45,11 +45,14 @@ export class ButtonComponent {
   @Input()
   public label?: string;
 
+  /*
+  This will by default be a leading icon
+  */
   @Input()
   public icon?: IconType;
 
   @Input()
-  public trailingIcon?: boolean;
+  public trailingIcon?: IconType;
 
   @Input()
   public type: ButtonType = ButtonType.Button;
