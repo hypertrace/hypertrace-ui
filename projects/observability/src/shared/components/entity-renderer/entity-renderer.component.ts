@@ -14,7 +14,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
       *ngIf="this.name"
       class="ht-entity-renderer"
       [ngClass]="{ 'default-text-style': !this.inheritTextStyle }"
-      [htTooltip]="this.getTooltipText | htMemoize: this.name"
+      [htTooltip]="this.name | htDisplayString: 'unknown'"
     >
       <div *ngIf="this.navigationParams; then nameWithLinkTemplate; else nameTemplate"></div>
     </div>
@@ -83,10 +83,6 @@ export class EntityRendererComponent implements OnChanges {
     if (changes.icon) {
       this.setIconType();
     }
-  }
-
-  public getTooltipText(name: string): string {
-    return name !== 'null' ? name : 'unknown';
   }
 
   private setName(): void {
