@@ -16,6 +16,10 @@ export { ButtonComponent } from './button/button.component';
 export { ButtonModule } from './button/button.module';
 export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
 
+// Back Button
+export { BackButtonComponent } from './back-button/back-button.component';
+export { BackButtonModule } from './back-button/back-button.module';
+
 // Checkbox
 export * from './checkbox/checkbox.component';
 export * from './checkbox/checkbox.module';
@@ -149,6 +153,10 @@ export * from './icon/icon-size';
 export * from './icon/icon-border';
 export * from './icon/icon.component';
 export * from './icon/icon.module';
+
+// Info icon
+export * from './info-icon/info-icon.component';
+export * from './info-icon/info-icon.module';
 
 // Input
 export { InputAppearance } from './input/input-appearance';
