@@ -183,7 +183,7 @@ describe('Button Component', () => {
     expect(spectator.query('.button')).toHaveClass('button secondary small solid');
   });
 
-  test('should render Icon and label correctly', () => {
+  test('should render Icons and label correctly', () => {
     spectator = createHost(`<ht-button [icon]="icon"></ht-button>`, {
       hostProps: {
         icon: IconType.Add
@@ -205,12 +205,24 @@ describe('Button Component', () => {
 
     // Set Label
     spectator.setInput({
-      trailingIcon: true
+      trailingIcon: IconType.Add
+    });
+
+    expect(spectator.query('.icon.trailing')).toExist();
+    expect(spectator.query('.icon.leading')).toExist();
+    expect(spectator.query('.label')).toExist();
+    expect('.conditional-padding.leading').toExist();
+    expect('.conditional-padding.trailing').toExist();
+
+    // Set Label
+    spectator.setInput({
+      icon: undefined
     });
 
     expect(spectator.query('.icon.trailing')).toExist();
     expect(spectator.query('.icon.leading')).not.toExist();
     expect(spectator.query('.label')).toExist();
+    expect('.conditional-padding.leading').not.toExist();
     expect('.conditional-padding.trailing').toExist();
   });
 });

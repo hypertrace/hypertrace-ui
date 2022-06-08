@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-holder';
@@ -26,6 +26,9 @@ export class NavigableTabComponent extends ContentHolder {
 
   @Input()
   public features?: string[];
+
+  @Input()
+  public info?: string | TemplateRef<unknown>;
 
   public get featureFlags(): string[] {
     return [...this.routeFeatures(), ...(this.features ?? [])];
