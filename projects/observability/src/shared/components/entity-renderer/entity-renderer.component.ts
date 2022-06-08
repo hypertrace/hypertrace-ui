@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { InAppNavigationParams, TypedSimpleChanges } from '@hypertrace/common';
 import { IconSize } from '@hypertrace/components';
-import { Entity } from '../../graphql/model/schema/entity';
+import { Entity, entityIdKey } from '../../graphql/model/schema/entity';
 import { EntityIconLookupService } from '../../services/entity/entity-icon-lookup.service';
 import { EntityNavigationService } from '../../services/navigation/entity/entity-navigation.service';
 
@@ -14,7 +14,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
       *ngIf="this.name"
       class="ht-entity-renderer"
       [ngClass]="{ 'default-text-style': !this.inheritTextStyle }"
-      [htTooltip]="this.name"
+      [htTooltip]="this.getTooltipText | htMemoize: this.name"
     >
       <div *ngIf="this.navigationParams; then nameWithLinkTemplate; else nameTemplate"></div>
     </div>
@@ -85,6 +85,10 @@ export class EntityRendererComponent implements OnChanges {
     }
   }
 
+  public getTooltipText(name: string): string {
+    return name !== 'null' ? name : 'unknown';
+  }
+
   private setName(): void {
     this.name = this.entity?.name as string;
   }
@@ -96,7 +100,7 @@ export class EntityRendererComponent implements OnChanges {
 
   private setNavigationParams(): void {
     this.navigationParams =
-      this.navigable && this.entity !== undefined
+      this.navigable && this.entity !== undefined && this.entity[entityIdKey] !== 'null'
         ? this.entityNavService.buildEntityDetailNavigationParams(this.entity, this.inactive)
         : undefined;
   }
