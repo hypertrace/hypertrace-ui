@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
+import { CheckboxModule } from '../../checkbox/checkbox.module';
 import { MultiSelectModule } from '../../multi-select/multi-select.module';
 import { TraceSearchBoxModule } from '../../search-box/search-box.module';
 import { SelectModule } from '../../select/select.module';
@@ -14,7 +14,7 @@ import { TableControlsComponent } from './table-controls.component';
     TooltipModule,
     TraceSearchBoxModule,
     ToggleGroupModule,
-    TraceCheckboxModule,
+    CheckboxModule,
     SelectModule,
     MultiSelectModule
   ],
