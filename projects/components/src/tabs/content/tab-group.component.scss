@@ -78,6 +78,7 @@
   flex-direction: row;
   align-items: center;
   color: $gray-5;
+  gap: 4px;
 
   &:hover {
     color: $gray-9;
@@ -85,10 +86,6 @@
 
   &.active {
     color: $gray-9;
-  }
-
-  .tab-label-tag {
-    margin-left: 4px;
   }
 }
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
-import { TraceCheckboxModule } from '../checkbox/checkbox.module';
+import { CheckboxModule } from '../checkbox/checkbox.module';
 import { DividerModule } from '../divider/divider.module';
 import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
@@ -21,7 +21,7 @@ import { MultiSelectComponent } from './multi-select.component';
     TraceSearchBoxModule,
     ButtonModule,
     LoadAsyncModule,
-    TraceCheckboxModule,
+    CheckboxModule,
     TooltipModule
   ],
   declarations: [MultiSelectComponent],
