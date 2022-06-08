@@ -8,7 +8,10 @@ export interface TableDataSource<TResult, TCol extends TableColumnConfig = Table
 
 export interface TableDataRequest<TCol extends TableColumnConfig = TableColumnConfig> {
   columns: TCol[];
-  position: TablePagePosition;
+  position: {
+    startIndex: number;
+    limit: number;
+  };
   sort?: {
     column: TCol;
     direction: TableSortDirection;
@@ -20,9 +23,4 @@ export interface TableDataRequest<TCol extends TableColumnConfig = TableColumnCo
 export interface TableDataResponse<TData> {
   data: TData[];
   totalCount: number;
-}
-
-export interface TablePagePosition {
-  startIndex: number;
-  limit: number;
 }
