@@ -288,7 +288,11 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   }
 
   private hasCachedRowsForRequest(request: TableDataRequest): boolean {
-    if (this.cachedData.rows.length !== 0 && this.cachedData.rows.length === this.cachedData.total) {
+    if (
+      this.cachedData.rows.length !== 0 &&
+      this.cachedData.rows.length === this.cachedData.total &&
+      request.position.limit <= this.cachedData.rows.length
+    ) {
       // Check if we already have all available results cached
       return true;
     }
