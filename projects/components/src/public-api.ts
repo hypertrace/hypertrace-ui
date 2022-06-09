@@ -154,6 +154,10 @@ export * from './icon/icon-border';
 export * from './icon/icon.component';
 export * from './icon/icon.module';
 
+// Info icon
+export * from './info-icon/info-icon.component';
+export * from './info-icon/info-icon.module';
+
 // Input
 export { InputAppearance } from './input/input-appearance';
 export * from './input/input.component';

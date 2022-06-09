@@ -90,7 +90,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return this.cachedValues.has(field) ? this.cachedValues.get(field)! : [];
   }
 
-  private cacheNewData(total: number, rows: StatefulTableRow[], request: TableDataRequest): void {
+  private cacheNewData(total: number, rows: StatefulTableRow[], request?: TableDataRequest): void {
     this.cachedData = {
       request: request,
       rows: rows.map(TableCdkRowUtil.cloneRow),
@@ -237,7 +237,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return of(this.cachedData.rows).pipe(
         map(cachedRows => TableCdkRowUtil.buildRowStateChanges(cachedRows, changedRow)),
         switchMap(stateChanges => this.fetchAndAppendNewChildren(stateChanges)),
-        map(TableCdkRowUtil.removeCollapsedRows)
+        map(TableCdkRowUtil.removeCollapsedRows),
+        tap(rows => this.cacheNewData(0, rows))
       );
     }
 
@@ -320,12 +321,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     let total = 0;
 
     return this.tableDataSourceProvider.data.getData(request).pipe(
+      tap(response => (total = response.totalCount)),
       tap(response => this.updatePaginationTotalCount(response.totalCount)),
-      map(response => {
-        total = response.totalCount;
-
-        return response.data;
-      }),
+      map(response => response.data),
       map(TableCdkRowUtil.buildInitialRowStates),
       map(rows =>
         this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
@@ -333,7 +331,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
           : rows
       ),
       tap(rows => this.cacheNewData(total, rows, request)),
-      map(rows => rows.slice(0, request.position.limit))
+      map(rows => rows.slice(0, request.position.limit)) // Paginate data
     );
   }
 
