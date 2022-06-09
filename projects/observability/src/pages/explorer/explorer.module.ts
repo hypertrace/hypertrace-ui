@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { FactorySansProvider, ModuleWithProviders, NgModule } from '@angular/core';
 import {
+  ButtonModule,
   FilterBarModule,
   LetAsyncModule,
+  NotificationModule,
   PageHeaderModule,
   PanelModule,
   ToggleGroupModule
@@ -14,7 +16,9 @@ import { ExplorerComponent } from './explorer.component';
 
 @NgModule({
   imports: [
+    ButtonModule,
     CommonModule,
+    NotificationModule,
     ObservabilityDashboardModule,
     FilterBarModule,
     ExploreQueryEditorModule,

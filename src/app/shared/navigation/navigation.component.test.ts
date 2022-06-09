@@ -1,5 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import {
+  FeatureState,
+  FeatureStateResolver,
   NavigationService,
   PreferenceService,
   RelativeTimeRange,
@@ -27,6 +29,9 @@ describe('NavigationComponent', () => {
     imports: [LetAsyncModule],
     declarations: [MockComponent(NavigationListComponent)],
     providers: [
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+      }),
       mockProvider(NavigationService, {
         getRouteConfig: () => ({
           data: {

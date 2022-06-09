@@ -1,7 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+
 import { IconType } from '@hypertrace/assets-library';
-import { PreferenceService, TimeRangeService } from '@hypertrace/common';
+import {
+  ApplicationFeature,
+  FeatureState,
+  FeatureStateResolver,
+  PreferenceService,
+  SubscriptionLifecycle,
+  TimeRangeService
+} from '@hypertrace/common';
 import {
   NavigationListComponentService,
   NavigationListService,
@@ -10,12 +19,12 @@ import {
   NavItemType
 } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ht-navigation',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./navigation.component.scss'],
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="navigation">
       <ht-navigation-list
@@ -83,12 +92,24 @@ export class NavigationComponent {
   ];
 
   public constructor(
+    private readonly featureStateResolver: FeatureStateResolver,
     private readonly navigationListService: NavigationListService,
     private readonly preferenceService: PreferenceService,
     private readonly navListComponentService: NavigationListComponentService,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle,
     private readonly timeRangeService: TimeRangeService
   ) {
+    this.subscriptionLifecycle.add(
+      this.featureStateResolver.getFeatureState(ApplicationFeature.SavedQueries).subscribe(featureState => {
+        if (featureState === FeatureState.Enabled) {
+          this.navItemDefinitions.push(
+            this.navigationListService.getNavItemDefinitionForFeature(ApplicationFeature.SavedQueries)
+          );
+        }
+      })
+    );
+
     const navItems = this.navItemDefinitions.map(definition =>
       this.navigationListService.decorateNavItem(definition, this.activatedRoute)
     );

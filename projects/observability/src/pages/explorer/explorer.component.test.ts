@@ -6,11 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
+  FeatureState,
   FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
   PreferenceService,
   RelativeTimeRange,
+  SubscriptionLifecycle,
   TimeDuration,
   TimeRangeService,
   TimeUnit
@@ -20,6 +22,7 @@ import {
   FilterBarComponent,
   FilterBuilderLookupService,
   FilterOperator,
+  NotificationService,
   ToggleGroupComponent
 } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
@@ -45,6 +48,7 @@ import { SPANS_GQL_REQUEST } from '../../shared/graphql/request/handlers/spans/s
 import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
+import { ExplorerService } from './explorer-service';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';
 
@@ -81,13 +85,13 @@ describe('Explorer component', () => {
       IconLibraryTestingModule
     ],
     declareComponent: false,
-    componentProviders: [LayoutChangeService],
+    componentProviders: [LayoutChangeService, SubscriptionLifecycle],
     providers: [
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       }),
       mockProvider(FeatureStateResolver, {
-        getFeatureState: jest.fn().mockReturnValue(of(true))
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
@@ -108,7 +112,13 @@ describe('Explorer component', () => {
         }
       },
       mockProvider(PreferenceService, {
-        get: jest.fn().mockReturnValue(of(true))
+        get: jest.fn().mockReturnValue(of([]))
+      }),
+      mockProvider(NotificationService, {
+        createSuccessToast: jest.fn()
+      }),
+      mockProvider(ExplorerService, {
+        isDuplicateQuery: jest.fn().mockReturnValue(false)
       }),
       ...getMockFlexLayoutProviders()
     ]
@@ -411,5 +421,16 @@ describe('Explorer component', () => {
     expect(spectator.query(ExploreQueryIntervalEditorComponent)?.interval).toEqual(
       new TimeDuration(30, TimeUnit.Second)
     );
+  }));
+
+  test('shows notification when a query is saved successfully', fakeAsync(() => {
+    init();
+    const notificationServiceSpy = spyOn(spectator.inject(NotificationService), 'createSuccessToast');
+
+    const saveQueryButton = spectator.query('.explorer-save-button');
+    expect(saveQueryButton).toExist();
+
+    spectator.click(saveQueryButton as HTMLElement);
+    expect(notificationServiceSpy).toHaveBeenCalledWith('Query Saved Successfully!');
   }));
 });

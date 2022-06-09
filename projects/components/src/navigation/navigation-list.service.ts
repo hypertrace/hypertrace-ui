@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HtRoute, NavigationService } from '@hypertrace/common';
+import { ApplicationFeature, HtRoute, NavigationService } from '@hypertrace/common';
 import { uniq } from 'lodash-es';
+import { featureBasedNavItemDefinitions } from './navigation-list.constants';
 import { NavItemConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
@@ -26,5 +27,9 @@ export class NavigationListService {
 
   private getFeaturesForRoute(route: HtRoute): string[] {
     return (route.data && route.data.features) || [];
+  }
+
+  public getNavItemDefinitionForFeature(feature: ApplicationFeature): NavItemConfig {
+    return featureBasedNavItemDefinitions[feature];
   }
 }

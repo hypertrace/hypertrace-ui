@@ -195,6 +195,9 @@ export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-so
 export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 
+// Saved Queries
+export * from './pages/saved-queries/saved-queries.component';
+
 // Explore Data source
 export * from './shared/dashboard/data/graphql/table/explore/explore-table-data-source.model';
 
@@ -250,6 +253,7 @@ export * from './pages/apis/backend-detail/traces/backend-trace-list.dashboard';
 export * from './pages/apis/backend-detail/traces/backend-trace-list.module';
 
 export * from './pages/explorer/explorer.module';
+export * from './pages/saved-queries/saved-queries.module';
 
 export * from './pages/api-trace-detail/logs/api-trace-logs.component';
 export * from './pages/api-trace-detail/sequence/api-trace-sequence.component';

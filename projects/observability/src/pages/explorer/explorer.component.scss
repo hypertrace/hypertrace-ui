@@ -53,4 +53,14 @@
       @include body-1-medium;
     }
   }
+
+  .explorer-save-button {
+    align-self: flex-end;
+    margin: 0 24px 16px 10px;
+  }
+
+  .explorer-toggle-container {
+    display: flex;
+    justify-content: space-between;
+  }
 }
