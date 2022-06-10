@@ -30,6 +30,7 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
+        (change)="$event.stopPropagation()"
       >
         <ng-container
           *ngTemplateOutlet="
