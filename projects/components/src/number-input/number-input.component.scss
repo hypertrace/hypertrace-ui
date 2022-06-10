@@ -7,6 +7,15 @@
   height: inherit;
   background: white;
   text-align: center;
+
+  &.disabled {
+    background-color: $gray-2;
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: $gray-2;
+    }
+  }
 }
 
 .border {
