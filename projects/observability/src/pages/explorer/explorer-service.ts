@@ -50,7 +50,7 @@ export class ExplorerService {
     );
   }
 
-  public isDuplicateQuery(currentQuery: SavedQuery, savedQueries: SavedQuery[]): boolean {
+  public isDuplicateQuery(currentQuery: Omit<SavedQuery, 'name'>, savedQueries: Omit<SavedQuery, 'name'>[]): boolean {
     for (const savedQuery of savedQueries) {
       if (isEqual(currentQuery, savedQuery)) {
         return true;

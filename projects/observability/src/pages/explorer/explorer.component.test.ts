@@ -433,4 +433,31 @@ describe('Explorer component', () => {
     spectator.click(saveQueryButton as HTMLElement);
     expect(notificationServiceSpy).toHaveBeenCalledWith('Query Saved Successfully!');
   }));
+
+  test('saves query with a default name when no input is provided', fakeAsync(() => {
+    init();
+    const preferenceServiceSpy = spyOn(spectator.inject(PreferenceService), 'set');
+    window.prompt = jest.fn().mockReturnValue('My query');
+
+    const saveQueryButton = spectator.query('.explorer-save-button');
+    expect(saveQueryButton).toExist();
+
+    spectator.click(saveQueryButton as HTMLElement);
+    expect(preferenceServiceSpy).toHaveBeenCalledWith('savedQueries', [
+      { name: 'My query', filters: [], scopeQueryParam: 'endpoint-traces' }
+    ]);
+  }));
+
+  test("doesn't save query if user cancels input dialog", fakeAsync(() => {
+    init();
+    const preferenceServiceSpy = spyOn(spectator.inject(PreferenceService), 'set');
+    // tslint:disable-next-line: no-null-keyword
+    window.prompt = jest.fn().mockReturnValue(null);
+
+    const saveQueryButton = spectator.query('.explorer-save-button');
+    expect(saveQueryButton).toExist();
+
+    spectator.click(saveQueryButton as HTMLElement);
+    expect(preferenceServiceSpy).toBeCalledTimes(0);
+  }));
 });

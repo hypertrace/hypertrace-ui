@@ -18,7 +18,7 @@ import { SavedQuery } from '../explorer/explorer.component';
         >
           <div class="query-card">
             <div class="name-container">
-              <p class="query-name">></p>
+              <p class="query-name">{{ query.name }}</p>
               <p class="scope">{{ query.scopeQueryParam === 'spans' ? 'Spans' : 'Endpoint Traces' }}</p>
             </div>
             <div class="filters-container">

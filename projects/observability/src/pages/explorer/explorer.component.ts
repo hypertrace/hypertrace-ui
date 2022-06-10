@@ -227,12 +227,21 @@ export class ExplorerComponent {
 
     const currentQuery = { scopeQueryParam: currentScope, filters: cleanedFilters };
 
-    if (this.explorerService.isDuplicateQuery(currentQuery, this.savedQueries)) {
+    if (
+      this.explorerService.isDuplicateQuery(
+        currentQuery,
+        this.savedQueries.map(({ name, ...rest }) => rest)
+      )
+    ) {
       this.notificationService.createInfoToast('This query is saved already!');
     } else {
-      const newSavedQueries = [...this.savedQueries, currentQuery];
-      this.preferenceService.set('savedQueries', newSavedQueries);
-      this.notificationService.createSuccessToast('Query Saved Successfully!');
+      const queryName = prompt('Please enter a name for this query', 'My query');
+
+      if (queryName !== null) {
+        const newSavedQueries = [...this.savedQueries, { name: queryName, ...currentQuery }];
+        this.preferenceService.set('savedQueries', newSavedQueries);
+        this.notificationService.createSuccessToast('Query Saved Successfully!');
+      }
     }
   }
 
@@ -407,6 +416,7 @@ const enum ExplorerQueryParam {
 }
 
 export interface SavedQuery {
+  name: string;
   scopeQueryParam: ScopeQueryParam;
   filters: Filter[];
 }
