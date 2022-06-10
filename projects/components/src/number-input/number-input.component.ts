@@ -22,7 +22,6 @@ import { NumberInputAppearance } from './number-input-appearance';
       [disabled]="this.disabled"
       [ngModel]="this.value"
       (ngModelChange)="this.onValueChange($event)"
-      [htTooltip]="this.value"
     />
   `
 })
