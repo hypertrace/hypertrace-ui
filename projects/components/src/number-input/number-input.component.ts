@@ -18,10 +18,11 @@ import { NumberInputAppearance } from './number-input-appearance';
     <input
       type="number"
       class="number-input"
-      [ngClass]="this.appearance"
+      [ngClass]="this.getStyleClasses()"
       [disabled]="this.disabled"
       [ngModel]="this.value"
       (ngModelChange)="this.onValueChange($event)"
+      [htTooltip]="this.value"
     />
   `
 })
@@ -50,6 +51,10 @@ export class NumberInputComponent implements ControlValueAccessor {
   private propagateControlValueChangeOnTouch?: (value: number | undefined) => void;
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
+
+  public getStyleClasses(): string[] {
+    return [this.appearance, this.disabled ? 'disabled' : ''];
+  }
 
   private enforceMinMaxAndEmit(value?: number): number | undefined {
     if (value !== undefined && this.maxValue !== undefined && value > this.maxValue) {
