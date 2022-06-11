@@ -7,7 +7,7 @@ export class TimeDuration {
 
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
     this.toUnitString(); // Fail if unrecognized TimeUnit
-    this.millis = this.normalizeToMillis(value, unit);
+    this.millis = this.normalizeToMillis(isNaN(value) ? 0 : value, unit);
   }
 
   public toMillis(): number {
@@ -65,6 +65,8 @@ export class TimeDuration {
     // tslint:disable-next-line: strict-boolean-expressions
     const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
+
+    console.log(amountForUnit, firstApplicableUnit);
 
     return new TimeDuration(amountForUnit, firstApplicableUnit);
   }
