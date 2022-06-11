@@ -90,6 +90,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.SidebarLeft, url: `${iconsRootPath}/sidebar-left.svg` },
         { key: IconType.Sort, url: `${iconsRootPath}/sort.svg` },
         { key: IconType.Slack, url: `${iconsRootPath}/slack.svg` },
+        { key: IconType.Speedometer, url: `${iconsRootPath}/speedometer.svg` },
         { key: IconType.Spinner, url: `${iconsRootPath}/spinner.svg` },
         { key: IconType.StatusCode, url: `${iconsRootPath}/status-code.svg` },
         { key: IconType.StringAttribute, url: `${iconsRootPath}/string-attribute.svg` },
