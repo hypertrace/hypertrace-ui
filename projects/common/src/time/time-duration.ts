@@ -66,8 +66,6 @@ export class TimeDuration {
     const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
 
-    console.log(amountForUnit, firstApplicableUnit);
-
     return new TimeDuration(amountForUnit, firstApplicableUnit);
   }
 
