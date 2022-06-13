@@ -1,34 +1,72 @@
 @import 'mixins';
 
 .metric-card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border: 1px solid;
-  padding: 10px;
+  @include frame-border;
   border-radius: 6px;
 
-  .indicator-and-title {
+  .card-with-indicator {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
 
-    .indicator {
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
+    .indicator-and-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .indicator {
+        .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
+      }
+
+      .title-text {
+        @include chart-small-regular($gray-7);
+        text-transform: uppercase;
       }
     }
 
-    .title-text {
-      @include chart-small-regular($gray-7);
-      text-transform: uppercase;
+    .value {
+      @include header-5($gray-7);
+      margin-left: 14px;
     }
   }
 
-  .value {
-    @include header-5($gray-7);
-    margin-left: 14px;
+  .card-with-large-icon {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .value-with-text {
+      display: flex;
+      flex-direction: column;
+      margin: 16px;
+      justify-content: space-between;
+
+      .value {
+        @include header-4($gray-9);
+      }
+
+      .text {
+        @include body-1-medium($gray-5);
+      }
+    }
+
+    .icon {
+      align-self: baseline;
+      margin: 20px 24px 0 0;
+    }
   }
+}
+
+.selected {
+  background-color: $blue-1;
+  border-color: $blue-4;
+}
+
+.clickable {
+  cursor: pointer;
 }
