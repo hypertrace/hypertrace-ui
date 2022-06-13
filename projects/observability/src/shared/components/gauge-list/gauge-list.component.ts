@@ -95,7 +95,7 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
     this.itemOptions = items.map(option => ({
       label: option.label,
       color: colorLookupMap.get(option.colorKey ?? option.label),
-      width: `${((option.value / fullValue!) * 100).toFixed(2)}%`,
+      width: `${((option.value / fullValue) * 100).toFixed(2)}%`,
       value: option.value,
       percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
       original: option
