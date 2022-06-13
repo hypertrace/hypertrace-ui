@@ -87,10 +87,13 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
       }));
     } else {
       let maxValue = maxBy(this.items, option => option.value)?.value;
+
       if (maxValue === undefined || maxValue === 0) {
         maxValue = 1;
       }
+
       const totalCount = sum(this.items.map((gaugeItem: GaugeItem) => gaugeItem.value));
+
       this.itemOptions = this.items.map(option => ({
         label: option.label,
         color: colorLookupMap.get(option.colorKey ?? option.label),
