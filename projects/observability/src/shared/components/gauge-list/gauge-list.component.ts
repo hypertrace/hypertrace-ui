@@ -50,6 +50,9 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
   @Input()
   public showItemBorders: boolean = true;
 
+  @Input()
+  public total?: number;
+
   @Output()
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
 
@@ -71,9 +74,12 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
       return;
     }
 
-    let maxValue = maxBy(this.items, option => option.value)?.value;
-    if (maxValue === undefined || maxValue === 0) {
-      maxValue = 1;
+    if (this.total === undefined || this.total === 0) {
+      this.total = maxBy(this.items, option => option.value)?.value;
+
+      if (this.total === undefined || this.total === 0) {
+        this.total = 1;
+      }
     }
 
     const colorLookupMap = this.buildColorLookupForData(this.items);
@@ -82,7 +88,7 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
     this.itemOptions = this.items.map(option => ({
       label: option.label,
       color: colorLookupMap.get(option.colorKey ?? option.label),
-      width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
+      width: `${((option.value / this.total!) * 100).toFixed(2)}%`,
       value: option.value,
       percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
       original: option
