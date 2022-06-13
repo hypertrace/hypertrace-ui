@@ -10,11 +10,8 @@ import { MetricCardIndicatorType } from './metric-card';
   template: `
     <div
       class="metric-card"
-      [ngClass]="{ selected: this.isSelected, clickable: this.clickable }"
-      [ngStyle]="{
-        'background-color': this.isSelected ? '${Color.Blue1}' : this.backgroundColor,
-        'border-color': this.isSelected ? '${Color.Blue4}' : this.borderColor
-      }"
+      [ngClass]="{ clickable: this.clickable }"
+      [ngStyle]="this.getStylesForCard()"
       (click)="this.onSelectionChange()"
     >
       <div class="card-with-indicator" *ngIf="this.layoutType === '${MetricCardLayout.CardWithIndicator}'">
@@ -94,5 +91,11 @@ export class MetricCardComponent {
       return;
     }
     this.selectedValue.emit(this.selectionValue);
+  }
+
+  public getStylesForCard(): { 'background-color': string; 'border-color': string } {
+    return this.isSelected
+      ? { 'background-color': Color.Blue1, 'border-color': Color.Blue4 }
+      : { 'background-color': this.backgroundColor, 'border-color': this.borderColor };
   }
 }
