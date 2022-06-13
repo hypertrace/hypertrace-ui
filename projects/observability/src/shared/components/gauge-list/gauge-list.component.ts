@@ -74,17 +74,8 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
       return;
     }
 
-    const colorLookupMap = this.buildColorLookupForData(this.items);
-
     if (this.total !== undefined && this.total !== 0) {
-      this.itemOptions = this.items.map(option => ({
-        label: option.label,
-        color: colorLookupMap.get(option.colorKey ?? option.label),
-        width: `${((option.value / this.total!) * 100).toFixed(2)}%`,
-        value: option.value,
-        percentage: (option.value / this.total!) * 100,
-        original: option
-      }));
+      this.setItemOptions(this.items, this.total, this.total);
     } else {
       let maxValue = maxBy(this.items, option => option.value)?.value;
 
@@ -94,15 +85,21 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
 
       const totalCount = sum(this.items.map((gaugeItem: GaugeItem) => gaugeItem.value));
 
-      this.itemOptions = this.items.map(option => ({
-        label: option.label,
-        color: colorLookupMap.get(option.colorKey ?? option.label),
-        width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
-        value: option.value,
-        percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
-        original: option
-      }));
+      this.setItemOptions(this.items, maxValue, totalCount);
     }
+  }
+
+  private setItemOptions(items: T[], fullValue: number, totalCount: number) {
+    const colorLookupMap = this.buildColorLookupForData(this.items);
+
+    this.itemOptions = items.map(option => ({
+      label: option.label,
+      color: colorLookupMap.get(option.colorKey ?? option.label),
+      width: `${((option.value / fullValue!) * 100).toFixed(2)}%`,
+      value: option.value,
+      percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
+      original: option
+    }));
   }
 
   private buildColorLookupForData(barData: GaugeItem[]): Map<string, string> {
