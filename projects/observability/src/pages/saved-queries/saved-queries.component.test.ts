@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { SavedQueriesModule } from '@hypertrace/observability';
+import { ScopeQueryParam } from '../explorer/explorer.component';
 import { SavedQueriesComponent } from './saved-queries.component';
 
 describe('SavedQueriesComponent', () => {
@@ -34,9 +35,25 @@ describe('SavedQueriesComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should contain not found text when no saved queries are available', () => {
+  test('should contain not found text when no saved queries are available', () => {
     const debugElement = fixture.debugElement;
     const p = debugElement.query(By.css('.not-found-text')).nativeElement;
     expect(p.textContent).toContain("You haven't saved any queries! Go to Explorer page to save a query.");
+  });
+
+  test('renames a query successfully', () => {
+    component.savedQueries = [{ name: 'Query 1', scopeQueryParam: ScopeQueryParam.Spans, filters: [] }];
+    window.prompt = jest.fn().mockReturnValue('Query 2');
+
+    component.onRename(0);
+    expect(component.savedQueries[0].name).toBe('Query 2');
+  });
+
+  test('deletes a query successfully', () => {
+    component.savedQueries = [{ name: 'Query 1', scopeQueryParam: ScopeQueryParam.Spans, filters: [] }];
+    window.confirm = jest.fn().mockReturnValue(true);
+
+    component.onDelete(0);
+    expect(component.savedQueries.length).toBe(0);
   });
 });

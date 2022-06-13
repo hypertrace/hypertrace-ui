@@ -13,23 +13,57 @@
     padding: 24px;
   }
 
-  .query-card {
+  .query-container {
+    display: flex;
+  }
+
+  .query-link-container {
+    width: 100%;
+  }
+
+  .query-link {
     min-height: 36px;
     width: 100%;
     padding: 8px 10px;
     border: 1px solid $gray-3;
     border-radius: 6px;
     background-color: $gray-1;
+    transition: 0.2s border-color ease-in;
 
     &:hover {
       cursor: pointer;
-      border: 1px solid $gray-6;
+      border: 1px solid $gray-5;
     }
 
     span {
       background-color: $gray-2;
       border-radius: 4px;
       padding: 0 10px;
+    }
+  }
+
+  .query-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 2px 0 0 4px;
+  }
+
+  .query-option-edit {
+    transition: 0.2s color ease-in;
+
+    &:hover {
+      cursor: pointer;
+      color: $green-7;
+    }
+  }
+
+  .query-option-delete {
+    transition: 0.2s color ease-in;
+
+    &:hover {
+      cursor: pointer;
+      color: $red-7;
     }
   }
 

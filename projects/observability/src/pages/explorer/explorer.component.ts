@@ -221,7 +221,9 @@ export class ExplorerComponent {
 
     // Remove the undefined subpath field for correct object comparison
     for (const filter of this.filters) {
-      delete filter.subpath;
+      if (filter.subpath === undefined) {
+        delete filter.subpath;
+      }
       cleanedFilters.push(filter);
     }
 

@@ -44,6 +44,7 @@ export const enum IconType {
   Download = 'download',
   DrilldownFilter = 'svg:drilldown-filter',
   Edge = 'edge',
+  Edit = 'edit',
   Error = 'error_outline',
   Empty = 'panorama_fish_eye',
   Expand = 'launch',
