@@ -22,7 +22,7 @@
   }
 
   .label {
-    @include body-1-medium($gray-5);
+    @include body-small($gray-5);
     @include ellipsis-overflow;
   }
 
