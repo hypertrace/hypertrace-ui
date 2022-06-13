@@ -89,7 +89,7 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
     }
   }
 
-  private setItemOptions(items: T[], fullValue: number, totalCount: number) {
+  private setItemOptions(items: T[], fullValue: number, totalCount: number): void {
     const colorLookupMap = this.buildColorLookupForData(this.items);
 
     this.itemOptions = items.map(option => ({
