@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
 import { MetricCardLayout } from '../public-api';
@@ -8,12 +8,7 @@ import { MetricCardIndicatorType } from './metric-card';
   styleUrls: ['./metric-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      class="metric-card"
-      [ngClass]="{ clickable: this.clickable }"
-      [ngStyle]="this.getStylesForCard()"
-      (click)="this.onSelectionChange()"
-    >
+    <div class="metric-card" [ngStyle]="this.getStylesForCard()">
       <div class="card-with-indicator" *ngIf="this.layoutType === '${MetricCardLayout.CardWithIndicator}'">
         <div class="indicator-and-title">
           <div class="indicator">
@@ -76,22 +71,6 @@ export class MetricCardComponent {
 
   @Input()
   public isSelected: boolean = false;
-
-  @Input()
-  public clickable: boolean = false;
-
-  @Input()
-  public selectionValue?: string;
-
-  @Output()
-  public readonly selectedValue: EventEmitter<string> = new EventEmitter<string>();
-
-  public onSelectionChange(): void {
-    if (!this.clickable) {
-      return;
-    }
-    this.selectedValue.emit(this.selectionValue);
-  }
 
   public getStylesForCard(): { 'background-color': string; 'border-color': string } {
     return this.isSelected
