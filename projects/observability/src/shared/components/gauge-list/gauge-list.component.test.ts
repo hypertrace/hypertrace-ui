@@ -144,7 +144,7 @@ describe('Gauge List Component', () => {
     );
 
     expect(spectator.queryAll('.progress-value').length).toEqual(2);
-    const values = spectator.queryAll('.value') as HTMLElement[];
+    const values = spectator.queryAll('.value');
     expect(values[0]).toHaveText('80 (40%)');
     expect(values[1]).toHaveText('120 (60%)');
   });
