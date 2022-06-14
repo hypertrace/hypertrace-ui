@@ -5,6 +5,7 @@ describe('Time duration', () => {
   test('can convert to millis', () => {
     expect(new TimeDuration(3, TimeUnit.Minute).toMillis()).toBe(3 * 60 * 1000);
     expect(new TimeDuration(4, TimeUnit.Hour).toMillis()).toBe(4 * 60 * 60 * 1000);
+    expect(new TimeDuration(NaN, TimeUnit.Day).toMillis()).toBe(0);
   });
 
   test('converts to ISO 8601 duration string correctly', () => {
