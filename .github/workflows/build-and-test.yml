@@ -16,15 +16,15 @@ jobs:
         with:
           node-version: '16'
 
-      # - id: cache
-      #   name: Cache node modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+      - id: cache
+        name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: NPM Install
-        # if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
   build:
     runs-on: ubuntu-20.04
@@ -33,20 +33,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # temporary fix - https://github.com/actions/setup-node/issues/516
-      - name: Set up Node 16
-        uses: actions/setup-node@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
         with:
-          node-version: '16'
-
-      - name: NPM Install
-        run: npm ci
-
-      # - name: Cache node modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Build
         run: npm run build:ci
@@ -63,20 +54,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # temporary fix - https://github.com/actions/setup-node/issues/516
-      - name: Set up Node 16
-        uses: actions/setup-node@v2
+      - name: Restore node modules
+        uses: actions/cache@v2
         with:
-          node-version: '16'
-
-      - name: NPM Install
-        run: npm ci
-
-      # - name: Restore node modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Lint
         run: npm run lint
@@ -95,20 +77,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # temporary fix - https://github.com/actions/setup-node/issues/516
-      - name: Set up Node 16
-        uses: actions/setup-node@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
         with:
-          node-version: '16'
-
-      - name: NPM Install
-        run: npm ci
-
-      # - name: Cache node modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - id: set-test-chunks
         name: Set Chunks
@@ -134,20 +107,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # temporary fix - https://github.com/actions/setup-node/issues/516
-      - name: Set up Node 16
-        uses: actions/setup-node@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
         with:
-          node-version: '16'
-
-      - name: NPM Install
-        run: npm ci
-
-      # - name: Cache node modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
         run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
@@ -233,3 +197,4 @@ jobs:
           tags: ${{ github.sha }}
           dockerfile: Dockerfile
           build_args: GIT_COMMIT_HASH=${{ github.sha }},GIT_TOKEN=${{ secrets.GIT_ACTION_TOKEN }},GIT_USERNAME=rzp
+
