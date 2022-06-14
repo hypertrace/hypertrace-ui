@@ -18,7 +18,9 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
       <div class="sheet-overlay" [style.padding.px]="this.hasDefaultPadding ? 24 : 0">
         <ng-container *ngIf="!this.isViewCollapsed">
           <div *ngIf="this.showHeader" class="header">
-            <h3 class="header-title">{{ sheetTitle }}</h3>
+            <ng-container *ngIf="!this.isSheetTitleAString; else defaultSheetTitleTemplate">
+              <ng-container *ngTemplateOutlet="this.sheetTitle"></ng-container>
+            </ng-container>
             <div class="action-buttons">
               <ht-open-in-new-tab
                 *ngIf="this.navigationParams"
@@ -33,6 +35,9 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
               >
               </ht-button>
             </div>
+            <ng-template #defaultSheetTitleTemplate>
+              <h3 class="default-header-title">{{ sheetTitle }}</h3>
+            </ng-template>
           </div>
           <div class="content-wrapper">
             <div class="content">
@@ -58,7 +63,7 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
   `
 })
 export class SheetOverlayComponent {
-  public readonly sheetTitle: string;
+  public readonly sheetTitle: string | TemplateRef<unknown>;
   public readonly showHeader: boolean = true;
   public readonly size: SheetSize = SheetSize.Small;
   public readonly hasDefaultPadding: boolean = true;
@@ -68,6 +73,7 @@ export class SheetOverlayComponent {
   public visible: boolean = true;
   public readonly closeOnEscape: boolean;
   public readonly attachedTriggerTemplate?: TemplateRef<unknown>;
+  public readonly isSheetTitleAString: boolean;
   public isViewCollapsed: boolean;
   public navigationParams: ExternalNavigationParams | undefined;
 
@@ -81,6 +87,7 @@ export class SheetOverlayComponent {
     this.hasDefaultPadding = sheetConfig.hasDefaultPadding ?? true;
     this.showHeader = sheetConfig.showHeader === true;
     this.sheetTitle = sheetConfig.title === undefined ? '' : sheetConfig.title;
+    this.isSheetTitleAString = typeof this.sheetTitle === 'string';
     this.size = sheetConfig.size;
     this.closeOnEscape = sheetConfig.closeOnEscapeKey ?? true;
     this.attachedTriggerTemplate = sheetConfig.attachedTriggerTemplate;
