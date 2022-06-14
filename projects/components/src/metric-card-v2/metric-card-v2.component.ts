@@ -7,7 +7,7 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./metric-card-v2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="metric-card" [ngClass]="{ selected: this.isSelected }">
+    <div class="metric-card" [ngClass]="{ selected: this.isSelected, clickable: this.isClickable }">
       <div class="value-with-icon">
         <span class="value">{{ this.value }}</span>
         <ht-icon class="icon" [icon]="this.icon" [size]="this.iconSize" [color]="this.iconColor"></ht-icon>
@@ -34,4 +34,7 @@ export class MetricCardV2Component {
 
   @Input()
   public isSelected: boolean = false;
+
+  @Input()
+  public isClickable: boolean = false;
 }
