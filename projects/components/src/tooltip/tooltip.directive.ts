@@ -26,9 +26,7 @@ export class TooltipDirective implements OnDestroy {
 
   private popover?: PopoverRef;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {
-    // This.subscriptions.add(this.mouseLeave$.subscribe(() => this.removeTooltip()));
-  }
+  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {}
 
   @HostListener('mouseenter', ['$event'])
   public onHover(event: MouseEvent): void {
