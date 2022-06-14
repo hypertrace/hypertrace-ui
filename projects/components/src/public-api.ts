@@ -220,6 +220,10 @@ export * from './metric-card/metric-card';
 export * from './metric-card/metric-card.component';
 export * from './metric-card/metric-card.module';
 
+// Metric Card V2
+export * from './metric-card-v2/metric-card-v2.component';
+export * from './metric-card-v2/metric-card-v2.module';
+
 // Modal
 export * from './modal/modal';
 export * from './modal/modal.module';
