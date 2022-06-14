@@ -98,6 +98,57 @@ describe('Gauge List Component', () => {
     expect(spectator.query('.value')).toHaveText('120');
   });
 
+  test('should show correct percentage with total', () => {
+    const data = [
+      {
+        label: 'POST /api 1',
+        value: 120
+      }
+    ];
+
+    spectator = createHost(
+      `<ht-gauge-list [items]="data" showPercentages="true" [total]="total">
+      </ht-gauge-list>`,
+      {
+        hostProps: {
+          data: data,
+          total: 200
+        }
+      }
+    );
+
+    expect(spectator.query('.progress-value')).toExist();
+    expect(spectator.query('.value')).toHaveText('120 (60%)');
+  });
+
+  test('should show correct percentage without total', () => {
+    const data = [
+      {
+        label: 'POST /api 1',
+        value: 80
+      },
+      {
+        label: 'POST /api 1',
+        value: 120
+      }
+    ];
+
+    spectator = createHost(
+      `<ht-gauge-list [items]="data" showPercentages="true">
+      </ht-gauge-list>`,
+      {
+        hostProps: {
+          data: data
+        }
+      }
+    );
+
+    expect(spectator.queryAll('.progress-value').length).toEqual(2);
+    const values = spectator.queryAll('.value') as HTMLElement[];
+    expect(values[0]).toHaveText('80 (40%)');
+    expect(values[1]).toHaveText('120 (60%)');
+  });
+
   test('should determine color using label', () => {
     const data: GaugeItem[] = [
       {
