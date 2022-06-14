@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MetricCardV2Component } from './metric-card-v2.component';
+import { NgModule } from '@angular/core';
 import { IconModule, LabelModule } from '../public-api';
+import { MetricCardV2Component } from './metric-card-v2.component';
 
 @NgModule({
   declarations: [MetricCardV2Component],

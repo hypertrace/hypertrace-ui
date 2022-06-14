@@ -5,26 +5,21 @@
   border-radius: 8px;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  padding: 16px;
 
-  .value-with-text {
+  .value-with-icon {
     display: flex;
-    flex-direction: column;
-    margin: 16px;
     justify-content: space-between;
 
     .value {
       @include header-4($gray-9);
     }
-
-    .text {
-      @include body-1-medium($gray-5);
-    }
   }
 
-  .icon {
-    align-self: baseline;
-    margin: 20px 24px 0 0;
+  .text {
+    @include body-1-medium($gray-5);
   }
 }
 

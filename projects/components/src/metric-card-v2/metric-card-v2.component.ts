@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
 
@@ -8,11 +8,11 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="metric-card" [ngClass]="{ selected: this.isSelected }">
-      <div class="value-with-text">
+      <div class="value-with-icon">
         <span class="value">{{ this.value }}</span>
-        <ht-label class="text" [label]="this.text"></ht-label>
+        <ht-icon class="icon" [icon]="this.icon" [size]="this.iconSize" [color]="this.iconColor"></ht-icon>
       </div>
-      <ht-icon class="icon" [icon]="this.icon" [size]="this.iconSize" [color]="this.iconColor"></ht-icon>
+      <ht-label class="text" [label]="this.text"></ht-label>
     </div>
   `
 })
