@@ -7,7 +7,7 @@ import { MetricCardIndicatorType } from './metric-card';
   styleUrls: ['./metric-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="metric-card" [style.backgroundColor]="this.backgroundColor" [style.borderColor]="this.borderColor">
+    <div class="metric-card" [ngStyle]="this.getStylesForCard()" [ngClass]="{ clickable: this.isClickable }">
       <div class="indicator-and-title">
         <div class="indicator">
           <ng-container [ngSwitch]="this.indicator">
@@ -52,4 +52,16 @@ export class MetricCardComponent {
 
   @Input()
   public borderColor: Color = Color.Transparent;
+
+  @Input()
+  public isSelected: boolean = false;
+
+  @Input()
+  public isClickable: boolean = false;
+
+  public getStylesForCard(): { 'background-color': string; 'border-color': string } {
+    return this.isSelected
+      ? { 'background-color': Color.Blue1, 'border-color': Color.Blue4 }
+      : { 'background-color': this.backgroundColor, 'border-color': this.borderColor };
+  }
 }
