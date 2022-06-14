@@ -7,7 +7,7 @@ import { MetricCardIndicatorType } from './metric-card';
   styleUrls: ['./metric-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="metric-card" [ngStyle]="this.getStylesForCard()">
+    <div class="metric-card" [ngStyle]="this.getStylesForCard()" [ngClass]="{ clickable: this.isClickable }">
       <div class="indicator-and-title">
         <div class="indicator">
           <ng-container [ngSwitch]="this.indicator">
@@ -55,6 +55,9 @@ export class MetricCardComponent {
 
   @Input()
   public isSelected: boolean = false;
+
+  @Input()
+  public isClickable: boolean = false;
 
   public getStylesForCard(): { 'background-color': string; 'border-color': string } {
     return this.isSelected
