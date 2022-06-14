@@ -36,7 +36,7 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
               </ht-button>
             </div>
             <ng-template #defaultSheetTitleTemplate>
-              <h3 class="default-header-title">{{ sheetTitle }}</h3>
+              <h3 class="default-header-title">{{ this.sheetTitle }}</h3>
             </ng-template>
           </div>
           <div class="content-wrapper">
