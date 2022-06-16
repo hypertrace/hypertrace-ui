@@ -17,7 +17,7 @@ export class ExplorerService {
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
-    filters: DrilldownFilter[]
+    filters: ExplorerDrilldownFilter[]
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
@@ -49,4 +49,4 @@ export class ExplorerService {
   }
 }
 
-type DrilldownFilter = Omit<Filter, 'metadata' | 'userString' | 'urlString'>;
+export type ExplorerDrilldownFilter = Omit<Filter, 'metadata' | 'userString' | 'urlString'>;
