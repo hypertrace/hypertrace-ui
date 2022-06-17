@@ -21,18 +21,6 @@
   width: 48px;
 }
 
-@mixin critical-severity {
-  background-color: $color-risk-critical;
-}
-
-@mixin high-severity {
-  background-color: $color-risk-high;
-}
-
-@mixin medium-severity {
-  background-color: $color-risk-medium;
-}
-
-@mixin low-severity {
-  background-color: $color-risk-low;
+@mixin severity-background-color($color) {
+  background-color: $color;
 }
