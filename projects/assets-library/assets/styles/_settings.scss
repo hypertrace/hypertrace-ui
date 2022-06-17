@@ -1,0 +1,38 @@
+@import 'color-palette';
+
+@mixin scoring-config {
+  display: grid;
+  padding: 16px 0;
+  grid-template-columns: 10px 200px 48px;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  align-items: center;
+}
+
+@mixin dot {
+  background-color: $blue-9;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+@mixin score-input {
+  height: 32px;
+  width: 48px;
+}
+
+@mixin critical-severity {
+  background-color: $color-risk-critical;
+}
+
+@mixin high-severity {
+  background-color: $color-risk-high;
+}
+
+@mixin medium-severity {
+  background-color: $color-risk-medium;
+}
+
+@mixin low-severity {
+  background-color: $color-risk-low;
+}
