@@ -64,6 +64,8 @@ export const enum Color {
   Yellow7 = '#bd9d00',
   Yellow8 = '#6d5b00',
   Yellow9 = '#181400',
+  Aurora = '#27C675',
+  Teal = '#01BCD6',
   Transparent = 'transparent',
   OffWhite = '#f6f6f64d'
 }
