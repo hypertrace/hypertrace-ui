@@ -159,6 +159,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
           }"
           class="data-row"
           [style.height]="this.rowHeight"
+          [style.min-height]="this.rowHeight"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
