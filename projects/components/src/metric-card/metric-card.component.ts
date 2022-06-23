@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
-import { MetricCardIndicatorType } from './metric-card';
+import { MetricCardIconPosition, MetricCardIndicatorType } from './metric-card';
 @Component({
   selector: 'ht-metric-card',
   styleUrls: ['./metric-card.component.scss'],
@@ -15,20 +15,27 @@ import { MetricCardIndicatorType } from './metric-card';
               <div class="dot" [style.backgroundColor]="this.indicatorColor"></div>
             </ng-container>
             <ng-container *ngSwitchCase="'${MetricCardIndicatorType.Icon}'">
-              <ht-icon
-                *ngIf="this.icon"
-                class="icon"
-                [icon]="this.icon"
-                size="${IconSize.Small}"
-                [color]="this.indicatorColor"
-              ></ht-icon>
+              <ng-container *ngIf="this.icon && this.iconPosition === '${MetricCardIconPosition.TopLeft}'">
+                <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
+              </ng-container>
             </ng-container>
           </ng-container>
         </div>
         <div class="title-text">{{ this.titleText }}</div>
       </div>
-      <div class="value">{{ value }}</div>
+      <div class="value-and-icon">
+        <div class="value">
+          {{ value }}
+        </div>
+        <ng-container *ngIf="this.icon && this.iconPosition === '${MetricCardIconPosition.BottomRight}'">
+          <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
+        </ng-container>
+      </div>
     </div>
+
+    <ng-template #iconTemplate>
+      <ht-icon class="icon" [icon]="this.icon" [size]="this.iconSize" [color]="this.indicatorColor"></ht-icon>
+    </ng-template>
   `
 })
 export class MetricCardComponent {
@@ -43,6 +50,12 @@ export class MetricCardComponent {
 
   @Input()
   public icon?: string; // Only be used when indicator type is Icon
+
+  @Input()
+  public iconPosition: string = MetricCardIconPosition.TopLeft;
+
+  @Input()
+  public iconSize: string = IconSize.Small;
 
   @Input()
   public indicatorColor: Color = Color.Gray7;

@@ -27,9 +27,14 @@
     }
   }
 
-  .value {
-    @include header-5($gray-7);
-    margin-left: 14px;
+  .value-and-icon {
+    margin: 0 14px;
+    display: flex;
+    justify-content: space-between;
+
+    .value {
+      @include header-5($gray-7);
+    }
   }
 }
 
