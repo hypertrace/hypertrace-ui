@@ -52,10 +52,10 @@ export class MetricCardComponent {
   public icon?: string; // Only be used when indicator type is Icon
 
   @Input()
-  public iconPosition: string = MetricCardIconPosition.TopLeft;
+  public iconPosition: MetricCardIconPosition = MetricCardIconPosition.TopLeft;
 
   @Input()
-  public iconSize: string = IconSize.Small;
+  public iconSize: IconSize = IconSize.Small;
 
   @Input()
   public indicatorColor: Color = Color.Gray7;
