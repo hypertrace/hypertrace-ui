@@ -3,10 +3,11 @@
 .metric-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
   border: 1px solid;
   padding: 10px;
   border-radius: 6px;
+  justify-content: space-between;
+  height: 100%;
 
   .indicator-and-title {
     display: flex;
