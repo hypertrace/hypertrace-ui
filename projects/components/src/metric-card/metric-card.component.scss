@@ -1,12 +1,14 @@
 @import 'mixins';
 
 .metric-card {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   border: 1px solid;
   padding: 10px;
   border-radius: 6px;
+  gap: 4px;
+  justify-content: space-between;
 
   .indicator-and-title {
     display: flex;
@@ -27,8 +29,17 @@
     }
   }
 
-  .value {
-    @include header-5($gray-7);
-    margin-left: 14px;
+  .value-and-icon {
+    margin: 0 14px;
+    display: flex;
+    justify-content: space-between;
+
+    .value {
+      @include header-5($gray-7);
+    }
   }
+}
+
+.clickable {
+  @include card-hover;
 }

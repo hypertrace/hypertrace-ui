@@ -114,6 +114,7 @@ export const enum IconType {
   Slack = 'svg:slack',
   Sort = 'svg:sort',
   SpanId = 'bookmark_border',
+  Speedometer = 'svg:speedometer',
   Spinner = 'svg:spinner',
   StatusCode = 'svg:status-code',
   StringAttribute = 'svg:string-attribute',

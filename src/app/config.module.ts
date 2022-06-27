@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
 import { ALTERNATE_COLOR_PALETTES, APP_TITLE, DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
@@ -38,6 +39,14 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
     {
       provide: APP_TITLE,
       useValue: environment.appTitle
+    },
+    {
+      provide: MATERIAL_SANITY_CHECKS,
+      useValue: {
+        doctype: true,
+        theme: false,
+        version: true
+      }
     }
   ]
 })
