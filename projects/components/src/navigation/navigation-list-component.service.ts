@@ -35,15 +35,15 @@ export class NavigationListComponentService {
   }
 
   public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
-    return this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange).pipe(
-      switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))),
+    return this.featureStateResolver.getFeatureFlagValue<boolean>(ApplicationFeature.PageTimeRange).pipe(
+      switchMap(isEnabled => combineLatest(this.getTimeRangesForNavItems(navItems, isEnabled))),
       defaultIfEmpty<NavItemConfig[]>([])
     );
   }
 
   private getTimeRangesForNavItems(
     navItems: NavItemConfig[],
-    pageLevelTimeRangeFeatureState: FeatureState
+    isPageLevelTimeRangeEnabled: boolean
   ): Observable<NavItemConfig>[] {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
@@ -51,7 +51,7 @@ export class NavigationListComponentService {
           map(timeRangeResolver => ({
             ...navItem,
             timeRangeResolver: timeRangeResolver,
-            pageLevelTimeRangeIsEnabled: pageLevelTimeRangeFeatureState === FeatureState.Enabled
+            pageLevelTimeRangeIsEnabled: isPageLevelTimeRangeEnabled
           }))
         );
       }
