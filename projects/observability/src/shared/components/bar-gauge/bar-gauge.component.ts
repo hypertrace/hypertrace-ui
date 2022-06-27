@@ -58,7 +58,7 @@ import {
           </div>
         </div>
       </div>
-      <div *ngIf="this.showLengend" class="legend">
+      <div *ngIf="this.showLegend" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
           <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
@@ -105,7 +105,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   public showCount: boolean = true;
 
   @Input()
-  public showLengend: boolean = false;
+  public showLegend: boolean = false;
 
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
