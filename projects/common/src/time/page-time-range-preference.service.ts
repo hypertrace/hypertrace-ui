@@ -15,7 +15,7 @@ import { TimeUnit } from './time-unit.type';
 
 @Injectable({ providedIn: 'root' })
 export class PageTimeRangePreferenceService {
-  private static readonly STORAGE_TYPE: StorageType = StorageType.Local;
+  private static readonly STORAGE_TYPE: StorageType = StorageType.Session;
   private static readonly TIME_RANGE_PREFERENCE_KEY: string = 'page-time-range';
 
   private readonly pageTimeRangeStringDictionary$: Observable<PageTimeRangeStringDictionary>;
