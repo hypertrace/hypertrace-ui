@@ -27,7 +27,7 @@ import {
     <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
       <div *ngIf="this.display !== '${BarGaugeStyle.SingleBar}'" class="header-data" [ngClass]="this.display">
         <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
-        <div class="count">
+        <div class="count" *ngIf="this.showCount">
           <span>{{ this.totalValue | htDisplayNumber }}</span>
           <span> / </span>
           <span *ngIf="!this.isUnlimited">{{ this.maxValue | htDisplayNumber }}</span>
@@ -58,7 +58,7 @@ import {
           </div>
         </div>
       </div>
-      <div *ngIf="this.display === '${BarGaugeStyle.Regular}'" class="legend">
+      <div *ngIf="this.showLengend" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
           <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
@@ -100,6 +100,12 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public isUnlimited: boolean = false;
+
+  @Input()
+  public showCount: boolean = true;
+
+  @Input()
+  public showLengend: boolean = false;
 
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
