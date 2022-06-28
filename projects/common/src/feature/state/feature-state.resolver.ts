@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
 import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
+import { Dictionary } from '../../utilities/types/types';
 import { FeatureState } from './feature.state';
 
 export abstract class FeatureStateResolver {
@@ -35,9 +36,4 @@ export abstract class FeatureStateResolver {
   }
 }
 
-interface FeaturePageTimeRangeMap {
-  [path: string]: string;
-}
-
-export type GraphQlFeatureFlagValue = boolean | string | number | FeaturePageTimeRangeMap;
-export type FeatureFlagValue = GraphQlFeatureFlagValue | undefined;
+export type FeatureFlagValue = boolean | string | number | Dictionary<string>;

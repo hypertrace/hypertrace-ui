@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {
   ApplicationFeature,
+  FeatureState,
   FeatureStateResolver,
   GlobalHeaderHeightProviderService,
   NavigationService
@@ -47,8 +48,8 @@ export class ApplicationHeaderComponent {
     private readonly featureStateResolver: FeatureStateResolver
   ) {
     this.pageLevelTimeRangeDisabled$ = this.featureStateResolver
-      .getFeatureFlagValue<boolean>(ApplicationFeature.PageTimeRange)
-      .pipe(map(isEnabled => !isEnabled));
+      .getFeatureState(ApplicationFeature.PageTimeRange)
+      .pipe(map(featureState => featureState === FeatureState.Disabled));
   }
 
   public onLogoClick(): void {

@@ -4,6 +4,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take } from 'rxjs/operators';
 import { ApplicationFeature } from '../constants/application-constants';
 import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
+import { FeatureState } from '../feature/state/feature.state';
 import { NavigationService } from '../navigation/navigation.service';
 import { PreferenceService, StorageType } from '../preference/preference.service';
 import { RelativeTimeRange } from './relative-time-range';
@@ -31,10 +32,10 @@ export class PageTimeRangePreferenceService {
   public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRangeResolver> {
     return combineLatest([
       this.pageTimeRangeStringDictionary$,
-      this.featureStateResolver.getFeatureFlagValue<boolean>(ApplicationFeature.PageTimeRange)
+      this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange)
     ]).pipe(
-      map(([pageTimeRangeStringDictionary, isEnabled]) => {
-        if (isEnabled) {
+      map(([pageTimeRangeStringDictionary, featureState]) => {
+        if (featureState === FeatureState.Enabled) {
           if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
             return () => this.getDefaultTimeRangeForPath(rootLevelPath);
           }
