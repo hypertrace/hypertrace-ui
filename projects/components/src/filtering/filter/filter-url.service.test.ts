@@ -384,16 +384,7 @@ describe('Filter URL service', () => {
 
   test('correctly build url filters and group by nav query params', () => {
     expect(
-      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(
-        [
-          new NumberFilterBuilder().buildFilter(
-            getTestFilterAttribute(FilterAttributeType.Number),
-            FilterOperator.NotEquals,
-            2020
-          )
-        ],
-        attributes.slice(0, 1)
-      )
-    ).toMatchObject({ filter: ['numberAttribute_neq_2020'], 'group-by': ['booleanAttribute'] });
+      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(filters.slice(0, 1), attributes.slice(0, 1))
+    ).toMatchObject({ filter: ['numberAttribute_neq_217'], 'group-by': ['booleanAttribute'] });
   });
 });
