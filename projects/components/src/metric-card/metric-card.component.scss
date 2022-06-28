@@ -10,6 +10,11 @@
   gap: 4px;
   justify-content: space-between;
 
+  &.large {
+    padding: 16px 0;
+    border-radius: 8px;
+  }
+
   .indicator-and-title {
     display: flex;
     align-items: center;
@@ -26,6 +31,11 @@
     .title-text {
       @include chart-small-regular($gray-7);
       text-transform: uppercase;
+
+      &.large {
+        @include body-1-medium($gray-7);
+        text-transform: capitalize;
+      }
     }
   }
 
@@ -36,6 +46,10 @@
 
     .value {
       @include header-5($gray-7);
+
+      &.large {
+        @include header-4($gray-7);
+      }
     }
   }
 }
