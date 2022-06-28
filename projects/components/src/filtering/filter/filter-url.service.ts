@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, QueryParamObject } from '@hypertrace/common';
 import { isEmpty, remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -107,6 +107,13 @@ export class FilterUrlService {
     });
 
     this.setUrlFilters([...remainingFilters]);
+  }
+
+  public buildUrlFiltersAndGroupByNavQueryParams(filters: Filter[], groupBy: FilterAttribute[]): QueryParamObject {
+    return {
+      [FilterUrlService.FILTER_QUERY_PARAM]: isEmpty(filters) ? undefined : filters.map(f => f.urlString),
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()]
+    };
   }
 
   private parseUrlFilterString(attributes: FilterAttribute[], filterString: string): Filter | undefined {
