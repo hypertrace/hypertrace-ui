@@ -1,13 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
-import { MetricCardIconPosition, MetricCardIndicatorType } from './metric-card';
+import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from './metric-card';
 @Component({
   selector: 'ht-metric-card',
   styleUrls: ['./metric-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="metric-card" [ngStyle]="this.getStylesForCard()" [ngClass]="{ clickable: this.isClickable }">
+    <div
+      class="metric-card"
+      [ngStyle]="this.getStylesForCard()"
+      [ngClass]="{ clickable: this.isClickable, 'large-card': this.cardSize === '${MetricCardSize.Large}' }"
+    >
       <div class="indicator-and-title">
         <div class="indicator">
           <ng-container [ngSwitch]="this.indicator">
@@ -21,10 +25,22 @@ import { MetricCardIconPosition, MetricCardIndicatorType } from './metric-card';
             </ng-container>
           </ng-container>
         </div>
-        <div class="title-text">{{ this.titleText }}</div>
+        <div
+          [ngClass]="{
+            'large-title-text': this.cardSize === '${MetricCardSize.Large}',
+            'title-text': this.cardSize === '${MetricCardSize.Small}'
+          }"
+        >
+          {{ this.titleText }}
+        </div>
       </div>
       <div class="value-and-icon">
-        <div class="value">
+        <div
+          [ngClass]="{
+            'large-value': this.cardSize === '${MetricCardSize.Large}',
+            value: this.cardSize === '${MetricCardSize.Small}'
+          }"
+        >
           {{ value }}
         </div>
         <ng-container *ngIf="this.icon && this.iconPosition === '${MetricCardIconPosition.BottomRight}'">
@@ -65,6 +81,9 @@ export class MetricCardComponent {
 
   @Input()
   public borderColor: Color = Color.Transparent;
+
+  @Input()
+  public cardSize: MetricCardSize = MetricCardSize.Small;
 
   @Input()
   public isSelected: boolean = false;
