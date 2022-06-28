@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
-import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
 import { Dictionary } from '../../utilities/types/types';
+import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
 import { FeatureState } from './feature.state';
 
 export abstract class FeatureStateResolver {
@@ -36,4 +36,4 @@ export abstract class FeatureStateResolver {
   }
 }
 
-export type FeatureFlagValue = boolean | string | number | Dictionary<string>;
+export type FeatureFlagValue = boolean | string | number | Dictionary<string> | undefined;
