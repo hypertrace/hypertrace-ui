@@ -26,9 +26,9 @@ import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from 
           </ng-container>
         </div>
         <div
+          class="title-text"
           [ngClass]="{
-            'large-title-text': this.cardSize === '${MetricCardSize.Large}',
-            'title-text': this.cardSize === '${MetricCardSize.Small}'
+            large: this.cardSize === '${MetricCardSize.Large}'
           }"
         >
           {{ this.titleText }}
@@ -36,9 +36,9 @@ import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from 
       </div>
       <div class="value-and-icon">
         <div
+          class="value"
           [ngClass]="{
-            'large-value': this.cardSize === '${MetricCardSize.Large}',
-            value: this.cardSize === '${MetricCardSize.Small}'
+            large: this.cardSize === '${MetricCardSize.Large}'
           }"
         >
           {{ value }}
