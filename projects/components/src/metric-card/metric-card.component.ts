@@ -10,7 +10,7 @@ import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from 
     <div
       class="metric-card"
       [ngStyle]="this.getStylesForCard()"
-      [ngClass]="{ clickable: this.isClickable, 'large-card': this.cardSize === '${MetricCardSize.Large}' }"
+      [ngClass]="{ clickable: this.isClickable, large: this.cardSize === '${MetricCardSize.Large}' }"
     >
       <div class="indicator-and-title">
         <div class="indicator">
@@ -25,22 +25,12 @@ import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from 
             </ng-container>
           </ng-container>
         </div>
-        <div
-          class="title-text"
-          [ngClass]="{
-            large: this.cardSize === '${MetricCardSize.Large}'
-          }"
-        >
+        <div class="title-text" [ngClass]="this.cardSize">
           {{ this.titleText }}
         </div>
       </div>
       <div class="value-and-icon">
-        <div
-          class="value"
-          [ngClass]="{
-            large: this.cardSize === '${MetricCardSize.Large}'
-          }"
-        >
+        <div class="value" [ngClass]="this.cardSize">
           {{ value }}
         </div>
         <ng-container *ngIf="this.icon && this.iconPosition === '${MetricCardIconPosition.BottomRight}'">
