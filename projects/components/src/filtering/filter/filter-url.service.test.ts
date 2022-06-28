@@ -381,4 +381,19 @@ describe('Filter URL service', () => {
       ['group-by']: ['field1,field2']
     });
   });
+
+  test('correctly build url filters and group by nav query params', () => {
+    expect(
+      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(
+        [
+          new NumberFilterBuilder().buildFilter(
+            getTestFilterAttribute(FilterAttributeType.Number),
+            FilterOperator.NotEquals,
+            2020
+          )
+        ],
+        attributes.slice(0, 1)
+      )
+    ).toMatchObject({ filter: ['numberAttribute_neq_2020'], 'group-by': ['booleanAttribute'] });
+  });
 });
