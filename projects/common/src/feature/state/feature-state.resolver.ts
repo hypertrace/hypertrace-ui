@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
-import { Dictionary } from '../../utilities/types/types';
 import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
+import { Dictionary } from '../../utilities/types/types';
 import { FeatureState } from './feature.state';
 
 export abstract class FeatureStateResolver {

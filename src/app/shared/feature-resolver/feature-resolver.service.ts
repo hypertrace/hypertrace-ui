@@ -9,7 +9,8 @@ export class FeatureResolverService extends FeatureStateResolver {
       case ApplicationFeature.PageTimeRange:
         return of(false as T);
       case ApplicationFeature.FeatureDefaultTimeRange:
-        return of(({} as unknown) as T);
+        // tslint:disable-next-line: no-object-literal-type-assertion
+        return of({} as T);
       default:
         return of(true as T);
     }
