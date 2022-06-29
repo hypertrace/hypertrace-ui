@@ -1,7 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { NavigationService } from '@hypertrace/common';
-import { fromEvent, merge, Observable, Observer, ReplaySubject, Subject } from 'rxjs';
+import { fromEvent, merge, Observable, Observer, ReplaySubject } from 'rxjs';
 import { filter, mapTo, takeUntil } from 'rxjs/operators';
 import { PopoverPosition } from './popover';
 import { PopoverPositionBuilder } from './popover-position-builder';
@@ -26,7 +26,6 @@ export class PopoverRef {
   }
 
   private readonly closedObserver: Observer<void>;
-  private readonly hoverSubject: Subject<boolean> = new Subject();
 
   private _closed: boolean = false;
   private _visible: boolean = false;
@@ -44,7 +43,7 @@ export class PopoverRef {
     this.closedObserver = closedSubject;
     this.closed$ = closedSubject.asObservable();
 
-    this.hovered$ = this.hoverSubject.asObservable().pipe(takeUntil(this.closed$));
+    this.hovered$ = this.getHoverObservable();
 
     this.shown$.subscribe(() => (this._visible = true));
     this.hidden$.subscribe(() => (this._visible = false));
@@ -73,7 +72,6 @@ export class PopoverRef {
 
   public initialize(portal: Portal<unknown>): void {
     this.portal = portal;
-    this.initializeHover();
   }
 
   public updatePositionStrategy(position: PopoverPosition): void {
@@ -137,12 +135,10 @@ export class PopoverRef {
     }
   }
 
-  private initializeHover(): void {
+  private getHoverObservable(): Observable<boolean> {
     const mouseleave$ = fromEvent(this.overlayRef.hostElement, 'mouseleave').pipe(mapTo(false));
-    const mouseenter$ = fromEvent(this.overlayRef.hostElement, 'mouseover').pipe(mapTo(true));
+    const mouseenter$ = fromEvent(this.overlayRef.hostElement, 'mouseenter').pipe(mapTo(true));
 
-    merge(mouseenter$, mouseleave$)
-      .pipe(takeUntil(this.closed$))
-      .subscribe(hovered => this.hoverSubject.next(hovered));
+    return merge(mouseenter$, mouseleave$).pipe(takeUntil(this.closed$));
   }
 }
