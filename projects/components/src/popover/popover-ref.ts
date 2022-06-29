@@ -1,8 +1,8 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { NavigationService } from '@hypertrace/common';
-import { fromEvent, Observable, Observer, ReplaySubject, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { fromEvent, merge, Observable, Observer, ReplaySubject, Subject } from 'rxjs';
+import { filter, mapTo, takeUntil } from 'rxjs/operators';
 import { PopoverPosition } from './popover';
 import { PopoverPositionBuilder } from './popover-position-builder';
 
@@ -138,12 +138,11 @@ export class PopoverRef {
   }
 
   private initializeHover(): void {
-    fromEvent(this.overlayRef.hostElement, 'mouseover')
-      .pipe(takeUntil(this.closed$))
-      .subscribe(() => this.hoverSubject.next(true));
+    const mouseleave$ = fromEvent(this.overlayRef.hostElement, 'mouseleave').pipe(mapTo(false));
+    const mouseenter$ = fromEvent(this.overlayRef.hostElement, 'mouseover').pipe(mapTo(true));
 
-    fromEvent(this.overlayRef.hostElement, 'mouseleave')
+    merge(mouseenter$, mouseleave$)
       .pipe(takeUntil(this.closed$))
-      .subscribe(() => this.hoverSubject.next(false));
+      .subscribe(hovered => this.hoverSubject.next(hovered));
   }
 }
