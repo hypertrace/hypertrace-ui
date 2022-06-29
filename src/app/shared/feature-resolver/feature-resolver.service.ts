@@ -9,7 +9,7 @@ export class FeatureResolverService extends FeatureStateResolver {
       case ApplicationFeature.PageTimeRange:
         return of(false as T);
       case ApplicationFeature.FeatureDefaultTimeRange:
-        return of({} as T);
+        return of(({} as unknown) as T);
       default:
         return of(true as T);
     }
