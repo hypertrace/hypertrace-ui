@@ -1,8 +1,8 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { NavigationService } from '@hypertrace/common';
-import { fromEvent, Observable, Observer, ReplaySubject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { fromEvent, merge, Observable, Observer, ReplaySubject } from 'rxjs';
+import { filter, mapTo, takeUntil } from 'rxjs/operators';
 import { PopoverPosition } from './popover';
 import { PopoverPositionBuilder } from './popover-position-builder';
 
@@ -11,6 +11,7 @@ export class PopoverRef {
   public readonly shown$: Observable<void>;
   public readonly hidden$: Observable<void>;
   public readonly closed$: Observable<void>;
+  public readonly hovered$: Observable<boolean>;
 
   public get closed(): boolean {
     return this._closed;
@@ -20,7 +21,12 @@ export class PopoverRef {
     return this._visible;
   }
 
+  public get hostElement(): HTMLElement {
+    return this.overlayRef.hostElement;
+  }
+
   private readonly closedObserver: Observer<void>;
+
   private _closed: boolean = false;
   private _visible: boolean = false;
 
@@ -36,6 +42,8 @@ export class PopoverRef {
     const closedSubject = new ReplaySubject<void>(1);
     this.closedObserver = closedSubject;
     this.closed$ = closedSubject.asObservable();
+
+    this.hovered$ = this.getHoverObservable();
 
     this.shown$.subscribe(() => (this._visible = true));
     this.hidden$.subscribe(() => (this._visible = false));
@@ -125,5 +133,12 @@ export class PopoverRef {
         'No backdrop associated with popover - make sure to create a popover with a backdrop to listen for a click'
       );
     }
+  }
+
+  private getHoverObservable(): Observable<boolean> {
+    const mouseleave$ = fromEvent(this.overlayRef.hostElement, 'mouseleave').pipe(mapTo(false));
+    const mouseenter$ = fromEvent(this.overlayRef.hostElement, 'mouseenter').pipe(mapTo(true));
+
+    return merge(mouseenter$, mouseleave$).pipe(takeUntil(this.closed$));
   }
 }
