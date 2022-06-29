@@ -44,7 +44,7 @@ export class PopoverRef {
     this.closedObserver = closedSubject;
     this.closed$ = closedSubject.asObservable();
 
-    this.hovered$ = this.hoverSubject.asObservable();
+    this.hovered$ = this.hoverSubject.asObservable().pipe(takeUntil(this.closed$));
 
     this.shown$.subscribe(() => (this._visible = true));
     this.hidden$.subscribe(() => (this._visible = false));
@@ -138,7 +138,12 @@ export class PopoverRef {
   }
 
   private initializeHover(): void {
-    fromEvent(this.overlayRef.hostElement, 'mouseover').subscribe(() => this.hoverSubject.next(true));
-    fromEvent(this.overlayRef.hostElement, 'mouseleave').subscribe(() => this.hoverSubject.next(false));
+    fromEvent(this.overlayRef.hostElement, 'mouseover')
+      .pipe(takeUntil(this.closed$))
+      .subscribe(() => this.hoverSubject.next(true));
+
+    fromEvent(this.overlayRef.hostElement, 'mouseleave')
+      .pipe(takeUntil(this.closed$))
+      .subscribe(() => this.hoverSubject.next(false));
   }
 }
