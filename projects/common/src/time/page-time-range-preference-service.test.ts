@@ -24,7 +24,8 @@ describe('Page time range preference service', () => {
         getRouteConfig: jest.fn().mockReturnValue({ data: { defaultTimeRange: defaultPageTimeRange } })
       }),
       mockProvider(FeatureStateResolver, {
-        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
+        getFeatureFlagValue: jest.fn().mockReturnValue(of({}))
       })
     ]
   });
@@ -77,6 +78,36 @@ describe('Page time range preference service', () => {
       expectObservable(recordedTimeRanges$).toBe('db', {
         d: defaultPageTimeRange,
         b: timeRange
+      });
+    });
+  });
+
+  test('Should fallback to tenant default if value is present and nothing is in storage', () => {
+    runFakeRxjs(({ expectObservable }) => {
+      const tenantDefault = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
+      const spectator = serviceFactory({
+        providers: [
+          mockProvider(FeatureStateResolver, {
+            getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
+            getFeatureFlagValue: jest.fn().mockReturnValue(
+              of({
+                'test-path1': '15m',
+                'test-path2': '3h'
+              })
+            )
+          }),
+          mockProvider(TimeRangeService, {
+            timeRangeFromUrlString: jest.fn().mockReturnValue(tenantDefault)
+          })
+        ]
+      });
+
+      const recordedTimeRange$ = spectator.service
+        .getTimeRangePreferenceForPage('test-path1')
+        .pipe(map(timeRangeResolver => timeRangeResolver()));
+
+      expectObservable(recordedTimeRange$).toBe('x', {
+        x: tenantDefault
       });
     });
   });

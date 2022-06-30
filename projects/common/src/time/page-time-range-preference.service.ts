@@ -7,6 +7,7 @@ import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
 import { FeatureState } from '../feature/state/feature.state';
 import { NavigationService } from '../navigation/navigation.service';
 import { PreferenceService, StorageType } from '../preference/preference.service';
+import { Dictionary } from '../utilities/types/types';
 import { RelativeTimeRange } from './relative-time-range';
 import { TimeDuration } from './time-duration';
 import { TimeRange } from './time-range';
@@ -32,15 +33,19 @@ export class PageTimeRangePreferenceService {
   public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRangeResolver> {
     return combineLatest([
       this.pageTimeRangeStringDictionary$,
-      this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange)
+      this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange),
+      this.featureStateResolver.getFeatureFlagValue<Dictionary<string>>(ApplicationFeature.FeatureDefaultTimeRangeMap)
     ]).pipe(
-      map(([pageTimeRangeStringDictionary, featureState]) => {
+      map(([pageTimeRangeStringDictionary, featureState, featureDefaultTimeRangeMap]) => {
         if (featureState === FeatureState.Enabled) {
-          if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
-            return () => this.getDefaultTimeRangeForPath(rootLevelPath);
+          if (!isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
+            return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
+          }
+          if (rootLevelPath in featureDefaultTimeRangeMap) {
+            return () => this.timeRangeService.timeRangeFromUrlString(featureDefaultTimeRangeMap[rootLevelPath]);
           }
 
-          return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
+          return () => this.getDefaultTimeRangeForPath(rootLevelPath);
         }
 
         // When FF is disabled
