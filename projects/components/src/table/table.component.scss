@@ -40,7 +40,6 @@ $header-height: 32px;
 .data-row {
   display: flex;
   flex-direction: row;
-  min-height: 44px;
 
   &.selectable {
     cursor: pointer;
