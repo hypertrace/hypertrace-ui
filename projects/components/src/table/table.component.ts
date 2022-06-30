@@ -673,7 +673,7 @@ export class TableComponent
     } else if (this.hasMultiSelect()) {
       this.selections = [...previousSelections, toggledRow];
     } else {
-      this.selections = [toggledRow];
+      this.selections = toggledRow ? [toggledRow] : [];
     }
     this.selectionsChange.emit(this.selections);
     this.indeterminateRowsSelected = this.selections?.length !== this.dataSource?.getAllRows().length;
