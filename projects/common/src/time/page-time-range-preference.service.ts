@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { isEmpty, isNil } from 'lodash-es';
+import { isNil } from 'lodash-es';
 import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take } from 'rxjs/operators';
 import { ApplicationFeature } from '../constants/application-constants';
-import { FeatureFlagValue, FeatureStateResolver } from '../feature/state/feature-state.resolver';
+import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
 import { FeatureState } from '../feature/state/feature.state';
 import { NavigationService } from '../navigation/navigation.service';
 import { PreferenceService, StorageType } from '../preference/preference.service';
@@ -34,35 +34,23 @@ export class PageTimeRangePreferenceService {
     return combineLatest([
       this.pageTimeRangeStringDictionary$,
       this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange),
-      this.featureStateResolver.getFeatureFlagValue(ApplicationFeature.TenantDefaultTimeRangeMap)
+      this.featureStateResolver.getFeatureFlagValue<Dictionary<string>>(ApplicationFeature.FeatureDefaultTimeRangeMap)
     ]).pipe(
-      map(([pageTimeRangeStringDictionary, featureState, tenantDefaultTimeRangeMap]) => {
+      map(([pageTimeRangeStringDictionary, featureState, featureDefaultTimeRangeMap]) => {
         if (featureState === FeatureState.Enabled) {
-          if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
-            if (this.tenantTimeRangeMapHasValue(tenantDefaultTimeRangeMap, rootLevelPath)) {
-              return () =>
-                this.timeRangeService.timeRangeFromUrlString(
-                  (tenantDefaultTimeRangeMap as Dictionary<string>)[rootLevelPath]
-                );
-            }
-
-            return () => this.getDefaultTimeRangeForPath(rootLevelPath);
+          if (!isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
+            return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
+          }
+          if (rootLevelPath in featureDefaultTimeRangeMap) {
+            return () => this.timeRangeService.timeRangeFromUrlString(featureDefaultTimeRangeMap[rootLevelPath]);
           }
 
-          return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
+          return () => this.getDefaultTimeRangeForPath(rootLevelPath);
         }
 
         // When FF is disabled
         return () => this.getGlobalDefaultTimeRange();
       })
-    );
-  }
-
-  public tenantTimeRangeMapHasValue(tenantDefaultTimeRangeMap: FeatureFlagValue, rootLevelPath: string): boolean {
-    return (
-      tenantDefaultTimeRangeMap instanceof Object &&
-      rootLevelPath in tenantDefaultTimeRangeMap &&
-      !isEmpty(tenantDefaultTimeRangeMap[rootLevelPath])
     );
   }
 
