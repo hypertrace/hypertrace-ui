@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take } from 'rxjs/operators';
 import { ApplicationFeature } from '../constants/application-constants';
-import { FeatureStateResolver } from '../feature/state/feature-state.resolver';
+import { FeatureFlagValue, FeatureStateResolver } from '../feature/state/feature-state.resolver';
 import { FeatureState } from '../feature/state/feature.state';
 import { NavigationService } from '../navigation/navigation.service';
 import { PreferenceService, StorageType } from '../preference/preference.service';
+import { Dictionary } from '../utilities/types/types';
 import { RelativeTimeRange } from './relative-time-range';
 import { TimeDuration } from './time-duration';
 import { TimeRange } from './time-range';
@@ -32,11 +33,19 @@ export class PageTimeRangePreferenceService {
   public getTimeRangePreferenceForPage(rootLevelPath: string): Observable<TimeRangeResolver> {
     return combineLatest([
       this.pageTimeRangeStringDictionary$,
-      this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange)
+      this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange),
+      this.featureStateResolver.getFeatureFlagValue(ApplicationFeature.TenantDefaultTimeRangeMap)
     ]).pipe(
-      map(([pageTimeRangeStringDictionary, featureState]) => {
+      map(([pageTimeRangeStringDictionary, featureState, tenantDefaultTimeRangeMap]) => {
         if (featureState === FeatureState.Enabled) {
           if (isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
+            if (this.tenantTimeRangeMapHasValue(tenantDefaultTimeRangeMap, rootLevelPath)) {
+              return () =>
+                this.timeRangeService.timeRangeFromUrlString(
+                  (tenantDefaultTimeRangeMap as Dictionary<string>)[rootLevelPath]
+                );
+            }
+
             return () => this.getDefaultTimeRangeForPath(rootLevelPath);
           }
 
@@ -46,6 +55,14 @@ export class PageTimeRangePreferenceService {
         // When FF is disabled
         return () => this.getGlobalDefaultTimeRange();
       })
+    );
+  }
+
+  public tenantTimeRangeMapHasValue(tenantDefaultTimeRangeMap: FeatureFlagValue, rootLevelPath: string): boolean {
+    return (
+      tenantDefaultTimeRangeMap instanceof Object &&
+      rootLevelPath in tenantDefaultTimeRangeMap &&
+      !isEmpty(tenantDefaultTimeRangeMap[rootLevelPath])
     );
   }
 
