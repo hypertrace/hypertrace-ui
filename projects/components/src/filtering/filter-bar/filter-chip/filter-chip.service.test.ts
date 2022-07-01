@@ -266,6 +266,12 @@ describe('Filter Chip service', () => {
       {
         metadata: attribute,
         field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
         operator: FilterOperator.Equals,
         userString: `${attribute.displayName}.example ${FilterOperator.Equals}`
       },
@@ -295,6 +301,13 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
         userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
       }),
