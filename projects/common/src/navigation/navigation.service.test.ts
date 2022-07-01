@@ -34,7 +34,7 @@ describe('Navigation Service', () => {
     children: [secondFirstChildRouteConfig]
   };
   const secondSecondChildRouteConfig = {
-    path: 'second-second',
+    path: 'second-second/:id',
     children: []
   };
   const secondChildRouteConfig = {
