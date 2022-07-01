@@ -23,5 +23,6 @@ export const enum GraphQlOperatorType {
   Like = 'LIKE',
   In = 'IN',
   NotIn = 'NOT_IN',
-  ContainsKey = 'CONTAINS_KEY'
+  ContainsKey = 'CONTAINS_KEY',
+  ContainsKeyLike = 'CONTAINS_KEY_LIKE'
 }

@@ -10,7 +10,7 @@ export class ContainsFilterParser extends AbstractFilterParser<string> {
   }
 
   public supportedOperators(): FilterOperator[] {
-    return [FilterOperator.ContainsKey];
+    return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyLike];
   }
 
   public parseValueString(splitFilter: SplitFilter<FilterOperator>): string | undefined {
