@@ -94,6 +94,12 @@ describe('Navigation Service', () => {
     expect(spectator.service.getRouteConfig(['second/second-second'])).toEqual(secondSecondChildRouteConfig);
   });
 
+  test('skips partial matches', () => {
+    router.navigate(['root']);
+    // Shouldn't match "second-first" or "second-second"
+    expect(spectator.service.getRouteConfig(['second', 'second'])).toBeUndefined();
+  });
+
   test('can build a url tree from segments', () => {
     const path = [new UrlSegment('first', { m1: 'm1v', m2: 'm2v' }), new UrlSegment('second', {})];
 
