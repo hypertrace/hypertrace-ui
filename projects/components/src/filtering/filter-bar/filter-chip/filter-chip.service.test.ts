@@ -62,6 +62,7 @@ describe('Filter Chip service', () => {
             case FilterOperator.In:
               return new InFilterParser();
             case FilterOperator.ContainsKey:
+            case FilterOperator.ContainsKeyLike:
               return new ContainsFilterParser();
             default:
               assertUnreachable(operator);

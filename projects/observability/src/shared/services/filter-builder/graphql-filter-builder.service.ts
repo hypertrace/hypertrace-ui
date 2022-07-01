@@ -104,7 +104,7 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
 
     case GraphQlOperatorType.ContainsKeyLike:
       return FilterOperator.ContainsKeyLike;
-      
+
     default:
       return assertUnreachable(operator);
   }

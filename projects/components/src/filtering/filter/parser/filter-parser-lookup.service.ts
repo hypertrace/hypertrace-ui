@@ -6,7 +6,6 @@ import { FilterOperator } from '../filter-operators';
 import { AbstractFilterParser } from './types/abstract-filter-parser';
 import { ComparisonFilterParser } from './types/comparison-filter-parser';
 import { ContainsFilterParser } from './types/contains-filter-parser';
-import { ContainsKeyLikeFilterParser } from './types/contains-key-like-filter-parser';
 import { InFilterParser } from './types/in-filter-parser';
 
 @Injectable({
@@ -29,9 +28,8 @@ export class FilterParserLookupService {
       case FilterOperator.In:
         return new InFilterParser();
       case FilterOperator.ContainsKey:
-        return new ContainsFilterParser();
       case FilterOperator.ContainsKeyLike:
-        return new ContainsKeyLikeFilterParser();
+        return new ContainsFilterParser();
       default:
         return assertUnreachable(operator);
     }
