@@ -63,6 +63,8 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.In;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
+    case FilterOperator.ContainsKeyLike:
+      return GraphQlOperatorType.ContainsKeyLike;
     default:
       return assertUnreachable(operator);
   }
@@ -99,6 +101,10 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
 
     case GraphQlOperatorType.ContainsKey:
       return FilterOperator.ContainsKey;
+
+    case GraphQlOperatorType.ContainsKeyLike:
+      return FilterOperator.ContainsKeyLike;
+      
     default:
       return assertUnreachable(operator);
   }
