@@ -34,7 +34,7 @@ describe('Navigation Service', () => {
     children: [secondFirstChildRouteConfig]
   };
   const secondSecondChildRouteConfig = {
-    path: 'second-second',
+    path: 'second-second/:id',
     children: []
   };
   const secondChildRouteConfig = {
@@ -92,6 +92,12 @@ describe('Navigation Service', () => {
   test('can flatten and match a multisegment path', () => {
     router.navigate(['root']);
     expect(spectator.service.getRouteConfig(['second/second-second'])).toEqual(secondSecondChildRouteConfig);
+  });
+
+  test('skips partial matches', () => {
+    router.navigate(['root']);
+    // Shouldn't match "second-first" or "second-second"
+    expect(spectator.service.getRouteConfig(['second', 'second'])).toBeUndefined();
   });
 
   test('can build a url tree from segments', () => {
