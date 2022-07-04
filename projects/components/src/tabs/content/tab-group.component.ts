@@ -29,18 +29,23 @@ import { TabComponent } from './tab/tab.component';
       >
         <mat-tab *ngFor="let tab of this.tabs$ | async; index as i">
           <ng-template mat-tab-label>
-            <div class="tab-label" [ngClass]="{ active: this.activeTabIndex === i }">
-              {{ tab.label }}
-              <ht-info-icon *ngIf="tab.info" [info]="tab.info"></ht-info-icon>
-              <ng-container *ngIf="tab.labelTag">
-                <ht-label-tag
-                  class="tab-label-tag"
-                  [label]="tab.labelTag"
-                  [backgroundColor]="this.getBackgroundColor(i)"
-                  [labelColor]="this.getLabelColor(i)"
-                ></ht-label-tag>
-              </ng-container>
-            </div>
+            <ng-container *ngIf="tab.customHeader; else defaultHeader">
+              <ng-container *ngTemplateOutlet="tab.customHeader?.tpl"></ng-container>
+            </ng-container>
+            <ng-template #defaultHeader>
+              <div class="tab-label" [ngClass]="{ active: this.activeTabIndex === i }">
+                {{ tab.label }}
+                <ht-info-icon *ngIf="tab.info" [info]="tab.info"></ht-info-icon>
+                <ng-container *ngIf="tab.labelTag">
+                  <ht-label-tag
+                    class="tab-label-tag"
+                    [label]="tab.labelTag"
+                    [backgroundColor]="this.getBackgroundColor(i)"
+                    [labelColor]="this.getLabelColor(i)"
+                  ></ht-label-tag>
+                </ng-container>
+              </div>
+            </ng-template>
             <div class="ink-bar" [ngClass]="{ active: this.activeTabIndex === i }"></div>
           </ng-template>
           <ng-template matTabContent>
