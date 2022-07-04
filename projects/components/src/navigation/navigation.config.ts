@@ -49,6 +49,7 @@ export const enum NavItemType {
 }
 
 export interface NavItemGroup {
+  type: string;
   label: string;
   icon: string;
   navItems: NavItemConfig[];
