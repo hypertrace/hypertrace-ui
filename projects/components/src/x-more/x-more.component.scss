@@ -1,10 +1,10 @@
 @import 'mixins';
 
 .ht-x-more {
-  @include body-2-regular($gray-7);
+  @include overline($gray-7);
 
   .summary-text {
-    padding: 0 6px;
+    padding: 4px 6px;
     margin-left: 8px;
     border-radius: 4px;
 

@@ -22,6 +22,7 @@ import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
+import { XMoreDisplay } from '../x-more/x-more.component';
 import { MultiSelectJustify } from './multi-select-justify';
 @Component({
   selector: 'ht-multi-select',
@@ -68,12 +69,15 @@ import { MultiSelectJustify } from './multi-select-justify';
             <ng-container *ngIf="!this.isIconOnlyMode()">
               <div class="trigger-label-container" *ngIf="this.triggerValues$ | async as triggerValues">
                 <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
-                <span
+
+                <ht-x-more
                   *ngIf="triggerValues.overflowItemsCount"
                   class="trigger-more-items"
-                  [htTooltip]="triggerValues.overflowLabel"
-                  >+{{ triggerValues.overflowItemsCount }}</span
-                >
+                  [count]="triggerValues.overflowItemsCount"
+                  displayStyle="${XMoreDisplay.Gray}"
+                  [htTooltip]="triggerXMoreValues"
+                  [htTooltipContext]="{ $implicit: triggerValues.overflowLabel }"
+                ></ht-x-more>
                 <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" [size]="this.iconSize"></ht-icon>
               </div>
             </ng-container>
@@ -142,6 +146,12 @@ import { MultiSelectJustify } from './multi-select-justify';
         </ht-popover-content>
       </ht-popover>
     </div>
+
+    <ng-template #triggerXMoreValues let-values>
+      <div class="trigger-x-more-values">
+        {{ values }}
+      </div>
+    </ng-template>
   `
 })
 export class MultiSelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {

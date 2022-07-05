@@ -9,6 +9,7 @@ import { LoadAsyncModule } from '../load-async/load-async.module';
 import { PopoverModule } from '../popover/popover.module';
 import { TraceSearchBoxModule } from '../search-box/search-box.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
+import { XMoreModule } from '../x-more/x-more.module';
 import { MultiSelectComponent } from './multi-select.component';
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MultiSelectComponent } from './multi-select.component';
     ButtonModule,
     LoadAsyncModule,
     CheckboxModule,
-    TooltipModule
+    TooltipModule,
+    XMoreModule
   ],
   declarations: [MultiSelectComponent],
   exports: [MultiSelectComponent]
