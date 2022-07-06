@@ -17,9 +17,9 @@ import { LoadAsyncModule } from '../load-async/load-async.module';
 import { PopoverModule } from '../popover/popover.module';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
+import { XMoreComponent } from '../x-more/x-more.component';
 import { MultiSelectJustify } from './multi-select-justify';
 import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } from './multi-select.component';
-import { XMoreComponent } from '../x-more/x-more.component';
 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
