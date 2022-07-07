@@ -32,7 +32,14 @@ import { FileUploadState } from './file-display/file-display';
           size="${IconSize.ExtraLarger}"
           color="${Color.Blue4}"
         ></ht-icon>
-        <input type="file" multiple="multiple" (change)="this.onFilesSelection($event)" hidden #fileInput />
+        <input
+          type="file"
+          multiple="multiple"
+          (change)="this.onFilesSelection($event)"
+          onclick="this.value = null"
+          hidden
+          #fileInput
+        />
         <div class="title">
           <div class="click-to-upload" (click)="fileInput.click()">Click to upload</div>
           or drag and drop
