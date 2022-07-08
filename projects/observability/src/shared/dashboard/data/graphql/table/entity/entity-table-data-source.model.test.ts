@@ -106,7 +106,7 @@ describe('Entity table data source model', () => {
           direction: TableSortDirection.Descending,
           key: expect.objectContaining({ name: 'name' })
         },
-        filters: [],
+        filters: [expect.objectContaining({ keyOrExpression: 'id', operator: 'NOT_EQUALS', value: 'null' })],
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         includeTotal: true
       })
@@ -155,7 +155,14 @@ describe('Entity table data source model', () => {
           direction: TableSortDirection.Descending,
           key: expect.objectContaining({ name: 'name' })
         },
-        filters: [{ id: 'test-id', key: 'id', type: 'SERVICE' }],
+        filters: [
+          expect.objectContaining({ keyOrExpression: 'id', operator: 'NOT_EQUALS', value: 'null' }),
+          {
+            id: 'test-id',
+            key: 'id',
+            type: 'SERVICE'
+          }
+        ],
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         includeTotal: true
       })
