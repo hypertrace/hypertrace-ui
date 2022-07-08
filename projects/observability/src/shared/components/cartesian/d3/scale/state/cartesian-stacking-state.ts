@@ -1,6 +1,7 @@
 import { Dictionary } from '@hypertrace/common';
 import { Numeric } from 'd3-array';
 import { stack, stackOffsetNone, stackOrderNone } from 'd3-shape';
+import { isNil } from 'lodash-es';
 import { Series } from '../../../chart';
 import { SeriesState } from './series-state';
 
@@ -35,8 +36,21 @@ export class CartesianStackingState<TData> implements SeriesState<TData> {
 
     this.stackingSeriesList.forEach((series, index) => {
       series.data.forEach((datum: TData, dataIndex) => {
-        this.baselineMap.set(datum, dataset[index][dataIndex][0]);
-        this.maxValue = Math.max(this.maxValue, dataset[index][dataIndex][1]);
+        let baseline = 0;
+        let value = 0;
+
+        if (
+          !isNaN(dataset[index][dataIndex][1]) &&
+          !isNil(dataset[index][dataIndex][1]) &&
+          !isNaN(dataset[index][dataIndex][0]) &&
+          !isNil(dataset[index][dataIndex][0])
+        ) {
+          baseline = dataset[index][dataIndex][0];
+          value = dataset[index][dataIndex][1];
+        }
+
+        this.baselineMap.set(datum, baseline);
+        this.maxValue = Math.max(this.maxValue, value);
       });
     });
   }
