@@ -11,7 +11,8 @@ import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
-import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { GraphQlFieldFilter } from '../../../../../graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlFilter, GraphQlOperatorType } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
@@ -59,6 +60,8 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     filters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>
   ): GraphQlEntitiesQueryRequest {
+    const nonNullEntityFilter = new GraphQlFieldFilter('id', GraphQlOperatorType.NotEquals, 'null');
+
     return {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: this.entityType,
@@ -69,7 +72,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
-      filters: [...filters, ...this.toGraphQlFilters(request.filters)],
+      filters: [nonNullEntityFilter, ...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true,
       includeInactive: request.includeInactive
