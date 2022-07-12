@@ -94,6 +94,10 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnChanges 
   }
 
   public onDateChange(date: string): void {
+    if (date === '') {
+      return;
+    }
+
     // The html input uses the format YYYY-MM-DD
     const d: Date = new Date(this.date!);
     const yearMonthDay = date.split('-');
