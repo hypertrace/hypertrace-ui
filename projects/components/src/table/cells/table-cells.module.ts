@@ -9,6 +9,7 @@ import { FilterButtonModule } from '../../filtering/filter-button/filter-button.
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
 import { PopoverModule } from '../../popover/popover.module';
+import { StringArrayDisplayModule } from '../../string-array/string-array-display.module';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { XMoreModule } from '../../x-more/x-more.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
@@ -55,7 +56,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     FilterModalModule,
     PopoverModule,
     CopyToClipboardModule,
-    XMoreModule
+    XMoreModule,
+    StringArrayDisplayModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
