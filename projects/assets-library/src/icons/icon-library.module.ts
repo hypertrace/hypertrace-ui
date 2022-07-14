@@ -100,6 +100,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.TriangleLeft, url: `${iconsRootPath}/triangle-left.svg` },
         { key: IconType.TriangleRight, url: `${iconsRootPath}/triangle-right.svg` },
         { key: IconType.TriangleUp, url: `${iconsRootPath}/triangle-up.svg` },
+        { key: IconType.VerticalGrabHandle, url: `${iconsRootPath}/vertical-grab-handle.svg` },
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
         { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
         { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` }
