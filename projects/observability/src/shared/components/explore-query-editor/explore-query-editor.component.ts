@@ -4,6 +4,7 @@ import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
+import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
   ExploreRequestContext,
@@ -32,27 +33,39 @@ import {
       </div>
 
       <div class="query-level-config">
-        <ht-explore-query-interval-editor
-          class="interval"
-          [interval]="currentVisualization.interval"
-          (intervalChange)="this.setInterval($event)"
-        ></ht-explore-query-interval-editor>
-        <ht-explore-query-group-by-editor
-          class="group-by"
-          [context]="currentVisualization.context"
-          [groupByExpression]="(currentVisualization.groupBy?.keyExpressions)[0]"
-          (groupByExpressionChange)="this.updateGroupByExpression(currentVisualization.groupBy, $event)"
-        ></ht-explore-query-group-by-editor>
+        <div class="filters-row">
+          <ht-explore-query-interval-editor
+            class="interval"
+            [interval]="currentVisualization.interval"
+            (intervalChange)="this.setInterval($event)"
+          ></ht-explore-query-interval-editor>
+          <ht-explore-query-group-by-editor
+            class="group-by"
+            [context]="currentVisualization.context"
+            [groupByExpression]="(currentVisualization.groupBy?.keyExpressions)[0]"
+            (groupByExpressionChange)="this.updateGroupByExpression(currentVisualization.groupBy, $event)"
+          ></ht-explore-query-group-by-editor>
 
-        <ht-explore-query-limit-editor
-          *ngIf="currentVisualization.groupBy"
-          class="limit"
-          [limit]="currentVisualization.groupBy?.limit"
-          (limitChange)="this.updateGroupByLimit(currentVisualization.groupBy!, $event)"
-          [includeRest]="currentVisualization.groupBy?.includeRest"
-          (includeRestChange)="this.updateGroupByIncludeRest(currentVisualization.groupBy!, $event)"
-        >
-        </ht-explore-query-limit-editor>
+          <ht-explore-query-limit-editor
+            *ngIf="currentVisualization.groupBy"
+            class="limit"
+            [limit]="currentVisualization.groupBy?.limit"
+            (limitChange)="this.updateGroupByLimit(currentVisualization.groupBy!, $event)"
+            [includeRest]="currentVisualization.groupBy?.includeRest"
+            (includeRestChange)="this.updateGroupByIncludeRest(currentVisualization.groupBy!, $event)"
+          >
+          </ht-explore-query-limit-editor>
+        </div>
+        <div class="filters-row">
+          <ht-explore-query-order-by-editor
+            *ngIf="currentVisualization.sortBy"
+            class="order-by"
+            [context]="currentVisualization.context"
+            [series]="currentVisualization.series"
+            [orderByExpression]="(currentVisualization.sortBy?.keyExpressions)[0]"
+            (orderByExpressionChange)="this.updateSortByExpression(currentVisualization.sortBy!, $event)"
+          ></ht-explore-query-order-by-editor>
+        </div>
       </div>
     </div>
   `
@@ -74,6 +87,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   @Input()
   public groupBy?: GraphQlGroupBy;
 
+  @Input()
+  public sortBy?: GraphQlSortBySpecification;
+
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
 
@@ -84,7 +100,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   }
 
   public ngOnInit(): void {
-    this.visualizationRequest$.subscribe(query => this.visualizationRequestChange.emit(query));
+    this.visualizationRequest$.subscribe(query => {
+      this.visualizationRequestChange.emit(query)
+    });
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
@@ -107,6 +125,10 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     if (changeObject.groupBy && this.groupBy?.keyExpressions.length) {
       this.updateGroupByExpression(this.groupBy, this.groupBy.keyExpressions[0]);
     }
+
+    if (changeObject.sortBy && this.sortBy) {
+      this.setSortBy(this.sortBy);
+    }
   }
 
   public setSeries(series: ExploreSeries[]): void {
@@ -125,6 +147,10 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
   }
 
+  public updateSortByExpression(sortBy?: GraphQlSortBySpecification, keyExpression?: AttributeExpression): void {
+    console.log(sortBy, keyExpression);
+  }
+
   public updateGroupByIncludeRest(groupBy: GraphQlGroupBy, includeRest: boolean): void {
     this.visualizationBuilder.groupBy({ ...groupBy, includeRest: includeRest });
   }
@@ -135,6 +161,10 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   public setInterval(interval: IntervalValue): void {
     this.visualizationBuilder.interval(interval === 'NONE' ? undefined : interval);
+  }
+
+  public setSortBy(sortBy: GraphQlSortBySpecification): void {
+    this.visualizationBuilder.sortBy(sortBy)
   }
 
   public addSeries(): void {

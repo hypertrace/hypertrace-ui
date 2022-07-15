@@ -337,5 +337,6 @@ const enum ExplorerQueryParam {
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
-  Series = 'series'
+  Series = 'series',
+  Sort = 'sort'
 }

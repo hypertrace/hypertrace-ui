@@ -1,0 +1,41 @@
+@import 'font';
+@import 'color-palette';
+
+.order-by-container {
+  display: flex;
+  flex-direction: column;
+
+  .order-by-main-label {
+    @include body-1-medium($gray-9);
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 4px;
+  }
+
+  .fields-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+
+    .order-by-input-container {
+      display: flex;
+      flex-direction: column;
+
+      .attribute-selector {
+        width: 172px;
+        min-width: 0;
+      }
+  
+      .aggregation-selector {
+        width: 124px;
+      }
+  
+      .order-by-label {
+        @include body-2-regular($gray-7);
+        height: 18px;
+        line-height: 18px;
+        margin-bottom: 2px;
+      }
+    }
+  }
+}

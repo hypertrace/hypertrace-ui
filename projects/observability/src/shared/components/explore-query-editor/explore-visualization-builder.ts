@@ -14,6 +14,7 @@ import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metada
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
+import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
 import { SPAN_SCOPE } from '../../graphql/model/schema/span';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
@@ -88,6 +89,12 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     });
   }
 
+  public sortBy(sortBy?: GraphQlSortBySpecification): this {
+    return this.updateState({
+      sortBy: sortBy
+    });
+  }
+
   public interval(interval?: TimeDuration | 'AUTO'): this {
     return this.updateState({
       interval: interval
@@ -124,6 +131,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       filters: state.filters && [...state.filters],
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
+      sortBy: state.sortBy && { ...state.sortBy },
       exploreQuery$: this.mapStateToExploreQuery(state),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
@@ -242,6 +250,7 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
+  sortBy?: GraphQlSortBySpecification;
   useGroupName?: boolean;
   resultLimit: number;
 }

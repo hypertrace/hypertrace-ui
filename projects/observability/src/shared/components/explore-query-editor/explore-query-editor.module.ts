@@ -14,6 +14,7 @@ import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryGroupByEditorComponent } from './group-by/explore-query-group-by-editor.component';
 import { ExploreQueryIntervalEditorComponent } from './interval/explore-query-interval-editor.component';
 import { ExploreQueryLimitEditorComponent } from './limit/explore-query-limit-editor.component';
+import { ExploreQueryOrderByEditorComponent } from './order-by/explore-query-order-by-editor.component';
 import { ExploreQuerySeriesEditorComponent } from './series/explore-query-series-editor.component';
 import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-series-group-editor.component';
 
@@ -24,7 +25,8 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
     ExploreQuerySeriesEditorComponent,
     ExploreQueryGroupByEditorComponent,
     ExploreQueryLimitEditorComponent,
-    ExploreQueryIntervalEditorComponent
+    ExploreQueryIntervalEditorComponent,
+    ExploreQueryOrderByEditorComponent
   ],
   exports: [ExploreQueryEditorComponent],
   imports: [
