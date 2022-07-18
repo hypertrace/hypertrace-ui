@@ -1,0 +1,31 @@
+@import 'font';
+@import 'color-palette';
+
+.order-by-container {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+
+  .order-by-input-container {
+    display: flex;
+    flex-direction: column;
+
+    .order-by-label {
+      @include body-1-medium($gray-9);
+      height: 32px;
+      line-height: 32px;
+      margin-bottom: 12px;
+    }
+
+    .order-by-path-wrapper {
+      width: 81px;
+
+      .order-by-path-input {
+        @include body-2-regular($gray-9);
+        width: 100%;
+        height: 100%;
+        line-height: 32px;
+      }
+    }
+  }
+}

@@ -106,7 +106,7 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
     this.groupByExpressionsToEmit.next({ ...previousExpression, subpath: newPath });
   }
 
-  public supportsSubpath(attribute?: AttributeMetadata): boolean {
+  public supportsSubpath(attribute?: AttributeMetadata | null): boolean {
     return attribute?.type === AttributeMetadataType.StringMap;
   }
 
