@@ -14,7 +14,7 @@ import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metada
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
-import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
+import { GraphQlSortArgument } from '../../graphql/model/schema/sort/graphql-sort-argument';
 import { SPAN_SCOPE } from '../../graphql/model/schema/span';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
@@ -89,7 +89,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     });
   }
 
-  public sortBy(sortBy?: GraphQlSortBySpecification): this {
+  public sortBy(sortBy?: GraphQlSortArgument): this {
     return this.updateState({
       sortBy: sortBy
     });
@@ -250,7 +250,7 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
-  sortBy?: GraphQlSortBySpecification;
+  sortBy?: GraphQlSortArgument;
   useGroupName?: boolean;
   resultLimit: number;
 }

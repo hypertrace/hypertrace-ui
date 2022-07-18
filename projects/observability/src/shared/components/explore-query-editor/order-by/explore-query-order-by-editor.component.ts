@@ -104,14 +104,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   
 
   public constructor(private readonly metadataService: MetadataService) {
-
-    this.sortByExpressionsToEmit
-      .pipe(
-        debounceTime(500)
-      )
-      .subscribe(this.orderByExpressionChange);
-
-
       // Todo: new one
       this.selectedAggregation$ = this.seriesSubject.pipe(map(series => series && series.specification.aggregation));
       
@@ -140,6 +132,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         this.sortByAttributeOptions$,
         merge(this.incomingSortByExpressionSubject, this.sortByExpressionsToEmit)
       ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
+
+      this.sortByExpressionsToEmit
+      .pipe(
+        debounceTime(500)
+      )
+      .subscribe(this.orderByExpressionChange);
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
@@ -147,12 +145,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       this.contextSubject.next(this.context);
     }
 
-    if (changeObject.orderByExpression) {
-      this.incomingSortByExpressionSubject.next(this.orderByExpression);
-    }
-
     if (changeObject.series) {
       this.seriesSubject.next(this.series);
+    }
+
+    if (changeObject.orderByExpression) {
+      this.incomingSortByExpressionSubject.next(this.orderByExpression);
     }
   }
 

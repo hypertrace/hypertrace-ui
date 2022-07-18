@@ -4,7 +4,7 @@ import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
-import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
+import { GraphQlSortArgument } from '../../graphql/model/schema/sort/graphql-sort-argument';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
   ExploreRequestContext,
@@ -58,11 +58,9 @@ import {
         </div>
         <div class="filters-row">
           <ht-explore-query-order-by-editor
-            *ngIf="currentVisualization.sortBy"
             class="order-by"
             [context]="currentVisualization.context"
-            [series]="currentVisualization.series"
-            [orderByExpression]="(currentVisualization.sortBy?.keyExpressions)[0]"
+            [series]="currentVisualization.series[0]"
             (orderByExpressionChange)="this.updateSortByExpression(currentVisualization.sortBy!, $event)"
           ></ht-explore-query-order-by-editor>
         </div>
@@ -88,7 +86,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   public groupBy?: GraphQlGroupBy;
 
   @Input()
-  public sortBy?: GraphQlSortBySpecification;
+  public sortBy?: GraphQlSortArgument;
 
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
@@ -147,7 +145,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
   }
 
-  public updateSortByExpression(sortBy?: GraphQlSortBySpecification, keyExpression?: AttributeExpression): void {
+  public updateSortByExpression(sortBy?: GraphQlSortArgument, keyExpression?: AttributeExpression): void {
     console.log(sortBy, keyExpression);
   }
 
@@ -163,7 +161,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.interval(interval === 'NONE' ? undefined : interval);
   }
 
-  public setSortBy(sortBy: GraphQlSortBySpecification): void {
+  public setSortBy(sortBy: GraphQlSortArgument): void {
     this.visualizationBuilder.sortBy(sortBy)
   }
 

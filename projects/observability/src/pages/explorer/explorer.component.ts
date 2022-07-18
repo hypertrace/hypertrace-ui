@@ -24,6 +24,7 @@ import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { GraphQlSortBySpecification } from '../../shared/graphql/model/schema/sort/graphql-sort-by-specification';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -248,7 +249,8 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series))
+      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series)),
+      sortBy: undefined
     };
   }
 
@@ -320,6 +322,7 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
+  sortBy?: GraphQlSortBySpecification;
 }
 
 interface ExplorerContextScope {
