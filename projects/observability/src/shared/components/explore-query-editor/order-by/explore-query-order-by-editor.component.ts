@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
-import { isNil } from 'lodash-es';
-import { combineLatest, EMPTY, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { debounceTime, map, switchMap, take } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeExpression } from '../../../graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
@@ -11,13 +10,13 @@ import { TraceType } from '../../../graphql/model/schema/trace';
 import { ExploreSpecificationBuilder } from '../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../../cartesian/chart';
-import { ExploreSeries } from '../explore-visualization-builder';
+import { ExploreOrderBy, ExploreSeries, SortByType } from '../explore-visualization-builder';
 @Component({
   selector: 'ht-explore-query-order-by-editor',
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="order-by-container" *htLetAsync="this.currentSortByExpression$ as currentSortByExpression">
+    <div class="order-by-container">
       <span class="order-by-main-label"> Order by </span>
       <div class="fields-container">
         <div class="order-by-input-container" *ngIf="this.attributeOptions$ | async as attributeOptions">
@@ -54,11 +53,10 @@ import { ExploreSeries } from '../explore-visualization-builder';
         <div class="order-by-input-container">
           <span class="order-by-label"> Sort by </span>
           <ht-select
-            *ngIf="this.sortByAttributeOptions$ | async as sortByOptions"
             [showBorder]="true"
+            [selected]="this.orderByExpression?.sortBy"
             class="order-by-selector"
-            [selected]="currentSortByExpression && currentSortByExpression.metadata"
-            (selectedChange)="this.onSortByAttributeChange($event)"
+            (selectedChange)="this.onSortByChange($event)"
           >
             <ht-select-option
               *ngFor="let option of sortByOptions"
@@ -73,19 +71,16 @@ import { ExploreSeries } from '../explore-visualization-builder';
 })
 export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Input()
-  public orderByExpression?: AttributeExpression;
+  public orderByExpression?: ExploreOrderBy;
 
   @Input()
   public context?: TraceType;
 
-  @Input()
-  public series?: ExploreSeries;
-
   @Output()
-  public readonly orderByExpressionChange: EventEmitter<AttributeExpression | undefined> = new EventEmitter();
+  public readonly orderByExpressionChange: EventEmitter<ExploreOrderBy | undefined> = new EventEmitter();
 
-  @Output()
-  public readonly seriesChange: EventEmitter<ExploreSeries> = new EventEmitter();
+  // @Output()
+  // public readonly seriesChange: EventEmitter<ExploreSeries> = new EventEmitter();
 
   private readonly contextSubject: Subject<TraceType | undefined> = new ReplaySubject(1);
 
@@ -97,47 +92,58 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   public readonly attributeOptions$: Observable<SelectOption<AttributeMetadata>[]>;
   public readonly selectedAggregation$: Observable<MetricAggregationType | undefined>;
   public readonly selectedVisualizationType$: Observable<CartesianSeriesVisualizationType | undefined>;
-  public readonly sortByAttributeOptions$: Observable<SelectOption<AttributeMetadata | undefined>[]>;
-  public readonly currentSortByExpression$: Observable<AttributeExpressionWithMetadata | undefined>;
-  private readonly incomingSortByExpressionSubject: Subject<AttributeExpression | undefined> = new ReplaySubject(1);
-  private readonly sortByExpressionsToEmit: Subject<AttributeExpressionWithMetadata | undefined> = new Subject();
-  
+  public readonly sortByOptions: SelectOption<SortByType | undefined>[] = [
+    {
+      value: SortByType.None,
+      label: 'None'
+    },
+    {
+      value: SortByType.Asc,
+      label: 'Asc'
+    },
+    {
+      value: SortByType.Desc,
+      label: 'Desc'
+    }
+  ];
+  public readonly currentSortByExpression$?: Observable<AttributeExpressionWithMetadata | undefined>;
+  private readonly incomingOrderByExpressionSubject: Subject<ExploreOrderBy | undefined> = new ReplaySubject(1);
+  // private readonly orderByExpressionsToEmit: Subject<AttributeExpressionWithMetadata | undefined> = new Subject();
 
   public constructor(private readonly metadataService: MetadataService) {
-      // Todo: new one
-      this.selectedAggregation$ = this.seriesSubject.pipe(map(series => series && series.specification.aggregation));
-      
-      this.selectedVisualizationType$ = this.seriesSubject.pipe(
-        map(series => series && series.visualizationOptions.type)
-      );
+    // Todo: new one
+    this.selectedAggregation$ = this.seriesSubject.pipe(map(series => series && series.specification.aggregation));
 
-      this.selectedAttribute$ = combineLatest([this.contextSubject, this.seriesSubject]).pipe(
-        switchMap(() => this.getCurrentSelectedAttribute())
-      );
+    this.selectedVisualizationType$ = this.seriesSubject.pipe(
+      map(series => series && series.visualizationOptions.type)
+    );
 
+    this.selectedAttribute$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
+      switchMap(() => this.getCurrentSelectedAttribute())
+    );
 
-      this.aggregationOptions$ = this.selectedAttribute$.pipe(
-        map(selection => this.getAggregationOptionsForAttribute(selection))
-      );
+    this.aggregationOptions$ = this.selectedAttribute$.pipe(
+      map(selection => this.getAggregationOptionsForAttribute(selection))
+    );
 
-      this.attributeOptions$ = this.contextSubject.pipe(
-        switchMap(context => this.getAttributeOptionsForContext(context))
-      );
+    this.attributeOptions$ = this.contextSubject.pipe(
+      switchMap(context => this.getAttributeOptionsForContext(context))
+    );
 
-      this.sortByAttributeOptions$ = this.contextSubject.pipe(
-        switchMap(context => this.getSortByOptionsForContext(context))
-      );
+    // this.sortByAttributeOptions$ = this.contextSubject.pipe(
+    //   switchMap(context => this.getSortByOptionsForContext(context))
+    // );
 
-      this.currentSortByExpression$ = combineLatest([
-        this.sortByAttributeOptions$,
-        merge(this.incomingSortByExpressionSubject, this.sortByExpressionsToEmit)
-      ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
+    // this.currentSortByExpression$ = combineLatest([
+    //   this.sortByAttributeOptions$,
+    //   merge(this.incomingOrderByExpressionSubject, this.orderByExpressionsToEmit)
+    // ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
 
-      this.sortByExpressionsToEmit
-      .pipe(
-        debounceTime(500)
-      )
-      .subscribe(this.orderByExpressionChange);
+    // this.orderByExpressionsToEmit
+    // .pipe(
+    //   debounceTime(500)
+    // )
+    // .subscribe(this.orderByExpressionChange);
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
@@ -145,12 +151,16 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       this.contextSubject.next(this.context);
     }
 
-    if (changeObject.series) {
-      this.seriesSubject.next(this.series);
-    }
-
     if (changeObject.orderByExpression) {
-      this.incomingSortByExpressionSubject.next(this.orderByExpression);
+      console.log('Order By Expression: ', changeObject.orderByExpression);
+      this.incomingOrderByExpressionSubject.next(this.orderByExpression);
+
+      // if(!this.orderByExpression?.sortBy) {
+      //   this.orderByExpression = {
+      //     ...this.orderByExpression,
+      //     sortBy: SortByType.None
+      //   }
+      // }
     }
   }
 
@@ -158,9 +168,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.attributeOptions$.pipe(
-      map(attributeOptions =>
-        attributeOptions.find(option => option.value.name === (this.series && this.series.specification.name))
-      ),
+      map(attributeOptions => attributeOptions.find(option => option.value.name === this.orderByExpression?.metric)),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
   }
@@ -192,10 +200,17 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   public onAttributeChange(newAttribute: AttributeMetadata): void {
+    console.log(newAttribute);
     this.buildSpecAndEmit(
       combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$])
     );
   }
+
+  // public onAttributeChange(newAttribute: AttributeMetadata): void {
+  //   this.buildSpecAndEmit(
+  //     combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$])
+  //   );
+  // }
 
   private buildSpecAndEmit(
     seriesData$: Observable<
@@ -207,7 +222,9 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         take(1),
         switchMap(seriesData => this.buildNewExploreSeries(...seriesData))
       )
-      .subscribe(newSeries => this.seriesChange.next(newSeries));
+      .subscribe(newSeries => {
+        console.log(newSeries);
+      });
   }
 
   private buildNewExploreSeries(
@@ -234,49 +251,44 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   public onAggregationChange(newAggregation: MetricAggregationType): void {
-    this.buildSpecAndEmit(
-      combineLatest([this.selectedAttribute$, of(newAggregation), this.selectedVisualizationType$])
-    );
+    console.log(newAggregation);
+    // this.buildSpecAndEmit(
+    //   combineLatest([this.selectedAttribute$, of(newAggregation), this.selectedVisualizationType$])
+    // );
   }
 
-  private getSortByOptionsForContext(context?: TraceType): Observable<SelectOption<AttributeMetadata | undefined>[]> {
-    if (context === undefined) {
-      return of([this.getEmptySortByOption()]);
-    }
+  // private getSortByOptionsForContext(context?: TraceType): Observable<SelectOption<AttributeMetadata | undefined>[]> {
+  //   if (context === undefined) {
+  //     return of([this.getEmptySortByOption()]);
+  //   }
 
-    return this.metadataService.getSortableAttributes(context).pipe(
-      map(attributes =>
-        attributes.map(attribute => ({
-          value: attribute,
-          label: this.metadataService.getAttributeDisplayName(attribute)
-        }))
-      ),
-      map(attributeOptions => [this.getEmptySortByOption(), ...attributeOptions])
-    );
-  }
+  //   return this.metadataService.getSortableAttributes(context).pipe(
+  //     map(attributes =>
+  //       attributes.map(attribute => ({
+  //         value: attribute,
+  //         label: this.metadataService.getAttributeDisplayName(attribute)
+  //       }))
+  //     ),
+  //     map(attributeOptions => [this.getEmptySortByOption(), ...attributeOptions])
+  //   );
+  // }
 
-  private getEmptySortByOption(): SelectOption<AttributeMetadata | undefined> {
-    return {
-      value: undefined,
-      label: 'None'
-    };
-  }
+  // private resolveAttributeFromOptions(
+  //   options: SelectOption<AttributeMetadata | undefined>[],
+  //   expression?: AttributeExpression
+  // ): AttributeExpressionWithMetadata | undefined {
+  //   if (isNil(expression)) {
+  //     return undefined;
+  //   }
 
-  private resolveAttributeFromOptions(
-    options: SelectOption<AttributeMetadata | undefined>[],
-    expression?: AttributeExpression
-  ): AttributeExpressionWithMetadata | undefined {
-    if (isNil(expression)) {
-      return undefined;
-    }
+  //   const metadata = options.find(option => option.value?.name === expression.key)?.value;
 
-    const metadata = options.find(option => option.value?.name === expression.key)?.value;
+  //   return metadata && { ...expression, metadata: metadata };
+  // }
 
-    return metadata && { ...expression, metadata: metadata };
-  }
-
-  public onSortByAttributeChange(newAttribute?: AttributeMetadata): void {
-    this.sortByExpressionsToEmit.next(newAttribute && { key: newAttribute.name, metadata: newAttribute });
+  public onSortByChange(newAttribute?: AttributeMetadata): void {
+    console.log(newAttribute);
+    // this.orderByExpressionsToEmit.next(newAttribute && { key: newAttribute.name, metadata: newAttribute });
   }
 }
 

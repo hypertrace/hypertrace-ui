@@ -7,6 +7,7 @@ import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group
 import { GraphQlSortArgument } from '../../graphql/model/schema/sort/graphql-sort-argument';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
+  ExploreOrderBy,
   ExploreRequestContext,
   ExploreSeries,
   ExploreVisualizationBuilder,
@@ -59,9 +60,9 @@ import {
         <div class="filters-row">
           <ht-explore-query-order-by-editor
             class="order-by"
+            [orderByExpression]="currentVisualization.orderBy"
             [context]="currentVisualization.context"
-            [series]="currentVisualization.series[0]"
-            (orderByExpressionChange)="this.updateSortByExpression(currentVisualization.sortBy!, $event)"
+            (orderByExpressionChange)="this.updateOrderByExpression(currentVisualization.sortBy!, $event)"
           ></ht-explore-query-order-by-editor>
         </div>
       </div>
@@ -86,7 +87,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   public groupBy?: GraphQlGroupBy;
 
   @Input()
-  public sortBy?: GraphQlSortArgument;
+  public orderBy?: ExploreOrderBy;
 
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
@@ -99,7 +100,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   public ngOnInit(): void {
     this.visualizationRequest$.subscribe(query => {
-      this.visualizationRequestChange.emit(query)
+      this.visualizationRequestChange.emit(query);
     });
   }
 
@@ -124,8 +125,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.updateGroupByExpression(this.groupBy, this.groupBy.keyExpressions[0]);
     }
 
-    if (changeObject.sortBy && this.sortBy) {
-      this.setSortBy(this.sortBy);
+    if (changeObject.orderBy && this.orderBy) {
+      this.setOrderBy(this.orderBy);
     }
   }
 
@@ -145,8 +146,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
   }
 
-  public updateSortByExpression(sortBy?: GraphQlSortArgument, keyExpression?: AttributeExpression): void {
-    console.log(sortBy, keyExpression);
+  public updateOrderByExpression(orderBy?: GraphQlSortArgument, keyExpression?: AttributeExpression): void {
+    console.log(orderBy, keyExpression);
   }
 
   public updateGroupByIncludeRest(groupBy: GraphQlGroupBy, includeRest: boolean): void {
@@ -161,8 +162,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.interval(interval === 'NONE' ? undefined : interval);
   }
 
-  public setSortBy(sortBy: GraphQlSortArgument): void {
-    this.visualizationBuilder.sortBy(sortBy)
+  public setOrderBy(orderBy: ExploreOrderBy): void {
+    this.visualizationBuilder.orderBy(orderBy);
   }
 
   public addSeries(): void {

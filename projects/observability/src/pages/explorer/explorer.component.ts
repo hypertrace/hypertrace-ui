@@ -16,7 +16,9 @@ import { CartesianSeriesVisualizationType } from '../../shared/components/cartes
 import {
   ExploreRequestState,
   ExploreSeries,
-  ExploreVisualizationRequest
+  ExploreOrderBy,
+  ExploreVisualizationRequest,
+  SortByType
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
@@ -24,7 +26,6 @@ import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
-import { GraphQlSortBySpecification } from '../../shared/graphql/model/schema/sort/graphql-sort-by-specification';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -77,6 +78,7 @@ import {
                 [series]="initialState.series"
                 [interval]="initialState.interval"
                 [groupBy]="initialState.groupBy"
+                [orderBy]="initialState.orderBy"
               ></ht-explore-query-editor>
 
               <ht-application-aware-dashboard
@@ -236,6 +238,9 @@ export class ExplorerComponent {
   }
 
   private mapToInitialState(param: ParamMap): InitialExplorerState {
+    const series: ExploreSeries[] = param
+      .getAll(ExplorerQueryParam.Series)
+      .flatMap(series => this.tryDecodeExploreSeries(series));
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
       groupBy: param.has(ExplorerQueryParam.Group)
@@ -249,8 +254,12 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series)),
-      sortBy: undefined
+      series: series,
+      orderBy: {
+        metric: series[0].specification.name,
+        aggregation: series[0].specification.aggregation,
+        sortBy: SortByType.None
+      }
     };
   }
 
@@ -322,7 +331,7 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
-  sortBy?: GraphQlSortBySpecification;
+  orderBy?: ExploreOrderBy;
 }
 
 interface ExplorerContextScope {
