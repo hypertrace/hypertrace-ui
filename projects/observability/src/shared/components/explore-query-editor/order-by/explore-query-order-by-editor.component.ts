@@ -3,7 +3,6 @@ import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
 import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { AttributeExpression } from '../../../graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
 import { TraceType } from '../../../graphql/model/schema/trace';
@@ -19,18 +18,18 @@ import { ExploreOrderBy, ExploreSeries, SortByType } from '../explore-visualizat
     <div class="order-by-container">
       <span class="order-by-main-label"> Order by </span>
       <div class="fields-container">
-        <div class="order-by-input-container" *ngIf="this.attributeOptions$ | async as attributeOptions">
+        <div class="order-by-input-container" *ngIf="this.metricOptions$ | async as metricOptions">
           <span class="order-by-label"> Metric </span>
           <ht-select
             class="attribute-selector"
-            [selected]="this.selectedAttribute$ | async"
+            [selected]="this.selectedMetric$ | async"
             [showBorder]="true"
-            (selectedChange)="this.onAttributeChange($event)"
+            (selectedChange)="this.onMetricChange($event)"
           >
             <ht-select-option
-              *ngFor="let option of attributeOptions"
-              [value]="option.value"
-              [label]="option.label"
+              *ngFor="let metricOption of metricOptions"
+              [value]="metricOption.value"
+              [label]="metricOption.label"
             ></ht-select-option>
           </ht-select>
         </div>
@@ -44,9 +43,9 @@ import { ExploreOrderBy, ExploreSeries, SortByType } from '../explore-visualizat
             [disabled]="aggregationOptions && aggregationOptions.length === 1"
           >
             <ht-select-option
-              *ngFor="let option of aggregationOptions"
-              [value]="option.value"
-              [label]="option.label"
+              *ngFor="let aggregationOption of aggregationOptions"
+              [value]="aggregationOption.value"
+              [label]="aggregationOption.label"
             ></ht-select-option>
           </ht-select>
         </div>
@@ -79,19 +78,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Output()
   public readonly orderByExpressionChange: EventEmitter<ExploreOrderBy | undefined> = new EventEmitter();
 
-  // @Output()
-  // public readonly seriesChange: EventEmitter<ExploreSeries> = new EventEmitter();
-
   private readonly contextSubject: Subject<TraceType | undefined> = new ReplaySubject(1);
-
-  // TODO: Used here
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
-  private readonly seriesSubject: Subject<ExploreSeries | undefined> = new ReplaySubject(1);
-  public readonly selectedAttribute$: Observable<AttributeMetadata | undefined>;
+  public readonly selectedMetric$: Observable<AttributeMetadata | undefined>;
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
-  public readonly attributeOptions$: Observable<SelectOption<AttributeMetadata>[]>;
+  public readonly metricOptions$: Observable<SelectOption<AttributeMetadata>[]>;
   public readonly selectedAggregation$: Observable<MetricAggregationType | undefined>;
-  public readonly selectedVisualizationType$: Observable<CartesianSeriesVisualizationType | undefined>;
   public readonly sortByOptions: SelectOption<SortByType | undefined>[] = [
     {
       value: SortByType.None,
@@ -106,36 +98,38 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       label: 'Desc'
     }
   ];
-  public readonly currentSortByExpression$?: Observable<AttributeExpressionWithMetadata | undefined>;
+  // public readonly currentSortByExpression$?: Observable<AttributeExpressionWithMetadata | undefined>;
   private readonly incomingOrderByExpressionSubject: Subject<ExploreOrderBy | undefined> = new ReplaySubject(1);
   // private readonly orderByExpressionsToEmit: Subject<AttributeExpressionWithMetadata | undefined> = new Subject();
 
   public constructor(private readonly metadataService: MetadataService) {
-    // Todo: new one
-    this.selectedAggregation$ = this.seriesSubject.pipe(map(series => series && series.specification.aggregation));
 
-    this.selectedVisualizationType$ = this.seriesSubject.pipe(
-      map(series => series && series.visualizationOptions.type)
+    this.selectedAggregation$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
+      switchMap(() => this.getCurrentSelectedAggregation())
     );
 
-    this.selectedAttribute$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
+    // this.selectedVisualizationType$ = this.seriesSubject.pipe(
+    //   map(series => series && series.visualizationOptions.type)
+    // );
+
+    this.selectedMetric$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
       switchMap(() => this.getCurrentSelectedAttribute())
     );
 
-    this.aggregationOptions$ = this.selectedAttribute$.pipe(
+    this.aggregationOptions$ = this.selectedMetric$.pipe(
       map(selection => this.getAggregationOptionsForAttribute(selection))
     );
 
-    this.attributeOptions$ = this.contextSubject.pipe(
+    this.metricOptions$ = this.contextSubject.pipe(
       switchMap(context => this.getAttributeOptionsForContext(context))
     );
 
-    // this.sortByAttributeOptions$ = this.contextSubject.pipe(
+    // this.sortBymetricOptions$ = this.contextSubject.pipe(
     //   switchMap(context => this.getSortByOptionsForContext(context))
     // );
 
     // this.currentSortByExpression$ = combineLatest([
-    //   this.sortByAttributeOptions$,
+    //   this.sortBymetricOptions$,
     //   merge(this.incomingOrderByExpressionSubject, this.orderByExpressionsToEmit)
     // ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
 
@@ -152,23 +146,20 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }
 
     if (changeObject.orderByExpression) {
-      console.log('Order By Expression: ', changeObject.orderByExpression);
       this.incomingOrderByExpressionSubject.next(this.orderByExpression);
-
-      // if(!this.orderByExpression?.sortBy) {
-      //   this.orderByExpression = {
-      //     ...this.orderByExpression,
-      //     sortBy: SortByType.None
-      //   }
-      // }
     }
   }
 
-  // Todo: new one
-
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
-    return this.attributeOptions$.pipe(
+    return this.metricOptions$.pipe(
       map(attributeOptions => attributeOptions.find(option => option.value.name === this.orderByExpression?.metric)),
+      map(matchedSelection => matchedSelection && matchedSelection.value)
+    );
+  }
+
+  private getCurrentSelectedAggregation(): Observable<MetricAggregationType | undefined> {
+    return this.aggregationOptions$.pipe(
+      map(aggregationOptions => aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
   }
@@ -199,11 +190,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
   }
 
-  public onAttributeChange(newAttribute: AttributeMetadata): void {
+  public onMetricChange(newAttribute: AttributeMetadata): void {
     console.log(newAttribute);
-    this.buildSpecAndEmit(
-      combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$])
-    );
+    // this.buildSpecAndEmit(
+    //   combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$])
+    // );
   }
 
   // public onAttributeChange(newAttribute: AttributeMetadata): void {
@@ -212,7 +203,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   //   );
   // }
 
-  private buildSpecAndEmit(
+  public buildSpecAndEmit(
     seriesData$: Observable<
       [AttributeMetadata | undefined, MetricAggregationType | undefined, CartesianSeriesVisualizationType | undefined]
     >
@@ -253,7 +244,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   public onAggregationChange(newAggregation: MetricAggregationType): void {
     console.log(newAggregation);
     // this.buildSpecAndEmit(
-    //   combineLatest([this.selectedAttribute$, of(newAggregation), this.selectedVisualizationType$])
+    //   combineLatest([this.selectedMetric$, of(newAggregation), this.selectedVisualizationType$])
     // );
   }
 
@@ -292,6 +283,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 }
 
-interface AttributeExpressionWithMetadata extends AttributeExpression {
-  metadata: AttributeMetadata;
-}
+// interface AttributeExpressionWithMetadata extends AttributeExpression {
+//   metadata: AttributeMetadata;
+// }
