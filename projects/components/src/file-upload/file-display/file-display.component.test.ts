@@ -2,7 +2,7 @@ import { FormattingModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { IconComponent } from '../../icon/icon.component';
-import { FileUploadState } from './file-display';
+import { FileUploadEventType } from '../file-upload.service';
 import { FileDisplayComponent } from './file-display.component';
 
 describe('File Display Component', () => {
@@ -30,12 +30,24 @@ describe('File Display Component', () => {
     expect(spectator.component.deleteClick.emit).toHaveBeenCalled();
 
     // Success state
-    spectator.setInput({ file: file, state: FileUploadState.Success, showState: true });
+    spectator.setInput({
+      file: file,
+      latestUploadEvent: {
+        type: FileUploadEventType.Success,
+        response: {}
+      }
+    });
     expect(spectator.query('.success-icon')).toExist();
-    expect(spectator.query('.delete-icon')).not.toExist();
+    expect(spectator.query('.delete-icon')).toExist();
 
     // Failure state
-    spectator.setInput({ file: file, state: FileUploadState.Failure, showState: true });
+    spectator.setInput({
+      file: file,
+      latestUploadEvent: {
+        type: FileUploadEventType.Failure,
+        error: 'Failed'
+      }
+    });
     expect(spectator.query('.file-display.error')).toExist();
     expect(spectator.query('.failure-icon')).toExist();
   });
