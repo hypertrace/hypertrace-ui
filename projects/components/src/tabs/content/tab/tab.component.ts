@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../../content/content-holder';
+import { TabCustomHeaderDirective } from '../tab-custom-header.directive';
 
 @Component({
   selector: 'ht-tab',
@@ -8,6 +9,9 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../../content/content
   template: CONTENT_HOLDER_TEMPLATE
 })
 export class TabComponent extends ContentHolder {
+  @ContentChild(TabCustomHeaderDirective)
+  public customHeader?: TabCustomHeaderDirective;
+
   @Input()
   public label!: string;
 
