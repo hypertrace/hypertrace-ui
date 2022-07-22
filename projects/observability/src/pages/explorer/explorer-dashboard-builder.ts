@@ -66,6 +66,12 @@ export class ExplorerDashboardBuilder {
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false
+        },
+        'show-y-axis': true,
+        'y-axis': {
+          type: 'cartesian-axis',
+          'show-grid-lines': true,
+          'min-upper-limit': 25
         }
       },
       onReady: dashboard => {

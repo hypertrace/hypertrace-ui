@@ -84,7 +84,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         {
           type: 'cell-span-model',
           'col-start': 0,
-          'col-end': 1,
+          'col-end': 2,
           'row-start': 1,
           'row-end': 2
         },

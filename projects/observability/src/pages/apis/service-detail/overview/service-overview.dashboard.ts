@@ -28,7 +28,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
         },
         {
           type: 'dimension-model',
-          dimension: 0.3,
+          dimension: 0.2,
           unit: 'FR',
           'min-dimension': 345
         }
@@ -87,6 +87,11 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             },
             {
               type: 'dimension-model',
+              dimension: 88,
+              unit: 'PX'
+            },
+            {
+              type: 'dimension-model',
               dimension: 320,
               unit: 'PX'
             },
@@ -100,28 +105,21 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             {
               type: 'cell-span-model',
               'col-start': 0,
-              'col-end': 1,
-              'row-start': 0,
-              'row-end': 1
-            },
-            {
-              type: 'cell-span-model',
-              'col-start': 1,
               'col-end': 2,
               'row-start': 0,
               'row-end': 1
             },
             {
               type: 'cell-span-model',
-              'col-start': 2,
-              'col-end': 3,
-              'row-start': 0,
-              'row-end': 1
+              'col-start': 0,
+              'col-end': 1,
+              'row-start': 1,
+              'row-end': 2
             },
             {
               type: 'cell-span-model',
-              'col-start': 0,
-              'col-end': 3,
+              'col-start': 1,
+              'col-end': 2,
               'row-start': 1,
               'row-end': 2
             },
@@ -131,6 +129,13 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
               'col-end': 3,
               'row-start': 2,
               'row-end': 3
+            },
+            {
+              type: 'cell-span-model',
+              'col-start': 0,
+              'col-end': 3,
+              'row-start': 3,
+              'row-end': 4
             }
           ]
         },
@@ -153,6 +158,19 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'metric-aggregation',
                     metric: 'duration',
                     aggregation: MetricAggregationType.P99
+                  }
+                }
+              },
+              {
+                type: 'metric-display-widget',
+                title: 'P95 Latency',
+                subscript: 'ms',
+                data: {
+                  type: 'entity-metric-aggregation-data-source',
+                  metric: {
+                    type: 'metric-aggregation',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.P95
                   }
                 }
               },
