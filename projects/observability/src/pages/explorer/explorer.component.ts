@@ -16,9 +16,8 @@ import { CartesianSeriesVisualizationType } from '../../shared/components/cartes
 import {
   ExploreRequestState,
   ExploreSeries,
-  ExploreOrderBy,
   ExploreVisualizationRequest,
-  SortByType
+  GraphQlOrderBy
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
@@ -256,9 +255,11 @@ export class ExplorerComponent {
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
       series: series,
       orderBy: {
-        metric: series[0].specification.name,
         aggregation: series[0].specification.aggregation,
-        sortBy: SortByType.None
+        direction: undefined,
+        keyExpression: {
+          key: series[0].specification.name
+        }
       }
     };
   }
@@ -331,7 +332,7 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
-  orderBy?: ExploreOrderBy;
+  orderBy?: GraphQlOrderBy;
 }
 
 interface ExplorerContextScope {

@@ -88,7 +88,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     });
   }
 
-  public orderBy(orderBy?: ExploreOrderBy): this {
+  public orderBy(orderBy?: GraphQlOrderBy): this {
     return this.updateState({
       orderBy: orderBy
     });
@@ -145,6 +145,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
         interval: interval,
         filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
         groupBy: state.groupBy,
+        // orderBy: state.orderBy,
         limit: state.resultLimit
       }))
     );
@@ -249,7 +250,7 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
-  orderBy?: ExploreOrderBy;
+  orderBy?: GraphQlOrderBy;
   useGroupName?: boolean;
   resultLimit: number;
 }
@@ -270,14 +271,15 @@ export interface ExploreSeries {
   visualizationOptions: ExploreSeriesVisualizationOptions;
 }
 
-export interface ExploreOrderBy {
-  metric?: string;
+export interface GraphQlOrderBy {
   aggregation?: MetricAggregationType;
-  sortBy: SortByType;
+  direction?: SortByType;
+  keyExpression?: {
+    key: string;
+  };
 }
 
 export const enum SortByType {
-  None = 'None',
   Asc = 'ASC',
   Desc = 'DESC'
 }

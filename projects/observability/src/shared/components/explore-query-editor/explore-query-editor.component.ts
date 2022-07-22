@@ -4,14 +4,13 @@ import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
-import { GraphQlSortArgument } from '../../graphql/model/schema/sort/graphql-sort-argument';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
-  ExploreOrderBy,
   ExploreRequestContext,
   ExploreSeries,
   ExploreVisualizationBuilder,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
+  GraphQlOrderBy
 } from './explore-visualization-builder';
 
 @Component({
@@ -62,7 +61,7 @@ import {
             class="order-by"
             [orderByExpression]="currentVisualization.orderBy"
             [context]="currentVisualization.context"
-            (orderByExpressionChange)="this.updateOrderByExpression(currentVisualization.sortBy!, $event)"
+            (orderByExpressionChange)="this.updateOrderByExpression($event)"
           ></ht-explore-query-order-by-editor>
         </div>
       </div>
@@ -87,7 +86,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   public groupBy?: GraphQlGroupBy;
 
   @Input()
-  public orderBy?: ExploreOrderBy;
+  public orderBy?: GraphQlOrderBy;
 
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
@@ -146,8 +145,8 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
   }
 
-  public updateOrderByExpression(orderBy?: GraphQlSortArgument, keyExpression?: AttributeExpression): void {
-    console.log(orderBy, keyExpression);
+  public updateOrderByExpression(orderBy?: GraphQlOrderBy): void {
+    this.visualizationBuilder.orderBy(orderBy);
   }
 
   public updateGroupByIncludeRest(groupBy: GraphQlGroupBy, includeRest: boolean): void {
@@ -162,7 +161,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     this.visualizationBuilder.interval(interval === 'NONE' ? undefined : interval);
   }
 
-  public setOrderBy(orderBy: ExploreOrderBy): void {
+  public setOrderBy(orderBy: GraphQlOrderBy): void {
     this.visualizationBuilder.orderBy(orderBy);
   }
 
