@@ -1,0 +1,8 @@
+{
+  "featureFlags": {
+    "ui.saved-queries": true,
+    "ui.custom-dashboards": true
+  },
+  "urlConfig": {},
+  "dashboardConfig": {}
+}

@@ -4,10 +4,11 @@ import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
 import { entityMetadata } from './entity-metadata';
+import { DynamicConfigurationModule } from './shared/dynamic-configuration/dynamic-configuration.module';
 import { FeatureResolverModule } from './shared/feature-resolver/feature-resolver.module';
 
 @NgModule({
-  imports: [FeatureResolverModule],
+  imports: [FeatureResolverModule, DynamicConfigurationModule],
   providers: [
     {
       provide: GRAPHQL_OPTIONS,
