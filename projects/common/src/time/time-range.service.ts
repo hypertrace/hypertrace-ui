@@ -16,7 +16,7 @@ import { TimeUnit } from './time-unit.type';
   providedIn: 'root'
 })
 export class TimeRangeService {
-  private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
+  public static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
   private static readonly REFRESH_ON_NAVIGATION: string = 'refresh';
 
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);

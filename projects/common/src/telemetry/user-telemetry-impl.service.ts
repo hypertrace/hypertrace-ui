@@ -46,20 +46,28 @@ export class UserTelemetryImplService extends UserTelemetryService {
   public trackEvent(name: string, data: Dictionary<unknown>): void {
     this.initializedTelemetryProviders
       .filter(provider => provider.enableEventTracking)
-      .forEach(provider => provider.telemetryProvider.trackEvent?.(name, { ...data, eventCategory: 'user-action' }));
+      .forEach(provider =>
+        provider.telemetryProvider.trackEvent?.(name, { ...data, eventCategory: UserTelemetryEvent.mouseEvent })
+      );
   }
 
   public trackPageEvent(url: string, data: Dictionary<unknown>): void {
     this.initializedTelemetryProviders
       .filter(provider => provider.enablePageTracking)
-      .forEach(provider => provider.telemetryProvider.trackPage?.(url, { ...data, eventCategory: 'page-view' }));
+      .forEach(provider =>
+        provider.telemetryProvider.trackPage?.(url, { ...data, eventCategory: UserTelemetryEvent.navigate })
+      );
   }
 
   public trackErrorEvent(error: string, data: Dictionary<unknown>): void {
     this.initializedTelemetryProviders
       .filter(provider => provider.enableErrorTracking)
       .forEach(provider =>
-        provider.telemetryProvider.trackError?.(`Error: ${error}`, { ...data, eventCategory: 'error' })
+        provider.telemetryProvider.trackError?.(UserTelemetryEvent.error, {
+          ...data,
+          eventCategory: UserTelemetryEvent.error,
+          errorMessage: error
+        })
       );
   }
 
@@ -78,7 +86,20 @@ export class UserTelemetryImplService extends UserTelemetryService {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         delay(50)
       )
-      .subscribe(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url }));
+      .subscribe(route => {
+        const queryParamMap = this.router?.routerState.snapshot.root.queryParamMap;
+        // Todo - Read from TimeRangeService.TIME_QUERY_PARAM once root cause for test case failure is identified
+        const timeParamValue = queryParamMap?.get('time');
+        const rootObj = this.router?.parseUrl(route.url).root;
+        const urlSegments = rootObj?.children?.primary?.segments.map(segment => segment.path) || [];
+        this.trackPageEvent(UserTelemetryEvent.navigate, {
+          url: route.url,
+          ...queryParamMap,
+          isCustomTime: isCustomTime(timeParamValue !== null ? timeParamValue : undefined),
+          urlSegments: urlSegments,
+          basePath: urlSegments.length >= 0 ? urlSegments[0] : undefined
+        });
+      });
   }
 }
 
@@ -89,3 +110,13 @@ interface UserTelemetryInternalConfig<InitConfig = unknown> {
   enableEventTracking: boolean;
   enableErrorTracking: boolean;
 }
+
+export enum UserTelemetryEvent {
+  mouseEvent = 'mouse-event',
+  navigate = 'user-navigation',
+  error = 'error'
+}
+
+// This is temporary, will move this to fixed-time.range.ts once able to understand why test case was failing
+// This is to move past test case for now
+const isCustomTime = (time: undefined | string): boolean => (time !== undefined ? /(\d+)-(\d+)/.test(time) : false);

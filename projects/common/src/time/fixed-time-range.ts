@@ -1,9 +1,10 @@
 import { TimeRange } from './time-range';
 
+// Regex denoting custom time range
+const URL_REG_EX: RegExp = /(\d+)-(\d+)/;
+
 export class FixedTimeRange implements TimeRange {
   public static fromUrlString(urlString: string): undefined | FixedTimeRange {
-    const URL_REG_EX: RegExp = /(\d+)-(\d+)/;
-
     const captures = URL_REG_EX.exec(urlString);
     if (!captures || captures.length !== 3) {
       return undefined;

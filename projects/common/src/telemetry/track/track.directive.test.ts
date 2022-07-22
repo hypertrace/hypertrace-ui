@@ -35,10 +35,7 @@ describe('Track directive', () => {
     spectator.click(spectator.element);
     spectator.tick();
 
-    expect(telemetryService.trackEvent).toHaveBeenCalledWith(
-      'click: Content',
-      expect.objectContaining({ type: 'click' })
-    );
+    expect(telemetryService.trackEvent).toHaveBeenCalledWith('mouse-event', expect.objectContaining({ type: 'click' }));
   }));
 
   test('propagates events with custom config', fakeAsync(() => {
@@ -60,7 +57,7 @@ describe('Track directive', () => {
     spectator.tick();
 
     expect(telemetryService.trackEvent).toHaveBeenCalledWith(
-      'mouseover: Content',
+      'mouse-event',
       expect.objectContaining({ type: 'mouseover' })
     );
   }));
