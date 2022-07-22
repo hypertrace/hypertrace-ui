@@ -58,6 +58,7 @@ import {
         </div>
         <div class="filters-row">
           <ht-explore-query-order-by-editor
+            *ngIf="!currentVisualization.interval"
             class="order-by"
             [orderByExpression]="currentVisualization.orderBy"
             [context]="currentVisualization.context"
