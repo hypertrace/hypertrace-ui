@@ -33,7 +33,7 @@ export class RudderStackTelemetry implements UserTelemetryProvider<RudderStackCo
       },
       error => {
         // tslint:disable-next-line: no-console
-        console.error('something went wrong in identify ', error);
+        console.error('something went wrong in identify method', error);
       }
     );
   }
