@@ -81,20 +81,18 @@ export class SpanDetailComponent implements OnChanges {
   @Input()
   public activeTabLabel?: SpanDetailTab;
 
-  @Output()
-  private readonly activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
-
+  @Input()
+  public showAttributesTab: boolean = true;
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
-
   public showRequestTab?: boolean;
   public showResponseTab?: boolean;
   public showExitCallsTab?: boolean;
   public showLogEventsTab?: boolean;
   public totalLogEvents?: number;
-
   public tabs: ToggleItem<SpanDetailTab>[] = [];
-
+  @Output()
+  private readonly activeTabLabelChange: EventEmitter<SpanDetailTab> = new EventEmitter<SpanDetailTab>();
   private readonly activeTabSubject: ReplaySubject<ToggleItem<SpanDetailTab>> = new ReplaySubject<
     ToggleItem<SpanDetailTab>
   >(1);
@@ -146,7 +144,9 @@ export class SpanDetailComponent implements OnChanges {
     if (this.showResponseTab) {
       tabs.push({ label: SpanDetailTab.Response, value: SpanDetailTab.Response });
     }
-    tabs.push({ label: SpanDetailTab.Attributes, value: SpanDetailTab.Attributes });
+    if (this.showAttributesTab) {
+      tabs.push({ label: SpanDetailTab.Attributes, value: SpanDetailTab.Attributes });
+    }
     if (this.showExitCallsTab) {
       tabs.push({ label: SpanDetailTab.ExitCalls, value: SpanDetailTab.ExitCalls });
     }
