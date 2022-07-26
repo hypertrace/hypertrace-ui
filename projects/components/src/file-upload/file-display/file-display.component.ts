@@ -52,6 +52,7 @@ import {
         </ng-container>
         <ht-icon
           class="delete-icon"
+          *ngIf="this.showDelete"
           icon="${IconType.CloseCircleFilled}"
           size="${IconSize.Small}"
           color="${Color.Gray9}"
@@ -70,6 +71,13 @@ export class FileDisplayComponent {
 
   @Output()
   public readonly deleteClick: EventEmitter<void> = new EventEmitter();
+
+  public get showDelete(): boolean {
+    return (
+      this.latestUploadEvent?.type === FileUploadEventType.Failure ||
+      this.latestUploadEvent?.type === FileUploadEventType.Success
+    );
+  }
 
   public onDeleteClick(): void {
     this.deleteClick.emit();
