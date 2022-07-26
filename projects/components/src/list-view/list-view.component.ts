@@ -73,5 +73,6 @@ export interface ListViewRecord {
 
 export enum ListViewDisplay {
   Plain = 'plain',
-  Striped = 'striped'
+  Striped = 'striped',
+  BorderSeparated = 'border-separated'
 }
