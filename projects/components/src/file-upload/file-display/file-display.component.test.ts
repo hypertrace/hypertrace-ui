@@ -23,11 +23,7 @@ describe('File Display Component', () => {
     expect(spectator.query('.file-display')).toExist();
     expect(spectator.query('.file-name')).toHaveText('file.txt');
     expect(spectator.query('.file-size')).toHaveText('4');
-
-    // Delete file action
-    spyOn(spectator.component.deleteClick, 'emit');
-    spectator.click(spectator.query('.delete-icon') as Element);
-    expect(spectator.component.deleteClick.emit).toHaveBeenCalled();
+    expect(spectator.query('.delete-icon')).not.toExist();
 
     // Success state
     spectator.setInput({
@@ -39,6 +35,11 @@ describe('File Display Component', () => {
     });
     expect(spectator.query('.success-icon')).toExist();
     expect(spectator.query('.delete-icon')).toExist();
+
+    // Delete file action
+    spyOn(spectator.component.deleteClick, 'emit');
+    spectator.click(spectator.query('.delete-icon') as Element);
+    expect(spectator.component.deleteClick.emit).toHaveBeenCalled();
 
     // Failure state
     spectator.setInput({
