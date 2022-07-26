@@ -64,4 +64,8 @@ $horizontal-offset: 12px;
   .data-row:nth-child(even) {
     background: #fff;
   }
+
+  .data-row.border-separated:not(:last-of-type) {
+    border-bottom: 1px solid $gray-1;
+  }
 }
