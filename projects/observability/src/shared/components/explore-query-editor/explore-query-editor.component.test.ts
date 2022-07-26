@@ -34,7 +34,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false
+      groupable: false,
+      sortable: true
     },
     {
       name: 'second',
@@ -45,7 +46,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false
+      groupable: false,
+      sortable: true
     },
     {
       name: 'first groupable',
@@ -56,7 +58,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true
+      groupable: true,
+      sortable: true
     },
     {
       name: 'second groupable',
@@ -67,7 +70,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true
+      groupable: true,
+      sortable: true
     }
   ];
 

@@ -14,7 +14,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="order-by-container">
+    <div class="order-by-container" *ngIf="this.orderByExpression">
       <span class="order-by-main-label"> Order by </span>
       <div class="fields-container">
         <div class="order-by-input-container" *ngIf="this.metricOptions$ | async as metricOptions">

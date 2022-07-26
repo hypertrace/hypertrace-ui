@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { ApplicationFeature, TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
@@ -56,7 +56,7 @@ import {
           >
           </ht-explore-query-limit-editor>
         </div>
-        <div class="filters-row">
+        <div class="filters-row" *htIfFeature="'${ApplicationFeature.TraceableViewOnly}' | htFeature">
           <ht-explore-query-order-by-editor
             *ngIf="!currentVisualization.interval"
             class="order-by"
