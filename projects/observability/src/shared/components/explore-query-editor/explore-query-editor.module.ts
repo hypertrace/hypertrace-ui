@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {
   ButtonModule,
   CheckboxModule,
+  FeatureConfigCheckModule,
   FormFieldModule,
   InputModule,
   LetAsyncModule,
@@ -32,6 +33,7 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
   imports: [
     CommonModule,
     ButtonModule,
+    FeatureConfigCheckModule,
     SelectModule,
     TooltipModule,
     InputModule,
