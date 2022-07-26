@@ -18,9 +18,7 @@ describe('Explore Query Order by Editor component', () => {
   const hostBuilder = createHostFactory({
     component: ExploreQueryOrderByEditorComponent,
     imports: [HttpClientTestingModule],
-    declarations: [
-      MockComponent(SelectComponent)
-    ],
+    declarations: [MockComponent(SelectComponent)],
     providers: [
       mockProvider(MetadataService, {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
@@ -52,21 +50,23 @@ describe('Explore Query Order by Editor component', () => {
       }
     ]);
 
-    const spectator = hostBuilder(`
+    const spectator = hostBuilder(
+      `
     <ht-explore-query-order-by-editor
       context="${ObservabilityTraceType.Api}" [orderByExpression]="orderByExpression"
     ></ht-explore-query-order-by-editor>
   `,
       {
         hostProps: {
-          orderByExpression: { 
+          orderByExpression: {
             aggregation: MetricAggregationType.Average,
             keyExpression: {
               key: 'duration'
             }
-           }
+          }
         }
-      });
+      }
+    );
     spectator.tick();
 
     const selects = spectator.queryAll(SelectComponent);

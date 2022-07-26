@@ -154,10 +154,14 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private mapOrderByToGraphQlSpecification(orderBy: GraphQlOrderBy): GraphQlSortBySpecification[] | undefined {
-    return orderBy.keyExpression?.key && orderBy.aggregation && orderBy.direction ? [{
-      direction: orderBy.direction,
-      key: this.exploreSpecBuilder.exploreSpecificationForKey(orderBy.keyExpression?.key, orderBy.aggregation)
-    }] : undefined;
+    return orderBy.keyExpression?.key && orderBy.aggregation && orderBy.direction
+      ? [
+          {
+            direction: orderBy.direction,
+            key: this.exploreSpecBuilder.exploreSpecificationForKey(orderBy.keyExpression?.key, orderBy.aggregation)
+          }
+        ]
+      : undefined;
   }
 
   private mapStateToResultsQuery(

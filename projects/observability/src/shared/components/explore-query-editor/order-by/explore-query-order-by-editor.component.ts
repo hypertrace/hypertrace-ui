@@ -48,7 +48,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             ></ht-select-option>
           </ht-select>
         </div>
-        <div class="order-by-input-container"  *ngIf="this.sortByOptions$ | async as sortByOptions">
+        <div class="order-by-input-container" *ngIf="this.sortByOptions$ | async as sortByOptions">
           <span class="order-by-label"> Sort by </span>
           <ht-select
             [showBorder]="true"
@@ -87,7 +87,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private readonly incomingOrderByExpressionSubject: Subject<GraphQlOrderBy | undefined> = new ReplaySubject(1);
 
   public constructor(private readonly metadataService: MetadataService) {
-
     this.selectedAggregation$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
       switchMap(() => this.getCurrentSelectedAggregation())
     );
@@ -96,13 +95,9 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       switchMap(() => this.getCurrentSelectedAttribute())
     );
 
-    this.selectedSortBy$ = this.incomingOrderByExpressionSubject.pipe(
-      switchMap(() => this.getCurrentSelectedSortBy())
-    );
+    this.selectedSortBy$ = this.incomingOrderByExpressionSubject.pipe(switchMap(() => this.getCurrentSelectedSortBy()));
 
-    this.metricOptions$ = this.contextSubject.pipe(
-      switchMap(context => this.getAttributeOptionsForContext(context))
-    );
+    this.metricOptions$ = this.contextSubject.pipe(switchMap(context => this.getAttributeOptionsForContext(context)));
 
     this.aggregationOptions$ = this.selectedMetric$.pipe(
       map(selection => this.getAggregationOptionsForAttribute(selection))
@@ -134,9 +129,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   public onSortByChange(newSortBy?: GraphQlSortDirection): void {
-    this.buildSpecAndEmit(
-      combineLatest([this.selectedMetric$, this.selectedAggregation$, of(newSortBy)])
-    );
+    this.buildSpecAndEmit(combineLatest([this.selectedMetric$, this.selectedAggregation$, of(newSortBy)]));
   }
 
   private buildSpecAndEmit(
@@ -149,19 +142,23 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         take(1),
         switchMap(orderByData => this.buildOrderExpression(...orderByData))
       )
-      .subscribe((value) => this.orderByExpressionChange.emit(value));
+      .subscribe(value => this.orderByExpressionChange.emit(value));
   }
 
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.metricOptions$.pipe(
-      map(attributeOptions => attributeOptions.find(option => option.value.name === this.orderByExpression?.keyExpression?.key)),
+      map(attributeOptions =>
+        attributeOptions.find(option => option.value.name === this.orderByExpression?.keyExpression?.key)
+      ),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
   }
 
   private getCurrentSelectedAggregation(): Observable<MetricAggregationType | undefined> {
     return this.aggregationOptions$.pipe(
-      map(aggregationOptions => aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)),
+      map(aggregationOptions =>
+        aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)
+      ),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
   }
@@ -231,15 +228,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       ? attribute.allowedAggregations[0]
       : undefined;
 
-      
-    return of(
-      {
+    return of({
       aggregation: aggregationToUse,
       direction: sortBy,
       keyExpression: {
         key: attribute.name
       }
-      }
-    );
+    });
   }
 }
