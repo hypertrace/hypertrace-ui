@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MemoizeModule } from '@hypertrace/common';
+import { MemoizeModule, NavigationService } from '@hypertrace/common';
 import {
   JsonViewerModule,
   LabelModule,
@@ -31,7 +31,10 @@ describe('Span Tags Detail Component', () => {
       MemoizeModule
     ],
     declarations: [MockComponent(ExploreFilterLinkComponent)],
-    providers: [mockProvider(ExplorerService)]
+    providers: [
+      mockProvider(ExplorerService),
+      mockProvider(NavigationService, { getAllValuesForQueryParameter: () => [] })
+    ]
   });
 
   test('should display tag records', () => {
