@@ -14,6 +14,8 @@ import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metada
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
+import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
+import { GraphQlSortDirection } from '../../graphql/model/schema/sort/graphql-sort-direction';
 import { SPAN_SCOPE } from '../../graphql/model/schema/span';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
@@ -145,10 +147,17 @@ export class ExploreVisualizationBuilder implements OnDestroy {
         interval: interval,
         filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
         groupBy: state.groupBy,
-        // orderBy: state.orderBy,
+        orderBy: state.orderBy && this.mapOrderByToGraphQlSpecification(state.orderBy),
         limit: state.resultLimit
       }))
     );
+  }
+
+  private mapOrderByToGraphQlSpecification(orderBy: GraphQlOrderBy): GraphQlSortBySpecification[] | undefined {
+    return orderBy.keyExpression?.key && orderBy.aggregation && orderBy.direction ? [{
+      direction: orderBy.direction,
+      key: this.exploreSpecBuilder.exploreSpecificationForKey(orderBy.keyExpression?.key, orderBy.aggregation)
+    }] : undefined;
   }
 
   private mapStateToResultsQuery(
@@ -273,15 +282,10 @@ export interface ExploreSeries {
 
 export interface GraphQlOrderBy {
   aggregation?: MetricAggregationType;
-  direction?: SortByType;
+  direction?: GraphQlSortDirection;
   keyExpression?: {
     key: string;
   };
-}
-
-export const enum SortByType {
-  Asc = 'ASC',
-  Desc = 'DESC'
 }
 
 type TimeUnaware<T> = Omit<T, 'timeRange'>;

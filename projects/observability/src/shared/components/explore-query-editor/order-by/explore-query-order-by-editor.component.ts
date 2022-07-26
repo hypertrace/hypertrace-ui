@@ -5,9 +5,10 @@ import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rx
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
+import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql-sort-direction';
 import { TraceType } from '../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../services/metadata/metadata.service';
-import { GraphQlOrderBy, SortByType } from '../explore-visualization-builder';
+import { GraphQlOrderBy } from '../explore-visualization-builder';
 @Component({
   selector: 'ht-explore-query-order-by-editor',
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
@@ -79,10 +80,10 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private readonly contextSubject: Subject<TraceType | undefined> = new ReplaySubject(1);
   public readonly selectedMetric$: Observable<AttributeMetadata | undefined>;
   public readonly selectedAggregation$: Observable<MetricAggregationType | undefined>;
-  public readonly selectedSortBy$: Observable<SortByType | undefined>;
+  public readonly selectedSortBy$: Observable<GraphQlSortDirection | undefined>;
   public readonly metricOptions$: Observable<SelectOption<AttributeMetadata>[]>;
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
-  public readonly sortByOptions$: Observable<SelectOption<SortByType | undefined>[]>;
+  public readonly sortByOptions$: Observable<SelectOption<GraphQlSortDirection | undefined>[]>;
   private readonly incomingOrderByExpressionSubject: Subject<GraphQlOrderBy | undefined> = new ReplaySubject(1);
 
   public constructor(private readonly metadataService: MetadataService) {
@@ -132,7 +133,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
   }
 
-  public onSortByChange(newSortBy?: SortByType): void {
+  public onSortByChange(newSortBy?: GraphQlSortDirection): void {
     this.buildSpecAndEmit(
       combineLatest([this.selectedMetric$, this.selectedAggregation$, of(newSortBy)])
     );
@@ -140,7 +141,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private buildSpecAndEmit(
     orderByData$: Observable<
-      [AttributeMetadata | undefined, MetricAggregationType | undefined, SortByType | undefined]
+      [AttributeMetadata | undefined, MetricAggregationType | undefined, GraphQlSortDirection | undefined]
     >
   ): void {
     orderByData$
@@ -165,7 +166,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
   }
 
-  private getCurrentSelectedSortBy(): Observable<SortByType | undefined> {
+  private getCurrentSelectedSortBy(): Observable<GraphQlSortDirection | undefined> {
     return this.sortByOptions$.pipe(
       map(sortByOptions => sortByOptions.find(option => option.value === this.orderByExpression?.direction)),
       map(matchedSelection => matchedSelection && matchedSelection.value)
@@ -198,18 +199,18 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
   }
 
-  private getSortByOptions(): Observable<SelectOption<SortByType | undefined>[]> {
+  private getSortByOptions(): Observable<SelectOption<GraphQlSortDirection | undefined>[]> {
     return of([
       {
         value: undefined,
         label: 'None'
       },
       {
-        value: SortByType.Asc,
+        value: 'ASC',
         label: 'Asc'
       },
       {
-        value: SortByType.Desc,
+        value: 'DESC',
         label: 'Desc'
       }
     ]);
@@ -218,7 +219,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private buildOrderExpression(
     attribute?: AttributeMetadata,
     aggregation?: MetricAggregationType,
-    sortBy?: SortByType
+    sortBy?: GraphQlSortDirection
   ): Observable<GraphQlOrderBy> {
     if (!attribute || !aggregation) {
       return EMPTY;
