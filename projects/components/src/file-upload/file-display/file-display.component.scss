@@ -1,5 +1,16 @@
 @import 'mixins';
 
+.file-display-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .progress-bar {
+    width: 100%;
+  }
+}
+
 .file-display {
   display: flex;
   align-items: center;

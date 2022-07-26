@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { IconComponent } from '../icon/icon.component';
-import { FileDisplayComponent } from './file-display/file-display.component';
 import {
   maxFileCountValidator,
   maxFileSizeValidator,
@@ -20,7 +19,7 @@ describe('File Upload Component', () => {
     component: FileUploadComponent,
     shallow: true,
     imports: [FileUploadModule, RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
-    declarations: [MockComponent(FileDisplayComponent), MockComponent(IconComponent)]
+    declarations: [MockComponent(IconComponent)]
   });
 
   test('should render everything correctly', () => {
@@ -34,11 +33,9 @@ describe('File Upload Component', () => {
       }
     });
     expect(spectator.query('.file-upload')).toExist();
-    expect(spectator.queryAll(FileDisplayComponent).length).toBe(0);
 
     // Testing click to upload
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(spectator.queryAll(FileDisplayComponent).length).toBe(1);
     expect(formControl.value).toMatchObject([file]);
 
     // Testing drag hover
@@ -49,10 +46,6 @@ describe('File Upload Component', () => {
     spectator.triggerEventHandler('.upload-section', 'dropped', fileList);
     spectator.triggerEventHandler('.upload-section', 'dragHover', false);
     expect(formControl.value).toMatchObject([file, file]);
-
-    // Testing delete
-    spectator.triggerEventHandler(FileDisplayComponent, 'deleteClick', undefined);
-    expect(formControl.value).toMatchObject([file]);
 
     // Testing disabled
     formControl.disable();

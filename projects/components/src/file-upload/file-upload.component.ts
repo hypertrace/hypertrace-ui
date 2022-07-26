@@ -4,7 +4,6 @@ import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
-import { FileUploadState } from './file-display/file-display';
 
 @Component({
   selector: 'ht-file-upload',
@@ -46,16 +45,8 @@ import { FileUploadState } from './file-display/file-display';
         </div>
         <div class="sub-text">{{ this.subText }}</div>
       </div>
-      <ht-progress-bar *ngIf="this.showProgress" class="bulk-progress-bar" [progress]="this.progress"></ht-progress-bar>
-      <div class="files-section">
-        <ht-file-display
-          *ngFor="let file of this.files; let index = index"
-          [file]="file"
-          [state]="this.uploadState"
-          (deleteClick)="this.deleteFile(index)"
-        >
-        </ht-file-display>
-      </div>
+
+      <ng-content></ng-content>
     </div>
   `
 })
@@ -66,14 +57,8 @@ export class FileUploadComponent implements ControlValueAccessor {
   @Input()
   public disabled: boolean = false;
 
-  @Input()
-  public showProgress: boolean = true; // To show bulk upload progress
-
-  @Input()
-  public progress: number = 0; // Bulk upload progress
-
-  @Input()
-  public uploadState: FileUploadState = FileUploadState.NotStarted;
+  @Output()
+  public readonly filesAdded: EventEmitter<File[]> = new EventEmitter();
 
   @Output()
   public readonly selectedFileChanges: EventEmitter<File[]> = new EventEmitter();
@@ -106,8 +91,10 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.isDragHover = isDragHover;
   }
 
-  public onDrop(files: FileList): void {
-    this.updateFileSelection(files);
+  public onDrop(list: FileList): void {
+    const newFiles = this.getFilesFromFileList(list);
+
+    this.updateFileSelection(newFiles);
   }
 
   /**
@@ -120,7 +107,8 @@ export class FileUploadComponent implements ControlValueAccessor {
   }
 
   public onFilesSelection(event: Event): void {
-    this.updateFileSelection((event.target as HTMLInputElement)?.files ?? undefined);
+    const list = (event.target as HTMLInputElement)?.files;
+    this.updateFileSelection(this.getFilesFromFileList(list ?? undefined));
   }
 
   private propagateControlValueChange?: (value?: File[]) => void;
@@ -134,8 +122,9 @@ export class FileUploadComponent implements ControlValueAccessor {
   /**
    * Adds the new files at the last
    */
-  private updateFileSelection(files?: FileList): void {
-    this.files.push(...this.getFilesFromFileList(files));
+  private updateFileSelection(newFiles: File[]): void {
+    this.files.push(...newFiles);
+    this.filesAdded.emit(newFiles);
     this.selectedFileChanges.emit(this.files);
     this.propagateValueChangeToFormControl(this.files);
   }
