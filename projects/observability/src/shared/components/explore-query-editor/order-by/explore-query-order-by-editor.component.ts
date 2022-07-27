@@ -218,7 +218,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     aggregation?: MetricAggregationType,
     sortBy?: GraphQlSortDirection
   ): Observable<GraphQlOrderBy> {
-    if (!attribute || !aggregation) {
+    if (attribute === undefined || aggregation === undefined) {
       return EMPTY;
     }
 
