@@ -239,7 +239,8 @@ export class ExplorerComponent {
   private mapToInitialState(param: ParamMap): InitialExplorerState {
     const series: ExploreSeries[] = param
       .getAll(ExplorerQueryParam.Series)
-      .flatMap(series => this.tryDecodeExploreSeries(series));
+      .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
+
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
       groupBy: param.has(ExplorerQueryParam.Group)
