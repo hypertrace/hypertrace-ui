@@ -56,7 +56,7 @@ import {
           >
           </ht-explore-query-limit-editor>
         </div>
-        <div class="filters-row" *htIfFeature="'${ApplicationFeature.TraceableViewOnly}' | htFeature">
+        <div class="filters-row" *htIfFeature="'${ApplicationFeature.ExplorerOrderBySupport}' | htFeature">
           <ht-explore-query-order-by-editor
             *ngIf="!currentVisualization.interval"
             class="order-by"
