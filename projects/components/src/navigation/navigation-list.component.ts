@@ -43,6 +43,7 @@ import {
 
               <ng-container *ngSwitchCase="'${NavItemType.Link}'">
                 <ht-nav-item
+                  *ngIf="!(item.hidden ?? false)"
                   [navItemViewStyle]="this.navViewStyle"
                   [config]="item"
                   [active]="item === activeItem"
