@@ -108,9 +108,12 @@ export * from './feature-check/if-feature.directive';
 
 // File Upload
 export * from './file-upload/file-upload-validators';
-export * from './file-upload/file-display/file-display';
 export * from './file-upload/file-upload.component';
 export * from './file-upload/file-upload.module';
+export * from './file-upload/file-display/file-display.module';
+export * from './file-upload/file-display/file-display.component';
+
+export * from './file-upload/file-upload.service';
 
 // Filter
 export * from './filtering/filter/filter';

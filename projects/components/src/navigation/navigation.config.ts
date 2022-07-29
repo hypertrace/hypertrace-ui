@@ -10,6 +10,7 @@ export interface NavItemLinkConfig {
   iconSize?: IconSize;
   label: string;
   matchPaths: string[]; // For now, default path is index 0
+  hidden?: boolean;
   features?: string[];
   replaceCurrentHistory?: boolean;
   isBeta?: boolean;
