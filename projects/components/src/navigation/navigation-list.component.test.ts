@@ -85,6 +85,11 @@ describe('Navigation List Component', () => {
     );
     const footerItemsCount = spectator.component.footerItems?.length;
     expect(spectator.queryAll('.footer-item').length).toBe(footerItemsCount);
+    expect(spectator.query(LinkComponent)?.paramsOrUrl).toMatchObject({
+      navType: NavigationParamsType.External,
+      url: 'http://test',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    });
   });
 
   test('should update layout when collapsed input is updated', () => {
@@ -198,10 +203,5 @@ describe('Navigation List Component', () => {
     );
     expect(spectator.query('.nav-group-icon')).toExist();
     expect(spectator.query('.nav-group-label')).toExist();
-    expect(spectator.query(LinkComponent)?.paramsOrUrl).toMatchObject({
-      navType: NavigationParamsType.External,
-      url: 'http://test',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
-    });
   });
 });
