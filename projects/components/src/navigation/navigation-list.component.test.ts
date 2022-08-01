@@ -1,6 +1,13 @@
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { FeatureState, FeatureStateResolver, MemoizeModule, NavigationService } from '@hypertrace/common';
+import {
+  ExternalNavigationWindowHandling,
+  FeatureState,
+  FeatureStateResolver,
+  MemoizeModule,
+  NavigationParamsType,
+  NavigationService
+} from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -78,6 +85,11 @@ describe('Navigation List Component', () => {
     );
     const footerItemsCount = spectator.component.footerItems?.length;
     expect(spectator.queryAll('.footer-item').length).toBe(footerItemsCount);
+    expect(spectator.query(LinkComponent)?.paramsOrUrl).toMatchObject({
+      navType: NavigationParamsType.External,
+      url: 'http://test',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    });
   });
 
   test('should update layout when collapsed input is updated', () => {
