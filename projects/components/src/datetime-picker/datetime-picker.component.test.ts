@@ -1,16 +1,16 @@
-import { Time } from '@hypertrace/common';
-import { DatetimePickerComponent, InputComponent, LabelComponent, TimePickerComponent } from '@hypertrace/components';
+import { DatetimePickerComponent, InputComponent, LabelComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 
 describe('Date Time Picker Component', () => {
   let spectator: SpectatorHost<DatetimePickerComponent>;
   const onDateChangeSpy = jest.fn();
-  const initDate = new Date();
+  const INIT_DATE_STRING = '2022-01-01T12:00';
+  const initDate = new Date(INIT_DATE_STRING);
   const createHost = createHostFactory({
     component: DatetimePickerComponent,
     shallow: true,
-    declarations: [MockComponent(LabelComponent), MockComponent(InputComponent), MockComponent(TimePickerComponent)]
+    declarations: [MockComponent(LabelComponent), MockComponent(InputComponent)]
   });
 
   beforeEach(() => {
@@ -28,55 +28,21 @@ describe('Date Time Picker Component', () => {
 
   test('should render all elements correctly', () => {
     expect(spectator.query(LabelComponent)).not.toExist();
-    expect(spectator.query(InputComponent)?.value).toEqual(initDate.toISOString().slice(0, 10));
-
-    const timePicker = spectator.query(TimePickerComponent);
-    expect(timePicker).toExist();
-    expect(timePicker?.time).toEqual(new Time(initDate.getHours(), initDate.getMinutes()));
-    expect(timePicker?.showTimeTriggerIcon).toEqual(false);
-
-    spectator.triggerEventHandler(InputComponent, 'valueChange', '2020-10-10');
+    expect(spectator.query(InputComponent)?.value).toEqual(INIT_DATE_STRING);
+    const NEW_DATETIME_STRING = '2022-02-02T13:00';
+    spectator.triggerEventHandler(InputComponent, 'valueChange', NEW_DATETIME_STRING);
     expect(onDateChangeSpy).toHaveBeenCalledWith(spectator.component.date);
-
-    const changedTime = new Time(10);
-    spectator.triggerEventHandler(TimePickerComponent, 'timeChange', changedTime);
-    const changedDate = new Date(spectator.component.date!.valueOf());
-    changedDate.setHours(changedTime.hours);
-    changedDate.setMinutes(changedTime.minutes);
-    expect(onDateChangeSpy).toHaveBeenCalledWith(changedDate);
   });
 
   test('date should not get effected when time is updated', () => {
-    const validationSet = [
-      {
-        date: new Date('2020-10-10'),
-        time: new Time(18, 10, 0, 0, true),
-        expected: '2020-10-10'
-      },
-      {
-        date: new Date('2020-1-1'),
-        time: new Time(0, 30, 0, 0, true),
-        expected: '2020-01-01'
-      },
-      {
-        date: new Date('2020-1-1'),
-        time: new Time(23, 59, 0, 0, true),
-        expected: '2020-01-01'
-      },
-      {
-        date: new Date('2020-1-1'),
-        time: new Time(0, 0, 0, 0, true),
-        expected: '2020-01-01'
-      }
-    ];
+    const validationSet = ['2020-10-10T12:18', '2020-01-01T00:30', '2020-01-01T23:59', '2020-01-01T00:00'];
 
-    validationSet.forEach(({ date, time, expected }) => {
-      spectator.setHostInput({ date: date });
-      spectator.triggerEventHandler(TimePickerComponent, 'timeChange', time);
-      const changedDate = new Date(date.valueOf());
-      changedDate.setHours(time.hours, time.minutes);
+    validationSet.forEach(dateTimeString => {
+      spectator.setHostInput({ date: new Date(INIT_DATE_STRING) });
+      spectator.triggerEventHandler(InputComponent, 'valueChange', dateTimeString);
+      const changedDate = new Date(dateTimeString);
       expect(onDateChangeSpy).toHaveBeenCalledWith(changedDate);
-      expect(spectator.component.getInputDate()).toEqual(expected);
+      expect(spectator.component.getInputDate()).toEqual(dateTimeString);
     });
   });
 });

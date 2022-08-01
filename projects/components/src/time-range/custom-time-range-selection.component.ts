@@ -18,7 +18,7 @@ import { ButtonRole } from '../button/button';
           <div style="width: 24px;"></div>
 
           <!-- To Date & Time -->
-          <ht-datetime-picker label="To" [(date)]="this.to"></ht-datetime-picker>
+          <ht-datetime-picker label="To" [(date)]="this.to" [min]="this.from"></ht-datetime-picker>
         </div>
 
         <div class="divider"></div>

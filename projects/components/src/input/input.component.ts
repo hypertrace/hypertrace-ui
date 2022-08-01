@@ -31,6 +31,8 @@ import { InputAppearance } from './input-appearance';
         [disabled]="this.disabled"
         [placeholder]="this.placeholderValue"
         [ngModel]="this.value"
+        [min]="this.min"
+        [max]="this.max"
         (ngModelChange)="this.onValueChange($event)"
       />
     </mat-form-field>
@@ -42,6 +44,12 @@ export class InputComponent<T extends string | number> implements ControlValueAc
 
   @Input()
   public value?: T;
+
+  @Input()
+  public min?: T;
+
+  @Input()
+  public max?: T;
 
   @Input()
   public type?: string;
