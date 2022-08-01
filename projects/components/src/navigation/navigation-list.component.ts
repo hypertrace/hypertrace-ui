@@ -12,7 +12,6 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { NavigationListComponentService } from './navigation-list-component.service';
-
 import {
   FooterItemConfig,
   NavItemConfig,
