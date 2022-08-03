@@ -17,7 +17,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
     <div class="order-by-container" *ngIf="this.orderByExpression">
       <span class="order-by-main-label"> Order by </span>
       <div class="fields-container">
-        <div class="order-by-input-container" *ngIf="this.metricOptions$ | async as metricOptions">
+        <div class="order-by-input-container" *htLoadAsync="this.metricOptions$ as metricOptions">
           <span class="order-by-label"> Metric </span>
           <ht-select
             class="attribute-selector"
@@ -32,7 +32,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             ></ht-select-option>
           </ht-select>
         </div>
-        <div class="order-by-input-container" *ngIf="this.aggregationOptions$ | async as aggregationOptions">
+        <div class="order-by-input-container" *htLoadAsync="this.aggregationOptions$ as aggregationOptions">
           <span class="order-by-label"> Aggregation </span>
           <ht-select
             class="aggregation-selector"
@@ -48,7 +48,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             ></ht-select-option>
           </ht-select>
         </div>
-        <div class="order-by-input-container" *ngIf="this.sortByOptions$ | async as sortByOptions">
+        <div class="order-by-input-container">
           <span class="order-by-label"> Sort by </span>
           <ht-select
             [showBorder]="true"
@@ -57,7 +57,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             (selectedChange)="this.onSortByChange($event)"
           >
             <ht-select-option
-              *ngFor="let option of sortByOptions"
+              *ngFor="let option of this.sortByOptions"
               [value]="option.value"
               [label]="option.label"
             ></ht-select-option>
@@ -77,14 +77,27 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Output()
   public readonly orderByExpressionChange: EventEmitter<GraphQlOrderBy | undefined> = new EventEmitter();
 
-  private readonly contextSubject: Subject<TraceType | undefined> = new ReplaySubject(1);
   public readonly selectedMetric$: Observable<AttributeMetadata | undefined>;
   public readonly selectedAggregation$: Observable<MetricAggregationType | undefined>;
   public readonly selectedSortBy$: Observable<GraphQlSortDirection | undefined>;
   public readonly metricOptions$: Observable<SelectOption<AttributeMetadata>[]>;
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
-  public readonly sortByOptions$: Observable<SelectOption<GraphQlSortDirection | undefined>[]>;
+  public readonly sortByOptions: SelectOption<GraphQlSortDirection | undefined>[] = [
+    {
+      value: undefined,
+      label: 'None'
+    },
+    {
+      value: 'ASC',
+      label: 'Asc'
+    },
+    {
+      value: 'DESC',
+      label: 'Desc'
+    }
+  ];
   private readonly incomingOrderByExpressionSubject: Subject<GraphQlOrderBy | undefined> = new ReplaySubject(1);
+  private readonly contextSubject: Subject<TraceType | undefined> = new ReplaySubject(1);
 
   public constructor(private readonly metadataService: MetadataService) {
     this.selectedAggregation$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
@@ -102,8 +115,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     this.aggregationOptions$ = this.selectedMetric$.pipe(
       map(selection => this.getAggregationOptionsForAttribute(selection))
     );
-
-    this.sortByOptions$ = this.getSortByOptions();
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
@@ -164,10 +175,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   private getCurrentSelectedSortBy(): Observable<GraphQlSortDirection | undefined> {
-    return this.sortByOptions$.pipe(
-      map(sortByOptions => sortByOptions.find(option => option.value === this.orderByExpression?.direction)),
-      map(matchedSelection => matchedSelection && matchedSelection.value)
-    );
+    return of(this.sortByOptions.find(option => option.value === this.orderByExpression?.direction)?.value)
   }
 
   private getAggregationOptionsForAttribute(selected?: AttributeMetadata): SelectOption<MetricAggregationType>[] {
@@ -194,23 +202,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         }))
       )
     );
-  }
-
-  private getSortByOptions(): Observable<SelectOption<GraphQlSortDirection | undefined>[]> {
-    return of([
-      {
-        value: undefined,
-        label: 'None'
-      },
-      {
-        value: 'ASC',
-        label: 'Asc'
-      },
-      {
-        value: 'DESC',
-        label: 'Desc'
-      }
-    ]);
   }
 
   private buildOrderExpression(

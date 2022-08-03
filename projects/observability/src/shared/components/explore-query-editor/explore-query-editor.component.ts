@@ -126,7 +126,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
 
     if (changeObject.orderBy && this.orderBy) {
-      this.setOrderBy(this.orderBy);
+      this.updateOrderByExpression(this.orderBy);
     }
   }
 
@@ -160,10 +160,6 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   public setInterval(interval: IntervalValue): void {
     this.visualizationBuilder.interval(interval === 'NONE' ? undefined : interval);
-  }
-
-  public setOrderBy(orderBy: GraphQlOrderBy): void {
-    this.visualizationBuilder.orderBy(orderBy);
   }
 
   public addSeries(): void {
