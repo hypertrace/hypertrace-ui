@@ -4,5 +4,9 @@
     "ui.custom-dashboards": true
   },
   "urlConfig": {},
-  "dashboardConfig": {}
+  "dashboardConfig": {},
+  "analyticsConfig": {
+    "enabled": false,
+    "rudderstack_dataplane_url": ""
+  }
 }

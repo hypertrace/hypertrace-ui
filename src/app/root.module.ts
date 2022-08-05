@@ -12,9 +12,11 @@ import { NavigationModule } from './shared/navigation/navigation.module';
 
 export type CustomWindow = Window &
   typeof globalThis & {
-    RUDDERSTACK_HT_DATAPLANE_URL?: string;
-    RUDDERSTACK_HT_WRITE_KEY?: string;
-    ENABLE_ANALYTICS?: 'true' | 'false';
+    analyticsConfig: {
+      enabled: boolean;
+      rudderstack_dataplane_url: string;
+    };
+    RUDDERSTACK_HT_WRITE_KEY: string;
   };
 
 declare const window: CustomWindow;
@@ -36,7 +38,6 @@ declare const window: CustomWindow;
         enableEventTracking: true,
         enablePageTracking: true,
         initConfig: {
-          orgId: window.RUDDERSTACK_HT_DATAPLANE_URL,
           writeKey: window.RUDDERSTACK_HT_WRITE_KEY
         }
       }

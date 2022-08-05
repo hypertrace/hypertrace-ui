@@ -5,6 +5,9 @@ import { apiObject, identify, load, page, track } from 'rudder-sdk-js';
 import { UserInfoService } from '../../../user/user-info.service';
 import { TelemetryProviderConfig, UserTelemetryProvider } from '../../telemetry';
 
+// tslint:disable-next-line: import-blacklist
+import type { CustomWindow } from '../../../../../../src/app/root.module';
+
 export interface RudderStackConfig extends TelemetryProviderConfig {
   writeKey: string;
 }
@@ -15,7 +18,7 @@ export class RudderStackTelemetry implements UserTelemetryProvider<RudderStackCo
 
   public initialize(config: RudderStackConfig): void {
     try {
-      load(config.writeKey, config.orgId, { configUrl: config.orgId });
+      load(config.writeKey, (window as CustomWindow)?.analyticsConfig.rudderstack_dataplane_url);
     } catch (error) {
       /**
        * Fail silently
