@@ -1,4 +1,4 @@
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { uniqueId } from 'lodash-es';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
@@ -76,7 +76,7 @@ export class FileUploadService {
         catchError(error =>
           of({
             type: FileUploadEventType.Failure,
-            error: error
+            error: this.getFileUploadErrorMessage(error)
           })
         ),
         filter((uploadData): uploadData is FileUploadEvent<TResponse> => uploadData !== undefined)
@@ -100,6 +100,14 @@ export class FileUploadService {
       this.beforeUnloadSubscription?.unsubscribe();
       this.beforeUnloadSubscription = undefined;
     }
+  }
+
+  private getFileUploadErrorMessage(errorResponse: unknown): string {
+    return errorResponse instanceof HttpErrorResponse
+      ? errorResponse.error.error
+      : errorResponse instanceof Error
+      ? errorResponse.message
+      : 'File upload failed due to unknown error';
   }
 }
 
