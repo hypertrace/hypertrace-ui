@@ -10,18 +10,13 @@ import { ModalConstructionData, ModalContainerComponent } from './modal-containe
   providedIn: 'root'
 })
 export class ModalService {
-  private activeModal?: ModalRef<unknown>;
-
   public constructor(private readonly popoverService: PopoverService, private readonly defaultInjector: Injector) {}
 
   public createModal<TData, TResponse = never>(
     config: ModalConfig<TData>,
     injector: Injector = this.defaultInjector
   ): ModalRef<TResponse> {
-    this.activeModal?.close();
-
     const newModal = new DefaultModalRef();
-    this.activeModal = newModal;
 
     const popover = this.buildPopover(injector, this.buildMetadata(config, newModal, injector));
     newModal.initialize(popover);
