@@ -1,0 +1,51 @@
+@import 'font';
+@import 'layout';
+@import 'color-palette';
+
+.dashboard-viewer {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  height: 100%;
+  padding: 15px 24px;
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .dashboard-name-input {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0.83em 0;
+      border-bottom: 1px solid $gray-2;
+    }
+    .button-container {
+      display: flex;
+      .save-btn {
+        margin-right: 10px;
+      }
+    }
+  }
+  .panel {
+    ::ng-deep .ht-panel {
+      max-height: 285px;
+    }
+  }
+  .add-panel {
+    min-height: 224px;
+    border: 1px dashed $gray-2;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 15px 0;
+    &:hover {
+      background-color: $gray-1;
+      color: $blue-5;
+    }
+  }
+  .visualization-container {
+    display: block;
+    height: 224px;
+  }
+}

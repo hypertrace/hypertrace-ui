@@ -197,4 +197,3 @@ jobs:
           tags: ${{ github.sha }}
           dockerfile: Dockerfile
           build_args: GIT_COMMIT_HASH=${{ github.sha }},GIT_TOKEN=${{ secrets.GIT_ACTION_TOKEN }},GIT_USERNAME=rzp
-

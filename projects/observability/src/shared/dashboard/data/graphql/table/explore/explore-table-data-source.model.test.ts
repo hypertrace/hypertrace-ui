@@ -150,7 +150,7 @@ describe('Explore table data source model', () => {
   }));
 
   test('builds expected request with group by', fakeAsync(() => {
-    spectator.model.groupBy = ['name'];
+    spectator.model.groupBy = [{ key: 'name' }];
     spectator.model.groupByIncludeRest = false;
 
     tableDataSource.getData({

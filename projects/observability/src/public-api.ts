@@ -260,6 +260,16 @@ export * from './pages/api-trace-detail/sequence/api-trace-sequence.component';
 export * from './pages/api-trace-detail/sequence/api-trace-sequence.dashboard';
 export * from './pages/api-trace-detail/api-trace-detail.page.module';
 
+export * from './pages/custom-dashboards/custom-dashboards.component';
+export * from './pages/custom-dashboards/custom-dashboards.module';
+export * from './pages/custom-dashboards/custom-dashboard.service';
+
+export * from './pages/custom-dashboards/custom-dashboard-panel-edit/custom-dashboard-panel-edit.component';
+export * from './pages/custom-dashboards/custom-dashboard-panel-edit/custom-dashboard-panel-edit.module';
+
+export * from './pages/custom-dashboards/custom-dashboard-detail/custom-dashboard-detail.component';
+export * from './pages/custom-dashboards/custom-dashboard-detail/custom-dashboard-detail.module';
+
 // Icon Types
 export * from './shared/icons/observability-icon-type';
 export * from './shared/icons/observability-icon-library.module';

@@ -1,8 +1,9 @@
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlArgumentObject, GraphQlArgumentValue } from '@hypertrace/graphql-client';
-import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../../../graphql/model/schema/filter/graphql-filter';
+import { AttributeExpression } from './../../../../graphql/model/attribute/attribute-expression';
 
 @Model({
   type: 'graphql-key-value-filter'
@@ -10,10 +11,10 @@ import { GraphQlFilter, GraphQlOperatorType } from '../../../../graphql/model/sc
 export class GraphQlKeyValueFilterModel implements GraphQlFilter {
   @ModelProperty({
     key: 'key',
-    type: STRING_PROPERTY.type,
+    type: UNKNOWN_PROPERTY.type,
     required: true
   })
-  public key!: string;
+  public key!: AttributeExpression | string;
 
   @ModelProperty({
     key: 'operator',

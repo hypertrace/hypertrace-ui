@@ -21,7 +21,7 @@ import {
   TooltipOption
 } from '../utils/d3/d3-visualization-builder.service';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
-import { Donut, DonutCenter, DonutConfiguration, DonutSeries } from './donut';
+import { Donut, DonutCenter, DonutChartType, DonutConfiguration, DonutSeries } from './donut';
 import { DonutDataLookupStrategy } from './donut-data-lookup-strategy';
 
 @Injectable({ providedIn: 'root' })
@@ -42,7 +42,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly MIN_FONT_SIZE_FOR_TITLE: number = 12;
   private static readonly MAX_FONT_SIZE_FOR_TITLE: number = 15;
   private static readonly MAX_FONT_SIZE_FOR_VALUE: number = 64;
-
+  private type: DonutChartType = DonutChartType.Donut;
   public constructor(
     d3: D3UtilService,
     measurer: DomElementMeasurerService,
@@ -61,15 +61,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     visualizationContainer: DonutContainerSelection,
     dimensions: DonutDimensions
   ): void {
-    visualizationContainer
-      .select(selector(DonutBuilderService.DONUT_CHART_SVG_CLASS))
-      .attr('width', dimensions.visualizationWidth)
-      .attr('height', dimensions.visualizationHeight)
-      .select(selector(DonutBuilderService.DONUT_ARC_GROUP_CLASS))
-      .attr('transform', `translate(${dimensions.visualizationWidth / 2},${dimensions.visualizationHeight / 2})`)
-      .selectAll<BaseType, DonutArcData>(selector(DonutBuilderService.DONUT_ARC_CLASS))
-      .attr('d', arc<DonutArcData>().innerRadius(dimensions.donutInnerRadius).outerRadius(dimensions.donutOuterRadius));
-
+    this.buildDonutUsingType(visualizationContainer, dimensions, this.type);
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`)
@@ -157,6 +149,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   protected fillConfigurationDefaults(provided: DonutConfiguration): InternalConfiguration {
     const colorsRequired = provided.series.filter(series => isEmpty(series.color)).length;
     const colors = this.colorService.getColorPalette().forNColors(colorsRequired);
+    this.type = provided.type;
 
     return {
       series: provided.series.map(providedSeries => ({
@@ -167,7 +160,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       legend: provided.legendPosition === undefined ? LegendPosition.None : provided.legendPosition,
       tooltipOption: provided.tooltipOption === undefined ? { title: '' } : provided.tooltipOption,
       displayLegendCounts: provided.displayLegendCounts ?? true,
-      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall
+      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall,
+      type: provided.type
     };
   }
 
@@ -196,6 +190,35 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       }))
     };
   }
+
+  private buildDonutUsingType(
+    visualizationContainer: DonutContainerSelection,
+    dimensions: DonutDimensions,
+    type: DonutChartType
+  ): void {
+    if (type === DonutChartType.Donut) {
+      visualizationContainer
+        .select(selector(DonutBuilderService.DONUT_CHART_SVG_CLASS))
+        .attr('width', dimensions.visualizationWidth)
+        .attr('height', dimensions.visualizationHeight)
+        .select(selector(DonutBuilderService.DONUT_ARC_GROUP_CLASS))
+        .attr('transform', `translate(${dimensions.visualizationWidth / 2},${dimensions.visualizationHeight / 2})`)
+        .selectAll<BaseType, DonutArcData>(selector(DonutBuilderService.DONUT_ARC_CLASS))
+        .attr(
+          'd',
+          arc<DonutArcData>().innerRadius(dimensions.donutInnerRadius).outerRadius(dimensions.donutOuterRadius)
+        );
+    } else {
+      visualizationContainer
+        .select(selector(DonutBuilderService.DONUT_CHART_SVG_CLASS))
+        .attr('width', dimensions.visualizationWidth)
+        .attr('height', dimensions.visualizationHeight)
+        .select(selector(DonutBuilderService.DONUT_ARC_GROUP_CLASS))
+        .attr('transform', `translate(${dimensions.visualizationWidth / 2},${dimensions.visualizationHeight / 2})`)
+        .selectAll<BaseType, DonutArcData>(selector(DonutBuilderService.DONUT_ARC_CLASS))
+        .attr('d', arc<DonutArcData>().innerRadius(0).outerRadius(dimensions.donutOuterRadius));
+    }
+  }
 }
 
 type DonutContainerSelection = Selection<HTMLDivElement, unknown, null, undefined>;
@@ -208,6 +231,7 @@ interface InternalConfiguration extends ChartConfig {
   legend: LegendPosition;
   tooltipOption?: TooltipOption;
   displayLegendCounts: boolean;
+  type: DonutChartType;
 }
 
 interface DonutDimensions extends ChartDimensions {

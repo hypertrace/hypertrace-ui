@@ -1,12 +1,13 @@
 import { Dictionary } from '@hypertrace/common';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import {
   ExploreSpecification,
   ExploreValue
 } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { AttributeExpression } from './../../../../graphql/model/attribute/attribute-expression';
 import { SpecificationModel } from './specification.model';
 
 @Model({
@@ -19,10 +20,10 @@ export class ExploreSelectionSpecificationModel
   @ModelProperty({
     key: 'metric',
     displayName: 'Metric',
-    type: STRING_PROPERTY.type,
+    type: UNKNOWN_PROPERTY.type,
     required: true
   })
-  public metric!: string;
+  public metric!: string | AttributeExpression;
 
   @ModelProperty({
     key: 'aggregation',
@@ -50,7 +51,11 @@ export class ExploreSelectionSpecificationModel
   public aggregation?: MetricAggregationType;
 
   protected buildInnerSpec(): ExploreSpecification {
-    return new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric, this.aggregation);
+    if (typeof this.metric === 'string') {
+      return new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric, this.aggregation);
+    }
+
+    return new ExploreSpecificationBuilder().exploreSpecificationForAttributeExpression(this.metric, this.aggregation);
   }
 
   public extractFromServerData(resultContainer: Dictionary<ExploreValue>): ExploreValue {

@@ -12,7 +12,7 @@ import { InMemoryStorage } from '../utilities/browser/storage/in-memory-storage'
 export class UserInfoService {
   public BASE_URL: string = '/user-preferences';
   public static readonly STORAGE_KEY: 'user-data';
-  public static readonly DEFAULT_USER: UserTraits = { name: 'ht-user', email: 'ht-user@razorpay.com' };
+  public static readonly DEFAULT_USER: UserTraits = { id: 2, name: 'ht-user', email: 'ht-user@razorpay.com' };
   public constructor(
     private readonly http: HttpClient,
     private readonly inMemoryStorage: InMemoryStorage,
@@ -42,6 +42,20 @@ export class UserInfoService {
     const user = this.inMemoryStorage.get(UserInfoService.STORAGE_KEY);
     if (user !== undefined) {
       return JSON.parse(user);
+    }
+
+    return UserInfoService.DEFAULT_USER;
+  }
+  public updateUserData(data: UserTraits): UserTraits {
+    const user = this.inMemoryStorage.get(UserInfoService.STORAGE_KEY);
+    if (user !== undefined) {
+      const updatedUser = {
+        ...JSON.parse(user),
+        ...data
+      };
+      this.inMemoryStorage.set(UserInfoService.STORAGE_KEY, JSON.stringify(updatedUser));
+
+      return updatedUser;
     }
 
     return UserInfoService.DEFAULT_USER;

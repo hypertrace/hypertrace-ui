@@ -27,6 +27,7 @@ export interface UserTraits extends Dictionary<unknown> {
   companyName?: string;
   name?: string;
   displayName?: string;
+  id?: number;
 }
 
 export const enum TrackUserEventsType {

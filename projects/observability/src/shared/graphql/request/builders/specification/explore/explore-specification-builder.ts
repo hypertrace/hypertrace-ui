@@ -40,7 +40,7 @@ export class ExploreSpecificationBuilder {
     expression: AttributeExpression,
     aggregation?: MetricAggregationType
   ): ExploreSpecification {
-    const expressionString = this.attributeExpressionAsString(expression).replaceAll('.', '_');
+    const expressionString = this.attributeExpressionAsString(expression).replaceAll('.', '_').replaceAll('-', '_');
     const queryAlias = aggregation === undefined ? expressionString : `${aggregation}_${expressionString}`;
 
     return {

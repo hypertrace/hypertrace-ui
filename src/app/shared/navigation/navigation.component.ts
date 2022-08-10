@@ -110,6 +110,16 @@ export class NavigationComponent {
       })
     );
 
+    this.subscriptionLifecycle.add(
+      this.featureStateResolver.getFeatureState(ApplicationFeature.CustomDashboards).subscribe(featureState => {
+        if (featureState === FeatureState.Enabled) {
+          this.navItemDefinitions.push(
+            this.navigationListService.getNavItemDefinitionForFeature(ApplicationFeature.CustomDashboards)
+          );
+        }
+      })
+    );
+
     const navItems = this.navItemDefinitions.map(definition =>
       this.navigationListService.decorateNavItem(definition, this.activatedRoute)
     );

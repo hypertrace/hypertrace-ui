@@ -33,6 +33,7 @@ import { TopologyMetricWithCategoryModel } from './topology/metrics/topology-met
 import { TopologyMetricsModel } from './topology/metrics/topology-metrics.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
+import { ExploreDonutDataSourceModel } from './trace/donut/explore-donut-data-source.model';
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
 import { TraceMetricTimeseriesDataSourceModel } from './trace/timeseries/trace-metric-timeseries-data-source.model';
 import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfall-data-source.model';
@@ -72,6 +73,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         TraceMetricTimeseriesDataSourceModel,
         TraceMetricAggregationDataSourceModel,
         TraceDonutDataSourceModel,
+        ExploreDonutDataSourceModel,
         MetricTimeseriesSpecificationModel,
         MetricTimeseriesBandSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,

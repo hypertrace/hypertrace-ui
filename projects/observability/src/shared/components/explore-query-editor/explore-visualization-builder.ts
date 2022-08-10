@@ -99,6 +99,11 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       filters: filters && filters.length > 0 ? filters : undefined
     });
   }
+  public setContext(context?: ExploreRequestContext): this {
+    return this.updateState({
+      context: context
+    });
+  }
 
   public context(context?: ExploreRequestContext): this {
     this.queryStateSubject.next(this.buildDefaultRequest(context));
@@ -112,11 +117,11 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return this;
   }
 
-  private currentState(): ExploreRequestState {
+  public currentState(): ExploreRequestState {
     return this.queryStateSubject.getValue();
   }
 
-  private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
+  public buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
     return {
       context: state.context,
       resultLimit: state.resultLimit,

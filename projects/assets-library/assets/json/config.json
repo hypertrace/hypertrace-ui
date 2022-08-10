@@ -3,7 +3,9 @@
     "ui.saved-queries": true,
     "ui.custom-dashboards": true
   },
-  "urlConfig": {},
+  "urlConfig": {
+    "user_preference": "https://hus.concierge.stage.razorpay.in"
+  },
   "dashboardConfig": {},
   "analyticsConfig": {
     "enabled": false,

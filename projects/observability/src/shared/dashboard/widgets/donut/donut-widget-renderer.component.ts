@@ -22,6 +22,7 @@ import { DonutWidgetModel } from './donut-widget.model';
         [center]="data.center"
         [legendPosition]="this.model.legendPosition"
         [displayLegendCounts]="this.model.displayLegendCounts"
+        [type]="this.model.chartType"
       >
       </ht-donut>
     </ht-titled-content>

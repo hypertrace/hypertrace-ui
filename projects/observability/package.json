@@ -30,7 +30,8 @@
     "d3-selection": "^1.4.2",
     "d3-shape": "^1.3.5",
     "d3-transition": "^1.2.0",
-    "d3-zoom": "^1.8.3"
+    "d3-zoom": "^1.8.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@hypertrace/test-utils": "^0.0.0"

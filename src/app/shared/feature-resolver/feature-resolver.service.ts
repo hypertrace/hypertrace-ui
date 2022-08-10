@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ApplicationFeature, FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import {
+  ApplicationFeature,
+  DynamicConfigurationService,
+  FeatureState,
+  FeatureStateResolver
+} from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
-import { DynamicConfigurationService } from '../dynamic-configuration/dynamic-configuration.service';
 
 @Injectable()
 export class FeatureResolverService extends FeatureStateResolver {
@@ -18,6 +22,8 @@ export class FeatureResolverService extends FeatureStateResolver {
         case ApplicationFeature.PageTimeRange:
           return FeatureState.Disabled;
         case ApplicationFeature.SavedQueries:
+          return FeatureState.Enabled;
+        case ApplicationFeature.CustomDashboards:
           return FeatureState.Enabled;
         default:
           return FeatureState.Enabled;

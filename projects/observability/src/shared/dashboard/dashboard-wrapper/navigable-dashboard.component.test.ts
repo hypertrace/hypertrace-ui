@@ -14,6 +14,7 @@ import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/grap
 import { GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
 import { MetadataService } from '../../services/metadata/metadata.service';
 import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-filter-data-source.model';
+import { CustomDashboardService } from './../../../pages/custom-dashboards/custom-dashboard.service';
 import { ApplicationAwareDashboardComponent } from './application-aware-dashboard.component';
 import { NavigableDashboardComponent } from './navigable-dashboard.component';
 
@@ -25,7 +26,8 @@ describe('Navigable dashboard component', () => {
     providers: [
       mockProvider(MetadataService, {
         getFilterAttributes: () => of([])
-      })
+      }),
+      mockProvider(CustomDashboardService)
     ],
     template: `
       <ht-navigable-dashboard

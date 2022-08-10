@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
-import { ALTERNATE_COLOR_PALETTES, APP_TITLE, DEFAULT_COLOR_PALETTE, UserModule } from '@hypertrace/common';
+import {
+  ALTERNATE_COLOR_PALETTES,
+  APP_TITLE,
+  DEFAULT_COLOR_PALETTE,
+  DynamicConfigurationModule,
+  UserModule,
+  USER_PREFERENCES_OPTIONS
+} from '@hypertrace/common';
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
 import { entityMetadata } from './entity-metadata';
-import { DynamicConfigurationModule } from './shared/dynamic-configuration/dynamic-configuration.module';
 import { FeatureResolverModule } from './shared/feature-resolver/feature-resolver.module';
 
 @NgModule({
@@ -15,6 +21,12 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
       useValue: {
         uri: environment.graphqlUri,
         batchSize: 5
+      }
+    },
+    {
+      provide: USER_PREFERENCES_OPTIONS,
+      useValue: {
+        uri: environment.userPreferencesUri
       }
     },
     {

@@ -8,5 +8,11 @@ export const featureBasedNavItemDefinitions: Record<string, NavItemConfig> = {
     label: 'Saved Queries',
     icon: IconType.Save,
     matchPaths: ['saved-queries']
+  },
+  [ApplicationFeature.CustomDashboards]: {
+    type: NavItemType.Link,
+    label: 'Custom Dashboards',
+    icon: IconType.Dashboard,
+    matchPaths: ['custom-dashboards']
   }
 };

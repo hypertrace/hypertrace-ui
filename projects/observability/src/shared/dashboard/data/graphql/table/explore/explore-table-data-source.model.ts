@@ -8,11 +8,15 @@ import {
   ModelProperty,
   ModelPropertyType,
   NUMBER_PROPERTY,
+  PLAIN_OBJECT_PROPERTY,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { isEmpty } from 'lodash-es';
 import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
 import { TableDataSourceModel } from '../table-data-source.model';
+import { AttributeExpression } from './../../../../../graphql/model/attribute/attribute-expression';
+import { GraphQlSortBySpecification } from './../../../../../graphql/model/schema/sort/graphql-sort-by-specification';
 import { ExploreSpecification } from './../../../../../graphql/model/schema/specifications/explore-specification';
 import {
   EXPLORE_GQL_REQUEST,
@@ -47,7 +51,7 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
     required: false,
     type: ARRAY_PROPERTY.type
   })
-  public groupBy: string[] = [];
+  public groupBy: AttributeExpression[] = [];
 
   @ModelProperty({
     key: 'group-by-include-rest',
@@ -61,6 +65,13 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
     required: false,
     type: NUMBER_PROPERTY.type
   })
+  @ModelProperty({
+    key: 'order-by',
+    required: false,
+    type: PLAIN_OBJECT_PROPERTY.type
+  })
+  public orderBy?: GraphQlSortBySpecification;
+
   public groupLimit: number = 100;
 
   public getScope(): string {
@@ -76,18 +87,29 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       context: this.context,
       selections: request.columns.map(column => column.specification),
       interval: this.interval?.getDuration(),
-      limit: request.position.limit * 2, // Prefetch 2 pages
+      limit: this.limit ?? request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
-      orderBy: request.sort && [
-        {
-          direction: request.sort.direction,
-          key: request.sort.column.specification
-        }
-      ],
+      orderBy:
+        this.orderBy && this.orderBy.key
+          ? [
+              {
+                direction: this.orderBy.direction,
+                key: this.orderBy.key
+              }
+            ]
+          : request.sort && [
+              {
+                direction: request.sort.direction,
+                key: request.sort.column.specification
+              }
+            ],
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       groupBy: {
-        keyExpressions: this.groupBy.map(key => ({ key: key })),
+        keyExpressions: this.groupBy.map(attributeExpression => ({
+          key: attributeExpression.key,
+          ...(!isEmpty(attributeExpression.subpath) ? { subpath: attributeExpression.subpath } : {})
+        })),
         includeRest: this.groupByIncludeRest,
         limit: this.groupLimit
       }

@@ -107,6 +107,21 @@ const ROUTE_CONFIG: HtRoute[] = [
               import('./explorer/explorer-routing.module').then(module => module.ExplorerRoutingModule)
           },
           {
+            path: 'custom-dashboards',
+            data: {
+              breadcrumb: {
+                icon: IconType.Dashboard,
+                label: 'Dashboard'
+              },
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
+              shouldSavePageTimeRange: true
+            },
+            loadChildren: () =>
+              import('./custom-dashboards/custom-dashboards-routing.module').then(
+                module => module.CustomDashboardsRoutingModule
+              )
+          },
+          {
             path: 'saved-queries',
             data: {
               breadcrumb: {

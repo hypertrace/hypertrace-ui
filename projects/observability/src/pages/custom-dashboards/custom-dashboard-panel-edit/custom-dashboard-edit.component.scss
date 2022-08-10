@@ -1,0 +1,41 @@
+@import 'font';
+@import 'layout';
+@import 'color-palette';
+
+.dashboard-editor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  padding: 15px 24px;
+
+  .panel-name-input {
+    font-size: 1.17em;
+    margin-left: -10px;
+    font-weight: bold;
+    border-bottom: 1px solid $gray-2;
+  }
+
+  .visualization-container {
+    display: block;
+    height: 224px;
+  }
+
+  .context-data-toggle {
+    margin: 15px 0 25px;
+  }
+
+  .live-update-checkbox {
+    display: flex;
+    margin-top: 25px;
+  }
+
+  .button-group {
+    margin-top: 25px;
+    display: flex;
+
+    .save-btn {
+      margin-right: 10px;
+    }
+  }
+}

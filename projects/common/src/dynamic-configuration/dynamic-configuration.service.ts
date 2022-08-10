@@ -1,23 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Optional, SkipSelf } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import type { CustomWindow } from '../../root.module';
+// tslint:disable-next-line: no-implicit-dependencies
+import { CustomWindow } from 'src/app/root.module';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DynamicConfigurationService {
   private config!: UiConfiguration;
-  public constructor(
-    private readonly http: HttpClient,
-    @SkipSelf() @Optional() private readonly sharedService?: DynamicConfigurationService
-  ) {
-    if (this.sharedService) {
-      throw new Error('Config service already loaded');
-    }
-  }
-
+  public constructor(private readonly http: HttpClient) {}
   public load(): Observable<UiConfiguration> {
     return this.http.get<UiConfiguration>('/assets/json/config.json').pipe(
       tap((data: UiConfiguration) => {
@@ -26,7 +19,9 @@ export class DynamicConfigurationService {
       })
     );
   }
-
+  public getValueForUrlConfig(key: string): string | undefined {
+    return this.config?.urlConfig?.[key] as string;
+  }
   public isConfigPresentForFeature(feature: string): boolean {
     return this.config?.featureFlags?.hasOwnProperty(feature);
   }

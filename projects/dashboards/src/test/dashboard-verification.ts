@@ -12,7 +12,7 @@ import {
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { DashboardManagerService, LoggerService, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { GraphQlQueryEventService, MetadataService } from '@hypertrace/observability';
+import { CustomDashboardService, GraphQlQueryEventService, MetadataService } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
@@ -58,6 +58,7 @@ export const mockDashboardProviders = [
   mockProvider(ActivatedRoute, {
     queryParamMap: EMPTY
   }),
+  mockProvider(CustomDashboardService),
   ...getMockFlexLayoutProviders()
 ];
 

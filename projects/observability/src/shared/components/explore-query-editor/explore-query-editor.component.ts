@@ -67,6 +67,8 @@ import {
 export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   private static readonly DEFAULT_GROUP_LIMIT: number = 5;
   @Input()
+  public isExplorer?: boolean = true;
+  @Input()
   public filters?: Filter[];
 
   @Input()
@@ -96,7 +98,17 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
     if (changeObject.context) {
-      this.visualizationBuilder.context(this.context);
+      if (!this.isExplorer) {
+        /* Context changes reset filters, for explorer we are able to preserve filters since
+        they are part of the url, however for custom dashboards we have to get it from
+        the old state and update the state again
+        */
+        const oldState = this.visualizationBuilder.currentState();
+        this.visualizationBuilder.context(this.context);
+        this.visualizationBuilder.filters(oldState.filters);
+      } else {
+        this.visualizationBuilder.context(this.context);
+      }
     }
 
     if (changeObject.filters) {
