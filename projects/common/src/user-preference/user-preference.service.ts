@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserInfoService } from './../user/user-info.service';
 interface TokenOptions {
   uri: string;
@@ -12,6 +12,7 @@ export const USER_PREFERENCES_OPTIONS = new InjectionToken<TokenOptions>('USER_P
 })
 export class UserPreferenceService {
   public BASE_URL: string;
+  public hasLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public constructor(
     private readonly http: HttpClient,
@@ -34,7 +35,13 @@ export class UserPreferenceService {
    * already. More details: https://razorpay.slack.com/archives/CU5GKS8MQ/p1659328334493179?thread_ts=1659310225.849849&cid=CU5GKS8MQ
    */
   public addUser(): void {
-    this.userInfoService.load().subscribe(() => this.get('/v1/user/add').subscribe());
+    this.userInfoService.load().subscribe(() =>
+      this.get<{ success: boolean }>('/v1/user/add').subscribe(({ success }) => {
+        if (success) {
+          this.hasLoaded.next(true);
+        }
+      })
+    );
   }
 
   public get<T>(endPoint: string, params?: HttpParams): Observable<T> {
