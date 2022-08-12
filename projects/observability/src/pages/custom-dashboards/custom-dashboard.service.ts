@@ -49,9 +49,7 @@ export class CustomDashboardService {
   public static readonly API_ID_PARAM_NAME: string = 'dashboard_id';
   private readonly BASE_URL: string = '/v1/dashboard';
   public constructor(private readonly userPreferenceService: UserPreferenceService) {}
-  public fetchUser(): Observable<UserResponse> {
-    return this.userPreferenceService.get<UserResponse>(`/v1/user/add`);
-  }
+
   public fetchDashboards(searchText: string, pagination?: PageEvent): Observable<CustomDashboardListResponse> {
     let queryParams = new HttpParams();
     if (pagination) {

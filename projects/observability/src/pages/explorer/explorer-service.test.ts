@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { AttributeMetadata, AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerService } from './explorer-service';
-import { SavedQuery, ScopeQueryParam } from './explorer.component';
+import { ScopeQueryParam } from './explorer.types';
 
 describe('Explorer service', () => {
   const createService = createServiceFactory({
@@ -76,57 +76,5 @@ describe('Explorer service', () => {
         }
       });
     });
-  });
-
-  test('identifies duplicate queries correctly', () => {
-    const currentQuery = {
-      scopeQueryParam: ScopeQueryParam.EndpointTraces,
-      filters: [
-        {
-          field: 'serviceName',
-          operator: FilterOperator.Equals,
-          value: 'api',
-          userString: 'Service Name = api'
-        },
-        {
-          field: 'statusCode',
-          operator: FilterOperator.Equals,
-          value: '400',
-          userString: 'Status Code = 400',
-          urlString: 'statusCode_eq_400'
-        }
-      ]
-    };
-
-    const savedQueries = [
-      {
-        scopeQueryParam: ScopeQueryParam.EndpointTraces,
-        filters: [
-          {
-            field: 'serviceName',
-            operator: '=',
-            value: 'api',
-            userString: 'Service Name = api'
-          },
-          {
-            field: 'statusCode',
-            operator: '=',
-            value: '400',
-            userString: 'Status Code = 400',
-            urlString: 'statusCode_eq_400'
-          }
-        ]
-      }
-    ];
-
-    const spectator = createService({
-      providers: [
-        mockProvider(FilterBuilderLookupService, { lookup: lookupMock }),
-        mockProvider(MetadataService, { getAttribute: getAttributeMock })
-      ]
-    });
-
-    const result = spectator.service.isDuplicateQuery(currentQuery as SavedQuery, savedQueries as SavedQuery[]);
-    expect(result).toBeTruthy();
   });
 });

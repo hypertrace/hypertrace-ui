@@ -5,6 +5,7 @@ import { IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UserTelemetryOrchestrationService } from '../shared/telemetry/user-telemetry-orchestration.service';
+
 @Component({
   selector: 'ht-application-frame',
   styleUrls: ['./application-frame.component.scss'],

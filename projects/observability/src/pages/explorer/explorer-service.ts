@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +8,7 @@ import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attri
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
-import { SavedQuery, ScopeQueryParam } from './explorer.component';
+import { ScopeQueryParam } from './explorer.types';
 
 @Injectable({ providedIn: 'root' })
 export class ExplorerService {
@@ -48,16 +47,6 @@ export class ExplorerService {
         }
       }))
     );
-  }
-
-  public isDuplicateQuery(currentQuery: Omit<SavedQuery, 'name'>, savedQueries: Omit<SavedQuery, 'name'>[]): boolean {
-    for (const savedQuery of savedQueries) {
-      if (isEqual(currentQuery, savedQuery)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }
 

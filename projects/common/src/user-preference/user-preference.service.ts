@@ -12,6 +12,7 @@ export const USER_PREFERENCES_OPTIONS = new InjectionToken<TokenOptions>('USER_P
 })
 export class UserPreferenceService {
   public BASE_URL: string;
+
   public constructor(
     private readonly http: HttpClient,
     @Inject(USER_PREFERENCES_OPTIONS) tokenOptions: TokenOptions,
@@ -19,12 +20,23 @@ export class UserPreferenceService {
   ) {
     this.BASE_URL = tokenOptions.uri;
   }
+
   private addUserEmailHeader(): HttpHeaders {
     const requestHeaders = new HttpHeaders();
     const { email } = this.userInfoService.getUserData();
 
     return requestHeaders.append('user-email', email!);
   }
+
+  /**
+   * We call the /user/add endpoint of the Hypertrace User Service once on
+   * every application load. This adds the user to the service if not present
+   * already. More details: https://razorpay.slack.com/archives/CU5GKS8MQ/p1659328334493179?thread_ts=1659310225.849849&cid=CU5GKS8MQ
+   */
+  public addUser(): void {
+    this.userInfoService.load().subscribe(() => this.get('/v1/user/add').subscribe());
+  }
+
   public get<T>(endPoint: string, params?: HttpParams): Observable<T> {
     return this.http.get<T>(this.BASE_URL + endPoint, {
       params: params,

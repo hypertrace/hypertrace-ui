@@ -18,6 +18,7 @@ export class UserInfoService {
     private readonly inMemoryStorage: InMemoryStorage,
     private readonly logger: LoggerService
   ) {}
+
   public load(): Observable<UserTraits> {
     // tslint:disable-next-line: ban-ts-ignore
     // @ts-ignore
@@ -32,30 +33,17 @@ export class UserInfoService {
         }
       }),
       catchError(error => {
-        this.logger.error('something went wrong in while fetching user-info', error);
+        this.logger.error('Something went wrong while fetching /user-info', error);
 
         return of({});
       })
     );
   }
+
   public getUserData(): UserTraits {
     const user = this.inMemoryStorage.get(UserInfoService.STORAGE_KEY);
     if (user !== undefined) {
       return JSON.parse(user);
-    }
-
-    return UserInfoService.DEFAULT_USER;
-  }
-  public updateUserData(data: UserTraits): UserTraits {
-    const user = this.inMemoryStorage.get(UserInfoService.STORAGE_KEY);
-    if (user !== undefined) {
-      const updatedUser = {
-        ...JSON.parse(user),
-        ...data
-      };
-      this.inMemoryStorage.set(UserInfoService.STORAGE_KEY, JSON.stringify(updatedUser));
-
-      return updatedUser;
     }
 
     return UserInfoService.DEFAULT_USER;

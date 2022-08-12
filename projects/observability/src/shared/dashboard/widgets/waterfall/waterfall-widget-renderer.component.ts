@@ -16,7 +16,7 @@ import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
+import { ScopeQueryParam } from '../../../../pages/explorer/explorer.types';
 import { SpanDetailLayoutStyle } from '../../../components/span-detail/span-detail-layout-style';
 import { SpanDetailTab } from '../../../components/span-detail/span-detail-tab';
 import { WaterfallWidgetModel } from './waterfall-widget.model';

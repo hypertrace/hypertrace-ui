@@ -5,7 +5,7 @@ import { ButtonRole, ButtonStyle, FilterOperator, IconSize } from '@hypertrace/c
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ExplorerService } from '../explorer/explorer-service';
-import { ScopeQueryParam } from '../explorer/explorer.component';
+import { ScopeQueryParam } from '../explorer/explorer.types';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
 @Component({

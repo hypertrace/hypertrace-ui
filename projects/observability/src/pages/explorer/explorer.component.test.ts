@@ -3,6 +3,10 @@ import { Provider } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { EMPTY, NEVER, of } from 'rxjs';
+import { startWith } from 'rxjs/operators';
+
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
@@ -27,9 +31,6 @@ import {
 } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
-import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY, NEVER, of } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreQueryEditorComponent } from '../../shared/components/explore-query-editor/explore-query-editor.component';
 import { ExploreQueryGroupByEditorComponent } from '../../shared/components/explore-query-editor/group-by/explore-query-group-by-editor.component';
@@ -47,9 +48,9 @@ import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explo
 import { SPANS_GQL_REQUEST } from '../../shared/graphql/request/handlers/spans/spans-graphql-query-handler.service';
 import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
+import { SavedQueriesService } from '../saved-queries/saved-queries.service';
 import { CustomDashboardService } from './../custom-dashboards/custom-dashboard.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
-import { ExplorerService } from './explorer-service';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';
 
@@ -118,8 +119,8 @@ describe('Explorer component', () => {
       mockProvider(NotificationService, {
         createSuccessToast: jest.fn()
       }),
-      mockProvider(ExplorerService, {
-        isDuplicateQuery: jest.fn().mockReturnValue(false)
+      mockProvider(SavedQueriesService, {
+        saveQuery: jest.fn().mockReturnValue(of({ success: true }))
       }),
       mockProvider(CustomDashboardService),
       ...getMockFlexLayoutProviders()
@@ -438,16 +439,18 @@ describe('Explorer component', () => {
 
   test('saves query with a default name when no input is provided', fakeAsync(() => {
     init();
-    const preferenceServiceSpy = spyOn(spectator.inject(PreferenceService), 'set');
+    const savedQueriesServiceSpy = spyOn(spectator.inject(SavedQueriesService), 'saveQuery');
     window.prompt = jest.fn().mockReturnValue('My query');
 
     const saveQueryButton = spectator.query('.explorer-save-button');
     expect(saveQueryButton).toExist();
 
     spectator.click(saveQueryButton as HTMLElement);
-    expect(preferenceServiceSpy).toHaveBeenCalledWith('savedQueries', [
-      { name: 'My query', filters: [], scopeQueryParam: 'endpoint-traces' }
-    ]);
+    expect(savedQueriesServiceSpy).toHaveBeenCalledWith({
+      name: 'My query',
+      filters: [],
+      scopeQueryParam: 'endpoint-traces'
+    });
   }));
 
   test("doesn't save query if user cancels input dialog", fakeAsync(() => {

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ApiTraceDetails } from '../api-trace-detail/api-trace-detail.service';
 import { ExplorerService } from '../explorer/explorer-service';
-import { ScopeQueryParam } from '../explorer/explorer.component';
+import { ScopeQueryParam } from '../explorer/explorer.types';
 import { TraceDetails, TraceDetailService } from './trace-detail.service';
 @Component({
   styleUrls: ['./trace-detail.page.component.scss'],

@@ -4,7 +4,7 @@ import { FilterOperator, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
+import { ScopeQueryParam } from '../../../../pages/explorer/explorer.types';
 
 @Component({
   selector: 'ht-span-tags-detail',

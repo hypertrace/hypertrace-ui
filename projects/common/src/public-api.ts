@@ -133,11 +133,11 @@ export * from './color/color-palette';
 export * from './global-header-height/global-header-height-provider.service';
 
 // User Preference
+export * from './user-preference/user-preference.module';
 export * from './user-preference/user-preference.service';
 
 // Dynamic Config
 export * from './dynamic-configuration/dynamic-configuration.module';
 export * from './dynamic-configuration/dynamic-configuration.service';
 // User Service
-export * from './user/user-info.module';
 export * from './user/user-info.service';

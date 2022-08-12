@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavigationParamsType, NavigationService, UserInfoService } from '@hypertrace/common';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import {
   ButtonRole,
   ButtonStyle,
@@ -93,16 +93,13 @@ export class CustomDashboardListComponent {
     private readonly customDashboardService: CustomDashboardService,
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly userInfoService: UserInfoService
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.pageSize = params['page-size'] ?? this.pageSize;
       this.pageIndex = params.page ? +params.page + 1 : this.pageIndex;
     });
-    this.customDashboardService.fetchUser().subscribe(data => {
-      this.userInfoService.updateUserData({ email: data.payload.email, id: data.payload.id });
-    });
+
     this.setupDataSource({ pageSize: this.pageSize, pageIndex: this.pageIndex });
   }
 
