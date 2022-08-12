@@ -272,6 +272,10 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
+  public getRootPathUrl(): string {
+    return window.location.host;
+  }
+
   /**
    * Navigates back if back is a location in the app, otherwise to home
    */
