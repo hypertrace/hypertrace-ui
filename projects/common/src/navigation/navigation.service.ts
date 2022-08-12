@@ -273,7 +273,7 @@ export class NavigationService {
   }
 
   public getRootPathUrl(): string {
-    return window.location.host;
+    return new URL(this.getAbsoluteCurrentUrl()).origin;
   }
 
   /**
