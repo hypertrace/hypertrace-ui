@@ -272,7 +272,7 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
-  public getRootPathUrl(): string {
+  public getHostUrl(): string {
     return new URL(this.getAbsoluteCurrentUrl()).origin;
   }
 
