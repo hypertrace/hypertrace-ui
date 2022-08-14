@@ -260,6 +260,9 @@ export * from './pages/api-trace-detail/sequence/api-trace-sequence.component';
 export * from './pages/api-trace-detail/sequence/api-trace-sequence.dashboard';
 export * from './pages/api-trace-detail/api-trace-detail.page.module';
 
+export * from './pages/custom-dashboards/custom-dashboards-view.component';
+export * from './pages/custom-dashboards/custom-dashboards-view.module';
+
 export * from './pages/custom-dashboards/custom-dashboards.component';
 export * from './pages/custom-dashboards/custom-dashboards.module';
 export * from './pages/custom-dashboards/custom-dashboard.service';

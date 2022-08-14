@@ -6,6 +6,7 @@ import {
   InputModule,
   LetAsyncModule,
   LoadAsyncModule,
+  MessageDisplayModule,
   NotificationModule,
   PageHeaderModule
 } from '@hypertrace/components';
@@ -23,6 +24,7 @@ import { CustomDashboardDetailComponent } from './custom-dashboard-detail.compon
     LetAsyncModule,
     LoadAsyncModule,
     PageHeaderModule,
+    MessageDisplayModule,
     CustomDashboardPanelModule,
     NotificationModule,
     ObservabilityDashboardModule,

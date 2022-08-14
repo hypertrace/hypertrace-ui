@@ -12,6 +12,9 @@ export class CustomDashboardStoreService {
   public set(dashboardId: string, data: DashboardData): void {
     this.dashboards.set(dashboardId, data);
   }
+  public hasKey(dashboardId: string): boolean {
+    return this.dashboards.has(dashboardId);
+  }
   public get(dashboardId: string): DashboardData {
     return this.dashboards.get(dashboardId)!;
   }

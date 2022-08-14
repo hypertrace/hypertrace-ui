@@ -8,20 +8,39 @@ import {
   CustomDashboardListModule,
   CustomDashboardPanelEditComponent,
   CustomDashboardPanelEditModule,
-  CustomDashboardService
+  CustomDashboardService,
+  CustomDashboardsViewComponent,
+  CustomDashboardViewModule,
+  DASHBOARD_VIEWS
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: CustomDashboardListComponent
+    children: [
+      {
+        path: '',
+        redirectTo: DASHBOARD_VIEWS.MY_DASHBOARDS
+      },
+      {
+        path: ':dashboard_view',
+        component: CustomDashboardsViewComponent,
+        children: [
+          {
+            path: '',
+            component: CustomDashboardListComponent
+          }
+        ]
+      }
+    ]
   },
+
   {
-    path: `:${CustomDashboardService.API_ID_PARAM_NAME}/panel/:panel_id`,
+    path: `:dashboard_view/:${CustomDashboardService.API_ID_PARAM_NAME}/panel/:panel_id`,
     component: CustomDashboardPanelEditComponent
   },
   {
-    path: `:${CustomDashboardService.API_ID_PARAM_NAME}`,
+    path: `:dashboard_view/:${CustomDashboardService.API_ID_PARAM_NAME}`,
     component: CustomDashboardDetailComponent
   }
 ];
@@ -31,7 +50,8 @@ const ROUTE_CONFIG: HtRoute[] = [
     RouterModule.forChild(ROUTE_CONFIG),
     CustomDashboardListModule,
     CustomDashboardPanelEditModule,
-    CustomDashboardDetailModule
+    CustomDashboardDetailModule,
+    CustomDashboardViewModule
   ]
 })
 export class CustomDashboardsRoutingModule {}

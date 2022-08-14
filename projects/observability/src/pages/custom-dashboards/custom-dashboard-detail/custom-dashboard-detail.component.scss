@@ -17,7 +17,20 @@
       font-weight: bold;
       margin: 0.83em 0;
       border-bottom: 1px solid $gray-2;
+
+      ::ng-deep {
+        .mat-form-field-flex {
+          background: white;
+        }
+
+        input.mat-input-element {
+          &:disabled {
+            cursor: not-allowed;
+          }
+        }
+      }
     }
+
     .button-container {
       display: flex;
       .save-btn {
@@ -30,6 +43,11 @@
       max-height: 285px;
     }
   }
+  .no-panels-container {
+    height: 224px;
+    display: flex;
+  }
+
   .add-panel {
     min-height: 224px;
     border: 1px dashed $gray-2;
