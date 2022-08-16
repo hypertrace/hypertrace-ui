@@ -27,7 +27,7 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator!), // Todo : Very weird
-          this.transformValueIfOperatorIsContains(filter)
+          this.extractGraphQlFilterValue(filter)
         )
     );
   }
@@ -38,12 +38,12 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator),
-          this.transformValueIfOperatorIsContains(filter)
+          this.extractGraphQlFilterValue(filter)
         )
     );
   }
 
-  private transformValueIfOperatorIsContains(filter: Filter | FieldFilter | TableFilter): GraphQlArgumentValue {
+  private extractGraphQlFilterValue(filter: Filter | FieldFilter | TableFilter): GraphQlArgumentValue {
     return (filter.operator === FilterOperator.Contains && typeof filter.value === 'string'
       ? escapeRegExp(filter.value).toString()
       : filter.value) as GraphQlArgumentValue;
