@@ -10,9 +10,13 @@ import { ButtonRole, ButtonStyle, ToggleItem } from '@hypertrace/components';
     <div class="custom-dashboards">
       <div class="title">
         <h2>Custom Dashboards</h2>
-        <ht-link [paramsOrUrl]="this.currentContext.value + '/create'" class="create-dashboard-button">
-          <ht-button role="${ButtonRole.Primary}" display="${ButtonStyle.Solid}" label="Create Dashboard"> </ht-button>
-        </ht-link>
+        <ht-button
+          (click)="redirectToCreateDashboard()"
+          role="${ButtonRole.Primary}"
+          display="${ButtonStyle.Solid}"
+          label="Create Dashboard"
+        >
+        </ht-button>
       </div>
       <ht-toggle-group
         class="context-data-toggle"
@@ -61,6 +65,13 @@ export class CustomDashboardsViewComponent {
       });
       this.currentContext = context;
     }
+  }
+
+  public redirectToCreateDashboard(): void {
+    this.navigationService.navigate({
+      navType: NavigationParamsType.InApp,
+      path: [`/custom-dashboards/my-dashboards/create`]
+    });
   }
 }
 

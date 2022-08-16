@@ -148,9 +148,6 @@ export class CustomDashboardListComponent {
       path: [`/custom-dashboards/${this.dashboardView}/${id}`]
     });
   }
-  public navigateToCreateDashboard(): void {
-    this.navigationService.navigateWithinApp(['/create']);
-  }
   public onSearchChange(searchText: string): void {
     this.searchText = searchText;
     this.setupDataSource();
