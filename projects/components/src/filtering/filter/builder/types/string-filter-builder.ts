@@ -9,7 +9,13 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]
   }
 
   public supportedTopLevelOperators(): FilterOperator[] {
-    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In, FilterOperator.Like];
+    return [
+      FilterOperator.Equals,
+      FilterOperator.NotEquals,
+      FilterOperator.In,
+      FilterOperator.Like,
+      FilterOperator.Contains
+    ];
   }
 
   public supportedSubpathOperators(): FilterOperator[] {

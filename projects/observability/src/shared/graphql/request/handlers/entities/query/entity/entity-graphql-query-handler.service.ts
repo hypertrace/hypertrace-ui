@@ -59,7 +59,9 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
       properties: request.properties,
       filters: [new GraphQlEntityFilter(request.id, request.entityType)],
       // If querying for a single API by ID, then usually want to includeInactive
-      includeInactive: request.includeInactive !== false
+      includeInactive: request.includeInactive !== false,
+      // If querying for a single API by ID, ignore all global filters on entities query
+      ignoreGlobalFilters: true
     };
   }
 }
