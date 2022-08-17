@@ -46,8 +46,7 @@ export class MetadataGraphQlQueryHandlerService
       onlySupportsAggregation: result.onlySupportsAggregation,
       onlySupportsGrouping: result.onlySupportsGrouping,
       allowedAggregations: result.supportedAggregations.flatMap(convertFromGraphQlMetricAggregationType),
-      groupable: result.groupable,
-      sortable: true // Assumption: All fields are sortable
+      groupable: result.groupable
     }));
   }
 }

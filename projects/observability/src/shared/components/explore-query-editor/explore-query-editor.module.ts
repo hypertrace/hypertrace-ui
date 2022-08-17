@@ -7,6 +7,7 @@ import {
   FormFieldModule,
   InputModule,
   LetAsyncModule,
+  LoadAsyncModule,
   SelectModule,
   TooltipModule
 } from '@hypertrace/components';
@@ -40,6 +41,7 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
     IntervalSelectModule,
     CheckboxModule,
     LetAsyncModule,
+    LoadAsyncModule,
     FormFieldModule
   ]
 })

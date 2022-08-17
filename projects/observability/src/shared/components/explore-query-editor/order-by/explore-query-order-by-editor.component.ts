@@ -14,10 +14,10 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="order-by-container" *ngIf="this.orderByExpression">
+    <div class="order-by-container">
       <span class="order-by-main-label"> Order by </span>
       <div class="fields-container">
-        <div class="order-by-input-container" *htLoadAsync="this.metricOptions$ as metricOptions">
+        <div class="order-by-input-container">
           <span class="order-by-label"> Metric </span>
           <ht-select
             class="attribute-selector"
@@ -26,7 +26,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             (selectedChange)="this.onMetricChange($event)"
           >
             <ht-select-option
-              *ngFor="let metricOption of metricOptions"
+              *ngFor="let metricOption of (this.metricOptions$ | async)"
               [value]="metricOption.value"
               [label]="metricOption.label"
             ></ht-select-option>
@@ -84,15 +84,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
   public readonly sortByOptions: SelectOption<GraphQlSortDirection | undefined>[] = [
     {
-      value: undefined,
-      label: 'None'
-    },
-    {
-      value: 'ASC',
+      value: SortDirection.Asc,
       label: 'Asc'
     },
     {
-      value: 'DESC',
+      value: SortDirection.Desc,
       label: 'Desc'
     }
   ];
@@ -129,13 +125,13 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   public onMetricChange(newAttribute: AttributeMetadata): void {
     this.buildSpecAndEmit(
-      combineLatest([of(newAttribute), this.selectedAggregation$, of(this.orderByExpression?.direction)])
+      combineLatest([of(newAttribute), this.selectedAggregation$, of(this.orderByExpression.direction)])
     );
   }
 
   public onAggregationChange(newAggregation: MetricAggregationType): void {
     this.buildSpecAndEmit(
-      combineLatest([this.selectedMetric$, of(newAggregation), of(this.orderByExpression?.direction)])
+      combineLatest([this.selectedMetric$, of(newAggregation), of(this.orderByExpression.direction)])
     );
   }
 
@@ -145,7 +141,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private buildSpecAndEmit(
     orderByData$: Observable<
-      [AttributeMetadata | undefined, MetricAggregationType | undefined, GraphQlSortDirection | undefined]
+      [AttributeMetadata | undefined, MetricAggregationType, GraphQlSortDirection]
     >
   ): void {
     orderByData$
@@ -205,22 +201,16 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   private buildOrderExpression(
-    attribute?: AttributeMetadata,
-    aggregation?: MetricAggregationType,
-    sortBy?: GraphQlSortDirection
+    attribute: AttributeMetadata | undefined,
+    aggregation: MetricAggregationType,
+    sortBy: GraphQlSortDirection
   ): Observable<GraphQlOrderBy> {
-    if (attribute === undefined || aggregation === undefined) {
+    if (attribute === undefined) {
       return EMPTY;
     }
 
-    const aggregationToUse = attribute.allowedAggregations.includes(aggregation)
-      ? aggregation
-      : attribute.allowedAggregations.length > 0
-      ? attribute.allowedAggregations[0]
-      : undefined;
-
     return of({
-      aggregation: aggregationToUse,
+      aggregation: attribute.allowedAggregations.includes(aggregation) ? aggregation : attribute.allowedAggregations[0],
       direction: sortBy,
       keyExpression: {
         key: attribute.name
@@ -228,3 +218,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     });
   }
 }
+
+const enum SortDirection {
+  Asc = 'ASC',
+  Desc = 'DESC'
+} 

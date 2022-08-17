@@ -154,7 +154,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private mapOrderByToGraphQlSpecification(orderBy: GraphQlOrderBy): GraphQlSortBySpecification[] | undefined {
-    return orderBy.keyExpression !== undefined && orderBy.aggregation !== undefined && orderBy.direction !== undefined
+    return orderBy !== undefined
       ? [
           {
             direction: orderBy.direction,
@@ -285,9 +285,9 @@ export interface ExploreSeries {
 }
 
 export interface GraphQlOrderBy {
-  aggregation?: MetricAggregationType;
-  direction?: GraphQlSortDirection;
-  keyExpression?: {
+  aggregation: MetricAggregationType;
+  direction: GraphQlSortDirection;
+  keyExpression: {
     key: string;
   };
 }

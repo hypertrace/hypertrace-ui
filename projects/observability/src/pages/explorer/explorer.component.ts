@@ -254,14 +254,7 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: series,
-      orderBy: {
-        aggregation: series[0].specification.aggregation,
-        direction: undefined,
-        keyExpression: {
-          key: series[0].specification.name
-        }
-      }
+      series: series
     };
   }
 
