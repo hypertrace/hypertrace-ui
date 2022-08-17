@@ -476,7 +476,7 @@ export class TableWidgetRendererComponent
       searchFilters = [
         {
           field: this.api.model.getSearchAttribute()!,
-          operator: FilterOperator.Like,
+          operator: FilterOperator.Contains,
           value: text
         }
       ];

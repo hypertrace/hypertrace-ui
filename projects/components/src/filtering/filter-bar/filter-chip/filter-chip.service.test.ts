@@ -57,6 +57,7 @@ describe('Filter Chip service', () => {
             case FilterOperator.LessThanOrEqualTo:
             case FilterOperator.GreaterThan:
             case FilterOperator.GreaterThanOrEqualTo:
+            case FilterOperator.Contains:
             case FilterOperator.Like:
               return new ComparisonFilterParser();
             case FilterOperator.In:
@@ -248,6 +249,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.Like,
         userString: `${attribute.displayName} ${FilterOperator.Like}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Contains,
+        userString: `${attribute.displayName} ${FilterOperator.Contains}`
       }
     ]);
   });
