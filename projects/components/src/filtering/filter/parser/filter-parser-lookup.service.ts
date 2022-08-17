@@ -23,6 +23,7 @@ export class FilterParserLookupService {
       case FilterOperator.LessThanOrEqualTo:
       case FilterOperator.GreaterThan:
       case FilterOperator.GreaterThanOrEqualTo:
+      case FilterOperator.Contains:
       case FilterOperator.Like:
         return new ComparisonFilterParser();
       case FilterOperator.In:
