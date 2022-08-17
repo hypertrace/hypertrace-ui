@@ -9,6 +9,12 @@ export const enum FilterOperator {
   GreaterThanOrEqualTo = '>=',
   Like = '~',
   In = 'IN',
+  /**
+   * The difference between 'Contains' and 'Like' is that 'Like' will be treated as a regex filter, not escaping
+   * special characters. Whereas 'Contains' will escape special characters in order to treat it as plain text - currently
+   * this assumes no backend support and is done clientside, which is why FilterOperator.Contains gets mapped to
+   * GraphQlOperatorType.Like
+   */
   Contains = 'CONTAINS',
   ContainsKey = 'CONTAINS_KEY',
   ContainsKeyLike = 'CONTAINS_KEY_LIKE'
