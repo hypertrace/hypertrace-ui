@@ -12,7 +12,7 @@ import { FilterOperator } from '../../filter/filter-operators';
 import { FilterParserLookupService } from '../../filter/parser/filter-parser-lookup.service';
 import { ComparisonFilterParser } from '../../filter/parser/types/comparison-filter-parser';
 import { ContainsFilterParser } from '../../filter/parser/types/contains-filter-parser';
-import { InFilterParser } from '../../filter/parser/types/in-filter-parser';
+import { InNotInFilterParser } from '../../filter/parser/types/in-not-in-filter-parser';
 import { FilterChipService } from './filter-chip.service';
 
 describe('Filter Chip service', () => {
@@ -61,7 +61,7 @@ describe('Filter Chip service', () => {
             case FilterOperator.Like:
               return new ComparisonFilterParser();
             case FilterOperator.In:
-              return new InFilterParser();
+              return new InNotInFilterParser();
             case FilterOperator.ContainsKey:
             case FilterOperator.ContainsKeyLike:
               return new ContainsFilterParser();
