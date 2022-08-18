@@ -62,6 +62,7 @@ export class CustomDashboardListComponent {
   public searchText: string = '';
   public pageSize: number = 10;
   public pageIndex: number = 1;
+  public dashboardView: DashboardViewType = DASHBOARD_VIEWS.MY_DASHBOARDS;
   public columnConfigs: TableColumnConfig[] = [
     {
       id: 'name',
@@ -85,9 +86,20 @@ export class CustomDashboardListComponent {
       sortable: false,
       filterable: false,
       alignment: TableCellAlignmentType.Center
+    },
+    {
+      id: 'actions',
+      name: 'actions',
+      title: 'Actions',
+      display: CoreTableCellRendererType.Icon,
+      visible: true,
+      width: '20%',
+      sortable: false,
+      filterable: false,
+      alignment: TableCellAlignmentType.Center,
+      onClick: (row: CustomDashboardTableRow, _column) => this.deleteDashboard(row.id)
     }
   ];
-  public dashboardView: DashboardViewType = DASHBOARD_VIEWS.MY_DASHBOARDS;
   public constructor(
     private readonly customDashboardService: CustomDashboardService,
     private readonly userPreferenceService: UserPreferenceService,
@@ -131,7 +143,8 @@ export class CustomDashboardListComponent {
                 data: dashboardPayloads.map((dashboardPayload: CustomDashboardPayload) => ({
                   ...dashboardPayload.data,
                   id: dashboardPayload.id,
-                  createdAt: dashboardPayload.createdAt
+                  createdAt: dashboardPayload.createdAt,
+                  actions: this.dashboardView === DASHBOARD_VIEWS.MY_DASHBOARDS ? 'delete' : ''
                 })),
                 totalCount: this.searchText === '' ? response.totalRecords : dashboardPayloads.length
               }),
@@ -140,6 +153,15 @@ export class CustomDashboardListComponent {
         })
       );
     this.dashboards$.subscribe(() => this.changeDetectorRef.detectChanges());
+  }
+
+  private deleteDashboard(id: string): void {
+    const confirmation = confirm(`Are you sure you want to delete this dashboard?`);
+    if (confirmation) {
+      this.customDashboardService.deleteDashboard(id).subscribe(() => {
+        this.setupDataSource();
+      });
+    }
   }
 
   private navigateToDashboard(id: string): void {

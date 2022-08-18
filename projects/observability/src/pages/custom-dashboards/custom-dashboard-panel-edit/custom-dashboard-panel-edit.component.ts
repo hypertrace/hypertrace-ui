@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { isEqualIgnoreFunctions, NavigationParamsType, NavigationService } from '@hypertrace/common';
+import { isEqualIgnoreFunctions, NavigationService } from '@hypertrace/common';
 import { ButtonRole, Filter, InputAppearance, ToggleItem } from '@hypertrace/components';
 import { cloneDeep } from 'lodash-es';
 import { EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -67,7 +67,7 @@ import { CustomDashboardService } from '../custom-dashboard.service';
         [groupBy]="state.groupBy"
         [series]="state.series"
         [interval]="state.interval"
-        [groupBy]="state.groupBy"
+        [orderBy]="state.orderBy"
         (visualizationRequestChange)="this.onVisualizationRequestUpdated($event)"
       ></ht-explore-query-editor>
       <div class="button-group">
@@ -143,7 +143,7 @@ export class CustomDashboardPanelEditComponent {
     });
     this.activatedRoute.queryParams.subscribe(params => {
       this.dashboardName = params.dashboardName;
-      this.isNewDashboard = params.newDashboard;
+      this.isNewDashboard = params.newDashboard.toLowerCase() === 'true';
     });
     const hasKey = this.customDashboardStoreService.hasKey(this.dashboardId);
     if (!hasKey) {
@@ -204,24 +204,36 @@ export class CustomDashboardPanelEditComponent {
       series: [...request.series],
       filters: request.filters && [...request.filters],
       interval: request.interval,
-      groupBy: request.groupBy && { ...request.groupBy }
+      groupBy: request.groupBy && { ...request.groupBy },
+      orderBy: request.orderBy
     };
   }
   public onSaveOrEditPanel(): void {
     const panelSlug = this.customDashboardService.convertNameToSlug(this.state.name);
-    if (this.isNewPanel) {
-      this.state.id = panelSlug;
-      this.customDashboardStoreService.addPanel(this.dashboardId, this.state);
+    if (this.isNewDashboard) {
+      this.customDashboardService
+        .createDashboard({
+          id: this.dashboardId,
+          name: this.dashboardName,
+          panels: [this.state]
+        })
+        .subscribe(data => {
+          this.dashboardId = data.payload.id;
+          this.isNewDashboard = false;
+          this.redirectToDashboard();
+        });
     } else {
-      this.customDashboardStoreService.updatePanel(this.dashboardId, this.state);
+      if (this.isNewPanel) {
+        this.state.id = panelSlug;
+        this.customDashboardStoreService.addPanel(this.dashboardId, this.state);
+      } else {
+        this.customDashboardStoreService.updatePanel(this.dashboardId, this.state);
+      }
+      const dashboardData = this.customDashboardStoreService.get(this.dashboardId);
+      this.customDashboardService.updateDashboard(this.dashboardId, dashboardData).subscribe(() => {
+        this.redirectToDashboard();
+      });
     }
-    this.navigationService.navigate({
-      navType: NavigationParamsType.InApp,
-      path: ['/custom-dashboards/', this.dashboardView, this.dashboardId],
-      queryParams: { unSaved: true, newDashboard: this.isNewDashboard },
-      queryParamsHandling: 'merge',
-      replaceCurrentHistory: false
-    });
   }
   public redirectToDashboard(): void {
     const dashboardId = this.isNewDashboard ? 'create' : this.dashboardId;

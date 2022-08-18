@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TimeDuration } from '@hypertrace/common';
+import { ToggleItem } from '@hypertrace/components';
+import { ObservabilityTraceType } from '../../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../../shared/graphql/model/schema/span';
 import { ExplorerGeneratedDashboard } from '../../explorer/explorer-dashboard-builder';
 import { PanelData } from '../custom-dashboard-store.service';
 import {
@@ -36,9 +39,18 @@ import { ExploreSpecificationBuilder } from './../../../shared/graphql/request/b
               icon="${IconType.Delete}"
               (click)="onPanelDelete($event)"
             ></ht-icon>
+            <ht-icon
+              title="Delete"
+              class="panel-icon panel-clone"
+              icon="${IconType.ContentCopy}"
+              (click)="onPanelClone($event)"
+            ></ht-icon>
           </div>
         </ht-panel-header>
-        <ht-panel-body>
+        <ht-panel-body class="panel-body">
+          <div class="context-tag" *ngIf="this.currentContext">
+            {{ currentContext.label }}
+          </div>
           <div class="visualization-container" *ngIf="this.visualizationDashboard">
             <ht-application-aware-dashboard
               class="visualization-dashboard"
@@ -66,8 +78,22 @@ export class CustomDashboardPanelComponent implements OnInit {
   @Output()
   public readonly deletePanel: EventEmitter<{ panelName: string; panelId: string }> = new EventEmitter();
 
+  @Output()
+  public readonly clonePanel: EventEmitter<{ panelName: string; panelId: string }> = new EventEmitter();
+
   public visualizationDashboard!: ExplorerGeneratedDashboard;
   public expanded: boolean = true;
+  public currentContext: ToggleItem = {};
+  public readonly contextItems: ToggleItem<string>[] = [
+    {
+      label: 'Traces',
+      value: ObservabilityTraceType.Api
+    },
+    {
+      label: 'Spans',
+      value: SPAN_SCOPE
+    }
+  ];
   public constructor(private readonly exploreVisualizationBuilder: ExploreVisualizationBuilder) {}
   public ngOnInit(): void {
     this.panel!.series = this.tryDecodeExploreSeries(this.panel!.series);
@@ -79,6 +105,7 @@ export class CustomDashboardPanelComponent implements OnInit {
     const request = this.exploreVisualizationBuilder.buildRequest(this.panel!);
 
     this.visualizationDashboard = this.buildVisualizationDashboard(request);
+    this.currentContext = this.contextItems.find(i => i.value === this.panel?.context)!;
   }
   private tryDecodeExploreSeries(series: ExploreSeries[]): ExploreSeries[] | [] {
     return series.map(singleSeries => ({
@@ -113,5 +140,12 @@ export class CustomDashboardPanelComponent implements OnInit {
   public onPanelDelete(event: MouseEvent): void {
     event.stopPropagation();
     this.deletePanel.emit({ panelName: this.panel!.name, panelId: this.panel!.id });
+  }
+  public onPanelClone(event: MouseEvent): void {
+    /*
+      need to add stopPropagation since these buttons are in the panel header component, if we dont stop the panel collapse would be triggered which would minimise the panel. Hence we don't want the click event to propagate to the header
+    */
+    event.stopPropagation();
+    this.clonePanel.emit({ panelName: this.panel!.name, panelId: this.panel!.id });
   }
 }

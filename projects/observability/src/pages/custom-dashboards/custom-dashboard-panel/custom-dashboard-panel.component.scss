@@ -8,6 +8,9 @@
       align-items: center;
       justify-content: space-between;
     }
+    .body {
+      position: relative;
+    }
   }
 
   .actions-container {
@@ -42,5 +45,16 @@
   .visualization-container {
     display: block;
     height: 224px;
+  }
+  .context-tag {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.382);
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-bottom-left-radius: 5px;
   }
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ButtonModule,
+  CopyToClipboardModule,
   FilterBarModule,
   InputModule,
   LetAsyncModule,
@@ -26,6 +27,7 @@ import { CustomDashboardDetailComponent } from './custom-dashboard-detail.compon
     PageHeaderModule,
     MessageDisplayModule,
     CustomDashboardPanelModule,
+    CopyToClipboardModule,
     NotificationModule,
     ObservabilityDashboardModule,
     NavigableDashboardModule.withDefaultDashboards()

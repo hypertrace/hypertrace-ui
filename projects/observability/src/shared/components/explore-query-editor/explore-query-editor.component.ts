@@ -45,9 +45,9 @@ import {
           [groupByExpression]="(currentVisualization.groupBy?.keyExpressions)[0]"
           (groupByExpressionChange)="this.updateGroupByExpression(currentVisualization.groupBy, $event)"
         ></ht-explore-query-group-by-editor>
-
         <ht-explore-query-order-by-editor
           class="order-by"
+          [currentOrderOption]="currentVisualization.orderBy"
           (orderByDirectionChange)="this.updateOrderBy($event)"
         ></ht-explore-query-order-by-editor>
 
@@ -82,6 +82,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   @Input()
   public groupBy?: GraphQlGroupBy;
+
+  @Input()
+  public orderBy?: GraphQlSortDirection;
 
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
@@ -125,6 +128,9 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
     if (changeObject.groupBy && this.groupBy?.keyExpressions.length) {
       this.updateGroupByExpression(this.groupBy, this.groupBy.keyExpressions[0]);
+    }
+    if (changeObject.orderBy && this.orderBy) {
+      this.updateOrderBy(this.orderBy);
     }
   }
 

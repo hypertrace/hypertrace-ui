@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -30,17 +31,22 @@ import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql
     </div>
   `
 })
-export class ExploreQueryOrderByEditorComponent {
+export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Output()
   public readonly orderByDirectionChange: EventEmitter<GraphQlSortDirection | undefined> = new EventEmitter();
 
   public readonly orderOptions: SelectOption<string | undefined>[] = this.getOrderByOptions();
   private readonly orderByExpressionsToEmit: Subject<GraphQlSortDirection | undefined> = new Subject();
-
-  public readonly currentOrderOption: string | undefined = this.orderOptions[0].value;
+  @Input()
+  public currentOrderOption: string | undefined;
 
   public constructor() {
     this.orderByExpressionsToEmit.pipe(debounceTime(500)).subscribe(this.orderByDirectionChange);
+  }
+  public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
+    if (changeObject.currentOrderOption) {
+      this.currentOrderOption = this.currentOrderOption;
+    }
   }
 
   public onOrderByDirectionChange(newDirection?: GraphQlSortDirection): void {

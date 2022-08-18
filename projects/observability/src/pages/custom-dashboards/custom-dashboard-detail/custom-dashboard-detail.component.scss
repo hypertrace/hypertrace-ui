@@ -30,7 +30,9 @@
         }
       }
     }
-
+    .actions {
+      display: flex;
+    }
     .button-container {
       display: flex;
       .save-btn {

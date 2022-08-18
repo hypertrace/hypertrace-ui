@@ -7,7 +7,7 @@ import {
   SubscriptionLifecycle,
   UserPreferenceService
 } from '@hypertrace/common';
-import { ButtonRole, InputAppearance, NotificationService } from '@hypertrace/components';
+import { ButtonRole, ButtonSize, InputAppearance, NotificationService } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { CustomDashboardStoreService, DashboardData, PanelData } from '../custom-dashboard-store.service';
 import { CustomDashboardService } from '../custom-dashboard.service';
@@ -30,21 +30,29 @@ import { DASHBOARD_VIEWS } from './../custom-dashboards-view.component';
           (valueChange)="this.onDashboardNameChange($event)"
         >
         </ht-input>
-        <div class="button-container" *ngIf="isMyDashboard; else goBack">
-          <ht-button
-            class="save-btn"
-            [label]="'Save'"
-            role="${ButtonRole.Additive}"
-            (click)="createOrUpdateDashboard()"
-          >
-          </ht-button>
-          <ht-button [label]="'Cancel'" role="${ButtonRole.Destructive}" (click)="redirectToListing()"> </ht-button>
-        </div>
-        <ng-template #goBack>
-          <div>
-            <ht-button [label]="'Cancel'" role="${ButtonRole.Destructive}" (click)="navigateBack()"> </ht-button>
+        <div class="actions">
+          <div class="button-container" *ngIf="isMyDashboard; else goBack">
+            <ht-button
+              class="save-btn"
+              [label]="'Save'"
+              role="${ButtonRole.Additive}"
+              (click)="createOrUpdateDashboard()"
+            >
+            </ht-button>
+            <ht-button [label]="'Cancel'" role="${ButtonRole.Destructive}" (click)="redirectToListing()"> </ht-button>
           </div>
-        </ng-template>
+          <ng-template #goBack>
+            <div>
+              <ht-button [label]="'Cancel'" role="${ButtonRole.Destructive}" (click)="navigateBack()"> </ht-button>
+            </div>
+          </ng-template>
+          <ht-copy-to-clipboard
+            size="${ButtonSize.Small}"
+            icon="${IconType.Share}"
+            [text]="shareUrl"
+            label="Share"
+          ></ht-copy-to-clipboard>
+        </div>
       </div>
       <div class="panels-list" *htLoadAsync="this.panels$ as panels">
         <ht-custom-dashboard-panel
@@ -53,6 +61,7 @@ import { DASHBOARD_VIEWS } from './../custom-dashboards-view.component';
           *ngFor="let panel of panels"
           (editPanel)="onPanelEdit($event)"
           (deletePanel)="onPanelDelete($event)"
+          (clonePanel)="onPanelClone($event)"
         >
         </ht-custom-dashboard-panel>
         <div *ngIf="!isMyDashboard && hasPanels(panels)">
@@ -80,6 +89,7 @@ export class CustomDashboardDetailComponent {
   public queryParams: Params = {};
   public panels$!: Observable<PanelData[]>;
   public isMyDashboard: boolean = false;
+  public shareUrl: string = '';
   public constructor(
     protected readonly navigationService: NavigationService,
     protected readonly customDashboardStoreService: CustomDashboardStoreService,
@@ -99,6 +109,7 @@ export class CustomDashboardDetailComponent {
     this.activedRoute.queryParams.subscribe(query => {
       this.isUnsaved = query.unSaved;
       this.queryParams = query;
+      this.shareUrl = `${window.location.origin}/custom-dashboards/all-dashboards/${this.dashboardId}${window.location.search}`;
     });
 
     if (!this.isNew) {
@@ -155,10 +166,21 @@ export class CustomDashboardDetailComponent {
     });
   }
   public onPanelDelete(panelData: { panelName: string; panelId: string }): void {
-    const confirmation = confirm(`Are you sure to delete ${panelData.panelName} panel?`);
+    const confirmation = confirm(`Are you sure you want to delete ${panelData.panelName} panel?`);
     if (confirmation) {
       this.dashboardData = this.customDashboardStoreService.deletePanel(this.dashboardId, panelData.panelId);
       this.customDashboardStoreService.set(this.dashboardId, this.dashboardData);
+      this.panels$ = this.customDashboardStoreService.getAllPanels(this.dashboardId);
+    }
+  }
+  public onPanelClone(panelData: { panelName: string; panelId: string }): void {
+    const confirmation = confirm(`Are you sure you want to clone ${panelData.panelName} panel?`);
+    if (confirmation) {
+      const panel = { ...this.customDashboardStoreService.getPanel(this.dashboardId, panelData.panelId)! };
+      panel.name = `${panel.name} clone`;
+      panel.id = this.customDashboardService.convertNameToSlug(panel.name);
+      this.customDashboardStoreService.addPanel(this.dashboardId, panel);
+      // This.customDashboardStoreService.set(this.dashboardId, this.dashboardData);
       this.panels$ = this.customDashboardStoreService.getAllPanels(this.dashboardId);
     }
   }
