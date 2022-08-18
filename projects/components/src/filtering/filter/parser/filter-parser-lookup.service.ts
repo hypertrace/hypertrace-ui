@@ -7,6 +7,7 @@ import { AbstractFilterParser } from './types/abstract-filter-parser';
 import { ComparisonFilterParser } from './types/comparison-filter-parser';
 import { ContainsFilterParser } from './types/contains-filter-parser';
 import { InFilterParser } from './types/in-filter-parser';
+import { NotInFilterParser } from './types/not-in-filter-parser';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,8 @@ export class FilterParserLookupService {
         return new ComparisonFilterParser();
       case FilterOperator.In:
         return new InFilterParser();
+      case FilterOperator.NotIn:
+        return new NotInFilterParser();
       case FilterOperator.ContainsKey:
       case FilterOperator.ContainsKeyLike:
         return new ContainsFilterParser();

@@ -5,7 +5,7 @@ import { FilterOperator } from '../../filter-operators';
 import { SplitFilter } from '../parsed-filter';
 import { AbstractFilterParser } from './abstract-filter-parser';
 
-export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
+export class NotInFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   public supportedAttributeTypes(): FilterAttributeType[] {
     return [
       FilterAttributeType.String,
@@ -16,7 +16,7 @@ export class InFilterParser extends AbstractFilterParser<PossibleValuesTypes> {
   }
 
   public supportedOperators(): FilterOperator[] {
-    return [FilterOperator.In];
+    return [FilterOperator.NotIn];
   }
 
   public parseValueString(splitFilter: SplitFilter<FilterOperator>): PossibleValuesTypes | undefined {
