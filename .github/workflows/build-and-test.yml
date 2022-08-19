@@ -75,7 +75,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Build
-        run: npm run build:ci
+        run: npm run build:affected
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
@@ -114,10 +114,10 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Lint
-        run: npm run lint
+        run: npm run lint:affected
 
       - name: Prettier Check
-        run: npm run prettier:check
+        run: npm run prettier:affected
   test:
     name: Test
     runs-on: ubuntu-20.04
