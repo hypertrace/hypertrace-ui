@@ -9,7 +9,15 @@ export const enum FilterOperator {
   GreaterThanOrEqualTo = '>=',
   Like = '~',
   In = 'IN',
-  ContainsKey = 'CONTAINS_KEY'
+  /**
+   * The difference between 'Contains' and 'Like' is that 'Like' will be treated as a regex filter, not escaping
+   * special characters. Whereas 'Contains' will escape special characters in order to treat it as plain text - currently
+   * this assumes no backend support and is done clientside, which is why FilterOperator.Contains gets mapped to
+   * GraphQlOperatorType.Like
+   */
+  Contains = 'CONTAINS',
+  ContainsKey = 'CONTAINS_KEY',
+  ContainsKeyLike = 'CONTAINS_KEY_LIKE'
 }
 
 export const enum UrlFilterOperator {
@@ -21,7 +29,9 @@ export const enum UrlFilterOperator {
   GreaterThanOrEqualTo = '_gte_',
   Like = '_lk_',
   In = '_in_',
-  ContainsKey = '_ck_'
+  Contains = '_c_',
+  ContainsKey = '_ck_',
+  ContainsKeyLike = '_ckl_'
 }
 
 export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator => {
@@ -42,8 +52,12 @@ export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator
       return UrlFilterOperator.Like;
     case FilterOperator.In:
       return UrlFilterOperator.In;
+    case FilterOperator.Contains:
+      return UrlFilterOperator.Contains;
     case FilterOperator.ContainsKey:
       return UrlFilterOperator.ContainsKey;
+    case FilterOperator.ContainsKeyLike:
+      return UrlFilterOperator.ContainsKeyLike;
     default:
       return assertUnreachable(operator);
   }
@@ -67,8 +81,12 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
       return FilterOperator.Like;
     case UrlFilterOperator.In:
       return FilterOperator.In;
+    case UrlFilterOperator.Contains:
+      return FilterOperator.Contains;
     case UrlFilterOperator.ContainsKey:
       return FilterOperator.ContainsKey;
+    case UrlFilterOperator.ContainsKeyLike:
+      return FilterOperator.ContainsKeyLike;
     default:
       return assertUnreachable(operator);
   }
@@ -87,9 +105,12 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
         FilterOperator.GreaterThan,
         FilterOperator.GreaterThanOrEqualTo,
         FilterOperator.Like,
+        FilterOperator.Contains,
         FilterOperator.ContainsKey
       ];
+    case FilterOperator.Contains:
     case FilterOperator.ContainsKey:
+    case FilterOperator.ContainsKeyLike:
     case FilterOperator.NotEquals:
     case FilterOperator.Like:
       return [FilterOperator.In, FilterOperator.Equals];

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { assertUnreachable } from '@hypertrace/common';
 import { FieldFilter, Filter, FilterOperator, FilterValue, TableFilter } from '@hypertrace/components';
 import { GraphQlArgumentValue } from '@hypertrace/graphql-client';
+import { escapeRegExp } from 'lodash-es';
 import { GraphQlFieldFilter } from '../../graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlFilter, GraphQlOperatorType } from '../../graphql/model/schema/filter/graphql-filter';
 
@@ -26,7 +27,7 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator!), // Todo : Very weird
-          filter.value as GraphQlArgumentValue
+          this.extractGraphQlFilterValue(filter)
         )
     );
   }
@@ -37,9 +38,15 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator),
-          filter.value as GraphQlArgumentValue
+          this.extractGraphQlFilterValue(filter)
         )
     );
+  }
+
+  private extractGraphQlFilterValue(filter: Filter | FieldFilter | TableFilter): GraphQlArgumentValue {
+    return (filter.operator === FilterOperator.Contains && typeof filter.value === 'string'
+      ? escapeRegExp(filter.value).toString()
+      : filter.value) as GraphQlArgumentValue;
   }
 }
 
@@ -61,8 +68,12 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.Like;
     case FilterOperator.In:
       return GraphQlOperatorType.In;
+    case FilterOperator.Contains:
+      return GraphQlOperatorType.Like;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
+    case FilterOperator.ContainsKeyLike:
+      return GraphQlOperatorType.ContainsKeyLike;
     default:
       return assertUnreachable(operator);
   }
@@ -99,6 +110,10 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
 
     case GraphQlOperatorType.ContainsKey:
       return FilterOperator.ContainsKey;
+
+    case GraphQlOperatorType.ContainsKeyLike:
+      return FilterOperator.ContainsKeyLike;
+
     default:
       return assertUnreachable(operator);
   }

@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, TypedSimpleChanges } from '@hypertrace/common';
+import {
+  ExternalNavigationParams,
+  ExternalNavigationWindowHandling,
+  NavigationParamsType,
+  NavigationService,
+  TypedSimpleChanges
+} from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -43,6 +49,7 @@ import {
 
               <ng-container *ngSwitchCase="'${NavItemType.Link}'">
                 <ht-nav-item
+                  *ngIf="!(item.hidden ?? false)"
                   [navItemViewStyle]="this.navViewStyle"
                   [config]="item"
                   [active]="item === activeItem"
@@ -69,7 +76,7 @@ import {
 
         <hr class="nav-divider" />
         <div *ngFor="let footerItem of footerItems" class="footer-item">
-          <ht-link class="link" [paramsOrUrl]="footerItem.url">
+          <ht-link class="link" [paramsOrUrl]="this.getFooterItemNavigationParams | htMemoize: footerItem.url">
             <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
             <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>
           </ht-link>
@@ -110,6 +117,14 @@ export class NavigationListComponent implements OnChanges {
     private readonly activatedRoute: ActivatedRoute,
     private readonly navListComponentService: NavigationListComponentService
   ) {}
+
+  public getFooterItemNavigationParams(url: string): ExternalNavigationParams {
+    return {
+      navType: NavigationParamsType.External,
+      url: url,
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    };
+  }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.navItems) {

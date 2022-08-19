@@ -17,6 +17,7 @@ import { PopoverComponent } from '../popover/popover.component';
 import { PopoverModule } from '../popover/popover.module';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
+import { XMoreComponent } from '../x-more/x-more.component';
 import { MultiSelectJustify } from './multi-select-justify';
 import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } from './multi-select.component';
 
@@ -35,7 +36,8 @@ describe('Multi Select Component', () => {
       MockComponent(DividerComponent),
       MockComponent(SearchBoxComponent),
       MockComponent(ButtonComponent),
-      MockComponent(CheckboxComponent)
+      MockComponent(CheckboxComponent),
+      MockComponent(XMoreComponent)
     ],
     shallow: true
   });
@@ -107,7 +109,10 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(spectator.query('.trigger-more-items')).toExist();
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(1);
+
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
@@ -151,7 +156,10 @@ describe('Multi Select Component', () => {
     expect(optionElements.length).toBe(6);
 
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(spectator.query('.trigger-more-items')).toExist();
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(1);
+
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
         .length
@@ -317,13 +325,14 @@ describe('Multi Select Component', () => {
 
     spectator.tick();
     const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
-    expect(spectator.query('.trigger-more-items')).toExist();
     expect(selectedCheckboxElements.length).toBe(6);
 
     expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
     expect(spectator.query(LabelComponent)?.label).toEqual('first');
 
-    expect(spectator.query('.trigger-more-items')).toHaveText('+5');
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(5);
 
     spectator.setHostInput({
       searchMode: MultiSelectSearchMode.Disabled

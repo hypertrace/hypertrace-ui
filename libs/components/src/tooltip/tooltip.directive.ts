@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { delay, finalize, takeUntil } from 'rxjs/operators';
 import { PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
@@ -26,15 +26,17 @@ export class TooltipDirective implements OnDestroy {
 
   private popover?: PopoverRef;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {
-    this.subscriptions.add(this.mouseLeave$.subscribe(() => this.removeTooltip()));
-  }
+  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {}
 
   @HostListener('mouseenter', ['$event'])
   public onHover(event: MouseEvent): void {
     this.subscriptions.add(
       this.mouseEnter$
-        .pipe(debounceTime(TooltipDirective.DEFAULT_HOVER_DELAY_MS), takeUntil(this.mouseLeave$))
+        .pipe(
+          delay(TooltipDirective.DEFAULT_HOVER_DELAY_MS),
+          takeUntil(this.mouseLeave$),
+          finalize(() => this.removeTooltip())
+        )
         .subscribe(() => this.showTooltip())
     );
 
@@ -42,6 +44,7 @@ export class TooltipDirective implements OnDestroy {
   }
 
   @HostListener('mouseleave', ['$event'])
+  @HostListener('click', ['$event'])
   public onHoverEnd(event: MouseEvent): void {
     this.mouseLeave$.next(event);
   }

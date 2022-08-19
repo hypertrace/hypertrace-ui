@@ -90,6 +90,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.SidebarLeft, url: `${iconsRootPath}/sidebar-left.svg` },
         { key: IconType.Sort, url: `${iconsRootPath}/sort.svg` },
         { key: IconType.Slack, url: `${iconsRootPath}/slack.svg` },
+        { key: IconType.Speedometer, url: `${iconsRootPath}/speedometer.svg` },
         { key: IconType.Spinner, url: `${iconsRootPath}/spinner.svg` },
         { key: IconType.StatusCode, url: `${iconsRootPath}/status-code.svg` },
         { key: IconType.StringAttribute, url: `${iconsRootPath}/string-attribute.svg` },
@@ -99,6 +100,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.TriangleLeft, url: `${iconsRootPath}/triangle-left.svg` },
         { key: IconType.TriangleRight, url: `${iconsRootPath}/triangle-right.svg` },
         { key: IconType.TriangleUp, url: `${iconsRootPath}/triangle-up.svg` },
+        { key: IconType.VerticalGrabHandle, url: `${iconsRootPath}/vertical-grab-handle.svg` },
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
         { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
         { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` }

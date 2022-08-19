@@ -11,4 +11,4 @@ import { CheckboxComponent } from './checkbox.component';
   declarations: [CheckboxComponent],
   exports: [CheckboxComponent]
 })
-export class TraceCheckboxModule {}
+export class CheckboxModule {}

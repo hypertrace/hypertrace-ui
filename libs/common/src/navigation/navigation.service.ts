@@ -273,6 +273,10 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
+  public getHostUrl(): string {
+    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  }
+
   /**
    * Navigates back if back is a location in the app, otherwise to home
    */
@@ -338,8 +342,8 @@ export class NavigationService {
       .filter(
         // First, filter to anything that potentially matches
         route =>
-          (route.path === pathSegment && route.pathMatch === 'full') || // Exact match
-          (typeof route.path === 'string' && route.path.startsWith(pathSegment) && route.pathMatch !== 'full') || // Prefix match
+          route.path === pathSegment || // Regular match (either full or prefix)
+          (route.path?.startsWith(`${pathSegment}/`) && route.pathMatch !== 'full') || // Prefix that continues on
           route.path === '**' || // Wildcard match
           (route.path === '' && route.pathMatch !== 'full') // Pass through
       )
@@ -361,6 +365,7 @@ export interface QueryParamObject extends Params {
 export type NavigationPath = string | (string | Dictionary<string>)[];
 
 export type NavigationParams = InAppNavigationParams | ExternalNavigationParams;
+
 export interface InAppNavigationParams {
   navType: NavigationParamsType.InApp;
   path: NavigationPath;

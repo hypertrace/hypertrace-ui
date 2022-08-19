@@ -57,11 +57,13 @@ describe('Filter Chip service', () => {
             case FilterOperator.LessThanOrEqualTo:
             case FilterOperator.GreaterThan:
             case FilterOperator.GreaterThanOrEqualTo:
+            case FilterOperator.Contains:
             case FilterOperator.Like:
               return new ComparisonFilterParser();
             case FilterOperator.In:
               return new InFilterParser();
             case FilterOperator.ContainsKey:
+            case FilterOperator.ContainsKeyLike:
               return new ContainsFilterParser();
             default:
               return assertUnreachable(operator);
@@ -247,6 +249,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.Like,
         userString: `${attribute.displayName} ${FilterOperator.Like}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Contains,
+        userString: `${attribute.displayName} ${FilterOperator.Contains}`
       }
     ]);
   });
@@ -261,6 +269,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
         userString: `${attribute.displayName} ${FilterOperator.ContainsKey}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`
       },
       {
         metadata: attribute,
@@ -294,6 +308,13 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
         userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
       }),

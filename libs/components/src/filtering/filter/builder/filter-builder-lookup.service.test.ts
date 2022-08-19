@@ -166,6 +166,14 @@ describe('Filter Builder Lookup service', () => {
         value: 'test value',
         userString: 'String Attribute ~ test value',
         urlString: 'stringAttribute_lk_test%20value'
+      },
+      {
+        metadata: getTestFilterAttribute(FilterAttributeType.String),
+        field: getTestFilterAttribute(FilterAttributeType.String).name,
+        operator: FilterOperator.Contains,
+        value: 'test value',
+        userString: 'String Attribute CONTAINS test value',
+        urlString: 'stringAttribute_c_test%20value'
       }
     ]);
 

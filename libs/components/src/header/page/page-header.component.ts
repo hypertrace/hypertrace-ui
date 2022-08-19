@@ -35,7 +35,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
-          <ht-page-time-range class="time-range"></ht-page-time-range>
+          <ht-page-time-range *ngIf="!this.hidePageTimeRange" class="time-range"></ht-page-time-range>
         </div>
         <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
           <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
@@ -69,16 +69,16 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       <ng-template #breadCrumbContainerTemplate>
         <div class="breadcrumb-container">
           <ht-breadcrumbs [breadcrumbs]="breadcrumbs"></ht-breadcrumbs>
-          <div class="title" *ngIf="this.titlecrumb$ | async as titlecrumb">
+          <div class="title" *ngIf="this.titleCrumb$ | async as titleCrumb">
             <ht-icon
               class="icon"
-              *ngIf="titlecrumb.icon && breadcrumbs.length <= 1"
-              [icon]="titlecrumb.icon"
-              [label]="titlecrumb.label"
+              *ngIf="titleCrumb.icon && breadcrumbs.length <= 1"
+              [icon]="titleCrumb.icon"
+              [label]="titleCrumb.label"
               size="${IconSize.Large}"
             ></ht-icon>
 
-            <ht-label [label]="titlecrumb.label"></ht-label>
+            <ht-label [label]="titleCrumb.label"></ht-label>
             <ht-beta-tag *ngIf="this.isBeta" class="beta"></ht-beta-tag>
           </div>
         </div>
@@ -97,13 +97,16 @@ export class PageHeaderComponent implements OnInit {
   public isBeta: boolean = false;
 
   @Input()
+  public hidePageTimeRange?: boolean = false;
+
+  @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
   );
 
-  public titlecrumb$: Observable<Breadcrumb | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
+  public titleCrumb$: Observable<Breadcrumb | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : {}))
   );
 

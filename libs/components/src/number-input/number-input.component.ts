@@ -18,7 +18,7 @@ import { NumberInputAppearance } from './number-input-appearance';
     <input
       type="number"
       class="number-input"
-      [ngClass]="this.appearance"
+      [ngClass]="this.getStyleClasses()"
       [disabled]="this.disabled"
       [ngModel]="this.value"
       (ngModelChange)="this.onValueChange($event)"
@@ -51,28 +51,32 @@ export class NumberInputComponent implements ControlValueAccessor {
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
 
-  private enforceMinMaxAndEmit(): void {
-    if (this.value !== undefined && this.maxValue !== undefined && this.value > this.maxValue) {
-      this.value = this.maxValue;
+  public getStyleClasses(): string[] {
+    return [this.appearance, this.disabled ? 'disabled' : ''];
+  }
+
+  private enforceMinMaxAndEmit(value?: number): number | undefined {
+    if (value !== undefined && this.maxValue !== undefined && value > this.maxValue) {
+      return this.maxValue;
     }
 
-    if (this.value !== undefined && this.minValue !== undefined && this.value < this.minValue) {
-      this.value = this.minValue;
+    if (value !== undefined && this.minValue !== undefined && value < this.minValue) {
+      return this.minValue;
     }
 
-    this.valueChange.emit(this.numberCoercer.coerce(this.value));
+    return value;
   }
 
   public onValueChange(value?: number): void {
-    this.value = value;
-
-    this.enforceMinMaxAndEmit();
-    this.propagateValueChangeToFormControl(value);
+    const enforcedMinMaxValue = this.enforceMinMaxAndEmit(value);
+    this.value = enforcedMinMaxValue;
+    this.valueChange.emit(this.numberCoercer.coerce(enforcedMinMaxValue));
+    this.propagateValueChangeToFormControl(enforcedMinMaxValue);
   }
 
   public writeValue(value?: number): void {
-    this.value = value;
-    this.enforceMinMaxAndEmit();
+    const enforcedMinMaxValue = this.enforceMinMaxAndEmit(value);
+    this.value = enforcedMinMaxValue;
     this.cdr.markForCheck();
   }
 

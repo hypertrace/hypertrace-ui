@@ -40,12 +40,14 @@ export * from './external/external-url-navigator';
 // Feature
 export { FeatureGuard } from './feature/feature.guard';
 export { FeatureStateResolver } from './feature/state/feature-state.resolver';
+export { FeatureFlagValue } from './feature/state/feature-state.resolver';
 export { FeatureState } from './feature/state/feature.state';
 
 // Formatters
 export * from './utilities/formatters/date/date-formatter';
 export * from './utilities/formatters/date/display-date.pipe';
 export * from './utilities/formatters/file-size/display-file-size.pipe';
+export * from './utilities/formatters/time/display-time-ago.pipe';
 export * from './utilities/formatters/duration/duration-formatter';
 export * from './utilities/formatters/duration/display-duration.pipe';
 export * from './utilities/formatters/ordinal/ordinal.pipe';

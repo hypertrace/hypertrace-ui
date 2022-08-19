@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { HtRoute } from '../navigation/ht-route';
 import { NavigationService } from '../navigation/navigation.service';
 import { FeatureGuard } from './feature.guard';
-import { FeatureStateResolver } from './state/feature-state.resolver';
+import { FeatureFlagValue, FeatureStateResolver } from './state/feature-state.resolver';
 import { FeatureState } from './state/feature.state';
 
 describe('Feature Guard', () => {
@@ -31,6 +31,10 @@ describe('Feature Guard', () => {
       }
 
       return of(FeatureState.Disabled);
+    }
+
+    public getFeatureFlagValue<T extends FeatureFlagValue = FeatureFlagValue>(): Observable<T> {
+      return of(true as T);
     }
   })();
 

@@ -3,14 +3,14 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { CheckboxComponent } from './checkbox.component';
-import { TraceCheckboxModule } from './checkbox.module';
+import { CheckboxModule } from './checkbox.module';
 
 describe('Checkbox component', () => {
   let spectator: Spectator<CheckboxComponent>;
 
   const createHost = createHostFactory({
     component: CheckboxComponent,
-    imports: [TraceCheckboxModule, RouterTestingModule, ReactiveFormsModule],
+    imports: [CheckboxModule, RouterTestingModule, ReactiveFormsModule],
     providers: [],
     declareComponent: false
   });

@@ -1,12 +1,19 @@
 @import 'mixins';
 
 .metric-card {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   border: 1px solid;
   padding: 10px;
   border-radius: 6px;
+  gap: 4px;
+  justify-content: space-between;
+
+  &.large {
+    padding: 16px 0;
+    border-radius: 8px;
+  }
 
   .indicator-and-title {
     display: flex;
@@ -24,11 +31,29 @@
     .title-text {
       @include chart-small-regular($gray-7);
       text-transform: uppercase;
+
+      &.large {
+        @include body-1-medium($gray-7);
+        text-transform: capitalize;
+      }
     }
   }
 
-  .value {
-    @include header-5($gray-7);
-    margin-left: 14px;
+  .value-and-icon {
+    margin: 0 14px;
+    display: flex;
+    justify-content: space-between;
+
+    .value {
+      @include header-5($gray-7);
+
+      &.large {
+        @include header-4($gray-7);
+      }
+    }
   }
+}
+
+.clickable {
+  @include card-hover;
 }

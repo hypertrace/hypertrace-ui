@@ -1,4 +1,5 @@
 export const enum NumberInputAppearance {
   Underline = 'underline',
-  Border = 'border'
+  Border = 'border',
+  NoBorder = 'no-border'
 }

@@ -2,7 +2,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
-import { TraceCheckboxModule } from '../checkbox/checkbox.module';
+import { CheckboxModule } from '../checkbox/checkbox.module';
 import { IconModule } from '../icon/icon.module';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { LoadAsyncModule } from '../load-async/load-async.module';
@@ -27,7 +27,7 @@ import { TableComponent } from './table.component';
     LoadAsyncModule,
     LetAsyncModule,
     ButtonModule,
-    TraceCheckboxModule
+    CheckboxModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]

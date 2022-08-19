@@ -7,7 +7,7 @@ export class TimeDuration {
 
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
     this.toUnitString(); // Fail if unrecognized TimeUnit
-    this.millis = this.normalizeToMillis(value, unit);
+    this.millis = this.normalizeToMillis(isNaN(value) ? 0 : value, unit);
   }
 
   public toMillis(): number {
