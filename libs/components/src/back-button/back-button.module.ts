@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ButtonModule } from '../public-api';
+import { ButtonModule } from '../button/button.module';
 import { BackButtonComponent } from './back-button.component';
 
 @NgModule({
