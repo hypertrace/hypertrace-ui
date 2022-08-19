@@ -13,8 +13,22 @@ jobs:
       # Set fetch-depth: 0 to fetch commit history and tags for use in version calculation
       - name: Check out code
         uses: actions/checkout@v2.3.4
-        with:
+        # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
 
       - name: Cache node modules
         uses: actions/cache@v2

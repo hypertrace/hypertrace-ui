@@ -10,6 +10,23 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
 
       - name: Set up Node 16
         uses: actions/setup-node@v2
@@ -32,6 +49,24 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
+
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -53,6 +88,24 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
+
 
       - name: Restore node modules
         uses: actions/cache@v2
@@ -74,9 +127,24 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-        # Used by CCI uploader to detect base commit
         with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
+
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -101,8 +169,26 @@ jobs:
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
-      - name: Check out code
+       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      # In any subsequent steps within this job we can reference the resolved SHAs
+      # using either the step outputs or environment variables:
+
+      # ===========================================================================
+      # OPTION 2) Step outputs (in this case we must give the step an "id")
+      # ===========================================================================
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: |
+          echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+          echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
+
 
       - name: validate charts
         uses: hypertrace/github-actions/validate-charts@main
