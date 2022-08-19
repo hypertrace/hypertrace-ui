@@ -1,0 +1,1 @@
+describe('Stepper Component', () => {});
