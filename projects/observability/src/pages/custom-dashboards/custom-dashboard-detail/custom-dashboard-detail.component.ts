@@ -43,7 +43,7 @@ import { DASHBOARD_VIEWS } from './../custom-dashboards-view.component';
           </div>
           <ng-template #goBack>
             <div>
-              <ht-button [label]="'Cancel'" role="${ButtonRole.Destructive}" (click)="navigateBack()"> </ht-button>
+              <ht-button [label]="'Go Back'" role="${ButtonRole.Destructive}" (click)="navigateBack()"> </ht-button>
             </div>
           </ng-template>
           <ht-copy-to-clipboard
