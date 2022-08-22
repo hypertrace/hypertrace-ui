@@ -272,6 +272,10 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
+  public getHostUrl(): string {
+    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  }
+
   /**
    * Navigates back if back is a location in the app, otherwise to home
    */
