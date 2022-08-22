@@ -25,16 +25,6 @@
         color: white;
       }
     }
-
-    .mat-vertical-stepper-header {
-      padding: 24px;
-    }
-
-    .mat-vertical-content-container.mat-stepper-vertical-line::before {
-      top: -16px;
-      bottom: -16px;
-      border-left-color: $gray-9;
-    }
   }
 }
 
@@ -44,7 +34,6 @@
 
   .action-buttons {
     display: flex;
-    justify-self: flex-end;
     flex-direction: row;
     justify-content: space-between;
 

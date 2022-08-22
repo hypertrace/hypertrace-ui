@@ -11,7 +11,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holde
 })
 export class StepperTabComponent extends ContentHolder {
   @Input()
-  public label!: string;
+  public label?: string;
 
   @Input()
   public icon?: string = IconType.Edit;

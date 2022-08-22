@@ -19,9 +19,9 @@ import { StepperTabComponent } from './stepper-tab.component';
 @Component({
   selector: 'ht-stepper',
   template: `
-    <div class="stepper" *ngIf="this.steps$ | async as steps">
+    <div class="stepper" *htLoadAsync="this.steps$ as steps">
       <mat-stepper [orientation]="this.orientation" [linear]="this.isLinear" #stepper>
-        <ng-container *ngFor="let step of steps; index as i">
+        <ng-container *ngFor="let step of steps">
           <mat-step [completed]="step.completed" [stepControl]="step.stepControl" [optional]="step.optional">
             <ng-template matStepLabel>
               <ht-label class="header-label" [label]="step.label"></ht-label>
