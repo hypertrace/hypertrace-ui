@@ -99,7 +99,7 @@
     "@types/mixpanel-browser": "^2.38.0",
     "@types/node": "^18.7.9",
     "@types/uuid": "^8.3.4",
-    "@types/webpack-env": "^1.17.0",
+    "@types/webpack-env": "^1.18.0",
     "codelyzer": "^6.0.2",
     "commitizen": "^4.2.5",
     "cz-conventional-changelog": "^3.3.0",
