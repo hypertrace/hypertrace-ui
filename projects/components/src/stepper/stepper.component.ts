@@ -34,18 +34,18 @@ import { StepperTabComponent } from './stepper-tab.component';
         </ng-container>
       </mat-stepper>
       <div class="action-buttons">
-        <ht-button label="Cancel" (click)="onClickCancel()" [role]="'${ButtonRole.Tertiary}'"></ht-button>
+        <ht-button label="Cancel" (click)="this.onClickCancel()" [role]="'${ButtonRole.Tertiary}'"></ht-button>
         <div class="back-next">
           <ht-button
             *ngIf="stepper.selectedIndex !== 0"
             [display]="'${ButtonStyle.Outlined}'"
             label="Back"
-            (click)="onClickBack(stepper)"
+            (click)="this.onClickBack(stepper)"
           ></ht-button>
           <ht-button
             *ngIf="stepper.selectedIndex !== steps.length - 1"
             label="Next"
-            (click)="onClickNext(stepper)"
+            (click)="this.onClickNext(stepper)"
             [disabled]="
               this.isNextDisabled
                 | htMemoize
@@ -57,7 +57,7 @@ import { StepperTabComponent } from './stepper-tab.component';
           <ht-button
             *ngIf="stepper.selectedIndex === steps.length - 1"
             label="Submit"
-            (click)="onClickSubmit()"
+            (click)="this.onClickSubmit()"
             [disabled]="
               this.isSubmitDisabled
                 | htMemoize
@@ -78,15 +78,15 @@ export class StepperComponent implements AfterContentInit {
   @ContentChildren(StepperTabComponent)
   private readonly steps!: QueryList<StepperTabComponent>;
 
+  // If stepper is Linear, then we can navigate to a tab only if previous all tabs are at complete state.
   @Input()
   public isLinear: boolean = false;
 
+  // Currently we only support horizontal orientation.
   @Input()
   public orientation: StepperOrientation = StepperOrientation.Horizontal;
 
-  @Input()
-  public enableSubmit?: boolean;
-
+  // true for submit, false for cancel.
   @Output()
   public readonly submitForm: EventEmitter<boolean> = new EventEmitter();
 
