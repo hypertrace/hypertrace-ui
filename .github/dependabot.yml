@@ -5,10 +5,11 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     commit-message:
       prefix: "chore:"
       include: "scope"
+    target-branch: "rzp_main"
 
   # Update core-ui submodule
   - package-ecosystem: "gitsubmodule"
@@ -18,3 +19,4 @@ updates:
     commit-message:
       prefix: "chore:"
       include: "scope"
+    target-branch: "rzp_main"
