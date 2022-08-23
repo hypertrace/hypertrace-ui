@@ -64,6 +64,14 @@ describe('Filter Builder Lookup service', () => {
         value: false,
         userString: 'Boolean Attribute IN false',
         urlString: 'booleanAttribute_in_false'
+      },
+      {
+        metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
+        field: getTestFilterAttribute(FilterAttributeType.Boolean).name,
+        operator: FilterOperator.NotIn,
+        value: false,
+        userString: 'Boolean Attribute NOT_IN false',
+        urlString: 'booleanAttribute_nin_false'
       }
     ]);
 
@@ -127,6 +135,14 @@ describe('Filter Builder Lookup service', () => {
         value: 217,
         userString: 'Number Attribute IN 217',
         urlString: 'numberAttribute_in_217'
+      },
+      {
+        metadata: getTestFilterAttribute(FilterAttributeType.Number),
+        field: getTestFilterAttribute(FilterAttributeType.Number).name,
+        operator: FilterOperator.NotIn,
+        value: 217,
+        userString: 'Number Attribute NOT_IN 217',
+        urlString: 'numberAttribute_nin_217'
       }
     ]);
 
@@ -158,6 +174,14 @@ describe('Filter Builder Lookup service', () => {
         value: 'test value',
         userString: 'String Attribute IN test value',
         urlString: 'stringAttribute_in_test%20value'
+      },
+      {
+        metadata: getTestFilterAttribute(FilterAttributeType.String),
+        field: getTestFilterAttribute(FilterAttributeType.String).name,
+        operator: FilterOperator.NotIn,
+        value: 'test value',
+        userString: 'String Attribute NOT_IN test value',
+        urlString: 'stringAttribute_nin_test%20value'
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),

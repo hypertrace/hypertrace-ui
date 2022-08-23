@@ -8,7 +8,7 @@ export class StringArrayFilterBuilder extends AbstractFilterBuilder<string> {
   }
 
   public supportedTopLevelOperators(): FilterOperator[] {
-    return [FilterOperator.In];
+    return [FilterOperator.In, FilterOperator.NotIn];
   }
 
   public supportedSubpathOperators(): FilterOperator[] {
