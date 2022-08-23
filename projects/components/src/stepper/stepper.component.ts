@@ -103,16 +103,18 @@ export class StepperComponent implements AfterContentInit {
 
   // TODO: can be made a directive
   public isNextDisabled(stepper: MatStepper): boolean {
-    const formValid = stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid;
-    const stepCompleted = stepper.steps.get(stepper.selectedIndex)?.completed;
+    const selectedStep = stepper.steps.get(stepper.selectedIndex);
+    const formValid = selectedStep?.stepControl?.valid;
+    const stepCompleted = selectedStep?.completed;
 
     return this.isLinear && !stepCompleted && !formValid;
   }
 
   // TODO: can be made a directive
   public isSubmitDisabled(stepper: MatStepper): boolean {
-    const formValid = stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid;
-    const stepCompleted = stepper.steps.get(stepper.selectedIndex)?.completed;
+    const selectedStep = stepper.steps.get(stepper.selectedIndex);
+    const formValid = selectedStep?.stepControl?.valid;
+    const stepCompleted = selectedStep?.completed;
 
     return !stepCompleted && !formValid;
   }
