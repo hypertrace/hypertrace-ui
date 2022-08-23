@@ -28,17 +28,17 @@ import { StepperTabComponent } from './stepper-tab.component';
             </ng-template>
             <ng-container *ngTemplateOutlet="step.content"></ng-container>
             <ng-template matStepperIcon="edit">
-              <ht-icon [icon]="step.icon" [size]="'${IconSize.ExtraSmall}'"> </ht-icon>
+              <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"> </ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>
       </mat-stepper>
       <div class="action-buttons">
-        <ht-button label="Cancel" (click)="this.onClickCancel()" [role]="'${ButtonRole.Tertiary}'"></ht-button>
+        <ht-button label="Cancel" (click)="this.onClickCancel()" role="${ButtonRole.Tertiary}"></ht-button>
         <div class="back-next">
           <ht-button
             *ngIf="stepper.selectedIndex !== 0"
-            [display]="'${ButtonStyle.Outlined}'"
+            display="${ButtonStyle.Outlined}"
             label="Back"
             (click)="this.onClickBack(stepper)"
           ></ht-button>
@@ -112,6 +112,7 @@ export class StepperComponent implements AfterContentInit {
     this.submitForm.emit(false);
   }
 
+  // TODO: can be made a directive
   public isNextDisabled(
     isLinear: boolean,
     stepCompleted: boolean | undefined,
@@ -120,6 +121,7 @@ export class StepperComponent implements AfterContentInit {
     return isLinear && !stepCompleted && !formValid;
   }
 
+  // TODO: can be made a directive
   public isSubmitDisabled(stepCompleted: boolean | undefined, formValid: boolean | undefined): boolean {
     return !stepCompleted && !formValid;
   }
