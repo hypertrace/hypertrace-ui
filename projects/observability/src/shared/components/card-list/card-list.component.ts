@@ -43,7 +43,9 @@ export class CardListComponent implements AfterContentInit {
   public selectedCard?: CardContainerComponent;
 
   public onCardClicked(card: CardContainerComponent): void {
-    this.selectedCard = card.disabled ? this.selectedCard : this.selectedCard === card ? undefined : card;
+    if (!card.disabled) {
+      this.selectedCard = this.selectedCard === card ? undefined : card;
+    }
   }
 }
 
