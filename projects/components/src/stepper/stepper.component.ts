@@ -85,7 +85,7 @@ export class StepperComponent implements AfterContentInit {
 
   // True for submit, false for cancel.
   @Output()
-  public readonly submitForm: EventEmitter<boolean> = new EventEmitter();
+  public readonly submit: EventEmitter<boolean> = new EventEmitter();
 
   public steps$?: Observable<StepperTabComponent[]>;
 
@@ -94,11 +94,11 @@ export class StepperComponent implements AfterContentInit {
   }
 
   public onClickSubmit(): void {
-    this.submitForm.emit(true);
+    this.submit.emit(true);
   }
 
   public onClickCancel(): void {
-    this.submitForm.emit(false);
+    this.submit.emit(false);
   }
 
   // TODO: can be made a directive
