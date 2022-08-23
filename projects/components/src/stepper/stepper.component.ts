@@ -34,15 +34,22 @@ import { StepperTabComponent } from './stepper-tab.component';
         </ng-container>
       </mat-stepper>
       <div class="action-buttons">
-        <ht-button label="Cancel" (click)="this.onClickCancel()" role="${ButtonRole.Tertiary}"></ht-button>
+        <ht-button
+          class="cancel"
+          label="Cancel"
+          (click)="this.onClickCancel()"
+          role="${ButtonRole.Tertiary}"
+        ></ht-button>
         <div class="back-next">
           <ht-button
+            class="back"
             *ngIf="stepper.selectedIndex !== 0"
             display="${ButtonStyle.Outlined}"
             label="Back"
             (click)="this.onClickBack(stepper)"
           ></ht-button>
           <ht-button
+            class="next"
             *ngIf="stepper.selectedIndex !== steps.length - 1"
             label="Next"
             (click)="this.onClickNext(stepper)"
@@ -55,6 +62,7 @@ import { StepperTabComponent } from './stepper-tab.component';
             "
           ></ht-button>
           <ht-button
+            class="submit"
             *ngIf="stepper.selectedIndex === steps.length - 1"
             label="Submit"
             (click)="this.onClickSubmit()"
