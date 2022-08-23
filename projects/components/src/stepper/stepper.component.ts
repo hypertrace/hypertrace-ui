@@ -86,7 +86,7 @@ export class StepperComponent implements AfterContentInit {
   @Input()
   public orientation: StepperOrientation = StepperOrientation.Horizontal;
 
-  // true for submit, false for cancel.
+  // True for submit, false for cancel.
   @Output()
   public readonly submitForm: EventEmitter<boolean> = new EventEmitter();
 
