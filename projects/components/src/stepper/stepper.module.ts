@@ -10,7 +10,7 @@ import { StepperTabComponent } from './stepper-tab.component';
 import { StepperComponent } from './stepper.component';
 
 @NgModule({
-  imports: [CommonModule, MatStepperModule, LoadAsyncModule, ButtonModule, IconModule, LabelModule, MemoizeModule],
+  imports: [ButtonModule, CommonModule, IconModule, LabelModule, LoadAsyncModule, MatStepperModule, MemoizeModule],
   declarations: [StepperComponent, StepperTabComponent],
   exports: [StepperComponent, StepperTabComponent]
 })
