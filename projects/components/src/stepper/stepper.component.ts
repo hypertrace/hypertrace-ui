@@ -37,7 +37,7 @@ import { StepperTabComponent } from './stepper-tab.component';
         <ht-button
           class="cancel"
           label="Cancel"
-          (click)="this.onClickCancel()"
+          (click)="this.cancelled.emit()"
           role="${ButtonRole.Tertiary}"
         ></ht-button>
         <div class="back-next">
@@ -59,7 +59,7 @@ import { StepperTabComponent } from './stepper-tab.component';
             class="submit"
             *ngIf="stepper.selectedIndex === steps.length - 1"
             label="Submit"
-            (click)="this.onClickSubmit()"
+            (click)="this.submitted.emit()"
             [disabled]="this.isSubmitDisabled(stepper)"
           ></ht-button>
         </div>
@@ -83,22 +83,16 @@ export class StepperComponent implements AfterContentInit {
   @Input()
   public orientation: StepperOrientation = StepperOrientation.Horizontal;
 
-  // True for submit, false for cancel.
   @Output()
-  public readonly submit: EventEmitter<boolean> = new EventEmitter();
+  public readonly submitted: EventEmitter<void> = new EventEmitter();
+
+  @Output()
+  public readonly cancelled: EventEmitter<void> = new EventEmitter();
 
   public steps$?: Observable<StepperTabComponent[]>;
 
   public ngAfterContentInit(): void {
     this.steps$ = queryListAndChanges$(this.steps).pipe(map(list => list.toArray()));
-  }
-
-  public onClickSubmit(): void {
-    this.submit.emit(true);
-  }
-
-  public onClickCancel(): void {
-    this.submit.emit(false);
   }
 
   // TODO: can be made a directive
