@@ -14,7 +14,8 @@ import { CardContainerComponent } from './container/card-container.component';
           card: this.mode === '${CardListMode.Card}',
           list: this.mode === '${CardListMode.List}',
           'selected-card': this.selectedCard === card,
-          'grouped-style': card.showGroupedStyle
+          'grouped-style': card.showGroupedStyle,
+          disabled: card.disabled
         }"
         *ngFor="let card of this.cards$ | async"
         (click)="this.onCardClicked(card)"
@@ -42,7 +43,7 @@ export class CardListComponent implements AfterContentInit {
   public selectedCard?: CardContainerComponent;
 
   public onCardClicked(card: CardContainerComponent): void {
-    this.selectedCard = this.selectedCard === card ? undefined : card;
+    this.selectedCard = card.disabled ? this.selectedCard : this.selectedCard === card ? undefined : card;
   }
 }
 
