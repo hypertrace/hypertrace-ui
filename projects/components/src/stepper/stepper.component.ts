@@ -46,32 +46,21 @@ import { StepperTabComponent } from './stepper-tab.component';
             *ngIf="stepper.selectedIndex !== 0"
             display="${ButtonStyle.Outlined}"
             label="Back"
-            (click)="this.onClickBack(stepper)"
+            (click)="stepper.previous()"
           ></ht-button>
           <ht-button
             class="next"
             *ngIf="stepper.selectedIndex !== steps.length - 1"
             label="Next"
-            (click)="this.onClickNext(stepper)"
-            [disabled]="
-              this.isNextDisabled
-                | htMemoize
-                  : this.isLinear
-                  : stepper.steps.get(stepper.selectedIndex)?.completed
-                  : stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid
-            "
+            (click)="stepper.next()"
+            [disabled]="this.isNextDisabled(stepper)"
           ></ht-button>
           <ht-button
             class="submit"
             *ngIf="stepper.selectedIndex === steps.length - 1"
             label="Submit"
             (click)="this.onClickSubmit()"
-            [disabled]="
-              this.isSubmitDisabled
-                | htMemoize
-                  : stepper.steps.get(stepper.selectedIndex)?.completed
-                  : stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid
-            "
+            [disabled]="this.isSubmitDisabled(stepper)"
           ></ht-button>
         </div>
       </div>
@@ -104,14 +93,6 @@ export class StepperComponent implements AfterContentInit {
     this.steps$ = queryListAndChanges$(this.steps).pipe(map(list => list.toArray()));
   }
 
-  public onClickNext(stepper: MatStepper): void {
-    stepper.next();
-  }
-
-  public onClickBack(stepper: MatStepper): void {
-    stepper.previous();
-  }
-
   public onClickSubmit(): void {
     this.submitForm.emit(true);
   }
@@ -121,16 +102,18 @@ export class StepperComponent implements AfterContentInit {
   }
 
   // TODO: can be made a directive
-  public isNextDisabled(
-    isLinear: boolean,
-    stepCompleted: boolean | undefined,
-    formValid: boolean | undefined
-  ): boolean {
-    return isLinear && !stepCompleted && !formValid;
+  public isNextDisabled(stepper: MatStepper): boolean {
+    const formValid = stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid;
+    const stepCompleted = stepper.steps.get(stepper.selectedIndex)?.completed;
+
+    return this.isLinear && !stepCompleted && !formValid;
   }
 
   // TODO: can be made a directive
-  public isSubmitDisabled(stepCompleted: boolean | undefined, formValid: boolean | undefined): boolean {
+  public isSubmitDisabled(stepper: MatStepper): boolean {
+    const formValid = stepper.steps.get(stepper.selectedIndex)?.stepControl?.valid;
+    const stepCompleted = stepper.steps.get(stepper.selectedIndex)?.completed;
+
     return !stepCompleted && !formValid;
   }
 }

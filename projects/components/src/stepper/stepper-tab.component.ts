@@ -14,13 +14,13 @@ export class StepperTabComponent extends ContentHolder {
   public label?: string;
 
   @Input()
-  public icon?: string = IconType.Edit;
+  public icon: string = IconType.Edit;
 
   @Input()
-  public optional?: boolean = false;
+  public optional: boolean = false;
 
   @Input()
-  public completed?: boolean = true;
+  public completed: boolean = true;
 
   @Input()
   public stepControl?: AbstractControl;
