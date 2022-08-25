@@ -2,8 +2,8 @@ name: build-and-test
 on:
   pull_request:
   push:
-    branches_ingore:
-      - 'main'
+    branches:
+      - 'rzp_main'
 jobs:
   npm-install-if-needed:
     runs-on: ubuntu-20.04
