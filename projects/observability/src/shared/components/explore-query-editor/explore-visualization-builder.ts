@@ -7,7 +7,7 @@ import {
   TimeRangeService
 } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
-import { uniqBy } from 'lodash-es';
+import { camelCase, uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
@@ -84,7 +84,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public groupBy(groupBy?: GraphQlGroupBy): this {
     return this.updateState({
-      groupBy: groupBy
+      groupBy: groupBy && this.encodeGroupBy(groupBy)
     });
   }
 
@@ -233,6 +233,18 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     }
 
     return of(interval);
+  }
+
+  private encodeGroupBy(groupBy: GraphQlGroupBy): GraphQlGroupBy {
+    return {
+      ...groupBy,
+      keyExpressions: [
+        {
+          ...groupBy.keyExpressions[0],
+          subpath: camelCase(groupBy.keyExpressions[0].subpath)
+        }
+      ]
+    };
   }
 }
 
