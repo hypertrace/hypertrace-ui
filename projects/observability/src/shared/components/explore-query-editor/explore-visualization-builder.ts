@@ -238,12 +238,14 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   private encodeGroupBy(groupBy: GraphQlGroupBy): GraphQlGroupBy {
     return {
       ...groupBy,
-      keyExpressions: [
-        {
-          ...groupBy.keyExpressions[0],
-          subpath: camelCase(groupBy.keyExpressions[0].subpath)
-        }
-      ]
+      keyExpressions: groupBy.keyExpressions[0]
+        ? [
+            {
+              ...groupBy.keyExpressions[0],
+              subpath: groupBy.keyExpressions[0].subpath && camelCase(groupBy.keyExpressions[0].subpath)
+            }
+          ]
+        : []
     };
   }
 }
