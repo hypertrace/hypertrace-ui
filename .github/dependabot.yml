@@ -11,6 +11,78 @@ updates:
       include: "scope"
     target-branch: "rzp_main"
 
+  - package-ecosystem: "npm"
+    directory: "/projects/assets-library"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"
+
+  - package-ecosystem: "npm"
+    directory: "/projects/common"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"  
+
+  - package-ecosystem: "npm"
+    directory: "/projects/components"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"  
+
+  - package-ecosystem: "npm"
+    directory: "/projects/dashboards"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"  
+  
+  - package-ecosystem: "npm"
+    directory: "/projects/distributed-tracing"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"
+
+  - package-ecosystem: "npm"
+    directory: "/projects/graphql-client"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main" 
+
+  - package-ecosystem: "npm"
+    directory: "/projects/observability"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"  
+  
+  - package-ecosystem: "npm"
+    directory: "/projects/test-utils"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore:"
+      include: "scope"
+    target-branch: "rzp_main"
+
   # Update core-ui submodule
   - package-ecosystem: "gitsubmodule"
     directory: "/"
