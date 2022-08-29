@@ -41,8 +41,8 @@ describe('Explore Query Series Editor component', () => {
   beforeEach(() => {
     attributeMetadata.mockReset();
     attributeMetadata.mockReturnValue([
-      { name: 'test value', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] },
-      { name: 'foo bar', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] }
+      { name: 'test_value', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] },
+      { name: 'foo_bar', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] }
     ]);
   });
   test('updates on series change', fakeAsync(() => {
@@ -52,15 +52,15 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value')
+          series: buildSeries('test_value')
         }
       }
     );
     spectator.tick();
-    expect(spectator.element).toHaveText('test value');
+    expect(spectator.element).toHaveText('test_value');
 
-    spectator.setHostInput({ series: buildSeries('foo bar') });
-    expect(spectator.element).toHaveText('foo bar');
+    spectator.setHostInput({ series: buildSeries('foo_bar') });
+    expect(spectator.element).toHaveText('foo_bar');
   }));
 
   test('shows remove button only if removable', () => {
@@ -71,7 +71,7 @@ describe('Explore Query Series Editor component', () => {
       {
         hostProps: {
           removable: false,
-          series: buildSeries('test value')
+          series: buildSeries('test_value')
         }
       }
     );
@@ -91,7 +91,7 @@ describe('Explore Query Series Editor component', () => {
       {
         hostProps: {
           removable: true,
-          series: buildSeries('test value'),
+          series: buildSeries('test_value'),
           onRemove: onRemove
         }
       }
@@ -108,28 +108,28 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value')
+          series: buildSeries('test_value')
         }
       }
     );
 
     spectator.tick();
-    spectator.click(spectator.query(byText('test value'))!);
+    spectator.click(spectator.query(byText('test_value'))!);
     const options = spectator.queryAll('.select-option', { root: true });
 
     expect(options.length).toBe(2);
-    expect(options[0]).toHaveText('test value');
-    expect(options[1]).toHaveText('foo bar');
+    expect(options[0]).toHaveText('test_value');
+    expect(options[1]).toHaveText('foo_bar');
   }));
 
   test('displays aggregation options based on attribute selection', fakeAsync(() => {
     attributeMetadata.mockReturnValue([
       {
-        name: 'test value',
+        name: 'test_value',
         allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Min, MetricAggregationType.Sum]
       },
       {
-        name: 'foo bar'
+        name: 'foo_bar'
       }
     ]);
 
@@ -139,7 +139,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Average)
+          series: buildSeries('test_value', MetricAggregationType.Average)
         }
       }
     );
@@ -163,7 +163,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Average),
+          series: buildSeries('test_value', MetricAggregationType.Average),
           onChange: onChange
         }
       }
@@ -176,7 +176,7 @@ describe('Explore Query Series Editor component', () => {
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
         specification: expect.objectContaining({
-          name: 'test value',
+          name: 'test_value',
           aggregation: MetricAggregationType.Max
         })
       })
@@ -192,7 +192,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Average),
+          series: buildSeries('test_value', MetricAggregationType.Average),
           onChange: onChange
         }
       }
@@ -200,12 +200,12 @@ describe('Explore Query Series Editor component', () => {
 
     spectator.tick();
 
-    spectator.click(spectator.query(byText('test value'))!);
+    spectator.click(spectator.query(byText('test_value'))!);
     spectator.click(spectator.queryAll('.select-option', { root: true })[1]);
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
         specification: expect.objectContaining({
-          name: 'foo bar',
+          name: 'foo_bar',
           aggregation: MetricAggregationType.Average
         })
       })
@@ -216,11 +216,11 @@ describe('Explore Query Series Editor component', () => {
   test("defaults to first aggregation when changing to an attribute that doesn't support existing aggregation", fakeAsync(() => {
     attributeMetadata.mockReturnValue([
       {
-        name: 'test value',
+        name: 'test_value',
         allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max]
       },
       {
-        name: 'foo bar',
+        name: 'foo_bar',
         allowedAggregations: [MetricAggregationType.Min, MetricAggregationType.Max]
       }
     ]);
@@ -232,7 +232,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Average),
+          series: buildSeries('test_value', MetricAggregationType.Average),
           onChange: onChange
         }
       }
@@ -240,12 +240,12 @@ describe('Explore Query Series Editor component', () => {
 
     spectator.tick();
 
-    spectator.click(spectator.query(byText('test value'))!);
+    spectator.click(spectator.query(byText('test_value'))!);
     spectator.click(spectator.queryAll('.select-option', { root: true })[1]);
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
         specification: expect.objectContaining({
-          name: 'foo bar',
+          name: 'foo_bar',
           aggregation: MetricAggregationType.Min
         })
       })
@@ -257,11 +257,11 @@ describe('Explore Query Series Editor component', () => {
   test('disables aggregation selection when only one available', fakeAsync(() => {
     attributeMetadata.mockReturnValue([
       {
-        name: 'test value',
+        name: 'test_value',
         allowedAggregations: [MetricAggregationType.Sum]
       },
       {
-        name: 'foo bar'
+        name: 'foo_bar'
       }
     ]);
 
@@ -271,7 +271,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Sum)
+          series: buildSeries('test_value', MetricAggregationType.Sum)
         }
       }
     );
@@ -290,7 +290,7 @@ describe('Explore Query Series Editor component', () => {
     </ht-explore-query-series-editor>`,
       {
         hostProps: {
-          series: buildSeries('test value', MetricAggregationType.Average),
+          series: buildSeries('test_value', MetricAggregationType.Average),
           onChange: onChange
         }
       }

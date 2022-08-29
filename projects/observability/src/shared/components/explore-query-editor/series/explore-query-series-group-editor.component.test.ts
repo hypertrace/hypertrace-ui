@@ -127,6 +127,6 @@ describe('Explore Query Series Group Editor component', () => {
     spectator.queryAll(ExploreQuerySeriesEditorComponent)[0].seriesChange.emit(buildSeries('modified first'));
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith([matchSeriesWithName('modified first'), matchSeriesWithName('second')]);
+    expect(onChange).toHaveBeenCalledWith([matchSeriesWithName('modified_first'), matchSeriesWithName('second')]);
   });
 });
