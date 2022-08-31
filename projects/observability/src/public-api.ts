@@ -351,11 +351,6 @@ export * from './shared/components/interval-select/interval-select.module';
 export * from './shared/components/gauge-list/gauge-list.module';
 export * from './shared/components/gauge-list/gauge-list.component';
 
-// Stepper
-export * from './shared/components/stepper/stepper.module';
-export * from './shared/components/stepper/stepper.component';
-export * from './shared/components/stepper/step';
-
 export * from './shared/graphql/model/schema/observability-traces';
 
 export * from './shared/components/utils/d3/d3-visualization-builder.service';
