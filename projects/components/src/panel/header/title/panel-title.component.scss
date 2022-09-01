@@ -4,10 +4,13 @@
   @include subtitle-2;
   display: inline-flex;
   align-items: center;
-  border-radius: 2px;
+  border-radius: 8px;
+  width: 100%;
+  padding: 8px 12px;
 
   .label {
     margin-left: 10px;
+    flex: 1;
   }
 
   &:hover {

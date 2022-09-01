@@ -2,7 +2,6 @@
 @import 'color-palette';
 
 .ht-panel {
-  padding: 12px 10px;
   display: flex;
   flex-direction: column;
 
@@ -22,6 +21,7 @@
     flex: 1;
     overflow: auto;
     height: 100%;
+    padding: 0 12px 12px;
   }
 
   &.bordered {
