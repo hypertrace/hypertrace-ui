@@ -272,8 +272,8 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
-  public getHostUrl(): string {
-    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  public getShareableUrl(path: string[], queryParams?: Dictionary<string>): string {
+    return `${new URL(this.getAbsoluteCurrentUrl()).origin}${this.router.createUrlTree(path, { queryParams: queryParams })}`;
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location, PlatformLocation } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -50,7 +50,8 @@ describe('Navigation Service', () => {
     providers: [
       mockProvider(Location),
       mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
-      { provide: APP_TITLE, useValue: 'defaultAppTitle' }
+      { provide: APP_TITLE, useValue: 'defaultAppTitle' },
+      mockProvider(PlatformLocation, { href: 'https://test.traceable.ai'})
     ],
     imports: [
       RouterTestingModule.withRoutes([
@@ -308,5 +309,10 @@ describe('Navigation Service', () => {
 
     router.navigate(['root']);
     expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle');
+  });
+
+  test('can create shareableUrl correctly', () => {
+    const shareableUrl = spectator.service.getShareableUrl(['root', 'child'], {env: 'dev'});
+    expect(shareableUrl).toBe('https://test.traceable.ai/root/child?env=dev');
   });
 });
