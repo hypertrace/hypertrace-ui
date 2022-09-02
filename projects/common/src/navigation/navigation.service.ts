@@ -273,7 +273,7 @@ export class NavigationService {
   }
 
   public getShareableUrl(path: string[], queryParams?: Dictionary<string>): string {
-    return `${new URL(this.getAbsoluteCurrentUrl()).origin}${this.router.createUrlTree(path, { queryParams: queryParams })}`;
+    return `${new URL(this.getAbsoluteCurrentUrl()).origin}${this.router.createUrlTree(path, { queryParams: queryParams }).toString()}`;
   }
 
   /**
