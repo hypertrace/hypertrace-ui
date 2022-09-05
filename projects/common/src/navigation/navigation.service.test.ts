@@ -51,7 +51,7 @@ describe('Navigation Service', () => {
       mockProvider(Location),
       mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
       { provide: APP_TITLE, useValue: 'defaultAppTitle' },
-      mockProvider(PlatformLocation, { href: 'https://test.traceable.ai'})
+      mockProvider(PlatformLocation, { href: 'https://test.traceable.ai' })
     ],
     imports: [
       RouterTestingModule.withRoutes([
@@ -312,7 +312,26 @@ describe('Navigation Service', () => {
   });
 
   test('can create shareableUrl correctly', () => {
-    const shareableUrl = spectator.service.getShareableUrl(['root', 'child'], {env: 'dev'});
-    expect(shareableUrl).toBe('https://test.traceable.ai/root/child?env=dev');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.External,
+        url: 'http://test-url',
+        windowHandling: ExternalNavigationWindowHandling.SameWindow
+      })
+    ).toEqual('http://test-url');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: ['root', 'child'],
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.traceable.ai/root/child?env=test');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: 'url',
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.traceable.ai/url?env=test');
   });
 });
