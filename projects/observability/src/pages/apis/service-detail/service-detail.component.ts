@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SubscriptionLifecycle } from '@hypertrace/common';
+import { ApplicationFeature, FeatureState, FeatureStateResolver, SubscriptionLifecycle } from '@hypertrace/common';
 import { NavigableTab } from '@hypertrace/components';
 import { ServiceDetailService } from './service-detail.service';
 
@@ -34,4 +34,19 @@ export class ServiceDetailComponent {
       label: 'Metrics'
     }
   ];
+
+  public constructor(private readonly featureStateResolver: FeatureStateResolver) {
+    /**
+     * TODO: Create a generic config to map tabs to feature flags if more tabs
+     * are to be added in the future: https://github.com/razorpay/hypertrace-ui/pull/80#issuecomment-1235141757
+     */
+    this.featureStateResolver.getFeatureState(ApplicationFeature.InstrumentationQuality).subscribe(
+      featureState =>
+        featureState === FeatureState.Enabled &&
+        this.tabs.push({
+          path: 'instrumentation',
+          label: 'Instrumentation Quality'
+        })
+    );
+  }
 }

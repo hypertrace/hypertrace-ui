@@ -21,6 +21,8 @@ export class FeatureResolverService extends FeatureStateResolver {
       switch (flag) {
         case ApplicationFeature.PageTimeRange:
           return FeatureState.Disabled;
+        case ApplicationFeature.InstrumentationQuality:
+          return FeatureState.Disabled;
         case ApplicationFeature.SavedQueries:
           return FeatureState.Enabled;
         case ApplicationFeature.CustomDashboards:

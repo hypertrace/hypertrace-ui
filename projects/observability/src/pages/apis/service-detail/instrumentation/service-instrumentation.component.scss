@@ -1,0 +1,17 @@
+.service-instrumentation {
+  padding: 1rem 1.6rem;
+
+  .overview {
+    border: 1px dashed gray;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .checks-container {
+    border: 1px dashed gray;
+    margin-top: 1rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+  }
+}
