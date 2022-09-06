@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location, PlatformLocation } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -50,7 +50,8 @@ describe('Navigation Service', () => {
     providers: [
       mockProvider(Location),
       mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
-      { provide: APP_TITLE, useValue: 'defaultAppTitle' }
+      { provide: APP_TITLE, useValue: 'defaultAppTitle' },
+      mockProvider(PlatformLocation, { href: 'https://test.hypertrace.org' })
     ],
     imports: [
       RouterTestingModule.withRoutes([
@@ -308,5 +309,29 @@ describe('Navigation Service', () => {
 
     router.navigate(['root']);
     expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle');
+  });
+
+  test('can create shareableUrl correctly', () => {
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.External,
+        url: 'http://test-url',
+        windowHandling: ExternalNavigationWindowHandling.SameWindow
+      })
+    ).toEqual('http://test-url');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: ['root', 'child'],
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.hypertrace.org/root/child?env=test');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: 'url',
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.hypertrace.org/url?env=test');
   });
 });
