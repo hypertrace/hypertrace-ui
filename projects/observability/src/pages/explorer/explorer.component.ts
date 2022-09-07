@@ -19,6 +19,7 @@ import {
   ExploreVisualizationRequest,
   GraphQlOrderBy
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
+import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
@@ -254,7 +255,14 @@ export class ExplorerComponent {
           }
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: series
+      series: series,
+      orderBy: {
+        aggregation: series[0].specification.aggregation!,
+        direction: SortDirection.Asc,
+        keyExpression: {
+          key: series[0].specification.name
+        }
+      }
     };
   }
 
