@@ -1,3 +1,4 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -6,7 +7,8 @@ import {
   EventEmitter,
   Input,
   Output,
-  QueryList
+  QueryList,
+  ViewChild
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$ } from '@hypertrace/common';
@@ -20,7 +22,12 @@ import { StepperTabComponent } from './stepper-tab.component';
   selector: 'ht-stepper',
   template: `
     <div class="stepper" *htLoadAsync="this.steps$ as steps">
-      <mat-stepper [orientation]="this.orientation" [linear]="this.isLinear" #stepper>
+      <mat-stepper
+        [orientation]="this.orientation"
+        [linear]="this.isLinear"
+        #stepper
+        (selectionChange)="this.selectionChange.emit($event)"
+      >
         <ng-container *ngFor="let step of steps">
           <mat-step [completed]="step.completed" [stepControl]="step.stepControl" [optional]="step.optional">
             <ng-template matStepLabel>
@@ -28,7 +35,7 @@ import { StepperTabComponent } from './stepper-tab.component';
             </ng-template>
             <ng-container *ngTemplateOutlet="step.content"></ng-container>
             <ng-template matStepperIcon="edit">
-              <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"> </ht-icon>
+              <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>
@@ -75,6 +82,9 @@ export class StepperComponent implements AfterContentInit {
   @ContentChildren(StepperTabComponent)
   private readonly steps!: QueryList<StepperTabComponent>;
 
+  @ViewChild(MatStepper)
+  private readonly stepper?: MatStepper;
+
   // If stepper is Linear, then we can navigate to a tab only if previous all tabs are at complete state.
   @Input()
   public isLinear: boolean = false;
@@ -88,6 +98,9 @@ export class StepperComponent implements AfterContentInit {
 
   @Output()
   public readonly cancelled: EventEmitter<void> = new EventEmitter();
+
+  @Output()
+  public readonly selectionChange: EventEmitter<StepperSelectionChange> = new EventEmitter<StepperSelectionChange>();
 
   public steps$?: Observable<StepperTabComponent[]>;
 
@@ -112,8 +125,28 @@ export class StepperComponent implements AfterContentInit {
 
     return !stepCompleted && !formValid;
   }
+
+  /**
+   * Navigate to a particular step using the index
+   * @param index - index of the step to navigate to
+   */
+  public goToStep(index: number): void {
+    const isIndexValid = index >= 0 && index < this.steps.length;
+    const isNavigationAllowed = this.isLinear ? this.isStepCompleted(index) : true;
+    if (isIndexValid && isNavigationAllowed && this.stepper) {
+      this.stepper.selectedIndex = index;
+    }
+  }
+
+  private isStepCompleted(index: number) {
+    const step = this.steps.get(index);
+
+    return step?.completed;
+  }
 }
 
 export enum StepperOrientation {
   Horizontal = 'horizontal'
 }
+
+export type StepperSelectionChange = StepperSelectionEvent;
