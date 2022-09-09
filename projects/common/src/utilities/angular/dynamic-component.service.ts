@@ -9,8 +9,7 @@ import {
   Type,
   ViewContainerRef
 } from '@angular/core';
-import { isEmpty, isNil } from 'lodash-es';
-import { Dictionary } from '../types/types';
+import { isNil } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicComponentService {
@@ -36,21 +35,20 @@ export class DynamicComponentService {
   }
 
   /**
-   * Dynamically create a component and insert it into the view container. Props passed
-   * to the component will be set on the component instance.
+   * Dynamically create a component and insert it into the view container. Data and services can be provided to the dynamic
+   * component via `providers`
    *
    * @returns ComponentRef or undefined if the component could not be created
    */
   public attachComponentToViewContainer<T>(opts: DynamicComponentOptions<T>): ComponentRef<T> | undefined {
-    if (!isNil(opts.vcr) && !isNil(opts.component)) {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(opts.component);
+    if (!isNil(opts.viewContainerRef) && !isNil(opts.componentClass)) {
+      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(opts.componentClass);
+      const componentInjector = Injector.create({
+        parent: opts.injector,
+        providers: opts.providers ?? []
+      });
 
-      const componentRef = opts.vcr.createComponent(componentFactory);
-      if (!isEmpty(opts.props) && !isNil(componentRef)) {
-        Object.assign(componentRef.instance, opts.props);
-      }
-
-      return componentRef;
+      return opts.viewContainerRef.createComponent(componentFactory, opts.index, componentInjector);
     }
 
     return undefined;
@@ -58,7 +56,9 @@ export class DynamicComponentService {
 }
 
 export interface DynamicComponentOptions<T> {
-  component: Type<T>;
-  vcr?: ViewContainerRef;
-  props?: Dictionary<unknown>;
+  componentClass: Type<T>;
+  injector: Injector;
+  providers: StaticProvider[];
+  viewContainerRef?: ViewContainerRef;
+  index?: number;
 }

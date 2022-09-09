@@ -1,11 +1,11 @@
 // tslint:disable:max-classes-per-file
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Inject,
   InjectionToken,
   Injector,
+  Optional,
   ViewContainerRef
 } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
@@ -50,6 +50,8 @@ describe('Dynamic component service', () => {
   });
 
   describe('Test attachComponentToViewContainer method', () => {
+    const MOCK_TOKEN = new InjectionToken<string>('test token');
+
     @Component({
       selector: 'ht-mock-component',
       template: `
@@ -60,9 +62,10 @@ describe('Dynamic component service', () => {
       changeDetection: ChangeDetectionStrategy.OnPush
     })
     class MockComponent {
-      public title: string = '';
-
-      public constructor(public readonly vcr: ViewContainerRef, public readonly cdr: ChangeDetectorRef) {}
+      public constructor(
+        public readonly vcr: ViewContainerRef,
+        @Optional() @Inject(MOCK_TOKEN) public readonly title: string
+      ) {}
     }
 
     const createService = createServiceFactory({
@@ -72,15 +75,21 @@ describe('Dynamic component service', () => {
     const createComponent = createComponentFactory({
       component: MockComponent
     });
+
     test('should render the component correctly with the props passed', fakeAsync(() => {
       const spectator = createService();
       const mockComponent = createComponent();
+      const injector = spectator.inject(Injector);
       const component = spectator.service.attachComponentToViewContainer<MockComponent>({
-        component: MockComponent,
-        vcr: mockComponent.component.vcr,
-        props: {
-          title: 'test'
-        }
+        componentClass: MockComponent,
+        viewContainerRef: mockComponent.component.vcr,
+        injector: injector,
+        providers: [
+          {
+            provide: MOCK_TOKEN,
+            useValue: 'test'
+          }
+        ]
       });
 
       mockComponent.tick();
@@ -88,16 +97,5 @@ describe('Dynamic component service', () => {
       const compElRef = component?.location.nativeElement as HTMLDivElement;
       expect(compElRef.textContent?.trim()).toEqual('test');
     }));
-
-    test('should return undefined if no vcr provided', () => {
-      const spectator = createService();
-      const component = spectator.service.attachComponentToViewContainer<MockComponent>({
-        component: MockComponent,
-        props: {
-          title: 'test'
-        }
-      });
-      expect(component).toBeUndefined();
-    });
   });
 });
