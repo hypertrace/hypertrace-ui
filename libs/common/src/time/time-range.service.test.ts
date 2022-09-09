@@ -18,10 +18,10 @@ describe('Time range(TR) service', () => {
             map(
               initialTrString =>
                 // tslint:disable-next-line: no-object-literal-type-assertion
-                (({
+                ({
                   queryParamMap: of(convertToParamMap({ time: initialTrString, refresh: 'true' })),
                   snapshot: { queryParamMap: convertToParamMap({ time: initialTrString, refresh: 'true' }) }
-                } as unknown) as ActivatedRoute)
+                } as unknown as ActivatedRoute)
             )
           );
         },
@@ -30,7 +30,7 @@ describe('Time range(TR) service', () => {
           .mockReturnValueOnce('1573255100253-1573255111159')
           .mockReturnValue('1573255111159-1573455111990'),
         getCurrentActivatedRoute: () =>
-          (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
+          ({ snapshot: { queryParams: { time: 'test-value' } } } as unknown as ActivatedRoute)
       })
     ]
   });
@@ -65,22 +65,22 @@ describe('Time range(TR) service', () => {
         providers: [
           mockProvider(NavigationService, {
             navigation$: cold('-x---y', {
-              x: ({
+              x: {
                 queryParamMap: of(convertToParamMap({ time: firstArrivingTimeRange.toUrlString(), refresh: 'true' })),
                 snapshot: {
                   queryParamMap: convertToParamMap({ time: firstArrivingTimeRange.toUrlString(), refresh: 'true' })
                 }
-              } as unknown) as ActivatedRoute,
-              y: ({
+              } as unknown as ActivatedRoute,
+              y: {
                 queryParamMap: of(convertToParamMap({ time: secondArrivingTimeRange.toUrlString(), refresh: 'true' })),
                 snapshot: {
                   queryParamMap: convertToParamMap({ time: secondArrivingTimeRange.toUrlString(), refresh: 'true' })
                 }
-              } as unknown) as ActivatedRoute
+              } as unknown as ActivatedRoute
             }),
             getQueryParameter: jest.fn().mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
-              (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
+              ({ snapshot: { queryParams: { time: 'test-value' } } } as unknown as ActivatedRoute)
           })
         ]
       });
@@ -108,12 +108,12 @@ describe('Time range(TR) service', () => {
             navigation$: mockNavigation$.asObservable().pipe(
               map(
                 timeRangeString =>
-                  (({
+                  ({
                     queryParamMap: of(convertToParamMap({ time: timeRangeString, refresh: 'true' })),
                     snapshot: {
                       queryParamMap: convertToParamMap({ time: timeRangeString, refresh: 'true' })
                     }
-                  } as unknown) as ActivatedRoute)
+                  } as unknown as ActivatedRoute)
               )
             ),
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
@@ -122,7 +122,7 @@ describe('Time range(TR) service', () => {
               .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
               .mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
-              (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
+              ({ snapshot: { queryParams: { time: 'test-value' } } } as unknown as ActivatedRoute),
             replaceQueryParametersInUrl: jest.fn()
           })
         ]
@@ -157,12 +157,12 @@ describe('Time range(TR) service', () => {
             navigation$: mockNavigation$.asObservable().pipe(
               map(
                 timeRangeString =>
-                  (({
+                  ({
                     queryParamMap: of(convertToParamMap({ time: timeRangeString, refresh: 'true' })),
                     snapshot: {
                       queryParamMap: convertToParamMap({ time: timeRangeString, refresh: 'true' })
                     }
-                  } as unknown) as ActivatedRoute)
+                  } as unknown as ActivatedRoute)
               )
             ),
             addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
