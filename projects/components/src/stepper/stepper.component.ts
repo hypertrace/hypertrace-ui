@@ -138,10 +138,10 @@ export class StepperComponent implements AfterContentInit {
     }
   }
 
-  private isStepCompleted(index: number) {
+  private isStepCompleted(index: number): boolean {
     const step = this.steps.get(index);
 
-    return step?.completed;
+    return step?.completed ?? false;
   }
 }
 
