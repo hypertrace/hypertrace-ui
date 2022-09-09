@@ -50,6 +50,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Download, url: `${iconsRootPath}/download.svg` },
         { key: IconType.DrilldownFilter, url: `${iconsRootPath}/drilldown-filter.svg` },
         { key: IconType.Edge, url: `${iconsRootPath}/edge.svg` },
+        { key: IconType.Edit, url: `${iconsRootPath}/edit.svg` },
         { key: IconType.ExpandAll, url: `${iconsRootPath}/expand-all.svg` },
         { key: IconType.Expanded, url: `${iconsRootPath}/minus-circle.svg` },
         { key: IconType.ExpandedReverse, url: `${iconsRootPath}/minus-circle-reverse.svg` },

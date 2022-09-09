@@ -14,6 +14,7 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { isArray, isString } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
@@ -273,8 +274,23 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
-  public getHostUrl(): string {
-    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  public getShareableUrl(navParams: NavigationParams): string {
+    return navParams.navType === NavigationParamsType.InApp
+      ? this.getShareableUrlForInAppNavParams(navParams)
+      : this.getShareableUrlForExternalNavParams(navParams);
+  }
+
+  private getShareableUrlForInAppNavParams(navParams: InAppNavigationParams): string {
+    const host = new URL(this.getAbsoluteCurrentUrl()).origin;
+    const path = isString(navParams.path) ? [navParams.path] : isArray(navParams.path) ? navParams.path : [];
+
+    return `${host}${this.router.createUrlTree(path, { queryParams: navParams.queryParams }).toString()}`;
+  }
+
+  private getShareableUrlForExternalNavParams(navParams: ExternalNavigationParams): string {
+    return navParams.useGlobalParams
+      ? `${navParams.url}${this.router.createUrlTree([], { queryParams: this.buildQueryParam() }).toString()}`
+      : navParams.url;
   }
 
   /**

@@ -44,9 +44,11 @@ export class GraphQlFilterBuilderService {
   }
 
   private extractGraphQlFilterValue(filter: Filter | FieldFilter | TableFilter): GraphQlArgumentValue {
-    return (filter.operator === FilterOperator.Contains && typeof filter.value === 'string'
-      ? escapeRegExp(filter.value).toString()
-      : filter.value) as GraphQlArgumentValue;
+    return (
+      filter.operator === FilterOperator.Contains && typeof filter.value === 'string'
+        ? escapeRegExp(filter.value).toString()
+        : filter.value
+    ) as GraphQlArgumentValue;
   }
 }
 
@@ -70,6 +72,8 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.In;
     case FilterOperator.Contains:
       return GraphQlOperatorType.Like;
+    case FilterOperator.NotIn:
+      return GraphQlOperatorType.NotIn;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
     case FilterOperator.ContainsKeyLike:
@@ -106,7 +110,7 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
       return FilterOperator.In;
 
     case GraphQlOperatorType.NotIn:
-      throw new Error('NotIn operator is not supported');
+      return FilterOperator.NotIn;
 
     case GraphQlOperatorType.ContainsKey:
       return FilterOperator.ContainsKey;

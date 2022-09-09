@@ -12,7 +12,13 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string> {
   }
 
   public supportedSubpathOperators(): FilterOperator[] {
-    return [FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.In, FilterOperator.Like];
+    return [
+      FilterOperator.Equals,
+      FilterOperator.NotEquals,
+      FilterOperator.In,
+      FilterOperator.NotIn,
+      FilterOperator.Like
+    ];
   }
 
   protected buildValueString(value: string): string {

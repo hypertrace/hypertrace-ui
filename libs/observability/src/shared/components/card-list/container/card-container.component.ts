@@ -9,4 +9,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '@hypertrace/components';
 export class CardContainerComponent extends ContentHolder {
   @Input()
   public showGroupedStyle: boolean = false;
+
+  @Input()
+  public disabled: boolean = false;
 }

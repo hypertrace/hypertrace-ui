@@ -13,6 +13,7 @@ export class StringFilterBuilder extends AbstractFilterBuilder<string | string[]
       FilterOperator.Equals,
       FilterOperator.NotEquals,
       FilterOperator.In,
+      FilterOperator.NotIn,
       FilterOperator.Like,
       FilterOperator.Contains
     ];

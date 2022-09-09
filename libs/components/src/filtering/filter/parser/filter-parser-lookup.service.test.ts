@@ -5,7 +5,7 @@ import { FilterOperator } from '../filter-operators';
 import { FilterParserLookupService } from './filter-parser-lookup.service';
 import { ComparisonFilterParser } from './types/comparison-filter-parser';
 import { ContainsFilterParser } from './types/contains-filter-parser';
-import { InFilterParser } from './types/in-filter-parser';
+import { InNotInFilterParser } from './types/in-not-in-filter-parser';
 
 describe('Filter Parser Lookup service', () => {
   let spectator: SpectatorService<FilterParserLookupService>;
@@ -25,7 +25,8 @@ describe('Filter Parser Lookup service', () => {
     expect(spectator.service.lookup(FilterOperator.GreaterThan)).toEqual(expect.any(ComparisonFilterParser));
     expect(spectator.service.lookup(FilterOperator.GreaterThanOrEqualTo)).toEqual(expect.any(ComparisonFilterParser));
 
-    expect(spectator.service.lookup(FilterOperator.In)).toEqual(expect.any(InFilterParser));
+    expect(spectator.service.lookup(FilterOperator.In)).toEqual(expect.any(InNotInFilterParser));
+    expect(spectator.service.lookup(FilterOperator.NotIn)).toEqual(expect.any(InNotInFilterParser));
 
     expect(spectator.service.lookup(FilterOperator.ContainsKey)).toEqual(expect.any(ContainsFilterParser));
   });
