@@ -117,7 +117,7 @@ jobs:
         run: npm run lint:affected
 
       - name: Prettier Check
-        run: npm run prettier:affected
+        run: npm run prettier:check
   test:
     name: Test
     runs-on: ubuntu-20.04
