@@ -21,6 +21,8 @@
     "prettier:check": "nx format:check --all",
     "prettier:affected": "nx format:check",
     "prettier:write:uncommitted": "nx format:write --uncommitted=true",
+    "lint:ci": "nx run-many --target=lint --all",
+    "test:ci:with-cache": "nx run-many --target=test --all --ci --coverage",
     "test:ci": "nx run-many --target=test --all --ci --coverage --skip-nx-cache",
     "test:affected": "nx affected --target=test --configuration production --parallel --maxParallel=1",
     "check:ci": "npm run test:ci && npm run build:ci && npm run lint && npm run prettier:check",
