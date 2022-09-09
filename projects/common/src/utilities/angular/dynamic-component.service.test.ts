@@ -1,3 +1,4 @@
+// tslint:disable:max-classes-per-file
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -50,7 +51,7 @@ describe('Dynamic component service', () => {
 
   describe('Test attachComponentToViewContainer method', () => {
     @Component({
-      selector: 'trace-mock-component',
+      selector: 'ht-mock-component',
       template: `
         <div class="title">
           {{ this.title }}
