@@ -153,7 +153,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:ci
+        run: npm run test:affected
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -166,7 +166,7 @@ jobs:
         with:
           name: Unit Test Results (all)
           path: test-results/**/*.xml
-          
+
   validate-helm-charts:
     runs-on: ubuntu-20.04
     steps:
@@ -175,10 +175,10 @@ jobs:
         with:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
-          
+
       - name: validate charts
         uses: hypertrace/github-actions/validate-charts@main
-        
+
   publish-test-results:
     name: "Publish Unit Tests Results"
     needs: test
@@ -197,7 +197,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: artifacts/**/*.xml
-          
+
   merge-publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
