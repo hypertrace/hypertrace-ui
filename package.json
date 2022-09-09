@@ -25,7 +25,7 @@
     "check:ci": "npm run test:ci && npm run build:ci && npm run lint && npm run prettier:check",
     "docs": "compodoc -p tsconfig.json",
     "prepare": "husky install",
-    "check": "npm run build && npm run lint:fix && npm run test && npm run prettier:check",
+    "check": "npm run build && npm run lint && npm run test && npm run prettier:check",
     "check:affected": "npm run build:affected && npm run lint:affected:fix && npm run test:affected && npm run prettier:check"
   },
   "private": true,

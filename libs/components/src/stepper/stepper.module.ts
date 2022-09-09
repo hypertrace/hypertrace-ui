@@ -5,7 +5,7 @@ import { MemoizeModule } from '@hypertrace/common';
 import { ButtonModule } from '../button/button.module';
 import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
-import { LoadAsyncModule } from '../public-api';
+import { LoadAsyncModule } from '../load-async/load-async.module';
 import { StepperTabComponent } from './stepper-tab.component';
 import { StepperComponent } from './stepper.component';
 

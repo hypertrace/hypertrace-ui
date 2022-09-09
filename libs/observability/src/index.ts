@@ -116,9 +116,6 @@ export * from './shared/components/table/tracing-table-cell-type';
 export * from './shared/components/table/data-cell/metric/metric-table-cell-renderer.component';
 export * from './shared/components/table/data-cell/trace-status/trace-status-table-cell-renderer.component';
 
-export * from './shared/components/stepper/directive/content/step-content.directive';
-export * from './shared/components/stepper/directive/footer/step-summary-footer-section.directive';
-export * from './shared/components/stepper/directive/footer/step-summary-header-section.directive';
 export * from './shared/components/utils/chart-tooltip/default/default-chart-tooltip.component';
 
 // Waterfall

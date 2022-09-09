@@ -49,6 +49,7 @@ export * from './content/content-holder';
 export * from './tabs/content/tab-group.component';
 export * from './tabs/content/tab.module';
 export * from './tabs/content/tab/tab.component';
+export * from './tabs/content/tab-custom-header.directive';
 
 // Color picker
 export * from './color-picker/color-picker.component';
