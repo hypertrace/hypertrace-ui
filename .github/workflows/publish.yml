@@ -13,7 +13,8 @@ jobs:
       # Set fetch-depth: 0 to fetch commit history and tags for use in version calculation
       - name: Check out code
         uses: actions/checkout@v2.3.4
-        # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
 
       # In any subsequent steps within this job we can reference the resolved SHAs
