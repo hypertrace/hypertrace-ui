@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
-import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
@@ -50,12 +50,13 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
           </ht-select>
         </div>
         <div class="order-by-input-container">
-          <span class="order-by-label"> Sort by </span>
+          <span class="order-by-label"> Direction </span>
           <ht-select
             [showBorder]="true"
             [selected]="this.selectedSortBy$ | async"
             class="order-by-selector"
             (selectedChange)="this.onSortByChange($event)"
+            [disabled]="!(this.selectedMetric$ | async)"
           >
             <ht-select-option
               *ngFor="let option of this.sortByOptions"
@@ -217,9 +218,9 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     attribute: AttributeMetadata | undefined,
     aggregation: MetricAggregationType,
     sortBy: GraphQlSortDirection
-  ): Observable<GraphQlOrderBy> {
-    if (attribute === undefined) {
-      return EMPTY;
+  ): Observable<GraphQlOrderBy | undefined> {
+    if(attribute === undefined) {
+      return of(attribute);
     }
 
     return of({
@@ -227,8 +228,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       direction: sortBy,
       keyExpression: {
         key: attribute.name
-      }
-    });
+      }});
   }
 }
 
