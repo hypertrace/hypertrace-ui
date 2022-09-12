@@ -9,12 +9,9 @@ import {
   Type,
   ViewContainerRef
 } from '@angular/core';
-import { isNil } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicComponentService {
-  public constructor(private readonly componentFactoryResolver: ComponentFactoryResolver) {}
-
   public insertComponent<C>(
     container: Element,
     componentClass: Type<C>,
@@ -38,27 +35,20 @@ export class DynamicComponentService {
    * Dynamically create a component and insert it into the view container. Data and services can be provided to the dynamic
    * component via `providers`
    *
+   * **Note**: The provided view container ref should be a proper DOM Node (`div`, `section`, etc) and not something like
+   * `ng-container`
    * @returns ComponentRef or undefined if the component could not be created
    */
-  public attachComponentToViewContainer<T>(opts: DynamicComponentOptions<T>): ComponentRef<T> | undefined {
-    if (!isNil(opts.viewContainerRef) && !isNil(opts.componentClass)) {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(opts.componentClass);
-      const componentInjector = Injector.create({
-        parent: opts.injector,
-        providers: opts.providers ?? []
-      });
-
-      return opts.viewContainerRef.createComponent(componentFactory, opts.index, componentInjector);
-    }
-
-    return undefined;
+  public insertComponentToViewContainer<C>(
+    componentClass: Type<C>,
+    viewContainerRef: ViewContainerRef,
+    providers: StaticProvider[] = []
+  ): ComponentRef<C> | undefined {
+    return this.insertComponent(
+      viewContainerRef.element.nativeElement,
+      componentClass,
+      viewContainerRef.injector,
+      providers
+    );
   }
-}
-
-export interface DynamicComponentOptions<T> {
-  componentClass: Type<T>;
-  injector: Injector;
-  providers: StaticProvider[];
-  viewContainerRef?: ViewContainerRef;
-  index?: number;
 }

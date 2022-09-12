@@ -79,18 +79,16 @@ describe('Dynamic component service', () => {
     test('should render the component correctly with the props passed', fakeAsync(() => {
       const spectator = createService();
       const mockComponent = createComponent();
-      const injector = spectator.inject(Injector);
-      const component = spectator.service.attachComponentToViewContainer<MockComponent>({
-        componentClass: MockComponent,
-        viewContainerRef: mockComponent.component.vcr,
-        injector: injector,
-        providers: [
+      const component = spectator.service.insertComponentToViewContainer<MockComponent>(
+        MockComponent,
+        mockComponent.component.vcr,
+        [
           {
             provide: MOCK_TOKEN,
             useValue: 'test'
           }
         ]
-      });
+      );
 
       mockComponent.tick();
       expect(component).toBeDefined();
