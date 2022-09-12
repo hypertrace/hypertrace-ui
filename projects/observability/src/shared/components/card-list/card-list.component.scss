@@ -19,10 +19,17 @@
 
   .card {
     border-radius: 8px;
-    border: 1px solid $gray-2;
     margin-bottom: 8px;
 
-    @include card-hover();
+    &.disabled {
+      background-color: $gray-1;
+      cursor: not-allowed;
+    }
+
+    &:not(.disabled) {
+      @include card-hover();
+      border: 1px solid $gray-2;
+    }
 
     &.selected-card {
       background: $gray-1;

@@ -16,6 +16,7 @@ export const enum FilterOperator {
    * GraphQlOperatorType.Like
    */
   Contains = 'CONTAINS',
+  NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY',
   ContainsKeyLike = 'CONTAINS_KEY_LIKE'
 }
@@ -30,6 +31,7 @@ export const enum UrlFilterOperator {
   Like = '_lk_',
   In = '_in_',
   Contains = '_c_',
+  NotIn = '_nin_',
   ContainsKey = '_ck_',
   ContainsKeyLike = '_ckl_'
 }
@@ -54,6 +56,8 @@ export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator
       return UrlFilterOperator.In;
     case FilterOperator.Contains:
       return UrlFilterOperator.Contains;
+    case FilterOperator.NotIn:
+      return UrlFilterOperator.NotIn;
     case FilterOperator.ContainsKey:
       return UrlFilterOperator.ContainsKey;
     case FilterOperator.ContainsKeyLike:
@@ -83,6 +87,8 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
       return FilterOperator.In;
     case UrlFilterOperator.Contains:
       return FilterOperator.Contains;
+    case UrlFilterOperator.NotIn:
+      return FilterOperator.NotIn;
     case UrlFilterOperator.ContainsKey:
       return FilterOperator.ContainsKey;
     case UrlFilterOperator.ContainsKeyLike:
@@ -95,9 +101,11 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
 export const incompatibleOperators = (operator: FilterOperator): FilterOperator[] => {
   switch (operator) {
     case FilterOperator.In:
+    case FilterOperator.NotIn:
     case FilterOperator.Equals:
       return [
         FilterOperator.In,
+        FilterOperator.NotIn,
         FilterOperator.Equals,
         FilterOperator.NotEquals,
         FilterOperator.LessThan,
@@ -113,14 +121,21 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
     case FilterOperator.ContainsKeyLike:
     case FilterOperator.NotEquals:
     case FilterOperator.Like:
-      return [FilterOperator.In, FilterOperator.Equals];
+      return [FilterOperator.In, FilterOperator.NotIn, FilterOperator.Equals];
     case FilterOperator.LessThan:
     case FilterOperator.LessThanOrEqualTo:
-      return [FilterOperator.In, FilterOperator.Equals, FilterOperator.LessThan, FilterOperator.LessThanOrEqualTo];
+      return [
+        FilterOperator.In,
+        FilterOperator.NotIn,
+        FilterOperator.Equals,
+        FilterOperator.LessThan,
+        FilterOperator.LessThanOrEqualTo
+      ];
     case FilterOperator.GreaterThan:
     case FilterOperator.GreaterThanOrEqualTo:
       return [
         FilterOperator.In,
+        FilterOperator.NotIn,
         FilterOperator.Equals,
         FilterOperator.GreaterThan,
         FilterOperator.GreaterThanOrEqualTo
