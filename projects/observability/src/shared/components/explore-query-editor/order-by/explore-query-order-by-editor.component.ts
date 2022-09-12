@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
-import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
@@ -27,7 +27,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             [disabled]="(this.metricOptions$ | async)?.length <= 1"
           >
             <ht-select-option
-              *ngFor="let metricOption of (this.metricOptions$ | async)"
+              *ngFor="let metricOption of this.metricOptions$ | async"
               [value]="metricOption.value"
               [label]="metricOption.label"
             ></ht-select-option>
@@ -43,7 +43,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             [disabled]="(this.aggregationOptions$ | async)?.length <= 1"
           >
             <ht-select-option
-              *ngFor="let aggregationOption of (this.aggregationOptions$ | async)"
+              *ngFor="let aggregationOption of this.aggregationOptions$ | async"
               [value]="aggregationOption.value"
               [label]="aggregationOption.label"
             ></ht-select-option>
@@ -78,10 +78,10 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Output()
   public readonly orderByExpressionChange: EventEmitter<GraphQlOrderBy | undefined> = new EventEmitter();
 
-  public readonly selectedMetric$: Observable<AttributeMetadata>;
+  public readonly selectedMetric$: Observable<AttributeMetadata | undefined>;
   public readonly selectedAggregation$: Observable<MetricAggregationType>;
   public readonly selectedSortBy$: Observable<GraphQlSortDirection>;
-  public readonly metricOptions$: Observable<SelectOption<AttributeMetadata>[]>;
+  public readonly metricOptions$: Observable<SelectOption<AttributeMetadata | undefined>[]>;
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
   public readonly sortByOptions: SelectOption<GraphQlSortDirection>[] = [
     {
@@ -141,9 +141,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   private buildSpecAndEmit(
-    orderByData$: Observable<
-      [AttributeMetadata, MetricAggregationType, GraphQlSortDirection]
-    >
+    orderByData$: Observable<[AttributeMetadata | undefined, MetricAggregationType, GraphQlSortDirection]>
   ): void {
     orderByData$
       .pipe(
@@ -153,10 +151,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       .subscribe(value => this.orderByExpressionChange.emit(value));
   }
 
-  private getCurrentSelectedAttribute(): Observable<AttributeMetadata> {
+  private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.metricOptions$.pipe(
-      map(attributeOptions =>
-        attributeOptions.find(option => option.value.name === this.orderByExpression?.keyExpression?.key)!
+      map(
+        attributeOptions =>
+          attributeOptions.find(option => option.value?.name === this.orderByExpression?.keyExpression?.key)!
       ),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
@@ -164,15 +163,18 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private getCurrentSelectedAggregation(): Observable<MetricAggregationType> {
     return this.aggregationOptions$.pipe(
-      map(aggregationOptions =>
-        aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)!
+      map(
+        aggregationOptions => aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)!
       ),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
   }
 
   private getCurrentSelectedSortBy(): Observable<GraphQlSortDirection> {
-    return of(this.sortByOptions.find(option => this.orderByExpression && option.value === this.orderByExpression.direction)!.value)
+    return of(
+      this.sortByOptions.find(option => this.orderByExpression && option.value === this.orderByExpression.direction)!
+        .value
+    );
   }
 
   private getAggregationOptionsForAttribute(selected?: AttributeMetadata): SelectOption<MetricAggregationType>[] {
@@ -186,7 +188,9 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }));
   }
 
-  private getAttributeOptionsForContext(context?: TraceType): Observable<SelectOption<AttributeMetadata>[]> {
+  private getAttributeOptionsForContext(
+    context?: TraceType
+  ): Observable<SelectOption<AttributeMetadata | undefined>[]> {
     if (context === undefined) {
       return of([]);
     }
@@ -197,15 +201,27 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
           value: attribute,
           label: this.metadataService.getAttributeDisplayName(attribute)
         }))
-      )
+      ),
+      map(attributeOptions => [this.getEmptyAttributeOption(), ...attributeOptions])
     );
   }
 
+  private getEmptyAttributeOption(): SelectOption<AttributeMetadata | undefined> {
+    return {
+      value: undefined,
+      label: 'None'
+    };
+  }
+
   private buildOrderExpression(
-    attribute: AttributeMetadata,
+    attribute: AttributeMetadata | undefined,
     aggregation: MetricAggregationType,
     sortBy: GraphQlSortDirection
   ): Observable<GraphQlOrderBy> {
+    if (attribute === undefined) {
+      return EMPTY;
+    }
+
     return of({
       aggregation: attribute.allowedAggregations.includes(aggregation) ? aggregation : attribute.allowedAggregations[0],
       direction: sortBy,
@@ -219,4 +235,4 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 export const enum SortDirection {
   Asc = 'ASC',
   Desc = 'DESC'
-} 
+}
