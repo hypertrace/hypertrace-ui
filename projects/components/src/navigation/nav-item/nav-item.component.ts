@@ -60,7 +60,7 @@ export class NavItemComponent {
   public buildNavigationParam = (item: NavItemLinkConfig): NavigationParams => {
     const navParams: NavigationParams = {
       navType: NavigationParamsType.InApp,
-      path: item.matchPaths[0],
+      path: item.isFullPathMatch ? item.matchPaths : item.matchPaths[0],
       relativeTo: this.activatedRoute,
       replaceCurrentHistory: item.replaceCurrentHistory
     };

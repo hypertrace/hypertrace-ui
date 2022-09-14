@@ -155,12 +155,20 @@ export class NavigationListComponent implements OnChanges {
   }
 
   private findActiveItem(navItems: NavItemConfig[]): NavItemLinkConfig | undefined {
-    return navItems
-      .filter((item): item is NavItemLinkConfig => item.type === NavItemType.Link)
+    const linkConfigs = navItems.filter((item): item is NavItemLinkConfig => item.type === NavItemType.Link);
+
+    // Try to find a fullPathMatch config first
+    const fullPathMatchItem = linkConfigs
       .find(linkItem =>
-        linkItem.matchPaths.some(matchPath =>
-          this.navigationService.isRelativePathActive([matchPath], this.activatedRoute)
-        )
+        linkItem.isFullPathMatch &&
+          this.navigationService.isRelativePathActive(linkItem.matchPaths, this.activatedRoute)
       );
+
+    // Return the fullPathMatch config if found, else return the first config that matches the partial path
+    return fullPathMatchItem ?? linkConfigs.find(linkItem =>
+      linkItem.matchPaths.some(matchPath =>
+        this.navigationService.isRelativePathActive([matchPath], this.activatedRoute)
+      ))
+
   }
 }
