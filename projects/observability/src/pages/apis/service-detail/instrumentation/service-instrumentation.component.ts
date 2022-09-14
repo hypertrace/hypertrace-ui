@@ -1,32 +1,54 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { BreadcrumbsService } from '@hypertrace/components';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ServiceInstrumentationService } from './service-instrumentation.service';
+import { OrgScoreResponse, ServiceScoreResponse } from './service-instrumentation.types';
 
 @Component({
   styleUrls: ['./service-instrumentation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ServiceInstrumentationService],
   template: `
-    <main class="service-instrumentation">
+    <main class="service-instrumentation" *ngIf="this.serviceScoreSubject | async">
       <section class="overview">
-        <div>{{ this.serviceName$ | async }} progress circle and description</div>
-        <div>org scores</div>
+        <ht-service-instrumentation-total-score
+          [serviceScore]="(this.serviceScoreSubject | async)?.aggregatedWeightedScore"
+        ></ht-service-instrumentation-total-score>
+
+        <ht-service-instrumentation-org-score
+          [orgScore]="(this.orgScoreResponse$ | async)?.aggregatedWeightedScore"
+        ></ht-service-instrumentation-org-score>
       </section>
 
       <section class="checks-container">
-        <div>card1</div>
-        <div>card2</div>
-        <div>card3</div>
-        <div>card4</div>
+        <ht-service-instrumentation-category-card
+          *ngFor="let categoryScore of (serviceScoreSubject | async)?.qoiTypeScores"
+        ></ht-service-instrumentation-category-card>
       </section>
     </main>
   `
 })
 export class ServiceInstrumentationComponent {
-  public serviceName$: Observable<string | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
-    map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1]?.label : ''))
-  );
+  public serviceScoreSubject: BehaviorSubject<ServiceScoreResponse | undefined> = new BehaviorSubject<
+    ServiceScoreResponse | undefined
+  >(undefined);
 
-  public constructor(protected readonly breadcrumbsService: BreadcrumbsService) {}
+  public orgScoreResponse$: Observable<OrgScoreResponse>;
+
+  public constructor(
+    private readonly breadcrumbsService: BreadcrumbsService,
+    private readonly serviceInstrumentationService: ServiceInstrumentationService
+  ) {
+    this.breadcrumbsService.breadcrumbs$
+      .pipe(map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1]?.label : undefined)))
+      .subscribe(serviceName => {
+        this.serviceInstrumentationService
+          .getServiceScore(serviceName!)
+          .subscribe(serviceScore => this.serviceScoreSubject.next(serviceScore));
+      });
+
+    this.orgScoreResponse$ = this.serviceInstrumentationService.getOrgScore();
+  }
 }

@@ -247,6 +247,9 @@ export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
 
+// Progress Circle
+export * from './progress-circle/progress-circle.module';
+
 // Radio
 export * from './radio/radio-group.component';
 export * from './radio/radio-option';

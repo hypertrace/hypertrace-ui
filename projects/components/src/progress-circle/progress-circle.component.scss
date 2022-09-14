@@ -1,0 +1,29 @@
+.ht-progress-circle {
+  position: relative;
+
+  .progress-circle {
+    transform: rotate(-90deg);
+  }
+
+  .progress-circle-back {
+    fill: none;
+    stroke-width: 4px;
+  }
+
+  .progress-circle-prog {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 8px;
+    stroke-dashoffset: 0px;
+    transition: stroke-dasharray 0.6s linear 0s;
+  }
+
+  .progress-text {
+    width: 100%;
+    position: absolute;
+    top: calc(50% - 1.4rem);
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+}

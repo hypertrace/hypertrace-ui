@@ -1,0 +1,44 @@
+@import 'font';
+
+.service-instrumentation-total-score {
+  display: flex;
+
+  .info-container {
+    padding-left: 1.2rem;
+  }
+
+  .heading {
+    @include header-4();
+    margin-top: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .description {
+    width: 400px;
+    @include subtitle-3();
+    text-align: justify;
+  }
+
+  .legend {
+    margin-top: 16px;
+    display: flex;
+  }
+
+  .dot {
+    display: flex;
+    align-items: center;
+
+    span {
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    label {
+      @include subtitle-3();
+      padding-left: 12px;
+      padding-right: 36px;
+    }
+  }
+}

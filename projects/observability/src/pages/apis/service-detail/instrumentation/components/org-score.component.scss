@@ -1,0 +1,27 @@
+@import 'font';
+@import 'color-palette';
+
+.service-instrumentation-org-score {
+  border-left: 1px solid $gray-3;
+  height: calc(100% - 2.2rem);
+  margin-left: 16px;
+  padding-left: 28px;
+
+  margin-top: 1.1rem;
+  display: grid;
+  align-items: center;
+
+  .heading {
+    @include subtitle-3();
+    margin-bottom: 0;
+  }
+
+  .score {
+    @include body-1-semibold();
+    margin-top: 6px;
+
+    .label {
+      padding-left: 6px;
+    }
+  }
+}
