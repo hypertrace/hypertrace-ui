@@ -56,7 +56,7 @@ import { GraphQlOrderBy } from '../explore-visualization-builder';
             [selected]="this.selectedSortBy$ | async"
             class="order-by-selector"
             (selectedChange)="this.onSortByChange($event)"
-            [disabled]="!(this.selectedMetric$ | async)"
+            [disabled]="(this.selectedMetric$ | async) === undefined"
           >
             <ht-select-option
               *ngFor="let option of this.sortByOptions"
@@ -94,7 +94,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       label: 'Desc'
     }
   ];
-  private readonly defaultDirection = SortDirection.Asc;
+  private readonly defaultDirection: GraphQlSortDirection = SortDirection.Asc;
   private readonly incomingOrderByExpressionSubject: Subject<GraphQlOrderBy> = new ReplaySubject(1);
   private readonly contextSubject: Subject<TraceType> = new ReplaySubject(1);
 
@@ -169,9 +169,10 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private getCurrentSelectedAggregation(): Observable<MetricAggregationType> {
     return this.aggregationOptions$.pipe(
       map(
-        aggregationOptions => aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)!
-      ),
-      map(matchedSelection => matchedSelection && matchedSelection.value)
+        aggregationOptions =>
+          aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)?.value ??
+          aggregationOptions[0].value
+      )
     );
   }
 
