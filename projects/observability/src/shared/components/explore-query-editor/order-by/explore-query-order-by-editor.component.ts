@@ -94,6 +94,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       label: 'Desc'
     }
   ];
+  private readonly defaultDirection = SortDirection.Asc;
   private readonly incomingOrderByExpressionSubject: Subject<GraphQlOrderBy> = new ReplaySubject(1);
   private readonly contextSubject: Subject<TraceType> = new ReplaySubject(1);
 
@@ -127,7 +128,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   public onMetricChange(newAttribute: AttributeMetadata): void {
     this.buildSpecAndEmit(
-      combineLatest([of(newAttribute), this.selectedAggregation$, of(this.orderByExpression!.direction)])
+      combineLatest([
+        of(newAttribute),
+        this.selectedAggregation$,
+        of(this.orderByExpression?.direction ?? this.defaultDirection)
+      ])
     );
   }
 
@@ -154,9 +159,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.metricOptions$.pipe(
-      map(
-        attributeOptions =>
-          attributeOptions.find(option => option.value?.name === this.orderByExpression?.keyExpression?.key)!
+      map(attributeOptions =>
+        attributeOptions.find(option => option.value?.name === this.orderByExpression?.keyExpression?.key)
       ),
       map(matchedSelection => matchedSelection && matchedSelection.value)
     );
@@ -173,8 +177,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
   private getCurrentSelectedSortBy(): Observable<GraphQlSortDirection> {
     return of(
-      this.sortByOptions.find(option => this.orderByExpression && option.value === this.orderByExpression.direction)!
-        .value
+      this.sortByOptions.find(option => this.orderByExpression && option.value === this.orderByExpression.direction)
+        ?.value ?? this.defaultDirection
     );
   }
 
@@ -219,7 +223,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     aggregation: MetricAggregationType,
     sortBy: GraphQlSortDirection
   ): Observable<GraphQlOrderBy | undefined> {
-    if(attribute === undefined) {
+    if (attribute === undefined) {
       return of(attribute);
     }
 
@@ -228,7 +232,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       direction: sortBy,
       keyExpression: {
         key: attribute.name
-      }});
+      }
+    });
   }
 }
 

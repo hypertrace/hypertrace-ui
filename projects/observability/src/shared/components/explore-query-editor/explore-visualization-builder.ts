@@ -98,7 +98,12 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public interval(interval?: TimeDuration | 'AUTO'): this {
     return this.updateState({
-      interval: interval
+      interval: interval,
+      ...(interval !== undefined
+        ? {
+            orderBy: undefined
+          }
+        : undefined)
     });
   }
 
