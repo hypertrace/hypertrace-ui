@@ -171,7 +171,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       map(
         aggregationOptions =>
           aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)?.value ??
-          aggregationOptions[0].value
+          aggregationOptions[0]?.value
       )
     );
   }
