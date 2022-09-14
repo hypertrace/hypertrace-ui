@@ -242,7 +242,7 @@ export class ExplorerComponent {
       .getAll(ExplorerQueryParam.Series)
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
-    const orderBy: GraphQlOrderBy | undefined = series[0]?.specification.aggregation
+    const orderBy: GraphQlOrderBy | undefined = series?.[0].specification.aggregation
       ? {
           aggregation: series[0].specification.aggregation,
           direction: SortDirection.Asc,
