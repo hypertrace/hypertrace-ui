@@ -107,9 +107,14 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       switchMap(() => this.getCurrentSelectedAttribute())
     );
 
-    this.selectedOrderBy$ = this.incomingOrderByExpressionSubject.pipe(switchMap(() => this.getCurrentSelectedOrderBy()));
+    this.selectedOrderBy$ = this.incomingOrderByExpressionSubject.pipe(
+      switchMap(() => this.getCurrentSelectedOrderBy())
+    );
 
-    this.attributeOptions$ = this.contextSubject.pipe(switchMap(context => this.getAttributeOptionsForContext(context)), shareReplay());
+    this.attributeOptions$ = this.contextSubject.pipe(
+      switchMap(context => this.getAttributeOptionsForContext(context)),
+      shareReplay()
+    );
 
     this.aggregationOptions$ = this.selectedAttribute$.pipe(
       map(selection => this.getAggregationOptionsForAttribute(selection)),
@@ -123,7 +128,6 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }
 
     if (changeObject.orderByExpression) {
-      debugger;
       this.incomingOrderByExpressionSubject.next(this.orderByExpression);
     }
   }

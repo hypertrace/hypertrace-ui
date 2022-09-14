@@ -161,10 +161,10 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   private mapOrderByToGraphQlSpecification(orderBy: ExploreOrderBy): GraphQlSortBySpecification[] {
     return [
-        {
-          direction: orderBy.direction,
-          key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation)
-        }
+      {
+        direction: orderBy.direction,
+        key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation)
+      }
     ];
   }
 
@@ -291,7 +291,7 @@ export interface ExploreSeries {
 export interface ExploreOrderBy {
   aggregation: MetricAggregationType;
   direction: GraphQlSortDirection;
-  attribute: AttributeExpression
+  attribute: AttributeExpression;
 }
 
 type TimeUnaware<T> = Omit<T, 'timeRange'>;

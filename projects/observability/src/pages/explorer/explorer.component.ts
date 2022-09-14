@@ -19,13 +19,13 @@ import {
   ExploreVisualizationRequest,
   ExploreOrderBy
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
-import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { GraphQlSortDirection } from '../../shared/graphql/model/schema/sort/graphql-sort-direction';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -215,8 +215,19 @@ export class ExplorerComponent {
       [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context as ExplorerGeneratedDashboardContext),
       [ExplorerQueryParam.Interval]: this.encodeInterval(request.interval),
       [ExplorerQueryParam.Series]: request.series.map(series => this.encodeExploreSeries(series)),
+      ...this.getOrderByQueryParams(request.orderBy),
       ...this.getGroupByQueryParams(request.groupBy)
     });
+  }
+
+  private getOrderByQueryParams(orderBy?: ExploreOrderBy): QueryParamObject {
+    return orderBy === undefined
+      ? {
+          [ExplorerQueryParam.OrderBy]: undefined
+        }
+      : {
+          [ExplorerQueryParam.OrderBy]: this.encodeExploreOrderBy(orderBy)
+        };
   }
 
   private getGroupByQueryParams(groupBy?: GraphQlGroupBy): QueryParamObject {
@@ -242,15 +253,9 @@ export class ExplorerComponent {
       .getAll(ExplorerQueryParam.Series)
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
-    const orderBy: ExploreOrderBy | undefined = series?.[0].specification.aggregation
-      ? {
-          aggregation: series[0].specification.aggregation,
-          direction: SortDirection.Asc,
-          attribute: {
-            key: series[0].specification.name
-          }
-        }
-      : undefined;
+    const orderBy: ExploreOrderBy | undefined = this.tryDecodeExploreOrderBy(
+      param.get(ExplorerQueryParam.OrderBy) ?? undefined
+    );
 
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
@@ -296,6 +301,10 @@ export class ExplorerComponent {
     return `${series.visualizationOptions.type}:${series.specification.aggregation}(${series.specification.name})`;
   }
 
+  private encodeExploreOrderBy(orderBy: ExploreOrderBy): string {
+    return `${orderBy.aggregation}(${orderBy.attribute.key}):${orderBy.direction}`;
+  }
+
   private tryDecodeExploreSeries(seriesString: string): [ExploreSeries] | [] {
     const matches = seriesString.match(/(\w+):(\w+)\((\w+)\)/);
     if (matches?.length !== 4) {
@@ -314,6 +323,26 @@ export class ExplorerComponent {
         }
       }
     ];
+  }
+
+  private tryDecodeExploreOrderBy(orderByString?: string): ExploreOrderBy | undefined {
+    const matches = orderByString?.match(/(\w+)\((\w+)\):(\w+)/);
+
+    if (matches?.length !== 4) {
+      return undefined;
+    }
+
+    const aggregation = matches[1] as MetricAggregationType;
+    const attribute = matches[2];
+    const direction = matches[3] as GraphQlSortDirection;
+
+    return {
+      aggregation: aggregation,
+      direction: direction,
+      attribute: {
+        key: attribute
+      }
+    };
   }
 
   private encodeAttributeExpression(attributeExpression: AttributeExpression): string {
@@ -357,5 +386,5 @@ const enum ExplorerQueryParam {
   OtherGroup = 'other',
   GroupLimit = 'limit',
   Series = 'series',
-  Sort = 'sort'
+  OrderBy = 'orderBy'
 }
