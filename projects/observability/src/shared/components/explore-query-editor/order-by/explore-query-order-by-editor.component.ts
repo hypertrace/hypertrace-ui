@@ -160,9 +160,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.metricOptions$.pipe(
       map(attributeOptions =>
-        attributeOptions.find(option => option.value?.name === this.orderByExpression?.keyExpression?.key)
-      ),
-      map(matchedSelection => matchedSelection && matchedSelection.value)
+        attributeOptions.find(option => option.value?.name === this.orderByExpression?.keyExpression?.key)?.value
+      )
     );
   }
 

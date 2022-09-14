@@ -36,8 +36,7 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false,
-      sortable: true
+      groupable: false
     },
     {
       name: 'second',
@@ -48,8 +47,7 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false,
-      sortable: true
+      groupable: false
     },
     {
       name: 'first groupable',
@@ -60,8 +58,7 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true,
-      sortable: true
+      groupable: true
     },
     {
       name: 'second groupable',
@@ -72,8 +69,7 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true,
-      sortable: true
+      groupable: true
     }
   ];
 
@@ -94,8 +90,8 @@ describe('Explore query editor', () => {
         getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
       }),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Enabled),
-        getFeatureState: () => of(FeatureState.Enabled)
+        getCombinedFeatureState: () => of(FeatureState.Disabled),
+        getFeatureState: () => of(FeatureState.Disabled)
       }),
       mockProvider(NavigationService, {
         navigation$: EMPTY

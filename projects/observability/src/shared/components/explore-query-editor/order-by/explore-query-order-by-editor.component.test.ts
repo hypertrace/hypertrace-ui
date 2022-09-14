@@ -9,7 +9,7 @@ import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-met
 import { MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../../graphql/model/schema/observability-traces';
 import { MetadataService } from '../../../services/metadata/metadata.service';
-import { ExploreQueryOrderByEditorComponent } from './explore-query-order-by-editor.component';
+import { ExploreQueryOrderByEditorComponent, SortDirection } from './explore-query-order-by-editor.component';
 
 describe('Explore Query Order by Editor component', () => {
   // Define metadata at top level so equality checks always get same values
@@ -71,6 +71,6 @@ describe('Explore Query Order by Editor component', () => {
 
     const selects = spectator.queryAll(SelectComponent);
     expect(selects.length).toBe(3);
-    expect(selects[2].selected).toBeUndefined();
+    expect(selects[2].selected).toBe(SortDirection.Asc);
   }));
 });

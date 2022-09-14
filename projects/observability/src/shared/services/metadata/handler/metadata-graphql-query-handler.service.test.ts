@@ -128,8 +128,7 @@ describe('Metadata graphql query handler service', () => {
           MetricAggregationType.P90,
           MetricAggregationType.P50
         ],
-        groupable: false,
-        sortable: true
+        groupable: false
       },
       {
         name: 'second',
@@ -140,8 +139,7 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         allowedAggregations: [],
-        groupable: true,
-        sortable: true
+        groupable: true
       },
       {
         name: 'Third',
@@ -152,8 +150,7 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         allowedAggregations: [],
-        groupable: false,
-        sortable: true
+        groupable: false
       }
     ]);
   });
