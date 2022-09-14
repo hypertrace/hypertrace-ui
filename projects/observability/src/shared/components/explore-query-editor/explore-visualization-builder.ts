@@ -10,6 +10,7 @@ import { Filter } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
@@ -90,7 +91,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     });
   }
 
-  public orderBy(orderBy?: GraphQlOrderBy): this {
+  public orderBy(orderBy?: ExploreOrderBy): this {
     return this.updateState({
       orderBy: orderBy
     });
@@ -137,7 +138,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       filters: state.filters && [...state.filters],
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
-      orderBy: state.orderBy && { ...state.orderBy },
+      orderBy: state.interval === undefined && state.orderBy ? { ...state.orderBy } : undefined,
       exploreQuery$: this.mapStateToExploreQuery(state),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
@@ -158,15 +159,13 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     );
   }
 
-  private mapOrderByToGraphQlSpecification(orderBy: GraphQlOrderBy): GraphQlSortBySpecification[] | undefined {
-    return orderBy !== undefined
-      ? [
-          {
-            direction: orderBy.direction,
-            key: this.exploreSpecBuilder.exploreSpecificationForKey(orderBy.keyExpression.key, orderBy.aggregation)
-          }
-        ]
-      : undefined;
+  private mapOrderByToGraphQlSpecification(orderBy: ExploreOrderBy): GraphQlSortBySpecification[] {
+    return [
+        {
+          direction: orderBy.direction,
+          key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation)
+        }
+    ];
   }
 
   private mapStateToResultsQuery(
@@ -268,7 +267,7 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
-  orderBy?: GraphQlOrderBy;
+  orderBy?: ExploreOrderBy;
   useGroupName?: boolean;
   resultLimit: number;
 }
@@ -289,12 +288,10 @@ export interface ExploreSeries {
   visualizationOptions: ExploreSeriesVisualizationOptions;
 }
 
-export interface GraphQlOrderBy {
+export interface ExploreOrderBy {
   aggregation: MetricAggregationType;
   direction: GraphQlSortDirection;
-  keyExpression: {
-    key: string;
-  };
+  attribute: AttributeExpression
 }
 
 type TimeUnaware<T> = Omit<T, 'timeRange'>;

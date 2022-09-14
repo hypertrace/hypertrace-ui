@@ -17,7 +17,7 @@ import {
   ExploreRequestState,
   ExploreSeries,
   ExploreVisualizationRequest,
-  GraphQlOrderBy
+  ExploreOrderBy
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
@@ -242,11 +242,11 @@ export class ExplorerComponent {
       .getAll(ExplorerQueryParam.Series)
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
-    const orderBy: GraphQlOrderBy | undefined = series?.[0].specification.aggregation
+    const orderBy: ExploreOrderBy | undefined = series?.[0].specification.aggregation
       ? {
           aggregation: series[0].specification.aggregation,
           direction: SortDirection.Asc,
-          keyExpression: {
+          attribute: {
             key: series[0].specification.name
           }
         }
@@ -338,7 +338,7 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
-  orderBy?: GraphQlOrderBy;
+  orderBy?: ExploreOrderBy;
 }
 
 interface ExplorerContextScope {

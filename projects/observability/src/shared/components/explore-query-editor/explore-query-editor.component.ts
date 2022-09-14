@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { ApplicationFeature, TypedSimpleChanges } from '@hypertrace/common';
+import { TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
@@ -10,7 +10,7 @@ import {
   ExploreSeries,
   ExploreVisualizationBuilder,
   ExploreVisualizationRequest,
-  GraphQlOrderBy
+  ExploreOrderBy
 } from './explore-visualization-builder';
 
 @Component({
@@ -56,7 +56,7 @@ import {
           >
           </ht-explore-query-limit-editor>
         </div>
-        <div class="filters-row" *htIfFeature="'${ApplicationFeature.ExplorerOrderBySupport}' | htFeature">
+        <div class="filters-row">
           <ht-explore-query-order-by-editor
             *ngIf="!currentVisualization.interval"
             class="order-by"
@@ -87,7 +87,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   public groupBy?: GraphQlGroupBy;
 
   @Input()
-  public orderBy?: GraphQlOrderBy;
+  public orderBy?: ExploreOrderBy;
 
   @Output()
   public readonly visualizationRequestChange: EventEmitter<ExploreVisualizationRequest> = new EventEmitter();
@@ -125,7 +125,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.updateGroupByExpression(this.groupBy, this.groupBy.keyExpressions[0]);
     }
 
-    if (changeObject.orderBy && this.orderBy) {
+    if (changeObject.orderBy) {
       this.updateOrderByExpression(this.orderBy);
     }
   }
@@ -146,7 +146,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
     }
   }
 
-  public updateOrderByExpression(orderBy?: GraphQlOrderBy): void {
+  public updateOrderByExpression(orderBy?: ExploreOrderBy): void {
     this.visualizationBuilder.orderBy(orderBy);
   }
 
