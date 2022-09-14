@@ -242,6 +242,16 @@ export class ExplorerComponent {
       .getAll(ExplorerQueryParam.Series)
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
+    const orderBy: GraphQlOrderBy | undefined = series?.[0].specification.aggregation
+      ? {
+          aggregation: series[0].specification.aggregation,
+          direction: SortDirection.Asc,
+          keyExpression: {
+            key: series[0].specification.name
+          }
+        }
+      : undefined;
+
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
       groupBy: param.has(ExplorerQueryParam.Group)
@@ -256,13 +266,7 @@ export class ExplorerComponent {
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
       series: series,
-      orderBy: {
-        aggregation: series[0].specification.aggregation!,
-        direction: SortDirection.Asc,
-        keyExpression: {
-          key: series[0].specification.name
-        }
-      }
+      orderBy: orderBy
     };
   }
 

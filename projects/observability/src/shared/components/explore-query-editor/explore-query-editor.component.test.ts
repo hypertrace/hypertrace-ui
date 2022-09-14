@@ -90,7 +90,6 @@ describe('Explore query editor', () => {
         getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
       }),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Disabled),
         getFeatureState: () => of(FeatureState.Disabled)
       }),
       mockProvider(NavigationService, {
