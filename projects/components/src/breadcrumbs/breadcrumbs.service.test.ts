@@ -1,5 +1,6 @@
 import { IconType } from '@hypertrace/assets-library';
 import { Breadcrumb, HtRouteData, NavigationService } from '@hypertrace/common';
+import { ObservabilityIconType } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of, throwError } from 'rxjs';
@@ -108,6 +109,45 @@ describe('BreadcrumbsService', () => {
 
     spectator.service.breadcrumbs$.subscribe();
     expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalled();
+  });
+
+  test('Returns the last string in the breadcrumb path when getLastBreadCrumbString is called', () => {
+    const spectator = createService({
+      providers: [
+        mockProvider(NavigationService, {
+          getCurrentActivatedRoute: () => ({
+            snapshot: buildMockRoute([
+              {
+                urlSegments: ['services'],
+                breadcrumb: {
+                  label: 'services'
+                }
+              },
+              {
+                urlSegments: ['service'],
+                breadcrumb: {
+                  icon: ObservabilityIconType.Service,
+                  label: 'service'
+                }
+              },
+              {
+                urlSegments: ['1234-1234-1234'],
+                breadcrumb: {
+                  label: 'Service name'
+                }
+              }
+            ])
+          }),
+          navigation$: NEVER
+        })
+      ]
+    });
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.getLastBreadCrumbString()).toBe('x', {
+        x: 'Service name'
+      });
+    });
   });
 });
 

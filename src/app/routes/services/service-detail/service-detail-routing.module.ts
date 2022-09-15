@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   ServiceApisListComponent,
+  ServiceDeploymentsComponent,
   ServiceDetailComponent,
   ServiceDetailModule,
   ServiceInstrumentationComponent,
@@ -41,6 +42,10 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: 'instrumentation',
         component: ServiceInstrumentationComponent
+      },
+      {
+        path: 'deployments',
+        component: ServiceDeploymentsComponent
       }
     ]
   }

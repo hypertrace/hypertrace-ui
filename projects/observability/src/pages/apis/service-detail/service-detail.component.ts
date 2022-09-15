@@ -1,6 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ApplicationFeature, FeatureState, FeatureStateResolver, SubscriptionLifecycle } from '@hypertrace/common';
+import {
+  ApplicationFeature,
+  FeatureState,
+  FeatureStateResolver,
+  forkJoinSafeEmpty,
+  SubscriptionLifecycle
+} from '@hypertrace/common';
 import { NavigableTab } from '@hypertrace/components';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ServiceDetailService } from './service-detail.service';
 
 @Component({
@@ -8,7 +17,7 @@ import { ServiceDetailService } from './service-detail.service';
   providers: [ServiceDetailService, SubscriptionLifecycle],
   template: `
     <div class="vertical-flex-layout">
-      <ht-page-header [tabs]="this.tabs"></ht-page-header>
+      <ht-page-header [tabs]="this.enabledTabs$ | async"></ht-page-header>
       <div class="scrollable-container">
         <router-outlet></router-outlet>
       </div>
@@ -35,18 +44,32 @@ export class ServiceDetailComponent {
     }
   ];
 
-  public constructor(private readonly featureStateResolver: FeatureStateResolver) {
-    /**
-     * TODO: Create a generic config to map tabs to feature flags if more tabs
-     * are to be added in the future: https://github.com/razorpay/hypertrace-ui/pull/80#issuecomment-1235141757
-     */
-    this.featureStateResolver.getFeatureState(ApplicationFeature.InstrumentationQuality).subscribe(
-      featureState =>
-        featureState === FeatureState.Enabled &&
-        this.tabs.push({
-          path: 'instrumentation',
-          label: 'Instrumentation Quality'
-        })
-    );
-  }
+  public readonly featureFlaggedTabs: NavigableTab[] = [
+    {
+      path: 'instrumentation',
+      label: 'Instrumentation Quality',
+      flagName: ApplicationFeature.InstrumentationQuality
+    },
+    {
+      path: 'deployments',
+      label: 'Deployments',
+      flagName: ApplicationFeature.DeploymentMarkers
+    }
+  ];
+
+  public enabledTabs$: Observable<NavigableTab[]> = forkJoinSafeEmpty(
+    this.featureFlaggedTabs.map(tab => this.featureStateResolver.getFeatureState(tab.flagName!))
+  ).pipe(
+    map(featureVals => {
+      featureVals.map((featureVal, index) => {
+        if (featureVal === FeatureState.Enabled) {
+          this.tabs.push(this.featureFlaggedTabs[index]);
+        }
+      });
+
+      return this.tabs;
+    })
+  );
+
+  public constructor(private readonly featureStateResolver: FeatureStateResolver) {}
 }

@@ -1,11 +1,12 @@
 {
   "featureFlags": {
     "ui.saved-queries": true,
-    "ui.custom-dashboards": true
+    "ui.custom-dashboards": true,
+    "ui.page-time-range": false,
+    "ui.instrumentation-quality": false,
+    "ui.deployment-markers": true
   },
-  "urlConfig": {
-    "user_preference": "https://hus.concierge.stage.razorpay.in"
-  },
+  "urlConfig": {},
   "dashboardConfig": {},
   "analyticsConfig": {
     "enabled": false,

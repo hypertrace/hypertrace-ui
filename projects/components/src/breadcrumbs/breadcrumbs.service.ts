@@ -67,6 +67,12 @@ export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
     return of(activatedRouteSnapshot.data.breadcrumb);
   }
 
+  public getLastBreadCrumbString(): Observable<string> {
+    return this.breadcrumbs$.pipe(
+      map(breadCrumbs => (breadCrumbs.length > 0 ? breadCrumbs[breadCrumbs.length - 1]?.label ?? '' : ''))
+    );
+  }
+
   public getPath(activatedRouteSnapshot: ActivatedRouteSnapshot): string[] {
     return activatedRouteSnapshot.pathFromRoot
       .flatMap(routeSnapshot => routeSnapshot.url)

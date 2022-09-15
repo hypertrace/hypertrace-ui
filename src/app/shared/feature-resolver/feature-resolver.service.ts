@@ -27,6 +27,8 @@ export class FeatureResolverService extends FeatureStateResolver {
           return FeatureState.Enabled;
         case ApplicationFeature.CustomDashboards:
           return FeatureState.Enabled;
+        case ApplicationFeature.DeploymentMarkers:
+          return FeatureState.Disabled;
         default:
           return FeatureState.Enabled;
       }
