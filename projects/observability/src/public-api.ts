@@ -207,6 +207,7 @@ export * from './shared/components/donut/donut.component';
 export * from './shared/components/donut/donut.module';
 
 // Pages
+export * from './pages/apis/backends/backend-list.dashboard';
 export * from './pages/apis/backends/backend-list.module';
 export * from './pages/apis/backends/backend-list.component';
 export * from './pages/apis/endpoints/endpoint-list.component';
