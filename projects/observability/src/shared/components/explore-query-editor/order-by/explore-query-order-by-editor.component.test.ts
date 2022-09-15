@@ -60,7 +60,8 @@ describe('Explore Query Order by Editor component', () => {
         hostProps: {
           orderByExpression: {
             aggregation: MetricAggregationType.Average,
-            keyExpression: {
+            direction: SortDirection.Asc,
+            attribute: {
               key: 'duration'
             }
           }
