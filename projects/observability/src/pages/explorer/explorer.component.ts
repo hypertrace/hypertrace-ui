@@ -14,10 +14,10 @@ import { concat, EMPTY, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
+  ExploreOrderBy,
   ExploreRequestState,
   ExploreSeries,
-  ExploreVisualizationRequest,
-  ExploreOrderBy
+  ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
@@ -223,10 +223,10 @@ export class ExplorerComponent {
   private getOrderByQueryParams(orderBy?: ExploreOrderBy): QueryParamObject {
     return orderBy === undefined
       ? {
-          [ExplorerQueryParam.OrderBy]: undefined
+          [ExplorerQueryParam.Order]: undefined
         }
       : {
-          [ExplorerQueryParam.OrderBy]: this.encodeExploreOrderBy(orderBy)
+          [ExplorerQueryParam.Order]: this.encodeExploreOrderBy(orderBy)
         };
   }
 
@@ -254,7 +254,7 @@ export class ExplorerComponent {
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
     const orderBy: ExploreOrderBy | undefined = this.tryDecodeExploreOrderBy(
-      param.get(ExplorerQueryParam.OrderBy) ?? undefined
+      param.get(ExplorerQueryParam.Order) ?? undefined
     );
 
     return {
@@ -386,5 +386,5 @@ const enum ExplorerQueryParam {
   OtherGroup = 'other',
   GroupLimit = 'limit',
   Series = 'series',
-  OrderBy = 'orderBy'
+  Order = 'order'
 }

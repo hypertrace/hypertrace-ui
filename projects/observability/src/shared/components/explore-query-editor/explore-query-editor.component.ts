@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { ApplicationFeature, TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import {
+  ExploreOrderBy,
   ExploreRequestContext,
   ExploreSeries,
   ExploreVisualizationBuilder,
-  ExploreVisualizationRequest,
-  ExploreOrderBy
+  ExploreVisualizationRequest
 } from './explore-visualization-builder';
 
 @Component({
@@ -56,7 +56,7 @@ import {
           >
           </ht-explore-query-limit-editor>
         </div>
-        <div class="filters-row">
+        <div class="filters-row" *htIfFeature="'${ApplicationFeature.ExplorerOrderBySupport}' | htFeature">
           <ht-explore-query-order-by-editor
             *ngIf="!currentVisualization.interval"
             class="order-by"
