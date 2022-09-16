@@ -340,9 +340,9 @@ export class ExplorerComponent {
             key: selectedSeries.specification.name
           }
         };
-      } else {
-        return undefined;
       }
+
+      return undefined;
     }
 
     return {
