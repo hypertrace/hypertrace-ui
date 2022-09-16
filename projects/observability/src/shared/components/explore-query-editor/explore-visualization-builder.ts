@@ -128,6 +128,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
     const orderBy = this.getOrderBy(state.series[0], state.interval, state.orderBy);
+
     return {
       context: state.context,
       resultLimit: state.resultLimit,
@@ -148,20 +149,18 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   ): ExploreOrderBy | undefined {
     if (interval !== undefined) {
       return undefined;
-    }
-
-    if (interval === undefined && orderBy !== undefined) {
+    } else if (orderBy === undefined) {
       return {
-        ...orderBy
+        aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+        direction: SortDirection.Asc,
+        attribute: {
+          key: selectedSeries.specification.name
+        }
       };
     }
 
     return {
-      aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
-      direction: SortDirection.Asc,
-      attribute: {
-        key: selectedSeries.specification.name
-      }
+      ...orderBy
     };
   }
 
