@@ -142,7 +142,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
       orderBy: orderBy,
-      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy }),
+      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy: orderBy }),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
   }
