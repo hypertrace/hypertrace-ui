@@ -268,9 +268,12 @@ export class ExplorerComponent {
             limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
           }
         : undefined,
-      interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
+      interval: interval,
       series: series,
-      orderBy: this.tryDecodeExploreOrderBy(interval, series[0], param.get(ExplorerQueryParam.Order) ?? undefined)
+      orderBy:
+        interval === 'NONE'
+          ? this.tryDecodeExploreOrderBy(series[0], param.get(ExplorerQueryParam.Order) ?? undefined)
+          : undefined
     };
   }
 
@@ -324,25 +327,17 @@ export class ExplorerComponent {
     ];
   }
 
-  private tryDecodeExploreOrderBy(
-    interval: IntervalValue,
-    selectedSeries: ExploreSeries,
-    orderByString?: string
-  ): ExploreOrderBy | undefined {
+  private tryDecodeExploreOrderBy(selectedSeries: ExploreSeries, orderByString?: string): ExploreOrderBy {
     const matches = orderByString?.match(/(\w+)\((\w+)\):(\w+)/);
 
     if (matches?.length !== 4) {
-      if (interval === 'NONE') {
-        return {
-          aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
-          direction: SortDirection.Asc,
-          attribute: {
-            key: selectedSeries.specification.name
-          }
-        };
-      }
-
-      return undefined;
+      return {
+        aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+        direction: SortDirection.Asc,
+        attribute: {
+          key: selectedSeries.specification.name
+        }
+      };
     }
 
     return {

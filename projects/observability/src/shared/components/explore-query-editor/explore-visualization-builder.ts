@@ -100,7 +100,12 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public interval(interval?: TimeDuration | 'AUTO'): this {
     return this.updateState({
-      interval: interval
+      interval: interval,
+      ...(interval !== undefined
+        ? {
+            orderBy: undefined
+          }
+        : undefined)
     });
   }
 
@@ -127,7 +132,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
-    const orderBy = this.getOrderBy(state.series[0], state.interval, state.orderBy);
+    const orderBy = state.interval === undefined ? this.getOrderBy(state.series[0], state.orderBy) : undefined;
 
     return {
       context: state.context,
@@ -137,20 +142,12 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
       orderBy: orderBy,
-      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy: orderBy }),
+      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy }),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
   }
 
-  private getOrderBy(
-    selectedSeries: ExploreSeries,
-    interval?: TimeDuration | 'AUTO',
-    orderBy?: ExploreOrderBy
-  ): ExploreOrderBy | undefined {
-    if (interval !== undefined) {
-      return undefined;
-    }
-
+  private getOrderBy(selectedSeries: ExploreSeries, orderBy?: ExploreOrderBy): ExploreOrderBy | undefined {
     if (orderBy === undefined) {
       return {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,

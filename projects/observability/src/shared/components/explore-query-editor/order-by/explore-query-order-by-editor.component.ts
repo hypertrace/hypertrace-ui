@@ -8,7 +8,7 @@ import { getAggregationDisplayName, MetricAggregationType } from '../../../graph
 import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql-sort-direction';
 import { TraceType } from '../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../services/metadata/metadata.service';
-import { ExploreOrderBy } from '../explore-visualization-builder';
+import { ExploreOrderBy, ExploreSeries } from '../explore-visualization-builder';
 @Component({
   selector: 'ht-explore-query-order-by-editor',
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
@@ -76,6 +76,9 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Input()
   public context?: TraceType;
 
+  @Input()
+  public selectedSeries: ExploreSeries[] = [];
+
   @Output()
   public readonly orderByExpressionChange: EventEmitter<ExploreOrderBy> = new EventEmitter();
 
@@ -121,7 +124,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
-    if (changeObject.context) {
+    if (changeObject.context || changeObject.selectedSeries) {
       this.contextSubject.next(this.context);
     }
 
@@ -193,10 +196,14 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       return [];
     }
 
-    return selected.allowedAggregations.map(aggType => ({
-      value: aggType,
-      label: getAggregationDisplayName(aggType)
-    }));
+    return selected.allowedAggregations
+      .filter(aggregation =>
+        this.selectedSeries.some(selectedSeries => selectedSeries.specification.aggregation === aggregation)
+      )
+      .map(aggType => ({
+        value: aggType,
+        label: getAggregationDisplayName(aggType)
+      }));
   }
 
   private getAttributeOptionsForContext(context?: TraceType): Observable<SelectOption<AttributeMetadata>[]> {
@@ -206,10 +213,14 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
     return this.metadataService.getSelectionAttributes(context).pipe(
       map(attributes =>
-        attributes.map(attribute => ({
-          value: attribute,
-          label: this.metadataService.getAttributeDisplayName(attribute)
-        }))
+        attributes
+          .filter(attribute =>
+            this.selectedSeries.some(selectedSeries => selectedSeries.specification.name === attribute.name)
+          )
+          .map(attribute => ({
+            value: attribute,
+            label: this.metadataService.getAttributeDisplayName(attribute)
+          }))
       )
     );
   }
