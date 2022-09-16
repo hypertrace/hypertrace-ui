@@ -77,12 +77,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   public context?: TraceType;
 
   @Output()
-  public readonly orderByExpressionChange: EventEmitter<ExploreOrderBy | undefined> = new EventEmitter();
+  public readonly orderByExpressionChange: EventEmitter<ExploreOrderBy> = new EventEmitter();
 
-  public readonly selectedAttribute$: Observable<AttributeMetadata | undefined>;
+  public readonly selectedAttribute$: Observable<AttributeMetadata>;
   public readonly selectedAggregation$: Observable<MetricAggregationType>;
   public readonly selectedOrderBy$: Observable<GraphQlSortDirection>;
-  public readonly attributeOptions$: Observable<SelectOption<AttributeMetadata | undefined>[]>;
+  public readonly attributeOptions$: Observable<SelectOption<AttributeMetadata>[]>;
   public readonly aggregationOptions$: Observable<SelectOption<MetricAggregationType>[]>;
   public readonly sortByOptions: SelectOption<GraphQlSortDirection>[] = [
     {
@@ -151,7 +151,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   private buildSpecAndEmit(
-    orderByData$: Observable<[AttributeMetadata | undefined, MetricAggregationType, GraphQlSortDirection]>
+    orderByData$: Observable<[AttributeMetadata, MetricAggregationType, GraphQlSortDirection]>
   ): void {
     orderByData$
       .pipe(
@@ -161,11 +161,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       .subscribe(value => this.orderByExpressionChange.emit(value));
   }
 
-  private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
+  private getCurrentSelectedAttribute(): Observable<AttributeMetadata> {
     return this.attributeOptions$.pipe(
       map(
         attributeOptions =>
-          attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)?.value
+          attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)!.value
       )
     );
   }
@@ -198,9 +198,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }));
   }
 
-  private getAttributeOptionsForContext(
-    context?: TraceType
-  ): Observable<SelectOption<AttributeMetadata | undefined>[]> {
+  private getAttributeOptionsForContext(context?: TraceType): Observable<SelectOption<AttributeMetadata>[]> {
     if (context === undefined) {
       return of([]);
     }
@@ -211,27 +209,15 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
           value: attribute,
           label: this.metadataService.getAttributeDisplayName(attribute)
         }))
-      ),
-      map(attributeOptions => [this.getEmptyAttributeOption(), ...attributeOptions])
+      )
     );
   }
 
-  private getEmptyAttributeOption(): SelectOption<AttributeMetadata | undefined> {
-    return {
-      value: undefined,
-      label: 'None'
-    };
-  }
-
   private buildOrderExpression(
-    attribute: AttributeMetadata | undefined,
+    attribute: AttributeMetadata,
     aggregation: MetricAggregationType,
     sortBy: GraphQlSortDirection
-  ): Observable<ExploreOrderBy | undefined> {
-    if (attribute === undefined) {
-      return of(attribute);
-    }
-
+  ): Observable<ExploreOrderBy> {
     return of({
       aggregation: attribute.allowedAggregations.includes(aggregation) ? aggregation : attribute.allowedAggregations[0],
       direction: sortBy,

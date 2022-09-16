@@ -19,6 +19,7 @@ import {
   ExploreSeries,
   ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
+import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
@@ -253,9 +254,7 @@ export class ExplorerComponent {
       .getAll(ExplorerQueryParam.Series)
       .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
 
-    const orderBy: ExploreOrderBy | undefined = this.tryDecodeExploreOrderBy(
-      param.get(ExplorerQueryParam.Order) ?? undefined
-    );
+    const interval: IntervalValue = this.decodeInterval(param.get(ExplorerQueryParam.Interval));
 
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
@@ -271,7 +270,7 @@ export class ExplorerComponent {
         : undefined,
       interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
       series: series,
-      orderBy: orderBy
+      orderBy: this.tryDecodeExploreOrderBy(interval, series[0], param.get(ExplorerQueryParam.Order) ?? undefined)
     };
   }
 
@@ -325,22 +324,32 @@ export class ExplorerComponent {
     ];
   }
 
-  private tryDecodeExploreOrderBy(orderByString?: string): ExploreOrderBy | undefined {
+  private tryDecodeExploreOrderBy(
+    interval: IntervalValue,
+    selectedSeries: ExploreSeries,
+    orderByString?: string
+  ): ExploreOrderBy | undefined {
     const matches = orderByString?.match(/(\w+)\((\w+)\):(\w+)/);
 
     if (matches?.length !== 4) {
-      return undefined;
+      if (interval === 'NONE') {
+        return {
+          aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+          direction: SortDirection.Asc,
+          attribute: {
+            key: selectedSeries.specification.name
+          }
+        };
+      } else {
+        return undefined;
+      }
     }
 
-    const aggregation = matches[1] as MetricAggregationType;
-    const attribute = matches[2];
-    const direction = matches[3] as GraphQlSortDirection;
-
     return {
-      aggregation: aggregation,
-      direction: direction,
+      aggregation: matches[1] as MetricAggregationType,
+      direction: matches[3] as GraphQlSortDirection,
       attribute: {
-        key: attribute
+        key: matches[2]
       }
     };
   }

@@ -35,6 +35,7 @@ import {
 import { GraphQlFilterBuilderService } from '../../services/filter-builder/graphql-filter-builder.service';
 import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
+import { SortDirection } from './order-by/explore-query-order-by-editor.component';
 
 @Injectable()
 export class ExploreVisualizationBuilder implements OnDestroy {
@@ -99,12 +100,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public interval(interval?: TimeDuration | 'AUTO'): this {
     return this.updateState({
-      interval: interval,
-      ...(interval !== undefined
-        ? {
-            orderBy: undefined
-          }
-        : undefined)
+      interval: interval
     });
   }
 
@@ -131,6 +127,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
+    const orderBy = this.getOrderBy(state.series[0], state.interval, state.orderBy);
     return {
       context: state.context,
       resultLimit: state.resultLimit,
@@ -138,9 +135,33 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       filters: state.filters && [...state.filters],
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
-      orderBy: state.interval === undefined && state.orderBy ? { ...state.orderBy } : undefined,
-      exploreQuery$: this.mapStateToExploreQuery(state),
+      orderBy: orderBy,
+      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy: orderBy }),
       resultsQuery$: this.mapStateToResultsQuery(state)
+    };
+  }
+
+  private getOrderBy(
+    selectedSeries: ExploreSeries,
+    interval?: TimeDuration | 'AUTO',
+    orderBy?: ExploreOrderBy
+  ): ExploreOrderBy | undefined {
+    if (interval !== undefined) {
+      return undefined;
+    }
+
+    if (interval === undefined && orderBy !== undefined) {
+      return {
+        ...orderBy
+      };
+    }
+
+    return {
+      aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+      direction: SortDirection.Asc,
+      attribute: {
+        key: selectedSeries.specification.name
+      }
     };
   }
 
