@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
 import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
 import { getAggregationDisplayName, MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
 import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql-sort-direction';
@@ -112,13 +112,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
 
     this.attributeOptions$ = this.contextSubject.pipe(
-      switchMap(context => this.getAttributeOptionsForContext(context)),
-      shareReplay()
+      switchMap(context => this.getAttributeOptionsForContext(context))
     );
 
     this.aggregationOptions$ = this.selectedAttribute$.pipe(
-      map(selection => this.getAggregationOptionsForAttribute(selection)),
-      shareReplay()
+      map(selection => this.getAggregationOptionsForAttribute(selection))
     );
   }
 
@@ -168,8 +166,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       map(
         attributeOptions =>
           attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)?.value
-      ),
-      shareReplay()
+      )
     );
   }
 
@@ -179,8 +176,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         aggregationOptions =>
           aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)?.value ??
           aggregationOptions[0]?.value
-      ),
-      shareReplay()
+      )
     );
   }
 
