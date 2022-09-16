@@ -211,6 +211,8 @@ export class CustomDashboardPanelEditComponent {
   public onSaveOrEditPanel(): void {
     const panelSlug = this.customDashboardService.convertNameToSlug(this.state.name);
     if (this.isNewDashboard) {
+      // In case of new dashboard, panel will also be new, so add a panel ID
+      this.state.id = panelSlug;
       this.customDashboardService
         .createDashboard({
           id: this.dashboardId,
