@@ -165,7 +165,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     return this.attributeOptions$.pipe(
       map(
         attributeOptions =>
-          attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)!.value
+          attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)?.value ??
+          attributeOptions[0]?.value
       )
     );
   }

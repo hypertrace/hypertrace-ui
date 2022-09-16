@@ -149,8 +149,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   ): ExploreOrderBy | undefined {
     if (interval !== undefined) {
       return undefined;
-    } 
-    
+    }
+
     if (orderBy === undefined) {
       return {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,

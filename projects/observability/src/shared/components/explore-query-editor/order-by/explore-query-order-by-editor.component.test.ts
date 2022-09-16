@@ -39,7 +39,7 @@ describe('Explore Query Order by Editor component', () => {
     ]);
   });
 
-  test('sets sort by to none if undefined provided', fakeAsync(() => {
+  test('sets order by to none if values provided', fakeAsync(() => {
     attributeMetadata.mockReturnValue([
       {
         name: 'test value',
@@ -59,10 +59,10 @@ describe('Explore Query Order by Editor component', () => {
       {
         hostProps: {
           orderByExpression: {
-            aggregation: MetricAggregationType.Average,
+            aggregation: MetricAggregationType.Count,
             direction: SortDirection.Asc,
             attribute: {
-              key: 'duration'
+              key: 'calls'
             }
           }
         }
