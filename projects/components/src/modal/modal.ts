@@ -1,4 +1,5 @@
 import { InjectionToken, TemplateRef, Type } from '@angular/core';
+import { Dictionary } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 
 export interface ModalConfig<TData = unknown> {
@@ -8,6 +9,7 @@ export interface ModalConfig<TData = unknown> {
   title?: string;
   data?: TData;
   closeOnEscapeKey?: boolean;
+  styles?: Dictionary<unknown>;
 }
 
 export const enum ModalSize {
