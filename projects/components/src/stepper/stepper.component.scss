@@ -25,6 +25,19 @@
         color: white;
       }
     }
+
+    .mat-stepper-horizontal {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+    }
+    .mat-horizontal-content-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+    }
   }
 }
 
@@ -33,6 +46,12 @@
   justify-content: space-between;
 
   .action-buttons {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid $gray-1;
+    padding-top: 8px;
     display: flex;
     justify-content: space-between;
 
