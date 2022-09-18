@@ -12,6 +12,7 @@ export interface ModalConfig<TData = unknown> {
   styles?: ModalStyles;
 }
 
+// TODO: Revisit this
 export interface ModalStyles {
   'background-color'?: Color;
 }
