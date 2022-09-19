@@ -24,4 +24,7 @@ export class StepperTabComponent extends ContentHolder {
 
   @Input()
   public stepControl?: AbstractControl;
+
+  @Input()
+  public actionButtonLabel?: string;
 }
