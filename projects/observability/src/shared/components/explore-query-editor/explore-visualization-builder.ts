@@ -164,10 +164,19 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private mapStateToExploreQuery(state: ExploreRequestState): Observable<TimeUnaware<GraphQlExploreRequest>> {
+    const orderBySelection = state.orderBy
+      ? [
+          this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(
+            state.orderBy.attribute,
+            state.orderBy.aggregation
+          )
+        ]
+      : [];
+
     return this.resolveInterval(state.interval).pipe(
       map(interval => ({
         requestType: EXPLORE_GQL_REQUEST,
-        selections: state.series.map(series => series.specification),
+        selections: [...state.series.map(series => series.specification), ...orderBySelection],
         context: state.context,
         interval: interval,
         filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),

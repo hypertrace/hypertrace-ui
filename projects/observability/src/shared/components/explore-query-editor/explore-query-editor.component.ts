@@ -61,7 +61,6 @@ import {
             *ngIf="!currentVisualization.interval"
             class="order-by"
             [orderByExpression]="currentVisualization.orderBy"
-            [selectedSeries]="currentVisualization.series"
             [context]="currentVisualization.context"
             (orderByExpressionChange)="this.updateOrderByExpression($event)"
           ></ht-explore-query-order-by-editor>
