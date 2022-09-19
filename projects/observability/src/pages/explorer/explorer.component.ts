@@ -333,7 +333,7 @@ export class ExplorerComponent {
     if (matches?.length !== 4) {
       return {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
-        direction: SortDirection.Asc,
+        direction: SortDirection.Desc,
         attribute: {
           key: selectedSeries.specification.name
         }

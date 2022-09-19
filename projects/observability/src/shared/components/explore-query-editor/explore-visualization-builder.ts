@@ -151,7 +151,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     if (orderBy === undefined) {
       return {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
-        direction: SortDirection.Asc,
+        direction: SortDirection.Desc,
         attribute: {
           key: selectedSeries.specification.name
         }
