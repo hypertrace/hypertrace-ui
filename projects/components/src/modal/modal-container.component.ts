@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { LayoutChangeService } from '@hypertrace/common';
+import { Dictionary, LayoutChangeService } from '@hypertrace/common';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { POPOVER_DATA } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
@@ -11,7 +11,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './m
   styleUrls: ['./modal-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div *ngIf="this.visible" class="modal-container" [style.height]="this.size.height" [style.width]="this.size.width">
+    <div *ngIf="this.visible" class="modal-container" [style]="this.styles">
       <div class="header">
         <ht-button
           *ngIf="this.showControls"
@@ -47,6 +47,7 @@ export class ModalContainerComponent {
   public readonly rendererInjector: Injector;
   public readonly rendererContext: unknown;
   public readonly closeOnEscape: boolean;
+  public readonly styles: Dictionary<unknown>;
 
   public visible: boolean = true;
 
@@ -61,6 +62,7 @@ export class ModalContainerComponent {
     this.size = this.isModalDimension(config.size)
       ? this.getDimensionsWithUnits(config.size)
       : this.getDimensionsWithUnits(getModalDimensions(config.size));
+    this.styles = { ...config.styles, height: this.size.height, width: this.size.width };
     this.isComponentModal = !(config.content instanceof TemplateRef);
     this.closeOnEscape = config.closeOnEscapeKey ?? true;
     this.renderer = config.content;

@@ -1,4 +1,5 @@
 import { InjectionToken, TemplateRef, Type } from '@angular/core';
+import { Color } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 
 export interface ModalConfig<TData = unknown> {
@@ -8,6 +9,12 @@ export interface ModalConfig<TData = unknown> {
   title?: string;
   data?: TData;
   closeOnEscapeKey?: boolean;
+  styles?: ModalStyles;
+}
+
+// TODO: Revisit this
+export interface ModalStyles {
+  'background-color'?: Color;
 }
 
 export const enum ModalSize {
