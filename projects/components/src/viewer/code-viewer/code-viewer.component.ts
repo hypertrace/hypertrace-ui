@@ -157,9 +157,15 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     }
 
     if (changes.code || changes.highlightText) {
+      /**
+       * `isEmpty(new RexExp('anything'))` returns true, so here we need to make another check for RegExp
+       */
+      const emptyValue =
+        this.highlightText instanceof RegExp ? isEmpty(this.highlightText.source) : isEmpty(this.highlightText);
+
       this.lineHighlights = new Array(this.codeLines.length)
         .fill(false)
-        .map((_, index) => this.isLineHighlighted(index));
+        .map((_, index) => (emptyValue ? false : this.isLineHighlighted(index)));
     }
   }
 
@@ -206,15 +212,6 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   private isLineHighlighted(lineNum: number): boolean {
-    /**
-     * `isEmpty(new RexExp('anything'))` returns true, so here we need to make another check for RegExp
-     */
-    const emptyValue =
-      this.highlightText instanceof RegExp ? isEmpty(this.highlightText.source) : isEmpty(this.highlightText);
-    if (emptyValue) {
-      return false;
-    }
-
     if (typeof this.highlightText === 'string') {
       return this.codeTexts[lineNum].toLowerCase().includes(this.highlightText.toLowerCase());
     }
