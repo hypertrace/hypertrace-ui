@@ -224,7 +224,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
       return (codeText.match(this.highlightText) ?? []).length > 0;
     }
 
-    throw new Error('Invalid type for highlight text, only string, string[] and RegExp is allowed');
+    return false;
   }
 
   // Background elements for search
