@@ -51,9 +51,25 @@ describe('Code Viewer Component', () => {
     expect(spectator.queryAll('.line-number.line-highlight').length).toBe(0);
     expect(spectator.queryAll('.code-line.line-highlight').length).toBe(0);
 
-    // Highlight text
+    // Highlight text (with string input)
     spectator.setInput({
       highlightText: 'key'
+    });
+
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
+
+    // Highlight text (with string[] input)
+    spectator.setInput({
+      highlightText: ['key']
+    });
+
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
+    expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
+
+    // Highlight text (with RegExp input)
+    spectator.setInput({
+      highlightText: new RegExp('key')
     });
 
     expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
