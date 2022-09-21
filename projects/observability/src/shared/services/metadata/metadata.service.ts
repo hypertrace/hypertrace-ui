@@ -63,6 +63,10 @@ export class MetadataService {
     );
   }
 
+  public getSortableAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
+    return this.getServerDefinedAttributes(scope);
+  }
+
   public getSpecificationDisplayNameWithUnit(
     scope: string,
     spec: Specification

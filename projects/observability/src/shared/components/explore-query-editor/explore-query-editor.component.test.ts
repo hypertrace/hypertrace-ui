@@ -2,6 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
+  FeatureState,
+  FeatureStateResolver,
   FixedTimeRange,
   IntervalDurationService,
   NavigationService,
@@ -86,6 +88,9 @@ describe('Explore query editor', () => {
         availableIntervals$: of('AUTO'),
         getAutoDurationFromTimeDurations: () => new TimeDuration(15, TimeUnit.Second),
         getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getCombinedFeatureState: () => of(FeatureState.Disabled)
       }),
       mockProvider(NavigationService, {
         navigation$: EMPTY

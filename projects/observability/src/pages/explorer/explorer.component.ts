@@ -14,16 +14,19 @@ import { concat, EMPTY, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
+  ExploreOrderBy,
   ExploreRequestState,
   ExploreSeries,
   ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
+import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { GraphQlSortDirection } from '../../shared/graphql/model/schema/sort/graphql-sort-direction';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -76,6 +79,7 @@ import {
                 [series]="initialState.series"
                 [interval]="initialState.interval"
                 [groupBy]="initialState.groupBy"
+                [orderBy]="initialState.orderBy"
               ></ht-explore-query-editor>
 
               <ht-application-aware-dashboard
@@ -212,8 +216,19 @@ export class ExplorerComponent {
       [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context as ExplorerGeneratedDashboardContext),
       [ExplorerQueryParam.Interval]: this.encodeInterval(request.interval),
       [ExplorerQueryParam.Series]: request.series.map(series => this.encodeExploreSeries(series)),
+      ...this.getOrderByQueryParams(request.orderBy),
       ...this.getGroupByQueryParams(request.groupBy)
     });
+  }
+
+  private getOrderByQueryParams(orderBy?: ExploreOrderBy): QueryParamObject {
+    return orderBy === undefined
+      ? {
+          [ExplorerQueryParam.Order]: undefined
+        }
+      : {
+          [ExplorerQueryParam.Order]: this.encodeExploreOrderBy(orderBy)
+        };
   }
 
   private getGroupByQueryParams(groupBy?: GraphQlGroupBy): QueryParamObject {
@@ -235,6 +250,12 @@ export class ExplorerComponent {
   }
 
   private mapToInitialState(param: ParamMap): InitialExplorerState {
+    const series: ExploreSeries[] = param
+      .getAll(ExplorerQueryParam.Series)
+      .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
+
+    const interval: IntervalValue = this.decodeInterval(param.get(ExplorerQueryParam.Interval));
+
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
       groupBy: param.has(ExplorerQueryParam.Group)
@@ -247,8 +268,12 @@ export class ExplorerComponent {
             limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
           }
         : undefined,
-      interval: this.decodeInterval(param.get(ExplorerQueryParam.Interval)),
-      series: param.getAll(ExplorerQueryParam.Series).flatMap(series => this.tryDecodeExploreSeries(series))
+      interval: interval,
+      series: series,
+      orderBy:
+        interval === 'NONE'
+          ? this.tryDecodeExploreOrderBy(series[0], param.get(ExplorerQueryParam.Order) ?? undefined)
+          : undefined
     };
   }
 
@@ -278,6 +303,10 @@ export class ExplorerComponent {
     return `${series.visualizationOptions.type}:${series.specification.aggregation}(${series.specification.name})`;
   }
 
+  private encodeExploreOrderBy(orderBy: ExploreOrderBy): string {
+    return `${orderBy.aggregation}(${orderBy.attribute.key}):${orderBy.direction}`;
+  }
+
   private tryDecodeExploreSeries(seriesString: string): [ExploreSeries] | [] {
     const matches = seriesString.match(/(\w+):(\w+)\((\w+)\)/);
     if (matches?.length !== 4) {
@@ -296,6 +325,28 @@ export class ExplorerComponent {
         }
       }
     ];
+  }
+
+  private tryDecodeExploreOrderBy(selectedSeries: ExploreSeries, orderByString?: string): ExploreOrderBy {
+    const matches = orderByString?.match(/(\w+)\((\w+)\):(\w+)/);
+
+    if (matches?.length !== 4) {
+      return {
+        aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+        direction: SortDirection.Desc,
+        attribute: {
+          key: selectedSeries.specification.name
+        }
+      };
+    }
+
+    return {
+      aggregation: matches[1] as MetricAggregationType,
+      direction: matches[3] as GraphQlSortDirection,
+      attribute: {
+        key: matches[2]
+      }
+    };
   }
 
   private encodeAttributeExpression(attributeExpression: AttributeExpression): string {
@@ -320,6 +371,7 @@ interface InitialExplorerState {
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
+  orderBy?: ExploreOrderBy;
 }
 
 interface ExplorerContextScope {
@@ -337,5 +389,6 @@ const enum ExplorerQueryParam {
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
-  Series = 'series'
+  Series = 'series',
+  Order = 'order'
 }
