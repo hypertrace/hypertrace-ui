@@ -63,7 +63,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      overflow-x: auto;
+      overflow: auto hidden;
 
       .code-line {
         @include line-base;
