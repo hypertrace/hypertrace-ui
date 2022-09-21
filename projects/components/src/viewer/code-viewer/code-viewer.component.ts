@@ -165,7 +165,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
       this.lineHighlights = new Array(this.codeLines.length)
         .fill(false)
-        .map((_, index) => (emptyValue ? false : this.isLineHighlighted(index)));
+        .map((_, index) => (emptyValue ? false : this.isLineHighlighted(this.codeTexts[index].toLowerCase())));
     }
   }
 
@@ -211,17 +211,17 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     });
   }
 
-  private isLineHighlighted(lineNum: number): boolean {
+  private isLineHighlighted(codeText: string): boolean {
     if (typeof this.highlightText === 'string') {
-      return this.codeTexts[lineNum].toLowerCase().includes(this.highlightText.toLowerCase());
+      return codeText.includes(this.highlightText.toLowerCase());
     }
 
     if (Array.isArray(this.highlightText)) {
-      return this.highlightText.some(text => this.codeTexts[lineNum].toLowerCase().includes(text.toLowerCase()));
+      return this.highlightText.some(text => codeText.includes(text.toLowerCase()));
     }
 
     if (this.highlightText instanceof RegExp) {
-      return (this.codeTexts[lineNum].match(this.highlightText) ?? []).length > 0;
+      return (codeText.match(this.highlightText) ?? []).length > 0;
     }
 
     throw new Error('Invalid type for highlight text, only string, string[] and RegExp is allowed');
