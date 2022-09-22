@@ -64,7 +64,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
-        recycleRows
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
         [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
@@ -809,7 +808,9 @@ export class TableComponent
     this.resizeStartX = this.resizeStartX + offsetX;
   }
 
-  private readonly debouncedResizeColumn: () => void = debounce(this.resizeColumn, 20, { trailing: true });
+  private readonly debouncedResizeColumn: (event: MouseEvent) => void = debounce(this.resizeColumn, 20, {
+    trailing: true
+  });
 }
 
 export interface SortedColumn<TCol extends TableColumnConfig> {
