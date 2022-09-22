@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
+import { PopoverBackdrop, PopoverFixedPositionLocation, PopoverPositionType } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
 import { DefaultSheetRef } from './sheet/default-sheet-ref';
@@ -32,6 +32,7 @@ export class OverlayService {
         type: PopoverPositionType.Fixed,
         location: config.position ?? PopoverFixedPositionLocation.RightUnderHeader
       },
+      backdrop: config.backdrop ?? PopoverBackdrop.None,
       data: metadata
     });
 

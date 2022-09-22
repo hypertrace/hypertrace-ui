@@ -1,13 +1,14 @@
 import { InjectionToken, TemplateRef } from '@angular/core';
 import { ExternalNavigationParams } from '@hypertrace/common';
 import { Observable } from 'rxjs';
-import { PopoverFixedPositionLocation } from '../../popover/popover';
+import { PopoverBackdrop, PopoverFixedPositionLocation } from '../../popover/popover';
 import { OverlayConfig } from './../overlay';
 
 export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   size: SheetSize;
   data?: TData;
   position?: PopoverFixedPositionLocation.Right | PopoverFixedPositionLocation.RightUnderHeader;
+  backdrop?: PopoverBackdrop;
   closeOnEscapeKey?: boolean;
   closeOnNavigation?: boolean;
   attachedTriggerTemplate?: TemplateRef<unknown>;
