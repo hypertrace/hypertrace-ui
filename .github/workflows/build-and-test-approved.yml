@@ -118,7 +118,6 @@ jobs:
       - name: Prettier Check
         run: npm run prettier:check:affected
   test:
-    name: Test
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     strategy:
