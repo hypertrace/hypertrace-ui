@@ -22,7 +22,7 @@ export class FileDownloadService implements OnDestroy {
   }
 
   /**
-   * Downloads data as text file
+   * Downloads data as text content
    * @param config Text download config
    */
   public downloadAsText(config: FileDownloadBaseConfig): void {
@@ -30,11 +30,11 @@ export class FileDownloadService implements OnDestroy {
   }
 
   /**
-   * Downloads data as csv file
+   * Downloads data as csv formatted content
    * @param config Csv download config
    */
   public downloadAsCsv(config: CsvDownloadFileConfig): void {
-    // If given header is empty, then creates header from the data keys
+    // If given header is empty, then create header from the data keys
     const header$ = isEmpty(config.header)
       ? config.dataSource.pipe(
           map(data => Object.keys(data[0] ?? [])),
@@ -42,12 +42,18 @@ export class FileDownloadService implements OnDestroy {
         )
       : of(config.header!);
 
-    const values$ = config.dataSource.pipe(map(data => data.map(datum => Object.values(datum))));
+    // Value replacer for null and undefined values
+    const replacer = (_: string, value: string) => value ?? '-';
 
-    // Creates csv data as string
+    // Convert values into strings
+    const values$ = config.dataSource.pipe(
+      map(data => data.map(datum => Object.values(datum).map(value => JSON.stringify(value, replacer))))
+    );
+
+    // Create csv data as string
     const csvData$ = combineLatest([header$, values$]).pipe(
-      map(([header, values]) => [header, ...values]),
-      map(data => data.map(d => d.join(',')).join('\n'))
+      map(([header, values]) => [header, ...values]), // Merge header and values
+      map(data => data.map(datum => datum.join(',')).join('\r\n')) // Join data to create a string
     );
 
     this.download({ ...config, dataSource: csvData$ }, csvData => {
@@ -106,7 +112,7 @@ export class FileDownloadService implements OnDestroy {
   }
 }
 
-export interface CsvDownloadFileConfig extends FileDownloadBaseConfig<Dictionary<string | number | boolean>[]> {
+export interface CsvDownloadFileConfig extends FileDownloadBaseConfig<Dictionary<unknown>[]> {
   header?: string[];
 }
 
