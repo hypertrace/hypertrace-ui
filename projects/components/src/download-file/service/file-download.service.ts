@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import { isEmpty, startCase } from 'lodash';
+import { isEmpty, startCase } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
@@ -34,11 +34,11 @@ export class FileDownloadService implements OnDestroy {
    * @param config Csv download config
    */
   public downloadAsCsv(config: CsvDownloadFileConfig): void {
-    // if given header is empty, then creates header from the data keys
+    // If given header is empty, then creates header from the data keys
     const header$ = isEmpty(config.header)
       ? config.dataSource.pipe(
           map(data => Object.keys(data[0] ?? [])),
-          map(keys => keys.map(key => startCase(key)))
+          map(keys => keys.map(startCase))
         )
       : of(config.header!);
 
@@ -52,6 +52,7 @@ export class FileDownloadService implements OnDestroy {
 
     this.download({ ...config, dataSource: csvData$ }, csvData => {
       const csvFile = new Blob([csvData], { type: 'text/csv' });
+
       return window.URL.createObjectURL(csvFile);
     });
   }
