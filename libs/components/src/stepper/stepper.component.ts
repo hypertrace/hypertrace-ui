@@ -58,14 +58,14 @@ import { StepperTabComponent } from './stepper-tab.component';
           <ht-button
             class="next"
             *ngIf="stepper.selectedIndex !== steps.length - 1"
-            label="Next"
+            [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
             (click)="stepper.next()"
             [disabled]="this.isNextDisabled(stepper)"
           ></ht-button>
           <ht-button
             class="submit"
             *ngIf="stepper.selectedIndex === steps.length - 1"
-            label="Submit"
+            [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
             (click)="this.submitted.emit()"
             [disabled]="this.isSubmitDisabled(stepper)"
           ></ht-button>
@@ -136,6 +136,10 @@ export class StepperComponent implements AfterContentInit {
     if (isIndexValid && isNavigationAllowed && this.stepper) {
       this.stepper.selectedIndex = index;
     }
+  }
+
+  public getActionButtonLabel(selectedIndex: number, steps: StepperTabComponent[]): string {
+    return steps[selectedIndex]?.actionButtonLabel ?? (selectedIndex === steps.length ? 'Submit' : 'Next');
   }
 
   private isStepCompleted(index: number): boolean {

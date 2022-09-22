@@ -37,8 +37,9 @@ describe('String array table cell renderer component', () => {
       providers: [tableCellDataProvider([])]
     });
 
-    expect(spectator.query('.first-item')).toHaveText('-');
-    expect(spectator.query(XMoreComponent)?.count).toBe(0);
+    expect(spectator.query('.string-array-cell')).toHaveText('-');
+    expect(spectator.query('.first-item')).not.toExist();
+    expect(spectator.query(XMoreComponent)).not.toExist();
   });
 
   test('should render array with multiple items as expected', () => {

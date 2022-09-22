@@ -18,9 +18,15 @@
 
   .query-level-config {
     display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-    > :not(:first-child) {
-      margin-left: 24px;
+    .filters-row {
+      display: flex;
+
+      > :not(:first-child) {
+        margin-left: 24px;
+      }
     }
   }
 }

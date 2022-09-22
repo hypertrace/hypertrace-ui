@@ -10,10 +10,13 @@ import { Filter } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
 import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
+import { GraphQlSortBySpecification } from '../../graphql/model/schema/sort/graphql-sort-by-specification';
+import { GraphQlSortDirection } from '../../graphql/model/schema/sort/graphql-sort-direction';
 import { SPAN_SCOPE } from '../../graphql/model/schema/span';
 import { ExploreSpecification } from '../../graphql/model/schema/specifications/explore-specification';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
@@ -32,6 +35,7 @@ import {
 import { GraphQlFilterBuilderService } from '../../services/filter-builder/graphql-filter-builder.service';
 import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
+import { SortDirection } from './order-by/explore-query-order-by-editor.component';
 
 @Injectable()
 export class ExploreVisualizationBuilder implements OnDestroy {
@@ -88,9 +92,20 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     });
   }
 
+  public orderBy(orderBy?: ExploreOrderBy): this {
+    return this.updateState({
+      orderBy: orderBy
+    });
+  }
+
   public interval(interval?: TimeDuration | 'AUTO'): this {
     return this.updateState({
-      interval: interval
+      interval: interval,
+      ...(interval !== undefined
+        ? {
+            orderBy: undefined
+          }
+        : undefined)
     });
   }
 
@@ -117,6 +132,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   }
 
   private buildRequest(state: ExploreRequestState): ExploreVisualizationRequest {
+    const orderBy = state.interval === undefined ? this.getOrderBy(state.series[0], state.orderBy) : undefined;
+
     return {
       context: state.context,
       resultLimit: state.resultLimit,
@@ -124,23 +141,59 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       filters: state.filters && [...state.filters],
       interval: state.interval,
       groupBy: state.groupBy && { ...state.groupBy },
-      exploreQuery$: this.mapStateToExploreQuery(state),
+      orderBy: orderBy,
+      exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy: orderBy }),
       resultsQuery$: this.mapStateToResultsQuery(state)
     };
   }
 
+  private getOrderBy(selectedSeries: ExploreSeries, orderBy?: ExploreOrderBy): ExploreOrderBy | undefined {
+    if (orderBy === undefined) {
+      return {
+        aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
+        direction: SortDirection.Desc,
+        attribute: {
+          key: selectedSeries.specification.name
+        }
+      };
+    }
+
+    return {
+      ...orderBy
+    };
+  }
+
   private mapStateToExploreQuery(state: ExploreRequestState): Observable<TimeUnaware<GraphQlExploreRequest>> {
+    const orderBySelection = state.orderBy
+      ? [
+          this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(
+            state.orderBy.attribute,
+            state.orderBy.aggregation
+          )
+        ]
+      : [];
+
     return this.resolveInterval(state.interval).pipe(
       map(interval => ({
         requestType: EXPLORE_GQL_REQUEST,
-        selections: state.series.map(series => series.specification),
+        selections: [...state.series.map(series => series.specification), ...orderBySelection],
         context: state.context,
         interval: interval,
         filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
         groupBy: state.groupBy,
+        orderBy: state.orderBy && this.mapOrderByToGraphQlSpecification(state.orderBy),
         limit: state.resultLimit
       }))
     );
+  }
+
+  private mapOrderByToGraphQlSpecification(orderBy: ExploreOrderBy): GraphQlSortBySpecification[] {
+    return [
+      {
+        direction: orderBy.direction,
+        key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation)
+      }
+    ];
   }
 
   private mapStateToResultsQuery(
@@ -242,6 +295,7 @@ export interface ExploreRequestState {
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
+  orderBy?: ExploreOrderBy;
   useGroupName?: boolean;
   resultLimit: number;
 }
@@ -260,6 +314,12 @@ export interface ExploreSeriesVisualizationOptions {
 export interface ExploreSeries {
   specification: ExploreSpecification;
   visualizationOptions: ExploreSeriesVisualizationOptions;
+}
+
+export interface ExploreOrderBy {
+  aggregation: MetricAggregationType;
+  direction: GraphQlSortDirection;
+  attribute: AttributeExpression;
 }
 
 type TimeUnaware<T> = Omit<T, 'timeRange'>;

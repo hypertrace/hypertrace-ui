@@ -1,11 +1,13 @@
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { By } from '@angular/platform-browser';
 import { MemoizeModule } from '@hypertrace/common';
-import { LoadAsyncModule, StepperComponent } from '@hypertrace/components';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponents } from 'ng-mocks';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
+import { LoadAsyncModule } from '../load-async/load-async.module';
+import { StepperComponent } from '../stepper/stepper.component';
 import { StepperTabComponent } from './stepper-tab.component';
 
 describe('Stepper Component', () => {
@@ -87,7 +89,7 @@ describe('Stepper Component', () => {
       `<ht-stepper class="stepper" [isLinear]="isLinear">
             <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
             <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
-            <ht-stepper-tab label="Kem cho" [completed]="tabThreeStatus"> Test!</ht-stepper-tab>
+            <ht-stepper-tab label="Kem cho" [completed]="tabThreeStatus" actionButtonLabel="Click me!"> Test!</ht-stepper-tab>
           </ht-stepper>`,
       {
         hostProps: {
@@ -103,6 +105,7 @@ describe('Stepper Component', () => {
     spectator.click('.next');
     const actionButtons = spectator.queryAll(ButtonComponent);
     expect(spectator.query('.submit')).toExist();
+    expect(spectator.debugElement.query(By.css('.submit')).componentInstance.label).toBe('Click me!');
     expect(actionButtons[2].disabled).toBe(true);
   });
 });
