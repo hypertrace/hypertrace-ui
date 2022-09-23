@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "newProjectRoot": "projects",
   "projects": {
     "assets-library": {
       "projectType": "library",
@@ -8,22 +7,6 @@
       "sourceRoot": "libs/assets-library/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/assets-library"],
-          "options": {
-            "project": "libs/assets-library/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/assets-library/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/assets-library/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/assets-library", "test-results/libs/assets-library"],
@@ -48,22 +31,6 @@
       "sourceRoot": "libs/common/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/common"],
-          "options": {
-            "project": "libs/common/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/common/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/common/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/common", "test-results/libs/common"],
@@ -88,22 +55,6 @@
       "sourceRoot": "libs/components/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/components"],
-          "options": {
-            "project": "libs/components/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/components/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/components/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/components", "test-results/libs/components"],
@@ -128,22 +79,6 @@
       "sourceRoot": "libs/dashboards/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/dashboards"],
-          "options": {
-            "project": "libs/dashboards/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/dashboards/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/dashboards/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/dashboards", "test-results/libs/dashboards"],
@@ -168,22 +103,6 @@
       "sourceRoot": "libs/graphql-client/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/graphql-client"],
-          "options": {
-            "project": "libs/graphql-client/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/graphql-client/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/graphql-client/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/graphql-client", "test-results/libs/graphql-client"],
@@ -317,22 +236,6 @@
       "sourceRoot": "libs/observability/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/observability"],
-          "options": {
-            "project": "libs/observability/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/observability/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/observability/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/observability", "test-results/libs/observability"],
@@ -357,22 +260,6 @@
       "sourceRoot": "libs/test-utils/src",
       "prefix": "hypertrace",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "outputs": ["dist/libs/test-utils"],
-          "options": {
-            "project": "libs/test-utils/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/test-utils/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/test-utils/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/test-utils", "test-results/libs/test-utils"],

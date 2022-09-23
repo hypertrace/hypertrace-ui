@@ -56,5 +56,28 @@
       "style": "scss"
     }
   },
-  "defaultProject": "hypertrace-ui"
+  "defaultProject": "hypertrace-ui",
+  "projects": {
+    "assets-library": {
+      "tags": []
+    },
+    "common": {
+      "tags": []
+    },
+    "components": {
+      "tags": []
+    },
+    "dashboards": {
+      "tags": []
+    },
+    "graphql-client": {
+      "tags": []
+    },
+    "observability": {
+      "tags": []
+    },
+    "test-utils": {
+      "tags": []
+    }
+  }
 }
