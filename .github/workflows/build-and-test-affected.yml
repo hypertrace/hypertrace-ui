@@ -154,6 +154,12 @@ jobs:
       - name: Test
         run: npm run test:affected
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage
+          fail_ci_if_error: true
+
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
