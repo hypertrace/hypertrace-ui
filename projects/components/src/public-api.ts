@@ -266,6 +266,10 @@ export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
 
+// Popover Zone
+export * from './popover-zone/popover-zone.module';
+export * from './popover-zone/popover-zone.component';
+
 // Progress Bar
 export * from './progress-bar/progress-bar.component';
 export * from './progress-bar/progress-bar.module';

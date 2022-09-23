@@ -1,8 +1,8 @@
 import { fakeAsync, flush } from '@angular/core/testing';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { PopoverService } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { BehaviorSubject } from 'rxjs';
+import { PopoverService } from '../popover/popover.service';
 import { PopoverZoneComponent } from './popover-zone.component';
 
 describe('Popover Zone Component', () => {

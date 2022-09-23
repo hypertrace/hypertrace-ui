@@ -9,16 +9,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import {
-  PopoverBackdrop,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverRelativePositionLocation,
-  PopoverService
-} from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
+import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
+import { PopoverRef } from '../popover/popover-ref';
+import { PopoverService } from '../popover/popover.service';
 
 @Component({
   selector: 'ht-popover-zone',
