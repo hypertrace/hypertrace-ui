@@ -152,7 +152,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:affected
+        run: npm run test:affected:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
