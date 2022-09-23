@@ -1,10 +1,11 @@
 name: build-and-test-approved
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   npm-install-if-needed:
-    if: github.event.review.state == 'approved'
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code
