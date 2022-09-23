@@ -118,6 +118,10 @@ jobs:
 
       - name: Prettier Check
         run: npm run prettier:check:affected
+
+      - name: Workspace Lint
+        run: npm run workspace:lint
+
   test-affected:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
