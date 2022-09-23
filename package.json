@@ -17,6 +17,7 @@
     "test:ci:with-cache": "nx run-many --target=test --all --ci --coverage",
     "test:ci": "nx run-many --target=test --all --ci --coverage --skip-nx-cache",
     "test:affected": "nx affected --target=test --configuration production --parallel --maxParallel=1",
+    "test:affected:coverage": "npm run test:affected -- --coverage",
     "lint": "nx run-many --target=lint --all",
     "lint:ci": "npm run lint -- --skip-nx-cache",
     "lint:affected": "nx affected --target=lint --parallel=true --maxParallel=2",
