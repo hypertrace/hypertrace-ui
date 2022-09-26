@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 // Todo: Temporary Mock
 import { orgScoreResponse, serviceScoreResponse } from './service-instrumentation.fixture';
@@ -7,6 +7,10 @@ import { OrgScoreResponse, ServiceScoreResponse } from './service-instrumentatio
 
 @Injectable()
 export class ServiceInstrumentationService {
+  public serviceScoreSubject: BehaviorSubject<ServiceScoreResponse | undefined> = new BehaviorSubject<
+    ServiceScoreResponse | undefined
+  >(undefined);
+
   public getServiceScore(serviceName: string): Observable<ServiceScoreResponse> {
     return of({ ...serviceScoreResponse, serviceName: serviceName });
   }

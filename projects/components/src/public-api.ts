@@ -247,6 +247,9 @@ export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
 
+// Progress Bar
+export * from './progress-bar/progress-bar.module';
+
 // Progress Circle
 export * from './progress-circle/progress-circle.module';
 

@@ -3,6 +3,8 @@ import { HtRoute } from '@hypertrace/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
+  InstrumentationDetailsComponent,
+  InstrumentationOverviewComponent,
   ServiceApisListComponent,
   ServiceDeploymentsComponent,
   ServiceDetailComponent,
@@ -41,7 +43,11 @@ const ROUTE_CONFIG: HtRoute[] = [
       },
       {
         path: 'instrumentation',
-        component: ServiceInstrumentationComponent
+        component: ServiceInstrumentationComponent,
+        children: [
+          { path: '', component: InstrumentationOverviewComponent },
+          { path: ':category', component: InstrumentationDetailsComponent }
+        ]
       },
       {
         path: 'deployments',

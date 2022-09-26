@@ -16,6 +16,7 @@ import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
         [htTrack]
         [htTrackLabel]="this.label"
         [type]="this.type"
+        [style.width]="this.width"
       >
         <ht-icon
           *ngIf="this.icon && !this.trailingIcon"
@@ -65,6 +66,9 @@ export class ButtonComponent {
 
   @Input()
   public disabled: boolean | undefined;
+
+  @Input()
+  public width: string = 'auto';
 
   public getStyleClasses(): string[] {
     const classes: string[] = [this.role, this.size, this.display];

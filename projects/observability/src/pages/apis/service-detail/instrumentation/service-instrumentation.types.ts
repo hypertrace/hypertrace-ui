@@ -1,4 +1,4 @@
-interface QoiParamScore {
+export interface QoiParamScore {
   description: string;
   qoiParam: string;
   evalTimestamp: number;
@@ -8,7 +8,7 @@ interface QoiParamScore {
   failureCount: number;
 }
 
-interface QoiTypeScore {
+export interface QoiTypeScore {
   qoiType: string;
   score: number;
   description?: string;

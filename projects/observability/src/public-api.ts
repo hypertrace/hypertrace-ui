@@ -243,6 +243,8 @@ export * from './pages/apis/service-detail/traces/service-trace-list.component';
 export * from './pages/apis/service-detail/traces/service-trace-list.dashboard';
 export * from './pages/apis/service-detail/apis/service-apis-list.component';
 export * from './pages/apis/service-detail/apis/service-apis-list.dashboard';
+export * from './pages/apis/service-detail/instrumentation/components/instrumentation-details.component';
+export * from './pages/apis/service-detail/instrumentation/components/instrumentation-overview.component';
 
 export * from './pages/apis/backend-detail/backend-detail.module';
 export * from './pages/apis/backend-detail/backend-detail.component';

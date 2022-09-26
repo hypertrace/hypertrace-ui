@@ -1,0 +1,14 @@
+@import 'font';
+
+.service-instrumentation-details {
+  h4 {
+    @include header-4();
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .description {
+    @include body-1-regular;
+    text-align: justify;
+  }
+}
