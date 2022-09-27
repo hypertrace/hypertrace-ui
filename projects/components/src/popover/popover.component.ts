@@ -9,14 +9,17 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
+import { assertUnreachable } from '@hypertrace/common';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from './popover';
 import { PopoverContentComponent } from './popover-content.component';
 import { PopoverRef } from './popover-ref';
-import { PopoverTriggerComponent } from './popover-trigger.component';
+import { PopoverTriggerComponent, PopoverTriggerType } from './popover-trigger.component';
 import { PopoverService } from './popover.service';
+import { PopoverHoverTriggerService } from './service/popover-hover-trigger.service';
 
 @Component({
   selector: 'ht-popover',
+  providers: [PopoverHoverTriggerService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <ng-container *ngTemplateOutlet="this.trigger.content"></ng-container> `
 })
@@ -52,7 +55,11 @@ export class PopoverComponent implements OnDestroy {
 
   private popover?: PopoverRef;
 
-  public constructor(private readonly popoverService: PopoverService, private readonly popoverElement: ElementRef) {}
+  public constructor(
+    private readonly popoverService: PopoverService,
+    private readonly popoverHoverTriggerService: PopoverHoverTriggerService,
+    private readonly popoverElement: ElementRef
+  ) {}
 
   public ngOnDestroy(): void {
     if (!this.popover?.closed) {
@@ -62,6 +69,30 @@ export class PopoverComponent implements OnDestroy {
 
   @HostListener('click')
   public onClick(): void {
+    if (this.popoverTriggerType === PopoverTriggerType.Click) {
+      this.handleClickPopoverTrigger();
+    }
+  }
+
+  @HostListener('mouseenter')
+  public onMouseenter(): void {
+    if (this.popoverTriggerType === PopoverTriggerType.Hover) {
+      this.handleHoverPopoverTrigger('mouseenter');
+    }
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave(): void {
+    if (this.popoverTriggerType === PopoverTriggerType.Hover) {
+      this.handleHoverPopoverTrigger('mouseleave');
+    }
+  }
+
+  private get popoverTriggerType(): PopoverTriggerType {
+    return this.trigger?.type ?? PopoverTriggerType.Click;
+  }
+
+  private handleClickPopoverTrigger(): void {
     if (this.disabled) {
       return;
     }
@@ -89,5 +120,30 @@ export class PopoverComponent implements OnDestroy {
     }
 
     this.popoverOpen.emit(this.popover);
+  }
+
+  private handleHoverPopoverTrigger(event: 'mouseenter' | 'mouseleave'): void {
+    if (this.disabled) {
+      return;
+    }
+
+    switch (event) {
+      case 'mouseenter':
+        this.popoverHoverTriggerService.showPopover({
+          origin: this.popoverElement,
+          popoverContent: this.content,
+          options: {
+            data: this.content.data
+          }
+        });
+        break;
+
+      case 'mouseleave':
+        this.popoverHoverTriggerService.closePopover();
+        break;
+
+      default:
+        assertUnreachable(event);
+    }
   }
 }

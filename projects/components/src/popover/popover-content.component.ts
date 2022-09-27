@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holder';
 
 @Component({
@@ -6,4 +6,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holde
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: CONTENT_HOLDER_TEMPLATE
 })
-export class PopoverContentComponent extends ContentHolder {}
+export class PopoverContentComponent extends ContentHolder {
+  @Input()
+  public data?: unknown;
+}
