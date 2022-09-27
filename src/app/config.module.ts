@@ -8,7 +8,7 @@ import {
   USER_PREFERENCES_OPTIONS
 } from '@hypertrace/common';
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
-import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
+import { DEPLOYMENT_SERVICE_OPTIONS, ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
 import { entityMetadata } from './entity-metadata';
 import { FeatureResolverModule } from './shared/feature-resolver/feature-resolver.module';
@@ -27,6 +27,12 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
       provide: USER_PREFERENCES_OPTIONS,
       useValue: {
         uri: environment.userPreferencesUri
+      }
+    },
+    {
+      provide: DEPLOYMENT_SERVICE_OPTIONS,
+      useValue: {
+        uri: environment.deploymentServiceUri
       }
     },
     {
