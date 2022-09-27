@@ -8,9 +8,12 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="service-deployments">
-      <p *ngIf="serviceName$ | async as serviceName; else loading">
-        Here is the list of your deployments in last 24 hours for {{ serviceName }}
-      </p>
+      <div *ngIf="serviceName$ | async as serviceName; else loading">
+        <p>Here is the list of your deployments in last 24 hours for {{ serviceName }}</p>
+        <section>
+          <ht-service-deployments-list [serviceName]="serviceName"> </ht-service-deployments-list>
+        </section>
+      </div>
       <ng-template #loading> Loading stuff... </ng-template>
     </main>
   `
