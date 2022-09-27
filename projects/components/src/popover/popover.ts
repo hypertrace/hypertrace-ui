@@ -29,6 +29,8 @@ export interface PopoverRelativePosition {
   type: PopoverPositionType.Relative;
   origin: ElementRef;
   locationPreferences: PopoverRelativePositionLocation[];
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface PopoverFixedPosition {
