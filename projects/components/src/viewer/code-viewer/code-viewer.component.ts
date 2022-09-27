@@ -47,7 +47,7 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
             <div
               *ngFor="let lineNumber of this.lineNumbers"
               class="line-number"
-              [ngClass]="{ 'line-highlight': this.isLineHighlighted(lineNumber - 1) }"
+              [ngClass]="{ 'line-highlight': this.lineHighlights[lineNumber - 1] }"
             >
               {{ lineNumber }}
             </div>
@@ -56,7 +56,7 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
             <div
               *ngFor="let codeLine of this.codeLines; let index = index"
               class="code-line"
-              [ngClass]="{ 'line-highlight': this.isLineHighlighted(index) }"
+              [ngClass]="{ 'line-highlight': this.lineHighlights[index] }"
             >
               <pre class="code-line-text" [innerHtml]="codeLine"></pre>
               <div #codeLineBackground class="code-line-background"></div>
@@ -85,7 +85,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public language: CodeLanguage = CodeLanguage.Yaml; // Need a default language by highlight.js
 
   @Input()
-  public highlightText: string = ''; // To highlight the entire line
+  public highlightText: string | string[] | RegExp = ''; // To highlight the entire line
 
   @Input()
   public titleText: string = 'Code Viewer';
@@ -127,6 +127,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public codeLines: string[] = []; // HTML strings after syntax highlighting
   public downloadCodeMetadata?: DownloadFileMetadata;
   public lineNumbers: number[] = [];
+  public lineHighlights: boolean[] = [];
 
   private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
     this.onDomMutation(mutations)
@@ -154,6 +155,18 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
         fileName: this.downloadFileName
       };
     }
+
+    if (changes.code || changes.highlightText) {
+      /**
+       * `isEmpty(new RexExp('anything'))` returns true, so here we need to make another check for RegExp
+       */
+      const emptyValue =
+        this.highlightText instanceof RegExp ? isEmpty(this.highlightText.source) : isEmpty(this.highlightText);
+
+      this.lineHighlights = new Array(this.codeLines.length)
+        .fill(false)
+        .map((_, index) => (emptyValue ? false : this.isLineHighlighted(this.codeTexts[index].toLowerCase())));
+    }
   }
 
   public ngOnDestroy(): void {
@@ -162,12 +175,6 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   public get isCodeEmpty(): boolean {
     return isEmpty(this.code);
-  }
-
-  public isLineHighlighted(lineNum: number): boolean {
-    return (
-      !isEmpty(this.highlightText) && this.codeTexts[lineNum].toLowerCase().includes(this.highlightText.toLowerCase())
-    );
   }
 
   public onSearch(searchString: string): void {
@@ -202,6 +209,22 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.codeLineBackgroundElements.forEach((codeLineBackgroundElement, index) => {
       codeLineBackgroundElement.nativeElement.appendChild(this.getBackgroundElements(searchedPositions[index]));
     });
+  }
+
+  private isLineHighlighted(codeText: string): boolean {
+    if (typeof this.highlightText === 'string') {
+      return codeText.includes(this.highlightText.toLowerCase());
+    }
+
+    if (Array.isArray(this.highlightText)) {
+      return this.highlightText.some(text => codeText.includes(text.toLowerCase()));
+    }
+
+    if (this.highlightText instanceof RegExp) {
+      return (codeText.match(this.highlightText) ?? []).length > 0;
+    }
+
+    return false;
   }
 
   // Background elements for search
