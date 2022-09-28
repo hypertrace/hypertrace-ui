@@ -1,3 +1,4 @@
+import { Dictionary } from '@hypertrace/common';
 import { GraphQlSelection } from '@hypertrace/graphql-client';
 import { Specification } from '../../../../../model/schema/specifier/specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../../../builders/argument/graphql-observability-argument-builder';
@@ -45,6 +46,12 @@ export interface NeighborSpecificationBuildConfig {
   edgeDirection: TopologyEdgeDirection;
   nodeSpecifications: Specification[];
   neighborType: string;
+}
+
+export interface TopologyNeighborSpecResult {
+  results: {
+    neighbor: Dictionary<unknown>;
+  };
 }
 
 export const enum TopologyEdgeDirection {
