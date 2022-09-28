@@ -51,7 +51,7 @@ export interface NeighborSpecificationBuildConfig {
 export interface TopologyNeighborSpecResult {
   results: {
     neighbor: Dictionary<unknown>;
-  };
+  }[];
 }
 
 export const enum TopologyEdgeDirection {
