@@ -148,7 +148,7 @@ export class StepperComponent implements AfterContentInit {
       .subscribe(valid => {
         const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;
         const isNextDisabled = this.isLinear && !valid;
-        const isSubmitDisabled = this.areAllStepsValid();
+        const isSubmitDisabled = !this.areAllStepsValid();
         this.isNextDisabledSubject.next(isLastStep ? isSubmitDisabled : isNextDisabled);
       });
 
