@@ -154,6 +154,7 @@ export * from './shared/graphql/request/handlers/entities/query/entities-graphql
 export * from './shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
+export * from './shared/graphql/request/handlers/entities/query/topology/topology-specification-builder';
 export * from './shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/explore/explore-graphql-query-builder.service';
 export * from './shared/graphql/request/handlers/explore/explore-query';
