@@ -48,9 +48,9 @@ export interface NeighborSpecificationBuildConfig {
   neighborType: string;
 }
 
-export interface TopologyNeighborSpecResult {
+export interface TopologyNeighborSpecResult<T = unknown> {
   results: {
-    neighbor: Dictionary<unknown>;
+    neighbor: Dictionary<T>;
   }[];
 }
 
