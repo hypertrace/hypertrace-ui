@@ -82,7 +82,7 @@ export class StepperComponent implements AfterContentInit {
   private readonly steps!: QueryList<StepperTabComponent>;
 
   @ViewChild(MatStepper)
-  public readonly stepper?: MatStepper;
+  private readonly stepper?: MatStepper;
 
   /**
    * If stepper is Linear, then we can navigate to a tab only if previous all tabs are at complete state.
@@ -192,7 +192,7 @@ export class StepperComponent implements AfterContentInit {
    * If the step has a step control , we check the forms validity and if not, we check the step completed property.
    */
   private areAllStepsValid(): boolean {
-    return this.steps.toArray().every(step => step.stepControl?.valid ?? step.completed);
+    return this.steps.toArray().every((_, index) => this.isStepCompleted(index));
   }
 }
 
