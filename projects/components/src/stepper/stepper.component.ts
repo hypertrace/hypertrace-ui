@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -134,7 +135,7 @@ export class StepperComponent implements AfterContentInit {
     )
       .pipe(
         switchMap(step => {
-          if (step.stepControl) {
+          if (!isNil(step.stepControl)) {
             return step.stepControl.statusChanges.pipe(
               startWith(step.stepControl.status),
               map(status => status === 'VALID')
