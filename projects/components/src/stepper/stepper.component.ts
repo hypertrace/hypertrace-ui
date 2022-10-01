@@ -14,7 +14,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
-import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './stepper-tab.component';
@@ -144,7 +144,8 @@ export class StepperComponent implements AfterContentInit {
 
           return of(step.completed);
         }),
-        debounceTime(100) // <-- debounce to avoid multiple emits
+        debounceTime(100), // <-- debounce to avoid multiple emits,
+        distinctUntilChanged()
       )
       .subscribe(valid => {
         const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;

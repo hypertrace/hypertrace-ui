@@ -129,7 +129,6 @@ describe('Stepper Component', () => {
     }));
     test('should enabled next button when the stepper is linear and first tab form is valid', fakeAsync(() => {
       const formControl = new FormControl('Hello', [Validators.required]);
-      console.log(formControl.status);
 
       spectator = createHost(
         `<ht-stepper class="stepper" [isLinear]="isLinear">
