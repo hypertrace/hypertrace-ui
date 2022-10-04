@@ -13,7 +13,7 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
+import { merge, Observable, of, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -106,10 +106,7 @@ export class StepperComponent implements AfterContentInit {
 
   public steps$?: Observable<StepperTabComponent[]>;
 
-  private readonly isNextDisabledSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public isNextDisabled$: Observable<boolean> = this.isNextDisabledSubject.asObservable();
-
-  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+  public isNextDisabled$: Observable<boolean> = of(false);
 
   public ngAfterContentInit(): void {
     this.steps$ = queryListAndChanges$(this.steps).pipe(map(list => list.toArray()));
@@ -129,32 +126,38 @@ export class StepperComponent implements AfterContentInit {
      * - For next: If the stepper is linear and the step is valid
      * - For Submit: If all the steps are valid
      */
-    const sub = merge(
+    this.isNextDisabled$ = merge(
       this.selectionChange.pipe(map(({ selectedStep }) => selectedStep)),
       this.steps$.pipe(map(([firstStep]) => firstStep))
-    )
-      .pipe(
-        switchMap(step => {
-          if (!isNil(step.stepControl)) {
-            return step.stepControl.statusChanges.pipe(
-              startWith(step.stepControl.status),
-              map(status => status === 'VALID')
-            );
-          }
+    ).pipe(
+      switchMap(step => {
+        if (!isNil(step.stepControl)) {
+          return step.stepControl.statusChanges.pipe(
+            startWith(step.stepControl.status),
+            map(() => step.stepControl?.status),
+            /**
+             * For some reason, the `statusChanges` doesn't reflect the correct status. So we are accessing the `status`
+             * property on the form itself in the next cycle by using `timer(0)`. This way we get the correct
+             * status.
+             * FIXME: Find a better approach
+             */
+            switchMap(() => timer(0).pipe(map(() => step.stepControl?.status))),
+            map(status => status === 'VALID')
+          );
+        }
 
-          return of(step.completed);
-        }),
-        debounceTime(100), // <-- debounce to avoid multiple emits,
-        distinctUntilChanged()
-      )
-      .subscribe(valid => {
+        return of(step.completed);
+      }),
+      debounceTime(100), // <-- debounce to avoid multiple emits,
+      distinctUntilChanged(),
+      map(valid => {
         const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;
         const isNextDisabled = this.isLinear && !valid;
         const isSubmitDisabled = !this.areAllStepsValid();
-        this.isNextDisabledSubject.next(isLastStep ? isSubmitDisabled : isNextDisabled);
-      });
 
-    this.subscriptionLifecycle.add(sub);
+        return isLastStep ? isSubmitDisabled : isNextDisabled;
+      })
+    );
   }
 
   /**
