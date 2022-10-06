@@ -2,6 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
@@ -13,8 +14,8 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { merge, Observable, of, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './stepper-tab.component';
@@ -66,7 +67,7 @@ import { StepperTabComponent } from './stepper-tab.component';
             class="next"
             [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
             (click)="this.nextOrSubmit(stepper)"
-            [disabled]="this.isNextDisabled$ | async"
+            [disabled]="this.isNextDisabled(stepper.selectedIndex)"
           ></ht-button>
         </div>
       </div>
@@ -106,58 +107,35 @@ export class StepperComponent implements AfterContentInit {
 
   public steps$?: Observable<StepperTabComponent[]>;
 
-  public isNextDisabled$: Observable<boolean> = of(false);
+  public constructor(private readonly cdr: ChangeDetectorRef, private readonly subs: SubscriptionLifecycle) {}
 
   public ngAfterContentInit(): void {
     this.steps$ = queryListAndChanges$(this.steps).pipe(map(list => list.toArray()));
-
-    /**
-     * Inorder to get the next/submit button disabled status, we need to listen to the primary triggers for change:
-     * 1. Stepper Initialization
-     * 2. Selection Change
-     *
-     * When either of these happens, we need to check if a step control is provided for the step. If a step control is provided, we
-     * switch to the form status changes inorder to find if the form is valid or not.
-     *
-     * If there is no step control provided, we can check for the step completed property.
-     *
-     * Since the same observable is used for both the disabled handling of submit and the next button,
-     * we switch between two logic:
-     * - For next: If the stepper is linear and the step is valid
-     * - For Submit: If all the steps are valid
-     */
-    this.isNextDisabled$ = merge(
-      this.selectionChange.pipe(map(({ selectedStep }) => selectedStep)),
-      this.steps$.pipe(map(([firstStep]) => firstStep))
-    ).pipe(
-      switchMap(step => {
-        if (!isNil(step.stepControl)) {
-          return step.stepControl.statusChanges.pipe(
-            startWith(step.stepControl.status),
-            map(() => step.stepControl?.status),
-            /**
-             * For some reason, the `statusChanges` doesn't reflect the correct status. So we are accessing the `status`
-             * property on the form itself in the next cycle by using `timer(0)`. This way we get the correct
-             * status.
-             * FIXME: Find a better approach
-             */
-            switchMap(() => timer(0).pipe(map(() => step.stepControl?.status))),
-            map(status => status === 'VALID')
-          );
-        }
-
-        return of(step.completed);
-      }),
-      debounceTime(100), // <-- debounce to avoid multiple emits,
-      distinctUntilChanged(),
-      map(valid => {
-        const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;
-        const isNextDisabled = this.isLinear && !valid;
-        const isSubmitDisabled = !this.areAllStepsValid();
-
-        return isLastStep ? isSubmitDisabled : isNextDisabled;
-      })
+    this.subs.add(
+      merge(
+        this.selectionChange.pipe(map(({ selectedStep }) => selectedStep)),
+        this.steps$.pipe(map(([firstStep]) => firstStep))
+      )
+        .pipe(
+          filter(step => !isNil(step.stepControl)),
+          switchMap(step => step.stepControl!.statusChanges)
+        )
+        .subscribe(() => this.cdr.markForCheck())
     );
+  }
+
+  public isNextDisabled(stepIndex: number): boolean {
+    const currentTab = this.steps?.get(stepIndex);
+    if (!currentTab) {
+      return true;
+    }
+
+    const isValid = currentTab.stepControl ? currentTab.stepControl?.status === 'VALID' : currentTab?.completed;
+    const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;
+    const isNextDisabled = this.isLinear && !isValid;
+    const isSubmitDisabled = !this.areAllStepsValid();
+
+    return isLastStep ? isSubmitDisabled : isNextDisabled;
   }
 
   /**

@@ -99,7 +99,6 @@ describe('Stepper Component', () => {
           }
         }
       );
-      spectator.tick(200); // <-- There is a 100ms debounce delay
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeFalsy();
@@ -122,7 +121,6 @@ describe('Stepper Component', () => {
           }
         }
       );
-      spectator.tick(200); // <-- There is a 100ms debounce delay
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeTruthy();
@@ -142,7 +140,6 @@ describe('Stepper Component', () => {
           }
         }
       );
-      spectator.tick(200); // <-- There is a 100ms debounce delay
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeFalsy();
@@ -169,7 +166,6 @@ describe('Stepper Component', () => {
     // Goto last step
     spectator.click('.next');
     spectator.click('.next');
-    spectator.tick(200); // <-- There is a 100ms debounce delay
 
     const actionButtons = spectator.queryAll(ButtonComponent);
     const submitButton = actionButtons[2]; // <-- ["Cancel", "Back", "Submit"]
