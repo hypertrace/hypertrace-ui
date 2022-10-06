@@ -67,7 +67,7 @@ describe('Stepper Component', () => {
   });
 
   describe('Next button disabled state with completed status', () => {
-    test('should disable next button when the stepper is linear and first tab is not completed', fakeAsync(() => {
+    test('should disable next button when the stepper is linear and first tab is not completed', () => {
       spectator = createHost(
         `<ht-stepper class="stepper" [isLinear]="isLinear">
             <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
@@ -80,13 +80,12 @@ describe('Stepper Component', () => {
           }
         }
       );
-      spectator.tick(200); // <-- There is a 100ms debounce delay
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeTruthy();
-    }));
+    });
 
-    test('should enable next button when the stepper is linear and first tab is completed', fakeAsync(() => {
+    test('should enable next button when the stepper is linear and first tab is completed', () => {
       spectator = createHost(
         `<ht-stepper class="stepper" [isLinear]="isLinear">
             <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
@@ -99,14 +98,15 @@ describe('Stepper Component', () => {
           }
         }
       );
+      spectator.detectComponentChanges();
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeFalsy();
-    }));
+    });
   });
 
   describe('Next button disabled state with form validation', () => {
-    test('should disable next button when the stepper is linear and first tab form is invalid', fakeAsync(() => {
+    test('should disable next button when the stepper is linear and first tab form is invalid', () => {
       const formControl = new FormControl(undefined, [Validators.required]);
 
       spectator = createHost(
@@ -124,7 +124,7 @@ describe('Stepper Component', () => {
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeTruthy();
-    }));
+    });
     test('should enabled next button when the stepper is linear and first tab form is valid', fakeAsync(() => {
       const formControl = new FormControl('Hello', [Validators.required]);
 
@@ -140,13 +140,14 @@ describe('Stepper Component', () => {
           }
         }
       );
+      spectator.detectComponentChanges();
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
       expect(actionButtons[1].disabled).toBeFalsy();
     }));
   });
 
-  test('should disable submit button correctly on tab completed state in linear mode', fakeAsync(() => {
+  test('should disable submit button correctly on tab completed state in linear mode', () => {
     spectator = createHost(
       `<ht-stepper class="stepper" [isLinear]="isLinear">
             <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
@@ -171,5 +172,5 @@ describe('Stepper Component', () => {
     const submitButton = actionButtons[2]; // <-- ["Cancel", "Back", "Submit"]
     expect(submitButton.label).toBe('Click me!');
     expect(submitButton.disabled).toBeTruthy();
-  }));
+  });
 });

@@ -130,12 +130,13 @@ export class StepperComponent implements AfterContentInit {
       return true;
     }
 
-    const isValid = currentTab.stepControl ? currentTab.stepControl?.status === 'VALID' : currentTab?.completed;
-    const isLastStep = this.stepper ? this.stepper?.selectedIndex === this.stepper?.steps.length - 1 : true;
-    const isNextDisabled = this.isLinear && !isValid;
-    const isSubmitDisabled = !this.areAllStepsValid();
+    const isValid = currentTab.stepControl ? currentTab.stepControl.status === 'VALID' : currentTab.completed;
+    const isLastStep = this.stepper ? this.isLastStep(this.stepper) : true;
+    if (isLastStep) {
+      return !this.areAllStepsValid();
+    }
 
-    return isLastStep ? isSubmitDisabled : isNextDisabled;
+    return this.isLinear && !isValid;
   }
 
   /**
@@ -151,8 +152,12 @@ export class StepperComponent implements AfterContentInit {
   }
 
   public nextOrSubmit(stepper: MatStepper): void {
-    const isLastStep = stepper.selectedIndex === stepper.steps.length - 1;
-    isLastStep ? this.submitted.emit() : stepper.next();
+    const isLastStep = this.isLastStep(stepper);
+    if (isLastStep) {
+      this.submitted.emit();
+    } else {
+      stepper.next();
+    }
   }
 
   public getActionButtonLabel(selectedIndex: number, steps: StepperTabComponent[]): string {
@@ -176,6 +181,10 @@ export class StepperComponent implements AfterContentInit {
    */
   private areAllStepsValid(): boolean {
     return this.steps.toArray().every((_, index) => this.isStepCompleted(index));
+  }
+
+  private isLastStep(stepper: MatStepper): boolean {
+    return stepper.selectedIndex === stepper.steps.length - 1;
   }
 }
 
