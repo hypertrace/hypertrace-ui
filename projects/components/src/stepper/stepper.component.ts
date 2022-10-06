@@ -2,6 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
@@ -11,9 +12,10 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { queryListAndChanges$ } from '@hypertrace/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
+import { merge, Observable } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './stepper-tab.component';
@@ -29,7 +31,13 @@ import { StepperTabComponent } from './stepper-tab.component';
         (selectionChange)="this.selectionChange.emit($event)"
       >
         <ng-container *ngFor="let step of steps">
-          <mat-step [completed]="step.completed" [stepControl]="step.stepControl" [optional]="step.optional">
+          <-- NOTE: completed and step control both should not be present when in linear flow. So when step control is
+          provided, we explicitly set completed to false so that the stepper can work with teh form validity status -->
+          <mat-step
+            [completed]="step.stepControl ? false : step.completed"
+            [stepControl]="step.stepControl"
+            [optional]="step.optional"
+          >
             <ng-template matStepLabel>
               <ht-label class="header-label" [label]="step.label"></ht-label>
             </ng-template>
@@ -57,23 +65,16 @@ import { StepperTabComponent } from './stepper-tab.component';
           ></ht-button>
           <ht-button
             class="next"
-            *ngIf="stepper.selectedIndex !== steps.length - 1"
             [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
-            (click)="stepper.next()"
-            [disabled]="this.isNextDisabled(stepper)"
-          ></ht-button>
-          <ht-button
-            class="submit"
-            *ngIf="stepper.selectedIndex === steps.length - 1"
-            [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
-            (click)="this.submitted.emit()"
-            [disabled]="this.isSubmitDisabled(stepper)"
+            (click)="this.nextOrSubmit(stepper)"
+            [disabled]="this.isNextDisabled(stepper.selectedIndex)"
           ></ht-button>
         </div>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   styleUrls: ['./stepper.component.scss']
 })
 export class StepperComponent implements AfterContentInit {
@@ -85,7 +86,9 @@ export class StepperComponent implements AfterContentInit {
   @ViewChild(MatStepper)
   private readonly stepper?: MatStepper;
 
-  // If stepper is Linear, then we can navigate to a tab only if previous all tabs are at complete state.
+  /**
+   * If stepper is Linear, then we can navigate to a tab only if previous all tabs are at complete state.
+   */
   @Input()
   public isLinear: boolean = false;
 
@@ -104,26 +107,36 @@ export class StepperComponent implements AfterContentInit {
 
   public steps$?: Observable<StepperTabComponent[]>;
 
+  public constructor(private readonly cdr: ChangeDetectorRef, private readonly subs: SubscriptionLifecycle) {}
+
   public ngAfterContentInit(): void {
     this.steps$ = queryListAndChanges$(this.steps).pipe(map(list => list.toArray()));
+    this.subs.add(
+      merge(
+        this.selectionChange.pipe(map(({ selectedStep }) => selectedStep)),
+        this.steps$.pipe(map(([firstStep]) => firstStep))
+      )
+        .pipe(
+          filter(step => !isNil(step.stepControl)),
+          switchMap(step => step.stepControl!.statusChanges)
+        )
+        .subscribe(() => this.cdr.markForCheck())
+    );
   }
 
-  // TODO: can be made a directive
-  public isNextDisabled(stepper: MatStepper): boolean {
-    const selectedStep = stepper.steps.get(stepper.selectedIndex);
-    const formValid = selectedStep?.stepControl?.valid;
-    const stepCompleted = selectedStep?.completed;
+  public isNextDisabled(stepIndex: number): boolean {
+    const currentTab = this.steps?.get(stepIndex);
+    if (!currentTab) {
+      return true;
+    }
 
-    return this.isLinear && !stepCompleted && !formValid;
-  }
+    const isValid = currentTab.stepControl ? currentTab.stepControl.status === 'VALID' : currentTab.completed;
+    const isLastStep = this.stepper ? this.isLastStep(this.stepper) : true;
+    if (isLastStep) {
+      return !this.areAllStepsValid();
+    }
 
-  // TODO: can be made a directive
-  public isSubmitDisabled(stepper: MatStepper): boolean {
-    const selectedStep = stepper.steps.get(stepper.selectedIndex);
-    const formValid = selectedStep?.stepControl?.valid;
-    const stepCompleted = selectedStep?.completed;
-
-    return !stepCompleted && !formValid;
+    return this.isLinear && !isValid;
   }
 
   /**
@@ -138,14 +151,40 @@ export class StepperComponent implements AfterContentInit {
     }
   }
 
+  public nextOrSubmit(stepper: MatStepper): void {
+    const isLastStep = this.isLastStep(stepper);
+    if (isLastStep) {
+      this.submitted.emit();
+    } else {
+      stepper.next();
+    }
+  }
+
   public getActionButtonLabel(selectedIndex: number, steps: StepperTabComponent[]): string {
-    return steps[selectedIndex]?.actionButtonLabel ?? (selectedIndex === steps.length ? 'Submit' : 'Next');
+    const isLastStep = selectedIndex === steps.length - 1;
+
+    return steps[selectedIndex]?.actionButtonLabel ?? (isLastStep ? 'Submit' : 'Next');
   }
 
   private isStepCompleted(index: number): boolean {
     const step = this.steps.get(index);
+    if (!step) {
+      return false;
+    }
 
-    return step?.completed ?? false;
+    return step.stepControl?.valid ?? step.completed;
+  }
+
+  /**
+   * Check if all the steps are valid.
+   * If the step has a step control , we check the forms validity and if not, we check the step completed property.
+   */
+  private areAllStepsValid(): boolean {
+    return this.steps.toArray().every((_, index) => this.isStepCompleted(index));
+  }
+
+  private isLastStep(stepper: MatStepper): boolean {
+    return stepper.selectedIndex === stepper.steps.length - 1;
   }
 }
 
