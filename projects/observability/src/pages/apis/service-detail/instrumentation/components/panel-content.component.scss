@@ -1,0 +1,35 @@
+@import 'font';
+@import 'color-palette';
+
+.description {
+  @include body-2-regular;
+  padding-bottom: 0.8rem;
+}
+
+.metric {
+  @include body-2-regular;
+  line-height: 0.8rem;
+
+  b {
+    @include body-2-semibold;
+    line-height: 0.8rem;
+  }
+
+  a:link {
+    color: $blue-5;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: $purple-6;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  a:active {
+    text-decoration: underline;
+  }
+}

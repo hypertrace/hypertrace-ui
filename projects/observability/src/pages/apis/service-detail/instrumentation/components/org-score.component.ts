@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ServiceInstrumentationService } from '../service-instrumentation.service';
 
 @Component({
@@ -17,14 +17,16 @@ import { ServiceInstrumentationService } from '../service-instrumentation.servic
     </div>
   `
 })
-export class OrgScoreComponent {
+export class OrgScoreComponent implements OnInit {
   @Input()
   public orgScore: number = 0;
 
   public scoreLabel: string = '';
   public scoreColor: string = '';
 
-  public constructor(private readonly serviceInstrumentationService: ServiceInstrumentationService) {
+  public constructor(private readonly serviceInstrumentationService: ServiceInstrumentationService) {}
+
+  public ngOnInit(): void {
     this.scoreLabel = this.serviceInstrumentationService.getLabelForScore(this.orgScore);
     this.scoreColor = this.serviceInstrumentationService.getColorForScore(this.orgScore).dark;
   }

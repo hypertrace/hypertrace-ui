@@ -29,8 +29,13 @@ describe('CategoryCardComponent', () => {
     expect(component).toBeDefined();
   });
 
-  test('should assign correct label to card action button based on catgory score', () => {
-    expect(component.getButtonLabel(89)).toBe('Learn how to improve');
-    expect(component.getButtonLabel(90)).toBe('See details');
+  test('shows correct number of checks passing', () => {
+    expect(component.getNoOfChecksPassing()).toBe(0);
+  });
+
+  test('shows correct heuristicClass score for org', () => {
+    component.heuristicClassScore = { name: 'a', score: 5 };
+    component.orgCategoryScores = [{ name: 'a', score: 6 }];
+    expect(component.getOrgScoreForCategory()).toBe(6);
   });
 });

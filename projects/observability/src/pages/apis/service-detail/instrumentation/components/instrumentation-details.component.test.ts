@@ -13,7 +13,7 @@ describe('InstrumentationDetailsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [InstrumentationDetailsComponent],
       imports: [RouterTestingModule],
-      providers: [mockProvider(ServiceInstrumentationService, {})]
+      providers: [mockProvider(ServiceInstrumentationService, { getColorForScore: () => ({ dark: '#dc3d43' }) })]
     });
     fixture = TestBed.createComponent(InstrumentationDetailsComponent);
     component = fixture.componentInstance;
@@ -23,5 +23,45 @@ describe('InstrumentationDetailsComponent', () => {
 
   test('should be created successfully', () => {
     expect(component).toBeDefined();
+  });
+
+  test('assigns correct color to icon', () => {
+    expect(component.getIconColor(30)).toBe('#dc3d43');
+  });
+
+  test('assigns correct type to icon', () => {
+    expect(component.getHeaderIcon(30)).toBe('svg:close');
+    expect(component.getHeaderIcon(50)).toBe('svg:warning');
+    expect(component.getHeaderIcon(70)).toBe('checkmark');
+  });
+
+  test('shows correct header summary when check is eligible', () => {
+    expect(
+      component.getHeaderSummary({
+        sampleSize: '10',
+        failureCount: '9',
+        sampleType: 'span',
+        name: '',
+        description: '',
+        evalTimestamp: '',
+        sampleIds: [],
+        score: 0
+      })
+    ).toBe('90% of spans failed this check');
+  });
+
+  test('shows correct header summary when check is not eligible', () => {
+    expect(
+      component.getHeaderSummary({
+        sampleSize: '10',
+        failureCount: '9',
+        sampleType: 'span',
+        name: '',
+        description: '',
+        evalTimestamp: '',
+        sampleIds: [],
+        score: -1.0
+      })
+    ).toBe('Check skipped as no eligible spans in this run');
   });
 });

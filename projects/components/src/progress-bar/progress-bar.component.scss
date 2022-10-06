@@ -14,10 +14,10 @@
     overflow: hidden;
     animation: expandWidth 1s;
   }
-}
 
-@keyframes expandWidth {
-  0% {
-    width: 0;
+  @keyframes expandWidth {
+    0% {
+      width: 0;
+    }
   }
 }

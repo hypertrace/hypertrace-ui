@@ -10,6 +10,6 @@ import { LoadAsyncWrapperComponent } from './wrapper/load-async-wrapper.componen
 @NgModule({
   declarations: [LoadAsyncDirective, LoadAsyncWrapperComponent, LoaderComponent],
   imports: [CommonModule, IconModule, MessageDisplayModule, SkeletonModule],
-  exports: [LoadAsyncDirective]
+  exports: [LoadAsyncDirective, LoaderComponent]
 })
 export class LoadAsyncModule {}

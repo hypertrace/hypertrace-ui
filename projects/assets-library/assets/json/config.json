@@ -3,7 +3,7 @@
     "ui.saved-queries": true,
     "ui.custom-dashboards": true,
     "ui.page-time-range": false,
-    "ui.instrumentation-quality": false,
+    "ui.instrumentation-quality": true,
     "ui.deployment-markers": true
   },
   "urlConfig": {},

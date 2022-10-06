@@ -1,14 +1,37 @@
 @import 'font';
+@import 'color-palette';
 
 .service-instrumentation-details {
+  .button-container {
+    width: fit-content;
+  }
+
   h4 {
-    @include header-4();
+    @include header-4;
     margin-top: 8px;
     margin-bottom: 8px;
+  }
+
+  h5 {
+    @include subtitle-2;
+    margin-bottom: 16px;
   }
 
   .description {
     @include body-1-regular;
     text-align: justify;
+  }
+
+  .heuristics {
+    .status-icon {
+      padding-right: 14px;
+      padding-top: 2px;
+    }
+
+    .header-title {
+      width: 360px; /* This fixes the position of the header description */
+      @include body-1-medium;
+      line-height: 1.4rem;
+    }
   }
 }

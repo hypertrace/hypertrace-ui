@@ -1,28 +1,29 @@
-export interface QoiParamScore {
+export interface HeuristicScoreInfo {
+  name: string;
   description: string;
-  qoiParam: string;
-  evalTimestamp: number;
+  evalTimestamp: string;
   score: number;
   sampleIds: string[];
-  sampleSize: number;
-  failureCount: number;
+  sampleType: string;
+  sampleSize: string;
+  failureCount: string;
 }
 
-export interface QoiTypeScore {
-  qoiType: string;
+export interface HeuristicClassScoreInfo {
+  name: string;
   score: number;
   description?: string;
-  qoiParamScores?: QoiParamScore[];
+  heuristicScoreInfo?: HeuristicScoreInfo[];
 }
 
 export interface ServiceScoreResponse {
   serviceName: string;
   bu: string;
-  qoiTypeScores: QoiTypeScore[];
+  heuristicClassScoreInfo: HeuristicClassScoreInfo[];
   aggregatedWeightedScore: number;
 }
 
 export interface OrgScoreResponse {
-  qoiTypeScores: QoiTypeScore[];
+  heuristicClassScoreInfo: HeuristicClassScoreInfo[];
   aggregatedWeightedScore: number;
 }

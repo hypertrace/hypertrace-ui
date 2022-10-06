@@ -6,6 +6,7 @@
   height: calc(100% - 2.2rem);
   margin-left: 16px;
   padding-left: 28px;
+  animation: slideLeft 1s;
 
   margin-top: 1.1rem;
   display: grid;
@@ -23,5 +24,11 @@
     .label {
       padding-left: 6px;
     }
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    padding-left: 50px;
   }
 }

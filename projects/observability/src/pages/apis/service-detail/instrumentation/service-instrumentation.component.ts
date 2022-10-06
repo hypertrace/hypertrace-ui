@@ -10,9 +10,17 @@ import { ServiceScoreResponse } from './service-instrumentation.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ServiceInstrumentationService],
   template: `
-    <main class="service-instrumentation" *ngIf="this.getServiceScore() | async">
-      <router-outlet></router-outlet>
+    <main class="service-instrumentation" *ngIf="this.getServiceScore() | async; else loader">
+      <ng-container *ngIf="(this.getServiceScore() | async)?.heuristicClassScoreInfo.length > 0; else noData">
+        <router-outlet></router-outlet>
+      </ng-container>
+
+      <ng-template #noData>
+        Quality evaluation has not been done yet for this service. Please check back later.
+      </ng-template>
     </main>
+
+    <ng-template #loader> <ht-loader></ht-loader></ng-template>
   `
 })
 export class ServiceInstrumentationComponent implements OnInit {

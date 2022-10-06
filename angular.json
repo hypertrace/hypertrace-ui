@@ -36,7 +36,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": ["src/styles/main.scss"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css", "src/styles/main.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["./projects/assets-library/assets/styles", "./node_modules"]
             },
