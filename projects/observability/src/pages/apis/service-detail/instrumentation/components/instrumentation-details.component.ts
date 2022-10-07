@@ -68,11 +68,11 @@ export class InstrumentationDetailsComponent {
   }
 
   public getHeaderIcon(score: number): string {
-    if (score < 50) {
+    if (score < 50 && score > -1) {
       return IconType.Close;
     }
 
-    if (score < 70) {
+    if (score < 70 && score > -1) {
       return IconType.Warning;
     }
 
@@ -80,17 +80,25 @@ export class InstrumentationDetailsComponent {
   }
 
   public getIconColor(score: number): string {
+    if (score < 0) {
+      return '#b7bfc2'; // $gray-3
+    }
+
     return this.serviceInstrumentationService.getColorForScore(score).dark;
   }
 
   public getHeaderSummary(heuristicScore: HeuristicScoreInfo): string {
     if (heuristicScore.score < 0) {
-      return 'Check skipped as no eligible spans in this run';
+      return 'This check was skipped as no eligible spans were present in the last evaluation';
+    }
+
+    if (heuristicScore.failureCount === '0') {
+      return 'All spans passed this check';
     }
 
     const sampleSize = Number(heuristicScore.sampleSize);
     const failureCount = Number(heuristicScore.failureCount);
-    const percentFailed = (failureCount / sampleSize) * 100;
+    const percentFailed = Math.round((failureCount / sampleSize) * 100);
 
     return `${percentFailed}% of ${heuristicScore.sampleType}s failed this check`;
   }

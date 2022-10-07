@@ -24,15 +24,15 @@ export class ServiceInstrumentationService {
 
   public getLabelForScore(score: number): string {
     if (score < 50) {
-      return 'Below Average';
+      return 'Below Expectation';
     }
 
     if (score < 70) {
-      return 'Average';
+      return 'Need Improvement';
     }
 
     if (score < 90) {
-      return 'Above Average';
+      return 'Good';
     }
 
     return 'Excellent!';

@@ -12,9 +12,7 @@ import { HeuristicClassScoreInfo } from '../service-instrumentation.types';
   template: `
     <div class="service-instrumentation-category-card" [style.border-top-color]="this.scoreColor">
       <h5 class="heading">{{ this.heuristicClassScore?.name }}</h5>
-      <p class="checks-status">
-        {{ this.getNoOfChecksPassing() }}/{{ this.heuristicClassScore?.heuristicScoreInfo.length }} checks passing
-      </p>
+      <p class="checks-status">{{ this.getNoOfChecksPassing() }}/{{ this.getTotalEligibleChecks() }} checks passing</p>
 
       <ht-service-instrumentation-progress-bar
         [score]="this.heuristicClassScore?.score"
@@ -63,6 +61,16 @@ export class CategoryCardComponent implements OnInit {
     return (
       this.heuristicClassScore?.heuristicScoreInfo?.reduce(
         (accumulator, currentParam) => (currentParam.score >= 70 ? accumulator + 1 : accumulator),
+        0
+      ) ?? 0
+    );
+  }
+
+  public getTotalEligibleChecks(): number {
+    // Checks with a score of -1 are skipped
+    return (
+      this.heuristicClassScore?.heuristicScoreInfo?.reduce(
+        (accumulator, currentParam) => (currentParam.score >= 0 ? accumulator + 1 : accumulator),
         0
       ) ?? 0
     );

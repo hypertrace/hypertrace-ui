@@ -26,6 +26,7 @@ describe('InstrumentationDetailsComponent', () => {
   });
 
   test('assigns correct color to icon', () => {
+    expect(component.getIconColor(-1)).toBe('#b7bfc2');
     expect(component.getIconColor(30)).toBe('#dc3d43');
   });
 
@@ -62,6 +63,21 @@ describe('InstrumentationDetailsComponent', () => {
         sampleIds: [],
         score: -1.0
       })
-    ).toBe('Check skipped as no eligible spans in this run');
+    ).toBe('This check was skipped as no eligible spans were present in the last evaluation');
+  });
+
+  test('shows correct header summary when all spans passed check', () => {
+    expect(
+      component.getHeaderSummary({
+        sampleSize: '10',
+        failureCount: '0',
+        sampleType: 'span',
+        name: '',
+        description: '',
+        evalTimestamp: '',
+        sampleIds: [],
+        score: 1
+      })
+    ).toBe('All spans passed this check');
   });
 });
