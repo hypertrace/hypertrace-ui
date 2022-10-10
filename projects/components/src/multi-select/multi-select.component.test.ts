@@ -629,4 +629,26 @@ describe('Multi Select Component', () => {
     expect(onChange).not.toHaveBeenCalled();
     flush();
   }));
+
+  test('should not show the select all button', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [showSelectAll]="showSelectAll">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          showSelectAll: false,
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
+        }
+      }
+    );
+
+    spectator.tick();
+    expect(spectator.query('.select-all')).not.toExist();
+  }));
 });
