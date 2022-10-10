@@ -24,6 +24,7 @@ import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
 import { XMoreDisplay } from '../x-more/x-more.component';
 import { MultiSelectJustify } from './multi-select-justify';
+
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
@@ -109,7 +110,7 @@ import { MultiSelectJustify } from './multi-select-justify';
 
               <ht-button
                 class="select-all"
-                *ngIf="(this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
+                *ngIf="this.showSelectAll && (this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
                 role="${ButtonRole.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Select All"
@@ -193,6 +194,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public maxHeight: number = 360;
+
+  @Input()
+  public showSelectAll: boolean = true;
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
