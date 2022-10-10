@@ -630,7 +630,7 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
-  test('should not show the select all button', fakeAsync(() => {
+  test('should not show the select all button', () => {
     spectator = hostFactory(
       `
     <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [showSelectAll]="showSelectAll">
@@ -648,7 +648,6 @@ describe('Multi Select Component', () => {
       }
     );
 
-    spectator.tick();
     expect(spectator.query('.select-all')).not.toExist();
-  }));
+  });
 });
