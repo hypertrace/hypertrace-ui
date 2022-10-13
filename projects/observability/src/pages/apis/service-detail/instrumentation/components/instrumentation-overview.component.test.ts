@@ -25,8 +25,8 @@ describe('InstrumentationOverviewComponent', () => {
   });
 
   test('shows correct toggle label', () => {
-    expect(component.getToggleLabel()).toBe('Show organization scores');
-    component.showOrgScores = true;
     expect(component.getToggleLabel()).toBe('Hide organization scores');
+    component.showOrgScores.next(false);
+    expect(component.getToggleLabel()).toBe('Show organization scores');
   });
 });
