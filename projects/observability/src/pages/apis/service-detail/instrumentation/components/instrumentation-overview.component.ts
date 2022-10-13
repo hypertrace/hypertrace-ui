@@ -17,6 +17,7 @@ import { OrgScoreResponse, ServiceScoreResponse } from '../service-instrumentati
         ></ht-service-instrumentation-total-score>
 
         <ht-service-instrumentation-org-score
+          [serviceScore]="(this.serviceScoreSubject | async)?.aggregatedWeightedScore"
           [orgScore]="this.orgScoreResponse?.aggregatedWeightedScore"
           *ngIf="this.showOrgScores | async"
         ></ht-service-instrumentation-org-score>

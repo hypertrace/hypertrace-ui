@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ServiceInstrumentationService } from '../service-instrumentation.service';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   styleUrls: ['./org-score.component.scss'],
@@ -8,26 +7,31 @@ import { ServiceInstrumentationService } from '../service-instrumentation.servic
   template: `
     <div class="service-instrumentation-org-score">
       <div>
-        <h5 class="heading">Razorpay Average</h5>
+        <h5 class="heading">Organization Score</h5>
         <p class="score">
           {{ this.orgScore | number: '1.0-0' }}
-          <span class="label" [style.color]="this.scoreColor">{{ this.scoreLabel }}</span>
+          <span class="label" [style.color]="this.getScoreComment().color">{{ this.getScoreComment().text }}</span>
         </p>
       </div>
     </div>
   `
 })
-export class OrgScoreComponent implements OnInit {
+export class OrgScoreComponent {
+  @Input()
+  public serviceScore: number = 0;
+
   @Input()
   public orgScore: number = 0;
 
-  public scoreLabel: string = '';
-  public scoreColor: string = '';
+  public getScoreComment(): { text: string; color: string } {
+    if (this.serviceScore > this.orgScore) {
+      return { text: 'The service score is above the org score', color: '#3d9a50' };
+    }
 
-  public constructor(private readonly serviceInstrumentationService: ServiceInstrumentationService) {}
+    if (this.serviceScore === this.orgScore) {
+      return { text: 'The service score matches the org score', color: '#3d9a50' };
+    }
 
-  public ngOnInit(): void {
-    this.scoreLabel = this.serviceInstrumentationService.getLabelForScore(this.orgScore);
-    this.scoreColor = this.serviceInstrumentationService.getColorForScore(this.orgScore).dark;
+    return { text: 'The service score is below the org score', color: '#dc3d43' };
   }
 }

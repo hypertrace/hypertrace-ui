@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { mockProvider } from '@ngneat/spectator/jest';
 
-import { ServiceInstrumentationService } from '../service-instrumentation.service';
 import { OrgScoreComponent } from './org-score.component';
 
 describe('OrgScoreComponent', () => {
@@ -10,13 +8,7 @@ describe('OrgScoreComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OrgScoreComponent],
-      providers: [
-        mockProvider(ServiceInstrumentationService, {
-          getLabelForScore: () => 'label',
-          getColorForScore: () => ({ dark: 'dark' })
-        })
-      ]
+      declarations: [OrgScoreComponent]
     });
     fixture = TestBed.createComponent(OrgScoreComponent);
     component = fixture.componentInstance;
@@ -29,10 +21,28 @@ describe('OrgScoreComponent', () => {
   });
 
   test('assigns correct label for score', () => {
-    expect(component.scoreLabel).toBe('label');
+    component.orgScore = 50;
+
+    component.serviceScore = 60;
+    expect(component.getScoreComment().text).toBe('The service score is above the org score');
+
+    component.serviceScore = 50;
+    expect(component.getScoreComment().text).toBe('The service score matches the org score');
+
+    component.serviceScore = 40;
+    expect(component.getScoreComment().text).toBe('The service score is below the org score');
   });
 
   test('assigns correct color for score', () => {
-    expect(component.scoreColor).toBe('dark');
+    component.orgScore = 50;
+
+    component.serviceScore = 60;
+    expect(component.getScoreComment().color).toBe('#3d9a50');
+
+    component.serviceScore = 50;
+    expect(component.getScoreComment().color).toBe('#3d9a50');
+
+    component.serviceScore = 40;
+    expect(component.getScoreComment().color).toBe('#dc3d43');
   });
 });
