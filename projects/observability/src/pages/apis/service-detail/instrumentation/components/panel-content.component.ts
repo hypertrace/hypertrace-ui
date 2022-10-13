@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+import { BreadcrumbsService } from '@hypertrace/components';
 import { HeuristicScoreInfo } from '../service-instrumentation.types';
 
 @Component({
@@ -24,12 +25,18 @@ export class PanelContentComponent {
   @Input()
   public heuristicScore: HeuristicScoreInfo | undefined;
 
+  private serviceName: string = '';
+
+  public constructor(private readonly breadcrumbsService: BreadcrumbsService) {
+    this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => (this.serviceName = serviceName));
+  }
+
   public getExampleLink(id: string): string {
     if (this.heuristicScore?.sampleType === 'span') {
-      return `/explorer?time=1d&scope=spans&series=column:count(spans)&filter=id_eq_${id}`;
+      return `/explorer?time=1d&scope=spans&series=column:count(spans)&filter=serviceName_eq_${this.serviceName}&filter=id_eq_${id}`;
     }
 
-    return `/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=traceId_eq_${id}`;
+    return `/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_${this.serviceName}&filter=traceId_eq_${id}`;
   }
 
   public getEvaluationDate(): string {

@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { mockProvider } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
 
+import { BreadcrumbsService } from '@hypertrace/components';
 import { PanelContentComponent } from './panel-content.component';
 
 describe('PanelContentComponent', () => {
@@ -8,7 +11,12 @@ describe('PanelContentComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PanelContentComponent]
+      declarations: [PanelContentComponent],
+      providers: [
+        mockProvider(BreadcrumbsService, {
+          getLastBreadCrumbString: () => of('x')
+        })
+      ]
     });
     fixture = TestBed.createComponent(PanelContentComponent);
     component = fixture.componentInstance;
@@ -22,7 +30,7 @@ describe('PanelContentComponent', () => {
 
   test('navigates to Explorer page with trace ID filled', () => {
     expect(component.getExampleLink('1')).toBe(
-      '/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=traceId_eq_1'
+      '/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_x&filter=traceId_eq_1'
     );
   });
 
