@@ -8,7 +8,8 @@ import {
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
+  TemplateRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
@@ -89,6 +90,11 @@ import { MultiSelectJustify } from './multi-select-justify';
             class="multi-select-content"
             [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
           >
+            <!-- Custom Control -->
+            <div class="custom-control" *ngIf="this.customControlTemplate">
+              <ng-container *ngTemplateOutlet="this.customControlTemplate"></ng-container>
+            </div>
+
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ht-search-box
                 class="search-bar"
@@ -197,6 +203,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public showSelectAll: boolean = true;
+
+  @Input()
+  public customControlTemplate?: TemplateRef<unknown>;
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
