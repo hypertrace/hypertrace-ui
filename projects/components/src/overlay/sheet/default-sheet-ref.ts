@@ -7,6 +7,7 @@ export class DefaultSheetRef extends SheetRef {
 
   private readonly closedObserver: Observer<unknown>;
   private popoverRef?: PopoverRef;
+  private closedWithResult: boolean = false;
 
   public constructor() {
     super();
@@ -18,7 +19,12 @@ export class DefaultSheetRef extends SheetRef {
   public initialize(popoverRef: PopoverRef): void {
     this.popoverRef = popoverRef;
     this.popoverRef.closed$.subscribe({
-      next: () => this.closedObserver.next(undefined),
+      next: () => {
+        if (!this.closedWithResult) {
+          this.closedObserver.next(undefined);
+        }
+        this.closedWithResult = false;
+      },
       complete: () => this.closedObserver.complete(),
       error: err => this.closedObserver.error(err)
     });
@@ -27,6 +33,7 @@ export class DefaultSheetRef extends SheetRef {
   public close(result?: unknown): void {
     if (result !== undefined) {
       this.closedObserver.next(result);
+      this.closedWithResult = true;
     }
     this.popoverRef?.close();
   }
