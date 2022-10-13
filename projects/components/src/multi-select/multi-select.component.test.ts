@@ -630,7 +630,7 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
-  test('should not show the select all button', () => {
+  test('should not show the select all button', fakeAsync(() => {
     spectator = hostFactory(
       `
     <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [showSelectAll]="showSelectAll">
@@ -647,7 +647,41 @@ describe('Multi Select Component', () => {
         }
       }
     );
+    spectator.tick();
+    spectator.click('.trigger-content');
 
-    expect(spectator.query('.select-all')).not.toExist();
-  });
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
+
+    // Custom control should not exist
+    expect(spectator.query('.custom-control', { root: true })).not.toExist();
+  }));
+
+  test('should show customControl template when present', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [customControlTemplate]="testTemplate">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>
+
+    <ng-template #testTemplate>
+      <div class="test-template">Test Control Template</div>
+    </ng-template>
+
+    `,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
+        }
+      }
+    );
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    expect(spectator.component.customControlTemplate).toBeDefined();
+    expect(spectator.query('.custom-control', { root: true })).toExist();
+  }));
 });
