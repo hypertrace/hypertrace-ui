@@ -298,6 +298,7 @@ export * from './shared/dashboard/widgets/topology/node/box/api-node-renderer/ap
 export * from './shared/dashboard/widgets/topology/node/box/backend-node-renderer/backend-node-box-renderer.service';
 export * from './shared/dashboard/widgets/topology/node/box/service-node-renderer/service-node-box-renderer.service';
 export * from './shared/dashboard/widgets/topology/tooltip/topology-entity-tooltip.component';
+export * from './shared/dashboard/widgets/topology/visibility-updater';
 
 // Topology Metric
 export * from './shared/dashboard/widgets/topology/metric/edge-metric-category';

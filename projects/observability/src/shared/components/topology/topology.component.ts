@@ -11,8 +11,10 @@ import {
 import {
   Topology,
   TopologyDataSpecifier,
+  TopologyEdgeInteractionHandler,
   TopologyEdgeRenderer,
   TopologyNode,
+  TopologyNodeInteractionHandler,
   TopologyNodeRenderer,
   TopologyTooltipRenderer
 } from './topology';
@@ -44,6 +46,12 @@ export class TopologyComponent implements OnChanges, OnDestroy {
   public edgeDataSpecifiers?: TopologyDataSpecifier[];
 
   @Input()
+  public nodeInteractionHandler?: TopologyNodeInteractionHandler;
+
+  @Input()
+  public edgeInteractionHandler?: TopologyEdgeInteractionHandler;
+
+  @Input()
   public showBrush?: boolean = true;
 
   @Input()
@@ -73,7 +81,9 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       edgeDataSpecifiers: this.edgeDataSpecifiers,
       tooltipRenderer: this.tooltipRenderer,
       showBrush: this.showBrush,
-      shouldAutoZoomToFit: this.shouldAutoZoomToFit
+      shouldAutoZoomToFit: this.shouldAutoZoomToFit,
+      nodeInteractionHandler: this.nodeInteractionHandler,
+      edgeInteractionHandler: this.edgeInteractionHandler
     });
 
     // Angular doesn't like introducing new child views mid-change detection
