@@ -18,6 +18,7 @@ export class DefaultSheetRef extends SheetRef {
   public initialize(popoverRef: PopoverRef): void {
     this.popoverRef = popoverRef;
     this.popoverRef.closed$.subscribe({
+      next: () => this.closedObserver.next(undefined),
       complete: () => this.closedObserver.complete(),
       error: err => this.closedObserver.error(err)
     });
