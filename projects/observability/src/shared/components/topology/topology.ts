@@ -211,7 +211,7 @@ export interface TopologyTooltipOptions {
 }
 
 export interface TopologyInteractionHandler<T = unknown> {
-  click?: (data: T) => Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
+  click?(data: T): Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
 }
 
 export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
