@@ -197,7 +197,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
   }
 }
 
-interface TopologyTemplateData {
+export interface TopologyTemplateData {
   nodeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   edgeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   nodes: TopologyNode[];

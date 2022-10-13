@@ -85,6 +85,16 @@ export interface TopologyConfiguration {
    * Used to render tooltips. If not provided, no tooltips are rendered.
    */
   tooltipRenderer?: TopologyTooltipRenderer;
+
+  /**
+   * Used to handle interactions on node in a custom way (by avoiding default behavior)
+   */
+  nodeInteractionHandler?: TopologyNodeInteractionHandler;
+
+  /**
+   * Used to handle interactions on edge in a custom way (by avoiding default behavior)
+   */
+  edgeInteractionHandler?: TopologyEdgeInteractionHandler;
 }
 
 export interface TopologyNode {
@@ -200,3 +210,10 @@ export interface TopologyTooltip {
 export interface TopologyTooltipOptions {
   modal?: boolean;
 }
+
+export interface TopologyInteractionHandler<T = unknown> {
+  click?(data: T): Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
+}
+
+export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
+export type TopologyEdgeInteractionHandler = TopologyInteractionHandler<TopologyEdge>;

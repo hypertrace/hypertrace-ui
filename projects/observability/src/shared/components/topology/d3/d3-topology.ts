@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
-import { throttle } from 'lodash-es';
+import { isNil, throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -384,7 +384,11 @@ export class D3Topology implements Topology {
       this.neighborhoodFinder.neighborhoodForNode(node.userNode),
       this.neighborhoodFinder.singleNodeNeighborhood(node.userNode)
     );
-    if (this.tooltip) {
+
+    if (!isNil(this.config.nodeInteractionHandler?.click)) {
+      this.config.nodeInteractionHandler?.click(node.userNode).subscribe(() => this.resetVisibility());
+    } else if (this.tooltip) {
+      // Default Behavior
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
       this.showNodeTooltip(node, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
@@ -393,7 +397,11 @@ export class D3Topology implements Topology {
 
   private onEdgeClick(edge: RenderableTopologyEdge): void {
     this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(edge.userEdge));
-    if (this.tooltip) {
+
+    if (!isNil(this.config.edgeInteractionHandler?.click)) {
+      this.config.edgeInteractionHandler?.click(edge.userEdge).subscribe(() => this.resetVisibility());
+    } else if (this.tooltip) {
+      // Default Behavior
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
       this.showEdgeTooltip(edge, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
