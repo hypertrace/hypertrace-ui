@@ -1,15 +1,16 @@
-import cytoscape from 'cytoscape';
-import { HierarchyNode } from 'd3-hierarchy';
+import { hierarchy, HierarchyNode } from 'd3-hierarchy';
 import { RenderableTopology, TopologyEdge, TopologyNode } from '../../topology';
 import { D3ProxyNode, TreeLayout } from './tree-layout';
+import cytoscape from 'cytoscape';
 
 export class CustomTreeLayout extends TreeLayout {
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
-    console.log(topology.nodes.map(node => node.userNode.data?.name));
+    console.log(topology);
+    // console.log(topology.nodes.map(node => node.userNode.data?.name));
     // var g = new dracula.Graph();
-    // const rootHierarchyNode = cytoscape((this.buildHierarchyProxyNodes(topology.nodes, { x: 0, y: 0 })));
+    const rootHierarchyNode = hierarchy(this.buildHierarchyProxyNodes(topology.nodes, { x: 0, y: 0 }));
 
-    const rootHierarchyNode = cytoscape({
+    const rootHierarchyNode2 = cytoscape({
       elements: {
         nodes: topology.nodes.map(node => ({ data: { id: node.userNode.data?.name! } })),
         edges: topology.edges.map(edge => ({
@@ -17,25 +18,24 @@ export class CustomTreeLayout extends TreeLayout {
         }))
       },
       layout: {
-        name: 'cose',
-        nodeDimensionsIncludeLabels: false,
-        animate: false
+        name: 'breadthfirst',
+        avoidOverlap: true
       }
     });
 
     console.log(rootHierarchyNode);
-    console.log(rootHierarchyNode.json());
+    console.log(rootHierarchyNode2.json());
 
-    // const nodeWidth = this.getNodeWidth(rootHierarchyNode);
-    // const nodeHeight = this.getNodeHeight(rootHierarchyNode);
+    const nodeWidth = this.getNodeWidth(rootHierarchyNode);
+    const nodeHeight = this.getNodeHeight(rootHierarchyNode);
 
-    // this.updateLayout(rootHierarchyNode, 0, -1, nodeWidth * 1.2, nodeHeight * 1.2);
+    this.updateLayout(rootHierarchyNode, 0, -1, nodeWidth * 1.2, nodeHeight * 1.2);
 
     // console.log(topology);
-    // console.log(rootHierarchyNode);
+    console.log(rootHierarchyNode);
   }
 
-  private updateLayout(
+  public updateLayout(
     hierarchyNode: HierarchyNode<D3ProxyNode>,
     nodeRowIndex: number,
     nodeColumnIndex: number,
