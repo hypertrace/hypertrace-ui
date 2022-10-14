@@ -34,6 +34,7 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
             *ngIf="this.enableSearch"
             class="search-box"
             (valueChange)="this.onSearch($event)"
+            (submit)="this.onSearchSubmit($event)"
           ></ht-search-box>
           <ht-download-file
             *ngIf="!!this.code && !!this.downloadFileName"
@@ -132,6 +133,14 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
     this.onDomMutation(mutations)
   );
+  private readonly scrollIntoViewOptions: ScrollIntoViewOptions = {
+    inline: 'center',
+    block: 'center'
+  };
+
+  private searchedBackgroundElements: HTMLDivElement[] = [];
+  private searchIndex: number = -1;
+  private searchText: string = '';
 
   public constructor(
     private readonly element: ElementRef,
@@ -182,6 +191,10 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     const searchText = searchString.toLowerCase();
     const codeTexts = this.codeTexts.map(text => text.toLowerCase());
 
+    this.searchIndex = -1;
+    this.searchText = searchText;
+    this.searchedBackgroundElements = [];
+
     // Remove existing child background elements
     this.codeLineBackgroundElements.forEach(
       codeLineBackgroundElement => (codeLineBackgroundElement.nativeElement.innerHTML = '')
@@ -209,6 +222,18 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.codeLineBackgroundElements.forEach((codeLineBackgroundElement, index) => {
       codeLineBackgroundElement.nativeElement.appendChild(this.getBackgroundElements(searchedPositions[index]));
     });
+
+    this.highlightSearchedBackgroundElement();
+  }
+
+  public onSearchSubmit(searchString: string) {
+    const searchText = searchString.toLowerCase();
+
+    if (searchText === this.searchText) {
+      this.highlightSearchedBackgroundElement();
+    } else {
+      this.onSearch(searchString);
+    }
   }
 
   private isLineHighlighted(codeText: string): boolean {
@@ -236,14 +261,35 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
       backgroundElem.className = 'bg-searched';
       backgroundElem.style.height = '100%';
       backgroundElem.style.width = `${position.end - position.start}ch`;
-      backgroundElem.style.backgroundColor = Color.Yellow4;
+      backgroundElem.style.backgroundColor = Color.Yellow3;
       backgroundElem.style.position = 'absolute';
       backgroundElem.style.left = `${position.start}ch`;
+      backgroundElem.style.borderRadius = '2px';
 
+      this.searchedBackgroundElements.push(backgroundElem);
       backgroundElemDocFragment.appendChild(backgroundElem);
     });
 
     return backgroundElemDocFragment;
+  }
+
+  // This is used to highlight the current search element
+  private highlightSearchedBackgroundElement(): void {
+    if (this.searchedBackgroundElements.length === 0) {
+      return;
+    }
+
+    const prevIndex = this.searchIndex;
+    this.searchIndex = (this.searchIndex + 1) % this.searchedBackgroundElements.length;
+
+    if (prevIndex !== -1) {
+      const prevElement = this.searchedBackgroundElements[prevIndex];
+      prevElement.style.border = 'none';
+    }
+
+    const currentElement = this.searchedBackgroundElements[this.searchIndex];
+    currentElement.style.border = ` 1px solid ${Color.Gray6}`;
+    currentElement.scrollIntoView(this.scrollIntoViewOptions);
   }
 
   private observeDomMutations(): void {
@@ -261,10 +307,10 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
     if (mutationType === 'childList') {
       const searchedElement: HTMLElement = this.element.nativeElement.querySelector('.bg-searched');
-      searchedElement?.scrollIntoView();
+      searchedElement?.scrollIntoView(this.scrollIntoViewOptions);
     } else if (mutationType === 'attributes') {
       const highlightedCodeLineElement: HTMLElement = this.element.nativeElement.querySelector('.line-highlight');
-      highlightedCodeLineElement?.scrollIntoView();
+      highlightedCodeLineElement?.scrollIntoView(this.scrollIntoViewOptions);
     }
   }
 }
