@@ -24,7 +24,7 @@ describe('ServiceInstrumentationService', () => {
 
   test('returns correct label for score', () => {
     expect(service.getLabelForScore(30)).toBe('Below Expectation');
-    expect(service.getLabelForScore(50)).toBe('Need Improvement');
+    expect(service.getLabelForScore(50)).toBe('Needs Improvement');
     expect(service.getLabelForScore(70)).toBe('Good');
     expect(service.getLabelForScore(90)).toBe('Excellent!');
   });

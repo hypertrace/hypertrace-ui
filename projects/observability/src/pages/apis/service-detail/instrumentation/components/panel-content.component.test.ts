@@ -30,7 +30,7 @@ describe('PanelContentComponent', () => {
 
   test('navigates to Explorer page with trace ID filled', () => {
     expect(component.getExampleLink('1')).toBe(
-      '/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_x&filter=traceId_eq_1'
+      '/explorer?time=12h&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_x&filter=traceId_eq_1'
     );
   });
 

@@ -33,10 +33,10 @@ export class PanelContentComponent {
 
   public getExampleLink(id: string): string {
     if (this.heuristicScore?.sampleType === 'span') {
-      return `/explorer?time=1d&scope=spans&series=column:count(spans)&filter=serviceName_eq_${this.serviceName}&filter=id_eq_${id}`;
+      return `/explorer?time=12h&scope=spans&series=column:count(spans)&filter=serviceName_eq_${this.serviceName}&filter=id_eq_${id}`;
     }
 
-    return `/explorer?time=1d&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_${this.serviceName}&filter=traceId_eq_${id}`;
+    return `/explorer?time=12h&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_${this.serviceName}&filter=traceId_eq_${id}`;
   }
 
   public getEvaluationDate(): string {

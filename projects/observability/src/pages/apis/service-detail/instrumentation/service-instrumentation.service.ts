@@ -28,7 +28,7 @@ export class ServiceInstrumentationService {
     }
 
     if (score < 70) {
-      return 'Need Improvement';
+      return 'Needs Improvement';
     }
 
     if (score < 90) {
