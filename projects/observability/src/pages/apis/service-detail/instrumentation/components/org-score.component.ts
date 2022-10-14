@@ -24,11 +24,14 @@ export class OrgScoreComponent {
   public orgScore: number = 0;
 
   public getScoreComment(): { text: string; color: string } {
-    if (this.serviceScore > this.orgScore) {
+    const serviceScore = Math.round(this.serviceScore);
+    const orgScore = Math.round(this.orgScore);
+
+    if (serviceScore > orgScore) {
       return { text: 'The service score is above the org score', color: '#3d9a50' };
     }
 
-    if (this.serviceScore === this.orgScore) {
+    if (serviceScore === orgScore) {
       return { text: 'The service score matches the org score', color: '#3d9a50' };
     }
 
