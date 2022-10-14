@@ -93,7 +93,7 @@ describe('Code Viewer Component', () => {
 
     // Search
     spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'e');
-    const searchElements = spectator.queryAll('.bg-searched') as HTMLDivElement[];
+    const searchElements = spectator.queryAll('.bg-searched');
     expect(searchElements.length).toBe(2);
     expect(searchElements[0]).toHaveStyle({ border: `1px solid ${Color.Gray6}` });
     expect(searchElements[1]).toHaveStyle({ border: undefined });

@@ -226,7 +226,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.highlightSearchedBackgroundElement();
   }
 
-  public onSearchSubmit(searchString: string) {
+  public onSearchSubmit(searchString: string): void {
     const searchText = searchString.toLowerCase();
 
     if (searchText === this.searchText) {
