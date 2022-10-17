@@ -44,6 +44,7 @@
     "@types/d3-transition": "1.1.5",
     "apollo-angular": "^2.6.0",
     "core-js": "^3.25.5",
+    "cytoscape": "^3.23.0",
     "d3-array": "^2.12.0",
     "d3-axis": "^2.1.0",
     "d3-brush": "^1.1.6",

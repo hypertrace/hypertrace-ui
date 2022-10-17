@@ -9,9 +9,8 @@ import {
   Type
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
-import cytoscape from 'cytoscape';
 import { Selection } from 'd3-selection';
-import { cloneDeep, isNil, throttle } from 'lodash-es';
+import { isNil, throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -310,50 +309,7 @@ export class D3Topology implements Topology {
       this.topologyData
     );
 
-    const selfNode = this.topologyData.nodes.find(node => node.outgoing.length > 0);
-    const selfLink = cloneDeep(selfNode?.outgoing[0]);
-
-    if (selfLink && selfNode) {
-      console.log('selfNode: ', selfNode);
-
-      selfLink.source = selfNode;
-      selfLink.target = this.topologyData.nodes[2];
-
-      selfNode.outgoing.push(selfLink);
-      this.topologyData.nodes[2].incoming.push(selfLink);
-      this.topologyData.edges.push(selfLink);
-    }
-
-    console.log(this.topologyData);
-
-    const edges = this.topologyData.edges.map(edge => ({
-      data: { source: edge.source.userNode.data?.name!, target: edge.target.userNode.data?.name! }
-    }));
-
-    const rootHierarchyNode2 = cytoscape({
-      elements: {
-        nodes: this.topologyData.nodes.map(node => ({ data: { id: node.userNode.data?.name! } })),
-        edges: edges
-      },
-      layout: {
-        name: 'breadthfirst',
-        spacingFactor: 300
-      }
-    });
-
-    const graph: Elements = rootHierarchyNode2.json() as Elements;
-
-    const map: Map<string, { x: number; y: number }> = new Map<string, { x: number; y: number }>(
-      graph.elements.nodes.map(node => [node.data.id, { x: node.position.y + 450, y: node.position.x / 4 + 300 }])
-    );
-
-    // console.log(map);
-
-    this.topologyData.nodes.forEach(node => {
-      node.x = map.get(node.userNode.data?.name!)!.x;
-      node.y = map.get(node.userNode.data?.name!)!.y;
-    });
-    // this.topologyData.nodes.forEach((node) => {node.x = 1; node.y = 1});
+    this.layout.layout(this.topologyData, this.width, this.height);
 
     this.drawData(this.topologyData, this.nodeRenderer, this.edgeRenderer);
   }
@@ -495,13 +451,4 @@ export class D3Topology implements Topology {
     }
     this.tooltip.showWithEdgeData(edge.userEdge, new ElementRef(originEl), { modal: modal });
   }
-}
-
-interface Elements {
-  elements: {
-    nodes: {
-      data: { id: string };
-      position: { x: number; y: number };
-    }[];
-  };
 }
