@@ -52,6 +52,7 @@ import { StepperTabComponent } from './stepper-tab.component';
         <ht-button
           class="cancel"
           label="Cancel"
+          [disabled]="this.isCancelButtonDisabled()"
           (click)="this.cancelled.emit()"
           role="${ButtonRole.Tertiary}"
         ></ht-button>
@@ -61,6 +62,7 @@ import { StepperTabComponent } from './stepper-tab.component';
             *ngIf="stepper.selectedIndex !== 0"
             display="${ButtonStyle.Outlined}"
             label="Back"
+            [disabled]="this.isBackButtonDisabled()"
             (click)="stepper.previous()"
           ></ht-button>
           <ht-button
@@ -96,6 +98,9 @@ export class StepperComponent implements AfterContentInit {
   @Input()
   public orientation: StepperOrientation = StepperOrientation.Horizontal;
 
+  @Input()
+  public buttonDisabled: StepperButtonDisabledExplicitStatus = {};
+
   @Output()
   public readonly submitted: EventEmitter<void> = new EventEmitter();
 
@@ -130,13 +135,24 @@ export class StepperComponent implements AfterContentInit {
       return true;
     }
 
-    const isValid = currentTab.stepControl ? currentTab.stepControl.status === 'VALID' : currentTab.completed;
+    // Submit Button
     const isLastStep = this.stepper ? this.isLastStep(this.stepper) : true;
     if (isLastStep) {
-      return !this.areAllStepsValid();
+      return this.isButtonDisabled(StepperButton.Submit) || !this.areAllStepsValid();
     }
 
-    return this.isLinear && !isValid;
+    // Next button
+    const isValid = currentTab.stepControl ? currentTab.stepControl.status === 'VALID' : currentTab.completed;
+
+    return this.isButtonDisabled(StepperButton.Next) || (this.isLinear && !isValid);
+  }
+
+  public isBackButtonDisabled(): boolean {
+    return this.isButtonDisabled(StepperButton.Back);
+  }
+
+  public isCancelButtonDisabled(): boolean {
+    return this.isButtonDisabled(StepperButton.Cancel);
   }
 
   /**
@@ -186,6 +202,10 @@ export class StepperComponent implements AfterContentInit {
   private isLastStep(stepper: MatStepper): boolean {
     return stepper.selectedIndex === stepper.steps.length - 1;
   }
+
+  private isButtonDisabled(button: StepperButton): boolean {
+    return this.buttonDisabled[button] ?? false;
+  }
 }
 
 export enum StepperOrientation {
@@ -193,3 +213,12 @@ export enum StepperOrientation {
 }
 
 export type StepperSelectionChange = StepperSelectionEvent;
+
+export enum StepperButton {
+  Cancel = 'cancel',
+  Back = 'back',
+  Next = 'next',
+  Submit = 'submit'
+}
+
+export type StepperButtonDisabledExplicitStatus = Partial<Record<StepperButton, boolean>>;
