@@ -98,6 +98,7 @@ export interface TopologyConfiguration {
 }
 
 export interface TopologyNode {
+  data?: { name?: string; [key: string]: unknown };
   edges: TopologyEdge[];
 }
 
