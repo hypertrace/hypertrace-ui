@@ -14,7 +14,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'HasMeaningfulEndpointName',
           evalTimestamp: '1658434128',
           score: 70.0,
-          sampleIds: ['5dea74f41f728fd91c7', '5dea74asdas1'],
+          sampleIds: ['5dea74f41f728fd91c7:1665992993880', '5dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '1000',
           failureCount: '200'
@@ -24,7 +24,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'HasUniqueClientSpans',
           evalTimestamp: '1658434286',
           score: 25.0,
-          sampleIds: ['95ea74f41f728fd91c7', 'asddea74asdas1'],
+          sampleIds: ['95ea74f41f728fd91c7:1665992993880', 'asddea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '1000',
           failureCount: '250'
@@ -41,7 +41,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'HasNoTokens',
           evalTimestamp: '1658434128',
           score: 60.0,
-          sampleIds: ['m5dea7728fd91c7', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
           failureCount: '90'
@@ -58,7 +58,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'HasNoTokens',
           evalTimestamp: '1658434128',
           score: 70.0,
-          sampleIds: ['m5dea7728fd91c7', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
           failureCount: '30'
@@ -68,7 +68,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'SecondHeuristic',
           evalTimestamp: '1658434128',
           score: 50.0,
-          sampleIds: ['m5dea7728fd91c7', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
           failureCount: '50'
@@ -79,7 +79,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'ThirdHeuristic',
           evalTimestamp: '1658434128',
           score: 30.0,
-          sampleIds: ['m5dea7728fd91c8', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c8:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'trace',
           sampleSize: '100',
           failureCount: '70'
@@ -96,7 +96,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'HasNoTokens',
           evalTimestamp: '1658434128',
           score: 90.0,
-          sampleIds: ['m5dea7728fd91c7', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
           failureCount: '10'
@@ -106,7 +106,7 @@ export const serviceScoreResponse: ServiceScoreResponse = {
           name: 'SecondHeuristic',
           evalTimestamp: '1658434128',
           score: -1.0,
-          sampleIds: ['m5dea7728fd91c7', 'n1235dea74asdas1'],
+          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
           failureCount: '90'

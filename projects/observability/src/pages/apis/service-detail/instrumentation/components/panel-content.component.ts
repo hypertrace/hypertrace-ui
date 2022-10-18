@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { BreadcrumbsService } from '@hypertrace/components';
-import { HeuristicScoreInfo } from '../service-instrumentation.types';
+import {
+  HeuristicScoreInfo,
+  SampleHeuristicEnityId,
+  SAMPLE_HEURISTIC_ENTITY_DELIMETER
+} from '../service-instrumentation.types';
 
 @Component({
   styleUrls: ['./panel-content.component.scss'],
@@ -14,7 +18,9 @@ import { HeuristicScoreInfo } from '../service-instrumentation.types';
     <p class="metric" *ngIf="this.heuristicScore?.sampleIds.length > 0">
       <b>Example {{ this.heuristicScore?.sampleType }}s: </b>
       <span *ngFor="let exampleId of this.heuristicScore?.sampleIds; let i = index">
-        <a title="Open in Explorer" [href]="this.getExampleLink(exampleId)">{{ exampleId }}</a>
+        <a target="_blank" title="Open in Explorer" [href]="this.getExampleLink(exampleId)">{{
+          this.getExampleHeuristicEntityId(exampleId)
+        }}</a>
         <span *ngIf="i < this.heuristicScore?.sampleIds.length - 1">, </span>
       </span>
     </p>
@@ -26,17 +32,42 @@ export class PanelContentComponent {
   public heuristicScore: HeuristicScoreInfo | undefined;
 
   private serviceName: string = '';
+  private readonly timeDuration: string = '12h';
+  private readonly SAMPLE_DELIMETER: SAMPLE_HEURISTIC_ENTITY_DELIMETER = ':';
 
   public constructor(private readonly breadcrumbsService: BreadcrumbsService) {
     this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => (this.serviceName = serviceName));
   }
 
-  public getExampleLink(id: string): string {
-    if (this.heuristicScore?.sampleType === 'span') {
-      return `/explorer?time=12h&scope=spans&series=column:count(spans)&filter=serviceName_eq_${this.serviceName}&filter=id_eq_${id}`;
-    }
+  public getExampleHeuristicEntityId(sampleId: SampleHeuristicEnityId<SAMPLE_HEURISTIC_ENTITY_DELIMETER>): string {
+    const [entityId] = sampleId.split(this.SAMPLE_DELIMETER);
 
-    return `/explorer?time=12h&scope=endpoint-traces&series=column:count(calls)&filter=serviceName_eq_${this.serviceName}&filter=traceId_eq_${id}`;
+    return entityId ?? '';
+  }
+
+  public getExampleLink(id: SampleHeuristicEnityId<SAMPLE_HEURISTIC_ENTITY_DELIMETER>): string {
+    const [heuristicEntityId, heuristicEntityStartTime] = id.split(this.SAMPLE_DELIMETER);
+    const exampleGeneratedUrl =
+      this.heuristicScore?.sampleType === 'span'
+        ? `/explorer?time=${this.timeDuration}&scope=spans&series=column:count(spans)`
+        : `/explorer?time=${this.timeDuration}&scope=endpoint-traces&series=column:count(calls)`;
+
+    const explorerFiltersToApply = [
+      { key: 'serviceName', value: this.serviceName, operator: 'eq' },
+      { key: 'startTime', value: heuristicEntityStartTime, operator: 'eq' },
+      { key: 'id', value: heuristicEntityId, operator: 'eq', scope: 'span' },
+      { key: 'traceId', value: heuristicEntityId, operator: 'eq', scope: 'trace' }
+    ];
+
+    return explorerFiltersToApply
+      .filter(
+        explorerFilter => explorerFilter.scope === undefined || explorerFilter.scope === this.heuristicScore?.sampleType
+      )
+      .reduce(
+        (previousValue, currValue) =>
+          `${previousValue}&filter=${currValue.key}_${currValue.operator}_${currValue.value}`,
+        exampleGeneratedUrl
+      );
   }
 
   public getEvaluationDate(): string {
