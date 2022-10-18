@@ -154,6 +154,7 @@ export * from './shared/graphql/request/handlers/entities/query/entities-graphql
 export * from './shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
+export * from './shared/graphql/request/handlers/entities/query/topology/topology-specification-builder';
 export * from './shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
 export * from './shared/graphql/request/handlers/explore/explore-graphql-query-builder.service';
 export * from './shared/graphql/request/handlers/explore/explore-query';
@@ -287,6 +288,17 @@ export * from './shared/components/topology/renderers/node/topology-node-rendere
 export * from './shared/components/topology/renderers/tooltip/topology-tooltip-renderer.service';
 export * from './shared/components/topology/topology.component';
 export * from './shared/components/topology/topology.module';
+export * from './shared/dashboard/data/graphql/topology/topology-data-source.model';
+export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-category.model';
+export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-with-category.model';
+export * from './shared/dashboard/widgets/topology/topology-widget-renderer.component';
+export * from './shared/dashboard/widgets/topology/topology-data-source-model-properties.service';
+export * from './shared/dashboard/widgets/topology/edge/curved/entity-edge-curve-renderer.service';
+export * from './shared/dashboard/widgets/topology/node/box/api-node-renderer/api-node-box-renderer.service';
+export * from './shared/dashboard/widgets/topology/node/box/backend-node-renderer/backend-node-box-renderer.service';
+export * from './shared/dashboard/widgets/topology/node/box/service-node-renderer/service-node-box-renderer.service';
+export * from './shared/dashboard/widgets/topology/tooltip/topology-entity-tooltip.component';
+export * from './shared/dashboard/widgets/topology/visibility-updater';
 
 // Topology Metric
 export * from './shared/dashboard/widgets/topology/metric/edge-metric-category';

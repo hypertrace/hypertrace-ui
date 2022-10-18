@@ -295,7 +295,6 @@ export class ExplorerDashboardBuilder {
               type: 'attribute-specification',
               attribute: 'endTime'
             },
-            sort: TableSortDirection.Descending,
             'click-handler': {
               type: 'api-trace-navigation-handler'
             }
@@ -504,7 +503,6 @@ export class ExplorerDashboardBuilder {
               type: 'attribute-specification',
               attribute: 'endTime'
             },
-            sort: TableSortDirection.Descending,
             'click-handler': {
               type: 'span-trace-navigation-handler'
             }
