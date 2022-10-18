@@ -1,21 +1,15 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { isEmpty, startCase } from 'lodash-es';
-import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FileDownloadService implements OnDestroy {
   private readonly downloadElement: HTMLAnchorElement;
   private readonly subscriptions: Subscription = new Subscription();
-  private readonly fileDownloadEventSubject: BehaviorSubject<FileDownloadEventType | undefined> = new BehaviorSubject<
-    FileDownloadEventType | undefined
-  >(undefined);
-
-  public readonly fileDownloadEvent$: Observable<
-    FileDownloadEventType | undefined
-  > = this.fileDownloadEventSubject.asObservable();
 
   public constructor(private readonly notificationService: NotificationService) {
     this.downloadElement = this.createDownloadElement();
@@ -25,15 +19,15 @@ export class FileDownloadService implements OnDestroy {
    * Downloads data as text content
    * @param config Text download config
    */
-  public downloadAsText(config: FileDownloadBaseConfig): void {
-    this.download({ ...config }, data => `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`);
+  public downloadAsText(config: FileDownloadBaseConfig): Observable<FileDownloadEvent> {
+    return this.download({ ...config }, data => `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`);
   }
 
   /**
    * Downloads data as csv formatted content
    * @param config Csv download config
    */
-  public downloadAsCsv(config: CsvDownloadFileConfig): void {
+  public downloadAsCsv(config: CsvDownloadFileConfig): Observable<FileDownloadEvent> {
     // If given header is empty, then create header from the data keys
     const header$ = isEmpty(config.header)
       ? config.dataSource.pipe(
@@ -56,7 +50,7 @@ export class FileDownloadService implements OnDestroy {
       map(data => data.map(datum => datum.join(',')).join('\r\n')) // Join data to create a string
     );
 
-    this.download({ ...config, dataSource: csvData$ }, csvData => {
+    return this.download({ ...config, dataSource: csvData$ }, csvData => {
       const csvFile = new Blob([csvData], { type: 'text/csv' });
 
       return window.URL.createObjectURL(csvFile);
@@ -82,38 +76,47 @@ export class FileDownloadService implements OnDestroy {
    * @param getHref Href provider to download
    * @param fileType Download File Type
    */
-  private download(config: FileDownloadBaseConfig, getHref: (data: string) => string): void {
-    this.fileDownloadEventSubject.next(FileDownloadEventType.Progress);
+  private download(config: FileDownloadBaseConfig, getHref: (data: string) => string): Observable<FileDownloadEvent> {
+    return config.dataSource.pipe(
+      take(1),
+      map(data => {
+        try {
+          this.downloadElement.href = getHref(data);
+          this.downloadElement.download = config.fileName;
+          this.downloadElement.click();
 
-    this.subscriptions.add(
-      config.dataSource
-        .pipe(
-          take(1),
-          catchError(() => {
-            this.fileDownloadEventSubject.next(FileDownloadEventType.Failure);
+          const successEvent: FileDownloadSuccessEvent = { type: FileDownloadEventType.Success };
 
-            return this.notificationService.createFailureToast(config.failureMsg ?? 'File download failed');
-          })
-        )
-        .subscribe(data => {
-          try {
-            this.downloadElement.href = getHref(data);
-            this.downloadElement.download = config.fileName;
-            this.downloadElement.click();
-
-            this.fileDownloadEventSubject.next(FileDownloadEventType.Success);
-            this.notificationService.createSuccessToast(config.successMsg ?? 'File download successful');
-          } catch (err) {
-            this.fileDownloadEventSubject.next(FileDownloadEventType.Failure);
-            this.notificationService.createFailureToast(config.failureMsg ?? 'File download failed');
-          }
+          return successEvent;
+        } catch (error) {
+          throw new Error(error);
+        }
+      }),
+      this.notificationService.withNotification(
+        config.successMsg ?? 'File download successful.',
+        config.failureMsg ?? 'File download failed. Please try again.'
+      ),
+      catchError(error =>
+        of({
+          type: FileDownloadEventType.Failure,
+          error: this.getFileDownloadErrorMessage(error)
         })
+      )
     );
+  }
+
+  private getFileDownloadErrorMessage(errorResponse: unknown): string {
+    return errorResponse instanceof HttpErrorResponse
+      ? errorResponse.error.error
+      : errorResponse instanceof Error
+      ? errorResponse.message
+      : 'File upload failed due to unknown error';
   }
 }
 
 export interface CsvDownloadFileConfig extends FileDownloadBaseConfig<Dictionary<unknown>[]> {
   header?: string[];
+  fileName: `${string}.csv`; // Only csv files allowed here
 }
 
 export interface FileDownloadBaseConfig<T = string> {
@@ -125,6 +128,15 @@ export interface FileDownloadBaseConfig<T = string> {
 
 export const enum FileDownloadEventType {
   Failure = 'failure',
-  Progress = 'progress',
   Success = 'success'
 }
+export interface FileDownloadFailureEvent {
+  type: FileDownloadEventType.Failure;
+  error: string;
+}
+
+export interface FileDownloadSuccessEvent {
+  type: FileDownloadEventType.Success;
+}
+
+export type FileDownloadEvent = FileDownloadFailureEvent | FileDownloadSuccessEvent;
