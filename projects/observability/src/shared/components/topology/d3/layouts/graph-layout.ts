@@ -24,26 +24,26 @@ export class GraphLayout {
 
   private fillNodeAndLevelMaps(levelToNodesMap: Map<number, RenderableTopologyNode[]>, nodeToLevelMap: Map<RenderableTopologyNode, number>) {
 
-    const nodes: RenderableTopologyNode[] = levelToNodesMap.get(0) ?? [];
-    const vis = new Set<string>();
+    const rootNodes: RenderableTopologyNode[] = levelToNodesMap.get(0) ?? [];
+    const visited = new Set<string>();
     let curr = 0;
 
     while (curr >= 0) {
-      const parent = nodes[curr];
+      const parent = rootNodes[curr];
       const level = nodeToLevelMap.get(parent)! + 1;
 
       parent.outgoing.forEach(edge => {
         const child = edge.target;
-        if (!vis.has(child.userNode.data?.name!)) {
-          vis.add(child.userNode.data?.name!);
-          nodes.push(child);
+        if (!visited.has(child.userNode.data?.name!)) {
+          visited.add(child.userNode.data?.name!);
+          rootNodes.push(child);
           nodeToLevelMap.set(child, level);
           levelToNodesMap.has(level) ? levelToNodesMap.get(level)?.push(child) : levelToNodesMap.set(level, [child]);
         }
       });
 
       curr++;
-      if (curr >= nodes.length) {
+      if (curr >= rootNodes.length) {
         break;
       }
     }

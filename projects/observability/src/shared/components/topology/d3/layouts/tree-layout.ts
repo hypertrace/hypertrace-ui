@@ -72,7 +72,6 @@ export class TreeLayout implements TopologyLayout {
 
     if (leaf !== undefined) {
       const renderedData = leaf.data.sourceNode!.renderedData();
-      console.log(renderedData);
 
       if (renderedData !== undefined) {
         leafWidth = renderedData.getBoudingBox().width;
