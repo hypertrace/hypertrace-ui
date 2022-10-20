@@ -10,7 +10,7 @@ import { FileDownloadService } from './service/file-download.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./download-file.component.scss'],
   template: `
-    <div *ngIf="this.metadata" class="download-file" (click)="this.triggerDownload()">
+    <div *ngIf="this.metadata" class="download-file" (click)="this.triggerDownload(this.metadata)">
       <ht-button
         *ngIf="!this.dataLoading"
         class="download-button"
@@ -33,9 +33,9 @@ export class DownloadFileComponent {
     private readonly fileDownloadService: FileDownloadService
   ) {}
 
-  public triggerDownload(): void {
+  public triggerDownload(metadata: DownloadFileMetadata): void {
     this.dataLoading = true;
-    this.fileDownloadService.downloadAsText(this.metadata!).subscribe(() => {
+    this.fileDownloadService.downloadAsText(metadata).subscribe(() => {
       this.dataLoading = false;
       this.cdr.detectChanges();
     });

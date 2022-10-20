@@ -1,15 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { isEmpty, startCase } from 'lodash-es';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
 
 @Injectable({ providedIn: 'root' })
-export class FileDownloadService implements OnDestroy {
+export class FileDownloadService {
   private readonly downloadElement: HTMLAnchorElement;
-  private readonly subscriptions: Subscription = new Subscription();
 
   public constructor(private readonly notificationService: NotificationService) {
     this.downloadElement = this.createDownloadElement();
@@ -57,11 +56,6 @@ export class FileDownloadService implements OnDestroy {
     });
   }
 
-  public ngOnDestroy(): void {
-    this.downloadElement.remove();
-    this.subscriptions.unsubscribe();
-  }
-
   private createDownloadElement(): HTMLAnchorElement {
     const downloadElem = document.createElement('a');
     downloadElem.setAttribute('display', 'none');
@@ -80,17 +74,13 @@ export class FileDownloadService implements OnDestroy {
     return config.dataSource.pipe(
       take(1),
       map(data => {
-        try {
-          this.downloadElement.href = getHref(data);
-          this.downloadElement.download = config.fileName;
-          this.downloadElement.click();
+        this.downloadElement.href = getHref(data);
+        this.downloadElement.download = config.fileName;
+        this.downloadElement.click();
 
-          const successEvent: FileDownloadSuccessEvent = { type: FileDownloadEventType.Success };
+        const successEvent: FileDownloadSuccessEvent = { type: FileDownloadEventType.Success };
 
-          return successEvent;
-        } catch (error) {
-          throw new Error(error);
-        }
+        return successEvent;
       }),
       this.notificationService.withNotification(
         config.successMsg ?? 'File download successful.',
