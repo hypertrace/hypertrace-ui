@@ -98,8 +98,8 @@ export class InstrumentationDetailsComponent {
 
     const sampleSize = Number(heuristicScore.sampleSize);
     const failureCount = Number(heuristicScore.failureCount);
-    const percentFailed = Math.round((failureCount / sampleSize) * 100);
+    const percentFailed = Math.min(Math.ceil((failureCount / sampleSize) * 100), 100);
 
-    return `${percentFailed}% of ${heuristicScore.sampleType}s failed this check`;
+    return `~${percentFailed}% of ${heuristicScore.sampleType}s failed this check`;
   }
 }

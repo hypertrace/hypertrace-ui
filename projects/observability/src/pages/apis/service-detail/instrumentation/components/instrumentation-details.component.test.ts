@@ -48,7 +48,7 @@ describe('InstrumentationDetailsComponent', () => {
         sampleIds: [],
         score: 0
       })
-    ).toBe('90% of spans failed this check');
+    ).toBe('~90% of spans failed this check');
   });
 
   test('shows correct header summary when check is not eligible', () => {
