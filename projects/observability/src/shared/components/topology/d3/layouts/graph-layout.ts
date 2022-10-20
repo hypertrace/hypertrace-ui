@@ -1,64 +1,64 @@
 import { RenderableTopology, RenderableTopologyNode, TopologyCoordinates, TopologyEdge, TopologyNode } from "../../topology";
 
 export class GraphLayout {
+
+  private levelToNodesMap = new Map<number, RenderableTopologyNode[]>();
+  private nodeToLevelMap = new Map<RenderableTopologyNode, number>();
+  private nodeCoOrdinatesMap: Map<TopologyNode, TopologyCoordinates> = new Map<TopologyNode, TopologyCoordinates>();
+
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
 
-    const levelToNodesMap = new Map<number, RenderableTopologyNode[]>();
-    const nodeToLevelMap = new Map<RenderableTopologyNode, number>();
-    const nodeCoOrdinatesMap: Map<string, TopologyCoordinates> = new Map<string, TopologyCoordinates>();
-
-    this.findRootNodes(topology, levelToNodesMap, nodeToLevelMap);
-    this.fillNodeAndLevelMaps(levelToNodesMap, nodeToLevelMap);
-    this.fillNodeCoOrdinatesMap(nodeCoOrdinatesMap, levelToNodesMap);
-    this.setNodeCoOrdinates(topology, nodeCoOrdinatesMap);
+    this.findRootNodes(topology);
+    this.fillNodeAndLevelMaps();
+    this.fillNodeCoOrdinatesMap();
+    this.setNodeCoOrdinates(topology);
   }
 
-  private findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>, levelToNodesMap: Map<number, RenderableTopologyNode[]>, nodeToLevelMap: Map<RenderableTopologyNode, number>) {
+  private findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>) {
     topology.nodes.forEach(node => {
       if (node.incoming.length === 0) {
-        nodeToLevelMap.set(node, 0);
-        levelToNodesMap.has(0) ? levelToNodesMap.get(0)?.push(node) : levelToNodesMap.set(0, [node])
+        this.nodeToLevelMap.set(node, 0);
+        this.levelToNodesMap.has(0) ? this.levelToNodesMap.get(0)?.push(node) : this.levelToNodesMap.set(0, [node])
       }
     });
   }
 
-  private fillNodeAndLevelMaps(levelToNodesMap: Map<number, RenderableTopologyNode[]>, nodeToLevelMap: Map<RenderableTopologyNode, number>) {
+  private fillNodeAndLevelMaps() {
 
-    const rootNodes: RenderableTopologyNode[] = levelToNodesMap.get(0) ?? [];
-    const visited = new Set<string>();
-    let curr = 0;
+    const nodes = [...(this.levelToNodesMap.get(0) ?? [])];
+    const visited = new Set<TopologyNode>([...nodes.map(node => node.userNode)]);
 
-    while (curr >= 0) {
-      const parent = rootNodes[curr];
-      const level = nodeToLevelMap.get(parent)! + 1;
+    while (nodes.length > 0) {
+      const parent = nodes[0];
+      const level = this.nodeToLevelMap.get(parent)! + 1;
 
       parent.outgoing.forEach(edge => {
         const child = edge.target;
-        if (!visited.has(child.userNode.data?.name!)) {
-          visited.add(child.userNode.data?.name!);
-          rootNodes.push(child);
-          nodeToLevelMap.set(child, level);
-          levelToNodesMap.has(level) ? levelToNodesMap.get(level)?.push(child) : levelToNodesMap.set(level, [child]);
+        if (!visited.has(child.userNode)) {
+          visited.add(child.userNode);
+          nodes.push(child);
+          this.nodeToLevelMap.set(child, level);
+          this.levelToNodesMap.has(level) ? this.levelToNodesMap.get(level)?.push(child) : this.levelToNodesMap.set(level, [child]);
         }
       });
 
-      curr++;
-      if (curr >= rootNodes.length) {
-        break;
-      }
+      nodes.shift();
     }
   }
 
-  private fillNodeCoOrdinatesMap(nodeCoOrdinatesMap: Map<string, TopologyCoordinates>, levelToNodesMap: Map<number, RenderableTopologyNode<TopologyNode>[]>) {
+  private fillNodeCoOrdinatesMap() {
+
+    console.log(this.levelToNodesMap);
+
     let curX = 1;
 
-    Array.from(levelToNodesMap.keys()).forEach(level => {
-      const nodes = levelToNodesMap.get(level)!;
+    Array.from(this.levelToNodesMap.keys()).forEach(level => {
+      const nodes = this.levelToNodesMap.get(level)!;
 
       let curY = 1;
       let maxWidth = 0;
       nodes.forEach((node) => {
-        nodeCoOrdinatesMap.set(node.userNode.data?.name!, { x: curX, y: curY });
+        this.nodeCoOrdinatesMap.set(node.userNode, { x: curX, y: curY });
         curY += (node.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
         maxWidth = Math.max(maxWidth, node.renderedData()?.getBoudingBox()?.width ?? 400);
       })
@@ -67,10 +67,10 @@ export class GraphLayout {
     });
   }
 
-  private setNodeCoOrdinates(topology: RenderableTopology<TopologyNode, TopologyEdge>, nodeCoOrdinatesMap: Map<string, TopologyCoordinates>) {
+  private setNodeCoOrdinates(topology: RenderableTopology<TopologyNode, TopologyEdge>) {
     topology.nodes.forEach(node => {
-      node.x = nodeCoOrdinatesMap.get(node.userNode.data?.name!)!.x;
-      node.y = nodeCoOrdinatesMap.get(node.userNode.data?.name!)!.y;
+      node.x = this.nodeCoOrdinatesMap.get(node.userNode)!.x;
+      node.y = this.nodeCoOrdinatesMap.get(node.userNode)!.y;
     });
   }
 }
