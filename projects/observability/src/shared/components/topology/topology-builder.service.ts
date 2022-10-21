@@ -13,7 +13,9 @@ export class TopologyBuilderService {
     clickableNodes: true,
     clickableEdges: true,
     nodeDataSpecifiers: [],
-    edgeDataSpecifiers: []
+    edgeDataSpecifiers: [],
+    verticalGap: 20,
+    horizontalGap: 240
   };
 
   public build(hostEl: Element, injector: Injector, config: RequiredTopologyConfig): Topology {

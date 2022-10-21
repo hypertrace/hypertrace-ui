@@ -1,16 +1,16 @@
-import { RenderableTopology, RenderableTopologyNode, TopologyCoordinates, TopologyEdge, TopologyNode } from "../../topology";
+import { RenderableTopology, RenderableTopologyNode, TopologyCoordinates, TopologyEdge, TopologyLayout, TopologyNode, TopologyOptions } from "../../topology";
 
-export class GraphLayout {
+export class GraphLayout implements TopologyLayout {
 
   private levelToNodesMap = new Map<number, RenderableTopologyNode[]>();
   private nodeToLevelMap = new Map<RenderableTopologyNode, number>();
   private nodeCoOrdinatesMap: Map<TopologyNode, TopologyCoordinates> = new Map<TopologyNode, TopologyCoordinates>();
 
-  public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
+  public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>, topologyOptions: TopologyOptions): void {
 
     this.findRootNodes(topology);
     this.fillNodeAndLevelMaps();
-    this.fillNodeCoOrdinatesMap();
+    this.fillNodeCoOrdinatesMap(topologyOptions);
     this.setNodeCoOrdinates(topology);
   }
 
@@ -46,7 +46,7 @@ export class GraphLayout {
     }
   }
 
-  private fillNodeCoOrdinatesMap() {
+  private fillNodeCoOrdinatesMap(topologyOptions: TopologyOptions) {
 
     console.log(this.levelToNodesMap);
 
@@ -59,11 +59,11 @@ export class GraphLayout {
       let maxWidth = 0;
       nodes.forEach((node) => {
         this.nodeCoOrdinatesMap.set(node.userNode, { x: curX, y: curY });
-        curY += (node.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
+        curY += (node.renderedData()?.getBoudingBox()?.height ?? 36) + topologyOptions.verticalGap;
         maxWidth = Math.max(maxWidth, node.renderedData()?.getBoudingBox()?.width ?? 400);
       })
 
-      curX += maxWidth + 240;
+      curX += maxWidth + topologyOptions.horizontalGap;
     });
   }
 

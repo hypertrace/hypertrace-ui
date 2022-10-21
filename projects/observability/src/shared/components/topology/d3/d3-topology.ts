@@ -64,6 +64,8 @@ export class D3Topology implements Topology {
   protected readonly edgeRenderer: TopologyEdgeRenderer;
   protected readonly domRenderer: Renderer2;
   protected readonly d3Util: D3UtilService;
+  protected readonly verticalGap: number;
+  protected readonly horizontalGap: number;
   protected width: number = 0;
   protected height: number = 0;
 
@@ -78,6 +80,8 @@ export class D3Topology implements Topology {
     this.userNodes = config.nodes;
     this.nodeRenderer = config.nodeRenderer;
     this.edgeRenderer = config.edgeRenderer;
+    this.verticalGap = config.verticalGap;
+    this.horizontalGap = config.horizontalGap;
     this.domRenderer = injector.get(Renderer2 as Type<Renderer2>);
     this.stateManager = new TopologyStateManager(this.config);
     this.topologyData = this.topologyConverter.convertTopology(
@@ -140,7 +144,12 @@ export class D3Topology implements Topology {
   }
 
   private updateLayout(): void {
-    this.layout.layout(this.topologyData, this.width, this.height);
+    this.layout.layout(this.topologyData, {
+      width: this.width,
+      height: this.height,
+      horizontalGap: this.horizontalGap,
+      verticalGap: this.verticalGap
+    });
     this.updatePositions();
   }
 
@@ -305,7 +314,13 @@ export class D3Topology implements Topology {
       this.domRenderer,
       this.topologyData
     );
-    this.layout.layout(this.topologyData, this.width, this.height);
+
+    this.layout.layout(this.topologyData, {
+      width: this.width,
+      height: this.height,
+      horizontalGap: this.config.horizontalGap,
+      verticalGap: this.config.verticalGap
+    });
     this.drawData(this.topologyData, this.nodeRenderer, this.edgeRenderer);
   }
 

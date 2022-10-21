@@ -23,6 +23,7 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
       return EMPTY;
     }
     const nodeLookup = this.buildLookupMap(topologyData.nodes, node => nodeRenderer.getElementForNode(node));
+
     const dragSubect = new Subject<TopologyDragEvent>();
 
     this.d3Utils.selectAll(Array.from(nodeLookup.keys()), this.domRenderer).call(

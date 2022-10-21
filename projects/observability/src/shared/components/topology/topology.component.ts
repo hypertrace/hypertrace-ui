@@ -57,6 +57,12 @@ export class TopologyComponent implements OnChanges, OnDestroy {
   @Input()
   public shouldAutoZoomToFit?: boolean = false;
 
+  @Input()
+  public verticalGap?: number;
+
+  @Input()
+  public horizontalGap?: number;
+
   @ViewChild('topologyContainer', { static: true })
   private readonly container!: ElementRef;
 
@@ -83,7 +89,9 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       showBrush: this.showBrush,
       shouldAutoZoomToFit: this.shouldAutoZoomToFit,
       nodeInteractionHandler: this.nodeInteractionHandler,
-      edgeInteractionHandler: this.edgeInteractionHandler
+      edgeInteractionHandler: this.edgeInteractionHandler,
+      verticalGap: this.verticalGap,
+      horizontalGap: this.horizontalGap
     });
 
     // Angular doesn't like introducing new child views mid-change detection
