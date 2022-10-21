@@ -15,14 +15,15 @@ import {
   TopologyCoordinates,
   TopologyEdge,
   TopologyLayout,
-  TopologyNode
+  TopologyNode,
+  TopologyOptions
 } from '../../topology';
 import { CustomForceBuilder } from './custom-force-builder';
 
 export class ForceLayout implements TopologyLayout {
-  public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>, width: number, height: number): void {
-    const xCenter = width / 2;
-    const yCenter = height / 2;
+  public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>, topologyOptions: TopologyOptions): void {
+    const xCenter = topologyOptions.width / 2;
+    const yCenter = topologyOptions.height / 2;
 
     const proxyNodeMap = this.getProxyNodes(topology.nodes, { x: xCenter, y: yCenter });
     const proxyEdges = this.getProxyEdges(topology.edges, proxyNodeMap);

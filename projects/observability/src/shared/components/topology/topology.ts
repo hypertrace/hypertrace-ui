@@ -95,6 +95,16 @@ export interface TopologyConfiguration {
    * Used to handle interactions on edge in a custom way (by avoiding default behavior)
    */
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
+
+  /**
+   * Used to provide vertical gap between two nodes 
+   */
+  verticalGap: number;
+
+  /**
+   * Used to provide horizontal gap between two level of nodes 
+   */
+  horizontalGap: number;
 }
 
 export interface TopologyNode {
@@ -165,7 +175,7 @@ export interface TopologyCoordinates {
 }
 
 export interface TopologyLayout {
-  layout(topology: RenderableTopology<TopologyNode, TopologyEdge>, width: number, height: number): void;
+  layout(topology: RenderableTopology<TopologyNode, TopologyEdge>, topologyOptions: TopologyOptions): void;
 }
 
 interface TopologyElementState<TDataSpec> {
@@ -212,6 +222,13 @@ export interface TopologyTooltipOptions {
 
 export interface TopologyInteractionHandler<T = unknown> {
   click?(data: T): Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
+}
+
+export interface TopologyOptions {
+  width: number;
+  height: number;
+  horizontalGap: number;
+  verticalGap: number;
 }
 
 export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
