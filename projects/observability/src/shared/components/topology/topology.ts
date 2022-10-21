@@ -98,12 +98,12 @@ export interface TopologyConfiguration {
 
   /**
    * Used to provide vertical gap between two nodes 
-   **/
+   */
   verticalGap: number;
 
   /**
    * Used to provide horizontal gap between two level of nodes 
-   **/
+   */
   horizontalGap: number;
 }
 
