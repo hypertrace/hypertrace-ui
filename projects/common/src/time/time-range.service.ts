@@ -61,8 +61,10 @@ export class TimeRangeService {
   }
 
   public refresh(): void {
-    const currentStringTimeRange = this.getCurrentTimeRange().toUrlString();
-    this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
+    if (this.isInitialized()) {
+      const currentStringTimeRange = this.getCurrentTimeRange().toUrlString();
+      this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
+    }
   }
 
   private isValidTimeRange(timeRange: TimeRange): boolean {
