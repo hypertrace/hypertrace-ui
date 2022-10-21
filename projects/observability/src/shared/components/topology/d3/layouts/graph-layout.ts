@@ -37,6 +37,9 @@ export class GraphLayout {
     const parent = nodes[0];
     nodes.shift();
     const level = this.nodeToLevelMap.get(parent)! + 1;
+    if(!this.levelToNodesMap.has(level)){
+      this.levelToNodesMap.set(level, []);
+    }
 
     parent.outgoing.forEach(edge => {
       const child = edge.target;
@@ -44,7 +47,7 @@ export class GraphLayout {
         visited.add(child.userNode);
         nodes.push(child);
         this.nodeToLevelMap.set(child, level);
-        this.levelToNodesMap.has(level) ? this.levelToNodesMap.get(level)?.push(child) : this.levelToNodesMap.set(level, [child]);
+        this.levelToNodesMap.get(level)?.push(child);
       }
     });
 
