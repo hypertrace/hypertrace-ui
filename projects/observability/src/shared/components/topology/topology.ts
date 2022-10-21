@@ -96,8 +96,14 @@ export interface TopologyConfiguration {
    */
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
 
+  /**
+   * Used to provide vertical gap between two nodes 
+   **/
   verticalGap: number;
 
+  /**
+   * Used to provide horizontal gap between two level of nodes 
+   **/
   horizontalGap: number;
 }
 
