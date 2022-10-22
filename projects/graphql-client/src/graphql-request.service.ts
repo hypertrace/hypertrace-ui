@@ -16,7 +16,10 @@ import {
 import { GraphQlSelection } from './model/graphql-selection';
 import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
 import { GraphQlDataExtractor } from './utils/extractor/graphql-data-extractor';
-import { GraphQlRequestOptionResolver } from './utils/resolver/graphql-request-option-resolver';
+import {
+  GraphQlRequestOptionResolver,
+  GraphQlRequestWithMetadata
+} from './utils/resolver/graphql-request-option-resolver';
 
 @Injectable({ providedIn: 'root' })
 export class GraphQlRequestService {
@@ -100,11 +103,11 @@ export class GraphQlRequestService {
   }
 
   private fireRequestBatch(
-    requests: GraphQlRequest[],
+    requestsWithMetadata: GraphQlRequestWithMetadata[],
     type: GraphQlHandlerType,
     options: GraphQlRequestOptions
   ): Map<GraphQlRequest, Observable<GraphQlResult>> {
-    const selectionMapByRequest = this.buildSelectionMultiMap(requests);
+    const selectionMapByRequest = this.buildSelectionMultiMap(requestsWithMetadata);
     const allSelectionMaps = Array.from(selectionMapByRequest.values());
     const allSelections = allSelectionMaps.map(selectionMap => Array.from(selectionMap.values())).flat();
     const requestBuilder = new GraphQlRequestBuilder().withSelects(...allSelections);
@@ -126,7 +129,7 @@ export class GraphQlRequestService {
     );
 
     return this.buildResultMap(
-      requests,
+      requestsWithMetadata.map(requestWithMetadata => requestWithMetadata.request),
       this.buildResponseGetter(requestBuilder, selectionResponseMap, selectionMapByRequest)
     );
   }
@@ -147,7 +150,7 @@ export class GraphQlRequestService {
   ): Observable<TResponse> {
     return this.apollo
       .query<TResponse>({
-        query: gql(requestString),
+        query: gql(`query ${requestString}`),
         errorPolicy: 'all',
         fetchPolicy: options.cacheability
       })
@@ -206,17 +209,24 @@ export class GraphQlRequestService {
     );
   }
 
-  private buildSelectionMultiMap(requests: GraphQlRequest[]): Map<GraphQlRequest, Map<unknown, GraphQlSelection>> {
-    return new Map(requests.map(request => [request, this.convertRequestToSelectionMap(request)]));
+  private buildSelectionMultiMap(
+    requestsWithMetadata: GraphQlRequestWithMetadata[]
+  ): Map<GraphQlRequest, Map<unknown, GraphQlSelection>> {
+    return new Map(
+      requestsWithMetadata.map(requestWithMetadata => [
+        requestWithMetadata.request,
+        this.convertRequestToSelectionMap(requestWithMetadata)
+      ])
+    );
   }
 
-  private convertRequestToSelectionMap(request: GraphQlRequest): Map<unknown, GraphQlSelection> {
+  private convertRequestToSelectionMap({ request, name }: GraphQlRequestWithMetadata): Map<unknown, GraphQlSelection> {
     const selectionOrSelectionMap = this.findMatchingHandler(request).convertRequest(request);
     if (selectionOrSelectionMap instanceof Map) {
       return selectionOrSelectionMap;
     }
 
-    return new Map([[GraphQlRequestService.DEFAULT_SELECTION_KEY, selectionOrSelectionMap]]);
+    return new Map([[GraphQlRequestService.DEFAULT_SELECTION_KEY, { ...selectionOrSelectionMap, name: name }]]);
   }
 
   private convertResponseForRequest(request: GraphQlRequest, response: Map<unknown, unknown>): unknown {
@@ -316,7 +326,7 @@ export class GraphQlRequestService {
 
   private groupQueriesByRequestOptions(
     requestsWithOptions: RequestWithOptions[]
-  ): Map<GraphQlRequestOptions, GraphQlRequest[]> {
+  ): Map<GraphQlRequestOptions, GraphQlRequestWithMetadata[]> {
     return this.optionsResolver.groupQueriesByResolvedOptions(
       ...requestsWithOptions
         .map(requestWithOptions => [requestWithOptions, this.findMatchingHandler(requestWithOptions.request)] as const)
