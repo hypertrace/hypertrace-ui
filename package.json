@@ -110,7 +110,7 @@
     "jest-junit": "^14.0.1",
     "jest-preset-angular": "^8.4.0",
     "lodash": "^4.17.21",
-    "ng-mocks": "^14.3.0",
+    "ng-mocks": "^14.3.1",
     "ng-packagr": "^12.2.5",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.3",
