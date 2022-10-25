@@ -24,19 +24,19 @@ export class GraphLayout {
 
   private fillNodeAndLevelMaps() {
 
-    const nodesThatAreGoingToBeExplored = [...(this.levelToNodesMap.get(0) ?? [])];
-    const nodesThatHaveBeenOrAreGoingToBeExplored = new Set<RenderableTopologyNode>([...nodesThatAreGoingToBeExplored]);
+    const goingToBeExploredNodes = [...(this.levelToNodesMap.get(0) ?? [])];
+    const goingToBeOrAlreadyExploredNodes = new Set<RenderableTopologyNode>([...goingToBeExploredNodes]);
 
-    this.levelOrderTraversal(nodesThatAreGoingToBeExplored, nodesThatHaveBeenOrAreGoingToBeExplored);
+    this.levelOrderTraversal(goingToBeExploredNodes, goingToBeOrAlreadyExploredNodes);
   }
 
-  private levelOrderTraversal(nodes: RenderableTopologyNode[], visited: Set<RenderableTopologyNode>): void{
-    if(nodes.length === 0) {
+  private levelOrderTraversal(goingToBeExploredNodes: RenderableTopologyNode[], goingToBeOrAlreadyExploredNodes: Set<RenderableTopologyNode>): void{
+    if(goingToBeExploredNodes.length === 0) {
       return;
     }
 
-    const currentNode = nodes[0];
-    nodes.shift();
+    const currentNode = goingToBeExploredNodes[0];
+    goingToBeExploredNodes.shift();
     const level = this.nodeToLevelMap.get(currentNode)! + 1;
     if(!this.levelToNodesMap.has(level)){
       this.levelToNodesMap.set(level, []);
@@ -44,15 +44,15 @@ export class GraphLayout {
 
     currentNode.outgoing.forEach(edge => {
       const child = edge.target;
-      if (!visited.has(child)) {
-        visited.add(child);
-        nodes.push(child);
+      if (!goingToBeOrAlreadyExploredNodes.has(child)) {
+        goingToBeOrAlreadyExploredNodes.add(child);
+        goingToBeExploredNodes.push(child);
         this.nodeToLevelMap.set(child, level);
         this.levelToNodesMap.get(level)?.push(child);
       }
     });
 
-    this.levelOrderTraversal(nodes, visited);
+    this.levelOrderTraversal(goingToBeExploredNodes, goingToBeOrAlreadyExploredNodes);
   }
 
   private assignCoordinatesToNodes() {
