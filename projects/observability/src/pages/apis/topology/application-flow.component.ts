@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ApplicationFeature, FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { TopologyLayoutType } from '../../../shared/components/topology/topology';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TopologyLayoutType } from '../../../shared/components/topology/topology';
 import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
 import {
   defaultPrimaryEdgeMetricCategories,
@@ -22,7 +22,7 @@ import {
       <ht-navigable-dashboard
         *htLetAsync="this.getDefaultJson() as defaultJson"
         [navLocation]="this.location"
-        [defaultJson]="defaultJson"
+        [defaultJson]="this.getDefaultJson()"
       >
       </ht-navigable-dashboard>
     </div>
