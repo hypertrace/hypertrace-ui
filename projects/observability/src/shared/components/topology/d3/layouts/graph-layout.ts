@@ -10,6 +10,7 @@ export class GraphLayout {
     this.findRootNodes(topology);
     this.fillNodeAndLevelMaps();
     this.assignCoordinatesToNodes();
+    this.verticallyCenterAlignNodes();
   }
 
   private findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>) {
@@ -24,12 +25,12 @@ export class GraphLayout {
   private fillNodeAndLevelMaps() {
 
     const nodesThatAreGoingToBeExplored = [...(this.levelToNodesMap.get(0) ?? [])];
-    const nodesThatHaveBeenOrAreGoingToBeExplored = new Set<TopologyNode>([...nodesThatAreGoingToBeExplored.map(node => node.userNode)]);
+    const nodesThatHaveBeenOrAreGoingToBeExplored = new Set<RenderableTopologyNode>([...nodesThatAreGoingToBeExplored]);
 
     this.levelOrderTraversal(nodesThatAreGoingToBeExplored, nodesThatHaveBeenOrAreGoingToBeExplored);
   }
 
-  private levelOrderTraversal(nodes: RenderableTopologyNode[], visited: Set<TopologyNode>): void{
+  private levelOrderTraversal(nodes: RenderableTopologyNode[], visited: Set<RenderableTopologyNode>): void{
     if(nodes.length === 0) {
       return;
     }
@@ -43,8 +44,8 @@ export class GraphLayout {
 
     parent.outgoing.forEach(edge => {
       const child = edge.target;
-      if (!visited.has(child.userNode)) {
-        visited.add(child.userNode);
+      if (!visited.has(child)) {
+        visited.add(child);
         nodes.push(child);
         this.nodeToLevelMap.set(child, level);
         this.levelToNodesMap.get(level)?.push(child);
@@ -71,5 +72,15 @@ export class GraphLayout {
 
       curX += maxWidth + 240;
     });
+  }
+
+  private verticallyCenterAlignNodes() {
+    const longestLevelLength = Math.max(...Array.from(this.levelToNodesMap.values()).map(nodes => nodes.length));
+
+    Array.from(this.levelToNodesMap.values()).forEach(nodes => {
+      nodes.forEach(node => {
+        node.y += (longestLevelLength - nodes.length) * ((node.renderedData()?.getBoudingBox()?.height ?? 36) + 20) / 2;
+      })
+    })
   }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { forkJoinSafeEmpty } from '@hypertrace/common';
+import { ApplicationFeature, FeatureState, FeatureStateResolver, forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { TopologyEdgeRendererService } from '../../../components/topology/renderers/edge/topology-edge-renderer.service';
 import { TopologyNodeRendererService } from '../../../components/topology/renderers/node/topology-node-renderer.service';
 import { TopologyTooltipRendererService } from '../../../components/topology/renderers/tooltip/topology-tooltip-renderer.service';
-import { TopologyDataSpecifier, TopologyNode } from '../../../components/topology/topology';
+import { TopologyDataSpecifier, TopologyLayoutType, TopologyNode } from '../../../components/topology/topology';
 import { INTERACTION_SCOPE } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../graphql/model/schema/specifications/metric-aggregation-specification';
@@ -76,6 +76,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
             [edgeDataSpecifiers]="data.edgeSpecs"
             [showBrush]="this.model.showBrush"
             [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
+            [layoutType]=" (this.isGraphLayoutEnabled() | async) ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'"
           >
           </ht-topology>
         </div>
@@ -84,6 +85,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
+TopologyLayoutType: any;
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TopologyWidgetModel>,
     changeDetector: ChangeDetectorRef,
@@ -92,6 +94,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     public readonly tooltipRenderer: TopologyTooltipRendererService,
     private readonly metadataService: MetadataService,
     private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
+    private readonly featureStateResolver: FeatureStateResolver,
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
@@ -160,6 +163,11 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
         )
       )
     );
+  }
+
+  public isGraphLayoutEnabled(): Observable<boolean> {
+    return this.featureStateResolver.getFeatureState(ApplicationFeature.ApplicationFlowLayout)
+    .pipe(map(state => state === FeatureState.Enabled));
   }
 
   public getLatencyLegendConfig(): LatencyLegendConfig[] {
