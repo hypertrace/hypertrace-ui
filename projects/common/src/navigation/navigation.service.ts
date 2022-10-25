@@ -5,6 +5,7 @@ import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
   Event,
+  Navigation,
   NavigationEnd,
   NavigationExtras,
   ParamMap,
@@ -40,7 +41,11 @@ export class NavigationService {
     @Optional() @Inject(APP_TITLE) private readonly appTitle: string
   ) {
     this.event$(RoutesRecognized)
-      .pipe(skip(1), take(1))
+      .pipe(
+        skip(1),
+        filter(() => !this.getActiveNavigation()?.extras.skipLocationChange),
+        take(1)
+      )
       .subscribe(() => (this.isFirstNavigation = false));
 
     this.navigation$
@@ -142,6 +147,10 @@ export class NavigationService {
         relativeTo: params?.relativeTo
       }
     };
+  }
+
+  public getActiveNavigation(): Navigation | undefined {
+    return this.router.getCurrentNavigation() ?? undefined;
   }
 
   public buildNavigationParams$(
