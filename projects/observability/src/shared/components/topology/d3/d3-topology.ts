@@ -61,7 +61,7 @@ export class D3Topology implements Topology {
   protected readonly dataClearCallbacks: (() => void)[] = [];
   protected container?: HTMLDivElement;
   protected tooltip?: TopologyTooltip;
-  protected layout: TopologyLayout
+  protected layout: TopologyLayout;
 
   protected readonly userNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
@@ -97,9 +97,8 @@ export class D3Topology implements Topology {
     this.zoom = new TopologyZoom();
     this.layout = this.initializeLayout(config.layoutType);
   }
-  
+
   private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
-    
     switch (layoutType) {
       case TopologyLayoutType.GraphLayout:
         return new GraphLayout();
@@ -107,8 +106,8 @@ export class D3Topology implements Topology {
         return new TreeLayout();
       case TopologyLayoutType.ForceLayout:
         return new ForceLayout();
-      default: 
-        return new CustomTreeLayout()
+      default:
+        return new CustomTreeLayout();
     }
 
     // TODO: Make this configurable with Node and edge renderers
@@ -268,9 +267,7 @@ export class D3Topology implements Topology {
     if (this.interactionControl) {
       return this.interactionControl;
     }
-    const componentResolver = this.injector.get(
-      (ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>
-    );
+    const componentResolver = this.injector.get(ComponentFactoryResolver as unknown as Type<ComponentFactoryResolver>);
     const applicationRef = this.injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, this.injector);
     const interactionInjector = Injector.create({
