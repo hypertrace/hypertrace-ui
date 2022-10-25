@@ -109,7 +109,6 @@ export class D3Topology implements Topology {
       default:
         return new CustomTreeLayout();
     }
-
     // TODO: Make this configurable with Node and edge renderers
   }
 
