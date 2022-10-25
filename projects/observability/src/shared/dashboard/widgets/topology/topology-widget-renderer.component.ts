@@ -85,7 +85,6 @@ import { TopologyWidgetModel } from './topology-widget.model';
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
-TopologyLayoutType: any;
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<TopologyWidgetModel>,
     changeDetector: ChangeDetectorRef,
