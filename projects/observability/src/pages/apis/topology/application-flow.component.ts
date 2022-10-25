@@ -19,11 +19,7 @@ import {
   template: `
     <div class="vertical-flex-layout">
       <ht-page-header></ht-page-header>
-      <ht-navigable-dashboard
-        *htLetAsync="this.getDefaultJson() as defaultJson"
-        [navLocation]="this.location"
-        [defaultJson]="this.getDefaultJson()"
-      >
+      <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.getDefaultJson() | async">
       </ht-navigable-dashboard>
     </div>
   `
