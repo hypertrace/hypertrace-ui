@@ -77,7 +77,9 @@ import { TopologyWidgetModel } from './topology-widget.model';
             [edgeDataSpecifiers]="data.edgeSpecs"
             [showBrush]="this.model.showBrush"
             [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
-            [layoutType]=" graphLayoutEnabled ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'"
+            [layoutType]="
+              graphLayoutEnabled ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'
+            "
           >
           </ht-topology>
         </div>
