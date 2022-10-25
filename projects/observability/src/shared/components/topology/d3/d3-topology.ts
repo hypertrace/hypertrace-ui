@@ -109,7 +109,6 @@ export class D3Topology implements Topology {
       default:
         return new CustomTreeLayout();
     }
-
     // TODO: Make this configurable with Node and edge renderers
   }
 
@@ -267,9 +266,7 @@ export class D3Topology implements Topology {
     if (this.interactionControl) {
       return this.interactionControl;
     }
-    const componentResolver = this.injector.get(
-      (ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>
-    );
+    const componentResolver = this.injector.get(ComponentFactoryResolver as unknown as Type<ComponentFactoryResolver>);
     const applicationRef = this.injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, this.injector);
     const interactionInjector = Injector.create({

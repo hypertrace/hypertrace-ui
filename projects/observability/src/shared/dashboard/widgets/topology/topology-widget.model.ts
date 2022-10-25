@@ -77,8 +77,7 @@ export class TopologyWidgetModel {
   private readonly featureStateResolver!: FeatureStateResolver;
 
   public isFeatureEnabled(feature: ApplicationFeature): Observable<boolean> {
-    return this.featureStateResolver.getFeatureState(feature)
-    .pipe(map(state => state === FeatureState.Enabled))
+    return this.featureStateResolver.getFeatureState(feature).pipe(map(state => state === FeatureState.Enabled));
   }
 
   public getData(): Observable<TopologyData> {
