@@ -35,8 +35,7 @@ export class GraphLayout {
       return;
     }
 
-    const currentNode = goingToBeExploredNodes[0];
-    goingToBeExploredNodes.shift();
+    const currentNode = goingToBeExploredNodes.shift()!;
     const level = this.nodeToLevelMap.get(currentNode)! + 1;
     if(!this.levelToNodesMap.has(level)){
       this.levelToNodesMap.set(level, []);
