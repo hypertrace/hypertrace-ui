@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { ApplicationFeature, forkJoinSafeEmpty } from '@hypertrace/common';
+import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { TopologyEdgeRendererService } from '../../../components/topology/renderers/edge/topology-edge-renderer.service';
 import { TopologyNodeRendererService } from '../../../components/topology/renderers/node/topology-node-renderer.service';
 import { TopologyTooltipRendererService } from '../../../components/topology/renderers/tooltip/topology-tooltip-renderer.service';
-import { TopologyDataSpecifier, TopologyLayoutType, TopologyNode } from '../../../components/topology/topology';
+import { TopologyDataSpecifier, TopologyNode } from '../../../components/topology/topology';
 import { INTERACTION_SCOPE } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../graphql/model/schema/specifications/metric-aggregation-specification';
@@ -67,7 +67,6 @@ import { TopologyWidgetModel } from './topology-widget.model';
             </div>
           </div>
           <ht-topology
-            *htLoadAsync="this.isGraphLayoutEnabled() as graphLayoutEnabled"
             class="topology"
             [nodes]="data.nodes"
             [nodeRenderer]="this.nodeRenderer"
@@ -77,9 +76,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
             [edgeDataSpecifiers]="data.edgeSpecs"
             [showBrush]="this.model.showBrush"
             [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
-            [layoutType]="
-              graphLayoutEnabled ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'
-            "
+            [layoutType]="this.model.layoutType"
           >
           </ht-topology>
         </div>
@@ -164,10 +161,6 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
         )
       )
     );
-  }
-
-  public isGraphLayoutEnabled(): Observable<boolean> {
-    return this.model.isFeatureEnabled(ApplicationFeature.ApplicationFlowLayout);
   }
 
   public getLatencyLegendConfig(): LatencyLegendConfig[] {
