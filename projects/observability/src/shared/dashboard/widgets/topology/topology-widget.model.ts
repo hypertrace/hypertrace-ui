@@ -1,3 +1,4 @@
+import { ApplicationFeature, FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { LinkWidgetModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
@@ -10,6 +11,7 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { TopologyData, TopologyDataSourceModel } from '../../data/graphql/topology/topology-data-source.model';
 
 @Model({
@@ -70,6 +72,14 @@ export class TopologyWidgetModel {
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
+
+  @ModelInject(FeatureStateResolver)
+  private readonly featureStateResolver!: FeatureStateResolver;
+
+  public isFeatureEnabled(feature: ApplicationFeature): Observable<boolean> {
+    return this.featureStateResolver.getFeatureState(feature)
+    .pipe(map(state => state === FeatureState.Enabled))
+  }
 
   public getData(): Observable<TopologyData> {
     return this.api.getData();

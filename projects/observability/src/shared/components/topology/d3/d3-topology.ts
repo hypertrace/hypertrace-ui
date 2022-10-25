@@ -61,7 +61,7 @@ export class D3Topology implements Topology {
   protected readonly dataClearCallbacks: (() => void)[] = [];
   protected container?: HTMLDivElement;
   protected tooltip?: TopologyTooltip;
-  protected layout: TopologyLayout // TODO: Make this configurable with Node and edge renderers
+  protected layout: TopologyLayout
 
   protected readonly userNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
@@ -99,6 +99,7 @@ export class D3Topology implements Topology {
   }
   
   private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
+    
     switch (layoutType) {
       case TopologyLayoutType.GraphLayout:
         return new GraphLayout();
@@ -109,6 +110,8 @@ export class D3Topology implements Topology {
       default: 
         return new CustomTreeLayout()
     }
+
+    // TODO: Make this configurable with Node and edge renderers
   }
 
   public draw(): this {

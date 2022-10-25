@@ -78,7 +78,7 @@ export class GraphLayout {
 
     Array.from(this.levelToNodesMap.values()).forEach(nodes => {
       nodes.forEach(node => {
-        node.y += (longestLevelLength - nodes.length) * ((node.renderedData()?.getBoudingBox()?.height ?? 36) + 20) / 2;
+        node.y += ((longestLevelLength - nodes.length) * ((node.renderedData()?.getBoudingBox()?.height ?? 36) + 20)) / 2;
       })
     })
   }

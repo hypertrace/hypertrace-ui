@@ -157,6 +157,7 @@ describe('Topology Widget renderer', () => {
         edgeMetrics: edgeMetrics
       })
     ),
+    isFeatureEnabled: jest.fn(() => of(true)),
     showLegend: true
   };
 

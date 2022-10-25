@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { ApplicationFeature, FeatureState, FeatureStateResolver, forkJoinSafeEmpty } from '@hypertrace/common';
+import { ApplicationFeature, forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -67,6 +67,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
             </div>
           </div>
           <ht-topology
+            *htLoadAsync="this.isGraphLayoutEnabled() as graphLayoutEnabled"
             class="topology"
             [nodes]="data.nodes"
             [nodeRenderer]="this.nodeRenderer"
@@ -76,7 +77,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
             [edgeDataSpecifiers]="data.edgeSpecs"
             [showBrush]="this.model.showBrush"
             [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
-            [layoutType]=" (this.isGraphLayoutEnabled() | async) ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'"
+            [layoutType]=" graphLayoutEnabled ? '${TopologyLayoutType.GraphLayout}' : '${TopologyLayoutType.CustomTreeLayout}'"
           >
           </ht-topology>
         </div>
@@ -93,7 +94,6 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     public readonly tooltipRenderer: TopologyTooltipRendererService,
     private readonly metadataService: MetadataService,
     private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
-    private readonly featureStateResolver: FeatureStateResolver,
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
@@ -165,8 +165,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
   }
 
   public isGraphLayoutEnabled(): Observable<boolean> {
-    return this.featureStateResolver.getFeatureState(ApplicationFeature.ApplicationFlowLayout)
-    .pipe(map(state => state === FeatureState.Enabled));
+    return this.model.isFeatureEnabled(ApplicationFeature.ApplicationFlowLayout);
   }
 
   public getLatencyLegendConfig(): LatencyLegendConfig[] {
