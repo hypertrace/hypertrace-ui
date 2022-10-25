@@ -30,6 +30,7 @@ export class NavigationService {
 
   private isFirstNavigation: boolean = true;
   private readonly globalQueryParams: Set<string> = new Set();
+  private pendingQueryParams: QueryParamObject = {};
 
   public constructor(
     private readonly router: Router,
@@ -44,19 +45,25 @@ export class NavigationService {
 
     this.navigation$
       .pipe(
-        switchMap(() => this.getCurrentActivatedRoute().data),
-        tap(routeData =>
-          this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle)
-        )
+        switchMap(route => route.data),
+        tap(routeData => {
+          this.pendingQueryParams = {};
+          this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle);
+        })
       )
       .subscribe();
   }
 
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
+    this.pendingQueryParams = {
+      ...this.pendingQueryParams,
+      ...newParams
+    };
+
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: [],
-      queryParams: newParams,
+      queryParams: this.pendingQueryParams,
       queryParamsHandling: 'merge',
       replaceCurrentHistory: true
     });

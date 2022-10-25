@@ -85,6 +85,7 @@ export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 
 // Download File
+export * from './download-file/service/file-download.service';
 export * from './download-file/download-file.component';
 export * from './download-file/download-file-metadata';
 export * from './download-file/download-file.module';
