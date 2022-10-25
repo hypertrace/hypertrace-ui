@@ -35,14 +35,14 @@ export class GraphLayout {
       return;
     }
 
-    const parent = nodes[0];
+    const currentNode = nodes[0];
     nodes.shift();
-    const level = this.nodeToLevelMap.get(parent)! + 1;
+    const level = this.nodeToLevelMap.get(currentNode)! + 1;
     if(!this.levelToNodesMap.has(level)){
       this.levelToNodesMap.set(level, []);
     }
 
-    parent.outgoing.forEach(edge => {
+    currentNode.outgoing.forEach(edge => {
       const child = edge.target;
       if (!visited.has(child)) {
         visited.add(child);
