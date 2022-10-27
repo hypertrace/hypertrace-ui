@@ -1,5 +1,4 @@
-@import 'font';
-@import 'colors';
+@import 'mixins';
 
 .ht-panel-title-with-action {
   @include subtitle-2;
