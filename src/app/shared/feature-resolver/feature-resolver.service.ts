@@ -8,7 +8,6 @@ export class FeatureResolverService extends FeatureStateResolver {
     switch (feature) {
       case ApplicationFeature.ExplorerOrderBySupport:
       case ApplicationFeature.PageTimeRange:
-      case ApplicationFeature.ApplicationFlowLayout:
         return of(false as T);
       case ApplicationFeature.FeatureDefaultTimeRangeMap:
         // tslint:disable-next-line: no-object-literal-type-assertion
