@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ApplicationFeature, FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { ModelJson } from '@hypertrace/hyperdash';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { TopologyLayoutType } from '../../../shared/components/topology/topology';
 import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
 import {
   defaultPrimaryEdgeMetricCategories,
@@ -19,217 +15,203 @@ import {
   template: `
     <div class="vertical-flex-layout">
       <ht-page-header></ht-page-header>
-      <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.getDefaultJson() | async">
-      </ht-navigable-dashboard>
+      <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson"> </ht-navigable-dashboard>
     </div>
   `
 })
 export class ApplicationFlowComponent {
   public readonly location: string = 'APPLICATION_FLOW';
-  public constructor(private readonly featureStateResolver: FeatureStateResolver) {}
-
-  public getDefaultJson(): Observable<ModelJson> {
-    return this.isGraphLayoutEnabled().pipe(
-      map(graphLayoutEnabled => ({
-        type: 'container-widget',
-        layout: {
-          type: 'auto-container-layout',
-          'enable-style': false
-        },
-        children: [
-          {
-            type: 'topology-widget',
-            layoutType: graphLayoutEnabled ? TopologyLayoutType.GraphLayout : TopologyLayoutType.CustomTreeLayout,
-            data: {
-              type: 'topology-data-source',
-              entity: 'SERVICE',
-              'downstream-entities': ['SERVICE', 'BACKEND'],
-              'edge-metrics': {
-                type: 'topology-metrics',
-                primary: {
-                  type: 'topology-metric-with-category',
-                  specification: {
-                    type: 'percentile-latency-metric-aggregation',
-                    'display-name': 'P99 Latency'
-                  },
-                  categories: [
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[0]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[1]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[2]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[3]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[4]
-                    }
-                  ]
-                },
-                secondary: {
-                  type: 'topology-metric-with-category',
-                  specification: {
-                    type: 'error-percentage-metric-aggregation',
-                    aggregation: MetricAggregationType.Average,
-                    'display-name': 'Error %'
-                  },
-                  categories: [
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultSecondaryEdgeMetricCategories[0]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultSecondaryEdgeMetricCategories[1]
-                    }
-                  ]
-                },
-                others: [
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'duration',
-                      aggregation: MetricAggregationType.P50,
-                      'display-name': 'P50 Latency'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'errorCount',
-                      aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Error Count'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'numCalls',
-                      aggregation: MetricAggregationType.AvgrateSecond,
-                      'display-name': 'Call Rate/sec'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'numCalls',
-                      aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Call Count'
-                    }
-                  }
-                ]
+  public readonly defaultJson: ModelJson = {
+    type: 'container-widget',
+    layout: {
+      type: 'auto-container-layout',
+      'enable-style': false
+    },
+    children: [
+      {
+        type: 'topology-widget',
+        data: {
+          type: 'topology-data-source',
+          entity: 'SERVICE',
+          'downstream-entities': ['SERVICE', 'BACKEND'],
+          'edge-metrics': {
+            type: 'topology-metrics',
+            primary: {
+              type: 'topology-metric-with-category',
+              specification: {
+                type: 'percentile-latency-metric-aggregation',
+                'display-name': 'P99 Latency'
               },
-              'node-metrics': {
-                type: 'topology-metrics',
-                primary: {
-                  type: 'topology-metric-with-category',
-                  specification: {
-                    type: 'percentile-latency-metric-aggregation',
-                    'display-name': 'P99 Latency'
-                  },
-                  categories: [
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[0]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[1]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[2]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[3]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[4]
-                    }
-                  ]
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[0]
                 },
-                secondary: {
-                  type: 'topology-metric-with-category',
-                  specification: {
-                    type: 'error-percentage-metric-aggregation',
-                    aggregation: MetricAggregationType.Average,
-                    'display-name': 'Error %'
-                  },
-                  categories: [
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultSecondaryNodeMetricCategories[0]
-                    },
-                    {
-                      type: 'topology-metric-category',
-                      ...defaultSecondaryNodeMetricCategories[1]
-                    }
-                  ]
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[1]
                 },
-                others: [
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'duration',
-                      aggregation: MetricAggregationType.P50,
-                      'display-name': 'P50 Latency'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'errorCount',
-                      aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Error Count'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'numCalls',
-                      aggregation: MetricAggregationType.AvgrateSecond,
-                      'display-name': 'Call Rate/sec'
-                    }
-                  },
-                  {
-                    type: 'topology-metric-with-category',
-                    specification: {
-                      type: 'metric-aggregation',
-                      metric: 'numCalls',
-                      aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Call Count'
-                    }
-                  }
-                ]
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[2]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[3]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryEdgeMetricCategories[4]
+                }
+              ]
+            },
+            secondary: {
+              type: 'topology-metric-with-category',
+              specification: {
+                type: 'error-percentage-metric-aggregation',
+                aggregation: MetricAggregationType.Average,
+                'display-name': 'Error %'
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryEdgeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryEdgeMetricCategories[1]
+                }
+              ]
+            },
+            others: [
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'duration',
+                  aggregation: MetricAggregationType.P50,
+                  'display-name': 'P50 Latency'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Error Count'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Call Rate/sec'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Call Count'
+                }
               }
-            }
+            ]
+          },
+          'node-metrics': {
+            type: 'topology-metrics',
+            primary: {
+              type: 'topology-metric-with-category',
+              specification: {
+                type: 'percentile-latency-metric-aggregation',
+                'display-name': 'P99 Latency'
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[1]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[2]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[3]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultPrimaryNodeMetricCategories[4]
+                }
+              ]
+            },
+            secondary: {
+              type: 'topology-metric-with-category',
+              specification: {
+                type: 'error-percentage-metric-aggregation',
+                aggregation: MetricAggregationType.Average,
+                'display-name': 'Error %'
+              },
+              categories: [
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryNodeMetricCategories[0]
+                },
+                {
+                  type: 'topology-metric-category',
+                  ...defaultSecondaryNodeMetricCategories[1]
+                }
+              ]
+            },
+            others: [
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'duration',
+                  aggregation: MetricAggregationType.P50,
+                  'display-name': 'P50 Latency'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'errorCount',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Error Count'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.AvgrateSecond,
+                  'display-name': 'Call Rate/sec'
+                }
+              },
+              {
+                type: 'topology-metric-with-category',
+                specification: {
+                  type: 'metric-aggregation',
+                  metric: 'numCalls',
+                  aggregation: MetricAggregationType.Sum,
+                  'display-name': 'Call Count'
+                }
+              }
+            ]
           }
-        ]
-      }))
-    );
-  }
-
-  private isGraphLayoutEnabled(): Observable<boolean> {
-    return this.featureStateResolver
-      .getFeatureState(ApplicationFeature.ApplicationFlowLayout)
-      .pipe(map(state => state === FeatureState.Enabled));
-  }
+        }
+      }
+    ]
+  };
 }
