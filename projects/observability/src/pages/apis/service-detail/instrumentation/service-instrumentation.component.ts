@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { SubscriptionLifecycle } from '@hypertrace/common';
 import { BreadcrumbsService } from '@hypertrace/components';
 import { ServiceInstrumentationService } from './service-instrumentation.service';
 import { ServiceScoreResponse } from './service-instrumentation.types';
@@ -23,18 +24,23 @@ import { ServiceScoreResponse } from './service-instrumentation.types';
     <ng-template #loader> <ht-loader></ht-loader></ng-template>
   `
 })
-export class ServiceInstrumentationComponent implements OnInit {
+export class ServiceInstrumentationComponent implements AfterContentInit {
   public constructor(
     private readonly breadcrumbsService: BreadcrumbsService,
-    private readonly serviceInstrumentationService: ServiceInstrumentationService
+    private readonly serviceInstrumentationService: ServiceInstrumentationService,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
   ) {}
 
-  public ngOnInit(): void {
-    this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => {
-      this.serviceInstrumentationService
-        .getServiceScore(serviceName)
-        .subscribe(serviceScore => this.serviceInstrumentationService.serviceScoreSubject.next(serviceScore));
-    });
+  public ngAfterContentInit(): void {
+    this.subscriptionLifecycle.add(
+      this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => {
+        this.subscriptionLifecycle.add(
+          this.serviceInstrumentationService
+            .getServiceScore(serviceName)
+            .subscribe(serviceScore => this.serviceInstrumentationService.serviceScoreSubject.next(serviceScore))
+        );
+      })
+    );
   }
 
   public getServiceScore(): BehaviorSubject<ServiceScoreResponse | undefined> {

@@ -20,7 +20,7 @@ import { HeuristicClassScoreInfo } from '../service-instrumentation.types';
 
       <ht-service-instrumentation-progress-bar
         *ngIf="this.orgCategoryScores"
-        label="Razorpay Average"
+        label="Organization Average"
         [score]="this.getOrgScoreForCategory()"
       ></ht-service-instrumentation-progress-bar>
 

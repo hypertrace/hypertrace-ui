@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { InstrumentationQualityService } from '@hypertrace/common';
+import { InstrumentationQualityService, SubscriptionLifecycle } from '@hypertrace/common';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 
@@ -20,7 +20,8 @@ describe('ServiceInstrumentationComponent', () => {
         mockProvider(ServiceInstrumentationService),
         mockProvider(InstrumentationQualityService, {
           getServiceScore: () => of(serviceScoreResponse)
-        })
+        }),
+        mockProvider(SubscriptionLifecycle)
       ]
     });
     fixture = TestBed.createComponent(ServiceInstrumentationComponent);

@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { BreadcrumbsService } from '@hypertrace/components';
 import {
   HeuristicScoreInfo,
-  SampleHeuristicEnityId,
-  SAMPLE_HEURISTIC_ENTITY_DELIMETER
+  SampleHeuristicEntityId,
+  SAMPLE_HEURISTIC_ENTITY_DELIMITER
 } from '../service-instrumentation.types';
 
 @Component({
@@ -31,36 +30,31 @@ export class PanelContentComponent {
   @Input()
   public heuristicScore: HeuristicScoreInfo | undefined;
 
-  private serviceName: string = '';
-  private readonly timeDuration: string = '12h';
-  private readonly SAMPLE_DELIMETER: SAMPLE_HEURISTIC_ENTITY_DELIMETER = ':';
+  private readonly SAMPLE_DELIMETER: SAMPLE_HEURISTIC_ENTITY_DELIMITER = ':';
 
-  public constructor(private readonly breadcrumbsService: BreadcrumbsService) {
-    this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => (this.serviceName = serviceName));
-  }
-
-  public getExampleHeuristicEntityId(sampleId: SampleHeuristicEnityId<SAMPLE_HEURISTIC_ENTITY_DELIMETER>): string {
+  public getExampleHeuristicEntityId(sampleId: SampleHeuristicEntityId<SAMPLE_HEURISTIC_ENTITY_DELIMITER>): string {
     const [entityId] = sampleId.split(this.SAMPLE_DELIMETER);
 
     return entityId ?? '';
   }
 
-  public getExampleLink(id: SampleHeuristicEnityId<SAMPLE_HEURISTIC_ENTITY_DELIMETER>): string {
+  public getExampleLink(id: SampleHeuristicEntityId<SAMPLE_HEURISTIC_ENTITY_DELIMITER>): string {
     const [heuristicEntityId, heuristicEntityStartTime] = id.split(this.SAMPLE_DELIMETER);
+    const timeRange = this.getExampleTime(heuristicEntityStartTime);
+
     const exampleGeneratedUrl =
       this.heuristicScore?.sampleType === 'span'
-        ? `/explorer?time=${this.timeDuration}&scope=spans&series=column:count(spans)`
-        : `/explorer?time=${this.timeDuration}&scope=endpoint-traces&series=column:count(calls)`;
+        ? `/explorer?time=${timeRange}&scope=spans&series=column:count(spans)`
+        : `/explorer?time=${timeRange}&scope=endpoint-traces&series=column:count(calls)`;
 
     const explorerFiltersToApply = [
-      { key: 'serviceName', value: this.serviceName, operator: 'eq' },
-      { key: 'startTime', value: heuristicEntityStartTime, operator: 'eq' },
       { key: 'id', value: heuristicEntityId, operator: 'eq', scope: 'span' },
       { key: 'traceId', value: heuristicEntityId, operator: 'eq', scope: 'trace' }
     ];
 
     return explorerFiltersToApply
       .filter(
+        // tslint:disable-next-line: strict-type-predicates
         explorerFilter => explorerFilter.scope === undefined || explorerFilter.scope === this.heuristicScore?.sampleType
       )
       .reduce(
@@ -76,5 +70,13 @@ export class PanelContentComponent {
       .split(' ');
 
     return `${day}, ${date} ${month} ${year}`;
+  }
+
+  private getExampleTime(unixTimestamp: string): string {
+    // Returns time range half-an-hour before and after the timestamp
+    const start = Number(unixTimestamp) - 30 * 60;
+    const end = Number(unixTimestamp) + 30 * 60;
+
+    return `${start}-${end}`;
   }
 }
