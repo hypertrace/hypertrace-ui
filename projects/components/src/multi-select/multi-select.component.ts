@@ -39,15 +39,7 @@ import { MultiSelectJustify } from './multi-select-justify';
     }
   ],
   template: `
-    <div
-      class="multi-select"
-      [ngClass]="[
-        this.size,
-        this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : '',
-        this.popoverOpen ? 'open' : ''
-      ]"
-    >
+    <div class="multi-select" [ngClass]="[this.size, this.disabled ? 'disabled' : '', this.popoverOpen ? 'open' : '']">
       <ht-popover
         [disabled]="this.disabled"
         class="multi-select-container"
@@ -63,6 +55,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               this.popoverOpen ? 'open' : '',
               this.size,
               this.disabled ? 'disabled' : '',
+              this.showBorder ? 'border' : '',
               this.triggerDisplayMode
             ]"
             #triggerContainer
