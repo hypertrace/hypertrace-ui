@@ -10,6 +10,7 @@ import {
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
+import { TopologyLayoutType } from '../../../components/topology/topology';
 import { TopologyData, TopologyDataSourceModel } from '../../data/graphql/topology/topology-data-source.model';
 
 @Model({
@@ -67,6 +68,14 @@ export class TopologyWidgetModel {
     required: false
   })
   public enableBoxStyle?: boolean = false;
+
+  @ModelProperty({
+    key: 'layoutType',
+    displayName: 'Layout Type',
+    type: STRING_PROPERTY.type,
+    required: false
+  })
+  public layoutType?: TopologyLayoutType = TopologyLayoutType.CustomTreeLayout;
 
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
