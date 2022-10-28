@@ -313,6 +313,7 @@ export * from './pages/apis/api-detail/overview/api-overview.dashboard';
 export * from './pages/apis/service-detail/metrics/service-metrics.dashboard';
 export * from './pages/apis/service-detail/overview/service-overview.dashboard';
 export * from './pages/apis/backend-detail/metrics/backend-metrics.dashboard';
+export * from './pages/apis/topology/application-flow.dashboard';
 
 // Cartesian
 export * from './shared/components/cartesian/cartesian-chart.component';
