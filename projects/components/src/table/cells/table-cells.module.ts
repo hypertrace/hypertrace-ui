@@ -1,13 +1,14 @@
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, NgModule } from '@angular/core';
-import { FormattingModule } from '@hypertrace/common';
+import { FormattingModule, MemoizeModule } from '@hypertrace/common';
 import { CheckboxModule } from '../../checkbox/checkbox.module';
 import { CopyToClipboardModule } from '../../copy-to-clipboard/copy-to-clipboard.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
 import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
+import { LabelModule } from '../../label/label.module';
 import { PopoverModule } from '../../popover/popover.module';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { XMoreModule } from '../../x-more/x-more.module';
@@ -38,8 +39,6 @@ import { TableCellParserConstructor } from './table-cell-parser';
 import { TableCellParserLookupService } from './table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 import { TableCellRendererLookupService } from './table-cell-renderer-lookup.service';
-import { LabelModule } from './../../label/label.module';
-import { MemoizeModule } from '@hypertrace/common';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
