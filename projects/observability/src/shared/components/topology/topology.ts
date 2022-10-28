@@ -95,6 +95,8 @@ export interface TopologyConfiguration {
    * Used to handle interactions on edge in a custom way (by avoiding default behavior)
    */
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
+
+  layoutType?: TopologyLayoutType;
 }
 
 export interface TopologyNode {
@@ -184,6 +186,13 @@ export type TopologyEdgeState<TDataSpec = unknown> = DeepReadonly<TopologyElemen
 export interface TopologyDataSpecifier<T = unknown> {
   label: string;
   value: T;
+}
+
+export const enum TopologyLayoutType {
+  ForceLayout = 'force-layout',
+  TreeLayout = 'tree-layout',
+  CustomTreeLayout = 'custom-tree-layout',
+  GraphLayout = 'graph-layout'
 }
 
 export const enum TopologyElementVisibility {

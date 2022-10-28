@@ -23,6 +23,7 @@ import {
   TopologyEdgeRenderer,
   TopologyElementVisibility,
   TopologyLayout,
+  TopologyLayoutType,
   TopologyNeighborhood,
   TopologyNode,
   TopologyNodeRenderer,
@@ -40,6 +41,9 @@ import {
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
 import { CustomTreeLayout } from './layouts/custom-tree-layout';
+import { ForceLayout } from './layouts/force-layout';
+import { GraphLayout } from './layouts/graph-layout';
+import { TreeLayout } from './layouts/tree-layout';
 
 export class D3Topology implements Topology {
   private static readonly CONTAINER_CLASS: string = 'topology-internal-container';
@@ -57,7 +61,7 @@ export class D3Topology implements Topology {
   protected readonly dataClearCallbacks: (() => void)[] = [];
   protected container?: HTMLDivElement;
   protected tooltip?: TopologyTooltip;
-  protected layout: TopologyLayout = new CustomTreeLayout(); // TODO: Make this configurable with Node and edge renderers
+  protected layout: TopologyLayout;
 
   protected readonly userNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
@@ -91,6 +95,21 @@ export class D3Topology implements Topology {
     this.hover = new TopologyHover(this.d3Util, this.domRenderer);
     this.click = new TopologyClick(this.d3Util, this.domRenderer);
     this.zoom = new TopologyZoom();
+    this.layout = this.initializeLayout(config.layoutType);
+  }
+
+  private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
+    switch (layoutType) {
+      case TopologyLayoutType.GraphLayout:
+        return new GraphLayout();
+      case TopologyLayoutType.TreeLayout:
+        return new TreeLayout();
+      case TopologyLayoutType.ForceLayout:
+        return new ForceLayout();
+      default:
+        return new CustomTreeLayout();
+    }
+    // TODO: Make this configurable with Node and edge renderers
   }
 
   public draw(): this {
