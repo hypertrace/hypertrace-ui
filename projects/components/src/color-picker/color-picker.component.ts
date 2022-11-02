@@ -49,8 +49,9 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public disabled?: boolean = false;
 
+  // Disables de-selecting current option, meaning only allow selection to another option
   @Input()
-  public noDeselectMode?: boolean = false;
+  public disableDeselection?: boolean = false;
 
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
@@ -81,7 +82,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   }
 
   public selectColor(color: string): void {
-    if (this.disabled || (this.noDeselectMode && color === this.selected)) {
+    if (this.disabled || (this.disableDeselection && color === this.selected)) {
       return;
     }
 
