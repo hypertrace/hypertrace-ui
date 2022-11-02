@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -51,7 +52,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
 
   // Disables de-selecting current option, meaning only allow selection to another option
   @Input()
-  public disableDeselection: boolean = false;
+  public required?: boolean = false;
 
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
@@ -82,11 +83,14 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   }
 
   public selectColor(color: string): void {
-    if (this.disabled || (this.disableDeselection && color === this.selected)) {
+    if (this.disabled) {
       return;
     }
 
     const clickedColor = this.selected === color ? undefined : color;
+    if (this.required && isNil(clickedColor)) {
+      return;
+    }
     this.selected = clickedColor;
     this.selectedChange.emit(clickedColor);
     this.propagateValueChangeToFormControl(clickedColor);
