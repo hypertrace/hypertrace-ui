@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
-import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -87,10 +86,11 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
       return;
     }
 
-    const clickedColor = this.selected === color ? undefined : color;
-    if (this.required && isNil(clickedColor)) {
+    const isDeselect = this.selected === color;
+    if (this.required && isDeselect) {
       return;
     }
+    const clickedColor = isDeselect ? undefined : color;
     this.selected = clickedColor;
     this.selectedChange.emit(clickedColor);
     this.propagateValueChangeToFormControl(clickedColor);
