@@ -337,7 +337,10 @@ export class D3Topology implements Topology {
         this.neighborhoodFinder.neighborhoodForNode(hoverEvent.source.userNode),
         this.neighborhoodFinder.singleNodeNeighborhood(hoverEvent.source.userNode)
       );
-      this.showNodeTooltip(hoverEvent.source, false);
+
+      if (!(this.config.nodeInteractionHandler?.disableTooltipOnHover ?? false)) {
+        this.showNodeTooltip(hoverEvent.source, false);
+      }
     }
   }
 
@@ -347,7 +350,10 @@ export class D3Topology implements Topology {
       this.tooltip && this.tooltip.hide();
     } else {
       this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(hoverEvent.source.userEdge));
-      this.showEdgeTooltip(hoverEvent.source, false);
+
+      if (!(this.config.edgeInteractionHandler?.disableTooltipOnHover ?? false)) {
+        this.showEdgeTooltip(hoverEvent.source, false);
+      }
     }
   }
 
