@@ -7,11 +7,6 @@
   height: 100%;
   width: 100%;
 
-  &.border {
-    border: 1px solid $color-border;
-    border-radius: 6px;
-  }
-
   .multi-select-container {
     width: 100%;
   }
@@ -48,6 +43,11 @@
 
     &.open {
       background-color: $gray-2;
+    }
+
+    &.border {
+      border: 1px solid $color-border;
+      border-radius: 6px;
     }
 
     &.icon-mode {
