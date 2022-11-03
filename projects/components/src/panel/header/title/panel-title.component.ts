@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
 import { ButtonRole, ButtonStyle } from '../../../button/button';
 
 @Component({
@@ -33,7 +32,7 @@ export class PanelTitleComponent {
   public expanded!: boolean;
 
   @Input()
-  public actionIcon?: IconType;
+  public actionIcon?: string;
 
   @Output()
   public readonly actionClicked: EventEmitter<void> = new EventEmitter();
