@@ -21,14 +21,7 @@ export class ColorPalette {
   }
 
   private getContrast(rgbColorString: string): string {
-    // Convert to RGB value
-    const rgbColor = rgb(rgbColorString);
-
-    // Get YIQ ratio
-    const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
-
-    // Check contrast
-    return yiq >= 128 ? Color.Gray9 : Color.White;
+    return getContrastingColor(rgbColorString);
   }
 
   public forNColors(count: number): string[] {
@@ -57,3 +50,14 @@ export class ColorPalette {
     return [...this.basisColors];
   }
 }
+
+export const getContrastingColor = (rgbColorString: string): string => {
+  // Convert to RGB value
+  const rgbColor = rgb(rgbColorString);
+
+  // Get YIQ ratio
+  const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
+
+  // Check contrast
+  return yiq >= 128 ? Color.Gray9 : Color.White;
+};
