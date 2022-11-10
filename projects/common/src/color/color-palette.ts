@@ -20,7 +20,7 @@ export class ColorPalette {
     return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
   }
 
-  private getContrast(rgbColorString: string): string {
+  public getContrast(rgbColorString: string): string {
     // Convert to RGB value
     const rgbColor = rgb(rgbColorString);
 
