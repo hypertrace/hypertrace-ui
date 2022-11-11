@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary, NavigationParams, TypedSimpleChanges } from '@hypertrace/common';
+import { Dictionary, NavigationParams, NavigationService, TypedSimpleChanges } from '@hypertrace/common';
 import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -34,7 +34,10 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   public tagRecords$?: Observable<ListViewRecord[]>;
 
-  public constructor(private readonly explorerService: ExplorerService) {}
+  public constructor(
+    private readonly explorerService: ExplorerService,
+    private readonly navigationService: NavigationService
+  ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
@@ -44,6 +47,7 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      ...this.navigationService.getAllValuesForQueryParameter('filter'),
       { field: 'tags', subpath: tag.key, operator: FilterOperator.Equals, value: tag.value }
     ]);
 

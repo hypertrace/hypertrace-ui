@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
@@ -17,23 +17,25 @@ export class ExplorerService {
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
-    filters: ExplorerDrilldownFilter[]
+    filters: (ExplorerDrilldownFilter | string)[]
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
-      this.metadataService
-        .getAttribute(
-          scopeQueryParam === ScopeQueryParam.EndpointTraces ? ObservabilityTraceType.Api : SPAN_SCOPE,
-          filter.field
-        )
-        .pipe(
-          map(attribute => ({ ...attribute, type: toFilterAttributeType(attribute.type) })),
-          map(
-            filterAttribute =>
-              this.filterBuilderLookupService
-                .lookup(filterAttribute.type)
-                .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString
-          )
-        )
+      typeof filter === 'string'
+        ? of(filter)
+        : this.metadataService
+            .getAttribute(
+              scopeQueryParam === ScopeQueryParam.EndpointTraces ? ObservabilityTraceType.Api : SPAN_SCOPE,
+              filter.field
+            )
+            .pipe(
+              map(attribute => ({ ...attribute, type: toFilterAttributeType(attribute.type) })),
+              map(
+                filterAttribute =>
+                  this.filterBuilderLookupService
+                    .lookup(filterAttribute.type)
+                    .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString
+              )
+            )
     );
 
     return forkJoinSafeEmpty(filterStrings$).pipe(
