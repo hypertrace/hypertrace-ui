@@ -104,6 +104,10 @@
     }
 
     .legend-entries {
+      /* Prevent large legends from shrinking chart */
+      max-height: 60px;
+      overflow-y: auto;
+
       padding-right: 8px;
       display: flex;
       flex-wrap: wrap;
