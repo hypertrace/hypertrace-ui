@@ -41,6 +41,13 @@ export class ColorService {
     return rgb(colorHex).brighter(basis).formatHex();
   }
 
+  public adjustOpacity(color: string, basis: number): string {
+    const rgbColor = rgb(color);
+    rgbColor.opacity = basis;
+
+    return rgbColor + '';
+  }
+
   public darker(colorHex: string, basis: number): string {
     return rgb(colorHex).darker(basis).formatHex();
   }
