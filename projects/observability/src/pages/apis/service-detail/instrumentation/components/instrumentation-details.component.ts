@@ -68,7 +68,9 @@ export class InstrumentationDetailsComponent {
   }
 
   public getHeaderIcon(score: number): string {
-    if (score < 50 && score > -1) {
+    const failureThreshold = this.heuristicClassScore?.name === 'Security' ? 100 : 50;
+
+    if (score < failureThreshold && score > -1) {
       return IconType.Close;
     }
 
@@ -82,6 +84,10 @@ export class InstrumentationDetailsComponent {
   public getIconColor(score: number): string {
     if (score < 0) {
       return '#b7bfc2'; // $gray-3
+    }
+
+    if (this.heuristicClassScore?.name === 'Security' && score < 100) {
+      return this.serviceInstrumentationService.getColorForScore(0).dark;
     }
 
     return this.serviceInstrumentationService.getColorForScore(score).dark;

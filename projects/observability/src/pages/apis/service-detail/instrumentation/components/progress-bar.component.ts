@@ -10,7 +10,7 @@ import { ServiceInstrumentationService } from '../service-instrumentation.servic
       <div class="score-info">
         <label>{{ this.label }}</label>
         <p class="score">
-          {{ this.score | number: '1.0-0' }}
+          {{ this.floor(this.score) }}
         </p>
       </div>
 
@@ -31,5 +31,9 @@ export class ProgressBarComponent implements OnInit {
 
   public ngOnInit(): void {
     this.scoreColor = this.serviceInstrumentationService.getColorForScore(this.score).dark;
+  }
+
+  public floor(num: number): number {
+    return Math.floor(num);
   }
 }

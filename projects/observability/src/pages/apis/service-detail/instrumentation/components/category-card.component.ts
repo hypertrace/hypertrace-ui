@@ -58,9 +58,11 @@ export class CategoryCardComponent implements OnInit {
   }
 
   public getNoOfChecksPassing(): number {
+    const failureThreshold = this.heuristicClassScore?.name === 'Security' ? 100 : 70;
+
     return (
       this.heuristicClassScore?.heuristicScoreInfo?.reduce(
-        (accumulator, currentParam) => (currentParam.score >= 70 ? accumulator + 1 : accumulator),
+        (accumulator, currentParam) => (currentParam.score >= failureThreshold ? accumulator + 1 : accumulator),
         0
       ) ?? 0
     );

@@ -50,68 +50,30 @@ export const serviceScoreResponse: ServiceScoreResponse = {
     },
     {
       name: 'Security',
-      score: 70.0,
       description: 'Trace security refers to the quality of the existing metadata in spans/traces.',
       heuristicScoreInfo: [
         {
           description: 'Single paragraph description for this heuristic.',
-          name: 'HasNoTokens',
+          name: 'PCI Info in Span',
           evalTimestamp: '1658434128',
-          score: 70.0,
+          score: 100.0,
           sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
-          failureCount: '30'
+          failureCount: '0'
         },
         {
           description: 'Single paragraph description for this heuristic.',
-          name: 'SecondHeuristic',
+          name: 'PII Info in Span',
           evalTimestamp: '1658434128',
-          score: 50.0,
+          score: 99.99,
           sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
           sampleType: 'span',
           sampleSize: '100',
-          failureCount: '50'
-        },
-        {
-          description:
-            'Single paragraph description for this heuristic. Single paragraph description for this heuristic. Single paragraph description for this heuristic.',
-          name: 'ThirdHeuristic',
-          evalTimestamp: '1658434128',
-          score: 30.0,
-          sampleIds: ['m5dea7728fd91c8:1665992993880', 'n1235dea74asdas1:1665992993880'],
-          sampleType: 'trace',
-          sampleSize: '100',
-          failureCount: '70'
+          failureCount: '1'
         }
-      ]
-    },
-    {
-      name: 'Noise',
-      score: 90.0,
-      description: 'Trace noise refers to the quality of the existing metadata in spans/traces.',
-      heuristicScoreInfo: [
-        {
-          description: 'Single paragraph description for this heuristic.',
-          name: 'HasNoTokens',
-          evalTimestamp: '1658434128',
-          score: 90.0,
-          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
-          sampleType: 'span',
-          sampleSize: '100',
-          failureCount: '10'
-        },
-        {
-          description: 'Single paragraph description for this heuristic.',
-          name: 'SecondHeuristic',
-          evalTimestamp: '1658434128',
-          score: -1.0,
-          sampleIds: ['m5dea7728fd91c7:1665992993880', 'n1235dea74asdas1:1665992993880'],
-          sampleType: 'span',
-          sampleSize: '100',
-          failureCount: '90'
-        }
-      ]
+      ],
+      score: 99.87
     }
   ],
   aggregatedWeightedScore: 60.5
