@@ -1,33 +1,66 @@
-import { ElementRef } from '@angular/core';
-import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { Subject } from 'rxjs';
-import { PopoverContentComponent } from '../popover-content.component';
-import { PopoverService } from '../popover.service';
-import { PopoverHoverTriggerService } from './popover-hover-trigger.service';
+import { Component } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+import {
+  PopoverContentComponent,
+  PopoverHoverTriggerService,
+  PopoverModule,
+  PopoverPositionType,
+  PopoverRelativePositionLocation,
+  PopoverService
+} from '@hypertrace/components';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
 
-describe('Popover Hover Trigger Service', () => {
-  const hoverSubject = new Subject();
+describe('Popover hover trigger service', () => {
+  let spectator: SpectatorHost<unknown>;
   const mockPopoverRef = {
-    close: jest.fn(),
-    hovered$: hoverSubject.asObservable()
+    hovered$: of(true)
   };
 
-  const createService = createServiceFactory({
-    service: PopoverHoverTriggerService,
+  const createHost = createHostFactory({
+    component: Component({
+      selector: 'test-tooltip',
+      template: `<div><ht-popover-content></ht-popover-content></div>`
+    })(class {}),
+    imports: [PopoverModule],
     providers: [
+      PopoverHoverTriggerService,
       mockProvider(PopoverService, {
         drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
       })
     ]
   });
 
-  test('should work everything correctly', () => {
-    const spectator = createService();
-
-    spectator.service.showPopover({
-      origin: new ElementRef(document.createElement('a')),
-      popoverContent: new PopoverContentComponent()
+  test('builds tooltip popover', fakeAsync(() => {
+    spectator = createHost('<test-tooltip></test-tooltip>');
+    const popoverHoverTriggerService = spectator.inject(PopoverHoverTriggerService);
+    const popoverContentComponent = spectator.query(PopoverContentComponent)!;
+    const origin = spectator.query('div');
+    popoverHoverTriggerService.showPopover({
+      origin: origin,
+      popoverContent: popoverContentComponent
     });
-    spectator.service.closePopover();
-  });
+
+    spectator.tick(300);
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledWith(
+      expect.objectContaining({
+        position: {
+          type: PopoverPositionType.Relative,
+          origin: origin,
+          locationPreferences: [
+            PopoverRelativePositionLocation.BelowCentered,
+            PopoverRelativePositionLocation.BelowRightAligned,
+            PopoverRelativePositionLocation.BelowLeftAligned,
+            PopoverRelativePositionLocation.AboveCentered,
+            PopoverRelativePositionLocation.AboveRightAligned,
+            PopoverRelativePositionLocation.AboveLeftAligned,
+            PopoverRelativePositionLocation.LeftCentered,
+            PopoverRelativePositionLocation.OverLeftAligned,
+            PopoverRelativePositionLocation.RightCentered
+          ]
+        }
+      })
+    );
+  }));
 });
