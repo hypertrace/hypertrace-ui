@@ -135,9 +135,13 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'API Discovery State' }),
               expect.objectContaining({ title: 'API ID' }),
               expect.objectContaining({ title: 'Entry Span ID' }),
+              expect.objectContaining({ title: 'IP Address' }),
               expect.objectContaining({ title: 'Service ID' }),
               expect.objectContaining({ title: 'Trace ID' }),
               expect.objectContaining({ title: 'Request URL' }),
+              expect.objectContaining({ title: 'User Agent' }),
+              expect.objectContaining({ title: 'User City' }),
+              expect.objectContaining({ title: 'User Country' }),
               expect.objectContaining({ title: 'Foo' })
             ]
           },

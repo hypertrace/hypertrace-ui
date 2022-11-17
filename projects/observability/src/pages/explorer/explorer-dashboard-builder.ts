@@ -357,6 +357,19 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'IP Address',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Service ID',
             width: '1',
             visible: false,
@@ -400,19 +413,6 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'User Agent',
-            visible: false,
-            filterable: true,
-            value: {
-              type: 'attribute-specification',
-              attribute: 'userAgent'
-            },
-            'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
-          },
-          {
-            type: 'table-widget-column',
-            title: 'IP Address',
             visible: false,
             filterable: true,
             value: {
@@ -561,6 +561,19 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'IP Address',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             visible: false,
             filterable: true,
             value: {
@@ -574,19 +587,6 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'User Agent',
-            visible: false,
-            filterable: true,
-            value: {
-              type: 'attribute-specification',
-              attribute: 'userAgent'
-            },
-            'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
-          },
-          {
-            type: 'table-widget-column',
-            title: 'IP Address',
             visible: false,
             filterable: true,
             value: {
