@@ -396,6 +396,58 @@ export class ExplorerDashboardBuilder {
             'click-handler': {
               type: 'api-trace-navigation-handler'
             }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User Agent',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Address',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User City',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userCity'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User Country',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userCountry'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
           }
         ];
       case SPAN_SCOPE:
@@ -517,6 +569,58 @@ export class ExplorerDashboardBuilder {
             },
             'click-handler': {
               type: 'span-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User Agent',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Address',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userAgent'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User City',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userCity'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User Country',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userCountry'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
             }
           }
         ];
