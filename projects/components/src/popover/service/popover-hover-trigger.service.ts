@@ -1,9 +1,8 @@
-import { ElementRef, Injectable, OnDestroy } from '@angular/core';
+import { ElementRef, Injectable, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover';
-import { PopoverContentComponent } from '../popover-content.component';
 import { PopoverRef } from '../popover-ref';
 import { PopoverService } from '../popover.service';
 
@@ -71,7 +70,7 @@ export class PopoverHoverTriggerService implements OnDestroy {
 
   private buildAndShowPopover(config: PopoverHoverTriggerConfig): Observable<boolean> {
     // If popover content is null/undefined, Then do not create popover
-    if (isNil(config.popoverContent)) {
+    if (isNil(config.componentOrTemplate)) {
       return EMPTY;
     }
 
@@ -100,16 +99,16 @@ export class PopoverHoverTriggerService implements OnDestroy {
       },
       data: config.options?.data,
       backdrop: PopoverBackdrop.None,
-      componentOrTemplate: config.popoverContent.content
+      componentOrTemplate: config.componentOrTemplate
     });
   }
 }
 
-export interface PopoverHoverTriggerConfig {
+export interface PopoverHoverTriggerConfig<TContent = TemplateRef<unknown>, TData = unknown> {
   origin: ElementRef;
-  popoverContent: PopoverContentComponent;
+  componentOrTemplate: TContent;
   options?: {
-    data?: unknown;
+    data?: TData;
     locationPreferences?: PopoverRelativePositionLocation[];
   };
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import {
-  PopoverContentComponent,
   PopoverHoverTriggerService,
   PopoverModule,
   PopoverPositionType,
@@ -9,18 +8,20 @@ import {
   PopoverService
 } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 describe('Popover hover trigger service', () => {
   let spectator: SpectatorHost<unknown>;
+  const hoveredSubject = new BehaviorSubject<boolean>(true);
   const mockPopoverRef = {
-    hovered$: of(true)
+    hovered$: hoveredSubject.asObservable(),
+    close: jest.fn()
   };
 
   const createHost = createHostFactory({
     component: Component({
       selector: 'test-tooltip',
-      template: `<div><ht-popover-content></ht-popover-content></div>`
+      template: `<div><div class="tooltip-content">Content!</div></div>`
     })(class {}),
     imports: [PopoverModule],
     providers: [
@@ -34,14 +35,14 @@ describe('Popover hover trigger service', () => {
   test('builds tooltip popover', fakeAsync(() => {
     spectator = createHost('<test-tooltip></test-tooltip>');
     const popoverHoverTriggerService = spectator.inject(PopoverHoverTriggerService);
-    const popoverContentComponent = spectator.query(PopoverContentComponent)!;
+    const componentOrTemplate = spectator.query('.tooltip-content')!;
     const origin = spectator.query('div');
     popoverHoverTriggerService.showPopover({
       origin: origin,
-      popoverContent: popoverContentComponent
+      componentOrTemplate: componentOrTemplate
     });
 
-    spectator.tick(300);
+    spectator.tick(300); // Debounce timer
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -59,8 +60,24 @@ describe('Popover hover trigger service', () => {
             PopoverRelativePositionLocation.OverLeftAligned,
             PopoverRelativePositionLocation.RightCentered
           ]
-        }
+        },
+        componentOrTemplate: componentOrTemplate
       })
     );
+  }));
+
+  test('closes tooltip when tooltip hover stops', fakeAsync(() => {
+    spectator = createHost('<test-tooltip></test-tooltip>');
+    const popoverHoverTriggerService = spectator.inject(PopoverHoverTriggerService);
+    const componentOrTemplate = spectator.query('.tooltip-content')!;
+    const origin = spectator.query('div');
+    popoverHoverTriggerService.showPopover({
+      origin: origin,
+      componentOrTemplate: componentOrTemplate
+    });
+
+    hoveredSubject.next(false);
+    spectator.tick(300); // Debounce timer
+    expect(mockPopoverRef.close).toHaveBeenCalled();
   }));
 });
