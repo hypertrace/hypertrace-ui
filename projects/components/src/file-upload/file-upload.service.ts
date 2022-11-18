@@ -16,14 +16,15 @@ export class FileUploadService {
 
   public uploadFilesAsFormDataAsync<TResponse extends object>(
     url: string,
-    formData: FormData
+    formData: FormData,
+    showNotification: boolean = true
   ): Observable<FileUploadEvent<TResponse>> {
     if (this.beforeUnloadSubscription === undefined) {
       this.addBeforeUnloadHandler();
     }
 
     const fileUploadId = uniqueId('file-upload');
-    const upload$ = this.uploadFilesAsFormData<TResponse>(url, formData).pipe(
+    const upload$ = this.uploadFilesAsFormData<TResponse>(url, formData, showNotification).pipe(
       delay(100),
       finalize(() => {
         this.onUploadComplete(fileUploadId);
@@ -42,7 +43,8 @@ export class FileUploadService {
 
   public uploadFilesAsFormData<TResponse extends object>(
     url: string,
-    formData: FormData
+    formData: FormData,
+    showNotification: boolean = true
   ): Observable<FileUploadEvent<TResponse>> {
     return this.http
       .post(url, formData, {
@@ -72,7 +74,7 @@ export class FileUploadService {
 
           return undefined;
         }),
-        this.notificationService.withNotification(`File upload successful`, `File upload failed`),
+        this.mayBeShowFileUploadNotification(showNotification, `File upload successful`, `File upload failed`),
         catchError(error =>
           of({
             type: FileUploadEventType.Failure,
@@ -108,6 +110,14 @@ export class FileUploadService {
       : errorResponse instanceof Error
       ? errorResponse.message
       : 'File upload failed due to unknown error';
+  }
+
+  private mayBeShowFileUploadNotification<T>(
+    show: boolean,
+    successMsg: string,
+    failureMsg: string
+  ): (source: Observable<T>) => Observable<T> {
+    return show ? this.notificationService.withNotification(successMsg, failureMsg) : (source: Observable<T>) => source;
   }
 }
 
