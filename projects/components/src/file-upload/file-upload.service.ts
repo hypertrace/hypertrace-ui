@@ -74,7 +74,7 @@ export class FileUploadService {
 
           return undefined;
         }),
-        this.showFileUploadNotification(showNotification, `File upload successful`, `File upload failed`),
+        this.mayBeShowFileUploadNotification(showNotification, `File upload successful`, `File upload failed`),
         catchError(error =>
           of({
             type: FileUploadEventType.Failure,
@@ -112,7 +112,7 @@ export class FileUploadService {
       : 'File upload failed due to unknown error';
   }
 
-  private showFileUploadNotification<T>(
+  private mayBeShowFileUploadNotification<T>(
     show: boolean,
     successMsg: string,
     failureMsg: string
