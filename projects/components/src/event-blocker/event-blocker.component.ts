@@ -21,6 +21,9 @@ export class EventBlockerComponent implements OnChanges {
   public enabled: boolean = true;
 
   @Input()
+  public preventDefault: boolean = true;
+
+  @Input()
   public events: string[] = [];
 
   // Shortcut syntax if listening to single event
@@ -70,7 +73,9 @@ export class EventBlockerComponent implements OnChanges {
 
   private blockEventIfNeeded(event: Event): void {
     if (this.enabled) {
-      event.preventDefault();
+      if (this.preventDefault) {
+        event.preventDefault();
+      }
       event.stopImmediatePropagation();
     }
   }
