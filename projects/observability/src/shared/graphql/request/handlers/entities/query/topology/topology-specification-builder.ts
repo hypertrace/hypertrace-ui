@@ -1,5 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
 import { GraphQlSelection } from '@hypertrace/graphql-client';
+import { GraphQlFilter } from '../../../../../model/schema/filter/graphql-filter';
 import { Specification } from '../../../../../model/schema/specifier/specification';
 import { GraphQlObservabilityArgumentBuilder } from '../../../../builders/argument/graphql-observability-argument-builder';
 import { GraphQlSelectionBuilder } from '../../../../builders/selections/graphql-selection-builder';
@@ -25,7 +26,10 @@ export class TopologySpecificationBuilder {
       {
         path: config.edgeDirection,
         alias: alias,
-        arguments: [this.argBuilder.forNeighborType(config.neighborType)],
+        arguments: [
+          this.argBuilder.forNeighborType(config.neighborType),
+          ...this.argBuilder.forFilters(config.filters)
+        ],
         children: [
           {
             path: 'results',
@@ -46,6 +50,7 @@ export interface NeighborSpecificationBuildConfig {
   edgeDirection: TopologyEdgeDirection;
   nodeSpecifications: Specification[];
   neighborType: string;
+  filters?: GraphQlFilter[];
 }
 
 export interface TopologyNeighborSpecResult<T = unknown> {
