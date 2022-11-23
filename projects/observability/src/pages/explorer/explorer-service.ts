@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType, QueryParamObject } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  NavigationParams,
+  NavigationParamsType,
+  QueryParamObject,
+  TimeRange,
+  TimeRangeService
+} from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
@@ -14,13 +21,13 @@ import { ScopeQueryParam } from './explorer.component';
 export class ExplorerService {
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
+    private readonly timeRangeService: TimeRangeService
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
     filters: ExplorerDrilldownFilter[],
-    startTime?: Date,
-    endTime?: Date
+    timeRange?: TimeRange
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
@@ -49,10 +56,9 @@ export class ExplorerService {
         return {
           navType: NavigationParamsType.InApp,
           path: '/explorer',
-          queryParams:
-            !isNil(startTime) && !isNil(endTime)
-              ? { ...queryParam, time: `${startTime?.getTime()}` + '-' + `${endTime?.getTime()}` }
-              : queryParam
+          queryParams: !isNil(timeRange)
+            ? { ...queryParam, ...this.timeRangeService.toQueryParams(timeRange) }
+            : queryParam
         };
       })
     );
