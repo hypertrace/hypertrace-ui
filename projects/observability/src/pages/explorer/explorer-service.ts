@@ -17,7 +17,9 @@ export class ExplorerService {
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
-    filters: ExplorerDrilldownFilter[]
+    filters: ExplorerDrilldownFilter[],
+    startTime?: Date,
+    endTime?: Date
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
@@ -42,7 +44,8 @@ export class ExplorerService {
         path: '/explorer',
         queryParams: {
           filter: filterStrings,
-          scope: scopeQueryParam
+          scope: scopeQueryParam,
+          time: startTime?.getTime() + '-' + endTime?.getTime()
         }
       }))
     );
