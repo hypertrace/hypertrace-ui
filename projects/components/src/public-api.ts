@@ -266,6 +266,7 @@ export * from './popover/popover-ref';
 export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
+export * from './popover/service/popover-hover-trigger.service';
 
 // Progress Bar
 export * from './progress-bar/progress-bar.component';
