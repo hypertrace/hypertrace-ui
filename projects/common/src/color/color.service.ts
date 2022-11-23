@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
-import { rgb } from 'd3-color';
+import { hsl, rgb } from 'd3-color';
 import { ColorPalette } from './color-palette';
 
 export const DEFAULT_COLOR_PALETTE: InjectionToken<ColorPaletteDefinition> = new InjectionToken(
@@ -46,6 +46,17 @@ export class ColorService {
     rgbColor.opacity = basis;
 
     return rgbColor + '';
+  }
+
+  public getSameColorForeGround(background: string): string {
+    const backgroundHsl = hsl(rgb(background).formatHsl());
+    console.log(backgroundHsl.displayable());
+
+    const foreGround = backgroundHsl;
+    // add logic to determine readable non-white/black foreground given background
+    foreGround.l = 0;
+
+    return foreGround.toString();
   }
 
   public darker(colorHex: string, basis: number): string {
