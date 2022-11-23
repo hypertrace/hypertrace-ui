@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType, QueryParamObject } from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
@@ -39,15 +40,21 @@ export class ExplorerService {
     );
 
     return forkJoinSafeEmpty(filterStrings$).pipe(
-      map(filterStrings => ({
-        navType: NavigationParamsType.InApp,
-        path: '/explorer',
-        queryParams: {
+      map(filterStrings => {
+        const queryParam: QueryParamObject = {
           filter: filterStrings,
-          scope: scopeQueryParam,
-          time: startTime?.getTime() + '-' + endTime?.getTime()
-        }
-      }))
+          scope: scopeQueryParam
+        };
+
+        return {
+          navType: NavigationParamsType.InApp,
+          path: '/explorer',
+          queryParams:
+            !isNil(startTime) && !isNil(endTime)
+              ? { ...queryParam, time: `${startTime?.getTime()}` + '-' + `${endTime?.getTime()}` }
+              : queryParam
+        };
+      })
     );
   }
 }
