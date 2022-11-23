@@ -150,4 +150,17 @@ describe('Time range component', () => {
     expect(refreshButton.label).toBe('Refresh - updated 6m ago');
     discardPeriodicTasks();
   }));
+
+  test('should set seconds and milliseconds to zero', () => {
+    const spectator = createComponent();
+    const startTime = new Date(2022, 10, 23, 9, 54, 10, 200);
+    const endTime = new Date(2022, 10, 23, 10, 54, 20, 300);
+    spectator.click('.trigger');
+    spectator.component.setToFixedTimeRange(new FixedTimeRange(startTime, endTime));
+
+    expect(startTime.getSeconds()).toBe(0);
+    expect(startTime.getMilliseconds()).toBe(0);
+    expect(endTime.getSeconds()).toBe(0);
+    expect(endTime.getMilliseconds()).toBe(0);
+  });
 });

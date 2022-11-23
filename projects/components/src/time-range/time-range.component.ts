@@ -108,6 +108,13 @@ export class TimeRangeComponent {
   }
 
   public setToFixedTimeRange(timeRange: FixedTimeRange): void {
+    /*
+     * We set seconds and milliseconds to zero in the GraphQL
+     * call for faster processing of the query in the backend
+     */
+    timeRange.startTime.setSeconds(0, 0);
+    timeRange.endTime.setSeconds(0, 0);
+
     this.timeRangeSelected.emit(timeRange);
     this.timeRangeService.setFixedRange(timeRange.startTime, timeRange.endTime);
     this.popoverRef!.close();
