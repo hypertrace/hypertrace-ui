@@ -5,6 +5,7 @@ import { NavigableTabModule, PageHeaderModule } from '@hypertrace/components';
 import { GraphQlModule } from '@hypertrace/graphql-client';
 import { EntityGraphQlQueryHandlerService } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ServiceApisListModule } from './apis/service-apis-list.module';
+import { ServiceDependencyGraphModule } from './dependency-graph/service-dependency-graph.module';
 import { ServiceDeploymentsModule } from './deployments/service-deployments.module';
 import { ServiceInstrumentationModule } from './instrumentation/service-instrumentation.module';
 import { ServiceMetricsModule } from './metrics/service-metrics.module';
@@ -25,6 +26,7 @@ import { ServiceTraceListModule } from './traces/service-trace-list.module';
     ServiceTraceListModule,
     ServiceMetricsModule,
     ServiceInstrumentationModule,
+    ServiceDependencyGraphModule,
     ServiceDeploymentsModule,
     PageHeaderModule
   ]

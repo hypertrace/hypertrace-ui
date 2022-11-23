@@ -34,11 +34,12 @@ export class ServiceInstrumentationComponent implements AfterContentInit {
   public ngAfterContentInit(): void {
     this.subscriptionLifecycle.add(
       this.breadcrumbsService.getLastBreadCrumbString().subscribe(serviceName => {
-        this.subscriptionLifecycle.add(
-          this.serviceInstrumentationService
-            .getServiceScore(serviceName)
-            .subscribe(serviceScore => this.serviceInstrumentationService.serviceScoreSubject.next(serviceScore))
-        );
+        serviceName !== 'Services' &&
+          this.subscriptionLifecycle.add(
+            this.serviceInstrumentationService
+              .getServiceScore(serviceName)
+              .subscribe(serviceScore => this.serviceInstrumentationService.serviceScoreSubject.next(serviceScore))
+          );
       })
     );
   }

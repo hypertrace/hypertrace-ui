@@ -10,6 +10,7 @@ import { startWith } from 'rxjs/operators';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
+  DEPLOYMENT_SERVICE_OPTIONS,
   FeatureState,
   FeatureStateResolver,
   LayoutChangeService,
@@ -111,6 +112,12 @@ describe('Explorer component', () => {
         useValue: {
           name: 'default',
           colors: ['black', 'white']
+        }
+      },
+      {
+        provide: DEPLOYMENT_SERVICE_OPTIONS,
+        useValue: {
+          uri: '/'
         }
       },
       mockProvider(PreferenceService, {

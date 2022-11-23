@@ -22,6 +22,7 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
         [health]="data.health"
         [superscript]="model.superscript"
         [subscript]="model.subscript"
+        [size]="model.size"
       >
       </ht-metric-display>
     </ht-titled-content>

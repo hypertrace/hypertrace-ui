@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import { DeploymentsService, IntervalDurationService, TimeDuration } from '@hypertrace/common';
+import { BreadcrumbsService } from '@hypertrace/components';
 
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
-import { Renderer } from '@hypertrace/hyperdash';
+import { Renderer, TimeRange } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { NEVER, Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { EMPTY, NEVER, Observable } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+
 import { Axis, Band, Series } from '../../../../components/cartesian/chart';
 import { CartesianSelectedData } from '../../../../components/cartesian/chart-interactivty';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
@@ -31,6 +33,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [selectedInterval]="this.selectedInterval"
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"
+        [additionalSeries]="this.additionalSeries$ | async"
         (selectedIntervalChange)="this.onIntervalChange($event)"
         (selectionChange)="this.onSelectionChange($event)"
       >
@@ -45,13 +48,18 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
-    private readonly intervalDurationService: IntervalDurationService
+    private readonly intervalDurationService: IntervalDurationService,
+    private readonly breadCrumbsService: BreadcrumbsService,
+    private readonly deploymentsService: DeploymentsService
   ) {
     super(api, changeDetector);
+    this.additionalSeries$ = this.getAdditionalSeries();
   }
 
   public selectedInterval?: IntervalValue;
   public intervalOptions?: IntervalValue[];
+  // tslint:disable:no-any
+  public additionalSeries$?: Observable<any>;
   private fetcher?: CartesianDataFetcher<TSeriesInterval>;
 
   public onIntervalChange(interval: IntervalValue): void {
@@ -65,6 +73,31 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
 
   public getAxisOption(axis: CartesianAxisModel): Partial<Axis> {
     return axis?.getAxisOption();
+  }
+
+  protected onTimeRangeChange(timeRange: TimeRange): void {
+    super.onTimeRangeChange(timeRange);
+    this.additionalSeries$ = this.getAdditionalSeries();
+  }
+
+  // There is no other way w/o any as type conflicting occurs
+  // tslint:disable-next-line: no-any
+  public getAdditionalSeries(): Observable<any> {
+    if (this.model.showDeploymentMarkers) {
+      return this.breadCrumbsService.getLastBreadCrumbString().pipe(
+        switchMap(serviceName => this.deploymentsService.getAllServiceDeployments(serviceName, this.timeRange!)),
+        map(res => ({
+          // @TODO - read color and other attributes from model
+          data: res.payload.deployments.map(dep => ({ timestamp: new Date(dep.endTime), value: 0 })),
+          color: 'pink',
+          name: 'Deployment Markers',
+          type: 'single-axes-line'
+        })),
+        catchError(() => EMPTY)
+      );
+    }
+
+    return EMPTY;
   }
 
   protected fetchData(): Observable<CartesianData<TSeriesInterval>> {

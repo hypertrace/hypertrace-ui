@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   ApplicationFeature,
+  ApplicationFeatureValues,
   DynamicConfigurationService,
   FeatureState,
   FeatureStateResolver
@@ -12,10 +13,10 @@ export class FeatureResolverService extends FeatureStateResolver {
   public constructor(private readonly dynamicConfigService: DynamicConfigurationService) {
     super();
   }
-  public getFeatureState(flag: string): Observable<FeatureState> {
+  public getFeatureState(flag: ApplicationFeatureValues): Observable<FeatureState> {
     return of(this.getConfigValue(flag));
   }
-  private getConfigValue(flag: string): FeatureState {
+  private getConfigValue(flag: ApplicationFeatureValues): FeatureState {
     // Handle case where flag is not present in config.json
     if (!this.dynamicConfigService.isConfigPresentForFeature(flag)) {
       switch (flag) {

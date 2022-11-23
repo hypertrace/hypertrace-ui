@@ -31,6 +31,7 @@ import { CartesianDashedLine } from '../data/series/cartesian-dashed-line';
 import { CartesianLine } from '../data/series/cartesian-line';
 import { CartesianPoints } from '../data/series/cartesian-points';
 import { CartesianSeries } from '../data/series/cartesian-series';
+import { SingleAxisValueCartesianLine } from '../data/series/single-axis-value-cartesian-line';
 import { CartesianIntervalData } from '../legend/cartesian-interval-control.component';
 import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
@@ -54,6 +55,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected tooltip?: ChartTooltipRef<TData>;
   protected allSeriesData: CartesianData<TData, Series<TData>>[] = [];
   protected allCartesianData: CartesianData<TData, Series<TData> | Band<TData>>[] = [];
+  protected allAdditionalData: CartesianData<TData, Series<TData>>[] = [];
   protected renderedAxes: CartesianAxis<TData>[] = [];
   protected scaleBuilder: CartesianScaleBuilder<TData> = CartesianScaleBuilder.newBuilder();
 
@@ -63,6 +65,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected readonly requestedAxes: Axis[] = [];
   protected intervalData?: CartesianIntervalData;
   protected readonly series: Series<TData>[] = [];
+  protected readonly additionalSeries: Series<TData>[] = [];
   protected readonly seriesSummaries: Summary[] = [];
   protected readonly bands: Band<TData>[] = [];
   protected readonly eventListeners: {
@@ -160,6 +163,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     return this;
   }
 
+  public withAdditionalSeries(...series: Series<TData>[]): this {
+    this.additionalSeries.length = 0;
+    this.additionalSeries.push(...series);
+
+    return this;
+  }
+
   public withBands(...bands: Band<TData>[]): this {
     this.bands.length = 0;
     this.bands.push(...bands);
@@ -235,6 +245,19 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       .each((seriesViz, index, elements) => seriesViz.drawSvg(elements[index]));
 
     seriesElements.exit().remove();
+
+    const additionalElementsNode = select(this.chartBackgroundSvgElement!).append('g').node()!;
+    const additionalElements = select(additionalElementsNode)
+      .selectAll('additional-elements')
+      .data(this.allAdditionalData);
+
+    additionalElements
+      .enter()
+      .append('g')
+      .classed('additional-elements', true)
+      .each((seriesViz, index, elements) => seriesViz.drawSvg(elements[index]));
+
+    additionalElements.exit().remove();
   }
 
   protected drawDataCanvas(context: CanvasRenderingContext2D): void {
@@ -438,6 +461,34 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           this.chartContainerElement,
           LegendPosition.None
         );
+
+        /*
+        Only uncomment this when wanting to add support for additional series's legend, that too flag controlled.
+        Also, adding this might change the bounds, need to restructure UI and components to eject legend out of the graph to avoid affecting scales.
+
+        select(this.chartContainerElement)
+          .selectAll('.extra-legend-entries')
+          .data(this.additionalSeries)
+          .enter()
+          .append('div')
+          .classed('extra-legend-entry', true)
+          .each((seriesGroup, index, elements) => {
+            const legendEntriesSelection = select(elements[index]);
+            const newLegendContainerEl = legendEntriesSelection
+              .selectAll('.extra-legend-entries-title')
+              .data([seriesGroup])
+              .enter()
+            newLegendContainerEl
+              .append('div')
+              .classed('extra-legend-box', true)
+              .attr('title', seriesGroup.name)
+            newLegendContainerEl
+              .append('div')
+              .classed('extra-legend-title', true)
+              .text(seriesGroup.name)
+              .attr('title', seriesGroup.name);
+          });
+          */
       }
     }
 
@@ -533,6 +584,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       ),
       ...this.allSeriesData
     ];
+
+    this.allAdditionalData = this.additionalSeries.map(series => this.getChartSeriesVisualization(series));
   }
 
   private getChartSeriesVisualization(series: Series<TData>): CartesianSeries<TData> {
@@ -545,6 +598,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return new CartesianColumn(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.DashedLine:
         return new CartesianDashedLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
+      case 'single-axes-line':
+        return new SingleAxisValueCartesianLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Line:
       default:
         return new CartesianLine(series, this.scaleBuilder, this.getTooltipTrackingStrategy());

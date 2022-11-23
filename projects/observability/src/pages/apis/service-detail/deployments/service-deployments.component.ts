@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ReplayObservable, TimeRange, TimeRangeService } from '@hypertrace/common';
 
 import { BreadcrumbsService } from '@hypertrace/components';
 import { Observable } from 'rxjs';
@@ -8,14 +9,29 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="service-deployments">
-      <p *ngIf="serviceName$ | async as serviceName; else loading">
-        Here is the list of your deployments in last 24 hours for {{ serviceName }}
-      </p>
-      <ng-template #loading> Loading stuff... </ng-template>
+      <div *ngIf="serviceName$ | async as serviceName; else loading">
+        <p class="information-message">
+          <span
+            >Note: The criteria for deployments to be scraped from Spinnaker and shown here is having prefix
+            "<code>prod</code>" in Spinnaker Application Name (diff from pipeline name)</span
+          >
+        </p>
+        <section class="deployments-list-section">
+          <ht-service-deployments-list [serviceName]="serviceName" [timeRange]="this.currentTimeRange$ | async">
+          </ht-service-deployments-list>
+        </section>
+      </div>
+      <ng-template #loading> Loading deployments... </ng-template>
     </main>
   `
 })
 export class ServiceDeploymentsComponent {
   public serviceName$: Observable<string> = this.breadcrumbsService.getLastBreadCrumbString();
-  public constructor(protected readonly breadcrumbsService: BreadcrumbsService) {}
+  public currentTimeRange$: ReplayObservable<TimeRange>;
+  public constructor(
+    protected readonly breadcrumbsService: BreadcrumbsService,
+    private readonly timeRangeService: TimeRangeService
+  ) {
+    this.currentTimeRange$ = this.timeRangeService.getTimeRangeAndChanges();
+  }
 }

@@ -145,3 +145,7 @@ export * from './user/user-info.service';
 
 // Instrumentation Quality
 export * from './instrumentation-quality/instrumentation-quality.service';
+
+// Deployments
+export * from './deployments/deployments.service';
+export * from './deployments/deployment.types';

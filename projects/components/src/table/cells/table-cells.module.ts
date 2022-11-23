@@ -9,6 +9,7 @@ import { FilterButtonModule } from '../../filtering/filter-button/filter-button.
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
 import { PopoverModule } from '../../popover/popover.module';
+import { OpenInNewTabModule } from '../../public-api';
 import { TooltipModule } from '../../tooltip/tooltip.module';
 import { XMoreModule } from '../../x-more/x-more.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
@@ -23,6 +24,7 @@ import { DurationTableCellRendererComponent } from './data-renderers/duration/du
 import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
+import { OpenInNewTabCellRendererComponent } from './data-renderers/open-in-new-tab/open-in-new-tab-cell-renderer.component';
 import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
 import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
@@ -55,7 +57,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     FilterModalModule,
     PopoverModule,
     CopyToClipboardModule,
-    XMoreModule
+    XMoreModule,
+    OpenInNewTabModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
@@ -65,6 +68,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
   declarations: [
     IconTableCellRendererComponent,
     NumericTableCellRendererComponent,
+    OpenInNewTabCellRendererComponent,
     TableCheckboxCellRendererComponent,
     TableDataCellRendererComponent,
     TableExpandedDetailRowCellRendererComponent,
@@ -94,6 +98,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         CodeTableCellRendererComponent,
         StringArrayTableCellRendererComponent,
         StringEnumTableCellRendererComponent,
+        OpenInNewTabCellRendererComponent,
         TextWithCopyActionTableCellRendererComponent,
         RelativeTimestampTableCellRendererComponent,
         DurationTableCellRendererComponent

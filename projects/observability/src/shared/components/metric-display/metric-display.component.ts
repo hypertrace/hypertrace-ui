@@ -25,4 +25,7 @@ export class MetricDisplayComponent {
 
   @Input()
   public subscript: string = '';
+
+  @Input()
+  public size?: 'small' | 'regular' = 'regular';
 }

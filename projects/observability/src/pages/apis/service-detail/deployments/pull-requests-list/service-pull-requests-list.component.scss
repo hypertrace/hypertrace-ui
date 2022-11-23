@@ -1,0 +1,28 @@
+@import 'color-palette';
+
+.pull-requests-list {
+  padding: 12px;
+  font-size: 14px;
+
+  & > .pull-request-info-row {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1.5fr 1fr;
+    padding: 4px;
+    gap: 16px;
+
+    &:nth-child(odd) {
+      background: $gray-1;
+    }
+
+    &:nth-child(even) {
+      background: #fff;
+    }
+
+    & > .pull-request-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

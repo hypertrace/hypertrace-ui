@@ -41,6 +41,10 @@ export class ServiceDetailComponent {
     {
       path: 'metrics',
       label: 'Metrics'
+    },
+    {
+      path: 'dependency-graph',
+      label: 'Dependency Graph'
     }
   ];
 

@@ -55,6 +55,13 @@ export class MetricDisplayWidgetModel {
   })
   public subscript?: string;
 
+  @ModelProperty({
+    key: 'size',
+    type: STRING_PROPERTY.type,
+    required: false
+  })
+  public size?: string;
+
   @ModelInject(MODEL_API)
   public api!: ModelApi;
 

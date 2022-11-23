@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
+  DEPLOYMENT_SERVICE_OPTIONS,
   FormattingModule,
   IntervalDurationService,
   MemoizeModule,
@@ -78,7 +79,13 @@ describe('Cartesian widget renderer component', () => {
         ],
         getExactMatch: (duration: TimeDuration, availableDurations: TimeDuration[]): TimeDuration | undefined =>
           availableDurations.find(availableDuration => duration.equals(availableDuration))
-      })
+      }),
+      {
+        provide: DEPLOYMENT_SERVICE_OPTIONS,
+        useValue: {
+          uri: '/'
+        }
+      }
     ],
     imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule, MemoizeModule],
     shallow: true

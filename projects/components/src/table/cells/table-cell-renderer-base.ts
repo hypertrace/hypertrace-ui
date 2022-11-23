@@ -1,4 +1,5 @@
 import { Directive, Inject, OnInit } from '@angular/core';
+import { Dictionary } from '@hypertrace/common';
 import { TableColumnConfig, TableRow } from '../table-api';
 import {
   TABLE_CELL_DATA,
@@ -22,6 +23,9 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
   private _value!: TValue;
   private _units!: string;
   private _tooltip!: string;
+  // This is required as any structure maybe passed for cell renderer config
+  // tslint:disable-next-line: no-any
+  private _rendererConfiguration?: Dictionary<any>;
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
 
@@ -40,6 +44,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
     this._value = this.parser.parseValue(this.cellData, this.rowData);
     this._units = this.parser.parseUnits(this.cellData, this.rowData);
     this._tooltip = this.parser.parseTooltip(this.cellData, this.rowData);
+    this._rendererConfiguration = this.columnConfig.rendererConfiguration;
   }
 
   public get value(): TValue {
@@ -52,5 +57,10 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
 
   public get tooltip(): string {
     return this._tooltip;
+  }
+
+  // tslint:disable:no-any
+  public get rendererConfiguration(): Dictionary<any> | undefined {
+    return this?._rendererConfiguration;
   }
 }

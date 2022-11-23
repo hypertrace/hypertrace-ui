@@ -11,5 +11,6 @@ export const enum CoreTableCellRendererType {
   Text = 'text',
   TextWithCopyAction = 'text-with-copy-action',
   Timestamp = 'timestamp',
-  TimeAgo = 'time-ago'
+  TimeAgo = 'time-ago',
+  OpenInNewTab = 'open-in-new-tab'
 }

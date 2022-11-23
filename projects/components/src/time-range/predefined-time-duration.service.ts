@@ -13,6 +13,7 @@ export class PredefinedTimeDurationService {
 
   private createTimeDurations(): TimeDuration[] {
     return [
+      new TimeDuration(5, TimeUnit.Minute),
       new TimeDuration(15, TimeUnit.Minute),
       new TimeDuration(30, TimeUnit.Minute),
       new TimeDuration(1, TimeUnit.Hour),

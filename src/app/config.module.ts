@@ -3,6 +3,7 @@ import {
   ALTERNATE_COLOR_PALETTES,
   APP_TITLE,
   DEFAULT_COLOR_PALETTE,
+  DEPLOYMENT_SERVICE_OPTIONS,
   DynamicConfigurationModule,
   INSTRUMENTATION_QUALITY_OPTIONS,
   UserPreferenceModule,
@@ -28,6 +29,12 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
       provide: USER_PREFERENCES_OPTIONS,
       useValue: {
         uri: environment.userPreferencesUri
+      }
+    },
+    {
+      provide: DEPLOYMENT_SERVICE_OPTIONS,
+      useValue: {
+        uri: environment.deploymentServiceUri
       }
     },
     {

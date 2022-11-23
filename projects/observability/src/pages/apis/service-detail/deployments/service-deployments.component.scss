@@ -1,3 +1,19 @@
 .service-deployments {
   padding: 1rem 1.6rem;
+  padding-top: 6px;
+  .information-message {
+    margin-bottom: 20px;
+    margin-top: 8px;
+    font-size: 14px;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+.deployments-list-section {
+  ::ng-deep {
+    div.table {
+      min-height: 40vh;
+    }
+  }
 }

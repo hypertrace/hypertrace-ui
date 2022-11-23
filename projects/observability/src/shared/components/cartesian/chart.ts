@@ -9,6 +9,7 @@ export interface CartesianChart<TInterval> {
   draw(): this;
   isDrawn(): boolean;
   withSeries(...series: Series<TInterval>[]): this;
+  withAdditionalSeries?(...series: Series<TInterval>[]): this;
   withBands(...bands: Band<TInterval>[]): this;
   withLegend(legendPosition: LegendPosition): this;
   withEventListener(eventType: ChartEvent, listener: ChartEventListener<TInterval>): this;
@@ -28,7 +29,7 @@ export interface Series<TInterval> {
   name: string;
   groupName?: string;
   symbol?: SeriesSymbol;
-  type: CartesianSeriesVisualizationType;
+  type: CartesianSeriesVisualizationType | 'single-axes-line';
   stacking?: boolean;
   hide?: boolean;
   getTooltipTitle?(datum: TInterval): string;

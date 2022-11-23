@@ -1,4 +1,4 @@
-import { ApplicationFeature } from '@hypertrace/common';
+import { ApplicationFeatureValues } from '@hypertrace/common';
 
 export interface NavigableTab {
   path: string;
@@ -7,5 +7,5 @@ export interface NavigableTab {
   hidden?: boolean;
   features?: string[];
   replaceHistory?: boolean;
-  flagName?: ApplicationFeature;
+  flagName?: ApplicationFeatureValues;
 }

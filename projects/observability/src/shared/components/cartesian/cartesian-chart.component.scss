@@ -6,6 +6,25 @@
 }
 
 :host ::ng-deep {
+  .extra-legend-entry {
+    position: absolute;
+    display: flex;
+    gap: 2px;
+    margin-top: 6px;
+    align-items: center;
+    & > .extra-legend-box {
+      width: 16px;
+      height: 16px;
+      border: 2px dashed red;
+      border-radius: 50%;
+      background: repeating-linear-gradient(90deg, pink, white 6px, pink, white 6px);
+    }
+
+    & > .extra-legend-title {
+      font-size: 10px;
+    }
+  }
+
   .axis {
     .tick {
       text {
@@ -32,6 +51,10 @@
       stroke-dasharray: none;
       stroke: white;
       fill: $gray-9;
+    }
+
+    &.hidden {
+      display: none;
     }
   }
 

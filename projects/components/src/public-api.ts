@@ -344,6 +344,7 @@ export * from './time-picker/time-picker.module';
 
 // Time Range
 export * from './time-range/time-range.component';
+export * from './time-range/predefined-time-duration.service';
 export * from './time-range/time-range.module';
 
 // Titled Content

@@ -1,0 +1,24 @@
+.legend-widget {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  font-size: 12px;
+  & > .legend-widget-outer-box {
+    width: 16px;
+    height: 16px;
+    border: 2px dashed red;
+    border-radius: 50%;
+    background: repeating-linear-gradient(90deg, pink, white 6px, pink, white 6px);
+  }
+
+  & > .legend-widget-text {
+    & > .prefix-text {
+      margin-right: 4px;
+      margin-left: 2px;
+    }
+    & > .display-text {
+      margin-right: 4px;
+      font-weight: bold;
+    }
+  }
+}

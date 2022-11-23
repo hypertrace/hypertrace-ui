@@ -34,6 +34,10 @@
     @include font-metric-large;
   }
 
+  &.small .value {
+    font-size: 24px;
+  }
+
   .script {
     display: flex;
     flex-direction: column;

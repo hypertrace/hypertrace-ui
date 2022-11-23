@@ -66,6 +66,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
   public selectedInterval?: IntervalValue;
 
+  @Input()
+  public additionalSeries?: Series<TData>;
+
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
 
@@ -108,10 +111,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
         this.selectionChange.emit(selectedData as CartesianSelectedData<TData>);
       });
 
-    if (this.rangeSelectionEnabled) {
-      this.chart.withEventListener(ChartEvent.Select, selectedData => {
-        this.selectionChange.emit(selectedData);
-      });
+    if (this.chart.withAdditionalSeries && this.additionalSeries) {
+      this.chart = this.chart.withAdditionalSeries(this.additionalSeries);
     }
 
     if (this.rangeSelectionEnabled) {

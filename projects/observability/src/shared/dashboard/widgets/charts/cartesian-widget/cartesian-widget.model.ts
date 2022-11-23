@@ -154,6 +154,14 @@ export class CartesianWidgetModel<TInterval> {
   })
   public selectionHandler?: InteractionHandler;
 
+  @ModelProperty({
+    key: 'show-deployment-markers',
+    displayName: 'Show Deployment Markers',
+    type: BOOLEAN_PROPERTY.type,
+    required: false
+  })
+  public showDeploymentMarkers: boolean = false;
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 

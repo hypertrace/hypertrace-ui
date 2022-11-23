@@ -2,8 +2,8 @@
   <div *ngIf="metricTitle" class="metric-title">
     {{ metricTitle }}
   </div>
-  <div class="metric-value">
-    <span class="value" [ngClass]="[health]">{{ value | htDisplayNumber }}</span>
+  <div class="metric-value" [ngClass]="size">
+    <span class="value" [ngClass]="health">{{ value | htDisplayNumber }}</span>
     <div class="script">
       <span class="superscript">{{ this.superscript }}</span>
       <span class="subscript">{{ this.subscript }}</span>

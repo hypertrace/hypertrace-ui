@@ -18,6 +18,8 @@ export interface TableColumnConfig {
   alignment?: TableCellAlignmentType;
   width?: number | string;
   onClick?(row: TableRow, column: TableColumnConfig): void;
+  // tslint:disable-next-line: no-any
+  rendererConfiguration?: Dictionary<any>; // Contains metadata for cell renderer
 }
 
 export type TableRow = Dictionary<unknown>;

@@ -6,6 +6,7 @@ import {
   InstrumentationDetailsComponent,
   InstrumentationOverviewComponent,
   ServiceApisListComponent,
+  ServiceDependencyGraphComponent,
   ServiceDeploymentsComponent,
   ServiceDetailComponent,
   ServiceDetailModule,
@@ -52,6 +53,10 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: 'deployments',
         component: ServiceDeploymentsComponent
+      },
+      {
+        path: 'dependency-graph',
+        component: ServiceDependencyGraphComponent
       }
     ]
   }

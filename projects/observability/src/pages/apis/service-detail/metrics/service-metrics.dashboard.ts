@@ -20,6 +20,11 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
       'row-dimensions': [
         {
           type: 'dimension-model',
+          dimension: 20,
+          unit: 'PX'
+        },
+        {
+          type: 'dimension-model',
           dimension: 32,
           unit: 'PX'
         },
@@ -74,31 +79,17 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
           'col-end': 1,
           'row-start': 4,
           'row-end': 5
-        },
-        {
-          type: 'cell-span-model',
-          'col-start': 0,
-          'col-end': 1,
-          'row-start': 5,
-          'row-end': 6
-        },
-        {
-          type: 'cell-span-model',
-          'col-start': 0,
-          'col-end': 1,
-          'row-start': 6,
-          'row-end': 7
-        },
-        {
-          type: 'cell-span-model',
-          'col-start': 0,
-          'col-end': 1,
-          'row-start': 7,
-          'row-end': 8
         }
       ]
     },
     children: [
+      {
+        type: 'legend-widget',
+        color: 'pink',
+        displayText: 'Deployment Markers',
+        prefixText: 'denotes',
+        suffixText: 'in all charts'
+      },
       {
         type: 'container-widget',
         layout: {
@@ -201,6 +192,7 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
             'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
+            'show-deployment-markers': true,
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
@@ -327,6 +319,7 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                 type: 'cartesian-widget',
                 'selectable-interval': true,
                 'legend-position': LegendPosition.None,
+                'show-deployment-markers': true,
                 'show-summary': true,
                 title: 'Error Percentage',
                 series: [
@@ -349,6 +342,7 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                 type: 'cartesian-widget',
                 'selectable-interval': true,
                 'legend-position': LegendPosition.None,
+                'show-deployment-markers': true,
                 'show-summary': true,
                 title: 'Error Rate',
                 bands: [
@@ -400,6 +394,7 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
         type: 'cartesian-widget',
         'selectable-interval': true,
         'legend-position': LegendPosition.None,
+        'show-deployment-markers': true,
         'show-y-axis': true,
         'y-axis': {
           type: 'cartesian-axis',
