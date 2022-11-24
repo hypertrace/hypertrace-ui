@@ -1,3 +1,4 @@
+// tslint:disable: template-cyclomatic-complexity component-max-inline-declarations max-file-line-count
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
   AfterViewInit,
@@ -54,7 +55,6 @@ import {
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 
-// tslint:disable: template-cyclomatic-complexity component-max-inline-declarations max-file-line-count
 @Component({
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
@@ -583,7 +583,6 @@ export class TableComponent
 
   public onDataRowClick(row: StatefulTableRow): void {
     this.rowClicked.emit(row);
-    this.toggleRowSelected(row);
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {
@@ -659,16 +658,17 @@ export class TableComponent
     const previousSelections = this.selections ?? [];
     const deselectedRow = previousSelections.find(selection => isEqualIgnoreFunctions(selection, toggledRow));
     if (deselectedRow !== undefined) {
-      this.selections = without(previousSelections, deselectedRow);
+      TableCdkRowUtil.unselectAllRows([deselectedRow]);
+      this.selections = TableCdkRowUtil.selectAllRows(without(previousSelections, deselectedRow));
     } else if (this.hasMultiSelect()) {
-      this.selections = [...previousSelections, toggledRow];
+      this.selections = TableCdkRowUtil.selectAllRows([...previousSelections, toggledRow]);
     } else {
-      this.selections = [toggledRow];
+      this.selections = TableCdkRowUtil.selectAllRows([toggledRow]);
     }
     this.selectionsChange.emit(this.selections);
     this.headerChecked = this.selections.length > 0;
     this.indeterminateRowsSelected =
-      this.headerChecked && this.selections?.length !== this.dataSource?.getAllRows().length;
+      this.headerChecked && this.selections.length !== this.dataSource?.getAllRows().length;
     this.changeDetector.detectChanges();
   }
 
@@ -699,11 +699,12 @@ export class TableComponent
     return columnConfig.display === this.expandableToggleColumnConfig.display;
   }
 
-  public shouldHighlightRowAsSelection(row: StatefulTableRow): boolean {
-    return (
-      this.selections !== undefined &&
-      this.selections.find(selection => TableCdkRowUtil.isEqualExceptState(selection, row)) !== undefined
-    );
+  public shouldHighlightRowAsSelection(_row: StatefulTableRow): boolean {
+    /* return (
+               this.selections !== undefined &&
+               this.selections.find(selection => TableCdkRowUtil.isEqualExceptState(selection, row)) !== undefined
+             );*/
+    return false;
   }
 
   public isHoveredRow(row: StatefulTableRow): boolean {

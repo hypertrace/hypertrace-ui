@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Optional, SkipSelf } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { StatefulTableRow, TableColumnConfig, TableRow, TableRowState } from '../../../table-api';
 import {
   TABLE_CELL_DATA,
@@ -41,12 +41,16 @@ export class TableCheckboxCellRendererComponent extends TableCellRendererBase<Ta
     @Inject(TABLE_CELL_DATA) cellData: TableRowState,
     @Inject(TABLE_ROW_DATA) rowData: TableRow,
     @Optional()
+    @SkipSelf()
     @Inject(TABLE_ROW_DATA_STREAM)
     private readonly streamingRowData?: Observable<StatefulTableRow>
   ) {
     super(columnConfig, index, parser, cellData, rowData);
     this.checked$ = this.streamingRowData
-      ? this.streamingRowData.pipe(map(data => data?.$$state?.selected ?? this.value.selected))
+      ? this.streamingRowData.pipe(
+          debounceTime(50),
+          map(data => data?.$$state?.selected ?? false)
+        )
       : of(this.value.selected);
   }
 }
