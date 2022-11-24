@@ -87,6 +87,7 @@ export const enum IconType {
   List = 'format_list_bulleted',
   Loading = 'svg:loading',
   Lock = 'lock',
+  MailUnread = 'svg:mail-unread',
   MoreHorizontal = 'svg:more-horizontal',
   MoreVertical = 'svg:more-vertical',
   Menu = 'menu',
