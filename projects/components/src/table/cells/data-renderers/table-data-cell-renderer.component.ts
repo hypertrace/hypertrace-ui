@@ -10,8 +10,9 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { BehaviorSubject } from 'rxjs';
 import { FilterAttribute } from '../../../filtering/filter/filter-attribute';
-import { TableRow } from '../../table-api';
+import { StatefulTableRow, TableRow } from '../../table-api';
 import { TableColumnConfigExtended } from '../../table.service';
 import { createTableCellInjector } from '../table-cell-injection';
 import { TableCellAlignmentType } from '../types/table-cell-alignment-type';
@@ -60,6 +61,13 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
   @Input()
   public cellData?: unknown;
 
+  @Input()
+  public set selections(_selections: StatefulTableRow[]) {
+    if (this.rowData) {
+      this.rowDataSubject.next(this.rowData);
+    }
+  }
+
   @ViewChild('cellRenderer', { read: ViewContainerRef, static: true })
   public cellRenderer!: ViewContainerRef;
 
@@ -67,6 +75,7 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
   public leftAlignFilterButton: boolean = false;
   public popoverOpen: boolean = false;
   public filterValue: unknown;
+  private rowDataSubject: BehaviorSubject<TableRow | undefined> = new BehaviorSubject<TableRow | undefined>(undefined);
 
   public constructor(
     private readonly injector: Injector,
@@ -96,7 +105,8 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
         this.columnConfig.parser,
         this.cellData,
         this.rowData,
-        this.injector
+        this.injector,
+        this.rowDataSubject.asObservable()
       )
     );
 

@@ -99,6 +99,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [index]="index"
                 [sort]="columnDef.sort"
                 [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                [headerChecked]="this.headerChecked"
                 (sortChange)="this.onSortChange($event, columnDef)"
                 (columnsChange)="this.onColumnsEdit($event)"
                 (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
@@ -124,6 +125,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [columnConfig]="columnDef"
                 [index]="this.columnIndex(columnDef, index)"
                 [rowData]="row"
+                [selections]="this.selectionsChange | async"
                 [cellData]="row[columnDef.id]"
                 (click)="this.onDataCellClick(row)"
               ></ht-table-data-cell-renderer>
@@ -388,6 +390,7 @@ export class TableComponent
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
   public indeterminateRowsSelected?: boolean;
+  public headerChecked?: boolean;
 
   public constructor(
     private readonly elementRef: ElementRef,
@@ -559,9 +562,11 @@ export class TableComponent
       if (allRowsSelected) {
         this.dataSource?.selectAllRows();
         this.selections = this.dataSource?.getAllRows();
+        this.headerChecked = true;
       } else {
         this.dataSource?.unselectAllRows();
         this.selections = [];
+        this.headerChecked = false;
       }
 
       this.selectionsChange.emit(this.selections);
@@ -661,7 +666,9 @@ export class TableComponent
       this.selections = [toggledRow];
     }
     this.selectionsChange.emit(this.selections);
-    this.indeterminateRowsSelected = this.selections?.length !== this.dataSource?.getAllRows().length;
+    this.headerChecked = this.selections.length > 0;
+    this.indeterminateRowsSelected =
+      this.headerChecked && this.selections?.length !== this.dataSource?.getAllRows().length;
     this.changeDetector.detectChanges();
   }
 
