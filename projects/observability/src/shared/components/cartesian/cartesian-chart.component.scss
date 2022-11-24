@@ -127,6 +127,10 @@
     }
 
     .legend-entries {
+      /* Prevent large legends from shrinking chart */
+      max-height: 60px;
+      overflow-y: auto;
+
       padding-right: 8px;
       display: flex;
       flex-wrap: wrap;
@@ -142,6 +146,12 @@
         }
 
         .legend-text {
+          /* Add ellipsis for long text */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 200px;
+
           font-size: 14px;
           padding-left: 2px;
 
