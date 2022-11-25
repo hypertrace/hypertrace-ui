@@ -666,9 +666,15 @@ export class TableComponent
   }
 
   public toggleRowExpanded(row: StatefulTableRow): void {
-    row.$$state.expanded = !row.$$state.expanded;
-    this.rowStateSubject.next(row);
-    this.toggleRowChange.emit(row);
+    const updatedRow = {
+      ...row,
+      $$state: {
+        ...row.$$state,
+        expanded: !row.$$state.expanded
+      }
+    };
+    this.rowStateSubject.next(updatedRow);
+    this.toggleRowChange.emit(updatedRow);
     this.changeDetector.markForCheck();
   }
 
