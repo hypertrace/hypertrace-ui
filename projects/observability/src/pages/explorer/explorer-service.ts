@@ -3,7 +3,6 @@ import {
   forkJoinSafeEmpty,
   NavigationParams,
   NavigationParamsType,
-  QueryParamObject,
   TimeRange,
   TimeRangeService
 } from '@hypertrace/common';
@@ -48,17 +47,14 @@ export class ExplorerService {
 
     return forkJoinSafeEmpty(filterStrings$).pipe(
       map(filterStrings => {
-        const queryParam: QueryParamObject = {
-          filter: filterStrings,
-          scope: scopeQueryParam
-        };
-
         return {
           navType: NavigationParamsType.InApp,
           path: '/explorer',
-          queryParams: !isNil(timeRange)
-            ? { ...queryParam, ...this.timeRangeService.toQueryParams(timeRange) }
-            : queryParam
+          queryParams: {
+            filter: filterStrings,
+            scope: scopeQueryParam,
+            ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
+          }
         };
       })
     );
