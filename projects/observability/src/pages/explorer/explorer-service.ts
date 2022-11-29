@@ -46,17 +46,15 @@ export class ExplorerService {
     );
 
     return forkJoinSafeEmpty(filterStrings$).pipe(
-      map(filterStrings => {
-        return {
-          navType: NavigationParamsType.InApp,
-          path: '/explorer',
-          queryParams: {
-            filter: filterStrings,
-            scope: scopeQueryParam,
-            ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
-          }
-        };
-      })
+      map(filterStrings => ({
+        navType: NavigationParamsType.InApp,
+        path: '/explorer',
+        queryParams: {
+          filter: filterStrings,
+          scope: scopeQueryParam,
+          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
+        }
+      }))
     );
   }
 }
