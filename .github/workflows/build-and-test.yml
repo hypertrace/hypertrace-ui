@@ -138,7 +138,7 @@ jobs:
 
       - id: set-test-chunks
         name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(jq -nc '["assets-library","common", "components", "dashboards" , "graphql-client" , "test-utils", "observability", "hypertrace-ui"] | _nwise($PARALLELISM)')"
+        run: echo "::set-output name=test-chunks::$(jq -nc '["assets-library","common", "components", "dashboards" , "graphql-client" , "test-utils", "observability", "hypertrace-ui"] | _nwise(4) | join(",")')"
 
       - id: set-test-chunk-ids
         name: Set Chunk IDs
@@ -182,7 +182,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npx nx run-many --target=test -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--projects "+.')
+        run: npx nx run-many --target=test -- $(echo $CHUNKS | | jq -r '"--projects="+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
 
