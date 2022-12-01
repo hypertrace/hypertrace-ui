@@ -118,7 +118,7 @@ jobs:
 
       - name: Prettier Check
         run: npm run prettier:check:affected
-    setup-test-batches:
+  setup-test-batches:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     env:
