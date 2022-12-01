@@ -9,7 +9,8 @@ export const enum GraphQlMetricAggregationType {
   Avgrate = 'AVGRATE',
   Count = 'COUNT',
   Percentile = 'PERCENTILE',
-  DistinctCount = 'DISTINCTCOUNT'
+  DistinctCount = 'DISTINCTCOUNT',
+  DistinctArray = 'DISTINCT_ARRAY'
 }
 
 export const convertFromGraphQlMetricAggregationType = (
@@ -37,6 +38,8 @@ export const convertFromGraphQlMetricAggregationType = (
       return [MetricAggregationType.Count];
     case GraphQlMetricAggregationType.DistinctCount:
       return [MetricAggregationType.DistinctCount];
+    case GraphQlMetricAggregationType.DistinctArray:
+      return [MetricAggregationType.DistinctArray];
     default:
       return assertUnreachable(value);
   }
@@ -64,6 +67,8 @@ export const convertToGraphQlMetricAggregationType = (value: MetricAggregationTy
       return GraphQlMetricAggregationType.Count;
     case MetricAggregationType.DistinctCount:
       return GraphQlMetricAggregationType.DistinctCount;
+    case MetricAggregationType.DistinctArray:
+      return GraphQlMetricAggregationType.DistinctArray;
     default:
       return assertUnreachable(value);
   }

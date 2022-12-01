@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { LoggerService } from '@hypertrace/common';
@@ -41,7 +50,9 @@ import { RadioOption } from './radio-option';
         <span *ngIf="option.description" class="radio-button-description">{{ option.description }}</span>
       </mat-radio-button>
     </mat-radio-group>
-    <ng-template #defaultLabel let-label><ht-label class="radio-button-label" [label]="label"></ht-label></ng-template>
+    <ng-template #defaultLabel let-label>
+      <ht-label class="radio-button-label" [label]="label"></ht-label>
+    </ng-template>
   `
 })
 export class RadioGroupComponent implements ControlValueAccessor, OnInit {
@@ -66,7 +77,7 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   private propagateControlValueChange?: (value: string | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates
@@ -83,7 +94,8 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public writeValue(value?: string): void {
-    this.setSelection(value);
+    this.selected = this.options.find(option => option.value === value);
+    this.cdr.detectChanges();
   }
 
   public setDisabledState(isDisabled?: boolean): void {

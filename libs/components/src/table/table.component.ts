@@ -23,7 +23,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { without } from 'lodash-es';
+import { debounce, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -63,20 +63,23 @@ import { TableColumnConfigExtended, TableService } from './table.service';
     <div class="table">
       <cdk-table
         *ngIf="this.dataSource"
+        #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
         [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
         class="table"
       >
         <!-- Columns -->
-        <div *ngFor="let columnDef of this.visibleColumnConfigs$ | async; trackBy: this.trackItem; index as index">
+        <ng-container
+          *ngFor="let columnDef of this.visibleColumnConfigs$ | async; trackBy: this.trackItem; index as index"
+        >
           <ng-container [cdkColumnDef]="columnDef.id">
             <cdk-header-cell
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
               [style.max-width]="columnDef.width"
-              [style.min-width]="columnDef.minWidth ?? columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
               class="header-cell"
             >
               <div
@@ -105,7 +108,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             <cdk-cell
               *cdkCellDef="let row"
               [style.flex-basis]="columnDef.width"
-              [style.min-width]="columnDef.minWidth ?? columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
               [style.max-width]="columnDef.width"
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
@@ -126,7 +129,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
               ></ht-table-data-cell-renderer>
             </cdk-cell>
           </ng-container>
-        </div>
+        </ng-container>
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
@@ -209,7 +212,7 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
-
+  public readonly minColumnWidth: string = '80px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
     width: '32px',
@@ -471,23 +474,7 @@ export class TableComponent
 
   @HostListener('mousemove', ['$event'])
   public onResizeMouseMove(event: MouseEvent): void {
-    if (this.resizeColumns === undefined) {
-      return;
-    }
-
-    const offsetX = this.calcOffsetX(
-      event,
-      this.resizeStartX,
-      this.resizeHeaderOffsetLeft + this.resizeColumns.left.bounds.left,
-      this.resizeHeaderOffsetLeft + this.resizeColumns.right.bounds.right
-    );
-
-    this.resizeColumns.left.config.width = `${this.resizeColumns.left.element.offsetWidth + offsetX}px`;
-    this.resizeColumns.right.config.width = `${this.resizeColumns.right.element.offsetWidth - offsetX}px`;
-
-    this.resizeStartX = this.resizeStartX + offsetX;
-
-    this.changeDetector.markForCheck();
+    this.debouncedResizeColumn(event);
   }
 
   @HostListener('mouseup')
@@ -510,10 +497,8 @@ export class TableComponent
     };
   }
 
-  private calcOffsetX(event: MouseEvent, startX: number, minX: number, maxX: number): number {
-    const isResizeLeft = event.clientX - startX < 0;
-
-    return isResizeLeft ? Math.max(minX, event.clientX) - startX : Math.min(maxX, event.clientX) - startX;
+  private calcOffsetX(event: MouseEvent, startX: number, minX: number): number {
+    return Math.max(minX, event.clientX) - startX;
   }
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
@@ -677,7 +662,7 @@ export class TableComponent
     }
     this.selectionsChange.emit(this.selections);
     this.indeterminateRowsSelected = this.selections?.length !== this.dataSource?.getAllRows().length;
-    this.changeDetector.markForCheck();
+    this.changeDetector.detectChanges();
   }
 
   public toggleRowExpanded(row: StatefulTableRow): void {
@@ -807,6 +792,25 @@ export class TableComponent
         }
       : undefined;
   }
+
+  private resizeColumn(event: MouseEvent): void {
+    if (this.resizeColumns === undefined) {
+      return;
+    }
+
+    const offsetX = this.calcOffsetX(
+      event,
+      this.resizeStartX,
+      this.resizeHeaderOffsetLeft + this.resizeColumns.left.bounds.left
+    );
+
+    this.resizeColumns.left.config.width = `${this.resizeColumns.left.element.offsetWidth + offsetX}px`;
+    this.resizeStartX = this.resizeStartX + offsetX;
+  }
+
+  private readonly debouncedResizeColumn: (event: MouseEvent) => void = debounce(this.resizeColumn, 20, {
+    trailing: true
+  });
 }
 
 export interface SortedColumn<TCol extends TableColumnConfig> {

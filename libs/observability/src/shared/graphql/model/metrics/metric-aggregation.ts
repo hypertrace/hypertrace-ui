@@ -23,7 +23,8 @@ export const enum MetricAggregationType {
   AvgrateSecond = 'avgrate_sec',
   AvgrateMinute = 'avgrate_min',
   Count = 'count',
-  DistinctCount = 'distinct_count'
+  DistinctCount = 'distinct_count',
+  DistinctArray = 'distinct_array'
 }
 
 export const getAggregationDisplayName = (aggregation: MetricAggregationType): string => {
@@ -52,6 +53,8 @@ export const getAggregationDisplayName = (aggregation: MetricAggregationType): s
       return 'Count';
     case MetricAggregationType.DistinctCount:
       return 'Distinct Count';
+    case MetricAggregationType.DistinctArray:
+      return 'Distinct Array';
     default:
       return assertUnreachable(aggregation);
   }
@@ -81,6 +84,7 @@ export const getAggregationUnitDisplayName = (
       return `${attribute.units}/s`;
     case MetricAggregationType.Count:
     case MetricAggregationType.DistinctCount:
+    case MetricAggregationType.DistinctArray:
       return '';
     default:
       return assertUnreachable(aggregation);
@@ -101,6 +105,7 @@ export const addAggregationToDisplayName = (displayName: string, aggregation: Me
       return `${getAggregationDisplayName(aggregation)} ${displayName}`;
     case MetricAggregationType.Count:
     case MetricAggregationType.DistinctCount:
+    case MetricAggregationType.DistinctArray:
     case MetricAggregationType.AvgrateMinute:
     case MetricAggregationType.AvgrateSecond: // Postfix aggregation
       return `${displayName} ${getAggregationDisplayName(aggregation)}`;

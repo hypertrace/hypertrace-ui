@@ -384,6 +384,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public setDisabledState(isDisabled?: boolean): void {
     this.disabled = isDisabled ?? false;
+    this.cdr.markForCheck();
   }
 
   private propagateValue(): void {

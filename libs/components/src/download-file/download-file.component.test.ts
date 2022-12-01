@@ -1,32 +1,18 @@
-import { Renderer2 } from '@angular/core';
-import { fakeAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { fakeAsync, flush } from '@angular/core/testing';
+import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { of } from 'rxjs';
+import { of, timer } from 'rxjs';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
 import { DownloadFileMetadata } from './download-file-metadata';
 import { DownloadFileComponent } from './download-file.component';
-import { DownloadFileModule } from './download-file.module';
+import { FileDownloadService } from './service/file-download.service';
 
 describe('Download File Component', () => {
-  let spectator: Spectator<DownloadFileComponent>;
-  const mockElement = document.createElement('a');
-  const createElementSpy = jest.fn().mockReturnValue(mockElement);
-
-  const createHost = createHostFactory({
+  const createComponent = createComponentFactory({
     component: DownloadFileComponent,
-    imports: [DownloadFileModule, RouterTestingModule],
     declarations: [MockComponent(ButtonComponent), MockComponent(IconComponent)],
-    providers: [
-      mockProvider(Document, {
-        createElement: createElementSpy
-      }),
-      mockProvider(Renderer2, {
-        setAttribute: jest.fn()
-      })
-    ],
+    providers: [mockProvider(FileDownloadService)],
     shallow: true
   });
 
@@ -35,32 +21,32 @@ describe('Download File Component', () => {
     fileName: 'download.txt'
   };
 
-  test('should have only download button, when data is not loading', () => {
-    spectator = createHost(`<ht-download-file [metadata]="metadata"></ht-download-file>`, {
-      hostProps: {
-        metadata: metadata
-      }
-    });
-
-    expect(spectator.query(ButtonComponent)).toExist();
-  });
-
   test('should download file', fakeAsync(() => {
-    spectator = createHost(`<ht-download-file [metadata]="metadata"></ht-download-file>`, {
-      hostProps: {
+    const spectator = createComponent({
+      props: {
         metadata: metadata
-      }
+      },
+      providers: [
+        mockProvider(FileDownloadService, {
+          downloadAsText: jest.fn().mockReturnValue(timer(2000))
+        })
+      ]
     });
 
-    jest.spyOn(spectator.component, 'triggerDownload');
+    // Before data loading
+    expect(spectator.query(ButtonComponent)).toExist();
+    expect(spectator.query(IconComponent)).not.toExist();
 
-    expect(spectator.component.dataLoading).toBe(false);
-    const element = spectator.query('.download-file');
-    expect(element).toExist();
+    // While data loading
+    spectator.click('.download-file');
+    expect(spectator.query(ButtonComponent)).not.toExist();
+    expect(spectator.query(IconComponent)).toExist();
+    spectator.tick(2500);
 
-    spectator.click(element!);
-    spectator.tick();
-
-    expect(spectator.component.triggerDownload).toHaveBeenCalledTimes(1);
+    // After Data loading
+    expect(spectator.query(ButtonComponent)).toExist();
+    expect(spectator.query(IconComponent)).not.toExist();
+    expect(spectator.inject(FileDownloadService).downloadAsText).toHaveBeenCalledWith(metadata);
+    flush();
   }));
 });

@@ -506,15 +506,16 @@ describe('Table component', () => {
     spectator.component.onResizeMouseDown(mouseEvent as MouseEvent, 1);
     spectator.dispatchMouseEvent('cdk-table', 'mousemove', 1, 0);
     spectator.dispatchMouseEvent('cdk-table', 'mouseup');
+    spectator.tick(21);
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            width: '101px'
+            width: 100
           }),
           expect.objectContaining({
-            width: '199px'
+            width: 200
           })
         ]
       });

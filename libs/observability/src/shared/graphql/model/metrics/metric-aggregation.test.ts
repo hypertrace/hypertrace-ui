@@ -14,5 +14,6 @@ describe('MetricAggregation', () => {
     expect(getAggregationDisplayName(MetricAggregationType.AvgrateMinute)).toBe('Rate (min.)');
     expect(getAggregationDisplayName(MetricAggregationType.Count)).toBe('Count');
     expect(getAggregationDisplayName(MetricAggregationType.DistinctCount)).toBe('Distinct Count');
+    expect(getAggregationDisplayName(MetricAggregationType.DistinctArray)).toBe('Distinct Array');
   });
 });

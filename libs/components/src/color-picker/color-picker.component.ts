@@ -49,6 +49,10 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public disabled?: boolean = false;
 
+  // Disables de-selecting current option, meaning only allow selection to another option
+  @Input()
+  public required?: boolean = false;
+
   @Output()
   private readonly selectedChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -82,7 +86,11 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
       return;
     }
 
-    const clickedColor = this.selected === color ? undefined : color;
+    const isDeselect = this.selected === color;
+    if (this.required && isDeselect) {
+      return;
+    }
+    const clickedColor = isDeselect ? undefined : color;
     this.selected = clickedColor;
     this.selectedChange.emit(clickedColor);
     this.propagateValueChangeToFormControl(clickedColor);

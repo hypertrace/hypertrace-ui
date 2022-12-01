@@ -76,6 +76,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
             [edgeDataSpecifiers]="data.edgeSpecs"
             [showBrush]="this.model.showBrush"
             [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
+            [layoutType]="this.model.layoutType"
           >
           </ht-topology>
         </div>
@@ -197,7 +198,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
   }
 }
 
-interface TopologyTemplateData {
+export interface TopologyTemplateData {
   nodeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   edgeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   nodes: TopologyNode[];

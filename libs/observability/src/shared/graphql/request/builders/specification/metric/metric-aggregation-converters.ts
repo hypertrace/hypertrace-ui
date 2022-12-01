@@ -24,6 +24,8 @@ export const convertToGraphQlMetricAggregationPath = (value: MetricAggregationTy
       return GraphQlMetricAggregationPath.Count;
     case MetricAggregationType.DistinctCount:
       return GraphQlMetricAggregationPath.DistinctCount;
+    case MetricAggregationType.DistinctArray:
+      return GraphQlMetricAggregationPath.DistinctArray;
     default:
       return assertUnreachable(value);
   }

@@ -28,7 +28,13 @@ export class PopoverPositionBuilder {
         return this.overlay
           .position()
           .flexibleConnectedTo(position.origin)
-          .withPositions(position.locationPreferences.map(location => this.getPositionPairForLocation(location)));
+          .withPositions(
+            position.locationPreferences.map(location => ({
+              ...this.getPositionPairForLocation(location),
+              offsetX: position.offsetX,
+              offsetY: position.offsetY
+            }))
+          );
       case PopoverPositionType.Hidden:
       default:
         return undefined;

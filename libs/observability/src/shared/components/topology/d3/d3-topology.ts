@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
-import { throttle } from 'lodash-es';
+import { isNil, throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -23,6 +23,7 @@ import {
   TopologyEdgeRenderer,
   TopologyElementVisibility,
   TopologyLayout,
+  TopologyLayoutType,
   TopologyNeighborhood,
   TopologyNode,
   TopologyNodeRenderer,
@@ -40,6 +41,9 @@ import {
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
 import { CustomTreeLayout } from './layouts/custom-tree-layout';
+import { ForceLayout } from './layouts/force-layout';
+import { GraphLayout } from './layouts/graph-layout';
+import { TreeLayout } from './layouts/tree-layout';
 
 export class D3Topology implements Topology {
   private static readonly CONTAINER_CLASS: string = 'topology-internal-container';
@@ -57,7 +61,7 @@ export class D3Topology implements Topology {
   protected readonly dataClearCallbacks: (() => void)[] = [];
   protected container?: HTMLDivElement;
   protected tooltip?: TopologyTooltip;
-  protected layout: TopologyLayout = new CustomTreeLayout(); // TODO: Make this configurable with Node and edge renderers
+  protected layout: TopologyLayout;
 
   protected readonly userNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
@@ -91,6 +95,21 @@ export class D3Topology implements Topology {
     this.hover = new TopologyHover(this.d3Util, this.domRenderer);
     this.click = new TopologyClick(this.d3Util, this.domRenderer);
     this.zoom = new TopologyZoom();
+    this.layout = this.initializeLayout(config.layoutType);
+  }
+
+  private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
+    switch (layoutType) {
+      case TopologyLayoutType.GraphLayout:
+        return new GraphLayout();
+      case TopologyLayoutType.TreeLayout:
+        return new TreeLayout();
+      case TopologyLayoutType.ForceLayout:
+        return new ForceLayout();
+      default:
+        return new CustomTreeLayout();
+    }
+    // TODO: Make this configurable with Node and edge renderers
   }
 
   public draw(): this {
@@ -316,7 +335,10 @@ export class D3Topology implements Topology {
         this.neighborhoodFinder.neighborhoodForNode(hoverEvent.source.userNode),
         this.neighborhoodFinder.singleNodeNeighborhood(hoverEvent.source.userNode)
       );
-      this.showNodeTooltip(hoverEvent.source, false);
+
+      if (!(this.config.nodeInteractionHandler?.disableTooltipOnHover ?? false)) {
+        this.showNodeTooltip(hoverEvent.source, false);
+      }
     }
   }
 
@@ -326,7 +348,10 @@ export class D3Topology implements Topology {
       this.tooltip && this.tooltip.hide();
     } else {
       this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(hoverEvent.source.userEdge));
-      this.showEdgeTooltip(hoverEvent.source, false);
+
+      if (!(this.config.edgeInteractionHandler?.disableTooltipOnHover ?? false)) {
+        this.showEdgeTooltip(hoverEvent.source, false);
+      }
     }
   }
 
@@ -382,7 +407,11 @@ export class D3Topology implements Topology {
       this.neighborhoodFinder.neighborhoodForNode(node.userNode),
       this.neighborhoodFinder.singleNodeNeighborhood(node.userNode)
     );
-    if (this.tooltip) {
+
+    if (!isNil(this.config.nodeInteractionHandler?.click)) {
+      this.config.nodeInteractionHandler?.click(node.userNode).subscribe(() => this.resetVisibility());
+    } else if (this.tooltip) {
+      // Default Behavior
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
       this.showNodeTooltip(node, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
@@ -391,7 +420,11 @@ export class D3Topology implements Topology {
 
   private onEdgeClick(edge: RenderableTopologyEdge): void {
     this.emphasizeTopologyNeighborhood(this.neighborhoodFinder.neighborhoodForEdge(edge.userEdge));
-    if (this.tooltip) {
+
+    if (!isNil(this.config.edgeInteractionHandler?.click)) {
+      this.config.edgeInteractionHandler?.click(edge.userEdge).subscribe(() => this.resetVisibility());
+    } else if (this.tooltip) {
+      // Default Behavior
       // TODO - a modal tooltip disables the interactions like hover (which is good), but doesn't allow clicking another element without an extra click
       this.showEdgeTooltip(edge, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());

@@ -8,7 +8,8 @@ import {
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
+  TemplateRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
@@ -24,6 +25,7 @@ import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
 import { XMoreDisplay } from '../x-more/x-more.component';
 import { MultiSelectJustify } from './multi-select-justify';
+
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
@@ -37,15 +39,7 @@ import { MultiSelectJustify } from './multi-select-justify';
     }
   ],
   template: `
-    <div
-      class="multi-select"
-      [ngClass]="[
-        this.size,
-        this.showBorder ? 'border' : '',
-        this.disabled ? 'disabled' : '',
-        this.popoverOpen ? 'open' : ''
-      ]"
-    >
+    <div class="multi-select" [ngClass]="[this.size, this.disabled ? 'disabled' : '', this.popoverOpen ? 'open' : '']">
       <ht-popover
         [disabled]="this.disabled"
         class="multi-select-container"
@@ -61,6 +55,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               this.popoverOpen ? 'open' : '',
               this.size,
               this.disabled ? 'disabled' : '',
+              this.showBorder ? 'border' : '',
               this.triggerDisplayMode
             ]"
             #triggerContainer
@@ -88,6 +83,11 @@ import { MultiSelectJustify } from './multi-select-justify';
             class="multi-select-content"
             [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
           >
+            <!-- Custom Control -->
+            <div class="custom-control" *ngIf="this.customControlTemplate">
+              <ng-container *ngTemplateOutlet="this.customControlTemplate"></ng-container>
+            </div>
+
             <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
               <ht-search-box
                 class="search-bar"
@@ -109,7 +109,7 @@ import { MultiSelectJustify } from './multi-select-justify';
 
               <ht-button
                 class="select-all"
-                *ngIf="(this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
+                *ngIf="this.showSelectAll && (this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
                 role="${ButtonRole.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Select All"
@@ -193,6 +193,12 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public maxHeight: number = 360;
+
+  @Input()
+  public showSelectAll: boolean = true;
+
+  @Input()
+  public customControlTemplate?: TemplateRef<unknown>;
 
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
