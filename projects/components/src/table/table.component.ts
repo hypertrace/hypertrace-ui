@@ -410,7 +410,7 @@ export class TableComponent
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
+    if (changes.mode || (changes.columnConfigs && changes.firstChange) || changes.detailContent || changes.metadata) {
       this.initializeColumns();
     }
 
