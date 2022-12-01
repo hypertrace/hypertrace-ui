@@ -115,11 +115,11 @@ import { TableWidgetModel } from './table-widget.model';
     </ht-titled-content>
 
     <ng-template #childDetail let-row="row">
-      <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize: row"></ng-container>
+      <ng-container [hdaDashboardModel]="this.getChildModel | htMemoize : row"></ng-container>
     </ng-template>
 
     <ng-template #customControlDetail let-selectedRows="selectedRows">
-      <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize: selectedRows"></ng-container>
+      <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize : selectedRows"></ng-container>
     </ng-template>
   `
 })

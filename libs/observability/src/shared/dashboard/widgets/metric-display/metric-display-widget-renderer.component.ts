@@ -12,7 +12,7 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
   template: `
     <ht-titled-content
       *htLoadAsync="this.data$ as data"
-      [title]="this.model.title | htDisplayTitle: this.getUnits(data.units)"
+      [title]="this.model.title | htDisplayTitle : this.getUnits(data.units)"
       [hideTitle]="this.hideTitle()"
       [titlePosition]="this.getTitlePosition()"
     >

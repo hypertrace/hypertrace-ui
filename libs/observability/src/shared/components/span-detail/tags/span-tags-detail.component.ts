@@ -18,7 +18,7 @@ import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
             <div class="value">{{ record.value }}</div>
             <ht-explore-filter-link
               class="filter-link"
-              [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+              [paramsOrUrl]="this.getExploreNavigationParams | htMemoize : record | async"
               htTooltip="See traces in Explorer"
             >
             </ht-explore-filter-link>

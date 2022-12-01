@@ -65,7 +65,7 @@ import { StepperTabComponent } from './stepper-tab.component';
           ></ht-button>
           <ht-button
             class="next"
-            [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
+            [label]="this.getActionButtonLabel | htMemoize : stepper.selectedIndex : steps"
             (click)="this.nextOrSubmit(stepper)"
             [disabled]="this.isNextDisabled(stepper.selectedIndex)"
           ></ht-button>

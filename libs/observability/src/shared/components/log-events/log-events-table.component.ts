@@ -39,7 +39,7 @@ export const enum LogEventsTableViewType {
     <ng-template #detailContent let-row="row">
       <div class="content">
         <ht-list-view
-          [records]="this.getLogEventAttributeRecords | htMemoize: row.attributes"
+          [records]="this.getLogEventAttributeRecords | htMemoize : row.attributes"
           [header]="this.header"
           display="${ListViewDisplay.Plain}"
           data-sensitive-pii

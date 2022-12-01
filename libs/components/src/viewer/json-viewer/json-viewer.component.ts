@@ -9,7 +9,7 @@ import { JsonElementType, JsonRecord } from './json-viewer.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="json-viewer">
-      <div class="property" *ngFor="let record of this.json | htJsonRecords: this.showExpanded">
+      <div class="property" *ngFor="let record of this.json | htJsonRecords : this.showExpanded">
         <div class="record" (click)="onToggle(record)">
           <div class="toggle">
             <ht-icon

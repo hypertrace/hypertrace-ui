@@ -43,7 +43,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
             ></ht-summary-value>
             <ht-explore-filter-link
               class="filter-link"
-              [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+              [paramsOrUrl]="getExplorerNavigationParams | htMemoize : traceDetails | async"
               htTooltip="See traces in Explorer"
             >
             </ht-explore-filter-link>
@@ -55,7 +55,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
 
           <ht-download-file
             class="download"
-            [metadata]="this.getDownloadTraceDetailsJsonMetadata | htMemoize: traceDetails.id"
+            [metadata]="this.getDownloadTraceDetailsJsonMetadata | htMemoize : traceDetails.id"
             htTooltip="Download Trace as Json"
           ></ht-download-file>
         </div>

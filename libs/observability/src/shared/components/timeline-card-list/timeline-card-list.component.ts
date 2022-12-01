@@ -33,10 +33,13 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
     <ng-template #timelineCard let-card="card">
       <div class="card">
         <div class="time" *ngIf="this.showTime">
-          <div class="value">{{ card.timestamp | htDisplayDate: this.dateFormat }}</div>
+          <div class="value">{{ card.timestamp | htDisplayDate : this.dateFormat }}</div>
           <div class="vertical-line"></div>
         </div>
-        <div class="content" [ngClass]="{ 'selected-card': this.isSelectedCard | htMemoize: card:this.selectedIndex }">
+        <div
+          class="content"
+          [ngClass]="{ 'selected-card': this.isSelectedCard | htMemoize : card : this.selectedIndex }"
+        >
           <ng-container *ngTemplateOutlet="card.content"></ng-container>
         </div>
       </div>

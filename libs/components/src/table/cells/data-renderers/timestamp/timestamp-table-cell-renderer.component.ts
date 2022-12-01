@@ -20,8 +20,8 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./timestamp-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="cell-value" [htTooltip]="this.value | htDisplayDate: this.dateFormat">
-      {{ this.value | htDisplayDate: this.dateFormat }}
+    <div class="cell-value" [htTooltip]="this.value | htDisplayDate : this.dateFormat">
+      {{ this.value | htDisplayDate : this.dateFormat }}
     </div>
   `
 })

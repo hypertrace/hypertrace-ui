@@ -80,7 +80,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
             ></ht-summary-value>
             <ht-explore-filter-link
               class="filter-link"
-              [paramsOrUrl]="getExploreNavigationParams | htMemoize: this.selectedData | async"
+              [paramsOrUrl]="getExploreNavigationParams | htMemoize : this.selectedData | async"
               htTooltip="See spans in Explorer"
             >
             </ht-explore-filter-link>

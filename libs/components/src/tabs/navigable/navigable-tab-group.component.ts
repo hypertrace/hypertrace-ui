@@ -33,7 +33,7 @@ import { NavigableTabComponent } from './navigable-tab.component';
               <ht-link
                 mat-tab-link
                 [active]="activeTab === tab"
-                [paramsOrUrl]="buildNavParamsForTab | htMemoize: tab"
+                [paramsOrUrl]="buildNavParamsForTab | htMemoize : tab"
                 class="tab-link"
               >
                 <div class="tab-link-content">

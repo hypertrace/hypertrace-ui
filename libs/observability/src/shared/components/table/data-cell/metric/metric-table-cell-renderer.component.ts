@@ -24,7 +24,7 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
     <div class="metric-cell" [htTooltip]="this.tooltip">
       <!-- This displays as "<value> <unit>", e.g. 120 ms -->
       <span *ngIf="this.value !== undefined"
-        >{{ this.value | htDisplayNumber: this.formatter }} <span *ngIf="this.units">{{ this.units }}</span></span
+        >{{ this.value | htDisplayNumber : this.formatter }} <span *ngIf="this.units">{{ this.units }}</span></span
       >
       <span *ngIf="this.value === undefined">-</span>
     </div>

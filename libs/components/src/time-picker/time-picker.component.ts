@@ -36,7 +36,7 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
               *ngFor="let predefinedTime of this.predefinedTimes"
               (click)="this.onTimeChange(predefinedTime)"
               [ngClass]="{
-                selected: this.time && (this.areEqualTimes | htMemoize: this.time:predefinedTime)
+                selected: this.time && (this.areEqualTimes | htMemoize : this.time : predefinedTime)
               }"
             >
               <span>{{ predefinedTime.label }}</span>

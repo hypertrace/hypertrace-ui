@@ -25,7 +25,7 @@ export interface RowData extends Dictionary<unknown> {
   template: `
     <div
       class="relative-timestamp"
-      [htTooltip]="this.value | htDisplayDate: this.dateFormat"
+      [htTooltip]="this.value | htDisplayDate : this.dateFormat"
       [ngClass]="{ 'first-column': this.isFirstColumn }"
     >
       {{ this.duration }} ms

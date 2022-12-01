@@ -43,7 +43,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             ></ht-summary-value>
             <ht-explore-filter-link
               class="filter-link"
-              [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+              [paramsOrUrl]="getExplorerNavigationParams | htMemoize : traceDetails | async"
               htTooltip="See traces in Explorer"
             >
             </ht-explore-filter-link>

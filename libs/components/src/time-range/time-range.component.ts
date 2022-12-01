@@ -58,7 +58,7 @@ import { PopoverRef } from '../popover/popover-ref';
         </ht-popover>
       </div>
       <ht-button
-        *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
+        *ngIf="this.getRefreshButtonData | htMemoize : timeRange | async as refreshButton"
         class="refresh"
         [ngClass]="refreshButton.isEmphasized ? 'emphasized' : ''"
         [label]="refreshButton.text$ | async"
