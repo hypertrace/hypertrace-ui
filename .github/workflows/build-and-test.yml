@@ -1,4 +1,4 @@
-name: build-and-test-affected
+name: build-and-test
 on:
   pull_request:
   push:
@@ -43,7 +43,7 @@ jobs:
       - name: NPM Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-  build-affected:
+  build:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     steps:
@@ -75,14 +75,14 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Build
-        run: npm run build:affected
+        run: npm run build:ci
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist
-  lint-affected:
+  lint:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     steps:
@@ -114,15 +114,11 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Lint
-        run: npm run lint:affected
+        run: npm run lint:ci
 
       - name: Prettier Check
         run: npm run prettier:check:affected
-
-      - name: Workspace Lint
-        run: npm run workspace:lint
-
-  test-affected:
+  test:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     strategy:
@@ -156,7 +152,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:affected:coverage
+        run: npm run test:ci
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -170,3 +166,74 @@ jobs:
         with:
           name: Unit Test Results (all)
           path: test-results/**/*.xml
+
+  validate-helm-charts:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      - name: validate charts
+        uses: hypertrace/github-actions/validate-charts@main
+
+  publish-test-results:
+    name: "Publish Unit Tests Results"
+    needs: test
+    runs-on: ubuntu-20.04
+    # Only run if prereq jobs completed - successfully or not
+    if: success() || failure()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Unit Test Results
+        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/**/*.xml
+
+  merge-publish:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-20.04
+    needs: [npm-install-if-needed, build, lint, test, validate-helm-charts]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        # Used by gradle version calculation
+        with:
+          fetch-depth: 0
+
+      - name: Create checksum file
+        uses: hypertrace/github-actions/checksum@main
+
+      - name: Cache gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/checksum.txt') }}
+          restore-keys: |
+            gradle-${{ runner.os }}
+
+      - name: Download build results
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_READ_USER }}
+          password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
+
+      - name: Push docker image
+        run: ./gradlew dockerPushImages
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
