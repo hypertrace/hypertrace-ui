@@ -122,7 +122,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [npm-install-if-needed]
     env:
-      PARALLELISM: 4
+      PARALLELISM: 3
     outputs:
       test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
       test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
@@ -138,7 +138,7 @@ jobs:
 
       - id: set-test-chunks
         name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(jq -nc '[["assets-library", "components", "common", "dashboards", "graphql-client" , "hypertrace-ui", "test-utils", "observability"] | _nwise(length / 4 | ceil)]')"
+        run: echo "::set-output name=test-chunks::$(jq -nc '[["assets-library", "components", "common", "dashboards", "graphql-client" , "hypertrace-ui", "test-utils", "observability"] | _nwise(length / 3 | ceil)]')"
 
       - id: set-test-chunk-ids
         name: Set Chunk IDs
