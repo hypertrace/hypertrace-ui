@@ -138,7 +138,7 @@ jobs:
 
       - id: set-test-chunks
         name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(jq -nc '[["assets-library", "components", "common", "dashboards", "graphql-client" , "hypertrace-ui", "test-utils", "observability"] | _nwise(length / $PARALLELISM | ceil)'])"
+        run: echo "::set-output name=test-chunks::$(jq -nc '[["assets-library", "components", "common", "dashboards", "graphql-client" , "hypertrace-ui", "test-utils", "observability"] | _nwise(length / $PARALLELISM | ceil)]')"
 
       - id: set-test-chunk-ids
         name: Set Chunk IDs
