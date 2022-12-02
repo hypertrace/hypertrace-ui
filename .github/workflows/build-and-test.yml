@@ -182,7 +182,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npx nx run-many --target=test -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | join(",") | "--projects="+.')
+        run: npm run test -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | join(",") | "--projects="+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
 
