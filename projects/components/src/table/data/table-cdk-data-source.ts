@@ -42,6 +42,18 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   public loadingStateChange$: Observable<TableLoadingState> = this.loadingStateSubject.asObservable();
 
+  private readonly requestColumnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
+    TableColumnConfigExtended[]
+  >([]);
+
+  public readonly visibleColumnConfigs$: Observable<
+    TableColumnConfigExtended[]
+  > = this.requestColumnConfigsSubject.asObservable().pipe(map(columns => columns.filter(column => column.visible)));
+
+  public readonly visibleColumnIds$: Observable<string[]> = this.visibleColumnConfigs$.pipe(
+    map(columns => columns.map(column => column.id))
+  );
+
   public constructor(
     private readonly tableDataSourceProvider: TableDataSourceProvider,
     private readonly columnConfigProvider: ColumnConfigProvider,
@@ -64,10 +76,15 @@ export class TableCdkDataSource implements DataSource<TableRow> {
          */
         debounceTime(100),
         mergeMap(([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow]) =>
-          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow)
+          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow).pipe(
+            map((statefulRows): [StatefulTableRow[], TableColumnConfigExtended[]] => [statefulRows, columnConfigs])
+          )
         )
       )
-      .subscribe(this.rowsChange$);
+      .subscribe(([rowChanges, columnConfigs]) => {
+        this.rowsChange$.next(rowChanges);
+        this.requestColumnConfigsSubject.next(columnConfigs);
+      });
 
     return this.rowsChange$.pipe(
       tap(rows => this.cacheFilterableValues(rows)),
