@@ -3,6 +3,7 @@ import { FactorySansProvider, ModuleWithProviders, NgModule } from '@angular/cor
 import {
   FilterBarModule,
   LetAsyncModule,
+  MenuDropdownModule,
   PageHeaderModule,
   PanelModule,
   ToggleGroupModule
@@ -18,6 +19,7 @@ import { ExplorerComponent } from './explorer.component';
     ObservabilityDashboardModule,
     FilterBarModule,
     ExploreQueryEditorModule,
+    MenuDropdownModule,
     PanelModule,
     PageHeaderModule,
     ToggleGroupModule,

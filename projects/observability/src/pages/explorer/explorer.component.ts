@@ -1,17 +1,19 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { IconType, ImagesAssetPath } from '@hypertrace/assets-library';
 import {
   assertUnreachable,
+  Dictionary,
   NavigationService,
   PreferenceService,
   QueryParamObject,
   TimeDuration,
   TimeDurationService
 } from '@hypertrace/common';
-import { Filter, ToggleItem } from '@hypertrace/components';
+import { ConfirmationService, CsvDownloadFileConfig, FileDownloadService, Filter, ToggleItem } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
-import { concat, EMPTY, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { concat, EMPTY, Observable, Subject, throwError } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreOrderBy,
@@ -101,7 +103,20 @@ import {
           (expandedChange)="this.onResultsExpandedChange($event)"
         >
           <ht-panel-header>
-            <ht-panel-title [expanded]="resultsExpanded"><span class="panel-title">Results</span> </ht-panel-title>
+            <div class="header-container">
+              <ht-panel-title [expanded]="resultsExpanded">
+                <span class="panel-title">Results</span>
+              </ht-panel-title>
+              <div class="actions-menu">
+                <ht-menu-dropdown *ngIf="resultsExpanded" label="Action" icon="${IconType.ChevronDown}">
+                  <ht-menu-item                    
+                    class="action-item download-as-csv"
+                    label="Download As CSV"
+                    (click)="this.downloadAsCsv()"
+                  ></ht-menu-item>
+                </ht-menu-dropdown>
+              </div>
+            </div>
           </ht-panel-header>
           <ht-panel-body>
             <ht-application-aware-dashboard
@@ -116,6 +131,13 @@ import {
         </ht-panel>
       </div>
     </div>
+
+    <ng-template #downloadAsCsvTemplate>
+      <div class="download-as-csv-content">
+        <div class="title">Download Data as CSV file?</div>
+        <img class="image" src="${ImagesAssetPath.DownloadDocument}"/>
+      </div>
+    </ng-template>
   `
 })
 export class ExplorerComponent {
@@ -127,6 +149,9 @@ export class ExplorerComponent {
   public readonly initialState$: Observable<InitialExplorerState>;
   public readonly currentContext$: Observable<ExplorerGeneratedDashboardContext>;
   public attributes$: Observable<AttributeMetadata[]> = EMPTY;
+
+  @ViewChild('downloadAsCsvTemplate')
+  public downloadAsCsvTemplate!: TemplateRef<unknown>;
 
   public readonly contextItems: ContextToggleItem[] = [
     {
@@ -156,6 +181,8 @@ export class ExplorerComponent {
     private readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
+    private readonly confirmationService: ConfirmationService,
+    private readonly fileDownloadService: FileDownloadService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     activatedRoute: ActivatedRoute
   ) {
@@ -174,6 +201,30 @@ export class ExplorerComponent {
     );
   }
 
+  private getCsvDownloadFileConfig(
+    resultsDashboard$: Observable<ExplorerGeneratedDashboard>
+  ): CsvDownloadFileConfig {
+    return {
+      fileName: `explore_results.csv`,
+      dataSource: resultsDashboard$.pipe(
+        map(resultsDashboard =>
+          ['test'].map(resultDashboard => {
+            console.log(resultsDashboard, resultDashboard);
+            const eventAttributes: Dictionary<unknown> = {};
+            debugger;
+            // resultDashboard.incidentDetectionAttributes.forEach((result: any) => {
+            //   eventAttributes[result.key] = result.value;
+            // });
+
+            return {
+              ...eventAttributes
+            };
+          })
+        )
+      )
+    };
+  }
+
   public onVisualizationRequestUpdated(newRequest: ExploreVisualizationRequest): void {
     this.explorerDashboardBuilder.updateForRequest(newRequest);
     this.updateUrlWithVisualizationData(newRequest);
@@ -181,6 +232,22 @@ export class ExplorerComponent {
 
   public onFiltersUpdated(newFilters: Filter[]): void {
     this.filters = [...newFilters];
+  }
+
+  public downloadAsCsv(): void {
+    this.confirmationService
+    .confirm({ content: this.downloadAsCsvTemplate })
+    .pipe(
+      filter(confirm => confirm),
+      switchMap(() => {
+        const csvDownloadFileConfig: CsvDownloadFileConfig = this.getCsvDownloadFileConfig(this.vizDashboard$);
+        debugger;
+        return !isNil(csvDownloadFileConfig)
+          ? this.fileDownloadService.downloadAsCsv(csvDownloadFileConfig)
+          : throwError('No data available.')
+      })
+    )
+    .subscribe();
   }
 
   private getOrDefaultContextItemFromQueryParam(value?: ScopeQueryParam): ContextToggleItem {
