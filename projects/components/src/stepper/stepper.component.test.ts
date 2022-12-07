@@ -8,7 +8,7 @@ import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
 import { LoadAsyncModule } from '../load-async/load-async.module';
-import { StepperComponent } from '../stepper/stepper.component';
+import { StepperButton, StepperComponent } from '../stepper/stepper.component';
 import { StepperTabComponent } from './stepper-tab.component';
 
 describe('Stepper Component', () => {
@@ -172,5 +172,106 @@ describe('Stepper Component', () => {
     const submitButton = actionButtons[2]; // <-- ["Cancel", "Back", "Submit"]
     expect(submitButton.label).toBe('Click me!');
     expect(submitButton.disabled).toBeTruthy();
+  });
+
+  describe('Buttons should be disabled correctly', () => {
+    test('should disabled cancel button', () => {
+      spectator = createHost(
+        `<ht-stepper class="stepper" [isLinear]="isLinear" [buttonDisabled]="buttonDisabled">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+          </ht-stepper>`,
+        {
+          hostProps: {
+            isLinear: true,
+            tabOneStatus: true,
+            tabTwoStatus: true,
+            buttonDisabled: {
+              [StepperButton.Cancel]: true
+            }
+          }
+        }
+      );
+
+      const actionButtons = spectator.queryAll(ButtonComponent);
+      const cancelButton = actionButtons[0]; // <-- ["Cancel", "Next"]
+      expect(cancelButton.disabled).toBeTruthy();
+    });
+
+    test('should disabled back button', () => {
+      spectator = createHost(
+        `<ht-stepper class="stepper" [isLinear]="isLinear" [buttonDisabled]="buttonDisabled">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+          </ht-stepper>`,
+        {
+          hostProps: {
+            isLinear: true,
+            tabOneStatus: true,
+            tabTwoStatus: true,
+            buttonDisabled: {
+              [StepperButton.Back]: true
+            }
+          }
+        }
+      );
+
+      spectator.click('.next');
+
+      const actionButtons = spectator.queryAll(ButtonComponent);
+      const back = actionButtons[1]; // <-- ["Cancel", "Back", "Next"]
+      expect(back.disabled).toBeTruthy();
+    });
+
+    test('should disabled next button', () => {
+      spectator = createHost(
+        `<ht-stepper class="stepper" [isLinear]="isLinear" [buttonDisabled]="buttonDisabled">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+            <ht-stepper-tab label="Kem Cho" [completed]="tabThreeStatus"> Test!</ht-stepper-tab>
+          </ht-stepper>`,
+        {
+          hostProps: {
+            isLinear: true,
+            tabOneStatus: true,
+            tabTwoStatus: true,
+            tabThreeStatus: true,
+            buttonDisabled: {
+              [StepperButton.Next]: true
+            }
+          }
+        }
+      );
+      spectator.detectComponentChanges();
+      const actionButtons = spectator.queryAll(ButtonComponent);
+      const next = actionButtons[1]; // <-- ["Cancel", "Next"]
+      expect(next.disabled).toBeTruthy();
+    });
+
+    test('should disabled submit button', () => {
+      spectator = createHost(
+        `<ht-stepper class="stepper" [isLinear]="isLinear" [buttonDisabled]="buttonDisabled">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+          </ht-stepper>`,
+        {
+          hostProps: {
+            isLinear: true,
+            tabOneStatus: true,
+            tabTwoStatus: true,
+            buttonDisabled: {
+              [StepperButton.Submit]: true
+            }
+          }
+        }
+      );
+      spectator.detectComponentChanges();
+      // Goto last step
+      spectator.click('.next');
+
+      const actionButtons = spectator.queryAll(ButtonComponent);
+      const submit = actionButtons[2]; // <-- ["Cancel", "Back", "Submit"]
+      expect(submit.disabled).toBeTruthy();
+    });
   });
 });
