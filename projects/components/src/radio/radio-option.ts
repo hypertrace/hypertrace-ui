@@ -5,4 +5,5 @@ export interface RadioOption {
   label: string | TemplateRef<unknown>;
   description?: string;
   disabled?: boolean;
+  infoText?: string;
 }

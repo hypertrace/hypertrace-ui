@@ -41,12 +41,15 @@ import { RadioOption } from './radio-option';
         [disabled]="option.disabled"
         (change)="$event.stopPropagation()"
       >
-        <ng-container
-          *ngTemplateOutlet="
-            this.isLabelAString(option.label) ? defaultLabel : option.label;
-            context: { $implicit: option.label }
-          "
-        ></ng-container>
+        <div class="radio-button-item">
+          <ng-container
+            *ngTemplateOutlet="
+              this.isLabelAString(option.label) ? defaultLabel : option.label;
+              context: { $implicit: option.label }
+            "
+          ></ng-container>
+          <ht-info-icon *ngIf="option.infoText" [info]="option.infoText" class="info-icon"></ht-info-icon>
+        </div>
         <span *ngIf="option.description" class="radio-button-description">{{ option.description }}</span>
       </mat-radio-button>
     </mat-radio-group>
