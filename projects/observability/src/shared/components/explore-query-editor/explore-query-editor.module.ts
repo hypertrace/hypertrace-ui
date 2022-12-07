@@ -3,11 +3,9 @@ import { NgModule } from '@angular/core';
 import {
   ButtonModule,
   CheckboxModule,
-  FeatureConfigCheckModule,
   FormFieldModule,
   InputModule,
   LetAsyncModule,
-  LoadAsyncModule,
   SelectModule,
   TooltipModule
 } from '@hypertrace/components';
@@ -34,14 +32,12 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
   imports: [
     CommonModule,
     ButtonModule,
-    FeatureConfigCheckModule,
     SelectModule,
     TooltipModule,
     InputModule,
     IntervalSelectModule,
     CheckboxModule,
     LetAsyncModule,
-    LoadAsyncModule,
     FormFieldModule
   ]
 })
