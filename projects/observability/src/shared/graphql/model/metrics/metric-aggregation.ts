@@ -94,7 +94,6 @@ export const addAggregationToDisplayName = (displayName: string, aggregation: Me
     case MetricAggregationType.P95:
     case MetricAggregationType.P90:
     case MetricAggregationType.P50:
-      return displayName;
     case MetricAggregationType.Min:
     case MetricAggregationType.Max:
     case MetricAggregationType.Sum: // Prefix aggregation
