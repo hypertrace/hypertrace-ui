@@ -189,7 +189,7 @@ import { SelectSize } from './select-size';
                 *ngIf="item.icon"
                 class="icon"
                 [icon]="item.icon"
-                size="${IconSize.Small}"
+                [size]="item.iconSize"
                 [color]="item.iconColor"
                 [borderType]="item?.iconBorderType"
                 [borderColor]="item?.iconBorderColor"

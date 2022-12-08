@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, Input, OnChanges } fr
 import { IconType } from '@hypertrace/assets-library';
 import { Observable, Subject } from 'rxjs';
 import { IconBorder } from '../icon/icon-border';
+import { IconSize } from '../icon/icon-size';
 import { SelectOptionRendererDirective } from './directive/select-option-renderer.directive';
 import { SelectOption } from './select-option';
 
@@ -25,6 +26,9 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
 
   @Input()
   public icon?: IconType;
+
+  @Input()
+  public iconSize?: IconSize;
 
   @Input()
   public iconColor?: string;
