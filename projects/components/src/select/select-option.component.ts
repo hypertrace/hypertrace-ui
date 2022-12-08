@@ -28,7 +28,7 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   public icon?: IconType;
 
   @Input()
-  public iconSize?: IconSize;
+  public iconSize?: IconSize = IconSize.Small;
 
   @Input()
   public iconColor?: string;
