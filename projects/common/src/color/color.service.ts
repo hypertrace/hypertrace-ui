@@ -43,6 +43,7 @@ export class ColorService {
 
   public adjustOpacity(color: string, opacity: number): string {
     const rgbColor = rgb(color);
+
     return rgb(rgbColor.r, rgbColor.g, rgbColor.b, opacity).toString();
   }
 
