@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  ExternalNavigationWindowHandling,
   forkJoinSafeEmpty,
   NavigationParams,
   NavigationParamsType,
@@ -28,7 +29,46 @@ export class ExplorerService {
     filters: ExplorerDrilldownFilter[],
     timeRange?: TimeRange
   ): Observable<NavigationParams> {
-    const filterStrings$: Observable<string>[] = filters.map(filter =>
+    const filterStrings$: Observable<string>[] = this.buildFilterStrings(filters, scopeQueryParam);
+
+    return forkJoinSafeEmpty(filterStrings$).pipe(
+      map(filterStrings => ({
+        navType: NavigationParamsType.InApp,
+        path: '/explorer',
+        queryParams: {
+          filter: filterStrings,
+          scope: scopeQueryParam,
+          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
+        }
+      }))
+    );
+  }
+
+  public buildExternalNavParamsWithFilters(
+    scopeQueryParam: ScopeQueryParam,
+    filters: ExplorerDrilldownFilter[],
+    timeRange?: TimeRange
+  ): Observable<NavigationParams> {
+    const filterStrings$: Observable<string>[] = this.buildFilterStrings(filters, scopeQueryParam);
+
+    return forkJoinSafeEmpty(filterStrings$).pipe(
+      map(filterStrings => ({
+        navType: NavigationParamsType.External,
+        url:
+          '/explorer' +
+          `?${this.buildFiltersUrlString(filterStrings)}` +
+          `${this.buildScopeUrlString(scopeQueryParam)}` +
+          `${!isNil(timeRange) ? `${this.buildTimeRangeUrlString(timeRange)}` : ''}`,
+        windowHandling: ExternalNavigationWindowHandling.NewWindow
+      }))
+    );
+  }
+
+  private buildFilterStrings(
+    filters: ExplorerDrilldownFilter[],
+    scopeQueryParam: ScopeQueryParam
+  ): Observable<string>[] {
+    return filters.map(filter =>
       this.metadataService
         .getAttribute(
           scopeQueryParam === ScopeQueryParam.EndpointTraces ? ObservabilityTraceType.Api : SPAN_SCOPE,
@@ -44,18 +84,21 @@ export class ExplorerService {
           )
         )
     );
+  }
 
-    return forkJoinSafeEmpty(filterStrings$).pipe(
-      map(filterStrings => ({
-        navType: NavigationParamsType.InApp,
-        path: '/explorer',
-        queryParams: {
-          filter: filterStrings,
-          scope: scopeQueryParam,
-          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
-        }
-      }))
+  private buildFiltersUrlString(filterStrings: string[]): string {
+    return filterStrings.reduce(
+      (acc: string, curr: string) => `${acc}${acc === '' ? 'filter=' : '&filter='}${curr}`,
+      ''
     );
+  }
+
+  private buildScopeUrlString(scopeQueryParam: ScopeQueryParam): string {
+    return `&scope=${scopeQueryParam}`;
+  }
+
+  private buildTimeRangeUrlString(timeRange: TimeRange): string {
+    return `&time=${timeRange.toUrlString()}`;
   }
 }
 
