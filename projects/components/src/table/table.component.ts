@@ -71,11 +71,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       >
         <!-- Columns -->
         <ng-container
-          *ngFor="
-            let columnDef of this.dataSource.visibleColumnConfigs$ | async;
-            trackBy: this.trackItem;
-            index as index
-          "
+          *ngFor="let columnDef of this.visibleColumnConfigs$ | async; trackBy: this.trackItem; index as index"
         >
           <ng-container [cdkColumnDef]="columnDef.id">
             <cdk-header-cell
@@ -150,15 +146,12 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row
-            *cdkHeaderRowDef="this.dataSource.visibleColumnIds$ | async"
-            class="header-row"
-          ></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row"></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.dataSource.visibleColumnIds$ | async; last as isLast"
+          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{
@@ -340,6 +333,12 @@ export class TableComponent
     TableColumnConfigExtended[]
   >([]);
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
+  public readonly visibleColumnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigs$.pipe(
+    map(columns => columns.filter(column => column.visible))
+  );
+  public readonly visibleColumnIds$: Observable<string[]> = this.visibleColumnConfigs$.pipe(
+    map(columns => columns.map(column => column.id))
+  );
 
   /*
    * Column State
