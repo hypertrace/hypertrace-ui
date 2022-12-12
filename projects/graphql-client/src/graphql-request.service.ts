@@ -85,6 +85,11 @@ export class GraphQlRequestService {
     }
   }
 
+  // Needs to be called when some service calls error out and we want to refetch data
+  public clearCache(): void {
+    this.apollo.client.clearStore();
+  }
+
   private fireRequests(...requests: RequestWithOptions[]): Map<GraphQlRequest, Observable<GraphQlResult>> {
     const requestTypeMap = this.groupQueriesByRequestType(requests);
 

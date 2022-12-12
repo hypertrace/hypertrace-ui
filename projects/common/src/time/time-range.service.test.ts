@@ -7,6 +7,8 @@ import { NavigationService, QueryParamObject } from '../navigation/navigation.se
 import { FixedTimeRange } from './fixed-time-range';
 import { TimeRangeService } from './time-range.service';
 
+import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
+
 describe('Time range(TR) service', () => {
   let timeRange$: Observable<string> = NEVER;
   const buildService = createServiceFactory({
@@ -31,7 +33,14 @@ describe('Time range(TR) service', () => {
           .mockReturnValue('1573255111159-1573455111990'),
         getCurrentActivatedRoute: () =>
           (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
-      })
+      }),
+      {
+        provide: GRAPHQL_OPTIONS,
+        useValue: {
+          uri: '/graphql',
+          batchSize: 2
+        }
+      }
     ]
   });
 
@@ -84,7 +93,14 @@ describe('Time range(TR) service', () => {
               .mockReturnValue(secondArrivingTimeRange.toUrlString()),
             getCurrentActivatedRoute: () =>
               (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
-          })
+          }),
+          {
+            provide: GRAPHQL_OPTIONS,
+            useValue: {
+              uri: '/graphql',
+              batchSize: 2
+            }
+          }
         ]
       });
 
@@ -128,7 +144,14 @@ describe('Time range(TR) service', () => {
             getCurrentActivatedRoute: () =>
               (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
             replaceQueryParametersInUrl: jest.fn()
-          })
+          }),
+          {
+            provide: GRAPHQL_OPTIONS,
+            useValue: {
+              uri: '/graphql',
+              batchSize: 2
+            }
+          }
         ]
       });
 

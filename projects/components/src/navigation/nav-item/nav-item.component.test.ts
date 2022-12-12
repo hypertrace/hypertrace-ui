@@ -8,6 +8,7 @@ import {
   NavigationService
 } from '@hypertrace/common';
 import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/components';
+import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
@@ -35,7 +36,14 @@ describe('Navigation Item Component', () => {
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled),
         getFeatureState: () => of(FeatureState.Enabled)
-      })
+      }),
+      {
+        provide: GRAPHQL_OPTIONS,
+        useValue: {
+          uri: '/graphql',
+          batchSize: 2
+        }
+      }
     ]
   });
 

@@ -8,7 +8,7 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
+import { concat, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonSize } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -126,14 +126,19 @@ export class TimeRangeComponent {
 
   public getRefreshButtonData = (timeRange: TimeRange): Observable<RefreshButtonData> => {
     const lastRefreshTimeMillis = Date.now();
+
+    const defaultRefresh$: Observable<RefreshButtonData> = of({
+      text$: of('Refresh'),
+      role: ButtonRole.Tertiary,
+      isEmphasized: false,
+      onClick: () => this.onRefresh()
+    });
+
+    // In case of relative time range, we give refresh button for manual prompt
+    // We also keep a timer to tell elapsed time and prompt user to refresh
     if (this.isRelative(timeRange)) {
       return concat(
-        of({
-          text$: of('Refresh'),
-          role: ButtonRole.Tertiary,
-          isEmphasized: false,
-          onClick: () => this.onRefresh()
-        }),
+        defaultRefresh$,
         this.ngZone.runOutsideAngular(() =>
           // Long running timer will prevent zone from stabilizing
           timer(this.refreshDuration.toMillis()).pipe(
@@ -157,7 +162,10 @@ export class TimeRangeComponent {
       );
     }
 
-    return EMPTY;
+    // This is to ensure that in case of timeouts, we again query the backend rather than returning error from cache
+    this.timeRangeService.clearCache();
+
+    return defaultRefresh$;
   };
 
   private onRefresh(): void {

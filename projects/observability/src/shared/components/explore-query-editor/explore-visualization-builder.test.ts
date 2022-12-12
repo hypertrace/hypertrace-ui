@@ -9,6 +9,7 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
+import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
@@ -38,7 +39,14 @@ describe('Explore visualization builder', () => {
       }),
       mockProvider(FeatureStateResolver, {
         getFeatureState: () => of(FeatureState.Enabled)
-      })
+      }),
+      {
+        provide: GRAPHQL_OPTIONS,
+        useValue: {
+          uri: '/graphql',
+          batchSize: 2
+        }
+      }
     ]
   });
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ParamMap } from '@angular/router';
+import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { isEmpty, isNil, omit } from 'lodash-es';
 import { concat, EMPTY, Observable, ReplaySubject } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, switchMap, take } from 'rxjs/operators';
@@ -24,7 +25,8 @@ export class TimeRangeService {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly timeDurationService: TimeDurationService
+    private readonly timeDurationService: TimeDurationService,
+    private readonly graphQLService: GraphQlRequestService
   ) {
     this.initializeTimeRange();
     this.navigationService.registerGlobalQueryParamKey(TimeRangeService.TIME_RANGE_QUERY_PARAM);
@@ -50,6 +52,12 @@ export class TimeRangeService {
     }
 
     return this.currentTimeRange;
+  }
+
+  // This is needed for custom time range
+  // We need to reset the cache before firing the same query again.
+  public clearCache(): void {
+    this.graphQLService.clearCache();
   }
 
   public setRelativeRange(value: number, unit: TimeUnit): this {

@@ -108,7 +108,7 @@ describe('Time range component', () => {
     expect(spectator.query('.refresh')).toExist();
   });
 
-  test('should not show refresh button when time range is fixed', () => {
+  test('should show refresh button when time range is fixed', () => {
     const spectator = createComponent({
       providers: [
         mockProvider(TimeRangeService, {
@@ -126,7 +126,7 @@ describe('Time range component', () => {
     expect(spectator.query('.custom-time-range-selection', { root: true })).not.toExist();
 
     spectator.click(spectator.queryAll('.popover-item', { root: true })[1]);
-    expect(spectator.query('.refresh')).not.toExist();
+    expect(spectator.query('.refresh')).toExist();
   });
 
   test('should publish new time range when refresh is clicked', () => {
