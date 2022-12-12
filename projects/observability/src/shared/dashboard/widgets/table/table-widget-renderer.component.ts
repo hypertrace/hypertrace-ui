@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ImagesAssetPath } from '@hypertrace/assets-library';
 import {
   assertUnreachable,
   Dictionary,
@@ -9,6 +10,9 @@ import {
   StorageType
 } from '@hypertrace/common';
 import {
+  ConfirmationService,
+  CsvDownloadFileConfig,
+  FileDownloadService,
   FilterAttribute,
   FilterOperator,
   StatefulTableRow,
@@ -33,8 +37,8 @@ import {
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
-import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
+import { capitalize, isEmpty, isEqual, isNil, pick } from 'lodash-es';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
 import {
   filter,
   first,
@@ -77,6 +81,7 @@ import { TableWidgetModel } from './table-widget.model';
           class="table-controls"
           [searchEnabled]="!!this.api.model.getSearchAttribute()"
           [searchPlaceholder]="this.api.model.getSearchPlaceholder()"
+          [downloadCsvEnabled]="this.api.model.isDownloadableAsCsv()"
           [selectControls]="this.selectControls$ | async"
           [checkboxControls]="this.checkboxControls$ | async"
           [selectedRows]="this.selectedRows"
@@ -86,6 +91,7 @@ import { TableWidgetModel } from './table-widget.model';
           (searchChange)="this.onSearchChange($event)"
           (selectChange)="this.onSelectChange($event)"
           (checkboxChange)="this.onCheckboxChange($event)"
+          (downloadCsvSelected)="this.onDownloadCsvSelected()"
           (viewChange)="this.onViewChange($event)"
         >
         </ht-table-controls>
@@ -121,11 +127,23 @@ import { TableWidgetModel } from './table-widget.model';
     <ng-template #customControlDetail let-selectedRows="selectedRows">
       <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize: selectedRows"></ng-container>
     </ng-template>
+
+    <ng-template #downloadAsCsvTemplate>
+      <div class="download-as-csv-content">
+        <div class="title">Download traces data as CSV file?</div>
+        <img class="image" src="${ImagesAssetPath.DownloadDocument}"/>
+        <div class="text">Up to 10k rows.</div>
+      </div>
+    </ng-template>
   `
 })
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
   implements OnInit {
+
+  @ViewChild('downloadAsCsvTemplate')
+  public downloadAsCsvTemplate!: TemplateRef<unknown>;
+  
   private static readonly DEFAULT_TAB_INDEX: number = 0;
 
   public viewItems: ToggleItem<string>[] = [];
@@ -153,7 +171,9 @@ export class TableWidgetRendererComponent
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
     changeDetectorRef: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly confirmationService: ConfirmationService,
+    private readonly fileDownloadService: FileDownloadService
   ) {
     super(api, changeDetectorRef);
   }
@@ -517,6 +537,45 @@ export class TableWidgetRendererComponent
     /**
      * Todo: Stitch this with selection handlers
      */
+  }
+
+  public onDownloadCsvSelected(): void {
+    //Todo fix this
+    this.confirmationService
+    .confirm({ content: this.downloadAsCsvTemplate })
+    .pipe(
+      filter(confirm => confirm),
+      switchMap(() => {
+        const csvDownloadFileConfig: CsvDownloadFileConfig = this.getCsvDownloadFileConfig(this.data$!);
+        return !isNil(csvDownloadFileConfig)
+          ? this.fileDownloadService.downloadAsCsv(csvDownloadFileConfig)
+          : throwError('No data available.')
+      })
+    )
+    .subscribe();
+  }
+
+  private getCsvDownloadFileConfig(
+    resultsDashboard$: Observable<TableDataSource<TableRow, TableColumnConfig> | undefined>
+  ): CsvDownloadFileConfig {
+    return {
+      fileName: `explore_results.csv`,
+      dataSource: resultsDashboard$.pipe(
+        map(resultsDashboard =>
+          ['test'].map(resultDashboard => {
+            console.log(resultsDashboard, resultDashboard);
+            const eventAttributes: Dictionary<unknown> = {};
+            // resultDashboard.incidentDetectionAttributes.forEach((result: any) => {
+            //   eventAttributes[result.key] = result.value;
+            // });
+
+            return {
+              ...eventAttributes
+            };
+          })
+        )
+      )
+    };
   }
 
   private getRowClickInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {

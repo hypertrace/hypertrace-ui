@@ -111,6 +111,14 @@ import {
           (activeItemChange)="this.onViewChange($event)"
         ></ht-toggle-group>
 
+        <ht-menu-dropdown *ngIf="this.downloadCsvEnabled" label="Action" icon="${IconType.ChevronDown}">
+          <ht-menu-item                    
+            class="action-item download-as-csv"
+            label="Download As CSV"
+            (click)="this.onDownloadAsCsv()"
+          ></ht-menu-item>
+        </ht-menu-dropdown>
+
         <!-- Custom Control -->
         <ng-container *ngIf="this.customControlContent">
           <ng-container
@@ -151,6 +159,9 @@ export class TableControlsComponent implements OnChanges {
   @Input()
   public customControlContent?: TemplateRef<{ selectedRows?: StatefulTableRow[] }>;
 
+  @Input()
+  public downloadCsvEnabled?: boolean;
+
   @Output()
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -159,6 +170,9 @@ export class TableControlsComponent implements OnChanges {
 
   @Output()
   public readonly checkboxChange: EventEmitter<TableCheckboxChange> = new EventEmitter<TableCheckboxChange>();
+
+  @Output()
+  public readonly downloadCsvSelected: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
@@ -184,7 +198,7 @@ export class TableControlsComponent implements OnChanges {
   }
 
   public get anyControlsEnabled(): boolean {
-    return !!this.searchEnabled || this.viewToggleEnabled || this.selectControlsEnabled || this.checkboxControlsEnabled;
+    return !!this.searchEnabled || !!this.downloadCsvEnabled || this.viewToggleEnabled || this.selectControlsEnabled || this.checkboxControlsEnabled;
   }
 
   public constructor(private readonly differFactory: IterableDiffers) {
@@ -259,6 +273,10 @@ export class TableControlsComponent implements OnChanges {
       values: [selection]
     });
     this.diffSelections();
+  }
+
+  public onDownloadAsCsv(): void {
+    this.downloadCsvSelected.emit();
   }
 
   public onCheckboxChange(checked: string[]): void {

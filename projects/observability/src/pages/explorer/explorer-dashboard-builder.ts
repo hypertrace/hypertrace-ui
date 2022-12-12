@@ -114,6 +114,7 @@ export class ExplorerDashboardBuilder {
         id: 'explorer.spans-table',
         mode: TableMode.Detail,
         style: TableStyle.FullPage,
+        'download-as-csv': true,
         columns: columns,
         'child-template': {
           type: 'span-detail-widget',
@@ -135,6 +136,7 @@ export class ExplorerDashboardBuilder {
       id: 'explorer.traces-table',
       mode: TableMode.Detail,
       style: TableStyle.Embedded,
+      'download-as-csv': true,
       columns: columns,
       'child-template': {
         type: 'trace-detail-widget',

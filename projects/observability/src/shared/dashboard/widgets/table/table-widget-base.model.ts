@@ -63,6 +63,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public searchPlaceholder?: string;
 
   @ModelProperty({
+    key: 'download-as-csv',
+    displayName: 'Download as CSV',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public downloadAsCsv: boolean = true;
+
+  @ModelProperty({
     key: 'select-control-options',
     displayName: 'Select Options',
     // tslint:disable-next-line: no-object-literal-type-assertion
@@ -201,6 +208,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public isResizable(): boolean {
     return this.resizable;
+  }
+
+  public isDownloadableAsCsv(): boolean {
+    return this.downloadAsCsv;
   }
 
   public getRowHeight(): string {
