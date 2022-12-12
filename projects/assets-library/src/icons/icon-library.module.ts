@@ -47,6 +47,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Dashboard, url: `${iconsRootPath}/dashboard.svg` },
         { key: IconType.DateAttribute, url: `${iconsRootPath}/date-attribute.svg` },
         { key: IconType.Device, url: `${iconsRootPath}/device.svg` },
+        { key: IconType.Dot, url: `${iconsRootPath}/dot.svg` },
         { key: IconType.Download, url: `${iconsRootPath}/download.svg` },
         { key: IconType.DrilldownFilter, url: `${iconsRootPath}/drilldown-filter.svg` },
         { key: IconType.Edge, url: `${iconsRootPath}/edge.svg` },
