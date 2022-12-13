@@ -31,6 +31,7 @@ export class SpecificationBuilder {
 
   public attributeSpecificationForKey(attributeKey: string): Specification {
     const queryAlias = attributeKey.replace(/[^\w]/gi, '_');
+
     return {
       resultAlias: () => attributeKey,
       name: attributeKey,
