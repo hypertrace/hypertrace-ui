@@ -5,12 +5,27 @@ import { GraphQlFilter } from './graphql-filter';
 export class GlobalGraphQlFilterService {
   private readonly filterRules: Map<symbol, FilterRule> = new Map();
 
-  public getGlobalFilters(scope: string): GraphQlFilter[] {
-    return Array.from(this.filterRules.values()).flatMap(rule => rule.filtersForScope(scope));
+  public getGlobalFilters(scope: string, filtersToExclude: symbol[] = []): GraphQlFilter[] {
+    const filtersToExcludeSet = new Set(filtersToExclude);
+
+    return Array.from(this.filterRules.entries())
+      .reduce((acc, curr) => {
+        const [ruleKey, rule] = curr;
+        if (!filtersToExcludeSet.has(ruleKey)) {
+          acc.push(rule);
+        }
+
+        return acc;
+      }, [] as FilterRule[])
+      .flatMap(rule => rule.filtersForScope(scope));
   }
 
-  public mergeGlobalFilters(scope: string, localFilters: GraphQlFilter[] = []): GraphQlFilter[] {
-    return [...localFilters, ...this.getGlobalFilters(scope)];
+  public mergeGlobalFilters(
+    scope: string,
+    localFilters: GraphQlFilter[] = [],
+    filtersToExclude: symbol[] = []
+  ): GraphQlFilter[] {
+    return [...localFilters, ...this.getGlobalFilters(scope, filtersToExclude)];
   }
 
   public setGlobalFilterRule(ruleKey: symbol, rule: FilterRule): void {

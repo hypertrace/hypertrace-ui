@@ -42,11 +42,9 @@ export class EntitiesGraphqlQueryBuilderService {
     ];
   }
 
-  protected buildFilters(request: GraphQlEntitiesRequest): GraphQlArgument[] {
+  protected buildFilters(request: GraphQlEntitiesRequest, globalFiltersToExclude: symbol[] = []): GraphQlArgument[] {
     return this.argBuilder.forFilters(
-      request.ignoreGlobalFilters ?? false
-        ? request.filters ?? []
-        : this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters)
+      this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters, globalFiltersToExclude)
     );
   }
 
@@ -95,6 +93,9 @@ export class EntitiesGraphqlQueryBuilderService {
   }
 }
 
+/**
+ * @param
+ */
 export interface GraphQlEntitiesRequest {
   timeRange: GraphQlTimeRange;
   entityType: EntityType;
@@ -105,7 +106,8 @@ export interface GraphQlEntitiesRequest {
   filters?: GraphQlFilter[];
   includeTotal?: boolean;
   includeInactive?: boolean;
-  ignoreGlobalFilters?: boolean;
+  ignoreApiDiscoveryStateFilter?: boolean;
+  ignoreGlobalEnvironmentFilter?: boolean;
 }
 
 export interface EntitiesResponse {
