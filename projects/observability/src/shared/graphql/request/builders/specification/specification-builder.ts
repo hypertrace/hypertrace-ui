@@ -30,12 +30,14 @@ export class SpecificationBuilder {
   }
 
   public attributeSpecificationForKey(attributeKey: string): Specification {
+    const queryAlias = attributeKey.replace(/[^\w]/gi, '_');
+
     return {
       resultAlias: () => attributeKey,
       name: attributeKey,
       asGraphQlSelections: () => ({
         path: 'attribute',
-        alias: attributeKey,
+        alias: queryAlias,
         arguments: [this.argBuilder.forAttributeKey(attributeKey)]
       }),
       extractFromServerData: serverData => {
