@@ -41,7 +41,7 @@ export class SpecificationBuilder {
         arguments: [this.argBuilder.forAttributeKey(attributeKey)]
       }),
       extractFromServerData: serverData => {
-        const serverValue = serverData[attributeKey];
+        const serverValue = serverData[queryAlias];
 
         return serverValue === 'null' ? undefined : serverValue;
       },
