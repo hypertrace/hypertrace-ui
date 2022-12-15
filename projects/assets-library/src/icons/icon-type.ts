@@ -46,6 +46,7 @@ export const enum IconType {
   Delete = 'delete',
   Device = 'svg:device',
   Done = 'done',
+  Dot = 'svg:dot',
   Download = 'download',
   DrilldownFilter = 'svg:drilldown-filter',
   Edge = 'edge',
