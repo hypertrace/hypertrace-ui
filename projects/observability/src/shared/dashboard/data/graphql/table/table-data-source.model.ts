@@ -1,6 +1,13 @@
-import { TableDataRequest, TableDataResponse, TableDataSource, TableFilter, TableRow } from '@hypertrace/components';
+import {
+  ClientSideSort,
+  TableDataRequest,
+  TableDataResponse,
+  TableDataSource,
+  TableFilter,
+  TableRow
+} from '@hypertrace/components';
 import { GraphQlRequestOptions } from '@hypertrace/graphql-client';
-import { ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
+import { BOOLEAN_PROPERTY, ModelProperty, NUMBER_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,6 +26,20 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     type: NUMBER_PROPERTY.type
   })
   public limit?: number;
+
+  @ModelProperty({
+    key: 'isClientSideFiltered',
+    displayName: 'Client Side Filtered',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public isClientSideFiltered?: boolean;
+
+  @ModelProperty({
+    key: 'clientSideSort',
+    displayName: 'Client Side Sort',
+    type: UNKNOWN_PROPERTY.type
+  })
+  public clientSideSort?: ClientSideSort;
 
   public getData(): Observable<TableDataSource<TableRow, SpecificationBackedTableColumnDef>> {
     return observableOf({

@@ -21,6 +21,7 @@ export class BackendListComponent {
     id: 'backends-list.table',
     style: TableStyle.FullPage,
     searchAttribute: 'name',
+    pageable: false,
     columns: [
       {
         type: 'table-widget-column',
@@ -41,7 +42,8 @@ export class BackendListComponent {
         value: {
           type: 'attribute-specification',
           attribute: 'type'
-        }
+        },
+        sortable: false
       },
       {
         type: 'table-widget-column',
@@ -106,7 +108,13 @@ export class BackendListComponent {
     ],
     data: {
       type: 'entity-table-data-source',
-      entity: 'BACKEND'
+      entity: 'BACKEND',
+      isClientSideFiltered: true,
+      limit: 300,
+      clientSideSort: {
+        direction: TableSortDirection.Descending,
+        defaultSortColumnIndex: 0
+      }
     }
   };
 }

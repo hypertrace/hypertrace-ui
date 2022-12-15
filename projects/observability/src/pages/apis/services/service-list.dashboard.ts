@@ -18,6 +18,7 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
+        pageable: false,
         columns: [
           {
             type: 'table-widget-column',
@@ -92,7 +93,13 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
         ],
         data: {
           type: 'entity-table-data-source',
-          entity: 'SERVICE'
+          entity: 'SERVICE',
+          isClientSideFiltered: true,
+          limit: 250,
+          clientSideSort: {
+            direction: TableSortDirection.Descending,
+            defaultSortColumnIndex: 0
+          }
         }
       }
     ]
