@@ -546,7 +546,7 @@ export class TableWidgetRendererComponent
     .pipe(
       filter(confirm => confirm),
       switchMap(() => {
-        const csvDownloadFileConfig: CsvDownloadFileConfig = this.getCsvDownloadFileConfig(this.data$!);
+        const csvDownloadFileConfig: CsvDownloadFileConfig = this.getCsvDownloadFileConfig();
         return !isNil(csvDownloadFileConfig)
           ? this.fileDownloadService.downloadAsCsv(csvDownloadFileConfig)
           : throwError('No data available.')
@@ -555,25 +555,39 @@ export class TableWidgetRendererComponent
     .subscribe();
   }
 
-  private getCsvDownloadFileConfig(
-    resultsDashboard$: Observable<TableDataSource<TableRow, TableColumnConfig> | undefined>
-  ): CsvDownloadFileConfig {
+  private getCsvDownloadFileConfig(): any {
+    //CsvDownloadFileConfig
+    debugger;
     return {
       fileName: `explore_results.csv`,
-      dataSource: resultsDashboard$.pipe(
-        map(resultsDashboard =>
-          ['test'].map(resultDashboard => {
-            console.log(resultsDashboard, resultDashboard);
+      dataSource: combineLatest([
+        this.model.getData(),
+        this.columnConfigs$.pipe(startWith([]))
+      ]).pipe(
+        switchMap(([data, columns])  => 
+          data.getData({
+            columns: columns!,
+            position: {
+              startIndex: 0,
+              limit: 1000
+            }
+          })),
+        map(resultDashboard => {
+          debugger;
+          ['value'].map(()=>{
+            console.log(resultDashboard);
+            debugger;
             const eventAttributes: Dictionary<unknown> = {};
             // resultDashboard.incidentDetectionAttributes.forEach((result: any) => {
             //   eventAttributes[result.key] = result.value;
             // });
-
-            return {
-              ...eventAttributes
-            };
+  
+            // return {
+            //   ...eventAttributes
+            // };
+            return eventAttributes;
           })
-        )
+        })
       )
     };
   }
