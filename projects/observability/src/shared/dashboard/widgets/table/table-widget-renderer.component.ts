@@ -23,6 +23,7 @@ import {
   TableColumnConfig,
   TableControlOption,
   TableControlOptionType,
+  TableDataResponse,
   TableDataSource,
   TableFilter,
   TableFilterControlOption,
@@ -30,6 +31,7 @@ import {
   TableSelectChange,
   TableSelectControl,
   TableSelectControlOption,
+  TableSortDirection,
   TableStyle,
   ToggleItem,
   toInFilter
@@ -555,41 +557,44 @@ export class TableWidgetRendererComponent
     .subscribe();
   }
 
-  private getCsvDownloadFileConfig(): any {
-    //CsvDownloadFileConfig
-    debugger;
+  private getCsvDownloadFileConfig(): CsvDownloadFileConfig {
     return {
       fileName: `explore_results.csv`,
       dataSource: combineLatest([
         this.model.getData(),
-        this.columnConfigs$.pipe(startWith([]))
+        this.columnConfigs$.pipe(map(columns => columns.filter(column => column.visible)))
       ]).pipe(
-        switchMap(([data, columns])  => 
-          data.getData({
-            columns: columns!,
-            position: {
-              startIndex: 0,
-              limit: 1000
-            }
-          })),
-        map(resultDashboard => {
-          debugger;
-          ['value'].map(()=>{
-            console.log(resultDashboard);
-            debugger;
+        switchMap(([data, columns])  => this.getDownloadableData(data, columns)),
+        map(result => result.data.map(row => {
             const eventAttributes: Dictionary<unknown> = {};
-            // resultDashboard.incidentDetectionAttributes.forEach((result: any) => {
-            //   eventAttributes[result.key] = result.value;
-            // });
-  
-            // return {
-            //   ...eventAttributes
-            // };
+            Object.keys(row).forEach(key => {
+              if(typeof row[key] !== 'object') {
+                eventAttributes[key] = row[key];
+              }
+            });
             return eventAttributes;
           })
-        })
+        )
       )
     };
+  }
+
+  private getDownloadableData(data: TableDataSource<TableRow, TableColumnConfig>, columns: TableColumnConfig[]): Observable<TableDataResponse<TableRow>>{
+    const sortedByColumn = columns.find(column => column.sort !== undefined);
+
+    return data.getData({
+      columns: columns,
+        position: {
+          startIndex: 0,
+          limit: 2
+        },
+      ...( sortedByColumn !== undefined ? {
+        sort: {
+            column: sortedByColumn,
+            direction: sortedByColumn.sort === 'DESC' ? TableSortDirection.Descending : TableSortDirection.Ascending
+          }
+        } : undefined)
+      });
   }
 
   private getRowClickInteractionHandler(selectedRow: StatefulTableRow): InteractionHandler | undefined {
