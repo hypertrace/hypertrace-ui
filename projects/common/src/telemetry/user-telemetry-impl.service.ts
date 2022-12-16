@@ -1,6 +1,7 @@
 import { Injectable, Injector, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { delay, filter } from 'rxjs/operators';
+import { getDifferenceInDays } from '../utilities/operations/operation-utilities';
 import { Dictionary } from '../utilities/types/types';
 import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
 import { UserTelemetryService } from './user-telemetry.service';
@@ -89,13 +90,15 @@ export class UserTelemetryImplService extends UserTelemetryService {
       .subscribe(route => {
         const queryParamMap = this.router?.routerState.snapshot.root.queryParamMap;
         // Todo - Read from TimeRangeService.TIME_QUERY_PARAM once root cause for test case failure is identified
-        const timeParamValue = queryParamMap?.get('time');
+        const timeParamValue = queryParamMap?.get('time') ?? undefined;
+        const isCustomTimeSelected = isCustomTime(timeParamValue);
         const rootObj = this.router?.parseUrl(route.url).root;
         const urlSegments = rootObj?.children?.primary?.segments.map(segment => segment.path) || [];
         this.trackPageEvent(UserTelemetryEvent.navigate, {
           url: route.url,
           ...queryParamMap,
-          isCustomTime: isCustomTime(timeParamValue !== null ? timeParamValue : undefined),
+          isCustomTime: isCustomTimeSelected,
+          ...(isCustomTimeSelected ? { diffInDays: getDifferenceInDays(timeParamValue) } : {}),
           urlSegments: urlSegments,
           basePath: urlSegments.length >= 0 ? urlSegments[0] : undefined
         });
