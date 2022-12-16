@@ -10,7 +10,8 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
       FilterAttributeType.Boolean,
       FilterAttributeType.Number,
       FilterAttributeType.String,
-      FilterAttributeType.StringMap
+      FilterAttributeType.StringMap,
+      FilterAttributeType.StringArray
     ];
   }
 
@@ -34,8 +35,8 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
         return this.parseNumberValue(splitFilter.rhs);
       case FilterAttributeType.String:
       case FilterAttributeType.StringMap:
+      case FilterAttributeType.StringArray:
         return this.parseStringValue(splitFilter.rhs);
-      case FilterAttributeType.StringArray: // Unsupported
       case FilterAttributeType.Timestamp: // Unsupported
         return undefined;
       default:

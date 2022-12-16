@@ -45,7 +45,7 @@ export class ExploreSpecificationBuilder {
 
     return {
       resultAlias: () => this.buildResultAlias(expression, aggregation),
-      name: expressionString,
+      name: expression.key,
       aggregation: aggregation,
       asGraphQlSelections: () => ({
         path: 'selection',
