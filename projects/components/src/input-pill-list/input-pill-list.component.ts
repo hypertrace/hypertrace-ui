@@ -13,6 +13,7 @@ import { InputAppearance } from '../input/input-appearance';
     <div class="input-pill-list">
       <div class="header">
         <ht-input
+          [disabled]="this.disabled || this.disableAdd"
           class="input primary-input"
           [value]="this.bufferValue$ | async"
           (keydown.enter)="this.addBufferValueToList()"
@@ -27,6 +28,7 @@ import { InputAppearance } from '../input/input-appearance';
           <ht-input
             [value]="value"
             class="input secondary-input"
+            [disabled]="this.disabled || this.disableEdit"
             appearance="${InputAppearance.Border}"
             (valueChange)="this.updateValue($event, index)"
           ></ht-input>
@@ -53,6 +55,15 @@ import { InputAppearance } from '../input/input-appearance';
 export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public readonly values: string[] = [];
+
+  @Input()
+  public readonly disableAdd: boolean = false;
+
+  @Input()
+  public readonly disableEdit: boolean = false;
+
+  @Input()
+  public readonly disabled: boolean = false;
 
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
