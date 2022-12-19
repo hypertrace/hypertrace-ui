@@ -1,16 +1,21 @@
 import { BOOLEAN_PROPERTY, Model, ModelApi, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { defaults } from 'lodash-es';
-import { EMPTY, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { MetricAggregation } from '../../../graphql/model/metrics/metric-aggregation';
 import { MetricHealth } from '../../../graphql/model/metrics/metric-health';
 import { EntityMetricAggregationDataSourceModel } from '../../data/graphql/entity/aggregation/entity-metric-aggregation-data-source.model';
 import { EntityAttributeDataSourceModel } from '../../data/graphql/entity/attribute/entity-attribute-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from '../../data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 
 @Model({
   type: 'metric-display-widget',
-  supportedDataSourceTypes: [EntityMetricAggregationDataSourceModel, EntityAttributeDataSourceModel]
+  supportedDataSourceTypes: [
+    EntityMetricAggregationDataSourceModel,
+    EntityAttributeDataSourceModel,
+    ExplorerVisualizationCartesianDataSourceModel
+  ]
 })
 export class MetricDisplayWidgetModel {
   public static readonly METRIC_WIDGET_DEFAULTS: MetricWidgetValueData = {
@@ -62,11 +67,27 @@ export class MetricDisplayWidgetModel {
   })
   public size?: string;
 
+  @ModelProperty({
+    key: 'metric-key',
+    type: STRING_PROPERTY.type,
+    required: false
+  })
+  public metricKey?: string;
+
   @ModelInject(MODEL_API)
   public api!: ModelApi;
 
   public getData(): Observable<MetricWidgetValueData> {
-    return this.api.getData<unknown>().pipe(mergeMap(receivedValue => this.normalizeData(receivedValue)));
+    return this.api.getData<unknown>().pipe(
+      // tslint:disable-next-line: no-any
+      mergeMap((receivedValue: any) => {
+        if (typeof receivedValue === 'object' && receivedValue.value === undefined) {
+          return this.normalizeData(receivedValue[this.metricKey!].value);
+        }
+
+        return this.normalizeData(receivedValue);
+      })
+    );
   }
 
   private normalizeData(metricValue: unknown): Observable<MetricWidgetValueData> {
@@ -82,7 +103,7 @@ export class MetricDisplayWidgetModel {
         )
       );
     } catch (e) {
-      return EMPTY;
+      throw e;
     }
   }
 

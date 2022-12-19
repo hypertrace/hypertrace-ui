@@ -14,7 +14,8 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
+  GraphQlExploreResult
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
@@ -41,6 +42,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
     const requestState = this.buildRequestState(interval);
     const timeRange = this.getTimeRangeOrThrow();
+
     if (requestState === undefined) {
       return NEVER;
     }
@@ -48,8 +50,11 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
       this.buildExploreRequest(requestState, this.getFilters(inheritedFilters), timeRange)
     ).pipe(
-      mergeMap(response =>
-        this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange)
+      mergeMap(
+        response =>
+          this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange) as Observable<
+            CartesianResult<ExplorerData>
+          >
       )
     );
   }
@@ -57,9 +62,13 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   protected mapResponseData(
     requestState: ExploreRequestState,
     response: GraphQlExploreResponse,
-    interval: TimeDuration,
+    interval: TimeDuration | undefined,
     timeRange: GraphQlTimeRange
-  ): Observable<CartesianResult<ExplorerData>> {
+  ): Observable<CartesianResult<ExplorerData>> | Observable<GraphQlExploreResult> {
+    if (interval === undefined && requestState.groupBy === undefined && response.results.length > 0) {
+      return of(response.results[0]);
+    }
+
     return this.getAllData(requestState, response, interval, timeRange).pipe(
       map(explorerResults => ({
         series: explorerResults,

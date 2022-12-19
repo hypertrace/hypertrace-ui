@@ -12,6 +12,7 @@ import {
 } from '../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
+// * This file isn't used for explorer screen calls
 export abstract class EntityValueDataSourceModel<TData, TResponse = TData> extends GraphQlDataSourceModel<TData> {
   protected abstract specification: Specification;
 

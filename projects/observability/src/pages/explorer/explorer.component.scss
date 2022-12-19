@@ -41,7 +41,15 @@
     .visualization-panel-content {
       .visualization-dashboard {
         display: block;
-        height: 224px;
+        height: 250px; /* height of chart + legend in Explorer */
+
+        ::ng-deep {
+          ht-metric-display-widget-renderer {
+            display: flex;
+            justify-content: center;
+            padding-top: 24px;
+          }
+        }
       }
     }
   }

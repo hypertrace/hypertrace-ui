@@ -10,13 +10,22 @@ import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-f
 import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import { GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
-import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from '../explore/explore-cartesian-data-source.model';
 @Model({
-  type: 'explorer-visualization-cartesian-data-source'
+  type: 'explorer-visualization-metric-data-source'
 })
-export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
+export class ExplorerVisualizationMetricDataSourceModel extends ExploreCartesianDataSourceModel {
   public request?: ExploreVisualizationRequest;
+
+  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
+    /*
+     * This typecast is required because TypeScript doesn't let us override
+     * a method of the parent class with a different return type. The return
+     * type of the parent can't be changed as it's fixed by Hyperdash.
+     */
+    return (this.fetchResults() as unknown) as Observable<CartesianDataFetcher<ExplorerData>>;
+  }
 
   protected fetchResults(): Observable<CartesianResult<ExplorerData>> {
     if (this.request === undefined) {

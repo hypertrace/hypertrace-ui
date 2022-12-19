@@ -6,8 +6,7 @@ import { MockService } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
-import { LegendPosition } from '../../shared/components/legend/legend.component';
-import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
+import { ExplorerVisualizationMetricDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-metric-data-source.model';
 import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
 import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
@@ -26,8 +25,10 @@ describe('Explorer dashboard builder', () => {
       type: CartesianSeriesVisualizationType.Column
     }
   });
+
   test('can build dashboard JSON for visualization', done => {
     const builder = new ExplorerDashboardBuilder(MockService(MetadataService), MockService(FilterBuilderLookupService));
+    jest.setTimeout(10000);
 
     runFakeRxjs(({ expectObservable }) => {
       const dashboardRecording = recordObservable(builder.visualizationDashboard$);
@@ -38,21 +39,108 @@ describe('Explorer dashboard builder', () => {
       expectObservable(dashboardRecording).toBe('x', {
         x: {
           json: {
-            type: 'cartesian-widget',
-            'selectable-interval': false,
-            'series-from-data': true,
-            'legend-position': LegendPosition.Bottom,
-            'selection-handler': {
-              type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': false
-            },
-            'show-y-axis': true,
-            'y-axis': {
-              type: 'cartesian-axis',
-              'show-grid-lines': true,
-              'min-upper-limit': 25
+            type: 'container-widget',
+            layout: {
+              type: 'custom-container-layout',
+              'column-dimensions': [
+                {
+                  type: 'dimension-model',
+                  dimension: 1,
+                  unit: 'FR'
+                },
+                {
+                  type: 'dimension-model',
+                  dimension: 1,
+                  unit: 'FR'
+                },
+                {
+                  type: 'dimension-model',
+                  dimension: 1,
+                  unit: 'FR'
+                },
+                {
+                  type: 'dimension-model',
+                  dimension: 1,
+                  unit: 'FR'
+                }
+              ],
+              'row-dimensions': [
+                {
+                  type: 'dimension-model',
+                  dimension: 124,
+                  unit: 'PX'
+                },
+                {
+                  type: 'dimension-model',
+                  dimension: 124,
+                  unit: 'PX'
+                }
+              ],
+              'cell-spans': [
+                {
+                  // First row
+                  type: 'cell-span-model',
+                  'col-start': 0,
+                  'col-end': 1,
+                  'row-start': 0,
+                  'row-end': 1
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 1,
+                  'col-end': 2,
+                  'row-start': 0,
+                  'row-end': 1
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 2,
+                  'col-end': 3,
+                  'row-start': 0,
+                  'row-end': 1
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 3,
+                  'col-end': 4,
+                  'row-start': 0,
+                  'row-end': 1
+                },
+                {
+                  // Second row
+                  type: 'cell-span-model',
+                  'col-start': 0,
+                  'col-end': 1,
+                  'row-start': 1,
+                  'row-end': 2
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 1,
+                  'col-end': 2,
+                  'row-start': 1,
+                  'row-end': 2
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 2,
+                  'col-end': 3,
+                  'row-start': 1,
+                  'row-end': 2
+                },
+                {
+                  type: 'cell-span-model',
+                  'col-start': 3,
+                  'col-end': 4,
+                  'row-start': 1,
+                  'row-end': 2
+                }
+              ],
+              'enable-style': true,
+              'grid-gap': '0'
             }
           },
+          children: undefined,
           onReady: expect.any(Function)
         }
       });
@@ -67,7 +155,7 @@ describe('Explorer dashboard builder', () => {
         };
         generatedDashboard.onReady(mockDashboard as Dashboard);
         expect(mockDashboard.createAndSetRootDataFromModelClass).toHaveBeenCalledWith(
-          ExplorerVisualizationCartesianDataSourceModel
+          ExplorerVisualizationMetricDataSourceModel
         );
         expect(mockDataSource.request).toBe(mockRequest);
         done();

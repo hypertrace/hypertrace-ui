@@ -103,6 +103,7 @@
     "prefer-on-push-component-change-detection": true,
     "strict-comparisons": false,
     "import-blacklist": [true, "@angular/material", [".*/src/.*"]],
-    "ban": [true, { "name": "forkJoin", "message": "Use forkJoinSafeEmpty instead" }]
+    "ban": [true, { "name": "forkJoin", "message": "Use forkJoinSafeEmpty instead" }],
+    "only-arrow-functions": false
   }
 }
