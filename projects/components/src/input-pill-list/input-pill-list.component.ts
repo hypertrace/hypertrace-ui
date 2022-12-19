@@ -17,6 +17,7 @@ import { InputAppearance } from '../input/input-appearance';
           [value]="this.bufferValue$ | async"
           (keydown.enter)="this.addBufferValueToList()"
           (valueChange)="this.addValueToBuffer($event)"
+          placeholder="Type in a value and press enter"
           appearance="${InputAppearance.Border}"
         ></ht-input>
       </div>
@@ -94,8 +95,9 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   }
 
   private notifyValueChange(): void {
-    this.valueChange.next(this.currentValues);
-    this.propagateValueChangeToFormControl(this.currentValues);
+    const validValues = this.currentValues.filter(value => !isEmpty(value));
+    this.valueChange.next(validValues);
+    this.propagateValueChangeToFormControl(validValues);
   }
 
   public writeValue(values: string[]): void {
