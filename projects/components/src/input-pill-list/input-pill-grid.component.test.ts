@@ -12,8 +12,8 @@ describe('InputPillListComponent', () => {
     declarations: [MockComponents(InputComponent)]
   });
 
-  const getPillValues = (spectator: SpectatorHost<InputPillListComponent>): string[] =>
-    spectator.debugElement.queryAll(By.css('.secondary-input')).map(element => element.componentInstance.value);
+  const getPillValues = (spectatorInstance: SpectatorHost<InputPillListComponent>): string[] =>
+    spectatorInstance.debugElement.queryAll(By.css('.secondary-input')).map(element => element.componentInstance.value);
 
   test('should initialize with no input, as expected', () => {
     spectator = createHost(`<ht-input-pill-list></ht-input-pill-list>`);
