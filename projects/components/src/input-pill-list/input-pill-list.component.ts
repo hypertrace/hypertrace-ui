@@ -13,7 +13,7 @@ import { InputAppearance } from '../input/input-appearance';
     <div class="input-pill-list">
       <div class="header">
         <ht-input
-          [disabled]="this.disabled || this.disableAdd"
+          [disabled]="this.disabled || this.disableAdd || this.disableUpdate"
           class="input primary-input"
           [value]="this.bufferValue$ | async"
           (keydown.enter)="this.addBufferValueToList()"
@@ -28,7 +28,7 @@ import { InputAppearance } from '../input/input-appearance';
           <ht-input
             [value]="value"
             class="input secondary-input"
-            [disabled]="this.disabled || this.disableEdit"
+            [disabled]="this.disabled || this.disableUpdate"
             appearance="${InputAppearance.Border}"
             (valueChange)="this.updateValue($event, index)"
           ></ht-input>
@@ -60,7 +60,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   public readonly disableAdd: boolean = false;
 
   @Input()
-  public readonly disableEdit: boolean = false;
+  public readonly disableUpdate: boolean = false;
 
   @Input()
   public readonly disabled: boolean = false;

@@ -61,7 +61,6 @@ describe('InputPillListComponent', () => {
     spectator.triggerEventHandler('.primary-input', 'valueChange', 'input-from-buffer');
     expect(getPillValues(spectator)).toEqual(['test-1', 'test-2']);
     expect(valueChangeEmitterSpy).not.toHaveBeenCalled();
-    expect(valueChangeEmitterSpy).not.toHaveBeenCalledTimes(0);
 
     // Keydown on enter. Verify emits. Verify pill list.
     spectator.triggerEventHandler('.primary-input', 'keydown.enter', undefined);
