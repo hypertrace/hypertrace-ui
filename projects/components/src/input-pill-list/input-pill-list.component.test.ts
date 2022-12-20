@@ -1,4 +1,7 @@
+import { fakeAsync } from '@angular/core/testing';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { KeyCode } from '@hypertrace/common';
 import { InputComponent } from '@hypertrace/components';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponents } from 'ng-mocks';
@@ -9,18 +12,22 @@ describe('InputPillListComponent', () => {
   const createHost = createHostFactory({
     component: InputPillListComponent,
     shallow: true,
-    declarations: [MockComponents(InputComponent)]
+    imports: [ReactiveFormsModule],
+    declarations: [MockComponents(InputComponent)],
+    providers: [FormBuilder]
   });
 
   const getPillValues = (spectatorInstance: SpectatorHost<InputPillListComponent>): string[] =>
-    spectatorInstance.debugElement.queryAll(By.css('.secondary-input')).map(element => element.componentInstance.value);
+    spectatorInstance.component.pillControlsArray.value.map((control: FormControl) => control.value);
+  const getInputValue = (spectatorInstance: SpectatorHost<InputPillListComponent>): string | undefined =>
+    spectatorInstance.component.form.get('inputBuffer')?.value;
 
   test('should initialize with no input, as expected', () => {
     spectator = createHost(`<ht-input-pill-list></ht-input-pill-list>`);
     // Header section
     expect(spectator.query('.header')).toExist();
     expect(spectator.query('.primary-input')).toExist();
-    expect(spectator.debugElement.query(By.css('.primary-input')).componentInstance.value).toEqual('');
+    expect(getInputValue(spectator)).toEqual('');
     expect(spectator.component.currentValues).toEqual([]);
 
     // Pills section
@@ -36,14 +43,14 @@ describe('InputPillListComponent', () => {
     // Header section
     expect(spectator.query('.header')).toExist();
     expect(spectator.query('.primary-input')).toExist();
-    expect(spectator.debugElement.query(By.css('.primary-input')).componentInstance.value).toEqual('');
+    expect(getInputValue(spectator)).toEqual('');
 
     // Pills section
     expect(spectator.query('.pill-list')).toExist();
     expect(getPillValues(spectator)).toEqual(['test-1', 'test-2']);
   });
 
-  test('interactions should function as expected', () => {
+  test('interactions should function as expected', fakeAsync(() => {
     spectator = createHost(`<ht-input-pill-list [values]="values"></ht-input-pill-list>`, {
       hostProps: {
         values: ['test-1', 'test-2']
@@ -55,30 +62,36 @@ describe('InputPillListComponent', () => {
     // Header section
     expect(spectator.query('.header')).toExist();
     expect(spectator.query('.primary-input')).toExist();
-    expect(spectator.debugElement.query(By.css('.primary-input')).componentInstance.value).toEqual('');
+    expect(getInputValue(spectator)).toEqual('');
 
     // Modify input. Verify no emits. Verify no change for pill list.
-    spectator.triggerEventHandler('.primary-input', 'valueChange', 'input-from-buffer');
+    spectator.component.form.get('inputBuffer')?.setValue('input-from-buffer');
     expect(getPillValues(spectator)).toEqual(['test-1', 'test-2']);
     expect(valueChangeEmitterSpy).not.toHaveBeenCalled();
 
     // Keydown on enter. Verify emits. Verify pill list.
-    spectator.triggerEventHandler('.primary-input', 'keydown.enter', undefined);
+    spectator.triggerEventHandler('.primary-input', 'keydown', { key: KeyCode.Enter, preventDefault: jest.fn() });
     expect(getPillValues(spectator)).toEqual(['input-from-buffer', 'test-1', 'test-2']);
     expect(valueChangeEmitterSpy).toHaveBeenCalledWith(['input-from-buffer', 'test-1', 'test-2']);
-    expect(valueChangeEmitterSpy).not.toHaveBeenCalledTimes(1);
+    expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(1);
 
     // Ignore a duplicate value
     spectator.triggerEventHandler('.primary-input', 'valueChange', 'test-2');
-    spectator.triggerEventHandler('.primary-input', 'keydown.enter', undefined);
+    spectator.triggerEventHandler('.primary-input', 'keydown.enter', { key: KeyCode.Enter, preventDefault: jest.fn() });
     expect(getPillValues(spectator)).toEqual(['input-from-buffer', 'test-1', 'test-2']);
-    expect(valueChangeEmitterSpy).not.toHaveBeenCalledTimes(1);
+    expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(1);
 
     // Update a pill in place. Verify emit and pill list on valueChange.
     const secondPill = spectator.debugElement.queryAll(By.css('.secondary-input'))[1];
-    spectator.triggerEventHandler(secondPill, 'valueChange', 'i-am-test-2-now');
+    ((spectator.component.form.get('pillControls') as FormArray)?.at(1) as FormGroup).patchValue({
+      value: 'i-am-test-2-now'
+    });
+    spectator.triggerEventHandler(secondPill, 'valueChange', undefined);
+
+    // Debounce of 200ms is applied on the pill input update. Wait for it.
+    spectator.tick(250);
     expect(getPillValues(spectator)).toEqual(['input-from-buffer', 'i-am-test-2-now', 'test-2']);
     expect(valueChangeEmitterSpy).toHaveBeenCalledWith(['input-from-buffer', 'i-am-test-2-now', 'test-2']);
-    expect(valueChangeEmitterSpy).not.toHaveBeenCalledTimes(2);
-  });
+    expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(2);
+  }));
 });

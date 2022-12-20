@@ -127,7 +127,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   /**
    * Update function is triggered on value update in the input forms.
    * To prevent unnecessary emits, debounce it
-   * **/
+   */
   public updateValue: () => void = debounce(this.notifyValueChange, 200);
 
   public get shouldDisableUpdate(): boolean {
