@@ -21,7 +21,7 @@ import { InputAppearance } from '../input/input-appearance';
       <div class="header">
         <ht-form-field class="form-field">
           <ht-input
-            [disabled]="this.disabled || this.disableAdd || this.disableUpdate"
+            [disabled]="this.shouldDisableUpdate || this.disableAdd"
             class="input primary-input"
             formControlName="inputBuffer"
             (keydown)="this.addBufferValueToList($event)"
