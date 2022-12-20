@@ -46,11 +46,14 @@
   }
 
   .filters {
+    min-width: 0;
+    flex: 1 1 auto;
+
     display: flex;
-    flex: auto;
     flex-wrap: wrap;
 
     .filter {
+      max-width: 100%;
       padding: 2px;
     }
 
