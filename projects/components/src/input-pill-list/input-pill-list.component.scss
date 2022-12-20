@@ -1,6 +1,7 @@
 @use 'mixins' as m;
 
 $input-height: 34px;
+$border-radius: 6px;
 
 .input-pill-list {
   @include m.fill-container();
@@ -23,7 +24,7 @@ $input-height: 34px;
     align-items: center;
     width: 100%;
     line-height: $input-height;
-    border-radius: 8px;
+    border-radius: $border-radius;
     display: block;
   }
 
@@ -34,7 +35,7 @@ $input-height: 34px;
     gap: 12px;
     background-color: white;
     border: 1px solid m.$gray-2;
-    border-radius: 8px;
+    border-radius: $border-radius;
     padding: 8px;
 
     .pill {
@@ -45,7 +46,7 @@ $input-height: 34px;
       justify-content: space-between;
       gap: 4px;
       border: 1px solid m.$gray-5;
-      border-radius: 8px;
+      border-radius: $border-radius;
       padding: 2px 4px 2px;
 
       .form-field {
