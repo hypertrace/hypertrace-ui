@@ -25,7 +25,6 @@ $input-height: 34px;
     width: 100%;
     line-height: $input-height;
     border-radius: 8px;
-    background: transparent;
     display: block;
   }
 
@@ -33,7 +32,7 @@ $input-height: 34px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-auto-flow: row;
-    gap: 8px;
+    gap: 12px;
     background-color: white;
     border: 1px solid m.$gray-1;
     border-radius: 8px;
@@ -48,10 +47,22 @@ $input-height: 34px;
       gap: 4px;
       border: 1px solid m.$gray-5;
       border-radius: 8px;
-      padding-right: 4px;
+      padding: 2px 4px 2px;
+
+      .form-field {
+        @include m.fill-container();
+
+        .secondary-input {
+          background-color: m.$blue-1;
+        }
+      }
 
       .close-icon {
         cursor: pointer;
+
+        &.disabled {
+          cursor: not-allowed;
+        }
       }
     }
   }
