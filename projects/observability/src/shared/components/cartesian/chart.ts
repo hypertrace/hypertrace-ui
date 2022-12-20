@@ -1,4 +1,5 @@
 import { TimeRange } from '@hypertrace/common';
+import { AxisDomain } from 'd3-axis';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
@@ -7,17 +8,29 @@ import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.co
 
 export interface CartesianChart<TInterval> {
   destroy(): this;
+
   draw(): this;
+
   isDrawn(): boolean;
+
   withSeries(...series: Series<TInterval>[]): this;
+
   withBands(...bands: Band<TInterval>[]): this;
+
   withLegend(legendPosition: LegendPosition): this;
+
   withEventListener(eventType: ChartEvent, listener: ChartEventListener<TInterval>): this;
+
   withAxis(axis: Axis): this;
+
   withIntervalData(intervalData: CartesianIntervalData): this;
+
   withTooltip(tooltip: ChartTooltipRef<TInterval>): this;
+
   withTimeRange(timeRange: TimeRange): this;
+
   showCrosshair(locationData: MouseLocationData<TInterval, Series<TInterval> | Band<TInterval>>[]): void;
+
   hideCrosshair(): void;
 }
 
@@ -26,14 +39,17 @@ export interface Series<TInterval> {
   units?: string;
   summary?: Summary;
   color: string;
+
   // Override the default color string using a method that takes data point as input
   getColor?(datum?: TInterval): string;
+
   name: string;
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
+
   getTooltipTitle?(datum: TInterval): string;
 }
 
@@ -137,6 +153,8 @@ export interface Axis {
    * What to do if label overflows
    */
   labelOverflow?: LabelOverflow;
+
+  getLabel?(domainValue: AxisDomain, index: number): string;
 }
 
 export interface AxisCrosshair {
