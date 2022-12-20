@@ -81,7 +81,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
 
-  public form: FormGroup = new FormGroup({
+  public readonly form: FormGroup = new FormGroup({
     inputBuffer: new FormControl(''),
     pillControls: new FormArray([])
   });
