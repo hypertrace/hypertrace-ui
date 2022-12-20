@@ -39,16 +39,15 @@ export interface Series<TInterval> {
   units?: string;
   summary?: Summary;
   color: string;
-
-  // Override the default color string using a method that takes data point as input
-  getColor?(datum?: TInterval): string;
-
   name: string;
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
+
+  // Override the default color string using a method that takes data point as input
+  getColor?(datum?: TInterval): string;
 
   getTooltipTitle?(datum: TInterval): string;
 }
@@ -159,7 +158,7 @@ export interface Axis {
 
 export interface AxisCrosshair {
   /**
-   * If true, snaps to closest data point to mouse. If false, follows exact mouse location. Defaults to true.
+   * If true, snaps to the closest data point to mouse. If false, follows exact mouse location. Defaults to true.
    */
   snap?: boolean;
 }
