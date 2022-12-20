@@ -4,18 +4,17 @@ $input-height: 34px;
 
 .input-pill-list {
   @include m.fill-container();
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   background-color: inherit;
-  padding: 8px 8px 8px 0;
+  padding: 8px;
 
   .header {
     @include m.fill-container();
 
     .primary-input {
-      border: 1px solid m.$gray-9;
+      border: 1px solid m.$gray-2;
     }
   }
 
@@ -34,7 +33,7 @@ $input-height: 34px;
     grid-auto-flow: row;
     gap: 12px;
     background-color: white;
-    border: 1px solid m.$gray-1;
+    border: 1px solid m.$gray-2;
     border-radius: 8px;
     padding: 8px;
 
