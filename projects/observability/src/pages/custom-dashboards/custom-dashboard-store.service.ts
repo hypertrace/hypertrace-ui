@@ -60,13 +60,15 @@ export interface DashboardData {
   panels: PanelData[];
   ownerId?: number;
 }
+
 export interface PanelData extends ExploreRequestState {
   id: string;
   name: string;
   json: ModelJson;
   isRealtime?: boolean;
-  interval: PanelInterval | 'AUTO';
+  interval: PanelInterval | 'AUTO' | undefined;
 }
+
 export interface PanelInterval extends TimeDuration {
   value: number;
   unit: TimeUnit;

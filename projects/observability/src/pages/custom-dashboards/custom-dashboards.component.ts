@@ -100,6 +100,7 @@ export class CustomDashboardListComponent {
       onClick: (row: CustomDashboardTableRow, _column) => this.deleteDashboard(row.id)
     }
   ];
+
   public constructor(
     private readonly customDashboardService: CustomDashboardService,
     private readonly userPreferenceService: UserPreferenceService,
@@ -176,7 +177,10 @@ export class CustomDashboardListComponent {
   }
   public onPaginationChange(options: PageEvent): void {
     const pageOptions = { ...options };
-    // Since HUS page number starts with 1 but ht-paginator has default value set as 0 hence incrementing
+    /*
+     * Since Hypertrace User Service page number starts with 1 but
+     * ht-paginator has default value set as 0 hence incrementing
+     */
     pageOptions.pageIndex += 1;
     this.setupDataSource(pageOptions);
   }

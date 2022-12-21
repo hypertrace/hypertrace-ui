@@ -84,6 +84,7 @@ export class CustomDashboardPanelComponent implements OnInit {
   public visualizationDashboard!: ExplorerGeneratedDashboard;
   public expanded: boolean = true;
   public currentContext: ToggleItem = {};
+
   public readonly contextItems: ToggleItem<string>[] = [
     {
       label: 'Traces',
@@ -94,12 +95,14 @@ export class CustomDashboardPanelComponent implements OnInit {
       value: SPAN_SCOPE
     }
   ];
+
   public constructor(private readonly exploreVisualizationBuilder: ExploreVisualizationBuilder) {}
+
   public ngOnInit(): void {
     this.panel!.series = this.tryDecodeExploreSeries(this.panel!.series);
-    if (this.panel?.interval !== 'AUTO') {
-      this.panel!.interval = this.panel!.interval;
-      this.panel!.interval = new TimeDuration(this.panel!.interval.value, this.panel!.interval.unit);
+
+    if (this.panel?.interval !== 'AUTO' && this.panel?.interval !== undefined) {
+      this.panel.interval = new TimeDuration(this.panel.interval.value, this.panel.interval.unit);
     }
 
     const request = this.exploreVisualizationBuilder.buildRequest(this.panel!);
@@ -107,6 +110,7 @@ export class CustomDashboardPanelComponent implements OnInit {
     this.visualizationDashboard = this.buildVisualizationDashboard(request);
     this.currentContext = this.contextItems.find(i => i.value === this.panel?.context)!;
   }
+
   private tryDecodeExploreSeries(series: ExploreSeries[]): ExploreSeries[] | [] {
     return series.map(singleSeries => ({
       specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(
@@ -133,18 +137,24 @@ export class CustomDashboardPanelComponent implements OnInit {
   public onExpandedChange(expanded: boolean): void {
     this.expanded = expanded;
   }
+
   public onPanelEdit(event: MouseEvent): void {
     event.stopPropagation();
     this.editPanel.emit(this.panel?.id);
   }
+
   public onPanelDelete(event: MouseEvent): void {
     event.stopPropagation();
     this.deletePanel.emit({ panelName: this.panel!.name, panelId: this.panel!.id });
   }
+
   public onPanelClone(event: MouseEvent): void {
     /*
-      need to add stopPropagation since these buttons are in the panel header component, if we dont stop the panel collapse would be triggered which would minimise the panel. Hence we don't want the click event to propagate to the header
-    */
+     * Need to add stopPropagation since these buttons are in the panel
+     * header component. If we dont stop the panel collapse would be
+     * triggered which would minimise the panel. Hence we don't want the
+     * click event to propagate to the header.
+     */
     event.stopPropagation();
     this.clonePanel.emit({ panelName: this.panel!.name, panelId: this.panel!.id });
   }
