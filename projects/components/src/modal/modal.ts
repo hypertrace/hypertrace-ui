@@ -31,6 +31,10 @@ export interface ModalDimension {
   // Number => without unit (considered px) and String => with units (expression included)
   width: number | string;
   height: number | string;
+  minWidth?: number | string;
+  minHeight?: number | string;
+  maxWidth?: number | string;
+  maxHeight?: number | string;
 }
 
 export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
@@ -63,5 +67,6 @@ export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
 
 export abstract class ModalRef<TResult> {
   public abstract readonly closed$: Observable<TResult>;
+
   public abstract close(result?: TResult): void;
 }
