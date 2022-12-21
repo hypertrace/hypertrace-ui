@@ -14,12 +14,14 @@ describe('Label Tag Component', () => {
 
   test('renders the beta tag with given parameters', () => {
     spectator = createHost(
-      '<ht-label-tag label="Beta" backgroundColor="#f2d0f5" labelColor="#94209f" prefixIcon="test-icon"></ht-label-tag>'
+      '<ht-label-tag label="Beta" backgroundColor="#f2d0f5" labelColor="#94209f" prefixIcon="test-icon" borderColor="#f2d0f6" [borderRadius]="4"></ht-label-tag>'
     );
     const labelElement = spectator.query('.label-tag') as HTMLElement;
     expect(labelElement).toHaveText('Beta');
     expect(labelElement.style.backgroundColor).toEqual('rgb(242, 208, 245)');
     expect(labelElement.style.color).toEqual('rgb(148, 32, 159)');
     expect(spectator.query(IconComponent)?.icon).toBe('test-icon');
+    expect(labelElement.style.border).toEqual('1px solid #f2d0f6');
+    expect(labelElement.style.borderRadius).toEqual('4px');
   });
 });
