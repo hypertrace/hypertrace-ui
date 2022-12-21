@@ -135,3 +135,6 @@ export * from './color/color-palette';
 
 // Global header height provider
 export * from './global-header-height/global-header-height-provider.service';
+
+// Key codes
+export * from './key-codes/key-code';
