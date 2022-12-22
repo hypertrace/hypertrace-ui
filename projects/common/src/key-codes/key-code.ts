@@ -3,5 +3,3 @@ export const enum KeyCode {
   Comma = ','
 }
 
-export const isEnterOrCommaKeyEvent = (event: KeyboardEvent): boolean =>
-  event.key === KeyCode.Enter || event.key === KeyCode.Comma;
