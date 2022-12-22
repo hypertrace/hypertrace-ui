@@ -20,7 +20,7 @@ export class MaxContentContainerLayoutModel extends ContainerLayout {
   public numberRows?: number;
 
   public getContainerLayoutData(children: object[]): ContainerLayoutData {
-    const gridDimension = this.getAutoGridDimensions(children.length);
+    const gridDimension = this.getGridDimensions(children.length);
 
     return {
       rows: `repeat(${gridDimension[0]}, max-content)`,
@@ -31,7 +31,7 @@ export class MaxContentContainerLayoutModel extends ContainerLayout {
     };
   }
 
-  private getAutoGridDimensions(totalChildren: number): [number, number] {
+  private getGridDimensions(totalChildren: number): [number, number] {
     let rows = this.numberRows;
     let columns = this.numberColumns;
 
