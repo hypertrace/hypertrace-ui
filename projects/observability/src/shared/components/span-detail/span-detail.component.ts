@@ -119,7 +119,9 @@ export class SpanDetailComponent implements OnChanges {
         this.changeTab(tab);
       }
     } else {
-      this.changeTab(this.tabs[0]);
+      if (this.tabs.length > 0) {
+        this.changeTab(this.tabs[0]);
+      }
     }
   }
 
