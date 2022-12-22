@@ -26,7 +26,7 @@ import { IconSize } from '../icon/icon-size';
           'show-border': this.showBorder,
           'error-border': this.showFormError && this.errorLabel
         }"
-        [ngStyle]="{'background-color': this.contentBgColor}"
+        [ngStyle]="{ 'background-color': this.contentBgColor }"
       >
         <ng-content></ng-content>
       </div>
