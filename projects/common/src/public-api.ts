@@ -4,6 +4,7 @@
 
 // Angular
 export * from './utilities/angular/angular-utils';
+export * from './utilities/angular/pipes';
 export { DynamicComponentService } from './utilities/angular/dynamic-component.service';
 
 // Browser
@@ -135,3 +136,6 @@ export * from './color/color-palette';
 
 // Global header height provider
 export * from './global-header-height/global-header-height-provider.service';
+
+// Key codes
+export * from './key-codes/key-code';

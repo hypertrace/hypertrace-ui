@@ -410,3 +410,7 @@ export * from './page-time-range/page-time-range.module';
 export * from './stepper/stepper.module';
 export * from './stepper/stepper.component';
 export * from './stepper/stepper-tab.component';
+
+// Pill list
+export * from './input-pill-list/input-pill-list.component';
+export * from './input-pill-list/input-pill-list.module';
