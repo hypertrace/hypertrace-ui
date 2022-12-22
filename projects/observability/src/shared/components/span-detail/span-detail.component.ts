@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
@@ -13,59 +14,66 @@ import { SpanDetailTab } from './span-detail-tab';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="span-detail" *ngIf="this.spanData">
-      <ht-span-detail-title-header
-        class="title-header"
-        *ngIf="this.showTitleHeader"
-        [serviceName]="this.spanData.serviceName"
-        [protocolName]="this.spanData.protocolName"
-        [apiName]="this.spanData.apiName"
-        (closed)="this.closed.emit()"
-      ></ht-span-detail-title-header>
+      <ng-container *ngIf="this.tabs.length > 0; else notAvailableTpl">
+        <ht-span-detail-title-header
+          class="title-header"
+          *ngIf="this.showTitleHeader"
+          [serviceName]="this.spanData.serviceName"
+          [protocolName]="this.spanData.protocolName"
+          [apiName]="this.spanData.apiName"
+          (closed)="this.closed.emit()"
+        ></ht-span-detail-title-header>
 
-      <div class="summary-container">
-        <ng-content></ng-content>
-      </div>
+        <div class="summary-container">
+          <ng-content></ng-content>
+        </div>
+        <ht-toggle-group
+          class="toggle-group"
+          [activeItem]="this.activeTab$ | async"
+          [items]="this.tabs"
+          (activeItemChange)="this.changeTab($event)"
+        >
+        </ht-toggle-group>
 
-      <ht-toggle-group
-        class="toggle-group"
-        [activeItem]="this.activeTab$ | async"
-        [items]="this.tabs"
-        (activeItemChange)="this.changeTab($event)"
-      >
-      </ht-toggle-group>
-
-      <div class="tab-container" *ngIf="this.activeTab$ | async as activeTab">
-        <ng-container [ngSwitch]="activeTab?.value">
-          <ng-container *ngSwitchCase="'${SpanDetailTab.Request}'">
-            <ht-span-request-detail
-              class="request"
-              [layout]="this.layout"
-              [requestHeaders]="this.spanData?.requestHeaders"
-              [requestCookies]="this.spanData?.requestCookies"
-              [requestBody]="this.spanData?.requestBody"
-            ></ht-span-request-detail>
+        <div class="tab-container" *ngIf="this.activeTab$ | async as activeTab">
+          <ng-container [ngSwitch]="activeTab?.value">
+            <ng-container *ngSwitchCase="'${SpanDetailTab.Request}'">
+              <ht-span-request-detail
+                class="request"
+                [layout]="this.layout"
+                [requestHeaders]="this.spanData?.requestHeaders"
+                [requestCookies]="this.spanData?.requestCookies"
+                [requestBody]="this.spanData?.requestBody"
+              ></ht-span-request-detail>
+            </ng-container>
+            <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
+              <ht-span-response-detail
+                class="response"
+                [layout]="this.layout"
+                [responseHeaders]="this.spanData?.responseHeaders"
+                [responseCookies]="this.spanData?.responseCookies"
+                [responseBody]="this.spanData?.responseBody"
+              ></ht-span-response-detail>
+            </ng-container>
+            <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
+              <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
+            </ng-container>
+            <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
+              <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
+            </ng-container>
+            <ng-container *ngSwitchCase="'${SpanDetailTab.Logs}'">
+              <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
+            </ng-container>
           </ng-container>
-          <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
-            <ht-span-response-detail
-              class="response"
-              [layout]="this.layout"
-              [responseHeaders]="this.spanData?.responseHeaders"
-              [responseCookies]="this.spanData?.responseCookies"
-              [responseBody]="this.spanData?.responseBody"
-            ></ht-span-response-detail>
-          </ng-container>
-          <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
-            <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
-          </ng-container>
-          <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
-            <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
-          </ng-container>
-          <ng-container *ngSwitchCase="'${SpanDetailTab.Logs}'">
-            <ht-log-events-table [logEvents]="this.spanData?.logEvents"></ht-log-events-table>
-          </ng-container>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
     </div>
+
+    <ng-template #notAvailableTpl>
+      <div class="no-data-message">
+        <ht-message-display icon="${IconType.NoData}" description="Span Details Not Available"></ht-message-display>
+      </div>
+    </ng-template>
   `
 })
 export class SpanDetailComponent implements OnChanges {
