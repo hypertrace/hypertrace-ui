@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import {
+  Color,
   getStringFromPasteEvent,
   getStringsFromCommaSeparatedList,
   isEnterKeyEvent,
@@ -41,7 +42,7 @@ import { InputAppearance } from '../input/input-appearance';
       <ng-container formArrayName="pillControls">
         <div class="pill-list" *ngIf="this.pillControlsArray.value.length > 0">
           <div class="pill" *ngFor="let pillValueControl of this.pillControlsArray?.controls; index as index">
-            <ht-form-field class="form-field" [formGroup]="pillValueControl">
+            <ht-form-field class="form-field" [formGroup]="pillValueControl" contentBgColor="${Color.Blue1}">
               <ht-input
                 class="input secondary-input"
                 [disabled]="this.shouldDisableUpdate"

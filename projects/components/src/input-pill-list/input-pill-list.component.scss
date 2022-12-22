@@ -50,10 +50,7 @@ $border-radius: 6px;
 
       .form-field {
         @include m.fill-container();
-
-        .secondary-input {
-          background-color: m.$blue-1;
-        }
+        background-color: m.$blue-1;
       }
 
       .close-icon {
