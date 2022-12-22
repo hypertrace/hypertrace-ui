@@ -4,6 +4,7 @@
 
 // Angular
 export * from './utilities/angular/angular-utils';
+export * from './utilities/angular/pipes';
 export { DynamicComponentService } from './utilities/angular/dynamic-component.service';
 
 // Browser
