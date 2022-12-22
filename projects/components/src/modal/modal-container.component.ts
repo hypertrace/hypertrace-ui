@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Dictionary, LayoutChangeService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { POPOVER_DATA } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
@@ -62,7 +63,7 @@ export class ModalContainerComponent {
     this.size = this.isModalDimension(config.size)
       ? this.getDimensionsWithUnits(config.size)
       : this.getDimensionsWithUnits(getModalDimensions(config.size));
-    this.styles = { ...config.styles, height: this.size.height, width: this.size.width };
+    this.styles = { ...config.styles, ...this.getDimensionStyles() };
     this.isComponentModal = !(config.content instanceof TemplateRef);
     this.closeOnEscape = config.closeOnEscapeKey ?? true;
     this.renderer = config.content;
@@ -105,7 +106,34 @@ export class ModalContainerComponent {
       dimsWithUnits.width = `${dims.width}px`;
     }
 
+    if (typeof dims.maxHeight === 'number') {
+      dimsWithUnits.maxHeight = `${dims.maxHeight}px`;
+    }
+
+    if (typeof dims.maxWidth === 'number') {
+      dimsWithUnits.maxWidth = `${dims.maxWidth}px`;
+    }
+
+    if (typeof dims.minHeight === 'number') {
+      dimsWithUnits.minHeight = `${dims.minHeight}px`;
+    }
+
+    if (typeof dims.minWidth === 'number') {
+      dimsWithUnits.minWidth = `${dims.minWidth}px`;
+    }
+
     return dimsWithUnits;
+  }
+
+  private getDimensionStyles(): Dictionary<unknown> {
+    return {
+      height: this.size.height,
+      width: this.size.width,
+      ...(!isNil(this.size.minHeight) ? { 'min-height': this.size.minHeight } : {}),
+      ...(!isNil(this.size.minWidth) ? { 'min-width': this.size.minWidth } : {}),
+      ...(!isNil(this.size.maxHeight) ? { 'max-height': this.size.maxHeight } : {}),
+      ...(!isNil(this.size.maxWidth) ? { 'max-width': this.size.maxWidth } : {})
+    };
   }
 }
 
