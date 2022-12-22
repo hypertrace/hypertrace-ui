@@ -7,7 +7,7 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./summary-value.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-summary-value" *ngIf="this.value" [htTooltip]="this.tooltipText">
+    <div class="ht-summary-value" *ngIf="!(this.value | htIsNil)" [htTooltip]="this.tooltipText">
       <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Small}" class="icon"></ht-icon>
       <div class="dot" *ngIf="!this.icon"></div>
       <div class="label" *ngIf="this.label">{{ this.label }}:</div>

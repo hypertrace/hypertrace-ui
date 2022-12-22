@@ -7,6 +7,7 @@ import {
   LabelModule,
   ListViewModule,
   LoadAsyncModule,
+  MessageDisplayModule,
   TabModule,
   ToggleButtonModule,
   ToggleGroupModule,
@@ -38,7 +39,8 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     SpanDetailTitleHeaderModule,
     SpanExitCallsModule,
     LogEventsTableModule,
-    ToggleGroupModule
+    ToggleGroupModule,
+    MessageDisplayModule
   ],
   declarations: [SpanDetailComponent],
   exports: [SpanDetailComponent]
