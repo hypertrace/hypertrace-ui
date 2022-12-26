@@ -52,7 +52,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
         <ng-container
           *ngIf="steps[this.stepper.selectedIndex].tabControls as customTabControl; else defaultTabControlTpl"
         >
-          <ng-container *ngTemplateOutlet="customTabControl.content" }></ng-container>
+          <ng-container *ngTemplateOutlet="customTabControl.content"></ng-container>
         </ng-container>
         <ng-template #defaultTabControlTpl>
           <div class="action-buttons">
