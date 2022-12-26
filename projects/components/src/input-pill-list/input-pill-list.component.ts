@@ -9,8 +9,15 @@ import {
   Validators
 } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
-import { isEnterOrCommaKeyEvent, TypedSimpleChanges } from '@hypertrace/common';
-import { debounce, isEmpty } from 'lodash-es';
+import {
+  Color,
+  getStringFromPasteEvent,
+  getStringsFromCommaSeparatedList,
+  isEnterKeyEvent,
+  isEnterOrCommaKeyEvent,
+  TypedSimpleChanges
+} from '@hypertrace/common';
+import { debounce, isEmpty, uniq } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { InputAppearance } from '../input/input-appearance';
 
@@ -21,10 +28,11 @@ import { InputAppearance } from '../input/input-appearance';
       <div class="header">
         <ht-form-field class="form-field">
           <ht-input
-            [disabled]="this.shouldDisableUpdate || this.disableAdd"
+            [disabled]="this.shouldDisableAdd"
             class="input primary-input"
             formControlName="inputBuffer"
             (keydown)="this.addBufferValueToList($event)"
+            (paste)="this.onContentPaste($event)"
             placeholder="Enter a comma separated list of values"
             appearance="${InputAppearance.Border}"
           ></ht-input>
@@ -34,7 +42,7 @@ import { InputAppearance } from '../input/input-appearance';
       <ng-container formArrayName="pillControls">
         <div class="pill-list" *ngIf="this.pillControlsArray.value.length > 0">
           <div class="pill" *ngFor="let pillValueControl of this.pillControlsArray?.controls; index as index">
-            <ht-form-field class="form-field" [formGroup]="pillValueControl">
+            <ht-form-field class="form-field" [formGroup]="pillValueControl" contentBgColor="${Color.Blue1}">
               <ht-input
                 class="input secondary-input"
                 [disabled]="this.shouldDisableUpdate"
@@ -45,7 +53,7 @@ import { InputAppearance } from '../input/input-appearance';
             </ht-form-field>
             <ht-icon
               class="close-icon"
-              [ngClass]="{ disabled: this.shouldDisableUpdate }"
+              [ngClass]="{ disabled: this.shouldDisableDelete }"
               icon="${IconType.CloseCircle}"
               size="${IconSize.Small}"
               (click)="this.removeValue(index)"
@@ -76,7 +84,13 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   public readonly disableUpdate: boolean = false;
 
   @Input()
+  public readonly disableDelete: boolean = false;
+
+  @Input()
   public readonly disabled: boolean = false;
+
+  @Input()
+  public readonly allowCommaInInput: boolean = true;
 
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
@@ -98,8 +112,9 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   }
 
   public addBufferValueToList(event: KeyboardEvent): void {
-    // Return if the key pressed is not a comma or enter
-    if (!isEnterOrCommaKeyEvent(event)) {
+    // If comma input is allowed and the key pressed is not an enter key, then ignore.
+    // Or, if the key pressed is not a comma or enter, ignore.
+    if ((this.allowCommaInInput && !isEnterKeyEvent(event)) || !isEnterOrCommaKeyEvent(event)) {
       return;
     }
     // Do not propagate Enter key or comma presses
@@ -107,13 +122,12 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
 
     // Process input buffer
     const input: string = this.inputBufferFormControl.value.trim();
-    const existingValues = this.getValuesFromPills();
-    // Add value to the list if it is not empty and not a duplicate
-    if (!isEmpty(input) && !existingValues.includes(input)) {
-      this.inputBufferFormControl.reset();
-      this.pillControlsArray?.insert(0, this.buildSinglePillForm(input));
-      this.notifyValueChange();
-    }
+    this.addValues([input]);
+  }
+
+  public onContentPaste(event: ClipboardEvent): void {
+    const pastedText: string = getStringFromPasteEvent(event);
+    this.addValues(getStringsFromCommaSeparatedList(pastedText));
   }
 
   public removeValue(index: number): void {
@@ -130,8 +144,15 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
    */
   public updateValue: () => void = debounce(this.notifyValueChange, 200);
 
+  public get shouldDisableAdd(): boolean {
+    return this.disabled || this.disableAdd;
+  }
   public get shouldDisableUpdate(): boolean {
     return this.disabled || this.disableUpdate;
+  }
+
+  public get shouldDisableDelete(): boolean {
+    return this.disabled || this.disableDelete;
   }
 
   public writeValue(values: string[]): void {
@@ -148,6 +169,16 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
 
   public get pillControlsArray(): FormArray {
     return this.form.get('pillControls') as FormArray;
+  }
+
+  private addValues(values: string[]): void {
+    const existingValues = this.getValuesFromPills();
+    uniq(values)
+      .filter(value => !isEmpty(value))
+      .filter(value => !existingValues.includes(value))
+      .forEach(value => this.pillControlsArray?.insert(0, this.buildSinglePillForm(value)));
+    this.inputBufferFormControl.reset();
+    this.notifyValueChange();
   }
 
   private propagateValueChangeToFormControl(value: string[]): void {

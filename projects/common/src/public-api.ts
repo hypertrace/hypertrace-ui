@@ -139,3 +139,4 @@ export * from './global-header-height/global-header-height-provider.service';
 
 // Key codes
 export * from './key-codes/key-code';
+export * from './event/event-utils';
