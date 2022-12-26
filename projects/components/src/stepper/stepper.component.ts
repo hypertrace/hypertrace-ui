@@ -18,7 +18,7 @@ import { merge, Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
-import { StepperTabComponent } from './stepper-tab.component';
+import { StepperTabComponent } from './tab/stepper-tab.component';
 
 @Component({
   selector: 'ht-stepper',
@@ -48,29 +48,38 @@ import { StepperTabComponent } from './stepper-tab.component';
           </mat-step>
         </ng-container>
       </mat-stepper>
-      <div class="action-buttons">
-        <ht-button
-          class="cancel"
-          label="Cancel"
-          (click)="this.cancelled.emit()"
-          role="${ButtonRole.Tertiary}"
-        ></ht-button>
-        <div class="back-next">
-          <ht-button
-            class="back"
-            *ngIf="stepper.selectedIndex !== 0"
-            display="${ButtonStyle.Outlined}"
-            label="Back"
-            (click)="stepper.previous()"
-          ></ht-button>
-          <ht-button
-            class="next"
-            [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
-            (click)="this.nextOrSubmit(stepper)"
-            [disabled]="this.isNextDisabled(stepper.selectedIndex)"
-          ></ht-button>
-        </div>
-      </div>
+      <footer class="footer">
+        <ng-container
+          *ngIf="steps[this.stepper.selectedIndex].tabControls as customTabControl; else defaultTabControlTpl"
+        >
+          <ng-container *ngTemplateOutlet="customTabControl.content" }></ng-container>
+        </ng-container>
+        <ng-template #defaultTabControlTpl>
+          <div class="action-buttons">
+            <ht-button
+              class="cancel"
+              label="Cancel"
+              (click)="this.cancelled.emit()"
+              role="${ButtonRole.Tertiary}"
+            ></ht-button>
+            <div class="back-next">
+              <ht-button
+                class="back"
+                *ngIf="stepper.selectedIndex !== 0"
+                display="${ButtonStyle.Outlined}"
+                label="Back"
+                (click)="stepper.previous()"
+              ></ht-button>
+              <ht-button
+                class="next"
+                [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
+                (click)="this.nextOrSubmit(stepper)"
+                [disabled]="this.isNextDisabled(stepper.selectedIndex)"
+              ></ht-button>
+            </div>
+          </div>
+        </ng-template>
+      </footer>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,6 +158,14 @@ export class StepperComponent implements AfterContentInit {
     if (isIndexValid && isNavigationAllowed && this.stepper) {
       this.stepper.selectedIndex = index;
     }
+  }
+
+  public next(): void {
+    this.stepper?.next();
+  }
+
+  public previous(): void {
+    this.stepper?.previous();
   }
 
   public nextOrSubmit(stepper: MatStepper): void {
