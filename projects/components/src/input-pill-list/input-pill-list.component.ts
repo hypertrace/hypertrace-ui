@@ -33,7 +33,7 @@ import { InputAppearance } from '../input/input-appearance';
             formControlName="inputBuffer"
             (keydown)="this.addBufferValueToList($event)"
             (paste)="this.onContentPaste($event)"
-            placeholder="Enter a comma separated list of values"
+            [placeholder]="this.placeholder"
             appearance="${InputAppearance.Border}"
           ></ht-input>
         </ht-form-field>
@@ -91,6 +91,9 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
 
   @Input()
   public readonly allowCommaInInput: boolean = true;
+
+  @Input()
+  public readonly placeholder: string = 'Type in a value and hit enter';
 
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
