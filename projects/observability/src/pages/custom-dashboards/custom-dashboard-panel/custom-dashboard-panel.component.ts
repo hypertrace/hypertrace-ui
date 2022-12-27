@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { IconType } from '@hypertrace/assets-library';
 import { TimeDuration } from '@hypertrace/common';
 import { ToggleItem } from '@hypertrace/components';
+import { ExplorerVisualizationMetricDataSourceModel } from '../../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-metric-data-source.model';
 import { ObservabilityTraceType } from '../../../shared/graphql/model/schema/observability-traces';
 import { SPAN_SCOPE } from '../../../shared/graphql/model/schema/span';
 import { ExplorerGeneratedDashboard } from '../../explorer/explorer-dashboard-builder';
@@ -124,6 +125,17 @@ export class CustomDashboardPanelComponent implements OnInit {
   }
 
   private buildVisualizationDashboard(request: ExploreVisualizationRequest): ExplorerGeneratedDashboard {
+    if (request.interval === undefined && request.groupBy === undefined) {
+      return {
+        json: this.panel?.json!,
+        onReady: dashboard => {
+          dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationMetricDataSourceModel);
+          const dataSource = dashboard.getRootDataSource<ExplorerVisualizationMetricDataSourceModel>()!;
+          dataSource.request = request;
+        }
+      };
+    }
+
     return {
       json: this.panel?.json!,
       onReady: dashboard => {

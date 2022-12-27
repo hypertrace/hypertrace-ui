@@ -128,6 +128,7 @@ export class CustomDashboardPanelEditComponent {
       value: SPAN_SCOPE
     }
   ];
+
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly activatedRoute: ActivatedRoute,
@@ -136,30 +137,37 @@ export class CustomDashboardPanelEditComponent {
     private readonly navigationService: NavigationService
   ) {
     const uniqueRequests$ = this.requestSubject.pipe(distinctUntilChanged(isEqualIgnoreFunctions));
+
     this.visualizationDashboard$ = uniqueRequests$.pipe(
       switchMap(request => this.buildVisualizationDashboard(request))
     );
+
     this.activatedRoute.params.subscribe(params => {
       this.isNewPanel = params.panel_id === 'new';
       this.panelId = params.panel_id;
       this.dashboardId = params.dashboard_id;
       this.dashboardView = params.dashboard_view;
     });
+
     this.activatedRoute.queryParams.subscribe(params => {
       this.dashboardName = params.dashboardName;
       this.isNewDashboard = params.newDashboard.toLowerCase() === 'true';
     });
+
     const hasKey = this.customDashboardStoreService.hasKey(this.dashboardId);
     if (!hasKey) {
-      // Fallback to listing incase user refereshes on panel edit page. In that case data is not present in the dashboard store since it's in memory.
+      // Fallback to listing incase user refereshes on panel edit page.
+      // In that case, data is not present in the dashboard store since it's in memory.
       this.redirectToDashboard();
 
       return;
     }
+
     if (!this.isNewPanel) {
       const panelData = this.customDashboardStoreService.getPanel(this.dashboardId, this.panelId)!;
       this.state = panelData;
     }
+
     this.currentContext = this.contextItems.find(i => i.value === this.state.context)!;
     this.setFilters();
   }
@@ -167,31 +175,37 @@ export class CustomDashboardPanelEditComponent {
   public onFiltersUpdated(newFilters: Filter[]): void {
     this.state.filters = [...newFilters];
   }
+
   public setFilters(): void {
     this.attributes$ = this.metadataService.getFilterAttributes(this.state.context);
   }
+
   public onPanelNameChange(name: string): void {
     this.state.name = name;
   }
+
   public onContextChange(context: ToggleItem<string>): void {
     this.state.context = context.value!;
     this.currentContext = this.contextItems.find(i => i.value === this.state.context)!;
 
     this.attributes$ = this.metadataService.getFilterAttributes(this.state.context);
   }
+
   private buildVisualizationDashboard(request: ExploreVisualizationRequest): Observable<ExplorerGeneratedDashboard> {
     if (request.interval === undefined && request.groupBy === undefined) {
+      this.state.json = {
+        type: 'container-widget',
+        layout: getLayoutForElements(request.series?.length),
+        children: request.series?.map(seriesObject => ({
+          type: 'metric-display-widget',
+          title: `${seriesObject.specification.name} ${seriesObject.specification.aggregation}`,
+          subscript: seriesObject.specification.name === 'duration' ? 'ms' : undefined,
+          'metric-key': seriesObject.specification.resultAlias()
+        }))
+      };
+
       return of({
-        json: {
-          type: 'container-widget',
-          layout: getLayoutForElements(request.series?.length),
-          children: request.series?.map(seriesObject => ({
-            type: 'metric-display-widget',
-            title: `${seriesObject.specification.name} ${seriesObject.specification.aggregation}`,
-            subscript: seriesObject.specification.name === 'duration' ? 'ms' : undefined,
-            'metric-key': seriesObject.specification.resultAlias()
-          }))
-        },
+        json: cloneDeep(this.state.json),
         onReady: dashboard => {
           dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationMetricDataSourceModel);
           const dataSource = dashboard.getRootDataSource<ExplorerVisualizationMetricDataSourceModel>()!;
@@ -234,11 +248,13 @@ export class CustomDashboardPanelEditComponent {
       orderBy: request.orderBy
     };
   }
+
   public onSaveOrEditPanel(): void {
     const panelSlug = this.customDashboardService.convertNameToSlug(this.state.name);
     if (this.isNewDashboard) {
       // In case of new dashboard, panel will also be new, so add a panel ID
       this.state.id = panelSlug;
+
       this.customDashboardService
         .createDashboard({
           id: this.dashboardId,
@@ -257,12 +273,15 @@ export class CustomDashboardPanelEditComponent {
       } else {
         this.customDashboardStoreService.updatePanel(this.dashboardId, this.state);
       }
+
       const dashboardData = this.customDashboardStoreService.get(this.dashboardId);
+
       this.customDashboardService.updateDashboard(this.dashboardId, dashboardData).subscribe(() => {
         this.redirectToDashboard();
       });
     }
   }
+
   public redirectToDashboard(): void {
     const dashboardId = this.isNewDashboard ? 'create' : this.dashboardId;
     this.navigationService.navigateWithinApp(['/custom-dashboards/', this.dashboardView, dashboardId]);

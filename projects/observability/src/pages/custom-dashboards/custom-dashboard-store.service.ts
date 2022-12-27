@@ -9,25 +9,31 @@ import { ExploreRequestState } from '../../public-api';
 })
 export class CustomDashboardStoreService {
   private readonly dashboards: Map<string, DashboardData> = new Map();
+
   public set(dashboardId: string, data: DashboardData): void {
     this.dashboards.set(dashboardId, data);
   }
+
   public hasKey(dashboardId: string): boolean {
     return this.dashboards.has(dashboardId);
   }
+
   public get(dashboardId: string): DashboardData {
     return this.dashboards.get(dashboardId)!;
   }
+
   public addPanel(dashboardId: string, panelData: PanelData): void {
     const dashboard = this.dashboards.get(dashboardId)!;
     dashboard.panels.push(panelData);
   }
+
   public getPanel(dashboardId: string, panelId: string): PanelData | undefined {
     const dashboard = this.dashboards.get(dashboardId);
     if (dashboard) {
       return dashboard.panels.find(p => p.id === panelId) as PanelData;
     }
   }
+
   public updatePanel(dashboardId: string, panelData: PanelData): void {
     const dashboard = this.dashboards.get(dashboardId)!;
 
@@ -35,6 +41,7 @@ export class CustomDashboardStoreService {
     dashboard.panels[panelIndex] = panelData;
     this.dashboards.set(dashboardId, dashboard);
   }
+
   public deletePanel(dashboardId: string, panelId: string): DashboardData {
     const dashboard = this.dashboards.get(dashboardId)!;
 
@@ -44,11 +51,13 @@ export class CustomDashboardStoreService {
 
     return dashboard;
   }
+
   public getAllPanels(dashboardId: string): Observable<PanelData[]> {
     const dashboard = this.dashboards.get(dashboardId)!;
 
     return of(dashboard.panels);
   }
+
   public delete(dashboardId: string): void {
     this.dashboards.delete(dashboardId);
   }

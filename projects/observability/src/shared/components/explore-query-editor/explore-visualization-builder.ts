@@ -229,7 +229,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     };
   }
 
-  private resolveInterval(interval?: TimeDuration | 'AUTO'): TimeDuration | undefined {
+  private resolveInterval(interval?: TimeDuration | 'AUTO' | undefined): TimeDuration | undefined {
     return interval === 'AUTO' ? this.intervalDurationService.getAutoDuration() : interval;
   }
 }
@@ -237,7 +237,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 export interface ExploreRequestState {
   series: ExploreSeries[];
   context: ExploreRequestContext;
-  interval?: TimeDuration | 'AUTO';
+  interval?: TimeDuration | 'AUTO' | undefined;
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;
   orderBy?: GraphQlSortDirection;
