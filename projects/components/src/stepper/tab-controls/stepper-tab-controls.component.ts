@@ -9,7 +9,7 @@ import { StepperTabComponent } from '../tab/stepper-tab.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StepperTabControlsComponent extends ContentHolder {
-  public constructor(public stepper: StepperComponent, public step: StepperTabComponent) {
+  public constructor(private readonly stepper: StepperComponent, public readonly step: StepperTabComponent) {
     super();
   }
 
