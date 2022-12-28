@@ -9,7 +9,7 @@ import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
 import { LoadAsyncModule } from '../load-async/load-async.module';
 import { StepperComponent } from '../stepper/stepper.component';
-import { StepperTabComponent } from './stepper-tab.component';
+import { StepperTabComponent } from './tab/stepper-tab.component';
 
 describe('Stepper Component', () => {
   let spectator: Spectator<StepperComponent>;
