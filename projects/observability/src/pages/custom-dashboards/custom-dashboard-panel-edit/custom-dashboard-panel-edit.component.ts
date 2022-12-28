@@ -19,8 +19,11 @@ import { SPAN_SCOPE } from '../../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../../shared/services/metadata/metadata.service';
 import { ExplorerGeneratedDashboard } from '../../explorer/explorer-dashboard-builder';
 import { getLayoutForElements } from '../../explorer/utils/get-layout-for-elements';
-import { CustomDashboardStoreService, PanelData } from '../custom-dashboard-store.service';
+import { CustomDashboardStoreService } from '../custom-dashboard-store.service';
 import { CustomDashboardService } from '../custom-dashboard.service';
+
+import type { ModelJson } from '@hypertrace/hyperdash';
+import type { PanelData } from '../custom-dashboard-store.service'; // tslint:disable-line: no-duplicate-imports
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,7 +71,6 @@ import { CustomDashboardService } from '../custom-dashboard.service';
         [interval]="state.interval"
         [groupBy]="state.groupBy"
         [series]="state.series"
-        [interval]="state.interval"
         [orderBy]="state.orderBy"
         (visualizationRequestChange)="this.onVisualizationRequestUpdated($event)"
       ></ht-explore-query-editor>
@@ -84,6 +86,22 @@ export class CustomDashboardPanelEditComponent {
   public attributes$: Observable<AttributeMetadata[]> = EMPTY;
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
 
+  private readonly cartesianWidgetJson: ModelJson = {
+    type: 'cartesian-widget',
+    'selectable-interval': false,
+    'series-from-data': true,
+    'legend-position': LegendPosition.Bottom,
+    'selection-handler': {
+      type: 'custom-dashboard-selection-handler'
+    },
+    'show-y-axis': true,
+    'y-axis': {
+      type: 'cartesian-axis',
+      'show-grid-lines': true,
+      'min-upper-limit': 25
+    }
+  };
+
   public state: PanelData = {
     context: ObservabilityTraceType.Api,
     resultLimit: 15,
@@ -92,21 +110,7 @@ export class CustomDashboardPanelEditComponent {
     id: '',
     isRealtime: false,
     interval: 'AUTO',
-    json: {
-      type: 'cartesian-widget',
-      'selectable-interval': false,
-      'series-from-data': true,
-      'legend-position': LegendPosition.Bottom,
-      'selection-handler': {
-        type: 'custom-dashboard-selection-handler'
-      },
-      'show-y-axis': true,
-      'y-axis': {
-        type: 'cartesian-axis',
-        'show-grid-lines': true,
-        'min-upper-limit': 25
-      }
-    }
+    json: this.cartesianWidgetJson
   };
 
   public filters: Filter[] = [];
@@ -166,6 +170,7 @@ export class CustomDashboardPanelEditComponent {
     if (!this.isNewPanel) {
       const panelData = this.customDashboardStoreService.getPanel(this.dashboardId, this.panelId)!;
       this.state = panelData;
+      this.state.interval = panelData.interval ?? ('NONE' as PanelData['interval']);
     }
 
     this.currentContext = this.contextItems.find(i => i.value === this.state.context)!;
@@ -213,6 +218,8 @@ export class CustomDashboardPanelEditComponent {
         }
       });
     }
+
+    this.state.json = this.cartesianWidgetJson;
 
     return of({
       /*

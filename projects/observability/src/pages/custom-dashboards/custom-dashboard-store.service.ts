@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { TimeDuration, TimeUnit } from '@hypertrace/common';
+import { TimeDuration } from '@hypertrace/common';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
-import { ExploreRequestState } from '../../public-api';
+
+import type { ExploreRequestState } from '../../public-api';
 
 @Injectable({
   providedIn: 'root'
@@ -75,10 +76,5 @@ export interface PanelData extends ExploreRequestState {
   name: string;
   json: ModelJson;
   isRealtime?: boolean;
-  interval: PanelInterval | 'AUTO' | undefined;
-}
-
-export interface PanelInterval extends TimeDuration {
-  value: number;
-  unit: TimeUnit;
+  interval: TimeDuration | 'AUTO' | undefined;
 }

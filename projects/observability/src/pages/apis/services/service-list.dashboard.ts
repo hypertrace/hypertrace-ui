@@ -28,7 +28,7 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'entity-specification'
             },
-            sort: TableSortDirection.Descending
+            sort: TableSortDirection.Ascending
           },
           {
             type: 'table-widget-column',
@@ -97,7 +97,7 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
           isClientSideFiltered: true,
           limit: 250,
           clientSideSort: {
-            direction: TableSortDirection.Descending,
+            direction: TableSortDirection.Ascending,
             defaultSortColumnIndex: 0
           }
         }
