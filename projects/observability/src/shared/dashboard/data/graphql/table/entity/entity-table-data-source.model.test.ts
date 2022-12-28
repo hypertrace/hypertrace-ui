@@ -99,7 +99,7 @@ describe('Entity table data source model', () => {
       expect.objectContaining({
         requestType: ENTITIES_GQL_REQUEST,
         entityType: 'SERVICE',
-        properties: [expect.objectContaining({ name: 'name' }), expect.objectContaining({ name: 'duration' })],
+        properties: [],
         limit: 100,
         offset: 0,
         sort: {
@@ -148,7 +148,7 @@ describe('Entity table data source model', () => {
       expect.objectContaining({
         requestType: ENTITIES_GQL_REQUEST,
         entityType: 'API',
-        properties: [expect.objectContaining({ name: 'name' }), expect.objectContaining({ name: 'duration' })],
+        properties: [],
         limit: 40,
         offset: 0,
         sort: {

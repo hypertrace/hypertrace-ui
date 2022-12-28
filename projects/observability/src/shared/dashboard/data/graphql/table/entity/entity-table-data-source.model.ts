@@ -94,7 +94,10 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     return {
       requestType: ENTITIES_GQL_REQUEST,
       entityType: this.entityType,
-      properties: request.columns.map(column => column.specification).concat(...this.additionalSpecifications),
+      properties: request.columns
+        .filter(column => column.visible)
+        .map(column => column.specification)
+        .concat(...this.additionalSpecifications),
       limit: this.limit ?? request.position.limit * 2, // Prefetch 2 pages,
       offset: offset,
       sort: sort,
