@@ -83,13 +83,14 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
           <ht-info-icon
             *ngIf="this.loadMoreConfig.additionalInfo"
             class="info"
-            [info]="his.loadMoreConfig.additionalInfo"
+            [info]="this.loadMoreConfig.additionalInfo"
           ></ht-info-icon>
           <ht-button
             class="load-more-button"
+            label="Load More..."
             role="${ButtonRole.Secondary}"
-            size="${ButtonSize.Tiny}"
-            display="${ButtonStyle.Outlined}"
+            size="${ButtonSize.ExtraSmall}"
+            display="${ButtonStyle.Solid}"
             (click)="this.loadMore.emit()"
           ></ht-button>
         </div>
@@ -138,7 +139,9 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public additionalHeaderContent?: TemplateRef<unknown>;
 
   @Input()
-  public loadMoreConfig?: LoadMoreConfig;
+  public loadMoreConfig: LoadMoreConfig = {
+    description: 'Minimized Open API Spec. Search and Selection will be limited.'
+  };
 
   @Input()
   public lineSplitter: RegExp = new RegExp('\r\n|\r|\n');
