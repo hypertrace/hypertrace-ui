@@ -3,9 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   QueryList,
   TemplateRef,
   ViewChildren
@@ -14,6 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { of } from 'rxjs';
+import { ButtonRole, ButtonSize, ButtonStyle } from '../../button/button';
 import { DownloadFileMetadata } from '../../download-file/download-file-metadata';
 import { CodeLanguage } from './code-language';
 import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighter.service';
@@ -74,6 +77,23 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
           <ht-message-display icon="${IconType.NoData}" [title]="this.noDataMessage"></ht-message-display>
         </ng-template>
       </div>
+      <div class="footer">
+        <div *ngIf="this.loadMoreConfig" class="load-more-section">
+          <div class="description">{{ this.loadMoreConfig.description }}</div>
+          <ht-info-icon
+            *ngIf="this.loadMoreConfig.additionalInfo"
+            class="info"
+            [info]="his.loadMoreConfig.additionalInfo"
+          ></ht-info-icon>
+          <ht-button
+            class="load-more-button"
+            role="${ButtonRole.Secondary}"
+            size="${ButtonSize.Tiny}"
+            display="${ButtonStyle.Outlined}"
+            (click)="this.loadMore.emit()"
+          ></ht-button>
+        </div>
+      </div>
     </div>
   `
 })
@@ -118,7 +138,13 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public additionalHeaderContent?: TemplateRef<unknown>;
 
   @Input()
+  public loadMoreConfig?: LoadMoreConfig;
+
+  @Input()
   public lineSplitter: RegExp = new RegExp('\r\n|\r|\n');
+
+  @Output()
+  public readonly loadMore: EventEmitter<void> = new EventEmitter();
 
   @ViewChildren('codeLineBackground', { read: ElementRef })
   private readonly codeLineBackgroundElements!: QueryList<ElementRef>;
@@ -267,6 +293,11 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
       highlightedCodeLineElement?.scrollIntoView();
     }
   }
+}
+
+export interface LoadMoreConfig {
+  description: string;
+  additionalInfo?: string;
 }
 
 interface Position {
