@@ -1,70 +1,47 @@
 import { Directive, ElementRef, HostListener, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
-import { Subject, Subscription } from 'rxjs';
-import { delay, finalize, takeUntil } from 'rxjs/operators';
-import { PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
-import { PopoverRef } from '../popover/popover-ref';
-import { PopoverService } from '../popover/popover.service';
+import { PopoverRelativePositionLocation } from '../popover/popover';
+import { PopoverHoverTriggerService } from '../popover/service/popover-hover-trigger.service';
 import { TooltipContentContainerComponent } from './tooltip-content-container.component';
 
 @Directive({
-  selector: '[htTooltip]'
+  selector: '[htTooltip]',
+  providers: [PopoverHoverTriggerService]
 })
 export class TooltipDirective implements OnDestroy {
-  private static readonly DEFAULT_HOVER_DELAY_MS: number = 400;
-
   @Input('htTooltip')
   public content?: TemplateRef<unknown> | string | number;
 
   @Input('htTooltipContext')
   public context?: unknown;
 
-  private readonly mouseEnter$: Subject<MouseEvent> = new Subject();
-  private readonly mouseLeave$: Subject<MouseEvent> = new Subject();
+  public constructor(private readonly popoverService: PopoverHoverTriggerService, private readonly host: ElementRef) {}
 
-  private readonly subscriptions: Subscription = new Subscription();
-
-  private popover?: PopoverRef;
-
-  public constructor(private readonly popoverService: PopoverService, private readonly host: ElementRef) {}
-
-  @HostListener('mouseenter', ['$event'])
-  public onHover(event: MouseEvent): void {
-    this.subscriptions.add(
-      this.mouseEnter$
-        .pipe(
-          delay(TooltipDirective.DEFAULT_HOVER_DELAY_MS),
-          takeUntil(this.mouseLeave$),
-          finalize(() => this.removeTooltip())
-        )
-        .subscribe(() => this.showTooltip())
-    );
-
-    this.mouseEnter$.next(event);
+  @HostListener('mouseenter')
+  public onHover(): void {
+    this.showTooltip();
   }
 
-  @HostListener('mouseleave', ['$event'])
-  @HostListener('click', ['$event'])
-  public onHoverEnd(event: MouseEvent): void {
-    this.mouseLeave$.next(event);
+  @HostListener('mouseleave')
+  @HostListener('click')
+  public onHoverEnd(): void {
+    this.removeTooltip();
   }
 
   public ngOnDestroy(): void {
     this.removeTooltip();
-    this.subscriptions.unsubscribe();
   }
 
   private showTooltip(): void {
-    if (isNil(this.content) || this.content === '' || this.popover) {
+    if (isNil(this.content) || this.content === '') {
       return;
     }
 
-    this.popover = this.popoverService.drawPopover({
+    this.popoverService.showPopover({
+      origin: this.host,
       componentOrTemplate: TooltipContentContainerComponent,
-      data: { content: this.content, context: this.context ?? {} },
-      position: {
-        type: PopoverPositionType.Relative,
-        origin: this.host,
+      options: {
+        data: { content: this.content, context: this.context ?? {} },
         locationPreferences: [
           PopoverRelativePositionLocation.BelowCentered,
           PopoverRelativePositionLocation.AboveCentered,
@@ -76,9 +53,6 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private removeTooltip(): void {
-    if (this.popover) {
-      this.popover.close();
-      this.popover = undefined;
-    }
+    this.popoverService.closePopover();
   }
 }
