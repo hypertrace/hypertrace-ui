@@ -78,7 +78,12 @@ export class UserTelemetryImplService extends UserTelemetryService {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         delay(50)
       )
-      .subscribe(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url }));
+      .subscribe(route => {
+        const absoluteUrl = route.url.split('?')?.[0];
+        const queryParams = this.router?.parseUrl(route.url).queryParams;
+
+        this.trackPageEvent(`Visited: ${absoluteUrl}`, { url: route.url, absoluteUrl: absoluteUrl, ...queryParams });
+      });
   }
 }
 
