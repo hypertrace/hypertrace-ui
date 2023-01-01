@@ -131,6 +131,7 @@ export const enum IconType {
   User = 'person_outline',
   Unavailable = 'remove_circle_outline',
   Unknown = 'device_unknown',
+  Undo = 'svg:undo',
   VerticalGrabHandle = 'svg:vertical-grab-handle',
   Warning = 'svg:warning',
   VirtualMachine = 'svg:virtual-machine',
