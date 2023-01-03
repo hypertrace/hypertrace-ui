@@ -45,7 +45,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'entity-specification'
             },
-            sort: TableSortDirection.Ascending
+            sort: TableSortDirection.Descending
           },
           {
             type: 'table-widget-column',

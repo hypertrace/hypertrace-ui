@@ -207,7 +207,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       case FilterOperator.Equals:
         return rows.filter(eachRow => ((eachRow[actualKeyNameInRows] as Entity).name as string) === tableFilter.value);
       case FilterOperator.Like:
-        const regexExp = new RegExp(tableFilter.value as string);
+        const regexExp = new RegExp(tableFilter.value as string, 'i');
 
         return rows.filter(eachRow => regexExp.test((eachRow[actualKeyNameInRows] as Entity).name as string));
       case FilterOperator.In:
