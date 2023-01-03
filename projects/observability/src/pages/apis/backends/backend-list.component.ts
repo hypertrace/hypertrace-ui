@@ -32,7 +32,7 @@ export class BackendListComponent {
           type: 'entity-specification',
           'entity-type': ObservabilityEntityType.Backend
         },
-        sort: TableSortDirection.Descending
+        sort: TableSortDirection.Ascending
       },
       {
         type: 'table-widget-column',
@@ -53,7 +53,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'duration',
           aggregation: 'p99'
-        }
+        },
+        visible: false
       },
       {
         type: 'table-widget-column',
@@ -63,7 +64,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'duration',
           aggregation: 'avg'
-        }
+        },
+        visible: false
       },
       {
         type: 'table-widget-column',
@@ -73,7 +75,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'errorCount',
           aggregation: 'avgrate_sec'
-        }
+        },
+        visible: false
       },
       {
         type: 'table-widget-column',
@@ -83,7 +86,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'errorCount',
           aggregation: 'sum'
-        }
+        },
+        visible: false
       },
       {
         type: 'table-widget-column',
@@ -93,7 +97,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'numCalls',
           aggregation: 'avgrate_sec'
-        }
+        },
+        visible: false
       },
       {
         type: 'table-widget-column',
@@ -103,7 +108,8 @@ export class BackendListComponent {
           type: 'metric-aggregation',
           metric: 'numCalls',
           aggregation: 'sum'
-        }
+        },
+        visible: false
       }
     ],
     data: {
@@ -112,7 +118,7 @@ export class BackendListComponent {
       isClientSideFiltered: true,
       limit: 300,
       clientSideSort: {
-        direction: TableSortDirection.Descending,
+        direction: TableSortDirection.Ascending,
         defaultSortColumnIndex: 0
       }
     }

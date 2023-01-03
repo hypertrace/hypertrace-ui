@@ -16,18 +16,12 @@
   }
 
   .options-button {
-    display: none;
+    display: inherit;
     color: $gray-7;
     cursor: pointer;
 
     &:hover {
       color: $blue-5;
-    }
-  }
-
-  &:hover {
-    .options-button {
-      display: inherit;
     }
   }
 
