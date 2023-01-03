@@ -58,7 +58,7 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
   protected buildTimeRange(timestamp?: Date): GraphQlTimeRange {
     let timeRange;
     if (timestamp) {
-      const duration = new TimeDuration(30, TimeUnit.Second);
+      const duration = new TimeDuration(60, TimeUnit.Second);
       timeRange = {
         startTime: timestamp.getTime() - duration.toMillis(),
         endTime: timestamp.getTime() + duration.toMillis()
