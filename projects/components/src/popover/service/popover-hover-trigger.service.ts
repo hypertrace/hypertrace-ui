@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, OnDestroy, TemplateRef, Type } from '@angular/core';
+import { ElementRef, Injectable, OnDestroy, TemplateRef } from '@angular/core';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
@@ -104,7 +104,7 @@ export class PopoverHoverTriggerService implements OnDestroy {
   }
 }
 
-export interface PopoverHoverTriggerConfig<TContent = TemplateRef<unknown> | Type<unknown>, TData = unknown> {
+export interface PopoverHoverTriggerConfig<TContent = TemplateRef<unknown>, TData = unknown> {
   origin: ElementRef;
   componentOrTemplate: TContent;
   options?: {
