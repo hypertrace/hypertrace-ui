@@ -396,6 +396,7 @@ export * from './toggle-switch/toggle-switch.module';
 export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 
 // Tooltip
+export { ActionableTooltipDirective } from './tooltip/actionable/actionable-tooltip.directive';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
 
