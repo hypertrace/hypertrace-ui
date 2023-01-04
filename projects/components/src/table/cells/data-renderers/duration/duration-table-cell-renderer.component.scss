@@ -3,6 +3,6 @@
 .duration-cell {
   .duration-text {
     @include ellipsis-overflow();
-    @include body-1-regular();
+    @include body-2-regular();
   }
 }
