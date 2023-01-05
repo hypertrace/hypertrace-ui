@@ -29,7 +29,7 @@ import { RadioOption } from './radio-option';
     <mat-radio-group
       class="radio-group"
       [ngClass]="this.optionsDirection"
-      [ngModel]="this.selected!.value"
+      [ngModel]="this.selected?.value"
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
@@ -39,7 +39,6 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
-        (change)="$event.stopPropagation()"
       >
         <div class="radio-button-item">
           <ng-container
