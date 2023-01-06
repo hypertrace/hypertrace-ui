@@ -6,11 +6,13 @@
   flex-direction: column;
   justify-content: center;
   min-height: 36px;
+  overflow-y: scroll;
   width: 100%;
   padding: 0 1px 0 8px;
   background: white;
   border: 1px solid $color-border;
   border-radius: 6px;
+  max-height: 180px;
 
   &.focused {
     caret-color: $blue-5;
