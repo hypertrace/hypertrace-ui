@@ -25,6 +25,6 @@ describe('ExtractValuesPipe', () => {
         false
       )
     ).toEqual([1, 3, 3]);
-    expect(pipe.transform(['unsupported-input'], 'a')).toEqual([]);
+    expect(pipe.transform(['unsupported-input'], 'a')).toEqual([undefined]);
   });
 });
