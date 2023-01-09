@@ -46,6 +46,7 @@
 .stepper {
   @include flex-layout(column);
   justify-content: space-between;
+  position: relative;
 
   .action-buttons {
     position: absolute;
