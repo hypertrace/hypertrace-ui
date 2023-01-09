@@ -7,10 +7,10 @@
 
 .string-enum-cell {
   @include ellipsis-overflow();
-  @include body-1-regular($gray-7);
+  @include body-2-regular($gray-7);
 
   &.first-column {
-    @include body-1-medium($gray-9);
+    @include body-2-medium($gray-9);
   }
 }
 

@@ -4,6 +4,6 @@
   @include ellipsis-overflow();
 
   &.first-column {
-    @include body-1-medium($gray-9);
+    @include body-2-medium($gray-9);
   }
 }

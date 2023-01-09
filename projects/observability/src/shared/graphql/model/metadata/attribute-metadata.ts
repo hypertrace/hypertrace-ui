@@ -11,6 +11,7 @@ export interface AttributeMetadata {
   onlySupportsGrouping: boolean;
   allowedAggregations: MetricAggregationType[];
   groupable: boolean;
+  isCustom: boolean;
 }
 
 export const enum AttributeMetadataType {
