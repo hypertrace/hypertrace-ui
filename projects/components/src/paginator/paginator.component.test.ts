@@ -111,14 +111,23 @@ describe('Paginator component', () => {
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 
-  test('should hide the paginator when totalItems is less than the pageSizeOptions options', () => {
+  test('should not hide the paginator when totalItems is less than the pageSizeOptions options', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
         totalItems: 20
       }
     });
 
-    const paginator = spectator.query('.paginator')!;
-    expect(paginator).toBeNull();
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-20 of 20');
+  });
+
+  test('should not hide the paginator when totalItems is 0', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 0
+      }
+    });
+
+    expect(spectator.query(LabelComponent)?.label).toEqual('0-0 of 0');
   });
 });
