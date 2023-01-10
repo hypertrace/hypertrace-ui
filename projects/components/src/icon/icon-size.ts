@@ -1,4 +1,5 @@
 export const enum IconSize {
+  Micro = 'micro',
   ExtraSmall = 'extra-small',
   Small = 'small',
   Medium = 'medium',
