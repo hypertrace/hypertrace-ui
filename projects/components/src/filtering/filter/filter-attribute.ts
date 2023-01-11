@@ -8,4 +8,5 @@ export interface FilterAttribute {
   onlySupportsAggregation?: boolean;
   onlySupportsGrouping?: boolean;
   category?: string;
+  supportsExclusion?: boolean;
 }
