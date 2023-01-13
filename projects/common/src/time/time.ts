@@ -32,7 +32,7 @@ export class Time {
     return this._date;
   }
 
-  public static timeFromLabel(label: string, isUTC: boolean = false): Time {
+  public static parse(label: string, isUTC: boolean = false): Time {
     const time: string[] = label.split(' ');
     const meridian: string = time.pop()!;
     const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => +value);
