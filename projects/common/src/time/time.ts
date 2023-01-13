@@ -32,16 +32,16 @@ export class Time {
     return this._date;
   }
 
-  public static parse(time: string, isUTC: boolean = false): Time {
+  public static parse(time: string): Time {
     // Using hardcoded epoch start to parse the time portion only of an ISO string
     const scheduledDate: Date = new Date(`1970-01-01T${time}`);
 
     return new Time(
-      scheduledDate.getHours(),
-      scheduledDate.getMinutes(),
-      scheduledDate.getSeconds(),
-      scheduledDate.getMilliseconds(),
-      isUTC
+      scheduledDate.getUTCHours(),
+      scheduledDate.getUTCMinutes(),
+      scheduledDate.getUTCSeconds(),
+      scheduledDate.getUTCMilliseconds(),
+      true
     );
   }
 

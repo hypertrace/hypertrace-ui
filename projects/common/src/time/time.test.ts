@@ -21,9 +21,9 @@ describe('Time', () => {
   });
 
   test('can return correct Time from an ISOString', () => {
-    expect(Time.parse('00:00:00.000Z')).toEqual(new Time(0));
-    expect(Time.parse('12:30:00.000Z')).toEqual(new Time(12, 30));
-    expect(Time.parse('02:00:00.000Z', true)).toEqual(new Time(2, 0, 0, 0, true));
-    expect(Time.parse('14:00:00.000Z', true)).toEqual(new Time(14, 0, 0, 0, true));
+    expect(Time.parse('00:00:00.000Z')).toEqual(new Time(0, 0, 0, 0, true));
+    expect(Time.parse('12:30:00.000Z')).toEqual(new Time(12, 30, 0, 0, true));
+    expect(Time.parse('02:00:00.000Z')).toEqual(new Time(2, 0, 0, 0, true));
+    expect(Time.parse('14:00:00.000Z')).toEqual(new Time(14, 0, 0, 0, true));
   });
 });
