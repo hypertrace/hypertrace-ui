@@ -32,11 +32,27 @@ export class Time {
     return this._date;
   }
 
+  public static timeFromLabel(label: string, isUTC = false): Time {
+    const time: string[] = label.split(' ');
+    const meridian: string = time.pop()!;
+    const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => +value);
+
+    return new Time(this.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
+  }
+
   public toISOString(): string {
     return this.date.toISOString().substring(11);
   }
 
   public equals(other?: Time): boolean {
     return this.toISOString() === other?.toISOString();
+  }
+
+  private static get24HrClockHours(hours: number, meridian: string): number {
+    if (meridian === 'AM') {
+      return hours === 12 ? 0 : hours;
+    } else {
+      return hours === 12 ? 12 : hours + 12;
+    }
   }
 }

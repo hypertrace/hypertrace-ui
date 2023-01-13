@@ -19,4 +19,11 @@ describe('Time', () => {
     expect(mockedTime.equals(new Time(8, 30))).toBeTruthy();
     expect(mockedTime.equals(new Time(9, 30))).toBeFalsy();
   });
+
+  test('can return correct Time from a label', () => {
+    expect(Time.timeFromLabel('12:00 AM')).toEqual(new Time(0));
+    expect(Time.timeFromLabel('12:30 PM')).toEqual(new Time(12, 30));
+    expect(Time.timeFromLabel('2:00 AM', true)).toEqual(new Time(2, 0, 0, 0, true));
+    expect(Time.timeFromLabel('2:00 PM', true)).toEqual(new Time(14, 0, 0, 0, true));
+  });
 });
