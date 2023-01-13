@@ -49,7 +49,7 @@ export class Time {
   }
 
   private static get24HrClockHours(hours: number, meridian: Meridian): number {
-    return meridian === 'AM' ? hours % 12 : hours + 12;
+    return meridian === 'AM' ? hours % 12 : hours === 12 ? 12 : hours + 12;
   }
 }
 
