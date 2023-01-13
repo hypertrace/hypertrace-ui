@@ -32,12 +32,12 @@ export class Time {
     return this._date;
   }
 
-  public static timeFromLabel(label: string, isUTC = false): Time {
+  public static timeFromLabel(label: string, isUTC: boolean = false): Time {
     const time: string[] = label.split(' ');
     const meridian: string = time.pop()!;
     const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => +value);
 
-    return new Time(this.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
+    return new Time(Time.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
   }
 
   public toISOString(): string {
@@ -51,8 +51,8 @@ export class Time {
   private static get24HrClockHours(hours: number, meridian: string): number {
     if (meridian === 'AM') {
       return hours === 12 ? 0 : hours;
-    } else {
-      return hours === 12 ? 12 : hours + 12;
     }
+
+    return hours === 12 ? 12 : hours + 12;
   }
 }
