@@ -32,9 +32,9 @@ export class Time {
     return this._date;
   }
 
-  public static parse(label: string, isUTC: boolean = false): Time {
-    const time: string[] = label.split(' ');
-    const meridian: string = time.pop()!;
+  public static parse(label: TimeString, isUTC: boolean = false): Time {
+    const time: [string, Meridian] = label.split(' ') as [string, Meridian];
+    const meridian: Meridian = time[1];
     const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => +value);
 
     return new Time(Time.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
@@ -48,7 +48,7 @@ export class Time {
     return this.toISOString() === other?.toISOString();
   }
 
-  private static get24HrClockHours(hours: number, meridian: string): number {
+  private static get24HrClockHours(hours: number, meridian: Meridian): number {
     if (meridian === 'AM') {
       return hours === 12 ? 0 : hours;
     }
@@ -56,3 +56,9 @@ export class Time {
     return hours === 12 ? 12 : hours + 12;
   }
 }
+
+export type Meridian = 'AM' | 'PM';
+export type TimeString =
+  | `${string}:${string} ${Meridian}`
+  | `${string}:${string}:${string} ${Meridian}`
+  | `${string}:${string}:${string}:${string} ${Meridian}`;
