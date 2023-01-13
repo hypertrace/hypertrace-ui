@@ -2,6 +2,7 @@
  * There are places where we want to specify a Time without a Date
  * associated. This is what this class is for.
  */
+import { NumberCoercer } from '../utilities/coercers/number-coercer';
 import { DateFormatMode, DateFormatter } from '../utilities/formatters/date/date-formatter';
 
 export class Time {
@@ -33,9 +34,10 @@ export class Time {
   }
 
   public static parse(label: TimeString, isUTC: boolean = false): Time {
+    const numberCoercer = new NumberCoercer();
     const time: [string, Meridian] = label.split(' ') as [string, Meridian];
     const meridian: Meridian = time[1];
-    const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => +value);
+    const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => numberCoercer.coerce(value) ?? 0);
 
     return new Time(Time.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
   }
@@ -55,6 +57,6 @@ export class Time {
 
 export type Meridian = 'AM' | 'PM';
 export type TimeString =
-  | `${string}:${string} ${Meridian}`
-  | `${string}:${string}:${string} ${Meridian}`
-  | `${string}:${string}:${string}:${string} ${Meridian}`;
+  | `${number}:${number} ${Meridian}`
+  | `${number}:${number}:${number} ${Meridian}`
+  | `${number}:${number}:${number}:${number} ${Meridian}`;
