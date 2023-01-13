@@ -25,5 +25,6 @@ describe('Time', () => {
     expect(Time.parse('12:30:00.000Z')).toEqual(new Time(12, 30, 0, 0, true));
     expect(Time.parse('02:00:00.000Z')).toEqual(new Time(2, 0, 0, 0, true));
     expect(Time.parse('14:00:00.000Z')).toEqual(new Time(14, 0, 0, 0, true));
+    expect(Time.parse('14:00:00.000+05:30')).toEqual(new Time(8, 30, 0, 0, true));
   });
 });
