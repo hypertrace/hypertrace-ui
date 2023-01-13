@@ -2,7 +2,6 @@
  * There are places where we want to specify a Time without a Date
  * associated. This is what this class is for.
  */
-import { NumberCoercer } from '../utilities/coercers/number-coercer';
 import { DateFormatMode, DateFormatter } from '../utilities/formatters/date/date-formatter';
 
 export class Time {
@@ -33,13 +32,17 @@ export class Time {
     return this._date;
   }
 
-  public static parse(label: TimeString, isUTC: boolean = false): Time {
-    const numberCoercer = new NumberCoercer();
-    const time: [string, Meridian] = label.split(' ') as [string, Meridian];
-    const meridian: Meridian = time[1];
-    const [hours, minutes, seconds, milliseconds] = time[0].split(':').map(value => numberCoercer.coerce(value) ?? 0);
+  public static parse(time: string, isUTC: boolean = false): Time {
+    // Using hardcoded epoch start to parse the time portion only of an ISO string
+    const scheduledDate: Date = new Date(`1970-01-01T${time}`);
 
-    return new Time(Time.get24HrClockHours(hours, meridian), minutes, seconds, milliseconds, isUTC);
+    return new Time(
+      scheduledDate.getHours(),
+      scheduledDate.getMinutes(),
+      scheduledDate.getSeconds(),
+      scheduledDate.getMilliseconds(),
+      isUTC
+    );
   }
 
   public toISOString(): string {
@@ -49,14 +52,4 @@ export class Time {
   public equals(other?: Time): boolean {
     return this.toISOString() === other?.toISOString();
   }
-
-  private static get24HrClockHours(hours: number, meridian: Meridian): number {
-    return meridian === 'AM' ? hours % 12 : hours === 12 ? 12 : hours + 12;
-  }
 }
-
-export type Meridian = 'AM' | 'PM';
-export type TimeString =
-  | `${number}:${number} ${Meridian}`
-  | `${number}:${number}:${number} ${Meridian}`
-  | `${number}:${number}:${number}:${number} ${Meridian}`;
