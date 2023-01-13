@@ -55,6 +55,7 @@ export interface NavItemGroup {
   navItems: NavItemConfig[];
   displayNavList: boolean;
   hideNavGroup?: boolean;
+  hideEnvironmentSelector?: boolean;
 }
 
 export const enum NavViewStyle {
