@@ -13,6 +13,7 @@ export interface SheetOverlayConfig<TData = unknown> extends OverlayConfig {
   attachedTriggerTemplate?: TemplateRef<unknown>;
   pageNavParams?: ExternalNavigationParams;
   hasDefaultPadding?: boolean;
+  onClose?(contentTemplate?: unknown): void;
 }
 
 export const enum SheetSize {

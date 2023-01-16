@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, HostListener, Inject, Injector, TemplateRef, Type } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ComponentRef,
+  HostListener,
+  Inject,
+  Injector,
+  TemplateRef,
+  Type,
+  ViewChild
+} from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ExternalNavigationParams, GlobalHeaderHeightProviderService, LayoutChangeService } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
@@ -42,7 +52,10 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
           <div class="content-wrapper">
             <div class="content">
               <ng-container *ngIf="this.isComponentSheet; else templateRenderer">
-                <ng-container *ngComponentOutlet="this.renderer; injector: this.rendererInjector"></ng-container>
+                <ng-container
+                  #componentTemplate
+                  *ngComponentOutlet="this.renderer; injector: this.rendererInjector"
+                ></ng-container>
               </ng-container>
               <ng-template #templateRenderer>
                 <ng-container *ngTemplateOutlet="this.renderer"></ng-container>
@@ -76,6 +89,10 @@ export class SheetOverlayComponent {
   public readonly isSheetTitleAString: boolean;
   public isViewCollapsed: boolean;
   public navigationParams: ExternalNavigationParams | undefined;
+  private onClose?: (contentTemplate: unknown) => void;
+
+  @ViewChild('templateRenderer')
+  private readonly templateRenderer!: ComponentRef<unknown>;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
@@ -90,6 +107,7 @@ export class SheetOverlayComponent {
     this.isSheetTitleAString = typeof this.sheetTitle === 'string';
     this.size = sheetConfig.size;
     this.closeOnEscape = sheetConfig.closeOnEscapeKey ?? true;
+    this.onClose = sheetConfig.onClose;
     this.attachedTriggerTemplate = sheetConfig.attachedTriggerTemplate;
     this.isViewCollapsed = !!this.attachedTriggerTemplate;
 
@@ -119,8 +137,12 @@ export class SheetOverlayComponent {
   }
 
   public close(): void {
-    this.visible = false;
-    this.popoverRef.close();
+    if (this.onClose) {
+      this.onClose(this.templateRenderer);
+    } else {
+      this.visible = false;
+      this.popoverRef.close();
+    }
   }
 
   public toggleCollapseExpand(): void {
