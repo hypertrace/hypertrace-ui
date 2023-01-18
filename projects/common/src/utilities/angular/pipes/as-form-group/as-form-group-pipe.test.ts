@@ -16,6 +16,12 @@ describe('AsFormGroupPipe', () => {
     expect(result).toBeUndefined();
   });
 
+  test('should not throw an error when the child form is undefined', () => {
+    const parent = new FormGroup({});
+    const result = pipe.transform(parent.controls.falsyChild);
+    expect(result).toBeUndefined();
+  });
+
   test('should work with nested form groups', () => {
     const childForm = new FormGroup({});
     const parentForm = new FormGroup({ childForm: childForm });
