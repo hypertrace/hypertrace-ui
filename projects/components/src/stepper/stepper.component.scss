@@ -46,20 +46,25 @@
 .stepper {
   @include flex-layout(column);
   justify-content: space-between;
+  position: relative;
 
-  .action-buttons {
+  .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     background-color: white;
     border-top: 1px solid $gray-1;
     padding-top: 8px;
-    display: flex;
-    justify-content: space-between;
 
-    .back-next {
+    .action-buttons {
       display: flex;
-      gap: 16px;
+      justify-content: space-between;
+      z-index: 20;
+
+      .back-next {
+        display: flex;
+        gap: 16px;
+      }
     }
   }
 }

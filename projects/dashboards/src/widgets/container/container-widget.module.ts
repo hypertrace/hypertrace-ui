@@ -12,6 +12,7 @@ import { CellSpanModel } from './layout/custom/cell-span/cell-span.model';
 import { CustomContainerLayoutModel } from './layout/custom/custom-container-layout.model';
 import { AutoDimensionModel } from './layout/custom/dimension/auto-dimension.model';
 import { DimensionModel } from './layout/custom/dimension/dimension.model';
+import { MaxContentContainerLayoutModel } from './layout/max-content/max-content-container-layout.model';
 
 @NgModule({
   declarations: [ContainerWidgetRendererComponent, ContainerLayoutComponent],
@@ -24,7 +25,8 @@ import { DimensionModel } from './layout/custom/dimension/dimension.model';
         CustomContainerLayoutModel,
         CellSpanModel,
         DimensionModel,
-        AutoDimensionModel
+        AutoDimensionModel,
+        MaxContentContainerLayoutModel
       ],
       renderers: [ContainerWidgetRendererComponent]
     }),

@@ -396,6 +396,7 @@ export * from './toggle-switch/toggle-switch.module';
 export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 
 // Tooltip
+export { ActionableTooltipDirective } from './tooltip/actionable/actionable-tooltip.directive';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
 
@@ -407,6 +408,8 @@ export * from './page-time-range/page-time-range.component';
 export * from './page-time-range/page-time-range.module';
 
 // Stepper
-export * from './stepper/stepper.module';
-export * from './stepper/stepper.component';
-export * from './stepper/stepper-tab.component';
+export * from './stepper';
+
+// Pill list
+export * from './input-pill-list/input-pill-list.component';
+export * from './input-pill-list/input-pill-list.module';

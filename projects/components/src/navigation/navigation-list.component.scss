@@ -80,7 +80,7 @@
     flex-direction: column;
     position: relative;
     color: $gray-5;
-    padding: 0px 12px 18px;
+    padding: 0px 12px 12px;
 
     .footer-item {
       display: flex;
@@ -88,7 +88,8 @@
       justify-content: center;
 
       .nav-group-icon {
-        height: 190px;
+        width: 140px;
+        height: 140px;
         opacity: 0.15;
         color: $blue-gray-4;
       }
@@ -109,7 +110,7 @@
     }
 
     .nav-divider {
-      margin: 12px auto 8px 0;
+      margin: 8px auto 8px 0;
       height: 1px;
       width: 16px;
       background-color: $gray-4;

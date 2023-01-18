@@ -55,6 +55,9 @@ describe('Metadata graphql query handler service', () => {
         },
         {
           path: 'groupable'
+        },
+        {
+          path: 'isCustom'
         }
       ]
     });
@@ -80,7 +83,8 @@ describe('Metadata graphql query handler service', () => {
           GraphQlMetricAggregationType.Count,
           GraphQlMetricAggregationType.Percentile
         ],
-        groupable: false
+        groupable: false,
+        isCustom: false
       },
       {
         name: 'second',
@@ -91,7 +95,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         supportedAggregations: [],
-        groupable: true
+        groupable: false,
+        isCustom: false
       },
       {
         name: 'Third',
@@ -102,7 +107,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         supportedAggregations: [],
-        groupable: false
+        groupable: false,
+        isCustom: false
       }
     ];
 
@@ -128,7 +134,8 @@ describe('Metadata graphql query handler service', () => {
           MetricAggregationType.P90,
           MetricAggregationType.P50
         ],
-        groupable: false
+        groupable: false,
+        isCustom: false
       },
       {
         name: 'second',
@@ -139,7 +146,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         allowedAggregations: [],
-        groupable: true
+        groupable: false,
+        isCustom: false
       },
       {
         name: 'Third',
@@ -150,7 +158,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsAggregation: false,
         onlySupportsGrouping: false,
         allowedAggregations: [],
-        groupable: false
+        groupable: false,
+        isCustom: false
       }
     ]);
   });
