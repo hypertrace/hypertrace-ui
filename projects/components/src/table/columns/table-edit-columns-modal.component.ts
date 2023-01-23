@@ -10,14 +10,14 @@ import { TableColumnConfigExtended } from '../table.service';
   template: `
     <div class="edit-modal">
       <div class="column-items">
-        <ng-container *ngFor="let column of this.editColumns">
+        <ng-container *ngFor="let column of this.editColumns; index as i">
           <div class="column-item">
             <ht-checkbox
               [label]="column.title"
               [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
               [disabled]="!column.editable || this.isLastRemainingColumn(column)"
-              (checkedChange)="column.visible = $event"
+              (checkedChange)="this.selectColumn($event, i)"
             ></ht-checkbox>
           </div>
         </ng-container>
@@ -51,6 +51,13 @@ export class TableEditColumnsModalComponent {
     this.editColumns = this.modalData
       .filter(column => !this.isMetaTypeColumn(column))
       .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+  }
+
+  public selectColumn(checked: boolean, index: number): void {
+    this.editColumns[index] = {
+      ...this.editColumns[index],
+      visible: checked
+    };
   }
 
   private isMetaTypeColumn(column: TableColumnConfigExtended): boolean {
