@@ -6,8 +6,20 @@
 
   .time-selector {
     @include body-1-medium($gray-7);
-    height: 32px;
     border-radius: 4px;
+    height: 36px;
+
+    &.extra-small {
+      height: 24px;
+    }
+
+    &.small {
+      height: 32px;
+    }
+
+    &.large {
+      height: 44px;
+    }
 
     &.with-background {
       border: 1px solid $gray-1;
