@@ -12,7 +12,7 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
     <div class="time-picker" [ngClass]="[this.size, this.disabled ? 'disabled' : '']">
       <ht-popover class="time-selector" [disabled]="this.disabled" [ngClass]="this.displayMode" [closeOnClick]="true">
         <ht-popover-trigger>
-          <div class="popover-trigger" #popoverTrigger>
+          <div class="popover-trigger" [class]="this.size" #popoverTrigger>
             <ht-icon
               class="trigger-icon"
               icon="${IconType.Time}"
@@ -99,7 +99,6 @@ export const enum TimePickerIconSize {
 }
 
 export const enum TimePickerSize {
-  ExtraSmall = 'extra-small',
   Small = 'small',
   Medium = 'medium',
   Large = 'large'

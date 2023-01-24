@@ -9,18 +9,6 @@
     border-radius: 4px;
     height: 36px;
 
-    &.extra-small {
-      height: 24px;
-    }
-
-    &.small {
-      height: 32px;
-    }
-
-    &.large {
-      height: 44px;
-    }
-
     &.with-background {
       border: 1px solid $gray-1;
       background: $gray-1;
@@ -29,6 +17,18 @@
     &.with-border {
       border: 1px solid $color-border;
       border-radius: 6px;
+    }
+  }
+
+  &.small {
+    .time-selector {
+      height: 32px;
+    }
+  }
+
+  &.large {
+    .time-selector {
+      height: 44px;
     }
   }
 }
@@ -41,6 +41,14 @@
   padding: 0 8px;
   cursor: pointer;
   min-width: 108px;
+
+  &.small {
+    height: 32px;
+  }
+
+  &.large {
+    height: 44px;
+  }
 
   .trigger-icon {
     padding: 0 8px;
