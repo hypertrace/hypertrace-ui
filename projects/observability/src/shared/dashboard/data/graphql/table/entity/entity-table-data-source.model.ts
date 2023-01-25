@@ -65,10 +65,12 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       properties: request.columns.map(column => column.specification).concat(...this.additionalSpecifications),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
-      sort: request.sort ? {
-        direction: request.sort.direction,
-        key: request.sort.column.specification
-      } : this.buildDefaultSortArg(request.columns),
+      sort: request.sort
+        ? {
+            direction: request.sort.direction,
+            key: request.sort.column.specification
+          }
+        : this.buildDefaultSortArg(request.columns),
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true,
@@ -132,10 +134,12 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   private buildDefaultSortArg(columns: SpecificationBackedTableColumnDef[]): GraphQlEntitiesQueryRequest['sort'] {
     const defaultSortColumn = columns.find(column => column.sort);
-    
-    return defaultSortColumn ? {
-      key: defaultSortColumn.specification,
-      direction: defaultSortColumn.sort ?? TableSortDirection.Ascending
-    } : undefined;
+
+    return defaultSortColumn
+      ? {
+          key: defaultSortColumn.specification,
+          direction: defaultSortColumn.sort ?? TableSortDirection.Ascending
+        }
+      : undefined;
   }
 }
