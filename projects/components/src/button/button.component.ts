@@ -89,6 +89,8 @@ export class ButtonComponent {
         return IconSize.Large;
       case ButtonSize.Medium:
         return IconSize.Medium;
+      case ButtonSize.ExtraSmall:
+        return IconSize.ExtraSmall;
       default:
         return IconSize.Small;
     }

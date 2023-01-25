@@ -77,6 +77,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.LinkUrl, url: `${iconsRootPath}/link-url.svg` },
         { key: IconType.Loading, url: `${iconsRootPath}/loading.svg` },
         { key: IconType.MailUnread, url: `${iconsRootPath}/mail-unread.svg` },
+        { key: IconType.Minus, url: `${iconsRootPath}/minus.svg` },
         { key: IconType.MoreHorizontal, url: `${iconsRootPath}/more-horizontal.svg` },
         { key: IconType.MoreVertical, url: `${iconsRootPath}/more-vertical.svg` },
         { key: IconType.NoData, url: `${iconsRootPath}/no-data.svg` },

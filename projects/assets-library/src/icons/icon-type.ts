@@ -89,6 +89,7 @@ export const enum IconType {
   Loading = 'svg:loading',
   Lock = 'lock',
   MailUnread = 'svg:mail-unread',
+  Minus = 'svg:minus',
   MoreHorizontal = 'svg:more-horizontal',
   MoreVertical = 'svg:more-vertical',
   Menu = 'menu',
