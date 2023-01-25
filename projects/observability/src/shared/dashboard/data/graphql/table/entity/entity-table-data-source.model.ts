@@ -133,6 +133,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
   private buildDefaultSortArg(columns: SpecificationBackedTableColumnDef[]): { key: Specification; direction: TableSortDirection } | undefined {
 
     const defaultSortColumn = columns.find(column => column.sort);
+    
     return defaultSortColumn ? {
       key: defaultSortColumn.specification,
       direction: defaultSortColumn.sort ?? TableSortDirection.Ascending
