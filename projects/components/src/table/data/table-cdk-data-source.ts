@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
@@ -284,14 +284,23 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
     const request = this.buildRequest(columnConfigs, pageEvent, filters, queryProperties);
 
-    return this.hasCachedRowsForRequest(request) ? this.fetchCachedData(request) : this.fetchNewData(request);
+    return this.hasCacheForRequest(request) ? this.fetchCachedData(request) : this.fetchNewData(request);
   }
 
-  private hasCachedRowsForRequest(request: TableDataRequest): boolean {
+  private haveColumConfigsChanged(request: TableDataRequest): boolean {
+    if (isNil(this.cachedData.request)) {
+      return true;
+    }
+
+    return !isEqual(request.columns, this.cachedData.request.columns);
+  }
+
+  private hasCacheForRequest(request: TableDataRequest): boolean {
     if (
       this.cachedData.rows.length !== 0 &&
       this.cachedData.rows.length === this.cachedData.total &&
-      request.position.limit <= this.cachedData.rows.length
+      request.position.limit <= this.cachedData.rows.length &&
+      !this.haveColumConfigsChanged(request)
     ) {
       // Check if we already have all available results cached
       return true;
@@ -306,7 +315,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
     // Check if requested startOffset + limit is within the cached data
     return (
-      offsetWithinCachedRows >= 0 && offsetWithinCachedRows + request.position.limit <= this.cachedData.rows.length
+      offsetWithinCachedRows >= 0 &&
+      offsetWithinCachedRows + request.position.limit <= this.cachedData.rows.length &&
+      !this.haveColumConfigsChanged(request)
     );
   }
 
