@@ -11,6 +11,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { LoggerService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { RadioOption } from './radio-option';
 
 @Component({
@@ -113,7 +114,9 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public onRadioChange(event: MatRadioChange): void {
-    this.setSelection(event.value);
+    if (!isNil(event.value)) {
+      this.setSelection(event.value);
+    }
   }
 
   public isLabelAString(label: string | TemplateRef<unknown>): boolean {
