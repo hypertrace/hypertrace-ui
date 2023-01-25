@@ -130,8 +130,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  private buildDefaultSortArg(columns: SpecificationBackedTableColumnDef[]): { key: Specification; direction: TableSortDirection } | undefined {
-
+  private buildDefaultSortArg(columns: SpecificationBackedTableColumnDef[]): GraphQlEntitiesQueryRequest['sort'] {
     const defaultSortColumn = columns.find(column => column.sort);
     
     return defaultSortColumn ? {
