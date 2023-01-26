@@ -4,7 +4,7 @@ import { PopoverBackdrop, PopoverFixedPositionLocation, PopoverPositionType } fr
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
 import { DefaultSheetRef } from './sheet/default-sheet-ref';
-import { SHEET_DATA, SheetOverlayConfig, SheetRef } from './sheet/sheet';
+import { SheetOverlayConfig, SheetRef, SHEET_DATA } from './sheet/sheet';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
