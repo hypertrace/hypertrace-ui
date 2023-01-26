@@ -41,7 +41,9 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
             <ng-template matStepLabel>
               <ht-label class="header-label" [label]="step.label"></ht-label>
             </ng-template>
-            <ng-container *ngTemplateOutlet="step.content"></ng-container>
+            <ng-template matStepContent>
+              <ng-container *ngTemplateOutlet="step.content"></ng-container>
+            </ng-template>
             <ng-template matStepperIcon="edit">
               <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
