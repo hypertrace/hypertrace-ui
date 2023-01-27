@@ -101,6 +101,12 @@ export class TableWidgetColumnModel {
   })
   public sortable: boolean = true;
 
+  @ModelProperty({
+    key: 'editable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public editable: boolean = true;
+
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
@@ -122,7 +128,7 @@ export class TableWidgetColumnModel {
       alignment: this.alignment,
       width: this.width,
       visible: this.visible,
-      editable: true,
+      editable: this.editable,
       filterable: this.filterable,
       sort: this.sort,
       sortable: this.sortable,
