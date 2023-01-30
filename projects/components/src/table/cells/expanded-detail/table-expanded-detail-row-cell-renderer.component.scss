@@ -2,7 +2,7 @@
 @import 'font';
 
 .table-expanded-cell-renderer {
-  padding: 0 0 16px 18px; // Using 18px for the right padding aligns the dotted line with the expander arrow
+  padding: 0 0 6px 8px;
 
   &.expanded {
     border-bottom: 1px solid $gray-2;
