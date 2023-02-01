@@ -42,7 +42,7 @@ export const enum DateFormatMode {
   /**
    * `d MMM y h:mm a zzzz` -> `11 Nov 1990 11:11 AM UTC+00:30`
    */
-  DateWithYearAndTimeAndTimeZone
+  DateWithYearAndTimeWithTimeZone
 }
 
 export class DateFormatter {
@@ -93,7 +93,7 @@ export class DateFormatter {
         return 'd MMM y h:mm a';
       case DateFormatMode.DateOnlyAndTime:
         return 'd MMM h:mm a';
-      case DateFormatMode.DateWithYearAndTimeAndTimeZone:
+      case DateFormatMode.DateWithYearAndTimeWithTimeZone:
         return 'd MMM y h:mm a zzzz';
       case DateFormatMode.DateAndTimeWithSeconds:
       default:
