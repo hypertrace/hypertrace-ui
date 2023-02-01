@@ -149,12 +149,20 @@ export class StepperComponent implements AfterContentInit {
   }
 
   /**
-   * Navigate to a particular step using the index
+   * Navigate to a particular step using the index.
+   *
+   * In linear mode, if the user is navigating forward,
+   * the steps in between should be completed.
    * @param index - index of the step to navigate to
    */
   public goToStep(index: number): void {
+    if (!this.stepper) {
+      return;
+    }
     const isIndexValid = index >= 0 && index < this.steps.length;
-    const isNavigationAllowed = this.isLinear ? this.isStepCompleted(index) : true;
+    const isGoingForward = index > this.stepper.selectedIndex;
+    const isNavigationAllowed =
+      this.isLinear && isGoingForward ? this.areStepsInBetweenCompleted(this.stepper.selectedIndex, index) : true;
     if (isIndexValid && isNavigationAllowed && this.stepper) {
       this.stepper.selectedIndex = index;
     }
@@ -202,6 +210,16 @@ export class StepperComponent implements AfterContentInit {
 
   private isLastStep(stepper: MatStepper): boolean {
     return stepper.selectedIndex === stepper.steps.length - 1;
+  }
+
+  /**
+   * Check if all the steps in between the selected index and the index are completed.
+   * Mandatory for linear stepper when navigating forward.
+   */
+  private areStepsInBetweenCompleted(selectedIndex: number, index: number): boolean {
+    return Array(index - selectedIndex)
+      .fill(0)
+      .every((_, i) => this.isStepCompleted(selectedIndex + i));
   }
 }
 
