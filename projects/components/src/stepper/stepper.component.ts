@@ -160,9 +160,9 @@ export class StepperComponent implements AfterContentInit {
       return;
     }
     const isIndexValid = index >= 0 && index < this.steps.length;
-    const isGoingForward = index > this.stepper.selectedIndex;
-    const isNavigationAllowed =
-      this.isLinear && isGoingForward ? this.areStepsInBetweenCompleted(this.stepper.selectedIndex, index) : true;
+    const isNavigationAllowed = this.isLinear
+      ? this.areStepsInBetweenCompleted(this.stepper.selectedIndex, index)
+      : true;
     if (isIndexValid && isNavigationAllowed && this.stepper) {
       this.stepper.selectedIndex = index;
     }
@@ -217,9 +217,13 @@ export class StepperComponent implements AfterContentInit {
    * Mandatory for linear stepper when navigating forward.
    */
   private areStepsInBetweenCompleted(selectedIndex: number, index: number): boolean {
-    return Array(index - selectedIndex)
-      .fill(0)
-      .every((_, i) => this.isStepCompleted(selectedIndex + i));
+    const isGoingForward = index > selectedIndex;
+
+    return isGoingForward
+      ? Array(index - selectedIndex)
+          .fill(0)
+          .every((_, i) => this.isStepCompleted(selectedIndex + i))
+      : true;
   }
 }
 
