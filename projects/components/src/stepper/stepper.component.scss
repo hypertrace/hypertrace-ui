@@ -55,11 +55,11 @@
     background-color: white;
     border-top: 1px solid $gray-1;
     padding-top: 8px;
+    z-index: 20;
 
     .action-buttons {
       display: flex;
       justify-content: space-between;
-      z-index: 20;
 
       .back-next {
         display: flex;
