@@ -37,6 +37,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
             [completed]="step.stepControl ? false : step.completed"
             [stepControl]="step.stepControl"
             [optional]="step.optional"
+            [editable]="step.editable"
           >
             <ng-template matStepLabel>
               <ht-label class="header-label" [label]="step.label"></ht-label>

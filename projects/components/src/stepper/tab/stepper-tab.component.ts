@@ -24,6 +24,9 @@ export class StepperTabComponent extends ContentHolder {
   public optional: boolean = false;
 
   @Input()
+  public editable: boolean = true;
+
+  @Input()
   public completed: boolean = true;
 
   @Input()
