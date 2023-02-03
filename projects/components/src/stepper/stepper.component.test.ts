@@ -16,7 +16,7 @@ describe('Stepper Component', () => {
 
   const createHost = createHostFactory({
     component: StepperComponent,
-    declarations: [MockComponents(ButtonComponent, LabelComponent, IconComponent, StepperTabComponent)],
+    declarations: [MockComponents(ButtonComponent, LabelComponent, IconComponent), StepperTabComponent],
     imports: [MemoizeModule, MatStepperModule, LoadAsyncModule],
     shallow: true,
     detectChanges: true

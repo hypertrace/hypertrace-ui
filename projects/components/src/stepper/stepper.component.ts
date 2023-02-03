@@ -34,8 +34,8 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
           <-- NOTE: completed and step control both should not be present when in linear flow. So when step control is
           provided, we explicitly set completed to false so that the stepper can work with teh form validity status -->
           <mat-step
-            [completed]="step.stepControl ? false : step.completed"
-            [stepControl]="step.stepControl"
+            [completed]="step?.stepControl ? false : step.completed"
+            [stepControl]="step?.stepControl"
             [optional]="step.optional"
             [editable]="step.editable"
           >
