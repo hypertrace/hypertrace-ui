@@ -8,6 +8,7 @@ import {
 } from '@hypertrace/hyperdash';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
 import { ContainerLayout } from './layout/container-layout';
+import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 
 @Model({
   type: 'container-widget'
@@ -35,4 +36,15 @@ export class ContainerWidgetModel<TChild = object> {
     key: 'layout'
   })
   public layout!: ContainerLayout;
+
+  @ModelProperty({
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    type: {
+      key: ModelPropertyType.TYPE,
+      defaultModelClass: ContainerStylesPropertiesModel
+    } as ModelModelPropertyTypeInstance,
+    key: 'style-properties',
+    required: false
+  })
+  public stylerProperties?: ContainerStylesPropertiesModel;
 }

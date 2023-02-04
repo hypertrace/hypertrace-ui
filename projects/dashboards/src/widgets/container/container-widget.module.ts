@@ -13,6 +13,7 @@ import { CustomContainerLayoutModel } from './layout/custom/custom-container-lay
 import { AutoDimensionModel } from './layout/custom/dimension/auto-dimension.model';
 import { DimensionModel } from './layout/custom/dimension/dimension.model';
 import { MaxContentContainerLayoutModel } from './layout/max-content/max-content-container-layout.model';
+import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 
 @NgModule({
   declarations: [ContainerWidgetRendererComponent, ContainerLayoutComponent],
@@ -21,6 +22,7 @@ import { MaxContentContainerLayoutModel } from './layout/max-content/max-content
     DashboardCoreModule.with({
       models: [
         ContainerWidgetModel,
+        ContainerStylesPropertiesModel,
         AutoContainerLayoutModel,
         CustomContainerLayoutModel,
         CellSpanModel,

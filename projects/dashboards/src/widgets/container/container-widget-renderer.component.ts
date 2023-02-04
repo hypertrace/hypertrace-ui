@@ -1,5 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  Renderer2,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { Renderer } from '@hypertrace/hyperdash';
+import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { WidgetRenderer } from '../widget-renderer';
 import { ContainerWidgetModel } from './container-widget.model';
@@ -22,11 +33,30 @@ export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWi
   @ViewChild('containerContent', { read: ViewContainerRef, static: true })
   public container!: ViewContainerRef;
 
+  constructor(
+    @Inject(RENDERER_API) api: RendererApi<ContainerWidgetModel>,
+    changeDetector: ChangeDetectorRef,
+    private readonly elRef: ElementRef,
+    private readonly renderer: Renderer2
+  ) {
+    super(api, changeDetector);
+  }
+
   public ngAfterViewInit(): void {
     this.model.layout.draw(this.container, this.model.children);
+    this.setHostStyling();
   }
 
   protected fetchData(): Observable<object[]> {
     return of(this.model.children);
+  }
+
+  private setHostStyling(): void {
+    const styles = this.model.stylerProperties?.getStyleProperties();
+    if (styles) {
+      for (const [key, value] of Object.entries(styles)) {
+        this.renderer.setStyle(this.elRef.nativeElement, key, value);
+      }
+    }
   }
 }
