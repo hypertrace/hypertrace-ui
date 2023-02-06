@@ -33,7 +33,7 @@ export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWi
   @ViewChild('containerContent', { read: ViewContainerRef, static: true })
   public container!: ViewContainerRef;
 
-  constructor(
+  public constructor(
     @Inject(RENDERER_API) api: RendererApi<ContainerWidgetModel>,
     changeDetector: ChangeDetectorRef,
     private readonly elRef: ElementRef,

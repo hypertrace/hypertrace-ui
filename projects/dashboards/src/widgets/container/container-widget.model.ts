@@ -6,9 +6,9 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
 import { ContainerLayout } from './layout/container-layout';
-import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 
 @Model({
   type: 'container-widget'
