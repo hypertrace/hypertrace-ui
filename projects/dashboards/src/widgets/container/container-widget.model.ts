@@ -40,7 +40,7 @@ export class ContainerWidgetModel<TChild = object> {
   @ModelProperty({
     type: {
       key: ModelPropertyType.TYPE
-    } as ModelModelPropertyTypeInstance,
+    },
     key: 'style-properties',
     required: false
   })
