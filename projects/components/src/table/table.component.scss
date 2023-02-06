@@ -10,6 +10,11 @@ $header-height: 32px;
   height: 100%;
   width: 100%;
   overflow: auto;
+
+  &.detail {
+    display: grid;
+    align-content: start;
+  }
 }
 
 .title-row {
@@ -68,6 +73,14 @@ $header-height: 32px;
     .data-cell {
       background: $gray-1;
     }
+  }
+}
+
+.expandable-row {
+  display: flex;
+
+  .expanded-cell {
+    flex: 1 1 auto;
   }
 }
 

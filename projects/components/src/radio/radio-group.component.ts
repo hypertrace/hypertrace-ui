@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { LoggerService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { RadioOption } from './radio-option';
 
 @Component({
@@ -20,7 +30,7 @@ import { RadioOption } from './radio-option';
     <mat-radio-group
       class="radio-group"
       [ngClass]="this.optionsDirection"
-      [ngModel]="this.selected!.value"
+      [ngModel]="this.selected?.value"
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
@@ -30,18 +40,22 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
-        (change)="$event.stopPropagation()"
       >
-        <ng-container
-          *ngTemplateOutlet="
-            this.isLabelAString(option.label) ? defaultLabel : option.label;
-            context: { $implicit: option.label }
-          "
-        ></ng-container>
+        <div class="radio-button-item">
+          <ng-container
+            *ngTemplateOutlet="
+              this.isLabelAString(option.label) ? defaultLabel : option.label;
+              context: { $implicit: option.label }
+            "
+          ></ng-container>
+          <ht-info-icon *ngIf="option.infoText" [info]="option.infoText" class="info-icon"></ht-info-icon>
+        </div>
         <span *ngIf="option.description" class="radio-button-description">{{ option.description }}</span>
       </mat-radio-button>
     </mat-radio-group>
-    <ng-template #defaultLabel let-label><ht-label class="radio-button-label" [label]="label"></ht-label></ng-template>
+    <ng-template #defaultLabel let-label>
+      <ht-label class="radio-button-label" [label]="label"></ht-label>
+    </ng-template>
   `
 })
 export class RadioGroupComponent implements ControlValueAccessor, OnInit {
@@ -66,7 +80,7 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   private propagateControlValueChange?: (value: string | undefined) => void;
   private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     // tslint:disable-next-line:strict-type-predicates
@@ -83,7 +97,8 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public writeValue(value?: string): void {
-    this.setSelection(value);
+    this.selected = this.options.find(option => option.value === value);
+    this.cdr.detectChanges();
   }
 
   public setDisabledState(isDisabled?: boolean): void {
@@ -99,7 +114,9 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public onRadioChange(event: MatRadioChange): void {
-    this.setSelection(event.value);
+    if (!isNil(event.value)) {
+      this.setSelection(event.value);
+    }
   }
 
   public isLabelAString(label: string | TemplateRef<unknown>): boolean {

@@ -85,6 +85,7 @@ export { MenuItemComponent } from './menu-dropdown/menu-item/menu-item.component
 export { MenuDropdownModule } from './menu-dropdown/menu-dropdown.module';
 
 // Download File
+export * from './download-file/service/file-download.service';
 export * from './download-file/download-file.component';
 export * from './download-file/download-file-metadata';
 export * from './download-file/download-file.module';
@@ -265,6 +266,7 @@ export * from './popover/popover-ref';
 export * from './popover/popover.module';
 export * from './popover/popover.component';
 export * from './popover/popover.service';
+export * from './popover/service/popover-hover-trigger.service';
 
 // Progress Bar
 export * from './progress-bar/progress-bar.component';
@@ -350,6 +352,7 @@ export { TableCellParser } from './table/cells/table-cell-parser';
 export * from './table/cells/data-parsers/table-cell-no-op-parser';
 export * from './table/cells/data-parsers/table-cell-string-parser';
 export * from './table/cells/data-parsers/table-cell-timestamp-parser';
+export * from './table/cells/data-parsers/table-cell-icon-parser';
 
 // Table Controls
 export * from './table/controls/table-controls.module';
@@ -393,6 +396,7 @@ export * from './toggle-switch/toggle-switch.module';
 export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 
 // Tooltip
+export { ActionableTooltipDirective } from './tooltip/actionable/actionable-tooltip.directive';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
 
@@ -404,6 +408,8 @@ export * from './page-time-range/page-time-range.component';
 export * from './page-time-range/page-time-range.module';
 
 // Stepper
-export * from './stepper/stepper.module';
-export * from './stepper/stepper.component';
-export * from './stepper/stepper-tab.component';
+export * from './stepper';
+
+// Pill list
+export * from './input-pill-list/input-pill-list.component';
+export * from './input-pill-list/input-pill-list.module';

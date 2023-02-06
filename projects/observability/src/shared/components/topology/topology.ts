@@ -95,6 +95,8 @@ export interface TopologyConfiguration {
    * Used to handle interactions on edge in a custom way (by avoiding default behavior)
    */
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
+
+  layoutType?: TopologyLayoutType;
 }
 
 export interface TopologyNode {
@@ -186,6 +188,13 @@ export interface TopologyDataSpecifier<T = unknown> {
   value: T;
 }
 
+export const enum TopologyLayoutType {
+  ForceLayout = 'force-layout',
+  TreeLayout = 'tree-layout',
+  CustomTreeLayout = 'custom-tree-layout',
+  GraphLayout = 'graph-layout'
+}
+
 export const enum TopologyElementVisibility {
   Normal = 'normal',
   Emphasized = 'emphasized',
@@ -212,6 +221,7 @@ export interface TopologyTooltipOptions {
 
 export interface TopologyInteractionHandler<T = unknown> {
   click?(data: T): Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
+  disableTooltipOnHover?: boolean; // Default to `false`
 }
 
 export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;

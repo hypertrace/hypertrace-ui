@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
-import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  NavigationParams,
+  NavigationParamsType,
+  TimeRange,
+  TimeRangeService
+} from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
@@ -13,11 +20,13 @@ import { ScopeQueryParam } from './explorer.component';
 export class ExplorerService {
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
+    private readonly timeRangeService: TimeRangeService
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
-    filters: ExplorerDrilldownFilter[]
+    filters: ExplorerDrilldownFilter[],
+    timeRange?: TimeRange
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
@@ -42,7 +51,8 @@ export class ExplorerService {
         path: '/explorer',
         queryParams: {
           filter: filterStrings,
-          scope: scopeQueryParam
+          scope: scopeQueryParam,
+          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
         }
       }))
     );

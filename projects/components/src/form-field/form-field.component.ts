@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { Color } from '@hypertrace/common';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -25,6 +26,7 @@ import { IconSize } from '../icon/icon-size';
           'show-border': this.showBorder,
           'error-border': this.showFormError && this.errorLabel
         }"
+        [ngStyle]="{ 'background-color': this.contentBgColor }"
       >
         <ng-content></ng-content>
       </div>
@@ -67,4 +69,7 @@ export class FormFieldComponent {
 
   @Input()
   public showFormError?: boolean = true;
+
+  @Input()
+  public contentBgColor?: Color = Color.White;
 }

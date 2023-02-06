@@ -98,7 +98,7 @@ describe('Button Component', () => {
       size: ButtonSize.ExtraSmall
     });
     expect(spectator.query('.button')).toHaveClass('button secondary extra-small');
-    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.ExtraSmall);
 
     // Large
     spectator.setInput({

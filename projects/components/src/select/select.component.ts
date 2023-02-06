@@ -189,7 +189,7 @@ import { SelectSize } from './select-size';
                 *ngIf="item.icon"
                 class="icon"
                 [icon]="item.icon"
-                size="${IconSize.Small}"
+                [size]="item.iconSize"
                 [color]="item.iconColor"
                 [borderType]="item?.iconBorderType"
                 [borderColor]="item?.iconBorderColor"
@@ -377,6 +377,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public setDisabledState(isDisabled?: boolean): void {
     this.disabled = isDisabled ?? false;
+    this.cdr.markForCheck();
   }
 
   private propagateValue(): void {

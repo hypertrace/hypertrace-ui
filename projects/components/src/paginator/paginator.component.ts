@@ -23,7 +23,7 @@ import { PaginationProvider } from './paginator-api';
     <div
       class="paginator"
       [class.compact]="this.showCompactView"
-      *ngIf="this.totalItems && this.totalItems > this.pageSizeOptions[0]"
+      *ngIf="this.totalItems && this.totalItems > this.minItemsBeforeDisplay"
     >
       <ht-label
         class="label"
@@ -118,6 +118,8 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
 
   // Caused either by a change in the provided page, or user change being emitted
   public readonly pageEvent$: Observable<PageEvent> = merge(this.pageChange, this.pageSizeInputSubject);
+
+  public readonly minItemsBeforeDisplay: number = 10;
 
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 

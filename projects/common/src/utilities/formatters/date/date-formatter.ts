@@ -3,19 +3,51 @@ import { defaults } from 'lodash-es';
 import { DateCoercer } from '../../coercers/date-coercer';
 
 export const enum DateFormatMode {
+  /**
+   * `h:mm a` -> `11:11 AM`
+   */
   TimeOnly,
+  /**
+   * `hh:mm:ss a` -> `11:11:00 AM`
+   */
   TimeWithSeconds,
+  /**
+   * `d MMM y` -> `11 Nov 1990`
+   */
   DateOnly,
+  /**
+   * `MMM d` -> `Nov 11`
+   */
   MonthAndDayOnly,
+  /**
+   * `MMM yy` -> `Nov 90`
+   */
   MonthAndYearOnly,
+  /**
+   * `MMMM yyyy` -> `November 1990`
+   */
   FullMonthAndYearOnly,
-  DateAndTime,
-  DateAndTimeWithSeconds
+  /**
+   * `d MMM y h:mm a` -> `11 Nov 1990 11:11 AM`
+   */
+  DateWithYearAndTime,
+  /**
+   * `y-MM-dd hh:mm:ss a` -> `1990-11-11 11:11:00 AM`
+   */
+  DateAndTimeWithSeconds,
+  /**
+   * `d MMM h:mm a` -> `11 Nov 11:11 AM`
+   */
+  DateOnlyAndTime,
+  /**
+   * `d MMM y h:mm a zzzz` -> `11 Nov 1990 11:11 AM UTC+00:30`
+   */
+  DateWithYearAndTimeWithTimeZone
 }
 
 export class DateFormatter {
   private static readonly DEFAULT_OPTIONS: Readonly<Required<DateFormatOptions>> = {
-    mode: DateFormatMode.DateAndTime
+    mode: DateFormatMode.DateWithYearAndTime
   };
 
   protected readonly options: Readonly<Required<DateFormatOptions>>;
@@ -31,9 +63,7 @@ export class DateFormatter {
   }
 
   protected applyOptionDefaults(options: DateFormatOptions): Readonly<Required<DateFormatOptions>> {
-    const newOptions = defaults({}, options, DateFormatter.DEFAULT_OPTIONS);
-
-    return newOptions;
+    return defaults({}, options, DateFormatter.DEFAULT_OPTIONS);
   }
 
   protected convertDateToString(value: Date | number | string | undefined): string {
@@ -59,8 +89,12 @@ export class DateFormatter {
         return 'MMMM yyyy';
       case DateFormatMode.DateOnly:
         return 'd MMM y';
-      case DateFormatMode.DateAndTime:
+      case DateFormatMode.DateWithYearAndTime:
         return 'd MMM y h:mm a';
+      case DateFormatMode.DateOnlyAndTime:
+        return 'd MMM h:mm a';
+      case DateFormatMode.DateWithYearAndTimeWithTimeZone:
+        return 'd MMM y h:mm a zzzz';
       case DateFormatMode.DateAndTimeWithSeconds:
       default:
         return 'y-MM-dd hh:mm:ss a';

@@ -5,7 +5,7 @@
   .text {
     overflow: hidden;
     @include ellipsis-overflow();
-    @include body-1-regular($gray-7);
+    @include body-2-regular($gray-7);
     padding-right: 8px;
   }
 
@@ -21,7 +21,7 @@
   justify-content: space-between;
 
   &.first-column {
-    @include body-1-medium($gray-9);
+    @include body-2-medium($gray-9);
   }
 
   &:hover {

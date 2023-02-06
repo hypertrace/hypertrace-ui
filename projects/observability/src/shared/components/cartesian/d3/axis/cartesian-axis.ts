@@ -37,6 +37,9 @@ export class CartesianAxis<TData = {}> {
     const axis = this.getAxisConstructor()(this.scale.d3Implementation as AxisScale<AxisDomain>);
 
     this.addTicksToAxis(axis);
+    if (this.configuration.getLabel) {
+      axis.tickFormat(this.configuration.getLabel);
+    }
 
     const axisSvgSelection = select(element)
       .append('g')
@@ -261,7 +264,7 @@ export class CartesianAxis<TData = {}> {
 }
 
 type DefaultedAxisConfig = Axis &
-  Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow'>;
+  Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow' | 'getLabel'>;
 
 export interface AxisDimension {
   xAxisHeight: number;
