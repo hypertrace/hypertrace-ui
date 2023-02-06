@@ -52,7 +52,7 @@ export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWi
   }
 
   private setHostStyling(): void {
-    const styles = this.model.stylerProperties?.getStyleProperties();
+    const styles = this.model.styleProperties?.getStyleProperties();
     if (styles) {
       for (const [key, value] of Object.entries(styles)) {
         this.renderer.setStyle(this.elRef.nativeElement, key, value);

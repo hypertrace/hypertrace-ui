@@ -32,12 +32,20 @@ export class ContainerStylesPropertiesModel {
   })
   public margin?: string;
 
+  @ModelProperty({
+    key: 'display',
+    type: STRING_PROPERTY.type,
+    required: false
+  })
+  public display?: string;
+
   public getStyleProperties(): Partial<CSSStyleDeclaration> {
     return {
       backgroundColor: this.backgroundColor,
       borderRadius: this.borderRadius,
       padding: this.padding,
-      margin: this.margin
+      margin: this.margin,
+      display: this.display
     };
   }
 }

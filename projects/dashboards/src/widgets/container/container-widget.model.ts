@@ -38,13 +38,11 @@ export class ContainerWidgetModel<TChild = object> {
   public layout!: ContainerLayout;
 
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
-      key: ModelPropertyType.TYPE,
-      defaultModelClass: ContainerStylesPropertiesModel
+      key: ModelPropertyType.TYPE
     } as ModelModelPropertyTypeInstance,
     key: 'style-properties',
     required: false
   })
-  public stylerProperties?: ContainerStylesPropertiesModel;
+  public styleProperties?: ContainerStylesPropertiesModel;
 }
