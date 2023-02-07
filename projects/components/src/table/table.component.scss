@@ -12,10 +12,10 @@ $header-height: 32px;
   overflow: auto;
   background-color: white;
 
-  &.detail {
-    display: grid;
-    align-content: start;
-  }
+  // &.detail {
+  //   display: grid;
+  //   align-content: start;
+  // }
 }
 
 .title-row {
@@ -77,13 +77,13 @@ $header-height: 32px;
   }
 }
 
-.expandable-row {
-  display: flex;
+// .expandable-row {
+//   display: flex;
 
-  .expanded-cell {
-    flex: 1 1 auto;
-  }
-}
+//   .expanded-cell {
+//     flex: 1 1 auto;
+//   }
+// }
 
 .header-cell {
   display: flex;
