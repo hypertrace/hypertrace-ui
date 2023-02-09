@@ -140,7 +140,10 @@ export class StepperComponent implements AfterContentInit {
       return true;
     }
 
-    const isValid = currentTab.stepControl ? currentTab.stepControl.status === 'VALID' : currentTab.completed;
+    const validFormStates = ['VALID', 'DISABLED'];
+    const isValid = currentTab.stepControl
+      ? validFormStates.includes(currentTab.stepControl.status)
+      : currentTab.completed;
     const isLastStep = this.stepper ? this.isLastStep(this.stepper) : true;
     if (isLastStep) {
       return !this.areAllStepsValid();
