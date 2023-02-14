@@ -15,7 +15,6 @@ $header-height: 32px;
   &.detail {
     display: grid;
     align-content: start;
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -40,6 +39,7 @@ $header-height: 32px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
+  min-width: 0;
 
   .header-cell {
     background: $gray-1;
