@@ -18,6 +18,7 @@ export interface TableColumnConfig {
   alignment?: TableCellAlignmentType;
   width?: number | string;
   minWidth?: number | string;
+  truncationStrategy?: TableTruncationStrategy;
   onClick?(row: TableRow, column: TableColumnConfig): void;
 }
 
@@ -88,4 +89,12 @@ export const enum TableSelectionMode {
   None = 'none',
   Single = 'single',
   Multiple = 'multiple'
+}
+
+/**
+ * How should the table handle truncation in cells? Wrap? New line? Ellipsis?
+ * @todo Add support for TruncateMiddle, TruncateStart, and TruncateEnd.
+ */
+export const enum TableTruncationStrategy {
+  Wrap = 'wrap'
 }
