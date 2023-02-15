@@ -66,9 +66,9 @@ export interface ListViewHeader {
   valueLabel: string;
 }
 
-export interface ListViewRecord {
+export interface ListViewRecord<PossibleValues = string | number> {
   key: string;
-  value: string | number;
+  value: PossibleValues;
 }
 
 export enum ListViewDisplay {
