@@ -161,7 +161,6 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
-          [style.min-height]="this.rowHeight"
           [ngStyle]="this.getRowStyle()"
         ></cdk-row>
 
