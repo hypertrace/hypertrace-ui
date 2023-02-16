@@ -6,6 +6,7 @@ import {
   ModelPropertyType,
   STRING_PROPERTY
 } from '@hypertrace/hyperdash';
+import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
 import { ContainerLayout } from './layout/container-layout';
 
@@ -35,4 +36,13 @@ export class ContainerWidgetModel<TChild = object> {
     key: 'layout'
   })
   public layout!: ContainerLayout;
+
+  @ModelProperty({
+    type: {
+      key: ModelPropertyType.TYPE
+    },
+    key: 'style-properties',
+    required: false
+  })
+  public styleProperties?: ContainerStylesPropertiesModel;
 }
