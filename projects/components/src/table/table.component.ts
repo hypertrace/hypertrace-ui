@@ -23,7 +23,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { debounce, without } from 'lodash-es';
+import { debounce, isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -479,7 +479,7 @@ export class TableComponent
   public getRowStyle(): Dictionary<string> {
     return {
       'min-height': this.rowHeight,
-      ...(this.maxRowHeight ? { 'max-height': this.maxRowHeight } : {})
+      ...(!isNil(this.maxRowHeight) ? { 'max-height': this.maxRowHeight } : {})
     };
   }
 
