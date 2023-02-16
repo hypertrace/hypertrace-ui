@@ -23,7 +23,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { debounce, without } from 'lodash-es';
+import { debounce, isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -161,7 +161,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
             selectable: this.supportsRowSelection()
           }"
           class="data-row"
-          [style.min-height]="this.rowHeight"
+          [ngStyle]="this.getRowStyle()"
         ></cdk-row>
 
         <!-- Expandable Detail Rows -->
@@ -289,8 +289,12 @@ export class TableComponent
   @Input()
   public loadingConfig?: LoadAsyncConfig;
 
+  // TODO: Rename rowHeight to minRowHeight
   @Input()
   public rowHeight: string = '44px';
+
+  @Input()
+  public maxRowHeight?: string;
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
@@ -470,6 +474,13 @@ export class TableComponent
       this.resizeStartX = event.clientX;
       event.preventDefault();
     }
+  }
+
+  public getRowStyle(): Dictionary<string> {
+    return {
+      'min-height': this.rowHeight,
+      ...(!isNil(this.maxRowHeight) ? { 'max-height': this.maxRowHeight } : {})
+    };
   }
 
   @HostListener('mousemove', ['$event'])
