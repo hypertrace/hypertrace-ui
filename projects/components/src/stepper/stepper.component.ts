@@ -201,7 +201,7 @@ export class StepperComponent implements AfterContentInit {
       return false;
     }
 
-    return step.stepControl?.valid ?? step.completed;
+    return step.stepControl ? step.stepControl.valid || step.stepControl.disabled : step.completed;
   }
 
   /**
