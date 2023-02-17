@@ -99,7 +99,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
 
   @Input()
-  public size: BarGaugeSize = BarGaugeSize.Small;
+  public size: BarGaugeSize = BarGaugeSize.Small; // Only used for single-bar display type as of now
 
   @Input()
   public isUnlimited: boolean = false;
