@@ -115,6 +115,7 @@ export * from './file-upload/file-display/file-display.module';
 export * from './file-upload/file-display/file-display.component';
 
 export * from './file-upload/file-upload.service';
+export * from './file-upload/file-types';
 
 // Filter
 export * from './filtering/filter/filter';
