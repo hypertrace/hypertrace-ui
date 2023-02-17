@@ -138,7 +138,7 @@ export class PageHeaderComponent implements OnInit {
 
   private getPreferences(): Observable<PageHeaderPreferences> {
     return isNonEmptyString(this.persistenceId)
-      ? this.preferenceService.get<PageHeaderPreferences>(this.persistenceId, {}).pipe(first())
+      ? this.preferenceService.getAndWatch<PageHeaderPreferences>(this.persistenceId, {}).pipe(first())
       : of({});
   }
 

@@ -567,7 +567,9 @@ export class TableWidgetRendererComponent
 
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
-      ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}, StorageType.Local).pipe(first())
+      ? this.preferenceService
+          .getAndWatch<TableWidgetViewPreferences>(this.model.viewId, {}, StorageType.Local)
+          .pipe(first())
       : of({});
   }
 
@@ -580,7 +582,7 @@ export class TableWidgetRendererComponent
   private getLocalPreferences(): Observable<TableWidgetLocalPreferences> {
     return isNonEmptyString(this.model.getId())
       ? this.preferenceService
-          .get<TableWidgetLocalPreferences>(this.model.getId()!, {}, StorageType.Local)
+          .getAndWatch<TableWidgetLocalPreferences>(this.model.getId()!, {}, StorageType.Local)
           .pipe(first())
       : of({});
   }
@@ -594,7 +596,7 @@ export class TableWidgetRendererComponent
   private getSessionPreferences(): Observable<TableWidgetSessionPreferences> {
     return isNonEmptyString(this.model.getId())
       ? this.preferenceService
-          .get<TableWidgetSessionPreferences>(this.model.getId()!, {}, StorageType.InMemory)
+          .getAndWatch<TableWidgetSessionPreferences>(this.model.getId()!, {}, StorageType.InMemory)
           .pipe(first())
       : of({});
   }

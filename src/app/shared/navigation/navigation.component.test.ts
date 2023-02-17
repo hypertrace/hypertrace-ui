@@ -52,7 +52,7 @@ describe('NavigationComponent', () => {
         decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))
       }),
       mockProvider(ActivatedRoute),
-      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),
+      mockProvider(PreferenceService, { getAndWatch: jest.fn().mockReturnValue(of(false)) }),
       mockProvider(PageTimeRangePreferenceService),
       mockProvider(LoggerService)
     ]
@@ -68,7 +68,7 @@ describe('NavigationComponent', () => {
     const spectator = createComponent({
       providers: [
         mockProvider(PreferenceService, {
-          get: jest.fn().mockReturnValue(new BehaviorSubject(false))
+          getAndWatch: jest.fn().mockReturnValue(new BehaviorSubject(false))
         })
       ]
     });

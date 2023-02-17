@@ -74,7 +74,7 @@ export class PageTimeRangePreferenceService {
 
   private buildPageTimeRangeObservable(): Observable<PageTimeRangeStringDictionary> {
     return this.preferenceService
-      .get<PageTimeRangeStringDictionary>(
+      .getAndWatch<PageTimeRangeStringDictionary>(
         PageTimeRangePreferenceService.TIME_RANGE_PREFERENCE_KEY,
         {},
         PageTimeRangePreferenceService.STORAGE_TYPE

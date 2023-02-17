@@ -98,7 +98,7 @@ export class NavigationComponent {
     // The time ranges in nav items are streams that get the most recent value from page time range preference service
     this.navItems$ = this.navListComponentService.resolveNavItemConfigTimeRanges(navItems);
 
-    this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
+    this.isCollapsed$ = this.preferenceService.getAndWatch(NavigationComponent.COLLAPSED_PREFERENCE, false);
   }
 
   public updateDefaultTimeRangeIfUnset(activeItem: NavItemLinkConfig | undefined): void {

@@ -109,7 +109,7 @@ describe('Explorer component', () => {
         }
       },
       mockProvider(PreferenceService, {
-        get: jest.fn().mockReturnValue(of(true))
+        getAndWatch: jest.fn().mockReturnValue(of(true))
       }),
       ...getMockFlexLayoutProviders()
     ]

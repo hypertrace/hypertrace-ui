@@ -30,7 +30,7 @@ describe('Preference Service', () => {
         a: () => service.set('foo', ['first', 2, null, false, { test: 'test' }, undefined, 'null', 'undefined'])
       }).subscribe(update => update());
 
-      expectObservable(service.get('foo', 'default')).toBe('ds-b-n-o-a', {
+      expectObservable(service.getAndWatch('foo', 'default')).toBe('ds-b-n-o-a', {
         d: 'default',
         s: 'a',
         b: false,
@@ -57,7 +57,7 @@ describe('Preference Service', () => {
         s: () => service.set('foo', 'a')
       }).subscribe(update => update());
 
-      expectObservable(service.get('foo')).toBe(
+      expectObservable(service.getAndWatch('foo')).toBe(
         '#',
         undefined,
         Error('No value found or default provided for preferenceKey: foo')

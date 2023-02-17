@@ -38,7 +38,7 @@ export class PreferenceService {
    * preference becomes unset. If default value is not provided, the observable will
    * throw in the case the preference is unset.
    */
-  public get<T extends PreferenceValue>(
+  public getAndWatch<T extends PreferenceValue>(
     key: PreferenceKey,
     defaultValue?: T,
     type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
@@ -62,6 +62,26 @@ export class PreferenceService {
   ): void {
     const val = this.asStorageValue(value);
     this.preferenceStorage(type).set(this.asStorageKey(key), val);
+  }
+
+  public get<T extends PreferenceValue>(
+    key: PreferenceKey,
+    defaultValue?: T,
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+  ): T | undefined {
+    const storageKey = this.asStorageKey(key);
+    const storedValue = this.preferenceStorage(type).get(storageKey);
+    const parsedValue = this.fromStorageValue(storedValue) as T;
+
+    return parsedValue ?? defaultValue;
+  }
+
+  public delete(key: PreferenceKey, type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE): void {
+    this.preferenceStorage(type).delete(this.asStorageKey(key));
+  }
+
+  public contains(key: PreferenceKey, type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE): boolean {
+    return this.preferenceStorage(type).contains(this.asStorageKey(key));
   }
 
   private asStorageKey(key: PreferenceKey): PreferenceStorageKey {

@@ -160,8 +160,11 @@ export class ExplorerComponent {
     activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
-    this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
-    this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
+    this.visualizationExpanded$ = this.preferenceService.getAndWatch(
+      ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE,
+      true
+    );
+    this.resultsExpanded$ = this.preferenceService.getAndWatch(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
     this.initialState$ = activatedRoute.queryParamMap.pipe(
