@@ -45,8 +45,37 @@ export class Time {
     );
   }
 
-  public toISOString(): string {
+  public toISOString(useTimezoneOffset: boolean = false): string {
+    if (useTimezoneOffset) {
+      /*
+       * WARNING: This format is currently unsupported by at least some backend APIs e.g. Reporting
+       */
+      return this.toOffsetISOString();
+    }
+
     return this.date.toISOString().substring(11);
+  }
+
+  private toOffsetISOString(): string {
+    const date = this.date;
+    const timezone = date.getTimezoneOffset();
+    const sign = timezone <= 0 ? '+' : '-';
+
+    const pad = function (n: number): string {
+      return (n < 10 ? '0' : '') + n;
+    };
+
+    return (
+      pad(date.getHours()) +
+      ':' +
+      pad(date.getMinutes()) +
+      ':' +
+      pad(date.getSeconds()) +
+      sign +
+      pad(Math.floor(timezone / 60)) +
+      ':' +
+      pad(timezone % 60)
+    );
   }
 
   public equals(other?: Time): boolean {
