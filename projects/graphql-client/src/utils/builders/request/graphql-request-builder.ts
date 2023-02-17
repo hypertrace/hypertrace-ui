@@ -120,6 +120,10 @@ export class GraphQlRequestBuilder {
   }
 
   private stringifyArgumentValue(argumentValue: GraphQlArgumentValue): string {
+    if (isNil(argumentValue)) {
+      return 'null';
+    }
+
     if (argumentValue instanceof GraphQlEnumArgument) {
       return argumentValue.toString();
     }
@@ -132,7 +136,7 @@ export class GraphQlRequestBuilder {
       return `[${arrayContents}]`;
     }
 
-    if (typeof argumentValue === 'object' && !isNil(argumentValue) && !(argumentValue instanceof Date)) {
+    if (typeof argumentValue === 'object' && !(argumentValue instanceof Date)) {
       const objectContents = toPairs(argumentValue)
         .map(nameValuePair => `${nameValuePair[0]}: ${this.stringifyArgumentValue(nameValuePair[1])}`)
         .join(', ');
