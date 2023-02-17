@@ -40,9 +40,7 @@ export class GraphQlRequestBuilder {
 
   private translateMergedRequestFragmentsToGql(mergedRequest: MergedRequestFragment): string {
     const contents = Object.keys(mergedRequest)
-      .map(key => {
-        return this.translateRequestFragmentToGql(key, mergedRequest[key]);
-      })
+      .map(key => this.translateRequestFragmentToGql(key, mergedRequest[key]))
       .join(' ');
 
     return `{ ${contents} }`;
@@ -136,10 +134,7 @@ export class GraphQlRequestBuilder {
 
     if (typeof argumentValue === 'object' && !isNil(argumentValue) && !(argumentValue instanceof Date)) {
       const objectContents = toPairs(argumentValue)
-        .map(nameValuePair => {
-          console.log(nameValuePair[0], nameValuePair[1]);
-          return `${nameValuePair[0]}: ${this.stringifyArgumentValue(nameValuePair[1])}`;
-        })
+        .map(nameValuePair => `${nameValuePair[0]}: ${this.stringifyArgumentValue(nameValuePair[1])}`)
         .join(', ');
 
       return `{${objectContents}}`;
