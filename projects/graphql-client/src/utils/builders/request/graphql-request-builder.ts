@@ -1,4 +1,4 @@
-import { isEmpty, isEqual, map, merge, mergeWith, toPairs } from 'lodash-es';
+import { isEmpty, isEqual, isNil, map, merge, mergeWith, toPairs } from 'lodash-es';
 import { GraphQlArgument, GraphQlArgumentValue, GraphQlEnumArgument } from '../../../model/graphql-argument';
 import { GraphQlSelection } from '../../../model/graphql-selection';
 
@@ -40,7 +40,9 @@ export class GraphQlRequestBuilder {
 
   private translateMergedRequestFragmentsToGql(mergedRequest: MergedRequestFragment): string {
     const contents = Object.keys(mergedRequest)
-      .map(key => this.translateRequestFragmentToGql(key, mergedRequest[key]))
+      .map(key => {
+        return this.translateRequestFragmentToGql(key, mergedRequest[key]);
+      })
       .join(' ');
 
     return `{ ${contents} }`;
@@ -132,9 +134,12 @@ export class GraphQlRequestBuilder {
       return `[${arrayContents}]`;
     }
 
-    if (typeof argumentValue === 'object' && !(argumentValue instanceof Date)) {
+    if (typeof argumentValue === 'object' && !isNil(argumentValue) && !(argumentValue instanceof Date)) {
       const objectContents = toPairs(argumentValue)
-        .map(nameValuePair => `${nameValuePair[0]}: ${this.stringifyArgumentValue(nameValuePair[1])}`)
+        .map(nameValuePair => {
+          console.log(nameValuePair[0], nameValuePair[1]);
+          return `${nameValuePair[0]}: ${this.stringifyArgumentValue(nameValuePair[1])}`;
+        })
         .join(', ');
 
       return `{${objectContents}}`;
