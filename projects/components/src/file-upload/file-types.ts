@@ -1,3 +1,4 @@
+// tslint:disable:no-namespace
 export enum SupportedFileType {
   Json = 'json',
   Yaml = 'yaml'

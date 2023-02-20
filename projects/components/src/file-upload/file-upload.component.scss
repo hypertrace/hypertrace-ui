@@ -67,10 +67,10 @@
   gap: 4px;
 
   .item {
+    @include footnote($gray-4);
     display: flex;
     align-items: center;
     gap: 8px;
-    @include footnote($gray-4);
 
     .icon {
       color: $green-4;

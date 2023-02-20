@@ -74,7 +74,7 @@ export class FileUploadComponent {
   @Input()
   public config: UploaderConfig = {
     maxNumberOfFiles: 10,
-    maxFileSizeInBytes: 20000000, // 20 MB
+    maxFileSizeInBytes: 20 * 1000 * 1000, // 20 MB
     supportedFileTypes: Object.values(SupportedFileType)
   };
 
