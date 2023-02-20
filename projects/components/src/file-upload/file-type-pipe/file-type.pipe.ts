@@ -6,7 +6,7 @@ import { SupportedFileType, SUPPORTED_FILE_TYPE_METADATA_MAP } from '../file-typ
   name: 'htFilePipe'
 })
 export class FileTypePipe implements PipeTransform {
-  public transform(value: SupportedFileType | SupportedFileType[]): any {
+  public transform(value: SupportedFileType | SupportedFileType[]): string {
     if (Array.isArray(value)) {
       return value.map(fileType => this.getFileExtension(fileType)).join(', ');
     }
