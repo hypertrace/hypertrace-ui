@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { isNil } from 'lodash-es';
-import { SupportedFileType, SupportedFileTypeMetaDataMap } from '../file-types';
+import { SupportedFileType, SUPPORTED_FILE_TYPE_METADATA_MAP } from '../file-types';
 
 @Pipe({
   name: 'htFilePipe'
@@ -15,7 +15,7 @@ export class FileTypePipe implements PipeTransform {
   }
 
   private getFileExtension(supportedFileType: SupportedFileType): string {
-    const data = SupportedFileTypeMetaDataMap.get(supportedFileType);
+    const data = SUPPORTED_FILE_TYPE_METADATA_MAP.get(supportedFileType);
 
     return !isNil(data) ? data.extension[0] : 'Unknown';
   }

@@ -87,8 +87,6 @@ export class FileUploadComponent {
   public files: File[] = [];
   public isDragHover: boolean = false;
   private readonly fileDisplayPipe: DisplayFileSizePipe = new DisplayFileSizePipe();
-  private propagateControlValueChange?: (value?: File[]) => void;
-  private propagateControlValueChangeOnTouch?: (value?: File[]) => void;
 
   public constructor(private readonly notificationService: NotificationService) {}
 
@@ -114,11 +112,6 @@ export class FileUploadComponent {
     return FileTypeUtil.supportedFileExtensions(supportedFileTypes).join(',');
   }
 
-  private propagateValueChangeToFormControl(value?: File[]): void {
-    this.propagateControlValueChange?.(value);
-    this.propagateControlValueChangeOnTouch?.(value);
-  }
-
   /**
    * Adds the new files at the last
    */
@@ -126,7 +119,6 @@ export class FileUploadComponent {
     this.files.push(...newFiles);
     this.filesAdded.emit(newFiles);
     this.selectedFileChanges.emit(this.files);
-    this.propagateValueChangeToFormControl(this.files);
   }
 
   /**

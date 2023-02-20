@@ -4,7 +4,7 @@ export enum SupportedFileType {
   Yaml = 'yaml'
 }
 
-export const SupportedFileTypeMetaDataMap: Map<SupportedFileType, SupportedFileTypeMetaData> = new Map([
+export const SUPPORTED_FILE_TYPE_METADATA_MAP: Map<SupportedFileType, SupportedFileTypeMetaData> = new Map([
   [
     SupportedFileType.Json,
     {
@@ -23,13 +23,13 @@ export const SupportedFileTypeMetaDataMap: Map<SupportedFileType, SupportedFileT
 
 export namespace FileTypeUtil {
   export const supportedFileExtensions = (fileTypes: SupportedFileType[]): string[] =>
-    fileTypes.flatMap(fileType => SupportedFileTypeMetaDataMap.get(fileType)?.extension ?? []);
+    fileTypes.flatMap(fileType => SUPPORTED_FILE_TYPE_METADATA_MAP.get(fileType)?.extension ?? []);
 
   export const supportedFileExtensionsSet = (fileTypes: SupportedFileType[]): Set<string> =>
     new Set(supportedFileExtensions(fileTypes));
 
   export const supportedFileMimeTypes = (fileTypes: SupportedFileType[]): string[] =>
-    fileTypes.flatMap(fileType => SupportedFileTypeMetaDataMap.get(fileType)?.mimeTypes ?? []);
+    fileTypes.flatMap(fileType => SUPPORTED_FILE_TYPE_METADATA_MAP.get(fileType)?.mimeTypes ?? []);
 
   export const supportedFileMimeTypesSet = (fileTypes: SupportedFileType[]): Set<string> =>
     new Set(supportedFileMimeTypes(fileTypes));
