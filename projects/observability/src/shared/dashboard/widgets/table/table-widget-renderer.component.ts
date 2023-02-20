@@ -106,6 +106,7 @@ import { TableWidgetModel } from './table-widget.model';
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
           [rowHeight]="this.api.model.getRowHeight()"
+          [maxRowHeight]="this.api.model.getMaxRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"

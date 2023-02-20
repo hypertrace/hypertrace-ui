@@ -134,6 +134,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public rowHeight: string = '44px';
 
   @ModelProperty({
+    key: 'max-row-height',
+    displayName: 'Max Row Height',
+    type: STRING_PROPERTY.type
+  })
+  public maxRowHeight?: string;
+
+  @ModelProperty({
     key: 'loadingConfig',
     required: false,
     type: PLAIN_OBJECT_PROPERTY.type
@@ -205,6 +212,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public getRowHeight(): string {
     return this.rowHeight;
+  }
+
+  public getMaxRowHeight(): string | undefined {
+    return this.maxRowHeight;
   }
 
   public getLoadingConfig(): LoadAsyncConfig | undefined {
