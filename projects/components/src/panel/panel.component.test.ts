@@ -32,6 +32,7 @@ describe('Panel component', () => {
     );
     expect(spectator.query('.title')).toHaveText('Results');
     expect(spectator.query('.summary')).toHaveText('(508 Records)');
+    expect(spectator.query('.collapsed-body')).not.toExist();
   });
 
   test('renders body content', () => {
