@@ -41,6 +41,9 @@ describe('Panel component', () => {
           <div class="title">{{title}}</div>
           <div class="summary">{{summary}}</div>
         </ht-panel-header>
+        <ht-panel-collapsed-body>
+          <div>Collapsed Body Content</div>
+        </ht-panel-collapsed-body>
         <ht-panel-body>
           <div>Body Content</div>
         </ht-panel-body>
@@ -56,9 +59,11 @@ describe('Panel component', () => {
     expect(spectator.query('.title')).toHaveText('Results');
     expect(spectator.query('.summary')).toHaveText('(508 Records)');
     expect(spectator.query('.body')).not.toExist();
+    expect(spectator.query('.collapsed-body')).toHaveText('Collapsed Body Content');
 
     spectator.click('.title');
     expect(spectator.query('.body')).toHaveText('Body Content');
+    expect(spectator.query('.collapsed-body')).not.toExist();
   });
 
   test('renders body content with no header', () => {
