@@ -74,7 +74,7 @@ export class FileUploadComponent {
   @Input()
   public config: UploaderConfig = {
     maxNumberOfFiles: 10,
-    maxFileSizeInBytes: 20 * 1000 * 1000, // 20 MB
+    maxFileSizeInBytes: 20 * 1024 * 1024, // 20 MB
     supportedFileTypes: Object.values(SupportedFileType)
   };
 
@@ -129,19 +129,19 @@ export class FileUploadComponent {
   }
 
   public validateFilesAndShowToastOnError(fileList: FileList | null): boolean {
-    if (!this.validateFileCount(fileList)) {
+    if (!this.isFileCountValid(fileList)) {
       this.showFileCountErrorToast();
 
       return false;
     }
 
-    if (!this.validateFileSizes(fileList)) {
+    if (!this.areFileSizesValid(fileList)) {
       this.showFileSizeErrorToast();
 
       return false;
     }
 
-    if (!this.validateFileTypes(fileList)) {
+    if (!this.areFileTypesValid(fileList)) {
       this.showFileTypeErrorToast();
 
       return false;
@@ -150,15 +150,15 @@ export class FileUploadComponent {
     return true;
   }
 
-  public validateFileCount(fileList: FileList | null): boolean {
+  private isFileCountValid(fileList: FileList | null): boolean {
     return !isEmpty(fileList) && fileList!.length <= this.config.maxNumberOfFiles;
   }
 
-  public validateFileSizes(fileList: FileList | null): boolean {
+  private areFileSizesValid(fileList: FileList | null): boolean {
     return this.getFilesFromFileList(fileList).every(file => file.size <= this.config.maxFileSizeInBytes);
   }
 
-  public validateFileTypes(fileList: FileList | null): boolean {
+  private areFileTypesValid(fileList: FileList | null): boolean {
     return this.getFilesFromFileList(fileList).every(file =>
       FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type)
     );
