@@ -108,7 +108,6 @@ export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
 // File Upload
-export * from './file-upload/file-upload-validators';
 export * from './file-upload/file-upload.component';
 export * from './file-upload/file-upload.module';
 export * from './file-upload/file-display/file-display.module';
