@@ -42,7 +42,11 @@ export const enum DateFormatMode {
   /**
    * `d MMM y h:mm a zzzz` -> `11 Nov 1990 11:11 AM UTC+00:30`
    */
-  DateWithYearAndTimeWithTimeZone
+  DateWithYearAndTimeWithTimeZone,
+  /**
+   * `hh:mm:ss` -> `21:00:00-08:00`
+   */
+  TimeWithTimeZoneOffset
 }
 
 export class DateFormatter {
@@ -72,11 +76,25 @@ export class DateFormatter {
       return '-';
     }
 
-    return formatDate(coercedValue, this.getFormatString(), 'en_US');
+    return formatDate(coercedValue, this.getFormatString(coercedValue), 'en_US');
   }
 
-  private getFormatString(): string {
+  private getFormatString(date: Date): string {
     switch (this.options.mode) {
+      case DateFormatMode.TimeWithTimeZoneOffset:
+        /*
+         * WARNING: This format is currently unsupported by at least some backend APIs e.g. Reporting
+         */
+        const timezone = date.getTimezoneOffset();
+        const sign = timezone <= 0 ? '+' : '-';
+
+        const pad = function (n: number): string {
+          return (n < 10 ? '0' : '') + n;
+        };
+
+        const offset = sign + pad(Math.floor(timezone / 60)) + ':' + pad(timezone % 60);
+
+        return `hh:mm:ss${offset}`;
       case DateFormatMode.TimeWithSeconds:
         return 'hh:mm:ss a';
       case DateFormatMode.TimeOnly:

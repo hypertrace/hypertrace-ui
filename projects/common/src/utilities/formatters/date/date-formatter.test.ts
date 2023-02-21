@@ -1,10 +1,10 @@
 import { DateFormatMode, DateFormatter } from './date-formatter';
 
 describe('Date formatter', () => {
-  const dateString = '2021-08-19T23:35:45.861Z';
+  const dateString = '2021-08-19T13:02:03.456Z';
 
   test('can format a date string', () => {
-    expect(new DateFormatter().format(dateString)).toEqual('19 Aug 2021 11:35 PM');
+    expect(new DateFormatter().format(dateString)).toEqual('19 Aug 2021 1:02 PM');
   });
 
   test('can format a date string with month and year only', () => {
@@ -28,6 +28,14 @@ describe('Date formatter', () => {
       new DateFormatter({
         mode: DateFormatMode.DateWithYearAndTimeWithTimeZone
       }).format(dateString)
-    ).toEqual('19 Aug 2021 11:35 PM GMT+00:00');
+    ).toEqual('19 Aug 2021 1:02 PM GMT-00:00');
+  });
+
+  test('can format a date string with and time with offset time zone', () => {
+    expect(
+      new DateFormatter({
+        mode: DateFormatMode.TimeWithTimeZoneOffset
+      }).format(dateString)
+    ).toEqual('01:02:03+00:00');
   });
 });
