@@ -88,9 +88,7 @@ export class DateFormatter {
         const timezone = date.getTimezoneOffset();
         const sign = timezone <= 0 ? '+' : '-';
 
-        const pad = (n: number): string => {
-          return `${n < 10 ? '0' : ''}${n}`;
-        };
+        const pad = (n: number): string => `${n < 10 ? '0' : ''}${n}`;
 
         const offset = `${sign}${pad(Math.floor(timezone / 60))}:${pad(timezone % 60)}`;
 

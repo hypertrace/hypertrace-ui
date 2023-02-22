@@ -50,8 +50,7 @@ export class Time {
       /*
        * WARNING: As of Feb 2023 this format is currently unsupported by at least some backend APIs e.g. Reporting
        */
-      const formatter = new DateFormatter({ mode: DateFormatMode.TimeWithTimeZoneOffset });
-      return formatter.format(this.date);
+      return new DateFormatter({ mode: DateFormatMode.TimeWithTimeZoneOffset }).format(this.date);
     }
 
     return this.date.toISOString().substring(11);
