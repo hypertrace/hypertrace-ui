@@ -16,7 +16,7 @@ describe('Time', () => {
   });
 
   test('can get ISO String with timezone offset from time', () => {
-    expect(mockedTime.toISOString(true)).toBe('08:30:00+00:00');
+    expect(mockedTime.toISOString(true)).toBe('08:30:00Z');
   });
 
   test('can compare two times', () => {

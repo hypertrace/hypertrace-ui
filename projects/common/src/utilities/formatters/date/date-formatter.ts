@@ -44,7 +44,7 @@ export const enum DateFormatMode {
    */
   DateWithYearAndTimeWithTimeZone,
   /**
-   * `hh:mm:ss` -> `21:00:00-08:00`
+   * `HH:mm:ssZZZZZ` -> `21:00:00Z` or `21:00:00-08:00`
    */
   TimeWithTimeZoneOffset
 }
@@ -62,37 +62,30 @@ export class DateFormatter {
     this.options = this.applyOptionDefaults(options);
   }
 
-  public format(value: Date | number | undefined | string): string {
-    return this.convertDateToString(value);
+  public format(value: Date | number | undefined | string, timezone?: string): string {
+    return this.convertDateToString(value, timezone);
   }
 
   protected applyOptionDefaults(options: DateFormatOptions): Readonly<Required<DateFormatOptions>> {
     return defaults({}, options, DateFormatter.DEFAULT_OPTIONS);
   }
 
-  protected convertDateToString(value: Date | number | string | undefined): string {
+  protected convertDateToString(value: Date | number | string | undefined, timezone?: string): string {
     const coercedValue = this.dateCoercer.coerce(value);
     if (coercedValue === undefined) {
       return '-';
     }
 
-    return formatDate(coercedValue, this.getFormatString(coercedValue), 'en_US');
+    return formatDate(coercedValue, this.getFormatString(), 'en_US', timezone);
   }
 
-  private getFormatString(date: Date): string {
+  private getFormatString(): string {
     switch (this.options.mode) {
       case DateFormatMode.TimeWithTimeZoneOffset:
         /*
          * WARNING: This format is currently unsupported by at least some backend APIs e.g. Reporting
          */
-        const timezone = date.getTimezoneOffset();
-        const sign = timezone <= 0 ? '+' : '-';
-
-        const pad = (n: number): string => `${n < 10 ? '0' : ''}${n}`;
-
-        const offset = `${sign}${pad(Math.floor(timezone / 60))}:${pad(timezone % 60)}`;
-
-        return `hh:mm:ss${offset}`;
+        return `HH:mm:ssZZZZZ`;
       case DateFormatMode.TimeWithSeconds:
         return 'hh:mm:ss a';
       case DateFormatMode.TimeOnly:
