@@ -82,9 +82,6 @@ export class DateFormatter {
   private getFormatString(): string {
     switch (this.options.mode) {
       case DateFormatMode.TimeWithTimeZoneOffset:
-        /*
-         * WARNING: This format is currently unsupported by at least some backend APIs e.g. Reporting
-         */
         return `HH:mm:ssZZZZZ`;
       case DateFormatMode.TimeWithSeconds:
         return 'hh:mm:ss a';

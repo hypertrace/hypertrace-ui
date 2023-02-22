@@ -2,8 +2,8 @@ import { DateFormatMode, DateFormatter } from './date-formatter';
 
 describe('Date formatter', () => {
   /*
-   * Note: Tests run local to zulu time, so parsing the string below will always
-   *       convert to timezone offset of 0 with time adjusted by the offset.
+   * Note: Tests run local to zulu time, so unless a different timezone is provided, parsing the
+   *       string below will always convert to timezone offset of 0 with time adjusted by the offset.
    */
   const dateString = '2021-08-19T14:23:56.789-08:30';
 
