@@ -47,9 +47,6 @@ export class Time {
 
   public toISOString(useTimezoneOffset: boolean = false): string {
     if (useTimezoneOffset) {
-      /*
-       * WARNING: As of Feb 2023 this format is currently unsupported by at least some backend APIs e.g. Reporting
-       */
       return new DateFormatter({ mode: DateFormatMode.TimeWithTimeZoneOffset }).format(this.date);
     }
 
