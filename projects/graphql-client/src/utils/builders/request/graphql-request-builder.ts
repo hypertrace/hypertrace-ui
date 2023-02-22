@@ -1,4 +1,4 @@
-import { isEmpty, isEqual, map, merge, mergeWith, toPairs } from 'lodash-es';
+import { isEmpty, isEqual, isNil, map, merge, mergeWith, toPairs } from 'lodash-es';
 import { GraphQlArgument, GraphQlArgumentValue, GraphQlEnumArgument } from '../../../model/graphql-argument';
 import { GraphQlSelection } from '../../../model/graphql-selection';
 
@@ -120,6 +120,10 @@ export class GraphQlRequestBuilder {
   }
 
   private stringifyArgumentValue(argumentValue: GraphQlArgumentValue): string {
+    if (isNil(argumentValue)) {
+      return 'null';
+    }
+
     if (argumentValue instanceof GraphQlEnumArgument) {
       return argumentValue.toString();
     }
