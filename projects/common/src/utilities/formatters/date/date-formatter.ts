@@ -88,11 +88,11 @@ export class DateFormatter {
         const timezone = date.getTimezoneOffset();
         const sign = timezone <= 0 ? '+' : '-';
 
-        const pad = function (n: number): string {
-          return (n < 10 ? '0' : '') + n;
+        const pad = (n: number): string => {
+          return `${n < 10 ? '0' : ''}${n}`;
         };
 
-        const offset = sign + pad(Math.floor(timezone / 60)) + ':' + pad(timezone % 60);
+        const offset = `${sign}${pad(Math.floor(timezone / 60))}:${pad(timezone % 60)}`;
 
         return `hh:mm:ss${offset}`;
       case DateFormatMode.TimeWithSeconds:

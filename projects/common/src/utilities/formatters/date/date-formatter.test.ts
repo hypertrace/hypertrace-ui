@@ -28,7 +28,7 @@ describe('Date formatter', () => {
       new DateFormatter({
         mode: DateFormatMode.DateWithYearAndTimeWithTimeZone
       }).format(dateString)
-    ).toEqual('19 Aug 2021 1:02 PM GMT-00:00');
+    ).toEqual('19 Aug 2021 1:02 PM GMT+00:00');
   });
 
   test('can format a date string with and time with offset time zone', () => {
