@@ -1,8 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import {
+  ApplicationFeature,
+  FeatureState,
+  FeatureStateResolver,
+  SubscriptionLifecycle,
+  TypedSimpleChanges
+} from '@hypertrace/common';
+import { combineLatest, Observable, Subject, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 
 @Component({
@@ -56,7 +62,15 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   // tslint:disable-next-line:no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
-  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+  public readonly enableSearchOnTrigger$: Observable<boolean>;
+  public constructor(
+    private readonly subscriptionLifecycle: SubscriptionLifecycle,
+    private readonly featureStateResolver: FeatureStateResolver
+  ) {
+    this.enableSearchOnTrigger$ = this.featureStateResolver
+      .getFeatureState(ApplicationFeature.EnableTriggerBasedSearch)
+      .pipe(map(state => state !== FeatureState.Enabled));
+  }
 
   public isFocused: boolean = false;
   private readonly debouncedValueSubject: Subject<string> = new Subject();
@@ -66,7 +80,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.debounceTime) {
+    if (changes.debounceTime || changes.searchMode) {
       this.setDebouncedSubscription();
     }
   }
@@ -92,9 +106,24 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   private setDebouncedSubscription(): void {
     this.subscriptionLifecycle.unsubscribe();
     this.subscriptionLifecycle.add(
-      this.debouncedValueSubject
-        .pipe(debounceTime(this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : this.debounceTime ?? 0))
-        .subscribe(value => this.valueChange.emit(value))
+      combineLatest([this.debouncedValueSubject, this.getDebounceTime()])
+        .pipe(debounce(([_, debounceTime]) => timer(debounceTime)))
+        .subscribe(([value, _]) => this.valueChange.emit(value))
+    );
+  }
+
+  private getDebounceTime(): Observable<number> {
+    return this.enableSearchOnTrigger$.pipe(
+      map(enabled => {
+        const defaultDebounceTime = this.debounceTime ?? 0;
+        // If incremental search mode is enabled, then use the inputs to compute debounce
+        if (this.searchMode === SearchBoxEmitMode.Incremental) {
+          return defaultDebounceTime;
+        }
+
+        // If on-submit search mode is enabled via the FF or the input, then use the overridden debounce time
+        return enabled || this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
+      })
     );
   }
 }

@@ -10,11 +10,12 @@ import {
   TemplateRef
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ApplicationFeature, TypedSimpleChanges } from '@hypertrace/common';
+import { TypedSimpleChanges } from '@hypertrace/common';
 import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
+import { SearchBoxEmitMode } from '../../search-box/search-box.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { StatefulTableRow } from '../table-api';
 import {
@@ -41,7 +42,7 @@ import {
           [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
           (submit)="this.onSearchChange($event)"
-          [searchMode]="'${ApplicationFeature.EnableTriggerBasedSearch}' | htFeature | htSearchModeOnSubmitIfEnabled"
+          searchMode="${SearchBoxEmitMode.OnSubmit}"
         ></ht-search-box>
 
         <!-- Selects -->
