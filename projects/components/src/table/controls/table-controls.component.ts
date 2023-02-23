@@ -41,7 +41,7 @@ import {
           [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
           (submit)="this.onSearchChange($event)"
-          [searchMode]="'${ApplicationFeature.DisableIncrementalSearch}' | htFeature | htSearchModeOnSubmitIfEnabled"
+          [searchMode]="'${ApplicationFeature.EnableTriggerBasedSearch}' | htFeature | htSearchModeOnSubmitIfEnabled"
         ></ht-search-box>
 
         <!-- Selects -->
