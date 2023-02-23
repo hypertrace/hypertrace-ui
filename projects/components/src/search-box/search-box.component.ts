@@ -122,7 +122,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         }
 
         // If on-submit search mode is enabled via the FF and the input, then use the overridden debounce time.
-        // Doing 'and' here to ensure we can control the behaviour via the FF.
+        // Doing 'and' here to ensure the default behaviour continues until overridden by an FF.
         return enabled && this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
       })
     );
