@@ -10,7 +10,7 @@ import {
   TemplateRef
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { ApplicationFeature, TypedSimpleChanges } from '@hypertrace/common';
 import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
@@ -40,6 +40,8 @@ import {
           [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
           [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
+          (submit)="this.onSearchChange($event)"
+          [searchMode]="'${ApplicationFeature.DisableIncrementalSearch}' | htFeature | htSearchModeOnSubmitIfEnabled"
         ></ht-search-box>
 
         <!-- Selects -->

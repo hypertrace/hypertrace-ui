@@ -12,7 +12,7 @@ import { IconSize } from '../icon/icon-size';
   providers: [SubscriptionLifecycle],
   template: `
     <div class="ht-search-box" [ngClass]="this.displayMode" [class.focused]="this.isFocused">
-      <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="onSubmit()"></ht-icon>
+      <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="this.onSubmit()"></ht-icon>
       <input
         class="input"
         type="text"
@@ -45,6 +45,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   @Input()
   public displayMode: SearchBoxDisplayMode = SearchBoxDisplayMode.Border;
+
+  @Input()
+  public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -90,7 +93,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.unsubscribe();
     this.subscriptionLifecycle.add(
       this.debouncedValueSubject
-        .pipe(debounceTime(this.debounceTime ?? 0))
+        .pipe(debounceTime(this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : this.debounceTime ?? 0))
         .subscribe(value => this.valueChange.emit(value))
     );
   }
@@ -99,4 +102,11 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 export const enum SearchBoxDisplayMode {
   Border = 'border',
   NoBorder = 'no-border'
+}
+
+export const enum SearchBoxEmitMode {
+  // Use incremental search mode for client side filtering and light load server side filtering.
+  Incremental = 'incremental',
+  // Use on-submit search mode for heavy load server side filtering.
+  OnSubmit = 'on-submit'
 }
