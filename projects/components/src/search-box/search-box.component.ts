@@ -69,7 +69,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   ) {
     this.enableSearchOnTrigger$ = this.featureStateResolver
       .getFeatureState(ApplicationFeature.EnableTriggerBasedSearch)
-      .pipe(map(state => state !== FeatureState.Enabled));
+      .pipe(map(state => state === FeatureState.Enabled));
   }
 
   public isFocused: boolean = false;
