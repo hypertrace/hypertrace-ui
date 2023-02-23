@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconRegistryService, IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
+import { isEmpty } from 'lodash-es';
 import { IconBorder } from './icon-border';
 import { IconSize } from './icon-size';
 
@@ -9,21 +10,29 @@ import { IconSize } from './icon-size';
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-icon
-      class="ht-icon"
-      [ngClass]="[this.size, this.borderType ? this.borderType : '']"
-      [ngStyle]="{
-        color: this.color ? this.color : '',
-        borderColor: this.borderType !== '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
-        background: this.borderType === '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
-        borderRadius: this.borderRadius ? this.borderRadius : ''
-      }"
-      [attr.aria-label]="this.labelToUse"
-      [htTooltip]="this.showTooltip ? this.labelToUse : undefined"
-      [fontSet]="this.fontSet"
-      [svgIcon]="this.svgIcon"
-      >{{ this.ligatureText }}</mat-icon
-    >
+    <ng-container>
+      <mat-icon
+        *ngIf="this.svgIcon; else matIconTemplate"
+        class="ht-icon"
+        [ngClass]="this.styleClasses"
+        [ngStyle]="this.customStyles"
+        [attr.aria-label]="this.labelToUse"
+        [htTooltip]="this.tooltip"
+        [svgIcon]="this.svgIcon"
+      ></mat-icon>
+
+      <ng-template #matIconTemplate>
+        <mat-icon
+          class="ht-icon"
+          [ngClass]="this.styleClasses"
+          [ngStyle]="this.customStyles"
+          [attr.aria-label]="this.labelToUse"
+          [htTooltip]="this.tooltip"
+          [fontSet]="this.fontSet"
+          >{{ this.ligatureText }}</mat-icon
+        >
+      </ng-template>
+    </ng-container>
   `
 })
 export class IconComponent implements OnChanges {
@@ -81,5 +90,26 @@ export class IconComponent implements OnChanges {
           assertUnreachable(iconRenderInfo);
       }
     }
+  }
+
+  public get isSvgIcon(): boolean {
+    return !isEmpty(this.svgIcon);
+  }
+
+  public get styleClasses(): string[] {
+    return [this.size, this.borderType ? this.borderType : ''];
+  }
+
+  public get customStyles(): Record<string, string> {
+    return {
+      color: this.color ? this.color : '',
+      borderColor: this.borderType !== IconBorder.InsetBorder && this.borderColor ? this.borderColor : '',
+      background: this.borderType === IconBorder.InsetBorder && this.borderColor ? this.borderColor : '',
+      borderRadius: this.borderRadius ? this.borderRadius : ''
+    };
+  }
+
+  public get tooltip(): string | undefined {
+    return this.showTooltip ? this.labelToUse : undefined;
   }
 }
