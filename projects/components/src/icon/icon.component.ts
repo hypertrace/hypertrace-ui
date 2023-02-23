@@ -13,7 +13,7 @@ import { IconSize } from './icon-size';
     <ng-container>
       <mat-icon
         *ngIf="this.svgIcon; else matIconTemplate"
-        class="ht-icon"
+        class="ht-icon svg-icon"
         [ngClass]="this.styleClasses"
         [ngStyle]="this.customStyles"
         [attr.aria-label]="this.labelToUse"
@@ -23,7 +23,7 @@ import { IconSize } from './icon-size';
 
       <ng-template #matIconTemplate>
         <mat-icon
-          class="ht-icon"
+          class="ht-icon ligature-icon"
           [ngClass]="this.styleClasses"
           [ngStyle]="this.customStyles"
           [attr.aria-label]="this.labelToUse"
