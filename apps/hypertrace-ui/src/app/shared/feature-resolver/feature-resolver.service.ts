@@ -6,12 +6,13 @@ import { Observable, of } from 'rxjs';
 export class FeatureResolverService extends FeatureStateResolver {
   public getFeatureFlagValue<T extends FeatureFlagValue = FeatureFlagValue>(feature: string): Observable<T> {
     switch (feature) {
-      case ApplicationFeature.ExplorerOrderBySupport:
       case ApplicationFeature.PageTimeRange:
         return of(false as T);
       case ApplicationFeature.FeatureDefaultTimeRangeMap:
         // tslint:disable-next-line: no-object-literal-type-assertion
         return of({} as T);
+      case ApplicationFeature.TriggerBasedSearch:
+        return of(false as T);
       default:
         return of(true as T);
     }

@@ -3,7 +3,7 @@ import { SubscriptionLifecycle } from '@hypertrace/common';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
-import { SearchBoxComponent } from '../../search-box/search-box.component';
+import { SearchBoxComponent, SearchBoxEmitMode } from '../../search-box/search-box.component';
 import { ToggleGroupComponent } from '../../toggle-group/toggle-group.component';
 import { TableControlsComponent } from './table-controls.component';
 
@@ -40,6 +40,7 @@ describe('Table Controls component', () => {
     });
 
     expect(spectator.query(SearchBoxComponent)?.placeholder).toEqual('Custom');
+    expect(spectator.query(SearchBoxComponent)?.searchMode).toEqual(SearchBoxEmitMode.OnSubmit);
   });
 
   test('should emit search string when entered', fakeAsync(() => {

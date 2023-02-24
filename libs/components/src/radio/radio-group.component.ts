@@ -11,6 +11,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { LoggerService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { RadioOption } from './radio-option';
 
 @Component({
@@ -29,7 +30,7 @@ import { RadioOption } from './radio-option';
     <mat-radio-group
       class="radio-group"
       [ngClass]="this.optionsDirection"
-      [ngModel]="this.selected!.value"
+      [ngModel]="this.selected?.value"
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
@@ -39,14 +40,16 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
-        (change)="$event.stopPropagation()"
       >
-        <ng-container
-          *ngTemplateOutlet="
-            this.isLabelAString(option.label) ? defaultLabel : option.label;
-            context: { $implicit: option.label }
-          "
-        ></ng-container>
+        <div class="radio-button-item">
+          <ng-container
+            *ngTemplateOutlet="
+              this.isLabelAString(option.label) ? defaultLabel : option.label;
+              context: { $implicit: option.label }
+            "
+          ></ng-container>
+          <ht-info-icon *ngIf="option.infoText" [info]="option.infoText" class="info-icon"></ht-info-icon>
+        </div>
         <span *ngIf="option.description" class="radio-button-description">{{ option.description }}</span>
       </mat-radio-button>
     </mat-radio-group>
@@ -111,7 +114,9 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public onRadioChange(event: MatRadioChange): void {
-    this.setSelection(event.value);
+    if (!isNil(event.value)) {
+      this.setSelection(event.value);
+    }
   }
 
   public isLabelAString(label: string | TemplateRef<unknown>): boolean {

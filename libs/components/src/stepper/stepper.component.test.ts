@@ -9,14 +9,14 @@ import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
 import { LoadAsyncModule } from '../load-async/load-async.module';
 import { StepperComponent } from '../stepper/stepper.component';
-import { StepperTabComponent } from './stepper-tab.component';
+import { StepperTabComponent } from './tab/stepper-tab.component';
 
 describe('Stepper Component', () => {
   let spectator: Spectator<StepperComponent>;
 
   const createHost = createHostFactory({
     component: StepperComponent,
-    declarations: [MockComponents(ButtonComponent, LabelComponent, IconComponent, StepperTabComponent)],
+    declarations: [MockComponents(ButtonComponent, LabelComponent, IconComponent), StepperTabComponent],
     imports: [MemoizeModule, MatStepperModule, LoadAsyncModule],
     shallow: true,
     detectChanges: true
@@ -172,5 +172,72 @@ describe('Stepper Component', () => {
     const submitButton = actionButtons[2]; // <-- ["Cancel", "Back", "Submit"]
     expect(submitButton.label).toBe('Click me!');
     expect(submitButton.disabled).toBeTruthy();
+  });
+
+  test('should be able to goto particular step', () => {
+    spectator = createHost(
+      `<ht-stepper class="stepper" [isLinear]="isLinear">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+            <ht-stepper-tab label="Kem cho" [completed]="tabThreeStatus" actionButtonLabel="Click me!"> Test!</ht-stepper-tab>
+          </ht-stepper>`,
+      {
+        hostProps: {
+          isLinear: true,
+          tabOneStatus: true,
+          tabTwoStatus: true,
+          tabThreeStatus: false
+        }
+      }
+    );
+
+    spectator.component.goToStep(1);
+    expect(spectator.query(MatStepper)?.selectedIndex).toBe(1);
+  });
+
+  test('should not be able to goto particular step if steps in between is not complete', () => {
+    spectator = createHost(
+      `<ht-stepper class="stepper" [isLinear]="isLinear">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+            <ht-stepper-tab label="Kem cho" [completed]="tabThreeStatus" actionButtonLabel="Click me!"> Test!</ht-stepper-tab>
+            <ht-stepper-tab label="Foo" [completed]="tabFourStatus" actionButtonLabel="Click me!"> Test 123!</ht-stepper-tab>
+          </ht-stepper>`,
+      {
+        hostProps: {
+          isLinear: true,
+          tabOneStatus: true,
+          tabTwoStatus: true,
+          tabThreeStatus: false,
+          tabFourStatus: false
+        }
+      }
+    );
+
+    spectator.component.goToStep(3);
+    expect(spectator.query(MatStepper)?.selectedIndex).toBe(0);
+  });
+
+  test('should be able to goto particular step in non linear mode', () => {
+    spectator = createHost(
+      `<ht-stepper class="stepper" [isLinear]="isLinear">
+            <ht-stepper-tab label="Hello" [completed]="tabOneStatus"> Hello World!</ht-stepper-tab>
+            <ht-stepper-tab label="Yo" [completed]="tabTwoStatus"> Hey!</ht-stepper-tab>
+            <ht-stepper-tab label="Kem cho" [completed]="tabThreeStatus" actionButtonLabel="Click me!"> Test!</ht-stepper-tab>
+            <ht-stepper-tab label="Foo" [completed]="tabFourStatus" actionButtonLabel="Click me!"> Test 123!</ht-stepper-tab>
+          </ht-stepper>`,
+      {
+        hostProps: {
+          isLinear: false,
+          tabOneStatus: true,
+          tabTwoStatus: true,
+          tabThreeStatus: false,
+          tabFourStatus: false
+        }
+      }
+    );
+
+    spectator.component.goToStep(3);
+    expect(spectator.query(MatStepper)?.selectedIndex).toBe(3);
   });
 });

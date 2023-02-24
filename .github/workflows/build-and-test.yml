@@ -68,6 +68,11 @@ jobs:
           echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
 
 
+      - name: Set up Node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
       - name: Cache node modules
         uses: actions/cache@v2
         with:

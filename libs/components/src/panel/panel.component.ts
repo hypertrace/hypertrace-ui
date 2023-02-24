@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { PanelBodyComponent } from './body/panel-body.component';
+import { PanelCollapsedBodyComponent } from './collapsed-body/panel-collapsed-body.component';
 import { PanelHeaderComponent } from './header/panel-header.component';
 
 @Component({
@@ -31,6 +32,9 @@ import { PanelHeaderComponent } from './header/panel-header.component';
       </div>
       <div class="body" *ngIf="this.expanded && this.body">
         <ng-container *ngTemplateOutlet="this.body!.content"></ng-container>
+      </div>
+      <div class="collapsed-body" *ngIf="!this.expanded && this.collapsedBody">
+        <ng-container *ngTemplateOutlet="this.collapsedBody.content"></ng-container>
       </div>
     </div>
   `
@@ -56,6 +60,9 @@ export class PanelComponent implements AfterViewInit {
 
   @ContentChild(PanelBodyComponent, { static: true })
   public readonly body?: PanelBodyComponent;
+
+  @ContentChild(PanelCollapsedBodyComponent, { static: true })
+  public readonly collapsedBody?: PanelCollapsedBodyComponent;
 
   @ViewChild('headerContainer', { read: ViewContainerRef, static: false })
   public readonly headerContainer?: ViewContainerRef;

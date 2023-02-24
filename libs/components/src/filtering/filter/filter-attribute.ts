@@ -1,4 +1,5 @@
 import { FilterAttributeType } from './filter-attribute-type';
+import { FilterOperator } from './filter-operators';
 
 export interface FilterAttribute {
   name: string;
@@ -8,4 +9,5 @@ export interface FilterAttribute {
   onlySupportsAggregation?: boolean;
   onlySupportsGrouping?: boolean;
   category?: string;
+  unsupportedOperators?: FilterOperator[];
 }

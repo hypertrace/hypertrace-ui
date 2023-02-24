@@ -1,3 +1,4 @@
+@use 'layout' as l;
 @import 'color-palette';
 @import 'font';
 
@@ -65,8 +66,18 @@
       }
     }
 
-    .radio-button-label {
-      @include body-2-regular($gray-7);
+    .radio-button-item {
+      @include l.flex-layout(row);
+      gap: 8px;
+
+      .radio-button-label {
+        @include body-2-regular($gray-7);
+      }
+
+      .info-icon {
+        display: flex;
+        align-items: center;
+      }
     }
 
     .radio-button-description {

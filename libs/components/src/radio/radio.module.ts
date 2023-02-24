@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
+import { InfoIconModule } from '../info-icon/info-icon.module';
 import { LabelModule } from '../label/label.module';
 import { RadioGroupComponent } from './radio-group.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, MatRadioModule, LabelModule],
+  imports: [CommonModule, InfoIconModule, FormsModule, MatRadioModule, LabelModule],
   declarations: [RadioGroupComponent],
   exports: [RadioGroupComponent]
 })

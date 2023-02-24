@@ -22,4 +22,12 @@ describe('Date formatter', () => {
       }).format(dateString)
     ).toEqual('August 2021');
   });
+
+  test('can format a date string with day, full month, year, and time with time zone', () => {
+    expect(
+      new DateFormatter({
+        mode: DateFormatMode.DateWithYearAndTimeWithTimeZone
+      }).format(dateString)
+    ).toEqual('19 Aug 2021 11:35 PM GMT+00:00');
+  });
 });

@@ -111,10 +111,10 @@ describe('Paginator component', () => {
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 
-  test('should hide the paginator when totalItems is less than the pageSizeOptions options', () => {
+  test('should hide the paginator when totalItems is less than the minItemsBeforeDisplay', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: 20
+        totalItems: 9
       }
     });
 

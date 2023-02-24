@@ -1,3 +1,4 @@
+import { Color } from '@hypertrace/common';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { CopyToClipboardComponent } from '../../copy-to-clipboard/copy-to-clipboard.component';
@@ -92,6 +93,14 @@ describe('Code Viewer Component', () => {
 
     // Search
     spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'e');
-    expect(spectator.queryAll('.bg-searched').length).toBe(2);
+    const searchElements = spectator.queryAll('.bg-searched');
+    expect(searchElements.length).toBe(2);
+    expect(searchElements[0]).toHaveStyle({ border: `1px solid ${Color.Gray6}` });
+    expect(searchElements[1]).toHaveStyle({ border: undefined });
+
+    // Search Submit
+    spectator.triggerEventHandler(SearchBoxComponent, 'submit', 'e');
+    expect(searchElements[0]).toHaveStyle({ border: undefined });
+    expect(searchElements[1]).toHaveStyle({ border: `1px solid ${Color.Gray6}` });
   });
 });

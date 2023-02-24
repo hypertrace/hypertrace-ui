@@ -124,6 +124,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (click)="this.onSelectionChange(item)"
                   class="multi-select-option"
                   [ngClass]="{ disabled: item.disabled }"
+                  [htTooltip]="item.tooltip"
                 >
                   <ht-checkbox
                     class="checkbox"
@@ -256,7 +257,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   }
 
   public onSelectAll(): void {
-    this.setSelection(this.allOptionsList!.map(item => item.value));
+    this.setSelection(this.allOptionsList!.filter(item => !item.disabled).map(item => item.value));
   }
 
   public onClearSelected(): void {
