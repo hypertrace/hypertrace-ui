@@ -68,7 +68,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     private readonly featureStateResolver: FeatureStateResolver
   ) {
     this.enableSearchOnTrigger$ = this.featureStateResolver
-      .getFeatureState(ApplicationFeature.EnableTriggerBasedSearch)
+      .getFeatureState(ApplicationFeature.TriggerBasedSearch)
       .pipe(map(state => state === FeatureState.Enabled));
   }
 
