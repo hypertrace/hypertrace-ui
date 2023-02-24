@@ -1,14 +1,21 @@
 import { fakeAsync } from '@angular/core/testing';
+import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { SearchBoxComponent, SearchBoxDisplayMode } from './search-box.component';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
+import { SearchBoxComponent, SearchBoxDisplayMode, SearchBoxEmitMode } from './search-box.component';
 
 describe('Search box Component', () => {
   let spectator: Spectator<SearchBoxComponent>;
 
   const createHost = createHostFactory({
     component: SearchBoxComponent,
-    shallow: true
+    shallow: true,
+    providers: [
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+      })
+    ]
   });
 
   test('should work with default values', fakeAsync(() => {
@@ -67,6 +74,32 @@ describe('Search box Component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.valueChange).toBe('200ms x', {
+        x: 'Test2'
+      });
+
+      spectator.triggerEventHandler('input', 'input', spectator.component.value);
+      spectator.tick();
+    });
+  }));
+
+  test('onSubmit mode should work as expected', fakeAsync(() => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.OnSubmit
+        }
+      }
+    );
+
+    const inputElement = spectator.query('input');
+    expect((inputElement as HTMLInputElement)?.placeholder).toEqual('Test Placeholder');
+    spectator.component.value = 'Test2';
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.valueChange).toBe('5000ms x', {
         x: 'Test2'
       });
 

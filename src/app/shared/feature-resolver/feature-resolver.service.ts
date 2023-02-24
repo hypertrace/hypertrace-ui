@@ -11,6 +11,8 @@ export class FeatureResolverService extends FeatureStateResolver {
       case ApplicationFeature.FeatureDefaultTimeRangeMap:
         // tslint:disable-next-line: no-object-literal-type-assertion
         return of({} as T);
+      case ApplicationFeature.TriggerBasedSearch:
+        return of(false as T);
       default:
         return of(true as T);
     }
