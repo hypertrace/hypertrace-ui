@@ -16,3 +16,4 @@ LICENSE*
 conf/
 coverage/
 test-results/
+dist/

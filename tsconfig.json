@@ -1,41 +1,34 @@
 /*
   This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
   It is not intended to be used to perform a compilation.
-
   To learn more about this file see: https://angular.io/config/solution-tsconfig.
 */
 {
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./apps/hypertrace-ui/tsconfig.json"
     },
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./libs/common/tsconfig.json"
     },
     {
-      "path": "./projects/common/tsconfig.lib.json"
+      "path": "./libs/graphql-client/tsconfig.json"
     },
     {
-      "path": "./projects/graphql-client/tsconfig.lib.json"
+      "path": "./libs/components/tsconfig.json"
     },
     {
-      "path": "./projects/components/tsconfig.lib.json"
+      "path": "./libs/dashboards/tsconfig.json"
     },
     {
-      "path": "./projects/dashboards/tsconfig.lib.json"
+      "path": "./libs/test-utils/tsconfig.json"
     },
     {
-      "path": "./projects/test-utils/tsconfig.lib.json"
+      "path": "./libs/assets-library/tsconfig.json"
     },
     {
-      "path": "./projects/assets-library/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/observability/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/observability/tsconfig.spec.json"
+      "path": "./libs/observability/tsconfig.json"
     }
   ]
 }
