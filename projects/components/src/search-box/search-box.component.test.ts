@@ -1,6 +1,8 @@
 import { fakeAsync } from '@angular/core/testing';
+import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
 import { SearchBoxComponent, SearchBoxDisplayMode, SearchBoxEmitMode } from './search-box.component';
 
 describe('Search box Component', () => {
@@ -8,7 +10,12 @@ describe('Search box Component', () => {
 
   const createHost = createHostFactory({
     component: SearchBoxComponent,
-    shallow: true
+    shallow: true,
+    providers: [
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+      })
+    ]
   });
 
   test('should work with default values', fakeAsync(() => {

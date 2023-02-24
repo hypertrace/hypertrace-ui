@@ -114,7 +114,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   private getDebounceTime(): Observable<number> {
     return this.enableSearchOnTrigger$.pipe(
-      map(enabled => {
+      map(searchOnTriggerEnabled => {
         const defaultDebounceTime = this.debounceTime ?? 0;
         // If incremental search mode is enabled, then use the inputs to compute debounce
         if (this.searchMode === SearchBoxEmitMode.Incremental) {
@@ -123,7 +123,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
         // If on-submit search mode is enabled via the FF and the input, then use the overridden debounce time.
         // Doing 'and' here to ensure the default behaviour continues until overridden by an FF.
-        return enabled && this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
+        return searchOnTriggerEnabled && this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
       })
     );
   }

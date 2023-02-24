@@ -1,10 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
-import { FeatureState, SubscriptionLifecycle } from '@hypertrace/common';
-import { FeaturePipe, MultiSelectComponent, SearchBoxEmitMode } from '@hypertrace/components';
+import { SubscriptionLifecycle } from '@hypertrace/common';
+import { MultiSelectComponent, SearchBoxEmitMode } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { MockComponent, MockPipe } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
-import { SearchModeOnSubmitIfEnabledPipe } from '../../search-box/search-mode-on-submit-if-feature-enabled.pipe';
 import { ToggleGroupComponent } from '../../toggle-group/toggle-group.component';
 import { TableControlsComponent } from './table-controls.component';
 
@@ -14,8 +13,6 @@ describe('Table Controls component', () => {
     shallow: true,
     providers: [mockProvider(SubscriptionLifecycle)],
     declarations: [
-      MockPipe(FeaturePipe, () => FeatureState.Enabled),
-      MockPipe(SearchModeOnSubmitIfEnabledPipe, () => SearchBoxEmitMode.OnSubmit),
       MockComponent(SearchBoxComponent),
       MockComponent(MultiSelectComponent),
       MockComponent(ToggleGroupComponent)
