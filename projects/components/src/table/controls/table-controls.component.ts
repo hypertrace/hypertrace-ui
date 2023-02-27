@@ -15,6 +15,7 @@ import { isEqual } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
+import { SearchBoxEmitMode } from '../../search-box/search-box.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { StatefulTableRow } from '../table-api';
 import {
@@ -40,6 +41,8 @@ import {
           [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
           [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
+          (submit)="this.onSearchChange($event)"
+          searchMode="${SearchBoxEmitMode.OnSubmit}"
         ></ht-search-box>
 
         <!-- Selects -->
