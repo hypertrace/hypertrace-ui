@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconRegistryService, IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { IconBorder } from './icon-border';
 import { IconSize } from './icon-size';
 
@@ -97,15 +97,15 @@ export class IconComponent implements OnChanges {
   }
 
   public get styleClasses(): string[] {
-    return [this.size, this.borderType ? this.borderType : ''];
+    return [this.size, !isNil(this.borderType) ? this.borderType : ''];
   }
 
   public get customStyles(): Record<string, string> {
     return {
       color: this.color ? this.color : '',
-      borderColor: this.borderType !== IconBorder.InsetBorder && this.borderColor ? this.borderColor : '',
-      background: this.borderType === IconBorder.InsetBorder && this.borderColor ? this.borderColor : '',
-      borderRadius: this.borderRadius ? this.borderRadius : ''
+      borderColor: this.borderType !== IconBorder.InsetBorder && !isNil(this.borderColor) ? this.borderColor : '',
+      background: this.borderType === IconBorder.InsetBorder && !isNil(this.borderColor) ? this.borderColor : '',
+      borderRadius: !isNil(this.borderRadius) ? this.borderRadius : ''
     };
   }
 
