@@ -100,10 +100,10 @@ export class IconComponent implements OnChanges {
 
   public get customStyles(): Record<string, string> {
     return {
-      color: this.color ? this.color : '',
-      borderColor: this.borderType !== IconBorder.InsetBorder && !isNil(this.borderColor) ? this.borderColor : '',
-      background: this.borderType === IconBorder.InsetBorder && !isNil(this.borderColor) ? this.borderColor : '',
-      borderRadius: !isNil(this.borderRadius) ? this.borderRadius : ''
+      color: this.color ?? '',
+      borderColor: this.borderType !== IconBorder.InsetBorder ? this.borderColor ?? '' : '',
+      background: this.borderType === IconBorder.InsetBorder ? this.borderColor ?? '' : '',
+      borderRadius: this.borderRadius ?? ''
     };
   }
 
