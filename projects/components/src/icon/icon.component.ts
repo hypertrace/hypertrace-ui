@@ -10,29 +10,27 @@ import { IconSize } from './icon-size';
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-container>
+    <mat-icon
+      *ngIf="this.svgIcon; else matIconTemplate"
+      class="ht-icon svg-icon"
+      [ngClass]="this.styleClasses"
+      [ngStyle]="this.customStyles"
+      [attr.aria-label]="this.labelToUse"
+      [htTooltip]="this.tooltip"
+      [svgIcon]="this.svgIcon"
+    ></mat-icon>
+
+    <ng-template #matIconTemplate>
       <mat-icon
-        *ngIf="this.svgIcon; else matIconTemplate"
-        class="ht-icon svg-icon"
+        class="ht-icon ligature-icon"
         [ngClass]="this.styleClasses"
         [ngStyle]="this.customStyles"
         [attr.aria-label]="this.labelToUse"
         [htTooltip]="this.tooltip"
-        [svgIcon]="this.svgIcon"
-      ></mat-icon>
-
-      <ng-template #matIconTemplate>
-        <mat-icon
-          class="ht-icon ligature-icon"
-          [ngClass]="this.styleClasses"
-          [ngStyle]="this.customStyles"
-          [attr.aria-label]="this.labelToUse"
-          [htTooltip]="this.tooltip"
-          [fontSet]="this.fontSet"
-          >{{ this.ligatureText }}</mat-icon
-        >
-      </ng-template>
-    </ng-container>
+        [fontSet]="this.fontSet"
+        >{{ this.ligatureText }}</mat-icon
+      >
+    </ng-template>
   `
 })
 export class IconComponent implements OnChanges {
