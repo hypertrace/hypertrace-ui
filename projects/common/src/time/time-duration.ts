@@ -1,17 +1,24 @@
 import { parse, toSeconds } from 'iso8601-duration';
+import { toString } from 'lodash-es';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 import { TimeUnit } from './time-unit.type';
 
 export class TimeDuration {
   private readonly millis: number;
+  private readonly militaryTime: Date;
 
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
     this.toUnitString(); // Fail if unrecognized TimeUnit
     this.millis = this.normalizeToMillis(isNaN(value) ? 0 : value, unit);
+    this.militaryTime = this.buildMilitaryTime();
   }
 
   public toMillis(): number {
     return this.millis;
+  }
+
+  public toDate(): Date {
+    return this.militaryTime;
   }
 
   public static parse(durationString: string): TimeDuration {
@@ -24,6 +31,48 @@ export class TimeDuration {
 
   public toIso8601DurationString(): string {
     return `PT${this.toMillis() / 1000}S`;
+  }
+
+  public toIso8601DurationStringMilitaryTime(): string {
+    const timeObject = this.toTimeObject();
+
+    let timeString = 'P';
+    if (timeObject.years > 0) {
+      timeString = timeString.concat(toString(timeObject.years), 'Y');
+    }
+    if (timeObject.months > 0) {
+      timeString = timeString.concat(toString(timeObject.months), 'M');
+    }
+    if (timeObject.days > 0) {
+      timeString = timeString.concat(toString(timeObject.days), 'D');
+    }
+    if (timeObject.hours > 0 || timeObject.minutes > 0 || timeObject.seconds > 0) {
+      timeString = timeString.concat('T');
+    }
+    if (timeObject.hours > 0) {
+      timeString = timeString.concat(toString(timeObject.hours), 'H');
+    }
+    if (timeObject.minutes > 0) {
+      timeString = timeString.concat(toString(timeObject.minutes), 'M');
+    }
+    if (timeObject.seconds > 0) {
+      timeString = timeString.concat(toString(timeObject.seconds), 'S');
+    }
+
+    return timeString;
+  }
+
+  private toTimeObject(): TimeObject {
+    const unixDate = new Date(0);
+
+    return {
+      years: this.militaryTime.getUTCFullYear() - unixDate.getUTCFullYear(),
+      months: this.militaryTime.getUTCMonth() - unixDate.getUTCMonth(),
+      days: this.militaryTime.getUTCDate() - unixDate.getUTCDate(),
+      hours: this.militaryTime.getUTCHours(),
+      minutes: this.militaryTime.getUTCMinutes(),
+      seconds: this.militaryTime.getUTCSeconds()
+    };
   }
 
   public toMultiUnitString(
@@ -111,6 +160,10 @@ export class TimeDuration {
     }
   }
 
+  private buildMilitaryTime(): Date {
+    return new Date(this.millis);
+  }
+
   private toUnitString(): string {
     switch (this.unit) {
       case TimeUnit.Year:
@@ -165,4 +218,13 @@ type ConvertibleTimeUnit =
 export enum UnitStringType {
   Long = 'long',
   Short = 'short'
+}
+
+interface TimeObject {
+  years: number;
+  months: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
