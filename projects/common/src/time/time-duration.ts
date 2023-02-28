@@ -17,10 +17,6 @@ export class TimeDuration {
     return this.millis;
   }
 
-  public toDate(): Date {
-    return this.militaryTime;
-  }
-
   public static parse(durationString: string): TimeDuration {
     return new TimeDuration(toSeconds(parse(durationString)), TimeUnit.Second);
   }
@@ -63,16 +59,38 @@ export class TimeDuration {
   }
 
   private toTimeObject(): TimeObject {
-    const unixDate = new Date(0);
-
     return {
-      years: this.militaryTime.getUTCFullYear() - unixDate.getUTCFullYear(),
-      months: this.militaryTime.getUTCMonth() - unixDate.getUTCMonth(),
-      days: this.militaryTime.getUTCDate() - unixDate.getUTCDate(),
-      hours: this.militaryTime.getUTCHours(),
-      minutes: this.militaryTime.getUTCMinutes(),
-      seconds: this.militaryTime.getUTCSeconds()
+      years: this.years,
+      months: this.months,
+      days: this.days,
+      hours: this.hours,
+      minutes: this.minutes,
+      seconds: this.seconds
     };
+  }
+
+  public get years(): number {
+    return this.militaryTime.getUTCFullYear() - new Date(0).getUTCFullYear();
+  }
+
+  public get months(): number {
+    return this.militaryTime.getUTCMonth() - new Date(0).getUTCMonth();
+  }
+
+  public get days(): number {
+    return this.militaryTime.getUTCDate() - new Date(0).getUTCDate();
+  }
+
+  public get hours(): number {
+    return this.militaryTime.getUTCHours();
+  }
+
+  public get minutes(): number {
+    return this.militaryTime.getUTCMinutes();
+  }
+
+  public get seconds(): number {
+    return this.militaryTime.getUTCSeconds();
   }
 
   public toMultiUnitString(
