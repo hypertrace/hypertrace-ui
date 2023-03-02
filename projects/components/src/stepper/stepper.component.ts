@@ -14,8 +14,8 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
-import { merge, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { combineLatest, merge, Observable } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './tab/stepper-tab.component';
@@ -73,7 +73,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
               ></ht-button>
               <ht-button
                 class="next"
-                [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
+                [label]="this.actionButtonLabel$ | async"
                 (click)="this.nextOrSubmit(stepper)"
                 [disabled]="this.isNextDisabled(stepper.selectedIndex)"
               ></ht-button>
@@ -116,6 +116,7 @@ export class StepperComponent implements AfterContentInit {
   public readonly selectionChange: EventEmitter<StepperSelectionChange> = new EventEmitter<StepperSelectionChange>();
 
   public steps$?: Observable<StepperTabComponent[]>;
+  public actionButtonLabel$?: Observable<string>;
 
   public constructor(private readonly cdr: ChangeDetectorRef, private readonly subs: SubscriptionLifecycle) {}
 
@@ -131,6 +132,18 @@ export class StepperComponent implements AfterContentInit {
           switchMap(step => step.stepControl!.statusChanges)
         )
         .subscribe(() => this.cdr.markForCheck())
+    );
+
+    const stepsInputChange$ = this.steps$.pipe(
+      switchMap(steps => merge(...steps.map(tab => tab.refresh$))),
+      startWith(undefined)
+    );
+    const stepperSelectionChange$ = this.selectionChange.asObservable().pipe(
+      map(event => event.selectedIndex),
+      startWith(0)
+    );
+    this.actionButtonLabel$ = combineLatest([stepperSelectionChange$, this.steps$, stepsInputChange$]).pipe(
+      map(([selectedIndex, steps]) => this.getActionButtonLabel(selectedIndex, steps))
     );
   }
 
