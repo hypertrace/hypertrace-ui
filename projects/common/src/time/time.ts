@@ -45,7 +45,11 @@ export class Time {
     );
   }
 
-  public toISOString(): string {
+  public toISOString(useTimezoneOffset: boolean = false): string {
+    if (useTimezoneOffset) {
+      return new DateFormatter({ mode: DateFormatMode.TimeWithTimeZoneOffset }).format(this.date);
+    }
+
     return this.date.toISOString().substring(11);
   }
 
