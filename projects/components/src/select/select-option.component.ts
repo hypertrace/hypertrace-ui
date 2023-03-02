@@ -45,6 +45,9 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   @Input()
   public disabled?: boolean;
 
+  @Input()
+  public tooltip?: string;
+
   @ContentChild(SelectOptionRendererDirective)
   public selectOptionRenderer?: SelectOptionRendererDirective;
 

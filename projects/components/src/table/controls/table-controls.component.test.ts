@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SubscriptionLifecycle } from '@hypertrace/common';
-import { MultiSelectComponent } from '@hypertrace/components';
+import { MultiSelectComponent, SearchBoxEmitMode } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { SearchBoxComponent } from '../../search-box/search-box.component';
@@ -40,6 +40,7 @@ describe('Table Controls component', () => {
     });
 
     expect(spectator.query(SearchBoxComponent)?.placeholder).toEqual('Custom');
+    expect(spectator.query(SearchBoxComponent)?.searchMode).toEqual(SearchBoxEmitMode.OnSubmit);
   });
 
   test('should emit search string when entered', fakeAsync(() => {

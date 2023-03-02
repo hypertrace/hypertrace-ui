@@ -19,7 +19,7 @@ import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
-import { SearchBoxDisplayMode } from '../search-box/search-box.component';
+import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
@@ -94,6 +94,8 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (valueChange)="this.searchOptions($event)"
                 [debounceTime]="200"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
+                (submit)="this.searchOptions($event)"
+                [searchMode]="this.searchTriggerMode"
                 *ngIf="(this.allOptions$ | async)?.length > 5 || (this.isSearchTextPresent$ | async)"
               ></ht-search-box>
               <ht-divider class="divider"></ht-divider>
@@ -124,6 +126,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (click)="this.onSelectionChange(item)"
                   class="multi-select-option"
                   [ngClass]="{ disabled: item.disabled }"
+                  [htTooltip]="item.tooltip"
                 >
                   <ht-checkbox
                     class="checkbox"
@@ -181,6 +184,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   @Input()
   public searchMode: MultiSelectSearchMode = MultiSelectSearchMode.Disabled;
+
+  @Input()
+  public searchTriggerMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
@@ -256,7 +262,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   }
 
   public onSelectAll(): void {
-    this.setSelection(this.allOptionsList!.map(item => item.value));
+    this.setSelection(this.allOptionsList!.filter(item => !item.disabled).map(item => item.value));
   }
 
   public onClearSelected(): void {
