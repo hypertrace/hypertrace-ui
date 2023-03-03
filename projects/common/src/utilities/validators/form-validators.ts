@@ -7,6 +7,7 @@ import { areEmailAddressesValid } from './email-validator';
 export namespace CustomFormValidators {
   export const commaSeparatedEmails = (control: AbstractControl) => {
     if (isNil(control.value) || isEmpty(control.value)) {
+      // tslint:disable: no-null-keyword
       return null;
     }
 
