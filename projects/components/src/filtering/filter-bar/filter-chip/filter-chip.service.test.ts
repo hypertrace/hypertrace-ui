@@ -64,6 +64,7 @@ describe('Filter Chip service', () => {
             case FilterOperator.NotIn:
               return new InNotInFilterParser();
             case FilterOperator.ContainsKey:
+            case FilterOperator.NotContainsKey:
             case FilterOperator.ContainsKeyLike:
               return new ContainsFilterParser();
             default:
@@ -292,6 +293,12 @@ describe('Filter Chip service', () => {
       {
         metadata: attribute,
         field: attribute.name,
+        operator: FilterOperator.NotContainsKey,
+        userString: `${attribute.displayName} ${FilterOperator.NotContainsKey}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
         operator: FilterOperator.ContainsKeyLike,
         userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`
       },
@@ -333,6 +340,13 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotContainsKey,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
         userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
       }),
