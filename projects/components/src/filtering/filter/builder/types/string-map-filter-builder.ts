@@ -8,7 +8,7 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string> {
   }
 
   public supportedTopLevelOperators(): FilterOperator[] {
-    return [FilterOperator.ContainsKey, FilterOperator.ContainsKeyLike];
+    return [FilterOperator.ContainsKey, FilterOperator.NotContainsKey, FilterOperator.ContainsKeyLike];
   }
 
   public supportedSubpathOperators(): FilterOperator[] {

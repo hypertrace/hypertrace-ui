@@ -24,5 +24,7 @@ export const enum GraphQlOperatorType {
   In = 'IN',
   NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY',
+
+  NotContainsKey = 'NOT_CONTAINS_KEY',
   ContainsKeyLike = 'CONTAINS_KEY_LIKE'
 }
