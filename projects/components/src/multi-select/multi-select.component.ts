@@ -43,7 +43,7 @@ import { MultiSelectJustify } from './multi-select-justify';
       <ht-popover
         [disabled]="this.disabled"
         class="multi-select-container"
-        (popoverOpen)="this.popoverOpen = true"
+        (popoverOpen)="this.onPopoverOpen()"
         (popoverClose)="this.popoverOpen = false"
       >
         <ht-popover-trigger>
@@ -206,6 +206,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   @Input()
   public customControlTemplate?: TemplateRef<unknown>;
 
+  @Input()
+  public setSelectedItemsFirst: boolean = false;
+
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
@@ -218,6 +221,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  private readonly reorderSelectedItemsSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
     map(searchText => !isEmpty(searchText)),
@@ -235,11 +239,13 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
-    this.filteredOptions$ = combineLatest([this.allOptions$, this.caseInsensitiveSearchSubject]).pipe(
-      map(([options, searchText]) =>
-        isEmpty(searchText)
-          ? options.toArray()
-          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+    this.filteredOptions$ = combineLatest([
+      this.allOptions$,
+      this.caseInsensitiveSearchSubject,
+      this.reorderSelectedItemsSubject
+    ]).pipe(
+      map(([options, searchText, reorderSelectedItemsSubject]) =>
+        this.getFilteredOptions(options, searchText, reorderSelectedItemsSubject)
       )
     );
     this.setTriggerLabel();
@@ -247,6 +253,39 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngOnChanges(): void {
     this.setTriggerLabel();
+  }
+
+  public onPopoverOpen(): void {
+    this.popoverOpen = true;
+    if (this.setSelectedItemsFirst) {
+      this.reorderSelectedItemsSubject.next(true);
+    }
+  }
+
+  private getFilteredOptions(
+    options: QueryList<SelectOptionComponent<V>>,
+    searchText: string,
+    reorderSelectedItemsSubject: boolean
+  ): SelectOptionComponent<V>[] {
+    const selectedOptions: SelectOptionComponent<V>[] = isEmpty(searchText)
+      ? options.toArray()
+      : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()));
+
+    if (reorderSelectedItemsSubject) {
+      return this.reorderSelectedItemsFirst(selectedOptions, this.selected ?? []);
+    }
+
+    return selectedOptions;
+  }
+
+  private reorderSelectedItemsFirst(
+    filteredOptions: SelectOptionComponent<V>[],
+    selected: V[]
+  ): SelectOptionComponent<V>[] {
+    return [
+      ...filteredOptions.filter(filteredOption => selected.includes(filteredOption.value)),
+      ...filteredOptions.filter(filteredOption => !selected.includes(filteredOption.value))
+    ];
   }
 
   public searchOptions(searchText: string): void {
