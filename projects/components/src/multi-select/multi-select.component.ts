@@ -14,7 +14,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEmpty, isEqual } from 'lodash-es';
+import { isEmpty, isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -206,9 +206,6 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   @Input()
   public customControlTemplate?: TemplateRef<unknown>;
 
-  @Input()
-  public setSelectedItemsFirst: boolean = false;
-
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
@@ -244,8 +241,13 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
       this.caseInsensitiveSearchSubject,
       this.reorderSelectedItemsSubject
     ]).pipe(
-      map(([options, searchText, reorderSelectedItemsSubject]) =>
-        this.getFilteredOptions(options, searchText, reorderSelectedItemsSubject)
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? this.reorderSelectedItemsFirst(options.toArray(), this.selected)
+          : this.reorderSelectedItemsFirst(
+              options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase())),
+              this.selected
+            )
       )
     );
     this.setTriggerLabel();
@@ -257,35 +259,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public onPopoverOpen(): void {
     this.popoverOpen = true;
-    if (this.setSelectedItemsFirst) {
-      this.reorderSelectedItemsSubject.next(true);
-    }
-  }
-
-  private getFilteredOptions(
-    options: QueryList<SelectOptionComponent<V>>,
-    searchText: string,
-    reorderSelectedItemsSubject: boolean
-  ): SelectOptionComponent<V>[] {
-    const selectedOptions: SelectOptionComponent<V>[] = isEmpty(searchText)
-      ? options.toArray()
-      : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()));
-
-    if (reorderSelectedItemsSubject) {
-      return this.reorderSelectedItemsFirst(selectedOptions, this.selected ?? []);
-    }
-
-    return selectedOptions;
-  }
-
-  private reorderSelectedItemsFirst(
-    filteredOptions: SelectOptionComponent<V>[],
-    selected: V[]
-  ): SelectOptionComponent<V>[] {
-    return [
-      ...filteredOptions.filter(filteredOption => selected.includes(filteredOption.value)),
-      ...filteredOptions.filter(filteredOption => !selected.includes(filteredOption.value))
-    ];
+    this.reorderSelectedItemsSubject.next(true);
   }
 
   public searchOptions(searchText: string): void {
@@ -400,6 +374,18 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   private propagateValueChangeToFormControl(value: V[] | undefined): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  private reorderSelectedItemsFirst(
+    filteredOptions: SelectOptionComponent<V>[],
+    selected?: V[]
+  ): SelectOptionComponent<V>[] {
+    return isNil(selected)
+      ? filteredOptions
+      : [
+          ...filteredOptions.filter(filteredOption => selected.includes(filteredOption.value)),
+          ...filteredOptions.filter(filteredOption => !selected.includes(filteredOption.value))
+        ];
   }
 }
 
