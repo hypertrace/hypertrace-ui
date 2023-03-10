@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
@@ -53,8 +53,8 @@ export interface LoadAsyncContext {
 
 export interface LoadAsyncConfig {
   load?: LoadingStateConfig;
-  noData?: NoDataOrErrorStateConfig;
-  error?: NoDataOrErrorStateConfig;
+  noData?: NoDataOrErrorStateConfig | TemplateRef<LoadAsyncContext>;
+  error?: NoDataOrErrorStateConfig | TemplateRef<LoadAsyncContext>;
 }
 
 export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
@@ -89,7 +89,7 @@ interface LoadingStateConfig {
   loaderType?: LoaderType;
 }
 
-interface NoDataOrErrorStateConfig {
+export interface NoDataOrErrorStateConfig {
   icon?: IconType;
   showIcon?: boolean;
   title?: string;
