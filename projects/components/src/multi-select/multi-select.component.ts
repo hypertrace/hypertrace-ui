@@ -14,7 +14,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEmpty, isEqual, isNil } from 'lodash-es';
+import { compact, isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -380,12 +380,13 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     filteredOptions: SelectOptionComponent<V>[],
     selected?: V[]
   ): SelectOptionComponent<V>[] {
-    return isNil(selected)
-      ? filteredOptions
-      : [
-          ...filteredOptions.filter(filteredOption => selected.includes(filteredOption.value)),
-          ...filteredOptions.filter(filteredOption => !selected.includes(filteredOption.value))
-        ];
+    if (isEmpty(selected)) {
+      return filteredOptions;
+    }
+    const filteredOptionsPartitions = compact(
+      partition(filteredOptions, filteredOption => selected?.includes(filteredOption.value))
+    );
+    return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
   }
 }
 
