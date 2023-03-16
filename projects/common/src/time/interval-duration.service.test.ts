@@ -116,6 +116,24 @@ describe('Interval duration service', () => {
     ]);
   });
 
+  test('provides a default max interval for a long time range', () => {
+    const spectator = serviceBuilder();
+
+    expect(
+      spectator.service.getAvailableIntervalsForTimeRange(
+        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z'))
+      )
+    ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
+
+    // low max data points
+    expect(
+      spectator.service.getAvailableIntervalsForTimeRange(
+        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z')),
+        50
+      )
+    ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
+  });
+
   test('calculates the closest match to an interval from a list', () => {
     const spectator = serviceBuilder();
 

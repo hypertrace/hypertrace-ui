@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isEqual, minBy } from 'lodash-es';
+import { isEqual, last, minBy } from 'lodash-es';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { TimeDuration } from './time-duration';
@@ -21,12 +21,10 @@ export class IntervalDurationService {
     new TimeDuration(1, TimeUnit.Hour),
     new TimeDuration(6, TimeUnit.Hour),
     new TimeDuration(12, TimeUnit.Hour),
-    new TimeDuration(1, TimeUnit.Day),
-    new TimeDuration(1, TimeUnit.Week),
-    new TimeDuration(1, TimeUnit.Month),
-    new TimeDuration(3, TimeUnit.Month),
-    new TimeDuration(1, TimeUnit.Year)
+    new TimeDuration(1, TimeUnit.Day)
   ];
+
+  private static readonly MAX_SUPPORTED_INTERVALS: TimeDuration = last(IntervalDurationService.PREDEFINED_INTERVALS)!;
 
   public readonly availableIntervals$: ReplayObservable<TimeDuration[]>;
 
@@ -68,7 +66,7 @@ export class IntervalDurationService {
 
   public getAutoDurationFromTimeDurations(durations: TimeDuration[]): TimeDuration {
     if (durations.length === 0) {
-      throw Error('No intervals supported at requested time range');
+      return IntervalDurationService.MAX_SUPPORTED_INTERVALS;
     }
 
     return durations[0];
