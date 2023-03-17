@@ -24,7 +24,7 @@ export class IntervalDurationService {
     new TimeDuration(1, TimeUnit.Day)
   ];
 
-  private static readonly MAX_SUPPORTED_INTERVALS: TimeDuration = last(IntervalDurationService.PREDEFINED_INTERVALS)!;
+  private static readonly MAX_SUPPORTED_INTERVAL: TimeDuration = last(IntervalDurationService.PREDEFINED_INTERVALS)!;
 
   public readonly availableIntervals$: ReplayObservable<TimeDuration[]>;
 
@@ -43,7 +43,9 @@ export class IntervalDurationService {
     maximumDataPoints: number = 500
   ): TimeDuration[] {
     // Can make this configurable at some point, but for now, an interval musts produce at least 3 data points
-    return this.getAvailableIntervals(timeRange, 3, maximumDataPoints);
+    const availableIntervals = this.getAvailableIntervals(timeRange, 3, maximumDataPoints);
+
+    return availableIntervals.length === 0 ? [IntervalDurationService.MAX_SUPPORTED_INTERVAL] : availableIntervals;
   }
 
   public getClosestMatch(duration: TimeDuration, availableDurations: TimeDuration[]): TimeDuration | undefined {
@@ -66,7 +68,7 @@ export class IntervalDurationService {
 
   public getAutoDurationFromTimeDurations(durations: TimeDuration[]): TimeDuration {
     if (durations.length === 0) {
-      return IntervalDurationService.MAX_SUPPORTED_INTERVALS;
+      return IntervalDurationService.MAX_SUPPORTED_INTERVAL;
     }
 
     return durations[0];
