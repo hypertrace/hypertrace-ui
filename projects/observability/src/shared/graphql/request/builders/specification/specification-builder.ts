@@ -1,3 +1,4 @@
+import { Dictionary } from '@hypertrace/common';
 import { Specification } from '../../../model/schema/specifier/specification';
 import { CompositeSpecification } from '../../../model/specifications/composite-specification';
 import { TraceStatusSpecification } from '../../../model/specifications/trace-status-specification';
@@ -10,8 +11,31 @@ export class SpecificationBuilder {
   protected readonly selectionBuilder: GraphQlSelectionBuilder = new GraphQlSelectionBuilder();
   protected readonly traceStatusSpecBuilder: TraceStatusSpecificationBuilder = new TraceStatusSpecificationBuilder();
 
-  public buildCompositeSpecification(specifications: Specification[], orderByKey: string): CompositeSpecification {
-    const name = specifications.map(specification => specification.resultAlias()).join('_');
+  /**
+   * If specifications are of type Specification[] then extractFromServerData will return unknown[]
+   * If specifications are of type Dictionary<Specification> then extractFromServerData will return Dictionary<unknown> with the exact mappings
+   * TODO: Add Typings
+   */
+  public buildCompositeSpecification(
+    specifications: Specification[] | Dictionary<Specification>,
+    orderByKey: string
+  ): CompositeSpecification {
+    if (!Array.isArray(specifications)) {
+      const specs = Object.values(specifications);
+      const alias = this.buildSpecName(specs);
+
+      return {
+        resultAlias: () => alias,
+        name: alias,
+        asGraphQlSelections: () => this.selectionBuilder.fromSpecifications(specs),
+        extractFromServerData: serverData => this.extractForSpecificationsObject(serverData, specifications),
+        asGraphQlOrderByFragment: () => ({
+          expression: { key: orderByKey }
+        })
+      };
+    }
+
+    const name = this.buildSpecName(specifications);
 
     return {
       resultAlias: () => name,
@@ -49,5 +73,25 @@ export class SpecificationBuilder {
         expression: { key: attributeKey }
       })
     };
+  }
+
+  private buildSpecName(specs: Specification[]): string {
+    return specs.map(specification => specification.resultAlias()).join('_');
+  }
+
+  private extractForSpecificationsObject(
+    serverData: Dictionary<unknown>,
+    specifications: Dictionary<Specification>
+  ): Dictionary<unknown> {
+    const extractedData: Dictionary<unknown> = {};
+    const specs = Object.values(specifications);
+
+    return Object.keys(specifications)
+      .map((key, index) => [key, specs[index].extractFromServerData(serverData)] as [string, unknown])
+      .reduce((acc, val) => {
+        acc[val[0]] = val[1];
+
+        return acc;
+      }, extractedData);
   }
 }
