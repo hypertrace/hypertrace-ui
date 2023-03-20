@@ -88,10 +88,11 @@ export class SpecificationBuilder {
 
     return Object.keys(specifications)
       .map((key, index) => [key, specs[index].extractFromServerData(serverData)] as [string, unknown])
-      .reduce((acc, val) => {
-        acc[val[0]] = val[1];
-
-        return acc;
+      .reduce((acc, [key, value]) => {
+	      return {
+		      ...acc,
+		      [key]: value
+	      }
       }, extractedData);
   }
 }
