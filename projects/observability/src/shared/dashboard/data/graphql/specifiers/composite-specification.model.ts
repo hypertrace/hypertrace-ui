@@ -15,7 +15,7 @@ export class CompositeSpecificationModel extends SpecificationModel<CompositeSpe
     displayName: 'Specifications',
     type: ARRAY_PROPERTY.type
   })
-  public specifications: Specification[] = [];
+  public specifications: Specification[] | Dictionary<Specification> = [];
 
   @ModelProperty({
     key: 'order-by',
