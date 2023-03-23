@@ -1,4 +1,4 @@
-import { Color, FeatureState, TimeRangeResolver } from '@hypertrace/common';
+import { Color, FeatureState, QueryParamObject, TimeRangeResolver } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { IconSize } from '../icon/icon-size';
 
@@ -10,6 +10,7 @@ export interface NavItemLinkConfig {
   iconSize?: IconSize;
   label: string;
   matchPaths: string[]; // For now, default path is index 0
+  queryParams?: QueryParamObject;
   hidden?: boolean;
   features?: string[];
   replaceCurrentHistory?: boolean;

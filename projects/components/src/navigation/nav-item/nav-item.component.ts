@@ -62,13 +62,19 @@ export class NavItemComponent {
       navType: NavigationParamsType.InApp,
       path: item.matchPaths[0],
       relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.replaceCurrentHistory
+      replaceCurrentHistory: item.replaceCurrentHistory,
+      queryParams: item.queryParams
     };
 
     if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
+      navParams.queryParams = {};
+
       return {
         ...navParams,
-        queryParams: this.timeRangeService.toQueryParams(this.config.timeRangeResolver(), true)
+        queryParams: {
+          ...navParams.queryParams,
+          ...this.timeRangeService.toQueryParams(this.config.timeRangeResolver(), true)
+        }
       };
     }
 
