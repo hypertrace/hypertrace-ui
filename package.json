@@ -64,7 +64,7 @@
     "highlight.js": "^11.7.0",
     "iso8601-duration": "^2.1.1",
     "lodash-es": "^4.17.21",
-    "mixpanel-browser": "^2.45.0",
+    "mixpanel-browser": "^2.46.0",
     "ngx-color": "7.0.0",
     "rudder-sdk-js": "^2.27.0",
     "rxjs": "~6.6.7",
