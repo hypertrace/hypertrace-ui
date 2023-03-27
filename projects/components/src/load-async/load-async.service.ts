@@ -53,8 +53,8 @@ export interface LoadAsyncContext {
 
 export interface LoadAsyncConfig {
   load?: LoadingStateConfig;
-  noData?: NoDataOrErrorStateConfig | TemplateRef<LoadAsyncContext>;
-  error?: NoDataOrErrorStateConfig | TemplateRef<LoadAsyncContext>;
+  noData?: NoDataOrErrorStateConfig;
+  error?: NoDataOrErrorStateConfig;
 }
 
 export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
@@ -80,7 +80,7 @@ interface SuccessAsyncState {
   context: LoadAsyncContext;
 }
 
-interface NoDataOrErrorAsyncState {
+export interface NoDataOrErrorAsyncState {
   type: LoadAsyncStateType.GenericError | LoadAsyncStateType.NoData;
   description?: string;
 }
@@ -89,9 +89,17 @@ interface LoadingStateConfig {
   loaderType?: LoaderType;
 }
 
-export interface NoDataOrErrorStateConfig {
+export type NoDataOrErrorStateConfig = NoDataOrErrorStateConfigDefault | NoDataOrErrorStateConfigWithCustomTemplate;
+
+export interface NoDataOrErrorStateConfigDefault {
   icon?: IconType;
   showIcon?: boolean;
   title?: string;
   description?: string;
+}
+
+export interface NoDataOrErrorStateConfigWithCustomTemplate {
+  icon?: IconType;
+  showIcon?: boolean;
+  template: TemplateRef<LoadAsyncContext>;
 }

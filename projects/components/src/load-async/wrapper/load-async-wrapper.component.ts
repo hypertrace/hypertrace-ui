@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken, TemplateRef } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { IconSize } from '../../icon/icon-size';
 import { NotificationMode } from '../../notification/notification.component';
 import { LoadAsyncStateType } from '../load-async-state.type';
 import {
@@ -9,7 +11,9 @@ import {
   LoadAsyncConfig,
   LoadAsyncContext,
   LoaderType,
-  NoDataOrErrorStateConfig
+  NoDataOrErrorAsyncState,
+  NoDataOrErrorStateConfig,
+  NoDataOrErrorStateConfigWithCustomTemplate
 } from '../load-async.service';
 
 export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters>>(
@@ -28,25 +32,31 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
       </ng-container>
       <ng-container *ngSwitchDefault>
         <ng-container *ngIf="this.customNoDataOrErrorTemplate; else defaultMessageDisplayTpl">
-          <ng-container *ngTemplateOutlet="this.customNoDataOrErrorTemplate; context: state.context"></ng-container>
+          <div class="custom-templated-message">
+            <div class="content">
+              <ht-icon *ngIf="this.icon" [icon]="this.icon" size="${IconSize.Large}"></ht-icon>
+              <ng-container *ngTemplateOutlet="this.customNoDataOrErrorTemplate; context: state.context"></ng-container>
+            </div>
+          </div>
         </ng-container>
+        <ng-template #defaultMessageDisplayTpl>
+          <ht-message-display
+            aria-live="polite"
+            role="alert"
+            [attr.data-alert-type]="
+              state.type === '${LoadAsyncStateType.GenericError}'
+                ? '${NotificationMode.Failure}'
+                : '${NotificationMode.Info}'
+            "
+            [icon]="this.icon"
+            [title]="this.title"
+            [description]="this.description"
+          ></ht-message-display>
+        </ng-template>
       </ng-container>
-      <ng-template #defaultMessageDisplayTpl>
-        <ht-message-display
-          aria-live="polite"
-          role="alert"
-          [attr.data-alert-type]="
-            state.type === '${LoadAsyncStateType.GenericError}'
-              ? '${NotificationMode.Failure}'
-              : '${NotificationMode.Info}'
-          "
-          [icon]="this.icon"
-          [title]="this.title"
-          [description]="this.description"
-        ></ht-message-display>
-      </ng-template>
     </div>
   `,
+  styleUrls: ['./load-async-wrapper.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadAsyncWrapperComponent {
@@ -57,10 +67,9 @@ export class LoadAsyncWrapperComponent {
   public title?: string;
   public description: string = '';
 
-  public customNoDataOrErrorTemplate?: TemplateRef<LoadAsyncContext>;
-
   public content?: TemplateRef<LoadAsyncContext>;
   public config?: LoadAsyncConfig;
+  public customNoDataOrErrorTemplate?: TemplateRef<LoadAsyncContext>;
 
   public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>) {
     this.state$ = parameters$.pipe(
@@ -79,10 +88,10 @@ export class LoadAsyncWrapperComponent {
         this.loaderType = this.config?.load?.loaderType;
         break;
       case LoadAsyncStateType.NoData:
-        this.updateNoDataMessage();
+        this.setPropsForNoDataState();
         break;
       case LoadAsyncStateType.GenericError:
-        this.updateGenericErrorMessage(state);
+        this.setPropsForErrorState(state);
         break;
       default:
         this.icon = undefined;
@@ -92,40 +101,48 @@ export class LoadAsyncWrapperComponent {
     }
   }
 
-  private updateGenericErrorMessage(state: NoDataOrErrorStateConfig): void {
-    if (this.config?.error instanceof TemplateRef) {
-      this.customNoDataOrErrorTemplate = this.config?.error;
+  private setPropsForErrorState(state: NoDataOrErrorAsyncState): void {
+    this.icon = this.showErrorIcon() ? this.getErrorIcon() : undefined;
+    if (this.isTemplateBasedConfig(this.config?.error)) {
+      this.customNoDataOrErrorTemplate = this.config.error.template;
     } else {
-      this.icon = this.showErrorIcon(this.config?.error) ? this.getErrorIcon(this.config?.error) : undefined;
       this.title = this.config?.error?.title ?? 'Error';
       this.description = state.description ?? this.config?.error?.description ?? '';
+      this.customNoDataOrErrorTemplate = undefined;
     }
   }
 
-  private updateNoDataMessage(): void {
-    if (this.config?.noData instanceof TemplateRef) {
-      this.customNoDataOrErrorTemplate = this.config?.noData;
+  private setPropsForNoDataState(): void {
+    this.icon = this.showNoDataIcon() ? this.getNoDataIcon() : undefined;
+    if (this.isTemplateBasedConfig(this.config?.noData)) {
+      this.customNoDataOrErrorTemplate = this.config.noData.template;
     } else {
-      this.icon = this.showNoDataIcon(this.config?.noData) ? this.getNoDataIcon(this.config?.noData) : undefined;
       this.title = this.config?.noData?.title ?? 'No Data';
       this.description = this.config?.noData?.description ?? '';
+      this.customNoDataOrErrorTemplate = undefined;
     }
   }
 
-  private getNoDataIcon(data?: NoDataOrErrorStateConfig): IconType {
-    return data?.icon ?? IconType.NoData;
+  private getNoDataIcon(): IconType {
+    return this.config?.noData?.icon ?? IconType.NoData;
   }
 
-  private getErrorIcon(data?: NoDataOrErrorStateConfig): IconType {
-    return data?.icon ?? IconType.Error;
+  private getErrorIcon(): IconType {
+    return this.config?.error?.icon ?? IconType.Error;
   }
 
-  private showNoDataIcon(data?: NoDataOrErrorStateConfig): boolean {
-    return data?.showIcon ?? true;
+  private showNoDataIcon(): boolean {
+    return this.config?.noData?.showIcon ?? true;
   }
 
-  private showErrorIcon(data?: NoDataOrErrorStateConfig): boolean {
-    return data?.showIcon ?? true;
+  private showErrorIcon(): boolean {
+    return this.config?.error?.showIcon ?? true;
+  }
+
+  private isTemplateBasedConfig(
+    config?: NoDataOrErrorStateConfig
+  ): config is NoDataOrErrorStateConfigWithCustomTemplate {
+    return !isNil(config) && 'template' in config && !isNil(config.template);
   }
 }
 
