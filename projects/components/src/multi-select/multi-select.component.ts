@@ -218,6 +218,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  private readonly reorderSelectedItemsSubject: BehaviorSubject<void> = new BehaviorSubject<void>(undefined);
 
   public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
     map(searchText => !isEmpty(searchText)),
@@ -237,7 +238,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = combineLatest([
       this.allOptions$,
-      this.caseInsensitiveSearchSubject
+      this.caseInsensitiveSearchSubject,
+      this.reorderSelectedItemsSubject
     ]).pipe(
       map(([options, searchText]) =>
         isEmpty(searchText)
@@ -257,6 +259,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public onPopoverClose(): void {
     this.popoverOpen = false;
+    this.reorderSelectedItemsSubject.next();
   }
 
   public searchOptions(searchText: string): void {
