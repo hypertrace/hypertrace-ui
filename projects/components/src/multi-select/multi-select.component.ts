@@ -43,8 +43,8 @@ import { MultiSelectJustify } from './multi-select-justify';
       <ht-popover
         [disabled]="this.disabled"
         class="multi-select-container"
-        (popoverOpen)="this.onPopoverOpen()"
-        (popoverClose)="this.popoverOpen = false"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.onPopoverFalse()"
       >
         <ht-popover-trigger>
           <div
@@ -218,7 +218,6 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
-  private readonly reorderSelectedItemsSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
     map(searchText => !isEmpty(searchText)),
@@ -238,8 +237,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = combineLatest([
       this.allOptions$,
-      this.caseInsensitiveSearchSubject,
-      this.reorderSelectedItemsSubject
+      this.caseInsensitiveSearchSubject
     ]).pipe(
       map(([options, searchText]) =>
         isEmpty(searchText)
@@ -257,9 +255,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.setTriggerLabel();
   }
 
-  public onPopoverOpen(): void {
-    this.popoverOpen = true;
-    this.reorderSelectedItemsSubject.next(true);
+  public onPopoverFalse(): void {
+    this.popoverOpen = false;
   }
 
   public searchOptions(searchText: string): void {
