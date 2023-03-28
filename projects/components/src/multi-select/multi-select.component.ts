@@ -44,7 +44,7 @@ import { MultiSelectJustify } from './multi-select-justify';
         [disabled]="this.disabled"
         class="multi-select-container"
         (popoverOpen)="this.popoverOpen = true"
-        (popoverClose)="this.onPopoverFalse()"
+        (popoverClose)="this.onPopoverClose()"
       >
         <ht-popover-trigger>
           <div
@@ -255,7 +255,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.setTriggerLabel();
   }
 
-  public onPopoverFalse(): void {
+  public onPopoverClose(): void {
     this.popoverOpen = false;
   }
 
