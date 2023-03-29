@@ -43,6 +43,12 @@
   }
 }
 
+.header-label {
+  &[data-editable='false'] {
+    opacity: 0.7;
+  }
+}
+
 .stepper {
   @include flex-layout(column);
   justify-content: space-between;
