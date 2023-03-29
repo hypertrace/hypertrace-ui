@@ -14,7 +14,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { compact, isEmpty, isEqual, partition } from 'lodash-es';
+import { isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
@@ -373,15 +373,15 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     if (isEmpty(selected)) {
       return filteredOptions;
     }
-    const filteredOptionsPartitions = compact(
-      partition(filteredOptions, filteredOption => selected?.includes(filteredOption.value))
+    const filteredOptionsPartitions = partition(filteredOptions, filteredOption =>
+      selected?.includes(filteredOption.value)
     );
 
     return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
   }
 
-  private getFilteredOptions(options: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
-    return combineLatest([of(options), this.caseInsensitiveSearchSubject]).pipe(
+  private getFilteredOptions(optionsList: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(optionsList), this.caseInsensitiveSearchSubject]).pipe(
       map(([options, searchText]) =>
         isEmpty(searchText)
           ? options
