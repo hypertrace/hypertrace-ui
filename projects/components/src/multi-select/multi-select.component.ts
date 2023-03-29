@@ -16,7 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { compact, isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { map, shareReplay, startWith } from 'rxjs/operators';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
@@ -236,19 +236,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
-    this.filteredOptions$ = combineLatest([
-      this.allOptions$,
-      this.caseInsensitiveSearchSubject,
-      this.reorderSelectedItemsSubject
-    ]).pipe(
-      map(([options, searchText]) =>
-        isEmpty(searchText)
-          ? this.reorderSelectedItemsFirst(options.toArray(), this.selected)
-          : this.reorderSelectedItemsFirst(
-              options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase())),
-              this.selected
-            )
-      )
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.reorderSelectedItemsSubject]).pipe(
+      map(([options]) => this.reorderSelectedItemsFirst(options.toArray(), this.selected)),
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
     );
     this.setTriggerLabel();
   }
@@ -386,7 +376,18 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     const filteredOptionsPartitions = compact(
       partition(filteredOptions, filteredOption => selected?.includes(filteredOption.value))
     );
+
     return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
+  }
+
+  private getFilteredOptions(options: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(options), this.caseInsensitiveSearchSubject]).pipe(
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? options
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
   }
 }
 
