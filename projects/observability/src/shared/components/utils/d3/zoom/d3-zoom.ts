@@ -1,6 +1,5 @@
-import { Key, MouseButton, throwIfNil } from '@hypertrace/common';
+import { ClientRectBounds, Key, MouseButton, throwIfNil } from '@hypertrace/common';
 import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush';
-// tslint:disable-next-line: no-restricted-globals weird tslint error. Rename event so we can type it and not mistake it for other events
 import { event as _d3CurrentEvent, Selection } from 'd3-selection';
 import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { isEqual } from 'lodash-es';
@@ -49,10 +48,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
   public attachZoom(configuration: D3ZoomConfiguration<TContainer, TTarget>): this {
     this.config = { ...configuration };
     this.zoomBehavior.scaleExtent([this.minScale, this.maxScale]);
-    this.config.container
-      .call(this.zoomBehavior)
-      // tslint:disable-next-line: no-null-keyword
-      .on('dblclick.zoom', null); // Remove default double click handler
+    this.config.container.call(this.zoomBehavior).on('dblclick.zoom', null); // Remove default double click handler
 
     if (this.config.showBrush) {
       this.showBrushOverlay();
@@ -81,7 +77,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     return this.minScale < this.getZoomScale();
   }
 
-  public zoomToRect(requestedRect: ClientRect): void {
+  public zoomToRect(requestedRect: ClientRectBounds): void {
     const availableRect = throwIfNil(this.config && this.config.container.node()).getBoundingClientRect();
     // Add a bit of padding to requested width/height for padding
     const requestedWidthScale = availableRect.width / (requestedRect.width + 24);
@@ -92,7 +88,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     this.translateToRect(requestedRect);
   }
 
-  public panToRect(viewRect: ClientRect): void {
+  public panToRect(viewRect: Omit<DOMRect, 'x' | 'y' | 'toJSON'>): void {
     const availableRect = throwIfNil(this.config && this.config.container.node()).getBoundingClientRect();
     // AvailableRect is used for width since we are always keeping scale as 1
     this.zoomBehavior.translateTo(
@@ -111,7 +107,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     containerSelection.select(`.${D3Zoom.DATA_BRUSH_CONTEXT_CLASS}`).remove();
     const containerdBox = throwIfNil(containerSelection.node()).getBoundingClientRect();
 
-    const boundingBox: ClientRect = {
+    const boundingBox: Omit<DOMRect, 'x' | 'y' | 'toJSON'> = {
       bottom: containerdBox.bottom,
       top: containerdBox.height - D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT,
       left: containerdBox.width - D3Zoom.DATA_BRUSH_OVERLAY_WIDTH,
@@ -132,8 +128,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       .attr('height', boundingBox.height)
       .attr('transform', `translate(${boundingBox.left - 20}, ${boundingBox.top - 40}) scale(${overlayZoomScale})`)
       .insert('g', ':first-child')
-      // tslint:disable-next-line: no-any
-      .call(this.brushBehaviour as any);
+      .call(this.brushBehaviour);
 
     this.styleBrushSelection(this.config.brushOverlay, overlayZoomScale);
   }
@@ -170,7 +165,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       return;
     }
     const chartZoomScale = this.getZoomScale();
-    const viewRect = {
+    const viewRect: Omit<DOMRect, 'x' | 'y' | 'toJSON'> = {
       top: start[1] * chartZoomScale,
       left: start[0] * chartZoomScale,
       bottom: end[1] * chartZoomScale,
@@ -182,7 +177,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     this.panToRect(viewRect);
   }
 
-  public translateToRect(rect: ClientRect): void {
+  public translateToRect(rect: ClientRectBounds): void {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     this.zoomBehavior.translateTo(this.getContainerSelectionOrThrow(), centerX, centerY);

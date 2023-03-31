@@ -31,7 +31,6 @@ import { GraphQlRequestService } from './graphql-request.service';
     }
   ]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class GraphQlModule {
   public constructor(
     graphQlRequestService: GraphQlRequestService,

@@ -1,6 +1,7 @@
 import { NgZone } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Spectator } from '@ngneat/spectator/jest';
 
 // Purpose of this patch is to make sure navigations always run synchronously and in the ngzone, neither of which is the default
@@ -12,7 +13,7 @@ export const patchRouterNavigateForTest = (spectator: { inject: Spectator<unknow
 
   spyOn(router, 'navigateByUrl').and.callFake((...args: unknown[]) =>
     ensureRunFakeAsync(() => {
-      const returned = ngZone.run(() => originalNavByUrl(...args));
+      const returned = ngZone.run(() => originalNavByUrl(...args) as Promise<boolean>);
       tick();
 
       return returned;
@@ -24,7 +25,7 @@ const ensureRunFakeAsync = <T>(func: () => T): T => {
   const useFakeAsync = !inFakeAsync();
 
   if (useFakeAsync) {
-    return fakeAsync(func)();
+    return fakeAsync(func)() as T;
   }
 
   return func();

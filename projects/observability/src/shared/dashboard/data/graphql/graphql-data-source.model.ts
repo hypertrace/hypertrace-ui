@@ -36,7 +36,6 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
   public filters: GraphQlFilter[] = [];
 
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE
     } as ModelModelPropertyTypeInstance,

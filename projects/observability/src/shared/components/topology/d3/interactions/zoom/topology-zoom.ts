@@ -1,4 +1,4 @@
-import { throwIfNil, unionOfClientRects } from '@hypertrace/common';
+import { ClientRectBounds, throwIfNil, unionOfClientRects } from '@hypertrace/common';
 import { D3Zoom } from '../../../../utils/d3/zoom/d3-zoom';
 import { RenderableTopologyNode, RenderableTopologyNodeRenderedData } from '../../../topology';
 import { D3ZoomConfiguration } from './../../../../utils/d3/zoom/d3-zoom';
@@ -28,7 +28,7 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
     this.panToRect(unionOfClientRects(...nodeClientRects));
   }
 
-  private determineZoomScale(nodes: RenderableTopologyNode[], availableRect: ClientRect): number {
+  private determineZoomScale(nodes: RenderableTopologyNode[], availableRect: ClientRectBounds): number {
     const nodeClientRects = nodes
       .map(node => node.renderedData())
       .filter((renderedData): renderedData is RenderableTopologyNodeRenderedData => !!renderedData)
@@ -49,7 +49,7 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
     containerSelection.select(`.${TopologyZoom.DATA_BRUSH_CONTEXT_CLASS}`).remove();
     const containerdBox = throwIfNil(containerSelection.node()).getBoundingClientRect();
 
-    const boundingBox: ClientRect = {
+    const boundingBox: ClientRectBounds = {
       bottom: containerdBox.bottom,
       top: containerdBox.height - TopologyZoom.DATA_BRUSH_OVERLAY_HEIGHT,
       left: containerdBox.width - TopologyZoom.DATA_BRUSH_OVERLAY_WIDTH,

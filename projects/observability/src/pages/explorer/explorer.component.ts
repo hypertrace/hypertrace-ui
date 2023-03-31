@@ -264,7 +264,7 @@ export class ExplorerComponent {
               .getAll(ExplorerQueryParam.Group)
               .flatMap(expressionString => this.tryDecodeAttributeExpression(expressionString)),
             includeRest: param.get(ExplorerQueryParam.OtherGroup) === 'true',
-            // tslint:disable-next-line: strict-boolean-expressions
+
             limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
           }
         : undefined,

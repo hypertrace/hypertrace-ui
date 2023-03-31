@@ -28,6 +28,7 @@ module.exports = {
       }
     ]
   ],
+  testRunner: 'jest-jasmine2',
   watchPathIgnorePatterns: ['test-results'],
   collectCoverageFrom: [
     'src/**/*.ts',

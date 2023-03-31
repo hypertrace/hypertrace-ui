@@ -35,7 +35,6 @@ export class DonutWidgetModel {
   @ModelProperty({
     key: 'legend-position',
     displayName: 'Legend Position',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [
@@ -59,7 +58,6 @@ export class DonutWidgetModel {
   @ModelProperty({
     key: 'header',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: WidgetHeaderModel

@@ -49,7 +49,9 @@ describe('NavigationComponent', () => {
       }),
       mockProvider(TimeRangeService),
       mockProvider(NavigationListService, {
-        decorateNavItem: jest.fn().mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] }))
+        decorateNavItem: jest
+          .fn()
+          .mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] } as NavItemConfig))
       }),
       mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),

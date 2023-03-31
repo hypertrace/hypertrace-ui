@@ -106,7 +106,6 @@ describe('Metadata Service', () => {
   test('calculates display name for metric aggregation', () => {
     const spectator = createService();
     expectSingleValueObservable(
-      // tslint:disable-next-line: no-object-literal-type-assertion
       spectator.service.getSpecificationDisplayName('Scope1', {
         ...specBuilder.attributeSpecificationForKey('attr1'),
         aggregation: MetricAggregationType.Max
@@ -115,7 +114,6 @@ describe('Metadata Service', () => {
     );
 
     expectSingleValueObservable(
-      // tslint:disable-next-line: no-object-literal-type-assertion
       spectator.service.getSpecificationDisplayName('Scope1', {
         ...specBuilder.attributeSpecificationForKey('attr1'),
         aggregation: MetricAggregationType.AvgrateMinute

@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
   AfterViewInit,
@@ -54,7 +56,6 @@ import {
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 
-// tslint:disable: template-cyclomatic-complexity component-max-inline-declarations max-file-line-count
 @Component({
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],

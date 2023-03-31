@@ -52,7 +52,6 @@ describe('Date coercer', () => {
 
   test('rejects non dates', () => {
     expect(basicCoercer.coerce(NaN)).toBeUndefined();
-    // tslint:disable-next-line: no-null-keyword
     expect(basicCoercer.coerce(null)).toBeUndefined();
     expect(basicCoercer.coerce('string')).toBeUndefined();
     expect(basicCoercer.coerce({})).toBeUndefined();

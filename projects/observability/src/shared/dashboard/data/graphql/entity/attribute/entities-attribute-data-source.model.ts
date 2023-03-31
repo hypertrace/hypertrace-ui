@@ -17,7 +17,6 @@ import { EntitiesValuesDataSourceModel } from '../entities-values-data-source.mo
 export class EntitiesAttributeDataSourceModel extends EntitiesValuesDataSourceModel {
   @ModelProperty({
     key: 'attribute',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: AttributeSpecificationModel

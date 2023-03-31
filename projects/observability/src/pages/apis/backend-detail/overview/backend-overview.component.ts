@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Color, SubscriptionLifecycle } from '@hypertrace/common';
 import { CoreTableCellRendererType, TableStyle } from '@hypertrace/components';
@@ -514,5 +515,4 @@ export class BackendOverviewComponent {
   public onDashboardReady(dashboard: Dashboard): void {
     this.subscriptionLifecycle.add(this.backendDetailService.applyFiltersToDashboard(dashboard));
   }
-  // tslint:disable-next-line: max-file-line-count
 }

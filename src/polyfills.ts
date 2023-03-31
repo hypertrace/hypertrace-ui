@@ -55,6 +55,8 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
+
+/* eslint-disable import/no-unassigned-import */
 import 'zone.js'; // Included with Angular CLI.
 import 'zone.js/plugins/zone-patch-rxjs';
 /***************************************************************************************************

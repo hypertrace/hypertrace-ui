@@ -18,7 +18,6 @@ export class TopologyMetricWithCategoryModel implements TopologyMetricWithCatego
   @ModelProperty({
     key: 'specification',
     required: true,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationSpecificationModel

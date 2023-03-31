@@ -25,7 +25,6 @@ describe('Time range component', () => {
     componentProviders: [],
     providers: [
       mockProvider(NavigationService, {
-        // tslint:disable-next-line: no-object-literal-type-assertion
         navigation$: of({
           queryParamMap: of(convertToParamMap({}))
         } as ActivatedRoute)

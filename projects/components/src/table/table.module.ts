@@ -32,7 +32,6 @@ import { TableComponent } from './table.component';
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class TableModule {
   public static withCellParsers(
     cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[]

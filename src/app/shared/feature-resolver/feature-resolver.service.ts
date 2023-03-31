@@ -9,7 +9,7 @@ export class FeatureResolverService extends FeatureStateResolver {
       case ApplicationFeature.PageTimeRange:
         return of(false as T);
       case ApplicationFeature.FeatureDefaultTimeRangeMap:
-        // tslint:disable-next-line: no-object-literal-type-assertion
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         return of({} as T);
       case ApplicationFeature.TriggerBasedSearch:
         return of(false as T);

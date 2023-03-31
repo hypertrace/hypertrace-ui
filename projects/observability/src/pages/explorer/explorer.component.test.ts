@@ -188,7 +188,6 @@ describe('Explorer component', () => {
     );
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],
@@ -274,7 +273,6 @@ describe('Explorer component', () => {
 
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],

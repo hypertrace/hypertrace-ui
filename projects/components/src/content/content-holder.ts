@@ -7,7 +7,6 @@ export const CONTENT_HOLDER_TEMPLATE = `
 `;
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
 export abstract class ContentHolder {
   @ViewChild('contentHolder', { static: true })
   public content!: TemplateRef<unknown>;

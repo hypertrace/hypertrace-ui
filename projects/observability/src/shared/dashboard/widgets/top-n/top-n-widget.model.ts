@@ -16,7 +16,6 @@ import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-so
 })
 export class TopNWidgetModel {
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: WidgetHeaderModel

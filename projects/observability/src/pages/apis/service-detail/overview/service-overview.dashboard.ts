@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Color } from '@hypertrace/common';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
@@ -12,7 +13,6 @@ import {
 import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
 
-// tslint:disable: max-file-line-count
 export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_OVERVIEW',
   json: {
