@@ -1,4 +1,6 @@
 import { InjectionToken, Injector } from '@angular/core';
+import { isNil } from 'lodash-es';
+import { Observable } from 'rxjs';
 import { TableColumnConfig, TableRow } from '../table-api';
 import { TableCellParserBase } from './table-cell-parser-base';
 
@@ -9,6 +11,7 @@ export const TABLE_DATA_PARSER: InjectionToken<TableCellParserBase<unknown, unkn
 );
 export const TABLE_CELL_DATA: InjectionToken<unknown> = new InjectionToken('TABLE_CELL_DATA');
 export const TABLE_ROW_DATA: InjectionToken<unknown> = new InjectionToken('TABLE_ROW_DATA');
+export const TABLE_ROW_DATA_STREAM: InjectionToken<Observable<unknown>> = new InjectionToken('Streaming cell data');
 
 export const createTableCellInjector = (
   columnConfig: TableColumnConfig,
@@ -16,7 +19,8 @@ export const createTableCellInjector = (
   parser: TableCellParserBase<unknown, unknown, unknown>,
   cellData: unknown,
   row: TableRow,
-  injector: Injector
+  injector: Injector,
+  cellDataObservable?: Observable<unknown>
 ): Injector =>
   Injector.create({
     providers: [
@@ -39,7 +43,15 @@ export const createTableCellInjector = (
       {
         provide: TABLE_ROW_DATA,
         useValue: row
-      }
+      },
+      ...(!isNil(cellDataObservable)
+        ? [
+            {
+              provide: TABLE_ROW_DATA_STREAM,
+              useValue: cellDataObservable
+            }
+          ]
+        : [])
     ],
     parent: injector
   });
