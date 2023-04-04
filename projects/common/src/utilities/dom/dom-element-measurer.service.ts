@@ -11,7 +11,7 @@ export class DomElementMeasurerService {
     return element.getComputedTextLength();
   }
 
-  public measureHtmlElement(element: HTMLElement): ClientRect {
+  public measureHtmlElement(element: HTMLElement): DOMRect {
     // Offset values are probably better, but return integer rather than fractional values.
     // This will be incorrect if we start using transforms on measured elements.
     return element.getBoundingClientRect();

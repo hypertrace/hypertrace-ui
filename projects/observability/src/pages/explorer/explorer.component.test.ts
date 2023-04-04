@@ -164,19 +164,17 @@ describe('Explorer component', () => {
         limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
-    // RunFakeRxjs(({ expectObservable }) => {
-    //   ExpectObservable(spectator.component.resultsDashboard$).toBe('x', { x: undefined });
-    // });
-    expect(querySpy).toHaveBeenCalledWith(
+    expect(querySpy).toHaveBeenNthCalledWith(
+      3,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -211,7 +209,7 @@ describe('Explorer component', () => {
         limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -221,7 +219,7 @@ describe('Explorer component', () => {
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -245,7 +243,7 @@ describe('Explorer component', () => {
         limit: 1000,
         interval: new TimeDuration(15, TimeUnit.Second)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -255,7 +253,7 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -265,6 +263,7 @@ describe('Explorer component', () => {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       })
     );
+
     // Select traces tab
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     detectQueryChange();
@@ -295,7 +294,7 @@ describe('Explorer component', () => {
         interval: new TimeDuration(15, TimeUnit.Second),
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -305,7 +304,7 @@ describe('Explorer component', () => {
         limit: 100,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 

@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "baseUrl": "./",
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "strict": true,
     "sourceMap": true,
     "declaration": false,
     "module": "es2020",
-    "target": "ES2022",
+    "target": "es2020",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

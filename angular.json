@@ -96,10 +96,7 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "no-cache": true
-          }
+          "builder": "@angular-builders/jest:run"
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

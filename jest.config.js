@@ -1,18 +1,28 @@
+const { pathsToModuleNameMapper } = require('ts-jest');
+const { paths } = require('./tsconfig.json').compilerOptions;
+
 process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependencies
+
+// eslint-disable-next-line no-undef
+globalThis.ngJest = {
+  skipNgcc: false,
+  tsconfig: 'tsconfig.spec.json'
+};
 
 module.exports = {
   rootDir: '.',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.html$',
-      astTransformers: {
-        before: ['jest-preset-angular/build/InlineFilesTransformer', 'jest-preset-angular/build/StripStylesTransformer']
-      }
-    }
-  },
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  globalSetup: 'jest-preset-angular/global-setup',
+  transform: {
+    '^.+\\.(ts|js|html|svg)$': [
+      'jest-preset-angular',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$'
+      }
+    ]
+  },
   reporters: [
     'default',
     [
@@ -28,6 +38,7 @@ module.exports = {
       }
     ]
   ],
+  testEnvironment: 'jsdom',
   testRunner: 'jest-jasmine2',
   watchPathIgnorePatterns: ['test-results'],
   collectCoverageFrom: [
@@ -44,13 +55,7 @@ module.exports = {
   testMatch: ['<rootDir>/(src|projects)/**/+(*.)+(spec|test).ts'],
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
-    '@hypertrace/assets-library': '<rootDir>/projects/assets-library/src/public-api.ts',
-    '@hypertrace/common$': '<rootDir>/projects/common/src/public-api.ts',
-    '@hypertrace/components': '<rootDir>/projects/components/src/public-api.ts',
-    '@hypertrace/dashboards$': '<rootDir>/projects/dashboards/src/public-api.ts',
-    '@hypertrace/dashboards/testing': '<rootDir>/projects/dashboards/src/test/public-api.ts',
-    '@hypertrace/test-utils': '<rootDir>/projects/test-utils/src/public-api.ts',
-    '@hypertrace/graphql-client': '<rootDir>/projects/graphql-client/src/public-api.ts',
-    '@hypertrace/observability': '<rootDir>/projects/observability/src/public-api.ts'
+    '^uuid$': 'uuid',
+    ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' })
   }
 };
