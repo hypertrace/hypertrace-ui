@@ -117,7 +117,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
+        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--test-path-pattern "+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
 
