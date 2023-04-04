@@ -14,9 +14,9 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEmpty, isEqual } from 'lodash-es';
+import { isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { map, shareReplay, startWith } from 'rxjs/operators';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
@@ -44,7 +44,7 @@ import { MultiSelectJustify } from './multi-select-justify';
         [disabled]="this.disabled"
         class="multi-select-container"
         (popoverOpen)="this.popoverOpen = true"
-        (popoverClose)="this.popoverOpen = false"
+        (popoverClose)="this.onPopoverClose()"
       >
         <ht-popover-trigger>
           <div
@@ -218,6 +218,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  private readonly reorderSelectedItemsSubject: BehaviorSubject<void> = new BehaviorSubject<void>(undefined);
 
   public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
     map(searchText => !isEmpty(searchText)),
@@ -235,18 +236,20 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
-    this.filteredOptions$ = combineLatest([this.allOptions$, this.caseInsensitiveSearchSubject]).pipe(
-      map(([options, searchText]) =>
-        isEmpty(searchText)
-          ? options.toArray()
-          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
-      )
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.reorderSelectedItemsSubject]).pipe(
+      map(([options]) => this.reorderSelectedItemsFirst(options.toArray(), this.selected)),
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
     );
     this.setTriggerLabel();
   }
 
   public ngOnChanges(): void {
     this.setTriggerLabel();
+  }
+
+  public onPopoverClose(): void {
+    this.popoverOpen = false;
+    this.reorderSelectedItemsSubject.next();
   }
 
   public searchOptions(searchText: string): void {
@@ -361,6 +364,30 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   private propagateValueChangeToFormControl(value: V[] | undefined): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  private reorderSelectedItemsFirst(
+    filteredOptions: SelectOptionComponent<V>[],
+    selected?: V[]
+  ): SelectOptionComponent<V>[] {
+    if (isEmpty(selected)) {
+      return filteredOptions;
+    }
+    const filteredOptionsPartitions = partition(filteredOptions, filteredOption =>
+      selected?.includes(filteredOption.value)
+    );
+
+    return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
+  }
+
+  private getFilteredOptions(optionsList: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(optionsList), this.caseInsensitiveSearchSubject]).pipe(
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? options
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
   }
 }
 
