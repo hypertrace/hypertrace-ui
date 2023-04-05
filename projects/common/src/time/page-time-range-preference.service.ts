@@ -37,7 +37,7 @@ export class PageTimeRangePreferenceService {
       this.featureStateResolver.getFeatureFlagValue<Dictionary<string>>(ApplicationFeature.FeatureDefaultTimeRangeMap)
     ]).pipe(
       map(([pageTimeRangeStringDictionary, featureState, featureDefaultTimeRangeMap]) => {
-        if (featureState === FeatureState.Enabled) {
+        if (featureState !== FeatureState.Enabled) {
           if (!isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
             return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
           }
@@ -93,7 +93,11 @@ export class PageTimeRangePreferenceService {
   }
 
   public getGlobalDefaultTimeRange(): TimeRange {
-    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
+    return this.maybeGetCurrentTimeRange() ?? new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
+  }
+
+  private maybeGetCurrentTimeRange(): TimeRange | undefined {
+    return this.timeRangeService.maybeGetCurrentTimeRange();
   }
 }
 
