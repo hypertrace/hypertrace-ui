@@ -88,7 +88,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     this.translateToRect(requestedRect);
   }
 
-  public panToRect(viewRect: Omit<DOMRect, 'x' | 'y' | 'toJSON'>): void {
+  public panToRect(viewRect: ClientRectBounds): void {
     const availableRect = throwIfNil(this.config && this.config.container.node()).getBoundingClientRect();
     // AvailableRect is used for width since we are always keeping scale as 1
     this.zoomBehavior.translateTo(
@@ -107,7 +107,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     containerSelection.select(`.${D3Zoom.DATA_BRUSH_CONTEXT_CLASS}`).remove();
     const containerdBox = throwIfNil(containerSelection.node()).getBoundingClientRect();
 
-    const boundingBox: Omit<DOMRect, 'x' | 'y' | 'toJSON'> = {
+    const boundingBox: ClientRectBounds = {
       bottom: containerdBox.bottom,
       top: containerdBox.height - D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT,
       left: containerdBox.width - D3Zoom.DATA_BRUSH_OVERLAY_WIDTH,
@@ -165,7 +165,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       return;
     }
     const chartZoomScale = this.getZoomScale();
-    const viewRect: Omit<DOMRect, 'x' | 'y' | 'toJSON'> = {
+    const viewRect: ClientRectBounds = {
       top: start[1] * chartZoomScale,
       left: start[0] * chartZoomScale,
       bottom: end[1] * chartZoomScale,
