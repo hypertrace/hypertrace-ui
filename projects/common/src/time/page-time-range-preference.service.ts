@@ -37,7 +37,7 @@ export class PageTimeRangePreferenceService {
       this.featureStateResolver.getFeatureFlagValue<Dictionary<string>>(ApplicationFeature.FeatureDefaultTimeRangeMap)
     ]).pipe(
       map(([pageTimeRangeStringDictionary, featureState, featureDefaultTimeRangeMap]) => {
-        if (featureState !== FeatureState.Enabled) {
+        if (featureState === FeatureState.Enabled) {
           if (!isNil(pageTimeRangeStringDictionary[rootLevelPath])) {
             return () => this.timeRangeService.timeRangeFromUrlString(pageTimeRangeStringDictionary[rootLevelPath]);
           }
