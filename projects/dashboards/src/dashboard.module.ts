@@ -15,7 +15,6 @@ import { DashboardWidgetsModule } from './widgets/dashboard-widgets.module';
     })
   ]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class DashboardModule {
   public constructor(defaultConfigurationService: DefaultConfigurationService) {
     try {

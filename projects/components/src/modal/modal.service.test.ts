@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { NavigationService } from '@hypertrace/common';

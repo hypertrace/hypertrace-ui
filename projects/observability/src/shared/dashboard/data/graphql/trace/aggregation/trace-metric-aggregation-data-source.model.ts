@@ -13,7 +13,6 @@ import { TraceValueDataSourceModel } from '../trace-value-data-source.model';
 export class TraceMetricAggregationDataSourceModel extends TraceValueDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'metric',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: ExploreSelectionSpecificationModel

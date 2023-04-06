@@ -16,7 +16,6 @@ export class AutoDimensionModel implements CellDimension {
   @ModelProperty({
     key: 'max-dimension-unit',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [DimensionUnit.Px]

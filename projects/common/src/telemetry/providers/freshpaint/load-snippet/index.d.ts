@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function loadFreshPaint(): void;
 
 export interface FreshPaint {

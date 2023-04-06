@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
   assertUnreachable,
@@ -58,7 +59,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
-// tslint:disable: max-file-line-count
 @Renderer({ modelClass: TableWidgetModel })
 @Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({

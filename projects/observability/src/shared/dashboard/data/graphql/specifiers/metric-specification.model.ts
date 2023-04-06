@@ -18,7 +18,6 @@ export abstract class MetricSpecificationModel<TSpecification extends MetricSpec
   @ModelProperty({
     key: 'aggregation',
     displayName: 'Aggregation',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [

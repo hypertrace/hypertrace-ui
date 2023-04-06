@@ -1,7 +1,7 @@
 import { CoreTableCellRendererType } from '../cells/types/core-table-cell-renderer-type';
 import { TableColumnConfig } from '../table-api';
 
-// tslint:disable-next-line:no-namespace
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace TableCdkColumnUtil {
   export const isColumnStateChange = (
     changedColumn: TableColumnConfig | undefined

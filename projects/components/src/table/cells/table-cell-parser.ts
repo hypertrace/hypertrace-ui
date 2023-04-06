@@ -12,7 +12,7 @@ export interface TableCellParserConstructor<TCellData, TValue, TFilterValue>
 /*
  * @TableCellParser decorator is used to configure type for cell parsers
  */
-// tslint:disable-next-line:only-arrow-functions
+
 export function TableCellParser(tableCellParserMetadata: TableCellParserMetadata): TableCellParserDecorator {
   return (constructor: TableCellParserConstructor<unknown, unknown, unknown>): void => {
     constructor.type = tableCellParserMetadata.type;

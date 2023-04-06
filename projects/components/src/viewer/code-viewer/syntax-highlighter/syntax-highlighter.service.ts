@@ -1,4 +1,3 @@
-// tslint:disable:match-default-export-name
 import { Injectable } from '@angular/core';
 import HighlightJs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';

@@ -62,7 +62,6 @@ export class TimeDuration {
       TimeUnit.Millisecond
     ];
 
-    // tslint:disable-next-line: strict-boolean-expressions
     const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
 

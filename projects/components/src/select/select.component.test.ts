@@ -195,7 +195,7 @@ describe('Select Component', () => {
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
       'select-level-icon'
     );
-    // tslint:disable-next-line:no-null-keyword
+
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(null);
 
     // Selection with no icon -> default icon and no color

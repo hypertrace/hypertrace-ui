@@ -20,14 +20,12 @@ describe('External URL navigator', () => {
   });
 
   test('goes back when unable to detect a url on navigation', () => {
-    // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
       paramMap: convertToParamMap({})
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(1);
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
       paramMap: convertToParamMap({
         [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
@@ -39,14 +37,12 @@ describe('External URL navigator', () => {
   });
 
   test('navigates when a url is provided', () => {
-    // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
       paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(1, 'https://www.google.com', '_self');
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     spectator.service.canActivate({
       paramMap: convertToParamMap({
         [ExternalNavigationPathParams.Url]: 'https://www.bing.com',

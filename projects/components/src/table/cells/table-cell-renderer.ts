@@ -14,7 +14,7 @@ export interface TableCellRendererConstructor
 /*
  * @TableCellRenderer decorator is used to configure type, alignment, parser for cell renderers
  */
-// tslint:disable-next-line:only-arrow-functions
+
 export function TableCellRenderer(tableCellRendererMetadata: TableCellRendererMetadata): TableCellRendererDecorator {
   return (constructor: TableCellRendererConstructor): void => {
     constructor.type = tableCellRendererMetadata.type;
