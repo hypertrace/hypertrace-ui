@@ -101,6 +101,10 @@
     &.single-bar {
       height: 6px;
       width: 100%;
+
+      &.large {
+        height: 12px;
+      }
     }
   }
 

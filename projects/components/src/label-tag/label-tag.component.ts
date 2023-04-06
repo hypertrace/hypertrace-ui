@@ -7,7 +7,11 @@ import { IconSize } from '../icon/icon-size';
   styleUrls: ['./label-tag.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="label-tag" [ngStyle]="{ backgroundColor: this.backgroundColor, color: this.labelColor }">
+    <div
+      class="label-tag"
+      [ngStyle]="{ backgroundColor: this.backgroundColor, color: this.labelColor, borderColor: this.borderColor }"
+      [ngClass]="[this.textStyle]"
+    >
       <ht-icon
         *ngIf="this.prefixIcon"
         [icon]="this.prefixIcon"
@@ -30,4 +34,15 @@ export class LabelTagComponent {
 
   @Input()
   public prefixIcon?: string;
+
+  @Input()
+  public borderColor?: string;
+
+  @Input()
+  public textStyle: LabelTagTextStyle = LabelTagTextStyle.Uppercase;
+}
+
+export const enum LabelTagTextStyle {
+  Regular = 'regular',
+  Uppercase = 'uppercase'
 }

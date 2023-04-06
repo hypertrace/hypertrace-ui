@@ -35,7 +35,7 @@ import {
           <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
         </div>
       </div>
-      <div class="bar" [ngClass]="this.display">
+      <div class="bar" [ngClass]="[this.display, this.size]">
         <div
           #maxValueBar
           class="max-value-bar"
@@ -97,6 +97,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
+
+  @Input()
+  public size: BarGaugeSize = BarGaugeSize.Small; // Only used for single-bar display type as of now
 
   @Input()
   public isUnlimited: boolean = false;
@@ -186,4 +189,9 @@ export const enum BarGaugeStyle {
   Regular = 'regular',
   Compact = 'compact',
   SingleBar = 'single-bar'
+}
+
+export const enum BarGaugeSize {
+  Small = 'small',
+  Large = 'large'
 }

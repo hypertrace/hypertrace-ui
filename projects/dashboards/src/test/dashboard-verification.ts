@@ -2,6 +2,8 @@ import { StaticProvider } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ColorService,
+  FeatureState,
+  FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
   RelativeTimeRange,
@@ -35,6 +37,9 @@ export const mockDashboardProviders = [
   mockProvider(GraphQlRequestService),
   mockProvider(GraphQlQueryEventService),
   mockProvider(ColorService),
+  mockProvider(FeatureStateResolver, {
+    getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled))
+  }),
   mockProvider(LayoutChangeService, {
     layout$: of()
   }),

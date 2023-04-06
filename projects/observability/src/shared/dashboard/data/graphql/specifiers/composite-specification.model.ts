@@ -29,7 +29,7 @@ export class CompositeSpecificationModel extends SpecificationModel<CompositeSpe
     return new SpecificationBuilder().buildCompositeSpecification(this.specifications, this.orderByKey);
   }
 
-  public extractFromServerData(resultContainer: Dictionary<unknown>): unknown[] {
+  public extractFromServerData(resultContainer: Dictionary<unknown>): unknown[] | Dictionary<unknown> {
     return this.innerSpec.extractFromServerData(resultContainer);
   }
 }

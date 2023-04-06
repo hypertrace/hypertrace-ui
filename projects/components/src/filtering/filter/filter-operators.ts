@@ -18,6 +18,7 @@ export const enum FilterOperator {
   Contains = 'CONTAINS',
   NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY',
+  NotContainsKey = 'NOT_CONTAINS_KEY',
   ContainsKeyLike = 'CONTAINS_KEY_LIKE'
 }
 
@@ -33,6 +34,7 @@ export const enum UrlFilterOperator {
   Contains = '_c_',
   NotIn = '_nin_',
   ContainsKey = '_ck_',
+  NotContainsKey = '_nck_',
   ContainsKeyLike = '_ckl_'
 }
 
@@ -60,6 +62,8 @@ export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator
       return UrlFilterOperator.NotIn;
     case FilterOperator.ContainsKey:
       return UrlFilterOperator.ContainsKey;
+    case FilterOperator.NotContainsKey:
+      return UrlFilterOperator.NotContainsKey;
     case FilterOperator.ContainsKeyLike:
       return UrlFilterOperator.ContainsKeyLike;
     default:
@@ -91,6 +95,8 @@ export const fromUrlFilterOperator = (operator: UrlFilterOperator): FilterOperat
       return FilterOperator.NotIn;
     case UrlFilterOperator.ContainsKey:
       return FilterOperator.ContainsKey;
+    case UrlFilterOperator.NotContainsKey:
+      return FilterOperator.NotContainsKey;
     case UrlFilterOperator.ContainsKeyLike:
       return FilterOperator.ContainsKeyLike;
     default:
@@ -114,10 +120,12 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
         FilterOperator.GreaterThanOrEqualTo,
         FilterOperator.Like,
         FilterOperator.Contains,
-        FilterOperator.ContainsKey
+        FilterOperator.ContainsKey,
+        FilterOperator.NotContainsKey
       ];
     case FilterOperator.Contains:
     case FilterOperator.ContainsKey:
+    case FilterOperator.NotContainsKey:
     case FilterOperator.ContainsKeyLike:
     case FilterOperator.NotEquals:
     case FilterOperator.Like:
