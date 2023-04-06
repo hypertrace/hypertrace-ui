@@ -1,5 +1,5 @@
 import { StaticProvider } from '@angular/core';
-import { StyleUtils, ɵMockMatchMediaProvider } from '@angular/flex-layout';
+import { StyleUtils, ɵMockMatchMediaProvider } from '@ngbracket/ngx-layout';
 
 export const getMockFlexLayoutProviders = (): StaticProvider[] => [
   {

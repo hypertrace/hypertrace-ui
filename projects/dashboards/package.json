@@ -15,7 +15,7 @@
     "@angular/material": "^12.2.1",
     "@angular/forms": "^12.2.1",
     "@angular/router": "^12.2.1",
-    "@angular/flex-layout": "^12.0.0-beta.34",
+    "@ngbracket/ngx-layout": "^15.0.0",
     "@hypertrace/common": "^0.0.0",
     "@hypertrace/components": "^0.0.0",
     "@hypertrace/graphql-client": "^0.0.0",
