@@ -112,7 +112,7 @@ export const getPercentage = (numerator: number | undefined, denominator: number
 
 // Trying to recreate Java hashcode
 export const hashCode = (str: string): number =>
-  // tslint:disable-next-line: no-bitwise
+  // eslint-disable-next-line  no-bitwise
   Array.from(str).reduce((s, c) => (Math.imul(31, s) + c.charCodeAt(0)) | 0, 0);
 
 export interface Point {

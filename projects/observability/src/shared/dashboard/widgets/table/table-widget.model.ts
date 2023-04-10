@@ -31,7 +31,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'columns',
     displayName: 'Columns',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -45,7 +44,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'selection-mode',
     displayName: 'Table Selection Mode',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableSelectionMode.None, TableSelectionMode.Single, TableSelectionMode.Multiple]
@@ -66,7 +64,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'row-click-handlers',
     displayName: 'Row click Handlers',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -80,7 +77,6 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'row-selection-handlers',
     displayName: 'Row selection handlers',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {

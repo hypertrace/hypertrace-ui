@@ -17,7 +17,6 @@ describe('Time range(TR) service', () => {
           return timeRange$.pipe(
             map(
               initialTrString =>
-                // tslint:disable-next-line: no-object-literal-type-assertion
                 (({
                   queryParamMap: of(convertToParamMap({ time: initialTrString, refresh: 'true' })),
                   snapshot: { queryParamMap: convertToParamMap({ time: initialTrString, refresh: 'true' }) }

@@ -1,4 +1,3 @@
-// tslint:disable: max-file-line-count
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { mockProvider } from '@ngneat/spectator/jest';

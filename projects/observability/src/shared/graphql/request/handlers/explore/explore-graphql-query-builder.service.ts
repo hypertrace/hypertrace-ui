@@ -96,7 +96,7 @@ export class ExploreGraphqlQueryBuilderService {
       ...specifications.map(specification => ({
         [specification.resultAlias()]: specification.extractFromServerData(row as Dictionary<GraphQlExploreResultValue>)
       }))
-    );
+    ) as Pick<GraphQlExploreResult, string>;
   }
 
   private getAnyIntervalSelections(request: GraphQlExploreRequest): GraphQlSelection[] {

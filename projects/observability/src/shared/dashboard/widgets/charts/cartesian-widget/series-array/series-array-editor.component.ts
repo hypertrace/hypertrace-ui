@@ -28,7 +28,6 @@ export class SeriesArrayEditorComponent {
   public currentSeries: ModelJson[];
 
   public constructor(@Inject(EDITOR_API) public readonly api: EditorApi<ModelJson[]>) {
-    // tslint:disable-next-line:strict-boolean-expressions
     this.currentSeries = api.value || [];
   }
 

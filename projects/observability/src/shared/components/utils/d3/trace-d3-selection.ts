@@ -12,7 +12,6 @@ import {
 import { Transition } from 'd3-transition';
 import { D3UtilService } from './d3-util.service';
 
-// tslint:disable: no-null-keyword wrapping D3 which uses null
 export class TraceD3Selection<
   TElement extends BaseType,
   TData = undefined,
@@ -360,7 +359,7 @@ export class TraceD3Selection<
     return value instanceof selectionFunction;
   }
 
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private wrapFunction<TFunction extends (...args: any[]) => unknown>(provided: TFunction): TFunction {
     return ((...args: Parameters<TFunction>) =>
       this.valueOrUnwrappedSelection(

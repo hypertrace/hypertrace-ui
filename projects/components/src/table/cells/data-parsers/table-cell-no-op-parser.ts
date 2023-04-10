@@ -11,7 +11,6 @@ export class TableCellNoOpParser<T = unknown> extends TableCellParserBase<T, T, 
   }
 
   public parseFilterValue(cellData: T | { filterValue?: string }): string | undefined {
-    // tslint:disable-next-line:strict-type-predicates
     if (typeof cellData === 'object' && cellData !== null && 'filterValue' in cellData) {
       return cellData.filterValue;
     }

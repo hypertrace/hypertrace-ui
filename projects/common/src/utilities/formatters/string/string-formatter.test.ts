@@ -2,7 +2,6 @@ import { displayString, getStringsFromCommaSeparatedList } from './string-format
 
 describe('String formatter', () => {
   test('can convert to display string', () => {
-    // tslint:disable-next-line: no-null-keyword
     expect(displayString(null)).toBe('-');
     expect(displayString('null')).toBe('-');
     expect(displayString(undefined)).toBe('-');
@@ -17,7 +16,6 @@ describe('String formatter', () => {
   });
 
   test('can convert to display string with default empty value', () => {
-    // tslint:disable-next-line: no-null-keyword
     expect(displayString(null, 'none')).toBe('none');
     expect(displayString('null', 'none')).toBe('none');
     expect(displayString(undefined, 'none')).toBe('none');
