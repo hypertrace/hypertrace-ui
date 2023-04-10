@@ -3,6 +3,7 @@ import { IconType } from '@hypertrace/assets-library';
 import {
   FixedTimeRange,
   RelativeTimeRange,
+  SubscriptionLifecycle,
   TimeDuration,
   TimeRange,
   TimeRangeService,
@@ -10,10 +11,11 @@ import {
 } from '@hypertrace/common';
 import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ButtonRole, ButtonSize } from '../button/button';
+import { ButtonRole } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
+import { RefreshButtonService } from '../refresh-button/refresh-button.service';
 
 @Component({
   selector: 'ht-time-range',
@@ -57,19 +59,17 @@ import { PopoverRef } from '../popover/popover-ref';
           </ht-popover-content>
         </ht-popover>
       </div>
-      <ht-button
-        *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
+      <ht-refresh-button
         class="refresh"
-        [ngClass]="refreshButton.isEmphasized ? 'emphasized' : ''"
+        *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         [label]="refreshButton.text$ | async"
-        icon="${IconType.Refresh}"
-        size="${ButtonSize.Small}"
+        [isEmphasized]="refreshButton.isEmphasized"
         [role]="refreshButton.role"
-        (click)="refreshButton.onClick()"
       >
-      </ht-button>
+      </ht-refresh-button>
     </div>
-  `
+  `,
+  providers: [SubscriptionLifecycle]
 })
 export class TimeRangeComponent {
   @Input()
@@ -90,7 +90,14 @@ export class TimeRangeComponent {
   @Output()
   public readonly timeRangeSelected: EventEmitter<TimeRange> = new EventEmitter();
 
-  public constructor(private readonly timeRangeService: TimeRangeService, private readonly ngZone: NgZone) {}
+  public constructor(
+    private readonly timeRangeService: TimeRangeService,
+    private readonly ngZone: NgZone,
+    private readonly refreshButtonService: RefreshButtonService,
+    private readonly subs: SubscriptionLifecycle
+  ) {
+    this.subs.add(this.refreshButtonService.refresh$.subscribe(() => this.timeRangeService.refresh()));
+  }
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
     this.showCustom = false;
@@ -124,11 +131,10 @@ export class TimeRangeComponent {
         of({
           text$: of('Refresh'),
           role: ButtonRole.Tertiary,
-          isEmphasized: false,
-          onClick: () => this.onRefresh()
+          isEmphasized: false
         }),
         this.ngZone.runOutsideAngular(() =>
-          // Long running timer will prevent zone from stabilizing
+          // Long-running timer will prevent zone from stabilizing
           timer(this.refreshDuration.toMillis()).pipe(
             map(() => ({
               text$: interval(new TimeDuration(1, TimeUnit.Minute).toMillis()).pipe(
@@ -142,8 +148,7 @@ export class TimeRangeComponent {
                 map(duration => `Refresh - updated ${duration.toString()} ago`)
               ),
               role: ButtonRole.Primary,
-              isEmphasized: true,
-              onClick: () => this.onRefresh()
+              isEmphasized: true
             }))
           )
         )
@@ -152,15 +157,10 @@ export class TimeRangeComponent {
 
     return EMPTY;
   };
-
-  private onRefresh(): void {
-    this.timeRangeService.refresh();
-  }
 }
 
 interface RefreshButtonData {
   text$: Observable<string>;
   role: ButtonRole;
   isEmphasized: boolean;
-  onClick(): void;
 }

@@ -35,7 +35,12 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
-          <ht-page-time-range *ngIf="!this.hidePageTimeRange" class="time-range"></ht-page-time-range>
+          <ng-container *ngIf="!this.hidePageTimeRange">
+            <ht-page-time-range class="time-range"></ht-page-time-range>
+          </ng-container>
+          <ng-container *ngIf="this.hidePageTimeRange && this.showRefreshButton">
+            <ht-refresh-button class="refresh-only-button"></ht-refresh-button>
+          </ng-container>
         </div>
         <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
           <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
@@ -98,6 +103,9 @@ export class PageHeaderComponent implements OnInit {
 
   @Input()
   public hidePageTimeRange?: boolean = false;
+
+  @Input()
+  public showRefreshButton?: boolean = false;
 
   @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
