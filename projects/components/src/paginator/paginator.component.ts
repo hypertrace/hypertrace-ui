@@ -23,7 +23,7 @@ import { PaginationProvider } from './paginator-api';
     <div
       class="paginator"
       [class.compact]="this.showCompactView"
-      *ngIf="this.totalItems && this.totalItems > this.minItemsBeforeDisplay"
+      *ngIf="this.totalItems && this.totalItems >= this.minItemsBeforeDisplay"
     >
       <ht-label
         class="label"
