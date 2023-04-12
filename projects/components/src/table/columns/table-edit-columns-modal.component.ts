@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { ButtonRole } from '../../button/button';
+import { ButtonRole, ButtonStyle } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { TableColumnConfigExtended } from '../table.service';
 
@@ -9,6 +9,13 @@ import { TableColumnConfigExtended } from '../table.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="edit-modal">
+      <ht-button
+        class="reset-button"
+        label="Reset to default"
+        role="${ButtonRole.Primary}"
+        display="${ButtonStyle.PlainText}"
+        (click)="this.onResetToDefault()"
+      ></ht-button>
       <div class="column-items">
         <ng-container *ngFor="let column of this.editColumns; index as i">
           <div class="column-item">
@@ -41,16 +48,14 @@ import { TableColumnConfigExtended } from '../table.service';
   `
 })
 export class TableEditColumnsModalComponent {
-  public readonly editColumns: TableColumnConfigExtended[];
+  public editColumns: TableColumnConfigExtended[];
   public readonly disabledTooltip: string = 'At least one column must be enabled';
 
   public constructor(
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
-    @Inject(MODAL_DATA) public readonly modalData: TableColumnConfigExtended[]
+    @Inject(MODAL_DATA) public readonly modalData: TableEditColumnsModalConfig
   ) {
-    this.editColumns = this.modalData
-      .filter(column => !this.isMetaTypeColumn(column))
-      .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+    this.editColumns = this.filterMetadaDataColumnsAndOrderVisible(this.modalData.availableColumns);
   }
 
   public selectColumn(checked: boolean, index: number): void {
@@ -58,10 +63,6 @@ export class TableEditColumnsModalComponent {
       ...this.editColumns[index],
       visible: checked
     };
-  }
-
-  private isMetaTypeColumn(column: TableColumnConfigExtended): boolean {
-    return column.id.startsWith('$$') || (column.attribute !== undefined && column.attribute.type.startsWith('$$'));
   }
 
   public isLastRemainingColumn(column: TableColumnConfigExtended): boolean {
@@ -77,4 +78,23 @@ export class TableEditColumnsModalComponent {
   public onCancel(): void {
     this.modalRef.close();
   }
+
+  public onResetToDefault(): void {
+    this.editColumns = this.filterMetadaDataColumnsAndOrderVisible(this.modalData.defaultColumns);
+  }
+
+  private filterMetadaDataColumnsAndOrderVisible(columns: TableColumnConfigExtended[]): TableColumnConfigExtended[] {
+    return columns
+      .filter(column => !this.isMetaTypeColumn(column))
+      .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+  }
+
+  private isMetaTypeColumn(column: TableColumnConfigExtended): boolean {
+    return column.id.startsWith('$$') || (column.attribute !== undefined && column.attribute.type.startsWith('$$'));
+  }
+}
+
+export interface TableEditColumnsModalConfig {
+  availableColumns: TableColumnConfigExtended[];
+  defaultColumns: TableColumnConfigExtended[];
 }

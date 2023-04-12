@@ -96,6 +96,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [editable]="!this.isTreeType()"
                 [metadata]="this.metadata"
                 [columnConfig]="columnDef"
+                [defaultColumns]="this.columnDefaultConfigs"
                 [availableColumns]="this.columnConfigs$ | async"
                 [index]="index"
                 [sort]="columnDef.sort"
@@ -338,6 +339,7 @@ export class TableComponent
     TableColumnConfigExtended[]
   >([]);
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
+  public columnDefaultConfigs?: TableColumnConfigExtended[];
   public readonly visibleColumnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigs$.pipe(
     map(columns => columns.filter(column => column.visible))
   );
@@ -514,7 +516,11 @@ export class TableComponent
   }
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
-    this.columnConfigsSubject.next(this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []));
+    const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
+    if (isNil(this.columnDefaultConfigs)) {
+      this.columnDefaultConfigs = columnConfigurations;
+    }
+    this.columnConfigsSubject.next(columnConfigurations);
   }
 
   private initializeData(): void {
