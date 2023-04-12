@@ -73,12 +73,28 @@ describe('Page Header Component', () => {
   });
 
   test('should show the refresh button', () => {
-    spectator = createHost('<ht-page-header hideRefreshButton="false" hidePageTimeRange="true"></ht-page-header>');
+    spectator = createHost(
+      '<ht-page-header [hideRefreshButton]="hideRefreshButton" [hidePageTimeRange]="hidePageTimeRange"></ht-page-header>',
+      {
+        hostProps: {
+          hidePageTimeRange: true,
+          hideRefreshButton: false
+        }
+      }
+    );
     expect(spectator.query('.refresh-only-button')).toExist();
   });
 
   test('should not show standalone refresh button when time range is shown', () => {
-    spectator = createHost('<ht-page-header hideRefreshButton="false"></ht-page-header>');
+    spectator = createHost(
+      '<ht-page-header [hideRefreshButton]="hideRefreshButton" [hidePageTimeRange]="hidePageTimeRange"></ht-page-header>',
+      {
+        hostProps: {
+          hidePageTimeRange: false,
+          hideRefreshButton: false
+        }
+      }
+    );
     expect(spectator.query('.refresh-only-button')).not.toExist();
   });
 });
