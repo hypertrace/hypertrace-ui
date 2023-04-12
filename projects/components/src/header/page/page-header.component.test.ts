@@ -71,4 +71,14 @@ describe('Page Header Component', () => {
 
     expect(spectator.query(PageTimeRangeComponent)).not.toExist();
   });
+
+  test('should show the refresh button', () => {
+    spectator = createHost('<ht-page-header hideRefreshButton="false" hidePageTimeRange="true"></ht-page-header>');
+    expect(spectator.query('.refresh-only-button')).toExist();
+  });
+
+  test('should not show standalone refresh button when time range is shown', () => {
+    spectator = createHost('<ht-page-header hideRefreshButton="false"></ht-page-header>');
+    expect(spectator.query('.refresh-only-button')).not.toExist();
+  });
 });
