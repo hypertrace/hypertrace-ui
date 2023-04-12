@@ -25,7 +25,6 @@ export class MetricTimeseriesSpecificationModel
   @ModelProperty({
     key: 'interval-unit',
     displayName: 'Interval Unit',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Day]

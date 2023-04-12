@@ -29,7 +29,6 @@ import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-me
 export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData> {
   @ModelProperty({
     key: 'entity',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend]
@@ -40,7 +39,6 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
   @ModelProperty({
     key: 'upstream-entities',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -53,7 +51,6 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
   @ModelProperty({
     key: 'downstream-entities',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -66,7 +63,6 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
   @ModelProperty({
     key: 'node-metrics',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: TopologyMetricsModel
@@ -76,7 +72,6 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
   @ModelProperty({
     key: 'edge-metrics',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: TopologyMetricsModel

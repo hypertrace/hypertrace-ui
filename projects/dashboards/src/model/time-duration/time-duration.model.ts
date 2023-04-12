@@ -16,7 +16,6 @@ export class TimeDurationModel {
   @ModelProperty({
     key: 'unit',
     required: true,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [

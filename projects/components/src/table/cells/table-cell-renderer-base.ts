@@ -13,7 +13,6 @@ import { CoreTableCellRendererType } from './types/core-table-cell-renderer-type
 import { TableCellAlignmentType } from './types/table-cell-alignment-type';
 
 @Directive() // Angular 9 Requires superclasses to be annotated as well in order to resolve injectables for constructor
-// tslint:disable-next-line:directive-class-suffix
 export abstract class TableCellRendererBase<TCellData, TValue = TCellData> implements OnInit {
   public static readonly type: CoreTableCellRendererType;
   public static readonly alignment: TableCellAlignmentType;

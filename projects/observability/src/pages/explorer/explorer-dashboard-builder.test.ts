@@ -71,7 +71,6 @@ describe('Explorer dashboard builder', () => {
 
   test('can build dashboard JSON for traces', done => {
     const builder = new ExplorerDashboardBuilder(
-      // tslint:disable-next-line: no-object-literal-type-assertion
       {
         getAttribute: (_: never, name: string) =>
           of({
@@ -116,7 +115,7 @@ describe('Explorer dashboard builder', () => {
               type: 'trace-detail-widget',
               data: {
                 type: 'api-trace-detail-data-source',
-                // tslint:disable-next-line: no-invalid-template-strings
+
                 trace: '${row}',
                 attributes: ['requestUrl']
               }

@@ -75,7 +75,7 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
       type: 'span-detail-widget',
       data: {
         type: 'span-detail-data-source',
-        // tslint:disable-next-line: no-invalid-template-strings
+
         span: '${row}'
       }
     },

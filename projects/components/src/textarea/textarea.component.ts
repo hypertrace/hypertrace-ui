@@ -55,7 +55,6 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
   public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
-    // tslint:disable-next-line:strict-type-predicates
     if (this.placeholder === undefined) {
       this.loggerService.warn('TextareaComponent requires "placeholder" input');
     }

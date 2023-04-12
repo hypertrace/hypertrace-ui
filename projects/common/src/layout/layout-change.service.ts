@@ -99,5 +99,4 @@ export class LayoutChangeService implements OnDestroy {
   }
 }
 
-// tslint:disable-next-line: no-empty-interface empty object so we can have a unique ref
 interface LayoutChangeEvent {}

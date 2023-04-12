@@ -1,7 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { CustomFormValidators } from '@hypertrace/common';
 
-// tslint:disable: no-null-keyword
 describe('CustomFormValidators', () => {
   test('commaSeparatedEmails should return null when emails are correct', () => {
     const emails = new FormControl('test-email@test.ai, test.email@test.ai');

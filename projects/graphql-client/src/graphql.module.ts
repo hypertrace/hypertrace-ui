@@ -1,6 +1,6 @@
 import { Inject, InjectionToken, Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { InMemoryCache } from '@apollo/client/core';
-import { APOLLO_OPTIONS } from 'apollo-angular';
+import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
 import { HttpBatchLink } from 'apollo-angular/http';
 import {
   GraphQlOptions,
@@ -11,6 +11,7 @@ import {
 import { GraphQlRequestService } from './graphql-request.service';
 
 @NgModule({
+  imports: [ApolloModule],
   providers: [
     {
       provide: APOLLO_OPTIONS,
@@ -31,7 +32,6 @@ import { GraphQlRequestService } from './graphql-request.service';
     }
   ]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class GraphQlModule {
   public constructor(
     graphQlRequestService: GraphQlRequestService,

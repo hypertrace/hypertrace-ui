@@ -15,7 +15,6 @@ const DEFAULT_DASHBOARDS = new InjectionToken<DashboardDefaultConfiguration[]>('
   providers: [{ provide: DEFAULT_DASHBOARDS, useValue: [], multi: true }],
   exports: [ApplicationAwareDashboardComponent, NavigableDashboardComponent]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class NavigableDashboardModule {
   public constructor(
     dashboardPersistenceService: DashboardPersistenceService,

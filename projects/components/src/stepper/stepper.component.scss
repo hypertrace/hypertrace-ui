@@ -27,38 +27,42 @@
     }
 
     .mat-stepper-horizontal {
-      height: 100%;
+      display: block;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
 
-      display: flex;
-      flex-direction: column;
+    .mat-horizontal-stepper-wrapper {
+      @include fill-container;
     }
 
     .mat-horizontal-content-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      padding-bottom: 54px;
+      min-height: 0;
+      flex: 1 1 auto;
+      padding-bottom: 8px;
+    }
+
+    .mat-horizontal-stepper-content {
+      @include fill-container;
     }
   }
 }
 
 .stepper {
+  @include fill-container;
   @include flex-layout(column);
   justify-content: space-between;
   position: relative;
 
   .footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     background-color: white;
     border-top: 1px solid $gray-1;
     padding-top: 8px;
-    z-index: 20;
 
     .action-buttons {
       display: flex;
+      align-items: center;
       justify-content: space-between;
 
       .back-next {

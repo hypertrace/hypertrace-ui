@@ -11,7 +11,6 @@ import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 export class EntityMetricAggregationDataSourceModel extends EntityValueDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'metric',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationSpecificationModel

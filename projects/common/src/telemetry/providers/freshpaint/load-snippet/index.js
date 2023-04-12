@@ -1,5 +1,3 @@
-// tslint:disable
-
 const loadFreshPaint = () => {
   if (window.freshpaint) {
     return getFreshPaint;

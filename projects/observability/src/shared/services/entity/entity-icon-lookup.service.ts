@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { Inject, Injectable } from '@angular/core';
 import { EntityMetadataMap, ENTITY_METADATA } from '../../constants/entity-metadata';
 import {
@@ -35,7 +36,6 @@ export class EntityIconLookupService {
     return this.forBackendType(entity[backendTypeKey] as string | undefined);
   }
 
-  // tslint:disable: cyclomatic-complexity
   public forBackendType(backendType?: string): string {
     switch (backendType) {
       case BackendType.AWS:

@@ -1,5 +1,4 @@
-// tslint:disable: max-file-line-count
-
+/* eslint-disable max-lines */
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';

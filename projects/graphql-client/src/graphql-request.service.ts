@@ -154,7 +154,7 @@ export class GraphQlRequestService {
       .pipe(
         tap(response => {
           if (!isNil(response.errors)) {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line  no-console
             console.error(`Query response error(s) for request '${requestString}'`, response.errors);
           }
         }),
@@ -170,7 +170,7 @@ export class GraphQlRequestService {
       .pipe(
         tap(response => {
           if (!isNil(response.errors)) {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line  no-console
             console.error(`Mutation response error(s) for request '${requestString}'`, response.errors);
           }
         }),
@@ -198,7 +198,7 @@ export class GraphQlRequestService {
         }
 
         const errorValue = String(result.value);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line  no-console
         console.error(errorValue);
 
         throw Error(errorValue);

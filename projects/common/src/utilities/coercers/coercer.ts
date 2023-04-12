@@ -33,7 +33,6 @@ export abstract class Coercer<T, TOptions extends CoercerOptions<T>> {
 
   protected collectValuesToCheck(value: unknown): unknown[] {
     return [
-      // tslint:disable-next-line: strict-boolean-expressions
       this.options.useSelf ? value : undefined,
       ...this.extractObjectKeys(value),
       ...this.extractArrayIndices(value)
