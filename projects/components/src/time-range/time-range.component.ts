@@ -15,7 +15,6 @@ import { ButtonRole } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
-import { RefreshButtonService } from '../refresh-button/refresh-button.service';
 
 @Component({
   selector: 'ht-time-range',
@@ -65,6 +64,7 @@ import { RefreshButtonService } from '../refresh-button/refresh-button.service';
         [label]="refreshButton.text$ | async"
         [isEmphasized]="refreshButton.isEmphasized"
         [role]="refreshButton.role"
+        (refresh)="this.onRefresh()"
       >
       </ht-refresh-button>
     </div>
@@ -90,14 +90,7 @@ export class TimeRangeComponent {
   @Output()
   public readonly timeRangeSelected: EventEmitter<TimeRange> = new EventEmitter();
 
-  public constructor(
-    private readonly timeRangeService: TimeRangeService,
-    private readonly ngZone: NgZone,
-    private readonly refreshButtonService: RefreshButtonService,
-    private readonly subs: SubscriptionLifecycle
-  ) {
-    this.subs.add(this.refreshButtonService.refresh$.subscribe(() => this.timeRangeService.refresh()));
-  }
+  public constructor(private readonly timeRangeService: TimeRangeService, private readonly ngZone: NgZone) {}
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
     this.showCustom = false;
@@ -157,6 +150,10 @@ export class TimeRangeComponent {
 
     return EMPTY;
   };
+
+  public onRefresh(): void {
+    this.timeRangeService.refresh();
+  }
 }
 
 interface RefreshButtonData {

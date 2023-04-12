@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonRole, ButtonSize } from '../button/button';
-import { RefreshButtonService } from './refresh-button.service';
 
 @Component({
   selector: 'ht-refresh-button',
@@ -13,7 +12,7 @@ import { RefreshButtonService } from './refresh-button.service';
       icon="${IconType.Refresh}"
       [size]="this.size"
       [role]="this.role"
-      (click)="refresh()"
+      (click)="this.refresh.emit()"
     >
     </ht-button>
   `,
@@ -32,9 +31,6 @@ export class RefreshButtonComponent {
   @Input()
   public label: string = 'Refresh';
 
-  public constructor(private readonly refreshButtonService: RefreshButtonService) {}
-
-  public refresh() {
-    this.refreshButtonService.refresh();
-  }
+  @Output()
+  public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 }

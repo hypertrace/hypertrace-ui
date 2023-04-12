@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ApplicationFeature,
   Breadcrumb,
@@ -38,8 +38,8 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="!this.hidePageTimeRange">
             <ht-page-time-range class="time-range"></ht-page-time-range>
           </ng-container>
-          <ng-container *ngIf="this.hidePageTimeRange && this.showRefreshButton">
-            <ht-refresh-button class="refresh-only-button"></ht-refresh-button>
+          <ng-container *ngIf="this.hidePageTimeRange && !this.hideRefreshButton">
+            <ht-refresh-button class="refresh-only-button" (refresh)="this.refresh.emit()"></ht-refresh-button>
           </ng-container>
         </div>
         <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
@@ -105,10 +105,13 @@ export class PageHeaderComponent implements OnInit {
   public hidePageTimeRange?: boolean = false;
 
   @Input()
-  public showRefreshButton?: boolean = false;
+  public hideRefreshButton?: boolean = true;
 
   @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
+
+  @Output()
+  public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
