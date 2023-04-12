@@ -79,7 +79,12 @@ describe('Page Header Component', () => {
         hostProps: {
           hidePageTimeRange: true,
           hideRefreshButton: false
-        }
+        },
+        providers: [
+          mockProvider(FeatureStateResolver, {
+            getCombinedFeatureState: () => of(FeatureState.Enabled)
+          })
+        ]
       }
     );
     expect(spectator.query('.refresh-only-button')).toExist();
