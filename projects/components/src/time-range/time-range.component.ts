@@ -3,7 +3,6 @@ import { IconType } from '@hypertrace/assets-library';
 import {
   FixedTimeRange,
   RelativeTimeRange,
-  SubscriptionLifecycle,
   TimeDuration,
   TimeRange,
   TimeRangeService,
@@ -68,8 +67,7 @@ import { PopoverRef } from '../popover/popover-ref';
       >
       </ht-refresh-button>
     </div>
-  `,
-  providers: [SubscriptionLifecycle]
+  `
 })
 export class TimeRangeComponent {
   @Input()
