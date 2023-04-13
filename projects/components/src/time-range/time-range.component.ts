@@ -64,7 +64,7 @@ import { PopoverRef } from '../popover/popover-ref';
         [label]="refreshButton.text$ | async"
         [isEmphasized]="refreshButton.isEmphasized"
         [role]="refreshButton.role"
-        (refresh)="this.onRefresh()"
+        (click)="this.onRefresh()"
       >
       </ht-refresh-button>
     </div>

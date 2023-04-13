@@ -131,7 +131,7 @@ describe('Time range component', () => {
   test('should publish new time range when refresh is clicked', () => {
     const spectator = createComponent();
     const spy = jest.spyOn(spectator.inject(TimeRangeService), 'refresh');
-    spectator.triggerEventHandler('.refresh', 'refresh', undefined);
+    spectator.click('.refresh');
     expect(spy).toHaveBeenCalled();
   });
 

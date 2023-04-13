@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { ButtonRole, ButtonSize } from '../button/button';
 
@@ -12,7 +12,6 @@ import { ButtonRole, ButtonSize } from '../button/button';
       icon="${IconType.Refresh}"
       [size]="this.size"
       [role]="this.role"
-      (click)="this.refresh.emit()"
     >
     </ht-button>
   `,
@@ -30,7 +29,4 @@ export class RefreshButtonComponent {
 
   @Input()
   public label: string = 'Refresh';
-
-  @Output()
-  public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 }
