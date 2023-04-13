@@ -85,6 +85,7 @@ export class TableEditColumnsModalComponent {
 
   private filterMetadaDataColumnsAndOrderVisible(columns: TableColumnConfigExtended[]): TableColumnConfigExtended[] {
     return columns
+      .map(column => ({ ...column })) // Todo: using this map to generate and handle a new array
       .filter(column => !this.isMetaTypeColumn(column))
       .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
   }
