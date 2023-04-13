@@ -51,8 +51,11 @@
   }
 
   &:hover {
+    background: m.$gray-1;
+  }
+
+  &:active {
     @include m.raised-shadow-hover();
     border: none;
-    background: m.$gray-1;
   }
 }
