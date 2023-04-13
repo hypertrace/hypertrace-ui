@@ -19,19 +19,6 @@
     padding: 0 12px;
     margin-top: 8px;
     border-top: 1px solid m.$gray-2;
-
-    .column-item {
-      height: 36px;
-      padding: 2px 8px;
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-
-      &:hover {
-        background: m.$gray-1;
-      }
-    }
   }
 
   .controls {
@@ -40,5 +27,35 @@
     padding: 20px 12px 0 12px;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+.column-item-container {
+  height: 36px;
+  padding: 2px 8px;
+  cursor: move;
+  background: white;
+
+  display: flex;
+  align-items: center;
+
+  .vertical-grab-handle-icon {
+    color: m.$gray-3;
+    align-self: center;
+    cursor: move;
+  }
+
+  .checkbox {
+    margin-left: 14px;
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: m.$gray-1;
+  }
+
+  &:active {
+    @include m.raised-shadow-hover();
+    border: none;
   }
 }
