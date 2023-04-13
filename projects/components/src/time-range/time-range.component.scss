@@ -55,12 +55,13 @@
 }
 
 .refresh {
+  display: block;
   margin-left: 8px;
   background-color: white;
   border-radius: 6px;
 
   ::ng-deep {
-    button.button.bordered {
+    button.button {
       height: 34px;
     }
   }
