@@ -105,6 +105,8 @@ export class PageHeaderComponent implements OnInit {
   public mode?: PageHeaderDisplayMode = PageHeaderDisplayMode.WithTimeRange;
 
   /**
+   * The provided value is mapped to `mode` for backwards compatibility.
+   * Please use `mode` instead.
    * @deprecated - Use the mode instead
    */
   @Input()
