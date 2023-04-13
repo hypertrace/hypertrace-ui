@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ButtonRole, ButtonStyle } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { TableColumnConfigExtended } from '../table.service';
+import { IconType } from '@hypertrace/assets-library';
+import { IconSize } from '../../icon/icon-size';
 
 @Component({
   selector: 'ht-edit-columns-modal',
@@ -16,10 +18,16 @@ import { TableColumnConfigExtended } from '../table.service';
         display="${ButtonStyle.PlainText}"
         (click)="this.onResetToDefault()"
       ></ht-button>
-      <div class="column-items">
-        <ng-container *ngFor="let column of this.editColumns; index as i">
-          <div class="column-item">
+      <ht-draggable-list class="column-items" (draggableListChange)="this.columnsReorder($event)">
+        <ht-draggable-item *ngFor="let column of this.editColumns; index as i" [data]="column">
+          <div class="column-item-container">
+            <ht-icon
+              class="vertical-grab-handle-icon"
+              icon="${IconType.VerticalGrabHandle}"
+              size="${IconSize.Medium}"
+            ></ht-icon>
             <ht-checkbox
+              class="checkbox"
               [label]="column.title"
               [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
@@ -27,9 +35,8 @@ import { TableColumnConfigExtended } from '../table.service';
               (checkedChange)="this.selectColumn($event, i)"
             ></ht-checkbox>
           </div>
-        </ng-container>
-      </div>
-
+        </ht-draggable-item>
+      </ht-draggable-list>
       <div class="controls">
         <ht-button
           label="Cancel"
@@ -81,6 +88,10 @@ export class TableEditColumnsModalComponent {
 
   public onResetToDefault(): void {
     this.editColumns = this.filterMetadaDataColumnsAndOrderVisible(this.modalData.defaultColumns);
+  }
+
+  public columnsReorder(editColumns: TableColumnConfigExtended[]): void {
+    this.editColumns = editColumns;
   }
 
   private filterMetadaDataColumnsAndOrderVisible(columns: TableColumnConfigExtended[]): TableColumnConfigExtended[] {
