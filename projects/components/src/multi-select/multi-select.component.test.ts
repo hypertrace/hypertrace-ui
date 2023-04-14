@@ -1,5 +1,4 @@
-// tslint:disable: max-file-line-count
-
+/* eslint-disable max-lines */
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
@@ -175,8 +174,15 @@ describe('Multi Select Component', () => {
       });
     });
 
-    optionElements.forEach((element, index) => {
-      expect(element).toHaveText(selectionOptions[index].label);
+    // Selected items first (after reordering)
+    expect(optionElements[0]).toHaveText(selectionOptions[1].label);
+    expect(optionElements[1]).toHaveText(selectionOptions[2].label);
+    expect(optionElements[2]).toHaveText(selectionOptions[0].label);
+    expect(optionElements[3]).toHaveText(selectionOptions[3].label);
+    expect(optionElements[4]).toHaveText(selectionOptions[4].label);
+    expect(optionElements[5]).toHaveText(selectionOptions[5].label);
+
+    optionElements.forEach(element => {
       expect(element.querySelector('ht-icon')).toExist();
     });
   }));

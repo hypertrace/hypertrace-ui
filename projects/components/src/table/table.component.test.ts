@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
@@ -17,7 +18,6 @@ import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, Tab
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
 
-// tslint:disable max-file-line-count
 describe('Table component', () => {
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
@@ -527,7 +527,6 @@ describe('Table component', () => {
     };
 
     spectator.component.headerRowElement = {
-      // tslint:disable-next-line:no-object-literal-type-assertion
       nativeElement: {
         offsetLeft: 0,
         offsetWidth: 300
@@ -535,7 +534,6 @@ describe('Table component', () => {
     };
 
     spectator.component.queryHeaderCellElement = (index: number) =>
-      // tslint:disable-next-line:no-object-literal-type-assertion
       [
         {
           offsetLeft: 0,

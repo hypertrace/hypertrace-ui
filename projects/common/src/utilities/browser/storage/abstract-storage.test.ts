@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { of } from 'rxjs';
 import { AbstractStorage } from './abstract-storage';

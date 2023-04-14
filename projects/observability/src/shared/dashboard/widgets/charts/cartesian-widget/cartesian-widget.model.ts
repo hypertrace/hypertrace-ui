@@ -107,7 +107,6 @@ export class CartesianWidgetModel<TInterval> {
   @ModelProperty({
     key: 'default-interval',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE
     } as ModelModelPropertyTypeInstance
@@ -124,7 +123,6 @@ export class CartesianWidgetModel<TInterval> {
   @ModelProperty({
     key: 'legend-position',
     displayName: 'Legend Position',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [

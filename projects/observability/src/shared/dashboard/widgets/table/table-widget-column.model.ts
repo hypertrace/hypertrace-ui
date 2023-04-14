@@ -72,7 +72,6 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'display',
     displayName: 'Display',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: STRING_PROPERTY.type
   })
   public display: string = CoreTableCellRendererType.Text;
@@ -87,7 +86,6 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'sort',
     displayName: 'Sort',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableSortDirection.Ascending, TableSortDirection.Descending]

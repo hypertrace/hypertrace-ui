@@ -13,7 +13,7 @@ import {
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ButtonRole } from '../button/button';
-import { ButtonComponent } from '../button/button.component';
+import { RefreshButtonComponent } from '../refresh-button/refresh-button.component';
 import { TimeRangeComponent } from './time-range.component';
 import { TimeRangeModule } from './time-range.module';
 
@@ -25,7 +25,6 @@ describe('Time range component', () => {
     componentProviders: [],
     providers: [
       mockProvider(NavigationService, {
-        // tslint:disable-next-line: no-object-literal-type-assertion
         navigation$: of({
           queryParamMap: of(convertToParamMap({}))
         } as ActivatedRoute)
@@ -138,7 +137,7 @@ describe('Time range component', () => {
 
   test('should update refresh button to primary after 5m', fakeAsync(() => {
     const spectator = createComponent();
-    const refreshButton = spectator.query('.refresh', { read: ButtonComponent })!;
+    const refreshButton = spectator.query('.refresh', { read: RefreshButtonComponent })!;
     expect(refreshButton).toExist();
     expect(refreshButton.role).toBe(ButtonRole.Tertiary);
     spectator.tick(new TimeDuration(5, TimeUnit.Minute).toMillis());

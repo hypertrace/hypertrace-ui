@@ -51,7 +51,6 @@ export class DashboardBrowserLocalStore implements DashboardStore {
     this.syncMemoryFromBrowserStorage();
     const existingDashboard = this.allDashboards[dashboard.id];
 
-    // tslint:disable-next-line: strict-boolean-expressions
     if (!existingDashboard) {
       return throwError(`Provided ID does not exist: ${dashboard.id}`);
     }
@@ -70,7 +69,7 @@ export class DashboardBrowserLocalStore implements DashboardStore {
   public delete(id: string): Observable<void> {
     this.syncMemoryFromBrowserStorage();
     if (id in this.allDashboards) {
-      // tslint:disable-next-line: no-dynamic-delete
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.allDashboards[id];
       this.syncBrowserStorageFromMemory();
 

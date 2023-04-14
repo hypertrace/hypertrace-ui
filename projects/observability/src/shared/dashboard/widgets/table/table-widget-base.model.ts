@@ -39,7 +39,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public viewId?: string;
 
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: WidgetHeaderModel
@@ -65,7 +64,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'select-control-options',
     displayName: 'Select Options',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -79,7 +77,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'checkbox-control-options',
     displayName: 'Checkbox Options',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -93,7 +90,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'mode',
     displayName: 'Table Mode',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
@@ -104,7 +100,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'style',
     displayName: 'Table Style',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableStyle.FullPage, TableStyle.Embedded, TableStyle.List]

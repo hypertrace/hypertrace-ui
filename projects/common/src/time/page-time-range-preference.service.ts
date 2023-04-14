@@ -49,7 +49,7 @@ export class PageTimeRangePreferenceService {
         }
 
         // When FF is disabled
-        return () => this.getGlobalDefaultTimeRange();
+        return () => this.maybeGetCurrentTimeRange() ?? this.getGlobalDefaultTimeRange();
       })
     );
   }
@@ -94,6 +94,10 @@ export class PageTimeRangePreferenceService {
 
   public getGlobalDefaultTimeRange(): TimeRange {
     return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
+  }
+
+  private maybeGetCurrentTimeRange(): TimeRange | undefined {
+    return this.timeRangeService.maybeGetCurrentTimeRange();
   }
 }
 

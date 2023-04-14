@@ -34,7 +34,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   @ModelProperty({
     key: 'child-data-source',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: EntityTableDataSourceModel

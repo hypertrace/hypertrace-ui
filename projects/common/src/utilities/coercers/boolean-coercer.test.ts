@@ -17,7 +17,6 @@ describe('Boolean coercer', () => {
     expect(booleanCoercer.coerce(false)).toBe(false);
     expect(booleanCoercer.coerce(0)).toBe(false);
     expect(booleanCoercer.coerce(undefined)).toBe(false);
-    // tslint:disable-next-line: no-null-keyword
     expect(booleanCoercer.coerce(null)).toBe(false);
     expect(booleanCoercer.coerce(100)).toBe(true);
     expect(booleanCoercer.coerce('foo')).toBe(true);

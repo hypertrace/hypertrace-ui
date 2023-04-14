@@ -8,6 +8,7 @@ export const enum Color {
   Blue6 = '#0043ad',
   Blue5 = '#0053d7',
   Blue7 = '#003385',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   BlueGray1 = '#70a7ff',
   BlueGray2 = '#648fd2',
   BlueGray3 = '#5777a4',
@@ -53,6 +54,8 @@ export const enum Color {
   Red7 = '#bb1902',
   Red8 = '#6a0e01',
   Red9 = '#140300',
+  Turquoise1 = '#ecffff',
+  Turquoise3 = '#48d1cc',
   Brown1 = '#9e4c41',
   White = '#FFFFFF',
   Yellow1 = '#fffbeb',
@@ -64,6 +67,7 @@ export const enum Color {
   Yellow7 = '#bd9d00',
   Yellow8 = '#6d5b00',
   Yellow9 = '#181400',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   Aurora = '#27C675',
   Teal = '#01BCD6',
   Transparent = 'transparent',
@@ -79,7 +83,7 @@ export const getHexColorForString = (id: string): string => {
   const hash = hashCode(id);
   let rgb = '#';
   for (let i = 0; i < 3; i++) {
-    // tslint:disable-next-line: no-bitwise
+    // eslint-disable-next-line  no-bitwise
     const value = (hash >> (i * 8)) & 0xff;
     rgb += `00${value.toString(16)}`.substr(-2);
   }

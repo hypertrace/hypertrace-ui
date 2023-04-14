@@ -1,4 +1,4 @@
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 // Highlight Js provides few basic themes, here using one of those.
 // Since highlight.js provides the class names, we can also use our custom colors/theme as well
 @use '~highlight.js/scss/intellij-light';

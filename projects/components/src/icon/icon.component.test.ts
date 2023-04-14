@@ -1,4 +1,3 @@
-// tslint:disable:completed-docs
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatIcon } from '@angular/material/icon';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';

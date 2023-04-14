@@ -1,4 +1,4 @@
-// tslint:disable: max-file-line-count
+/* eslint-disable max-lines */
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Renderer2 } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';

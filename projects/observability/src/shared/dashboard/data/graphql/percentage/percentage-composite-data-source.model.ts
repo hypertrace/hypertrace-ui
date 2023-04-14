@@ -13,7 +13,6 @@ import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-a
 export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'numerator',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationDataSourceModel
@@ -24,7 +23,6 @@ export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<M
 
   @ModelProperty({
     key: 'denominator',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationDataSourceModel

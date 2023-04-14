@@ -24,7 +24,6 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
   public data$?: Observable<unknown>;
 
-  // tslint:disable-next-line:no-input-rename
   @Input('htLoadAsyncConfig')
   public config?: LoadAsyncConfig;
   private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);

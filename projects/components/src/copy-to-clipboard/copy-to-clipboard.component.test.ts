@@ -41,7 +41,6 @@ describe('Copy to Clipboard component', () => {
       }
     );
 
-    // tslint:disable-next-line: deprecation
     document.createElement = createElementSpy;
     document.body.appendChild = appendChildSpy;
     document.body.removeChild = removeChildSpy;

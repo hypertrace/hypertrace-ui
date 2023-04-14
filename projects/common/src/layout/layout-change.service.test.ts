@@ -82,7 +82,6 @@ describe('LayoutChangeService', () => {
   test('completes observable on destroy', () => {
     runFakeRxjs(({ expectObservable }) => {
       childService.publishLayoutChange();
-      // tslint:disable-next-line: no-lifecycle-call
       childService.ngOnDestroy();
       expectObservable(childLayout$).toBe('(x|)', voidMarbleDefinition);
     });
