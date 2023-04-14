@@ -43,9 +43,7 @@ export class IntervalDurationService {
     maximumDataPoints: number = 500
   ): TimeDuration[] {
     // Can make this configurable at some point, but for now, an interval musts produce at least 3 data points
-    const availableIntervals = this.getAvailableIntervals(timeRange, 3, maximumDataPoints);
-
-    return availableIntervals.length === 0 ? [IntervalDurationService.MAX_SUPPORTED_INTERVAL] : availableIntervals;
+    return this.getAvailableIntervals(timeRange, 3, maximumDataPoints);
   }
 
   public getClosestMatch(duration: TimeDuration, availableDurations: TimeDuration[]): TimeDuration | undefined {
@@ -77,9 +75,11 @@ export class IntervalDurationService {
   private getAvailableIntervals(timeRange: TimeRange, minDataPoints: number, maxDataPoints: number): TimeDuration[] {
     const timeRangeDuration = this.timeDurationService.getTimeRangeDuration(timeRange);
 
-    return IntervalDurationService.PREDEFINED_INTERVALS.filter(duration =>
+    const availableIntervals = IntervalDurationService.PREDEFINED_INTERVALS.filter(duration =>
       this.isValidDurationForTimeRange(duration, timeRangeDuration, minDataPoints, maxDataPoints)
     );
+
+    return availableIntervals.length === 0 ? [IntervalDurationService.MAX_SUPPORTED_INTERVAL] : availableIntervals;
   }
 
   private isValidDurationForTimeRange(
