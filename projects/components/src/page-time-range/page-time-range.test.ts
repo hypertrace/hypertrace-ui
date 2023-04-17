@@ -47,7 +47,7 @@ describe('Page time range component', () => {
     const timeRangeComponent = spectator.query(TimeRangeComponent);
     expect(timeRangeComponent).toExist();
 
-    spyOn(spectator.component, 'savePageTimeRange');
+    jest.spyOn(spectator.component, 'savePageTimeRange').mockImplementation(() => {});
     spectator.component.onTimeRangeSelected(timeRange);
     expect(spectator.component.savePageTimeRange).not.toHaveBeenCalled();
   });
@@ -72,7 +72,7 @@ describe('Page time range component', () => {
     const timeRangeComponent = spectator.query(TimeRangeComponent);
     expect(timeRangeComponent).toExist();
 
-    spyOn(spectator.component, 'savePageTimeRange');
+    jest.spyOn(spectator.component, 'savePageTimeRange').mockImplementation(() => {});
     spectator.component.onTimeRangeSelected(timeRange);
     expect(spectator.component.savePageTimeRange).not.toHaveBeenCalled();
   });
@@ -97,7 +97,7 @@ describe('Page time range component', () => {
     const timeRangeComponent = spectator.query(TimeRangeComponent);
     expect(timeRangeComponent).toExist();
 
-    spyOn(spectator.component, 'savePageTimeRange');
+    jest.spyOn(spectator.component, 'savePageTimeRange').mockImplementation(() => {});
     spectator.component.onTimeRangeSelected(selectedTimeRange);
     expect(spectator.component.savePageTimeRange).toHaveBeenCalled();
 

@@ -1,26 +1,27 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { LoggerService } from '@hypertrace/common';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { TextareaComponent } from './textarea.component';
 import { TraceTextareaModule } from './textarea.module';
 
 describe('Textarea Component', () => {
   let spectator: Spectator<TextareaComponent>;
-  let logSpy: jasmine.Spy;
 
   const createHost = createHostFactory({
     component: TextareaComponent,
     imports: [TraceTextareaModule, NoopAnimationsModule],
+    providers: [
+      mockProvider(LoggerService, {
+        warn: jest.fn()
+      })
+    ],
     declareComponent: false
-  });
-
-  beforeEach(() => {
-    logSpy = spyOn(console, 'warn');
   });
 
   test('should warn when placeholder is not provided', () => {
     spectator = createHost(`<ht-textarea></ht-textarea>`);
 
-    expect(logSpy).toHaveBeenCalled();
+    expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
   });
 
   test('should not warn when placeholder is provided', () => {
@@ -30,7 +31,7 @@ describe('Textarea Component', () => {
       }
     });
 
-    expect(logSpy).not.toHaveBeenCalled();
+    expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
   });
 
   test('should apply disabled attribute when disabled', () => {
