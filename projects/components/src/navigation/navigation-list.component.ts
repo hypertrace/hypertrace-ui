@@ -8,6 +8,7 @@ import {
   NavigationService,
   TypedSimpleChanges
 } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -127,7 +128,7 @@ export class NavigationListComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.navItems) {
+    if (changes.navItems && !isNil(this.navItems)) {
       this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
       // Must remain subscribed to in template to maintain time range functionality for activeItemChange.
