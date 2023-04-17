@@ -37,7 +37,7 @@ describe('File Display Component', () => {
     expect(spectator.query('.delete-icon')).toExist();
 
     // Delete file action
-    jest.spyOn(spectator.component.deleteClick, 'emit').mockImplementation(() => {});
+    jest.spyOn(spectator.component.deleteClick, 'emit');
     spectator.click(spectator.query('.delete-icon') as Element);
     expect(spectator.component.deleteClick.emit).toHaveBeenCalled();
 

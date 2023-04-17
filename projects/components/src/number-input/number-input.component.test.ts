@@ -58,7 +58,7 @@ describe('Number Input Component', () => {
     </ht-number-input>`);
 
     spectator.tick();
-    jest.spyOn(spectator.component.valueChange, 'emit').mockImplementation(() => {});
+    jest.spyOn(spectator.component.valueChange, 'emit');
     spectator.triggerEventHandler('input', 'ngModelChange', 7);
     expect(spectator.component.valueChange.emit).toHaveBeenCalledWith(7);
 
