@@ -67,7 +67,7 @@ export class NumberInputComponent implements ControlValueAccessor {
     return value;
   }
 
-  public onValueChange(value?: number | null): void {
+  public onValueChange(value?: number): void {
     const enforcedMinMaxValue = this.enforceMinMaxAndEmit(value);
     this.value = enforcedMinMaxValue;
     this.valueChange.emit(this.numberCoercer.coerce(enforcedMinMaxValue));
