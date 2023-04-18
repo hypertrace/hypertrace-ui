@@ -10,16 +10,17 @@ describe('Textarea Component', () => {
   const createHost = createHostFactory({
     component: TextareaComponent,
     imports: [TraceTextareaModule, NoopAnimationsModule],
-    providers: [
-      mockProvider(LoggerService, {
-        warn: jest.fn()
-      })
-    ],
     declareComponent: false
   });
 
   test('should warn when placeholder is not provided', () => {
-    spectator = createHost(`<ht-textarea></ht-textarea>`);
+    spectator = createHost(`<ht-textarea></ht-textarea>`, {
+      providers: [
+        mockProvider(LoggerService, {
+          warn: jest.fn()
+        })
+      ]
+    });
 
     expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
   });
@@ -28,10 +29,15 @@ describe('Textarea Component', () => {
     spectator = createHost(`<ht-textarea [placeholder]="placeholder"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST'
-      }
+      },
+      providers: [
+        mockProvider(LoggerService, {
+          warn: jest.fn()
+        })
+      ]
     });
 
-    expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
+    expect(spectator.inject(LoggerService).warn).not.toHaveBeenCalled();
   });
 
   test('should apply disabled attribute when disabled', () => {
