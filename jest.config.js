@@ -38,8 +38,6 @@ module.exports = {
       }
     ]
   ],
-  testEnvironment: 'jsdom',
-  testRunner: 'jest-jasmine2',
   watchPathIgnorePatterns: ['test-results'],
   collectCoverageFrom: [
     'src/**/*.ts',

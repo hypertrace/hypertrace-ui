@@ -356,7 +356,7 @@ describe('Explorer component', () => {
 
   test('updates URL with query param when query updated', fakeAsync(() => {
     init();
-    const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
+    const queryParamChangeSpy = jest.spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
     spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
