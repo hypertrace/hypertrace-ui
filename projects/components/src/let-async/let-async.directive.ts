@@ -35,7 +35,6 @@ export class LetAsyncDirective<T> implements DoCheck {
     this.context.$implicit = value;
   }
 
-  // tslint:disable-next-line: no-null-undefined-union async pipe could return either null or undefined
   private removeNulls(value: T | null | undefined): T | undefined {
     return value === null ? undefined : value;
   }

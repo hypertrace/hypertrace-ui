@@ -61,7 +61,7 @@ describe('File Upload Component', () => {
         maxFileCountValidator(1)
       ]
     );
-    spectator.setHostInput({ formControl: formControlWithValidators });
+    spectator.setHostInput({ formControl: formControlWithValidators as FormControl<never[] | null> });
     expect(formControlWithValidators.hasError('supportedFileTypes')).toBe(true);
     expect(formControlWithValidators.hasError('maxFileSize')).toBe(true);
     expect(formControlWithValidators.hasError('maxTotalSize')).toBe(true);

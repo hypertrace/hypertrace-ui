@@ -16,7 +16,6 @@ import { TableWidgetModel } from './table-widget.model';
 export class TableWidgetViewToggleModel extends TableWidgetModel implements ModelOnInit {
   @ModelProperty({
     key: 'views',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {

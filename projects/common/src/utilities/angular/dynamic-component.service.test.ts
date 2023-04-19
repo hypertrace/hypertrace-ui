@@ -1,4 +1,4 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,8 +15,9 @@ import { DynamicComponentService } from './dynamic-component.service';
 describe('Dynamic component service', () => {
   const injectionToken = new InjectionToken<string>('test token');
 
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
   @Component({
-    // tslint:disable-next-line: component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'dynamic-component',
     template: 'Dynamic component {{this.injected}}'
   })

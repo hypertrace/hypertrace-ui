@@ -13,7 +13,6 @@ export const assertUnreachable = (
 };
 
 export const throwIfNil = <T>(
-  // tslint:disable-next-line: no-null-undefined-union
   value: T | undefined | null,
   message: string = `Unexpectedly found undefined value`
 ): T => {
@@ -32,7 +31,6 @@ const ignoreFunctions = (first: unknown, second: unknown) => {
   }
 };
 
-// tslint:disable-next-line: no-null-undefined-union
 export const isNonEmptyString = (str: string | undefined | null): str is string =>
   str !== undefined && str !== null && str !== '';
 

@@ -14,14 +14,12 @@ describe('Graphql filter builder service', () => {
     userString: '',
     urlString: ''
   });
-  // tslint:disable-next-line: no-object-literal-type-assertion
   const attribute1: FilterAttribute = {
     name: 'attr1',
     displayName: 'Attribute 1',
     type: FilterAttributeType.Number
   };
 
-  // tslint:disable-next-line: no-object-literal-type-assertion
   const attribute2: FilterAttribute = {
     name: 'attr2',
     displayName: 'Attribute 2',

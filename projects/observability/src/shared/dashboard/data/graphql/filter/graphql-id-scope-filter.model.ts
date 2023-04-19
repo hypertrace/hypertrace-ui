@@ -22,7 +22,6 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
 
   @ModelProperty({
     key: 'operator',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       required: true,

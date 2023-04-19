@@ -20,7 +20,7 @@ export const applicationFlowDefaultJson: DashboardDefaultConfiguration = {
     children: [
       {
         type: 'topology-widget',
-        // tslint:disable-next-line: no-invalid-template-strings
+
         layoutType: '${layoutType}',
         data: {
           type: 'topology-data-source',

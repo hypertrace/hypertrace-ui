@@ -121,4 +121,15 @@ describe('Paginator component', () => {
     const paginator = spectator.query('.paginator')!;
     expect(paginator).toBeNull();
   });
+
+  test('should show the paginator when totalItems is at least minItemsBeforeDisplay', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 10
+      }
+    });
+
+    const paginator = spectator.query('.paginator')!;
+    expect(paginator).toBeTruthy();
+  });
 });

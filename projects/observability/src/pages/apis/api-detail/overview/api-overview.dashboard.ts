@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Color } from '@hypertrace/common';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
@@ -11,7 +12,6 @@ import {
 } from '../../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 
-// tslint:disable: max-file-line-count
 export const apiOverviewDashboard: DashboardDefaultConfiguration = {
   location: 'API_OVERVIEW',
   json: {

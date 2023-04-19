@@ -35,7 +35,6 @@ export class RadarWidgetModel {
   @ModelProperty({
     key: 'comparison-durations',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -60,7 +59,6 @@ export class RadarWidgetModel {
     key: 'legend-position',
     required: false,
     displayName: 'Legend Position',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [LegendPosition.Bottom, LegendPosition.None]

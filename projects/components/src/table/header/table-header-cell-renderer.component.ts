@@ -19,7 +19,10 @@ import { IconSize } from '../../icon/icon-size';
 import { ModalSize } from '../../modal/modal';
 import { ModalService } from '../../modal/modal.service';
 import { TableCellAlignmentType } from '../cells/types/table-cell-alignment-type';
-import { TableEditColumnsModalComponent } from '../columns/table-edit-columns-modal.component';
+import {
+  TableEditColumnsModalComponent,
+  TableEditColumnsModalConfig
+} from '../columns/table-edit-columns-modal.component';
 import { TableCdkColumnUtil } from '../data/table-cdk-column-util';
 import { TableSortDirection } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
@@ -117,7 +120,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public metadata?: FilterAttribute[];
 
   @Input()
-  public availableColumns?: TableColumnConfigExtended[] = [];
+  public availableColumns: TableColumnConfigExtended[] = [];
+
+  @Input()
+  public defaultColumns: TableColumnConfigExtended[] = [];
 
   @Input()
   public columnConfig?: TableColumnConfigExtended;
@@ -265,12 +271,15 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onEditColumns(): void {
     this.modalService
-      .createModal<TableColumnConfigExtended[], TableColumnConfigExtended[]>({
+      .createModal<TableEditColumnsModalConfig, TableColumnConfigExtended[]>({
         content: TableEditColumnsModalComponent,
         size: ModalSize.Medium,
         showControls: true,
         title: 'Edit Columns',
-        data: this.availableColumns ?? []
+        data: {
+          availableColumns: this.availableColumns,
+          defaultColumns: this.defaultColumns
+        }
       })
       .closed$.subscribe(columnConfigs => {
         this.columnsChange.emit(columnConfigs);

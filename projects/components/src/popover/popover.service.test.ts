@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Component } from '@angular/core';
 import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { NavigationService } from '@hypertrace/common';

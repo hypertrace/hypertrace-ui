@@ -18,7 +18,6 @@ export const enum UploadFileType {
  * @description
  * Provides a set of validators specifically for file upload component that can be used by form controls.
  */
-// tslint:disable:no-null-keyword
 
 /**
  * @description
