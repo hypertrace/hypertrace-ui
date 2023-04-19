@@ -42,7 +42,7 @@ describe('Combo Box component', () => {
     );
     spectator.tick();
 
-    spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
     const element = spectator.query('.trigger-input');
 
     expect(element).toHaveValue('test-text');
@@ -63,7 +63,7 @@ describe('Combo Box component', () => {
     );
     spectator.tick();
 
-    spyOn(spectator.component.clear, 'emit');
+    jest.spyOn(spectator.component.clear, 'emit');
     const element = spectator.query('.trigger-input');
     expect(element).toHaveValue('test-text');
 
@@ -90,7 +90,7 @@ describe('Combo Box component', () => {
     );
     spectator.tick();
 
-    spyOn(spectator.component.escape, 'emit');
+    jest.spyOn(spectator.component.escape, 'emit');
     const trigger = spectator.query('.trigger-input');
     expect(trigger).toHaveValue('test-text');
 
@@ -120,7 +120,7 @@ describe('Combo Box component', () => {
     );
     spectator.tick();
 
-    spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
     spectator.click('.popover-trigger');
     spectator.tick();
 
@@ -150,7 +150,7 @@ describe('Combo Box component', () => {
     );
     spectator.tick();
 
-    spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
     spectator.click('.popover-trigger');
     spectator.tick();
 
@@ -179,8 +179,8 @@ describe('Combo Box component', () => {
       }
     );
 
-    spyOn(spectator.component.textChange, 'emit');
-    spyOn(spectator.component.enter, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.enter, 'emit');
     spectator.click('.trigger-clear-button'); // Need to clear the 'test-text' to unfilter all options
     spectator.click('.popover-trigger');
     spectator.tick();
@@ -218,8 +218,8 @@ describe('Combo Box component', () => {
       }
     );
 
-    spyOn(spectator.component.textChange, 'emit');
-    spyOn(spectator.component.enter, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.enter, 'emit');
     spectator.click('.trigger-clear-button'); // Need to clear the 'test-text' to unfilter all options
     spectator.click('.popover-trigger');
     spectator.tick();
@@ -257,8 +257,8 @@ describe('Combo Box component', () => {
       }
     );
 
-    spyOn(spectator.component.textChange, 'emit');
-    spyOn(spectator.component.selection, 'emit');
+    jest.spyOn(spectator.component.textChange, 'emit');
+    jest.spyOn(spectator.component.selection, 'emit');
     spectator.click('.trigger-clear-button'); // Need to clear the 'test-text' to unfilter all options
     spectator.click('.popover-trigger');
     spectator.tick();

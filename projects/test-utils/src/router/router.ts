@@ -11,7 +11,7 @@ export const patchRouterNavigateForTest = (spectator: { inject: Spectator<unknow
   const ngZone = spectator.inject<NgZone>(NgZone);
   const originalNavByUrl = router.navigateByUrl.bind(router);
 
-  spyOn(router, 'navigateByUrl').and.callFake((...args: unknown[]) =>
+  jest.spyOn(router, 'navigateByUrl').mockImplementation((...args: unknown[]) =>
     ensureRunFakeAsync(() => {
       const returned = ngZone.run(() => originalNavByUrl(...args) as Promise<boolean>);
       tick();
