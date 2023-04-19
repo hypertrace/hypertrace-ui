@@ -1,5 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
-import { ARRAY_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { Specification } from '../../../../../shared/graphql/model/schema/specifier/specification';
 import { CompositeSpecification } from '../../../../../shared/graphql/model/specifications/composite-specification';
 import { SpecificationBuilder } from '../../../../../shared/graphql/request/builders/specification/specification-builder';
@@ -13,7 +13,7 @@ export class CompositeSpecificationModel extends SpecificationModel<CompositeSpe
   @ModelProperty({
     key: 'specifications',
     displayName: 'Specifications',
-    type: ARRAY_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type
   })
   public specifications: Specification[] | Dictionary<Specification> = [];
 
