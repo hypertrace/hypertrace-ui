@@ -90,8 +90,8 @@ describe('Explore query editor', () => {
       }),
       mockProvider(IntervalDurationService, {
         availableIntervals$: of('AUTO'),
-        getAutoDurationFromTimeDurations: () => new TimeDuration(15, TimeUnit.Second),
-        getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
+        getAutoDurationFromTimeDurations: () => new TimeDuration(1, TimeUnit.Minute),
+        getAutoDuration: () => new TimeDuration(1, TimeUnit.Minute)
       }),
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Disabled)

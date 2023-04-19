@@ -35,12 +35,7 @@ describe('Interval duration service', () => {
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe(marblePattern, {
-        x: [
-          new TimeDuration(15, TimeUnit.Second),
-          new TimeDuration(30, TimeUnit.Second),
-          new TimeDuration(1, TimeUnit.Minute),
-          new TimeDuration(5, TimeUnit.Minute)
-        ],
+        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)],
         y: [
           new TimeDuration(1, TimeUnit.Minute),
           new TimeDuration(5, TimeUnit.Minute),
@@ -74,12 +69,7 @@ describe('Interval duration service', () => {
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe('x--', {
-        x: [
-          new TimeDuration(15, TimeUnit.Second),
-          new TimeDuration(30, TimeUnit.Second),
-          new TimeDuration(1, TimeUnit.Minute),
-          new TimeDuration(5, TimeUnit.Minute)
-        ]
+        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)]
       });
     });
   });
