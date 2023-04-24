@@ -162,7 +162,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
       undefined
     );
@@ -207,7 +207,7 @@ describe('Explorer component', () => {
         context: ObservabilityTraceType.Api,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
       undefined
     );
@@ -241,7 +241,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
       undefined
     );
@@ -291,7 +291,7 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second),
+        interval: new TimeDuration(1, TimeUnit.Minute),
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
       undefined
@@ -359,7 +359,7 @@ describe('Explorer component', () => {
     const queryParamChangeSpy = jest.spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
-    spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
+    spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(5, TimeUnit.Minute));
     spectator.query(ExploreQueryEditorComponent)!.updateGroupByExpression(
       {
         keyExpressions: [{ key: 'apiName' }],
@@ -375,7 +375,7 @@ describe('Explorer component', () => {
       group: ['apiName'],
       limit: 6,
       other: true,
-      interval: '30s'
+      interval: '5m'
     });
   }));
 
@@ -390,7 +390,7 @@ describe('Explorer component', () => {
             group: 'apiName',
             limit: '6',
             other: 'true',
-            interval: '30s'
+            interval: '5m'
           })
         )
       }
@@ -407,7 +407,7 @@ describe('Explorer component', () => {
       visualizationOptions: { type: CartesianSeriesVisualizationType.Line }
     });
     expect(spectator.query(ExploreQueryIntervalEditorComponent)?.interval).toEqual(
-      new TimeDuration(30, TimeUnit.Second)
+      new TimeDuration(5, TimeUnit.Minute)
     );
   }));
 });
