@@ -1,4 +1,3 @@
-// tslint:disable:no-namespace
 export enum SupportedFileType {
   Json = 'json',
   Yaml = 'yaml'
@@ -21,6 +20,7 @@ export const SUPPORTED_FILE_TYPE_METADATA_MAP: Map<SupportedFileType, SupportedF
   ]
 ]);
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace FileTypeUtil {
   export const supportedFileExtensions = (fileTypes: SupportedFileType[]): string[] =>
     fileTypes.flatMap(fileType => SUPPORTED_FILE_TYPE_METADATA_MAP.get(fileType)?.extension ?? []);
