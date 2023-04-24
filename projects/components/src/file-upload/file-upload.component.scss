@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px 0;
 
   .upload-section {
     @include center-contents;
@@ -55,5 +56,24 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+  }
+}
+
+.file-requirements-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .item {
+    @include footnote($gray-4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .icon {
+      color: $green-4;
+    }
   }
 }
