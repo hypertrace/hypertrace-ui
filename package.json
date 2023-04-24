@@ -121,7 +121,7 @@
     "jest-html-reporter": "^3.3.0",
     "jest-junit": "15.0.0",
     "lodash": "^4.17.21",
-    "ng-mocks": "^14.7.3",
+    "ng-mocks": "^14.10.0",
     "ng-packagr": "^14.2.2",
     "postcss": "^8.3.9",
     "postcss-import": "^14.0.2",
