@@ -57,7 +57,7 @@ describe('InputPillListComponent', () => {
       }
     });
 
-    const valueChangeEmitterSpy = spyOn(spectator.component.valueChange, 'next');
+    const valueChangeEmitterSpy = jest.spyOn(spectator.component.valueChange, 'next');
 
     // Header section
     expect(spectator.query('.header')).toExist();

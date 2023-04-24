@@ -1,4 +1,4 @@
-@import 'mixins';
+@use 'mixins' as m;
 
 .edit-modal {
   width: 100%;
@@ -7,34 +7,55 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  padding-left: 22px;
-  padding-right: 22px;
   padding-bottom: 6px;
+
+  .reset-button {
+    margin-left: 18px;
+  }
 
   .column-items {
     height: 100%;
     overflow: auto;
-
-    .column-item {
-      height: 36px;
-      padding: 2px 8px;
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-
-      &:hover {
-        background: $gray-1;
-      }
-    }
+    padding: 0 12px;
+    margin-top: 8px;
+    border-top: 1px solid m.$gray-2;
   }
 
   .controls {
     display: flex;
-    border-top: 1px solid $gray-2;
-    padding-top: 24px;
+    border-top: 1px solid m.$gray-2;
+    padding: 20px 12px 0 12px;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+.column-item-container {
+  height: 36px;
+  padding: 2px 8px;
+  cursor: move;
+  background: white;
+
+  display: flex;
+  align-items: center;
+
+  .vertical-grab-handle-icon {
+    color: m.$gray-3;
+    align-self: center;
+    cursor: move;
+  }
+
+  .checkbox {
+    margin-left: 14px;
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: m.$gray-1;
+  }
+
+  &:active {
+    @include m.raised-shadow-hover();
+    border: none;
   }
 }
