@@ -22,7 +22,7 @@ describe('Panel Title Component', () => {
   test('should render the component with action icon correctly', () => {
     const spectator = createHost(`<ht-panel-title actionIcon="${IconType.Edit}"><div>Test</div></ht-panel-title>`);
     expect(spectator.query(ButtonComponent)).toExist();
-    const emitSpy = spyOn(spectator.component.actionClicked, 'emit');
+    const emitSpy = jest.spyOn(spectator.component.actionClicked, 'emit');
     spectator.click('.button');
     expect(emitSpy).toHaveBeenCalled();
   });

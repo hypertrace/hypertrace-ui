@@ -11,9 +11,6 @@ import { TimeUnit } from './time-unit.type';
 @Injectable({ providedIn: 'root' })
 export class IntervalDurationService {
   private static readonly PREDEFINED_INTERVALS: TimeDuration[] = [
-    new TimeDuration(1, TimeUnit.Second),
-    new TimeDuration(15, TimeUnit.Second),
-    new TimeDuration(30, TimeUnit.Second),
     new TimeDuration(1, TimeUnit.Minute),
     new TimeDuration(5, TimeUnit.Minute),
     new TimeDuration(15, TimeUnit.Minute),

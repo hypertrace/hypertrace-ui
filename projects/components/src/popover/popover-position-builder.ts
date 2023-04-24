@@ -120,6 +120,8 @@ export class PopoverPositionBuilder {
         return globalPosition
           .left(`${popoverPosition.customLocation!.x}px`)
           .top(`${popoverPosition.customLocation!.y}px`);
+      case PopoverFixedPositionLocation.BottomCenter:
+        return globalPosition.centerHorizontally().centerVertically().bottom();
       case PopoverFixedPositionLocation.RightUnderHeader:
       default:
         return globalPosition.right('0').top(this.headerHeightProvider.globalHeaderHeight ?? '0');
