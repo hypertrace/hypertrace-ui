@@ -129,7 +129,7 @@ describe('Waterfall Chart component', () => {
     });
     spectator.tick();
 
-    const spy = spyOn(spectator.component, 'onToggleAll');
+    const spy = jest.spyOn(spectator.component, 'onToggleAll');
     spectator.component.onCollapseAll();
     spectator.tick(200);
 
@@ -144,7 +144,7 @@ describe('Waterfall Chart component', () => {
     });
     spectator.tick();
 
-    const spy = spyOn(spectator.component, 'onToggleAll');
+    const spy = jest.spyOn(spectator.component, 'onToggleAll');
     spectator.component.onExpandAll();
     spectator.tick(200);
 
