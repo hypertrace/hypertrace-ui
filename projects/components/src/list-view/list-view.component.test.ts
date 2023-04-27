@@ -6,6 +6,7 @@ import { mockProvider } from '@ngneat/spectator/jest';
 import { ListViewComponent, ListViewHeader, ListViewRecord } from './list-view.component';
 
 describe('List View Component', () => {
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
   @Component({
     selector: 'ht-test-host-component',
     template: ` <ht-list-view [records]="this.records" [header]="this.header"></ht-list-view> `

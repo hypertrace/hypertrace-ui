@@ -62,14 +62,12 @@ describe('Icon Registry Service', () => {
       getSvgElement: expect.any(Function)
     });
 
-    runFakeRxjs(({ expectObservable }) => {
-      if (svgRenderInfo.iconRenderType === 'svg') {
+    if (svgRenderInfo.iconRenderType === 'svg') {
+      runFakeRxjs(({ expectObservable }) => {
         expectObservable(svgRenderInfo.getSvgElement()).toBe('(x|)', {
           x: 'fake-svg'
         });
-      } else {
-        fail('Should be unreachable, this verification was made above');
-      }
-    });
+      });
+    }
   });
 });

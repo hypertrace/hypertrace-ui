@@ -59,7 +59,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
   @Output()
-  // tslint:disable-next-line:no-output-native
+  // eslint-disable-next-line @angular-eslint/no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
   public readonly enableSearchOnTrigger$: Observable<boolean>;

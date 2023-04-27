@@ -7,7 +7,7 @@ import { ModalConfig, ModalRef, ModalSize, MODAL_DATA } from './modal';
 import { ModalContainerComponent } from './modal-container.component';
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'test-modal-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

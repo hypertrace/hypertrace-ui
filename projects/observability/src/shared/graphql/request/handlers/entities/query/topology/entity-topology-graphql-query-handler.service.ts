@@ -123,8 +123,10 @@ export class EntityTopologyGraphQlQueryHandlerService
     }
   }
 
-  public convertResponse(response: TopologyServerResponse, request: GraphQlEntityTopologyRequest): EntityNode[] {
-    return this.convertToEntityNodes(request, response.results);
+  public convertResponse(response: unknown, request: GraphQlEntityTopologyRequest): EntityNode[] {
+    const serverResponse = response as TopologyServerResponse;
+
+    return this.convertToEntityNodes(request, serverResponse.results);
   }
 
   private convertToEntityNodes(

@@ -92,7 +92,6 @@ export class ModalContainerComponent {
   }
 
   private isModalDimension(size: unknown): size is ModalDimension {
-    // tslint:disable-next-line:strict-type-predicates
     return typeof size === 'object' && size !== null && 'width' in (size as ModalDimension);
   }
 

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { WidgetRenderer } from './widget-renderer';
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
 export abstract class InteractiveDataWidgetRenderer<TModel extends object, TData = unknown> extends WidgetRenderer<
   TModel,
   TData

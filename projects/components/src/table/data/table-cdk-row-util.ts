@@ -10,7 +10,7 @@ import {
   TreeTableRow
 } from '../table-api';
 
-// tslint:disable-next-line:no-namespace
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace TableCdkRowUtil {
   /****************************
    * State Creation

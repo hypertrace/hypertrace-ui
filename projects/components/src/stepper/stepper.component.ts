@@ -12,6 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
+import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { merge, Observable } from 'rxjs';
@@ -34,7 +35,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
           <-- NOTE: completed and step control both should not be present when in linear flow. So when step control is
           provided, we explicitly set completed to false so that the stepper can work with teh form validity status -->
           <mat-step
-            [completed]="step?.stepControl ? false : step.completed"
+            [completed]="step?.stepControl?.valid ?? step.completed"
             [stepControl]="step?.stepControl"
             [optional]="step.optional"
             [editable]="step.editable"
@@ -44,7 +45,10 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
             </ng-template>
             <ng-container *ngTemplateOutlet="step.content"></ng-container>
             <ng-template matStepperIcon="edit">
-              <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ht-icon icon="${IconType.Edit}" size="${IconSize.ExtraSmall}"></ht-icon>
+            </ng-template>
+            <ng-template matStepperIcon="done">
+              <ht-icon icon="${IconType.Checkmark}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>

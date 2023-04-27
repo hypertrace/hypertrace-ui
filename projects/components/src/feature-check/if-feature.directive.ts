@@ -9,7 +9,7 @@ export class IfFeatureDirective implements OnChanges {
   @Input('htIfFeature')
   public featureState?: FeatureState;
 
-  // tslint:disable-next-line:no-input-rename
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('htIfFeatureElse')
   public elseContent?: TemplateRef<unknown>;
 

@@ -8,7 +8,7 @@ export class CartesianNoDataMessage {
 
   public constructor(
     private readonly hostElement: Element,
-    private readonly series: Series<{}>[],
+    private readonly series: Series<unknown>[],
     private readonly message: string = 'No data to display'
   ) {}
 

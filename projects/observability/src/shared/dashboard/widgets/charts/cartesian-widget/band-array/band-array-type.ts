@@ -6,7 +6,6 @@ export const BAND_ARRAY_TYPE: ModelPropertyTypeRegistrationInformation = {
   validator: seriesArrayJsonValidation
 };
 
-// tslint:disable-next-line: only-arrow-functions required exported function for AOT
 export function seriesArrayJsonValidation(value: unknown, allowUndefinedOrNull: boolean): string | undefined {
   if (allowUndefinedOrNull && isNil(value)) {
     return undefined;

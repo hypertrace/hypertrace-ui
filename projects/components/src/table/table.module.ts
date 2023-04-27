@@ -14,6 +14,7 @@ import { TableCellRendererConstructor } from './cells/table-cell-renderer';
 import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './cells/table-cells.module';
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
 import { TableComponent } from './table.component';
+import { DraggableListModule } from '../draggable-list/draggable-list.module';
 
 @NgModule({
   imports: [
@@ -27,12 +28,12 @@ import { TableComponent } from './table.component';
     LoadAsyncModule,
     LetAsyncModule,
     ButtonModule,
-    CheckboxModule
+    CheckboxModule,
+    DraggableListModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class TableModule {
   public static withCellParsers(
     cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[]

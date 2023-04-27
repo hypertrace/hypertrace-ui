@@ -14,11 +14,10 @@ export const traceSequenceDashboard: DashboardDefaultConfiguration = {
         title: 'Sequence Diagram',
         data: {
           type: 'trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
           'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
+
           'entry-span-id': '${spanId}',
-          // tslint:disable-next-line: no-invalid-template-strings
+
           'start-time': '${startTime}'
         }
       }

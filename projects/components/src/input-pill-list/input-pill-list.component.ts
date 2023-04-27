@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   NG_VALUE_ACCESSOR,
   Validators
 } from '@angular/forms';
@@ -98,16 +98,16 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
 
-  public readonly form: FormGroup = new FormGroup({
-    inputBuffer: new FormControl(''),
-    pillControls: new FormArray([])
+  public readonly form: UntypedFormGroup = new UntypedFormGroup({
+    inputBuffer: new UntypedFormControl(''),
+    pillControls: new UntypedFormArray([])
   });
 
   public currentValues: string[] = [];
 
   private propagateControlValueChange?: (value: string[]) => void;
   private propagateControlValueChangeOnTouch?: (value: string[]) => void;
-  public constructor(private readonly formBuilder: FormBuilder) {}
+  public constructor(private readonly formBuilder: UntypedFormBuilder) {}
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.values) {
       this.initForm(this.values);
@@ -170,8 +170,8 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
-  public get pillControlsArray(): FormArray {
-    return this.form.get('pillControls') as FormArray;
+  public get pillControlsArray(): UntypedFormArray {
+    return this.form.get('pillControls') as UntypedFormArray;
   }
 
   private addValues(values: string[]): void {
@@ -189,7 +189,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     this.propagateControlValueChangeOnTouch?.(value);
   }
 
-  private buildFormArray(values: string[]): FormArray {
+  private buildFormArray(values: string[]): UntypedFormArray {
     return this.formBuilder.array(values.map(value => this.buildSinglePillForm(value)));
   }
 
@@ -197,12 +197,12 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     return (this.pillControlsArray.value ?? []).map((pill: { value: string }) => pill.value);
   }
 
-  private buildSinglePillForm(value: string): FormGroup {
-    return new FormGroup({ value: new FormControl(value, Validators.required) });
+  private buildSinglePillForm(value: string): UntypedFormGroup {
+    return new UntypedFormGroup({ value: new UntypedFormControl(value, Validators.required) });
   }
 
-  private get inputBufferFormControl(): FormControl {
-    return this.form.get('inputBuffer') as FormControl;
+  private get inputBufferFormControl(): UntypedFormControl {
+    return this.form.get('inputBuffer') as UntypedFormControl;
   }
 
   private initForm(values: string[]): void {

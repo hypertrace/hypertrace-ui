@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'htMemoize'
 })
 export class MemoizePipe implements PipeTransform {
-  // tslint:disable-next-line: no-any any required for template type check
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public transform<TFunction extends (this: undefined, ...args: any[]) => unknown>(
     func: TFunction,
     ...args: Parameters<TFunction>

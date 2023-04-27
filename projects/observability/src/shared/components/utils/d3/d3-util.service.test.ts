@@ -48,7 +48,6 @@ describe('D3 util service', () => {
 
     expect(selection.attr('test')).toBe('foo');
     // Null should clear and return the selection
-    // tslint:disable-next-line: no-null-keyword
     expect(selection.attr('test', null).attr('test')).toBe(null);
 
     expect(selection.property('foo1', 'bar1').property('foo1')).toBe('bar1');

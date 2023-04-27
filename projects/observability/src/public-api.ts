@@ -102,6 +102,8 @@ export { SpanDetailTab } from './shared/components/span-detail/span-detail-tab';
 
 export * from './shared/components/span-detail/span-detail.component';
 export * from './shared/components/span-detail/span-detail.module';
+export * from './shared/components/span-detail/request/span-request-detail.module';
+export * from './shared/components/span-detail/response/span-response-detail.module';
 export { SpanDetailLayoutStyle } from './shared/components/span-detail/span-detail-layout-style';
 
 // Specifications
