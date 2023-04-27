@@ -183,11 +183,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       </ng-container>
 
       <!-- Pagination -->
-      <div
+      <!-- <div
         class="pagination-controls"
         *ngIf="this.pageable"
         [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
       >
+       -->
+      <div class="pagination-controls" *ngIf="this.pageable">
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
