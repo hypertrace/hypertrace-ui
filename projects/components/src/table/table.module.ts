@@ -1,3 +1,4 @@
+import { PortalModule } from '@angular/cdk/portal';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -29,7 +30,8 @@ import { DraggableListModule } from '../draggable-list/draggable-list.module';
     LetAsyncModule,
     ButtonModule,
     CheckboxModule,
-    DraggableListModule
+    DraggableListModule,
+    PortalModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]

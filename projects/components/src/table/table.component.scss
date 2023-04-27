@@ -12,6 +12,9 @@ $header-height: 32px;
   width: 100%;
   overflow: auto;
   background-color: white;
+  &.paginator-after-last-row {
+    /*height: unset;*/
+  }
 }
 
 .title-row {
@@ -22,7 +25,7 @@ $header-height: 32px;
   @include overline($gray-4);
 }
 
-.bottom-margin {
+.table:not(.paginator-after-last-row) .bottom-margin {
   margin-bottom: $paginator-height; // Leave space for pagination controls
 }
 
@@ -40,6 +43,9 @@ $header-height: 32px;
     background: $gray-1;
     border-bottom: 1px solid $gray-2;
   }
+}
+.paginator-after-last-row .header-row {
+  /*position: absolute;*/
 }
 
 .data-row {
@@ -140,8 +146,16 @@ $header-height: 32px;
 }
 
 .pagination-controls {
-  position: fixed;
+  position: sticky;
   width: 100%;
   bottom: 0;
   background: white;
+}
+.is-table-full-page .pagination-controls {
+  position: fixed;
+}
+.paginator-after-last-row .pagination-controls {
+  position: static; /* TODO: position is being set directly on the element so we need to use a class for that instead */
+  bottom: unset;
+  background-color: red;
 }

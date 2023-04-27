@@ -14,7 +14,8 @@ import {
   OnDestroy,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
@@ -27,7 +28,7 @@ import {
 } from '@hypertrace/common';
 import { debounce, isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -49,6 +50,7 @@ import {
   TableColumnConfig,
   TableFilter,
   TableMode,
+  TablePaginatorLocation,
   TableRow,
   TableSelectionMode,
   TableSortDirection,
@@ -60,14 +62,20 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None, // eslint-disable-line @angular-eslint/use-component-view-encapsulation
   template: `
-    <div class="table">
+    <!--<div class="table-wrapper">-->
+    <div
+      class="table"
+      [class.paginator-after-last-row]="this.paginatorLocation === '${TablePaginatorLocation.AfterLastRow}'"
+    >
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
         [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
+        [class.is-table-full-page]="this.isTableFullPage"
         class="table"
       >
         <!-- Columns -->
@@ -170,6 +178,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         <ng-container *ngIf="this.isDetailType()">
           <cdk-row *cdkRowDef="let row; columns: [this.expandedDetailColumnConfig.id]" class="expandable-row"></cdk-row>
         </ng-container>
+
+        <!-- Footer Row -->
+        <!--<ng-container cdkColumnDef="paginator">-->
+        <!--<td cdk-footer-cell *cdkFooterCellDef [attr.colspan]="'100%'" class="after-last-row">
+            <ng-template [cdkPortalOutlet]="this.paginatorPortal"></ng-template>
+          </td>-->
+        <!--</ng-container>-->
       </cdk-table>
 
       <!-- State Watcher -->
@@ -183,11 +198,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
       </ng-container>
 
       <!-- Pagination -->
-      <div
-        class="pagination-controls"
-        *ngIf="this.pageable"
-        [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
-      >
+      <div class="pagination-controls" *ngIf="this.pageable">
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
@@ -197,6 +208,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
         ></ht-paginator>
       </div>
     </div>
+    <!--</div>-->
   `
 })
 export class TableComponent
@@ -298,6 +310,9 @@ export class TableComponent
   @Input()
   public maxRowHeight?: string;
 
+  @Input()
+  public paginatorLocation: TablePaginatorLocation = TablePaginatorLocation.Overlay;
+
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
 
@@ -387,6 +402,10 @@ export class TableComponent
     this.filters$
   ]).pipe(map(([params]) => this.calculateDefaultPagination(params)));
   public readonly currentPage$: Observable<Partial<PageEvent>> = merge(this.pageSubject, this.paginationReset$);
+  public readonly visibleColumnCount$: Observable<number> = this.visibleColumnConfigs$.pipe(
+    startWith([]),
+    map(columns => columns.length)
+  );
 
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
