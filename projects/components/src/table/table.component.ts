@@ -148,7 +148,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row"></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row" sticky></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->

@@ -8,9 +8,9 @@ $header-height: 32px;
   flex-direction: column;
   flex: 1 1;
   min-height: inherit;
-  height: 100%;
-  width: 100%;
-  overflow: auto;
+  // height: 100%;
+  // width: 100%;
+  // overflow: auto;
   background-color: white;
 }
 
@@ -140,7 +140,7 @@ $header-height: 32px;
 }
 
 .pagination-controls {
-  position: fixed;
+  // position: fixed;
   width: 100%;
   bottom: 0;
   background: white;
