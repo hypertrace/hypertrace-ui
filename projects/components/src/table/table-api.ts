@@ -89,3 +89,8 @@ export const enum TableSelectionMode {
   Single = 'single',
   Multiple = 'multiple'
 }
+
+export const enum TablePaginatorLocation {
+  Overlay = 'overlay',
+  AfterLastRow = 'after-last-row'
+}

@@ -49,6 +49,7 @@ import {
   TableColumnConfig,
   TableFilter,
   TableMode,
+  TablePaginatorLocation,
   TableRow,
   TableSelectionMode,
   TableSortDirection,
@@ -61,7 +62,11 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table">
+    <div
+      class="table"
+      [class.paginator-after-last-row]="this.paginatorLocation === '${TablePaginatorLocation.AfterLastRow}'"
+      [class.selection-mode-multiple]="this.selectionMode === '${TableSelectionMode.Multiple}'"
+    >
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
@@ -299,6 +304,9 @@ export class TableComponent
 
   @Input()
   public maxRowHeight?: string;
+
+  @Input()
+  public paginatorLocation: TablePaginatorLocation = TablePaginatorLocation.Overlay;
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
