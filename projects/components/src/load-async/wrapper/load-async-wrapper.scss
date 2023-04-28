@@ -1,9 +1,3 @@
-@import 'layout';
-
-:host {
-  @include fill-container();
-}
-
 .custom-templated-message {
   display: flex;
   height: 100%;
