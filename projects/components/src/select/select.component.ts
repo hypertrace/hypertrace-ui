@@ -15,7 +15,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty, isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
@@ -261,6 +261,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
   public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
+    shareReplay(1),
     map(searchText => !isEmpty(searchText))
   );
 
