@@ -136,7 +136,7 @@ $header-height: 32px;
   height: calc(100% - #{$header-height});
   width: 100%;
   position: absolute;
-  background: transparent;
+  background: white;
 }
 
 .pagination-controls {
