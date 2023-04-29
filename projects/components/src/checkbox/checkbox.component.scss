@@ -1,6 +1,7 @@
 @import 'color-palette';
 
 :host {
+
   ::ng-deep .mat-checkbox-checked .mat-checkbox-background,
   .mat-checkbox-indeterminate {
     background-color: $blue-4;

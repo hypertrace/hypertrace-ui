@@ -401,6 +401,11 @@ export { ActionableTooltipDirective } from './tooltip/actionable/actionable-tool
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
 
+// Tree With Checkboxes
+export * from './tree-with-checkboxes/tree-with-checkboxes.component';
+export * from './tree-with-checkboxes/tree-with-checkboxes.module';
+export * from './tree-with-checkboxes/tree-node-types';
+
 // Filter Url Service
 export * from './filtering/filter/filter-url.service';
 
