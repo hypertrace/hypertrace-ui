@@ -12,6 +12,11 @@ $header-height: 32px;
   width: 100%;
   overflow: auto;
   background-color: white;
+
+  &.detail {
+    display: grid;
+    align-content: start;
+  }
 }
 
 .title-row {
@@ -35,6 +40,7 @@ $header-height: 32px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
+  min-width: 0;
 
   .header-cell {
     background: $gray-1;
@@ -45,6 +51,7 @@ $header-height: 32px;
 .data-row {
   display: flex;
   flex-direction: row;
+  min-width: 0;
 
   &.selectable {
     cursor: pointer;
@@ -70,6 +77,14 @@ $header-height: 32px;
     .data-cell {
       background: $gray-1;
     }
+  }
+}
+
+.expandable-row {
+  display: flex;
+
+  .expanded-cell {
+    flex: 1 1 auto;
   }
 }
 

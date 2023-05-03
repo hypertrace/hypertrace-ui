@@ -61,13 +61,13 @@ import { TableColumnConfigExtended, TableService } from './table.service';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table">
+    <div class="table" [ngClass]="this.mode">
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
-        [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
+        [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '', this.mode]"
         class="table"
       >
         <!-- Columns -->
