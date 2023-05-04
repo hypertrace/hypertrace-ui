@@ -12,6 +12,7 @@ import { ButtonSize, ButtonStyle, ButtonType, ButtonVariant } from './button';
     <ht-event-blocker event="click" class="button-container" [enabled]="this.disabled">
       <button
         class="button"
+        role="button"
         [ngClass]="this.getStyleClasses()"
         [htTrack]
         [htTrackLabel]="this.label"
