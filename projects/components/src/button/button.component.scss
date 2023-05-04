@@ -65,7 +65,7 @@
   }
 
   &.quaternary {
-    @include button-style($blue-1, $blue-2, $blue-4, $blue-4);
+    @include button-style($blue-1, $blue-2, $blue-6, $blue-6);
   }
 
   &.destructive {

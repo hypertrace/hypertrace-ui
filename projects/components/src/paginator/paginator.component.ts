@@ -34,6 +34,7 @@ import { PaginationProvider } from './paginator-api';
         <ht-button
           class="button previous-button"
           htTooltip="Go to previous page"
+          ariaLabel="Previous"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowLeft}"
@@ -44,6 +45,7 @@ import { PaginationProvider } from './paginator-api';
         <ht-button
           class="button next-button"
           htTooltip="Go to next page"
+          ariaLabel="Next"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowRight}"
