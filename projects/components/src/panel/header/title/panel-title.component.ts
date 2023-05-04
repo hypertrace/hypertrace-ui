@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonRole, ButtonStyle } from '../../../button/button';
+import { ButtonVariant, ButtonStyle } from '../../../button/button';
 
 @Component({
   selector: 'ht-panel-title',
@@ -18,7 +18,7 @@ import { ButtonRole, ButtonStyle } from '../../../button/button';
           <ht-button
             class="button"
             [icon]="this.actionIcon"
-            role="${ButtonRole.Tertiary}"
+            variant="${ButtonVariant.Tertiary}"
             display="${ButtonStyle.Outlined}"
             (click)="this.actionClicked.emit()"
           ></ht-button>

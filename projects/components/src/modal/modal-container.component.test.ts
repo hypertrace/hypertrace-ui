@@ -12,7 +12,7 @@ import { ModalContainerComponent } from './modal-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="test-modal-content">Test Component Content Data: {{ this.data }}</div>
-    <button class="test-close-button" (click)="this.modalRef.close('clicked')">Close</button>
+    <button class="test-close-button" role="button" (click)="this.modalRef.close('clicked')">Close</button>
   `
 })
 class TestComponent {
