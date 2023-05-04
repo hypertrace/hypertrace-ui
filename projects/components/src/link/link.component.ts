@@ -20,6 +20,7 @@ import { EMPTY, Observable } from 'rxjs';
       [replaceUrl]="navData?.extras?.replaceUrl"
       [htTrack]
       htTrackLabel="{{ navData && navData.path ? navData.path : '' }}"
+      [attr.aria-label]="this.label"
     >
       <ng-content></ng-content>
     </a>
@@ -31,6 +32,10 @@ export class LinkComponent implements OnChanges {
 
   @Input()
   public disabled?: boolean;
+
+  // Label will be used for setting `aria-label`
+  @Input()
+  public label?: string;
 
   public navData$: Observable<NavData> = EMPTY;
 
