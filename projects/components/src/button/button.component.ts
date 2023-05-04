@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
+import { ButtonSize, ButtonStyle, ButtonType, ButtonVariant } from './button';
 
 @Component({
   selector: 'ht-button',
@@ -58,7 +58,7 @@ export class ButtonComponent {
   public type: ButtonType = ButtonType.Button;
 
   @Input()
-  public role: ButtonRole = ButtonRole.Secondary;
+  public variant: ButtonVariant = ButtonVariant.Secondary;
 
   @Input()
   public size: ButtonSize = ButtonSize.Small;
@@ -70,7 +70,7 @@ export class ButtonComponent {
   public disabled: boolean | undefined;
 
   public getStyleClasses(): string[] {
-    const classes: string[] = [this.role, this.size, this.display];
+    const classes: string[] = [this.variant, this.size, this.display];
 
     if (this.disabled) {
       classes.push('disabled');
