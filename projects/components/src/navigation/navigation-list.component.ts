@@ -80,7 +80,7 @@ import {
           <ht-link
             class="link"
             [paramsOrUrl]="this.getFooterItemNavigationParams | htMemoize: footerItem.url"
-            [label]="footerItem.label"
+            [ariaLabel]="footerItem.label"
           >
             <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
             <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>

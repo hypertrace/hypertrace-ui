@@ -16,6 +16,7 @@ import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
         [htTrack]
         [htTrackLabel]="this.label"
         [type]="this.type"
+        [attr.aria-label]="this.ariaLabel ?? this.label"
       >
         <ht-icon
           *ngIf="this.icon"
@@ -68,6 +69,9 @@ export class ButtonComponent {
 
   @Input()
   public disabled: boolean | undefined;
+
+  @Input()
+  public ariaLabel?: string;
 
   public getStyleClasses(): string[] {
     const classes: string[] = [this.role, this.size, this.display];
