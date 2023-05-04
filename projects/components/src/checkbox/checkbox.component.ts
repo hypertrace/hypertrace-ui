@@ -9,6 +9,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   template: `
     <mat-checkbox
       labelPosition="after"
+      [aria-label]="this.label || 'checkbox'"
       [checked]="this.isChecked"
       [disabled]="this.isDisabled"
       [(indeterminate)]="this.indeterminate"
