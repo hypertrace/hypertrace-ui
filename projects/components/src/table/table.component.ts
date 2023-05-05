@@ -1,3 +1,9 @@
+import { ModalService } from '../modal/modal.service';
+import {
+  TableEditColumnsModalConfig,
+  TableEditColumnsModalComponent
+} from './columns/table-edit-columns-modal.component';
+import { switchMap, take } from 'rxjs/operators';
 /* eslint-disable max-lines */
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { CdkHeaderRow } from '@angular/cdk/table';
@@ -55,6 +61,7 @@ import {
   TableStyle
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
+import { ModalSize } from '../modal/modal';
 
 @Component({
   selector: 'ht-table',
@@ -104,6 +111,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 (sortChange)="this.onSortChange($event, columnDef)"
                 (columnsChange)="this.onColumnsEdit($event)"
                 (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
+                (showEditColumnsChange)="this.showEditColumnsModal()"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
@@ -402,7 +410,8 @@ export class TableComponent
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly domElementMeasurerService: DomElementMeasurerService,
-    private readonly tableService: TableService
+    private readonly tableService: TableService,
+    private readonly modalService: ModalService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
@@ -570,6 +579,29 @@ export class TableComponent
   public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
     this.initializeColumns(columnConfigs);
     this.columnConfigsChange.emit(columnConfigs);
+  }
+
+  public showEditColumnsModal(): void {
+    this.columnConfigs$
+      .pipe(
+        take(1),
+        switchMap(
+          availableColumns =>
+            this.modalService.createModal<TableEditColumnsModalConfig, TableColumnConfigExtended[]>({
+              content: TableEditColumnsModalComponent,
+              size: ModalSize.Medium,
+              showControls: true,
+              title: 'Edit Columns',
+              data: {
+                availableColumns: availableColumns,
+                defaultColumns: this.columnDefaultConfigs ?? []
+              }
+            }).closed$
+        )
+      )
+      .subscribe(editedColumnConfigs => {
+        this.onColumnsEdit(editedColumnConfigs);
+      });
   }
 
   public onHeaderAllRowsSelectionChange(allRowsSelected: boolean): void {
