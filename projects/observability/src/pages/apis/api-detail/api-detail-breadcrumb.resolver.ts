@@ -101,6 +101,10 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     }
     const parentName = entity[this.getParentNameAttribute(parentTypeMetadata)] as string | string[];
 
+    if (Array.isArray(parentName) && parentName.length === 0) {
+      return {};
+    }
+
     return {
       parentId: entity[this.getParentIdAttribute(parentTypeMetadata)] as string,
       // TODO: (ENG-30212) How do we know which domain name to display when
