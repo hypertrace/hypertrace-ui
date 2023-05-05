@@ -99,10 +99,14 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     if (!parentTypeMetadata) {
       return {};
     }
+    const parentName: string | string[] = entity[this.getParentNameAttribute(parentTypeMetadata)] as string;
 
     return {
       parentId: entity[this.getParentIdAttribute(parentTypeMetadata)] as string,
-      parentName: entity[this.getParentNameAttribute(parentTypeMetadata)] as string
+      // TODO: (ENG-30212) How do we know which domain name to display when
+      //  there is an array? There is no guarantee that the first domain chosen
+      //  will match the domainId for the domain.
+      parentName: Array.isArray(parentName) ? parentName[0] : parentName
     };
   }
 
