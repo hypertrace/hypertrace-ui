@@ -99,7 +99,7 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     if (!parentTypeMetadata) {
       return {};
     }
-    const parentName: string | string[] = entity[this.getParentNameAttribute(parentTypeMetadata)] as string;
+    const parentName = entity[this.getParentNameAttribute(parentTypeMetadata)] as string | string[];
 
     return {
       parentId: entity[this.getParentIdAttribute(parentTypeMetadata)] as string,
