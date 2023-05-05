@@ -109,7 +109,6 @@ import { ModalSize } from '../modal/modal';
                 [sort]="columnDef.sort"
                 [indeterminateRowsSelected]="this.indeterminateRowsSelected"
                 (sortChange)="this.onSortChange($event, columnDef)"
-                (columnsChange)="this.onColumnsEdit($event)"
                 (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
                 (showEditColumnsChange)="this.showEditColumnsModal()"
               >
@@ -576,11 +575,6 @@ export class TableComponent
     }
   }
 
-  public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
-    this.initializeColumns(columnConfigs);
-    this.columnConfigsChange.emit(columnConfigs);
-  }
-
   public showEditColumnsModal(): void {
     this.columnConfigs$
       .pipe(
@@ -600,7 +594,8 @@ export class TableComponent
         )
       )
       .subscribe(editedColumnConfigs => {
-        this.onColumnsEdit(editedColumnConfigs);
+        this.initializeColumns(editedColumnConfigs);
+        this.columnConfigsChange.emit(editedColumnConfigs);
       });
   }
 

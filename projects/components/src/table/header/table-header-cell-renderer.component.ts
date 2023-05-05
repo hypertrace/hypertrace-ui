@@ -137,9 +137,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
 
   @Output()
-  public readonly columnsChange: EventEmitter<TableColumnConfigExtended[]> = new EventEmitter();
-
-  @Output()
   public readonly allRowsSelectionChange: EventEmitter<boolean> = new EventEmitter();
 
   @Output()
