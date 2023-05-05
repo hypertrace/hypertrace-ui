@@ -17,6 +17,7 @@ import { TableCdkRowUtil } from './data/table-cdk-row-util';
 import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, TableSortDirection } from './table-api';
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
+import { ModalService } from '../modal/modal.service';
 
 describe('Table component', () => {
   // TODO remove builders once table stops mutating inputs
@@ -71,6 +72,9 @@ describe('Table component', () => {
       }),
       mockProvider(TableService, {
         buildExtendedColumnConfigs: (columnConfigs: TableColumnConfig[]) => columnConfigs as TableColumnConfigExtended[]
+      }),
+      mockProvider(ModalService, {
+        createModal: jest.fn().mockReturnValue({ closed$: of([]) })
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],

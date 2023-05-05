@@ -1,11 +1,10 @@
+/* eslint-disable max-lines */
+/* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
 import {
   TableEditColumnsModalConfig,
   TableEditColumnsModalComponent
 } from './columns/table-edit-columns-modal.component';
-import { switchMap, take } from 'rxjs/operators';
-/* eslint-disable max-lines */
-/* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
   AfterViewInit,
@@ -33,7 +32,7 @@ import {
 } from '@hypertrace/common';
 import { debounce, isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { switchMap, take, filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
