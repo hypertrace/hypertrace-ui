@@ -16,7 +16,7 @@ import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimple
 import { isEmpty, isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
@@ -143,7 +143,7 @@ import { SelectSize } from './select-size';
             <ht-button
               class="clear-selected"
               *ngIf="this.showClearSelected && this.selected !== undefined"
-              role="${ButtonRole.Primary}"
+              variant="${ButtonVariant.Primary}"
               display="${ButtonStyle.Text}"
               size="${ButtonSize.ExtraSmall}"
               label="Clear Selected"

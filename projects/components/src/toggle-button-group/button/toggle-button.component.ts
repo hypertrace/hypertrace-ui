@@ -28,6 +28,7 @@ import { ToggleButtonState, ToggleViewMode } from '../toggle-button';
       <button
         [disabled]="this.state.isDisabled || this.disabled"
         class="button"
+        role="button"
         [ngClass]="{
           selected: this.label === this.state.selectedLabel,
           first: this.state.isFirst,

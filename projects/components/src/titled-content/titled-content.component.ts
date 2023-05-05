@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { isEmpty } from 'lodash-es';
-import { ButtonRole, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonSize, ButtonStyle } from '../button/button';
 import { TitledHeaderControlDirective } from './header-controls/titled-header-control.directive';
 
 @Component({
@@ -20,7 +20,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
         <ht-link [paramsOrUrl]="this.link" class="link" [ngClass]="this.titleStyle" *ngIf="this.link">
           <ht-button
             [label]="this.linkLabel"
-            role="${ButtonRole.Quaternary}"
+            variant="${ButtonVariant.Quaternary}"
             display="${ButtonStyle.Solid}"
             size="${ButtonSize.ExtraSmall}"
             trailingIcon="${IconType.ChevronRight}"
