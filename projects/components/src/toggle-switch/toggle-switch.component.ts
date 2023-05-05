@@ -12,7 +12,7 @@ import { ToggleSwitchSize } from './toggle-switch-size';
       <mat-slide-toggle
         color="primary"
         [checked]="this.isChecked"
-        [aria-label]="this.ariaLabel ?? this.label"
+        [aria-label]="this.ariaLabel ?? this.label || 'toggle switch'"
         [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.isDisabled }"
         [disabled]="this.isDisabled"
         (change)="this.onToggle($event)"
