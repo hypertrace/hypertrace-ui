@@ -458,6 +458,7 @@ export class TableComponent
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
+    this.dataSource?.disconnect();
   }
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
@@ -537,7 +538,9 @@ export class TableComponent
       return;
     }
 
+    this.dataSource?.disconnect();
     this.dataSource = this.buildDataSource();
+
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
     });
