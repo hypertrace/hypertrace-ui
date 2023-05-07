@@ -42,6 +42,7 @@ import { FilterChipComponent } from './filter-chip/filter-chip.component';
           <ht-filter-chip
             *ngFor="let filter of this.internalFilters$ | async; let index = index"
             class="filter"
+            [ariaLabel]="filter.field + ' filter chip'"
             [filter]="filter"
             [attributes]="this.attributes"
             (apply)="this.onApply(filter, $event)"

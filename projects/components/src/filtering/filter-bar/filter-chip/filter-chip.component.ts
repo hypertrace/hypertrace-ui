@@ -24,6 +24,7 @@ import { FilterChipService } from './filter-chip.service';
       <ht-combo-box
         class="combo-box"
         mode="${ComboBoxMode.Chip}"
+        [ariaLabel]="this.ariaLabel"
         [exactMatch]="false"
         [autoSize]="this.text !== undefined"
         [text]="this.text"
@@ -42,10 +43,13 @@ export class FilterChipComponent implements OnInit, OnChanges {
   public attributes?: FilterAttribute[];
 
   @Input()
-  public filter?: Filter;
+  public ariaLabel?: string;
 
   @Input()
   public clearOnEnter?: boolean = false;
+
+  @Input()
+  public filter?: Filter;
 
   @Output()
   public readonly apply: EventEmitter<Filter> = new EventEmitter();

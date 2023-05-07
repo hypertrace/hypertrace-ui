@@ -19,10 +19,6 @@ import { IconSize } from '../../icon/icon-size';
 import { ModalSize } from '../../modal/modal';
 import { ModalService } from '../../modal/modal.service';
 import { TableCellAlignmentType } from '../cells/types/table-cell-alignment-type';
-import {
-  TableEditColumnsModalComponent,
-  TableEditColumnsModalConfig
-} from '../columns/table-edit-columns-modal.component';
 import { TableCdkColumnUtil } from '../data/table-cdk-column-util';
 import { TableSortDirection } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
@@ -141,10 +137,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
 
   @Output()
-  public readonly columnsChange: EventEmitter<TableColumnConfigExtended[]> = new EventEmitter();
+  public readonly allRowsSelectionChange: EventEmitter<boolean> = new EventEmitter();
 
   @Output()
-  public readonly allRowsSelectionChange: EventEmitter<boolean> = new EventEmitter();
+  public readonly showEditColumnsChange: EventEmitter<boolean> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
@@ -270,20 +266,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   }
 
   public onEditColumns(): void {
-    this.modalService
-      .createModal<TableEditColumnsModalConfig, TableColumnConfigExtended[]>({
-        content: TableEditColumnsModalComponent,
-        size: ModalSize.Medium,
-        showControls: true,
-        title: 'Edit Columns',
-        data: {
-          availableColumns: this.availableColumns,
-          defaultColumns: this.defaultColumns
-        }
-      })
-      .closed$.subscribe(columnConfigs => {
-        this.columnsChange.emit(columnConfigs);
-      });
+    this.showEditColumnsChange.emit(true);
   }
 
   private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {
