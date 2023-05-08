@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, TemplateRef } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
@@ -17,13 +17,19 @@ import { IconSize } from '../icon/icon-size';
         [icon]="this.getStatusIconType()"
         size="${IconSize.Small}"
       ></ht-icon>
-      <div class="text">{{ this.data.message }}</div>
+      <div class="content-template" *ngIf="this.isContentTemplate; else textMessageTpl">
+        <ng-container *ngTemplateOutlet="this.template"></ng-container>
+      </div>
       <ht-icon
         class="dismiss-icon"
         icon="${IconType.CloseCircleFilled}"
         size="${IconSize.Small}"
         (click)="this.close()"
       ></ht-icon>
+
+      <ng-template #textMessageTpl>
+        <div class="text">{{ this.data.message }}</div>
+      </ng-template>
     </div>
   `
 })
@@ -43,6 +49,14 @@ export class NotificationComponent {
     }
   }
 
+  public get isContentTemplate(): boolean {
+    return this.data.message instanceof TemplateRef;
+  }
+
+  public get template(): TemplateRef<unknown> {
+    return this.data.message as TemplateRef<unknown>;
+  }
+
   public close(): void {
     this.data.closedObserver.next();
   }
@@ -56,6 +70,8 @@ export const enum NotificationMode {
 
 export interface NotificationData {
   mode: NotificationMode;
-  message: string;
+  message: NotificationContent;
   closedObserver: Observer<void>;
 }
+
+export type NotificationContent = string | TemplateRef<unknown>;
