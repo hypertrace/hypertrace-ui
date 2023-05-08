@@ -18,6 +18,7 @@ import { ButtonSize, ButtonStyle, ButtonType, ButtonVariant } from './button';
         [htTrackLabel]="this.label"
         [type]="this.type"
         [attr.aria-label]="this.ariaLabel ?? this.label"
+        [disabled]="this.disabled"
       >
         <ht-icon
           *ngIf="this.icon"
