@@ -30,6 +30,7 @@ import { InputAppearance } from './input-appearance';
         [required]="this.required"
         [disabled]="this.disabled"
         [placeholder]="this.placeholderValue"
+        [attr.aria-label]="this.ariaLabel || 'input'"
         [ngModel]="this.value"
         (ngModelChange)="this.onValueChange($event)"
       />
@@ -54,6 +55,9 @@ export class InputComponent<T extends string | number> implements ControlValueAc
 
   @Input()
   public disabled: boolean = false;
+
+  @Input()
+  public ariaLabel?: string;
 
   @Output()
   public readonly valueChange: EventEmitter<T | undefined> = new EventEmitter();

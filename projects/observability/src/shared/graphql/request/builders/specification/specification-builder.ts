@@ -1,4 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
+import { isEmpty } from 'lodash-es';
 import { Specification } from '../../../model/schema/specifier/specification';
 import { CompositeSpecification } from '../../../model/specifications/composite-specification';
 import { TraceStatusSpecification } from '../../../model/specifications/trace-status-specification';
@@ -53,11 +54,11 @@ export class SpecificationBuilder {
     return this.traceStatusSpecBuilder.build();
   }
 
-  public attributeSpecificationForKey(attributeKey: string): Specification {
+  public attributeSpecificationForKey(attributeKey: string, aliasSuffix: string = ''): Specification {
     const queryAlias = attributeKey.replace(/[^\w]/gi, '_');
 
     return {
-      resultAlias: () => attributeKey,
+      resultAlias: () => `${attributeKey}${!isEmpty(aliasSuffix) ? '_' : ''}${aliasSuffix}`,
       name: attributeKey,
       asGraphQlSelections: () => ({
         path: 'attribute',
