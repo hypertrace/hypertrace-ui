@@ -69,7 +69,7 @@
   }
 
   &.destructive {
-    @include button-style($red-5, $red-7, white, white);
+    @include button-style($red-6, $red-7, white, white);
   }
 
   &.additive {
@@ -95,7 +95,7 @@
   }
 
   &.destructive {
-    @include button-style(inherit, $red-1, $gray-7, $gray-7, $red-5);
+    @include button-style(inherit, $red-1, $gray-7, $gray-7, $red-6);
   }
 
   &.additive {
@@ -121,7 +121,7 @@
   }
 
   &.destructive {
-    @include button-style(inherit, $red-1, $red-5, $red-5);
+    @include button-style(inherit, $red-1, $red-6, $red-6);
   }
 
   &.additive {
@@ -148,7 +148,7 @@
   }
 
   &.destructive {
-    @include button-style(inherit, inherit, $red-5, $red-7);
+    @include button-style(inherit, inherit, $red-6, $red-7);
   }
 
   &.additive {
