@@ -31,6 +31,7 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
                 icon="${IconType.CloseCircle}"
                 display="${ButtonStyle.Outlined}"
                 htTooltip="Close Sheet"
+                ariaLabel="Close"
                 (click)="this.close()"
               >
               </ht-button>
