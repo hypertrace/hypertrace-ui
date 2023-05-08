@@ -1,5 +1,10 @@
 /* eslint-disable max-lines */
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
+import { ModalService } from '../modal/modal.service';
+import {
+  TableEditColumnsModalConfig,
+  TableEditColumnsModalComponent
+} from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
   AfterViewInit,
@@ -27,7 +32,7 @@ import {
 } from '@hypertrace/common';
 import { debounce, isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { switchMap, take, filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -56,6 +61,7 @@ import {
   TableStyle
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
+import { ModalSize } from '../modal/modal';
 
 @Component({
   selector: 'ht-table',
@@ -107,8 +113,8 @@ import { TableColumnConfigExtended, TableService } from './table.service';
                 [sort]="columnDef.sort"
                 [indeterminateRowsSelected]="this.indeterminateRowsSelected"
                 (sortChange)="this.onSortChange($event, columnDef)"
-                (columnsChange)="this.onColumnsEdit($event)"
                 (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
+                (showEditColumnsChange)="this.showEditColumnsModal()"
               >
               </ht-table-header-cell-renderer>
             </cdk-header-cell>
@@ -412,7 +418,8 @@ export class TableComponent
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly domElementMeasurerService: DomElementMeasurerService,
-    private readonly tableService: TableService
+    private readonly tableService: TableService,
+    private readonly modalService: ModalService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
@@ -461,6 +468,7 @@ export class TableComponent
     this.rowStateSubject.complete();
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
+    this.dataSource?.disconnect();
   }
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
@@ -540,7 +548,9 @@ export class TableComponent
       return;
     }
 
+    this.dataSource?.disconnect();
     this.dataSource = this.buildDataSource();
+
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
     });
@@ -577,9 +587,28 @@ export class TableComponent
     }
   }
 
-  public onColumnsEdit(columnConfigs: TableColumnConfigExtended[]): void {
-    this.initializeColumns(columnConfigs);
-    this.columnConfigsChange.emit(columnConfigs);
+  public showEditColumnsModal(): void {
+    this.columnConfigs$
+      .pipe(
+        take(1),
+        switchMap(
+          availableColumns =>
+            this.modalService.createModal<TableEditColumnsModalConfig, TableColumnConfigExtended[]>({
+              content: TableEditColumnsModalComponent,
+              size: ModalSize.Medium,
+              showControls: true,
+              title: 'Edit Columns',
+              data: {
+                availableColumns: availableColumns,
+                defaultColumns: this.columnDefaultConfigs ?? []
+              }
+            }).closed$
+        )
+      )
+      .subscribe(editedColumnConfigs => {
+        this.initializeColumns(editedColumnConfigs);
+        this.columnConfigsChange.emit(editedColumnConfigs);
+      });
   }
 
   public onHeaderAllRowsSelectionChange(allRowsSelected: boolean): void {

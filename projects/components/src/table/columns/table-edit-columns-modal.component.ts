@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { ButtonRole, ButtonStyle } from '../../button/button';
+import { ButtonVariant, ButtonStyle } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { TableColumnConfigExtended } from '../table.service';
 import { IconType } from '@hypertrace/assets-library';
@@ -14,7 +14,7 @@ import { IconSize } from '../../icon/icon-size';
       <ht-button
         class="reset-button"
         label="Reset to default"
-        role="${ButtonRole.Primary}"
+        variant="${ButtonVariant.Primary}"
         display="${ButtonStyle.PlainText}"
         (click)="this.onResetToDefault()"
       ></ht-button>
@@ -41,13 +41,13 @@ import { IconSize } from '../../icon/icon-size';
         <ht-button
           label="Cancel"
           class="cancel-button"
-          role="${ButtonRole.Tertiary}"
+          variant="${ButtonVariant.Tertiary}"
           (click)="this.onCancel()"
         ></ht-button>
         <ht-button
           label="Apply"
           class="action-button"
-          role="${ButtonRole.Additive}"
+          variant="${ButtonVariant.Additive}"
           (click)="this.onApply()"
         ></ht-button>
       </div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
-  ButtonRole,
+  ButtonVariant,
   ButtonSize,
   ButtonStyle,
   IconSize,
@@ -33,7 +33,7 @@ import {
                 class="expand icon detail-button"
                 icon="${IconType.Collapsed}"
                 size="${ButtonSize.ExtraSmall}"
-                role="${ButtonRole.Tertiary}"
+                variant="${ButtonVariant.Tertiary}"
                 display="${ButtonStyle.Text}"
                 htTooltip="Show Details for {{ this.label }}"
               ></ht-button>
@@ -58,7 +58,7 @@ import {
                   class="expanded close"
                   icon="${IconType.Expanded}"
                   size="${ButtonSize.ExtraSmall}"
-                  role="${ButtonRole.Secondary}"
+                  variant="${ButtonVariant.Secondary}"
                   display="${ButtonStyle.Text}"
                   (click)="this.onClickClose()"
                 ></ht-button>

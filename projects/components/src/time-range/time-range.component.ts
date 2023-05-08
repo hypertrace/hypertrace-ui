@@ -10,7 +10,7 @@ import {
 } from '@hypertrace/common';
 import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ButtonRole } from '../button/button';
+import { ButtonVariant } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
@@ -62,7 +62,7 @@ import { PopoverRef } from '../popover/popover-ref';
         *ngIf="this.getRefreshButtonData | htMemoize: timeRange | async as refreshButton"
         [label]="refreshButton.text$ | async"
         [isEmphasized]="refreshButton.isEmphasized"
-        [role]="refreshButton.role"
+        [variant]="refreshButton.variant"
         (click)="this.onRefresh()"
       >
       </ht-refresh-button>
@@ -121,7 +121,7 @@ export class TimeRangeComponent {
       return concat(
         of({
           text$: of('Refresh'),
-          role: ButtonRole.Tertiary,
+          variant: ButtonVariant.Tertiary,
           isEmphasized: false
         }),
         this.ngZone.runOutsideAngular(() =>
@@ -138,7 +138,7 @@ export class TimeRangeComponent {
                 ),
                 map(duration => `Refresh - updated ${duration.toString()} ago`)
               ),
-              role: ButtonRole.Primary,
+              variant: ButtonVariant.Primary,
               isEmphasized: true
             }))
           )
@@ -156,6 +156,6 @@ export class TimeRangeComponent {
 
 interface RefreshButtonData {
   text$: Observable<string>;
-  role: ButtonRole;
+  variant: ButtonVariant;
   isEmphasized: boolean;
 }

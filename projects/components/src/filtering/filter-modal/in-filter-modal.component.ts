@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { sortUnknown } from '@hypertrace/common';
-import { ButtonRole } from '../../button/button';
+import { ButtonVariant } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { FilterValue, IncompleteFilter } from '../filter/filter';
@@ -28,13 +28,13 @@ import { FilterUrlService } from '../filter/filter-url.service';
         <ht-button
           label="Cancel"
           class="cancel-button"
-          role="${ButtonRole.Tertiary}"
+          variant="${ButtonVariant.Tertiary}"
           (click)="this.onCancel()"
         ></ht-button>
         <ht-button
           label="Apply"
           class="action-button"
-          role="${ButtonRole.Additive}"
+          variant="${ButtonVariant.Additive}"
           (click)="this.onApply()"
         ></ht-button>
       </div>

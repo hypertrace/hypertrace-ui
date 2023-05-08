@@ -14,7 +14,7 @@ describe('Overlay service', () => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
       <div class="test-sheet-content">Test Component Content Data: {{ this.data }}</div>
-      <button class="test-close-button" (click)="this.onClose()">Close</button>
+      <button class="test-close-button" role="button" (click)="this.onClose()">Close</button>
     `
   })
   class TestComponent {

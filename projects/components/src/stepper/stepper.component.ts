@@ -17,7 +17,7 @@ import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common'
 import { isNil } from 'lodash-es';
 import { merge, Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './tab/stepper-tab.component';
 
@@ -65,7 +65,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
               class="cancel"
               label="Cancel"
               (click)="this.cancelled.emit()"
-              role="${ButtonRole.Tertiary}"
+              variant="${ButtonVariant.Tertiary}"
             ></ht-button>
             <div class="back-next">
               <ht-button

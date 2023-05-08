@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ButtonRole, ButtonSize } from '../button/button';
+import { ButtonVariant, ButtonSize } from '../button/button';
 
 @Component({
   selector: 'ht-refresh-button',
@@ -11,7 +11,7 @@ import { ButtonRole, ButtonSize } from '../button/button';
       [label]="this.label"
       icon="${IconType.Refresh}"
       [size]="this.size"
-      [role]="this.role"
+      [variant]="this.variant"
     >
     </ht-button>
   `,
@@ -22,7 +22,7 @@ export class RefreshButtonComponent {
   public isEmphasized: boolean = false;
 
   @Input()
-  public role: ButtonRole = ButtonRole.Tertiary;
+  public variant: ButtonVariant = ButtonVariant.Tertiary;
 
   @Input()
   public size: ButtonSize = ButtonSize.Small;

@@ -19,9 +19,10 @@ describe('NotificationService', () => {
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 5000,
+        politeness: 'polite',
         data: expect.objectContaining({ message: 'Success', mode: NotificationMode.Success })
       })
     );
@@ -34,9 +35,10 @@ describe('NotificationService', () => {
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 0,
+        politeness: 'assertive',
         data: expect.objectContaining({ message: 'Fail', mode: NotificationMode.Failure })
       })
     );
@@ -49,9 +51,10 @@ describe('NotificationService', () => {
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 5000,
+        politeness: 'polite',
         data: expect.objectContaining({ message: 'info', mode: NotificationMode.Info })
       })
     );
@@ -65,8 +68,8 @@ describe('NotificationService', () => {
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 5000,
         data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
       })
@@ -77,9 +80,10 @@ describe('NotificationService', () => {
     expect(spectator.inject(MatSnackBar).openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 0,
+        politeness: 'assertive',
         data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
       })
     );
@@ -94,9 +98,10 @@ describe('NotificationService', () => {
     expect(matSnackBar.openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 5000,
+        politeness: 'polite',
         data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
       })
     );
@@ -106,9 +111,10 @@ describe('NotificationService', () => {
     expect(matSnackBar.openFromComponent).toHaveBeenLastCalledWith(
       NotificationComponent,
       expect.objectContaining({
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
         duration: 0,
+        politeness: 'assertive',
         data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
       })
     );

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { ButtonRole, ButtonStyle } from '@hypertrace/components';
+import { ButtonVariant, ButtonStyle } from '@hypertrace/components';
 import { without } from 'lodash-es';
 import { TraceType } from '../../../graphql/model/schema/trace';
 import { ExploreSeries } from '../explore-visualization-builder';
@@ -15,7 +15,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
       <ht-button
         class="add-series-button"
         icon="${IconType.Add}"
-        role="${ButtonRole.Primary}"
+        variant="${ButtonVariant.Primary}"
         label="Add Metric"
         display="${ButtonStyle.Text}"
         (click)="this.onAddSeries()"

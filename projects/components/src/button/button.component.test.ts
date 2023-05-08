@@ -4,7 +4,7 @@ import { TrackDirective } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
+import { ButtonVariant, ButtonSize, ButtonStyle, ButtonType } from './button';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -53,31 +53,31 @@ describe('Button Component', () => {
 
     // Primary
     spectator.setInput({
-      role: ButtonRole.Primary
+      variant: ButtonVariant.Primary
     });
     expect(spectator.query('.button')).toHaveClass('button primary small solid');
 
     // Secondary
     spectator.setInput({
-      role: ButtonRole.Secondary
+      variant: ButtonVariant.Secondary
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small solid');
 
     // Tertiary
     spectator.setInput({
-      role: ButtonRole.Tertiary
+      variant: ButtonVariant.Tertiary
     });
     expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
 
     // Quaternary
     spectator.setInput({
-      role: ButtonRole.Quaternary
+      variant: ButtonVariant.Quaternary
     });
     expect(spectator.query('.button')).toHaveClass('button quaternary small solid');
 
     // Destructive
     spectator.setInput({
-      role: ButtonRole.Destructive
+      variant: ButtonVariant.Destructive
     });
     expect(spectator.query('.button')).toHaveClass('button destructive small solid');
   });

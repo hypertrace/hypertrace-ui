@@ -1,4 +1,4 @@
-export const enum ButtonRole {
+export const enum ButtonVariant {
   // These values are used as css classes
   Primary = 'primary',
   Secondary = 'secondary',
