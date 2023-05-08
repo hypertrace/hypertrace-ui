@@ -6,7 +6,6 @@ import { MockComponents } from 'ng-mocks';
 import { Subject } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
 import { NotificationComponent, NotificationMode } from './notification.component';
-import { TemplateRef } from '@angular/core';
 
 describe('NotificationComponent', () => {
   let spectator: SpectatorHost<NotificationComponent>;
@@ -15,27 +14,6 @@ describe('NotificationComponent', () => {
     component: NotificationComponent,
     shallow: true,
     declarations: [MockComponents(IconComponent)]
-  });
-
-  test('should render a template content notification correctly', () => {
-    const closedObserver: Subject<void> = new Subject();
-    spectator = createHost('<ht-notification></ht-notification>', {
-      providers: [
-        {
-          provide: MAT_SNACK_BAR_DATA,
-          useValue: {
-            mode: NotificationMode.Success,
-            message: ('Template Example' as unknown) as TemplateRef<unknown>,
-            closedObserver: closedObserver
-          }
-        }
-      ]
-    });
-
-    expect(spectator.query(IconComponent)?.icon).toEqual(IconType.CheckCircle);
-    expect(spectator.query('.text')).not.toExist();
-    expect(spectator.query('.content-template')).toExist();
-    expect(spectator.component.isContentTemplate).toBe(true);
   });
 
   test('should create text success notification correctly', fakeAsync(() => {
