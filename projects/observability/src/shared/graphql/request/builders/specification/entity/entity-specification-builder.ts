@@ -1,5 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
 import { GraphQlSelection } from '@hypertrace/graphql-client';
+import { isEmpty } from 'lodash-es';
 import {
   Entity,
   entityIdKey,
@@ -21,10 +22,11 @@ export class EntitySpecificationBuilder {
     nameKey: string,
     entityType?: EntityType,
     additionalAttributes: string[] = [],
-    additionalSpecifications: Specification[] = []
+    additionalSpecifications: Specification[] = [],
+    aliasSuffix: string = ''
   ): EntitySpecification {
     return {
-      resultAlias: () => this.buildResultAlias(idKey, nameKey, entityType),
+      resultAlias: () => this.buildResultAlias(idKey, nameKey, entityType, aliasSuffix),
       name: idKey,
       asGraphQlSelections: () =>
         this.buildGraphQlSelections(
@@ -49,8 +51,10 @@ export class EntitySpecificationBuilder {
     };
   }
 
-  public buildResultAlias(idKey: string, nameKey: string, entityType?: EntityType): string {
-    return `entity_${idKey}_${nameKey}_${entityType === undefined ? 'unknownType' : entityType}`;
+  public buildResultAlias(idKey: string, nameKey: string, entityType?: EntityType, aliasSuffix: string = ''): string {
+    return `entity_${idKey}_${nameKey}_${entityType === undefined ? 'unknownType' : entityType}${
+      !isEmpty(aliasSuffix) ? '_' : ''
+    }${aliasSuffix}`;
   }
 
   private buildGraphQlSelections(

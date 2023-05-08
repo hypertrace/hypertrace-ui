@@ -62,6 +62,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
           <input
             #input
             class="trigger-input"
+            [attr.aria-label]="this.ariaLabel || 'trigger input'"
             [style.width]="this.width"
             [class.has-icon]="this.icon"
             [class.has-text]="this.text"
@@ -141,6 +142,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   @Input()
   public placeholder?: string;
+
+  @Input()
+  public ariaLabel?: string;
 
   @Input()
   public disabled: boolean = false;
