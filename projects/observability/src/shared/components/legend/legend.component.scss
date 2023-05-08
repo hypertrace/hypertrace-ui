@@ -57,7 +57,7 @@
 
     &.font-size-extra-small {
       .legend-label {
-        @include chart-small-regular($gray-4);
+        @include chart-small-regular($gray-5);
       }
 
       .legend-value {
@@ -67,7 +67,7 @@
 
     &.font-size-small {
       .legend-label {
-        @include body-small($gray-4);
+        @include body-small($gray-5);
       }
 
       .legend-value {
