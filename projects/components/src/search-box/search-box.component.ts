@@ -1,15 +1,32 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
   ApplicationFeature,
+  Color,
   FeatureState,
   FeatureStateResolver,
   SubscriptionLifecycle,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { combineLatest, Observable, Subject, timer } from 'rxjs';
-import { debounce, map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subject, timer } from 'rxjs';
+import { debounce, map, switchMap } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
+import { PopoverService } from '../popover/popover.service';
+import { SearchHistoryService } from './history/search-history.service';
+import { PopoverRef } from '../popover/popover-ref';
+import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 
 @Component({
   selector: 'ht-search-box',
@@ -17,17 +34,29 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
   template: `
-    <div class="ht-search-box" [ngClass]="this.displayMode" [class.focused]="this.isFocused">
-      <ht-icon icon="${IconType.Search}" size="${IconSize.Small}" class="icon" (click)="this.onSubmit()"></ht-icon>
+    <div
+      class="ht-search-box"
+      [ngClass]="this.displayMode"
+      [class.focused]="this.isFocused"
+      [class.experimental-search-history]="this.enableSearchHistory"
+      [class.has-value]="!(this.value | htIsEmpty)"
+    >
+      <ht-icon
+        icon="${IconType.Search}"
+        size="${IconSize.Small}"
+        class="icon"
+        (click)="this.onSearchIconClick()"
+      ></ht-icon>
       <input
+        #input
         class="input"
         type="text"
         [placeholder]="placeholder"
         [(ngModel)]="value"
         (input)="this.onValueChange()"
         (keyup.enter)="this.onSubmit()"
-        (focus)="this.isFocused = true"
-        (blur)="this.isFocused = false"
+        (focus)="this.onInputFocus()"
+        (blur)="this.onInputBlur()"
       />
       <ht-icon
         icon="${IconType.CloseCircleFilled}"
@@ -36,6 +65,32 @@ import { IconSize } from '../icon/icon-size';
         *ngIf="value"
         (click)="this.clearValue()"
       ></ht-icon>
+
+      <ng-template #searchHistoryTemplate>
+        <div class="search-history">
+          <header class="search-history-header">
+            <ht-icon
+              class="icon"
+              icon="${IconType.TimeHistory}"
+              color="${Color.Gray7}"
+              size="${IconSize.Small}"
+            ></ht-icon>
+            <div class="title">Search History</div>
+          </header>
+          <section class="search-history-section">
+            <ht-event-blocker event="click">
+              <div
+                *ngFor="let searchText of this.searchHistory$ | async"
+                class="item"
+                (click)="this.onSearchedHistoryValueClick(searchText)"
+              >
+                <div class="text">{{ searchText }}</div>
+                <ht-icon icon="${IconType.Search}" color="${Color.Blue4}" size="${IconSize.Small}"></ht-icon>
+              </div>
+            </ht-event-blocker>
+          </section>
+        </div>
+      </ng-template>
     </div>
   `
 })
@@ -55,6 +110,12 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
   public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
+  @Input()
+  public enableSearchHistory: boolean = false; // Experimental
+
+  @Input()
+  public preferenceKey: string = 'application-search-history'; // Experimental
+
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
@@ -62,14 +123,34 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   // eslint-disable-next-line @angular-eslint/no-output-native
   public readonly submit: EventEmitter<string> = new EventEmitter();
 
+  @ViewChild('searchHistoryTemplate')
+  private readonly searchHistoryTemplate!: TemplateRef<unknown>;
+
+  @ViewChild('input')
+  private readonly inputElement!: ElementRef<HTMLInputElement>;
+
+  private readonly prefKeyChangeSubject: BehaviorSubject<string> = new BehaviorSubject(this.preferenceKey);
+
   public readonly enableSearchOnTrigger$: Observable<boolean>;
+  public readonly searchHistory$: Observable<string[]>;
+
+  public popover?: PopoverRef;
+
   public constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly host: ElementRef,
+    private readonly popoverService: PopoverService,
+    private readonly searchHistoryService: SearchHistoryService,
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
     private readonly featureStateResolver: FeatureStateResolver
   ) {
     this.enableSearchOnTrigger$ = this.featureStateResolver
       .getFeatureState(ApplicationFeature.TriggerBasedSearch)
       .pipe(map(state => state === FeatureState.Enabled));
+
+    this.searchHistory$ = this.prefKeyChangeSubject
+      .asObservable()
+      .pipe(switchMap(key => this.searchHistoryService.getSearchHistory(key)));
   }
 
   public isFocused: boolean = false;
@@ -83,9 +164,25 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     if (changes.debounceTime || changes.searchMode) {
       this.setDebouncedSubscription();
     }
+
+    if (changes.preferenceKey) {
+      this.prefKeyChangeSubject.next(this.preferenceKey);
+    }
+  }
+
+  public onSearchIconClick(): void {
+    if (this.isFocused) {
+      this.onSubmit();
+    } else {
+      this.inputElement.nativeElement.focus();
+      this.isFocused = true;
+    }
   }
 
   public onSubmit(): void {
+    if (this.enableSearchHistory) {
+      this.searchHistoryService.addToSearchHistory(this.preferenceKey, this.value).subscribe();
+    }
     this.submit.emit(this.value);
   }
 
@@ -101,6 +198,41 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
     this.value = '';
     this.onValueChange();
+  }
+
+  public onInputFocus(): void {
+    if (this.enableSearchHistory) {
+      this.closePopover();
+
+      this.popover = this.popoverService.drawPopover({
+        position: {
+          type: PopoverPositionType.Relative,
+          origin: this.host,
+          locationPreferences: [
+            PopoverRelativePositionLocation.BelowLeftAligned,
+            PopoverRelativePositionLocation.BelowRightAligned,
+            PopoverRelativePositionLocation.AboveLeftAligned,
+            PopoverRelativePositionLocation.AboveRightAligned
+          ]
+        },
+        componentOrTemplate: this.searchHistoryTemplate,
+        backdrop: PopoverBackdrop.Transparent
+      });
+      this.popover.closeOnBackdropClick();
+    }
+
+    this.isFocused = true;
+  }
+
+  public onInputBlur(): void {
+    this.isFocused = false;
+  }
+
+  public onSearchedHistoryValueClick(value: string): void {
+    this.value = value.trim();
+    this.debouncedValueSubject.next(this.value);
+    this.cdr.detectChanges();
+    this.closePopover();
   }
 
   private setDebouncedSubscription(): void {
@@ -126,6 +258,11 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         return searchOnTriggerEnabled && this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
       })
     );
+  }
+
+  private closePopover(): void {
+    this.popover?.close();
+    this.popover = undefined;
   }
 }
 
