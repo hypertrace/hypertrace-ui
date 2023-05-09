@@ -61,6 +61,7 @@ import { TableColumnConfigExtended } from '../table.service';
           <ht-checkbox
             class="state-checkbox"
             [htTooltip]="this.getHeaderCheckboxTooltip()"
+            [checked]="this.rowsSelectionChecked"
             [indeterminate]="this.indeterminateRowsSelected"
             (checkedChange)="this.onToggleAllSelectedChange($event)"
           ></ht-checkbox>
@@ -130,6 +131,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   @Input()
   public sort?: TableSortDirection;
+
+  @Input()
+  public rowsSelectionChecked?: boolean;
 
   @Input()
   public indeterminateRowsSelected?: boolean;

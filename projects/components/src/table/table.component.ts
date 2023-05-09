@@ -110,6 +110,7 @@ import { ModalSize } from '../modal/modal';
                   [index]="index"
                   [sort]="columnDef.sort"
                   [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                  [rowsSelectionChecked]="this.allRowsSelectionChecked"
                   (sortChange)="this.onSortChange($event, columnDef)"
                   (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
                   (showEditColumnsChange)="this.showEditColumnsModal()"
@@ -422,6 +423,7 @@ export class TableComponent
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
   public indeterminateRowsSelected?: boolean;
+  public allRowsSelectionChecked: boolean = false;
 
   public constructor(
     private readonly elementRef: ElementRef,
@@ -654,9 +656,11 @@ export class TableComponent
       if (allRowsSelected) {
         this.dataSource?.selectAllRows();
         this.selections = this.dataSource?.getAllRows();
+        this.allRowsSelectionChecked = true;
       } else {
         this.dataSource?.unselectAllRows();
         this.selections = [];
+        this.allRowsSelectionChecked = false;
       }
 
       this.selectionsChange.emit(this.selections);
