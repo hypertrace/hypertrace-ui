@@ -44,6 +44,7 @@ import {
   template: `
     <div class="explorer" *htLetAsync="this.initialState$ as initialState">
       <ht-page-header class="explorer-header"></ht-page-header>
+      <ht-search-box class="search-box" [enableSearchHistory]="true"></ht-search-box>
       <ht-toggle-group
         class="explorer-data-toggle"
         [items]="this.contextItems"
