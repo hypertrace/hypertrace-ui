@@ -14,7 +14,7 @@ export { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 // Button
 export { ButtonComponent } from './button/button.component';
 export { ButtonModule } from './button/button.module';
-export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
+export { ButtonVariant, ButtonSize, ButtonStyle } from './button/button';
 
 // Back Button
 export { BackButtonComponent } from './back-button/back-button.component';

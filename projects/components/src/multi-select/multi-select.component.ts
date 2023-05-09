@@ -17,7 +17,7 @@ import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common'
 import { isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
@@ -103,7 +103,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               <ht-button
                 class="clear-selected"
                 *ngIf="this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
+                variant="${ButtonVariant.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Clear Selected"
                 (click)="this.onClearSelected()"
@@ -112,7 +112,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               <ht-button
                 class="select-all"
                 *ngIf="this.showSelectAll && (this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
+                variant="${ButtonVariant.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Select All"
                 (click)="this.onSelectAll()"

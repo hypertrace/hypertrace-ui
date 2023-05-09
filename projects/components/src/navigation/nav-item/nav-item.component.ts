@@ -9,7 +9,11 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
   styleUrls: ['./nav-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link *ngIf="this.config" [paramsOrUrl]="buildNavigationParam | htMemoize: this.config">
+    <ht-link
+      *ngIf="this.config"
+      [paramsOrUrl]="buildNavigationParam | htMemoize: this.config"
+      [ariaLabel]="config.label"
+    >
       <div
         *htIfFeature="this.config.featureState$ | async as featureState"
         class="nav-item"

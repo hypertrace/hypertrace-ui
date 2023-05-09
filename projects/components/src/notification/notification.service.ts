@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { NotificationComponent, NotificationMode } from './notification.component';
+import { NotificationComponent, NotificationContent, NotificationMode } from './notification.component';
 import { NotificationModule } from './notification.module';
 
 @Injectable({ providedIn: NotificationModule })
 export class NotificationService {
   private readonly snackBarDefaultConfig: MatSnackBarConfig = {
-    horizontalPosition: 'left',
-    verticalPosition: 'bottom',
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    politeness: 'polite',
     duration: 5000 // Auto dismiss duration. 5 seconds in ms
   };
 
@@ -22,7 +23,7 @@ export class NotificationService {
     });
   }
 
-  public createSuccessToast(message: string): void {
+  public createSuccessToast(message: NotificationContent): void {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
       data: {
@@ -33,9 +34,10 @@ export class NotificationService {
     });
   }
 
-  public createFailureToast(message: string): Observable<never> {
+  public createFailureToast(message: NotificationContent): Observable<never> {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
+      politeness: 'assertive', // Set politeness level for errors to assertive
       duration: 0, // Keep the notification open indefinitely in case of error
       data: { message: message, mode: NotificationMode.Failure, closedObserver: this.closedObserver$ }
     });
@@ -43,14 +45,18 @@ export class NotificationService {
     return EMPTY;
   }
 
-  public createInfoToast(message: string): void {
+  public createInfoToast(message: NotificationContent): void {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
       data: { message: message, mode: NotificationMode.Info, closedObserver: this.closedObserver$ }
     });
   }
 
-  public wrapWithNotification<T>(source: Observable<T>, successMessage: string, failureMessage: string): Observable<T> {
+  public wrapWithNotification<T>(
+    source: Observable<T>,
+    successMessage: NotificationContent,
+    failureMessage: NotificationContent
+  ): Observable<T> {
     let emitted = false;
 
     return source.pipe(
@@ -62,7 +68,10 @@ export class NotificationService {
     );
   }
 
-  public withNotification<T>(successMessage: string, failureMessage: string): (source: Observable<T>) => Observable<T> {
+  public withNotification<T>(
+    successMessage: NotificationContent,
+    failureMessage: NotificationContent
+  ): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) => this.wrapWithNotification(source, successMessage, failureMessage);
   }
 }

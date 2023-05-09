@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 
 @Component({
   selector: 'ht-back-button',
@@ -9,7 +9,7 @@ import { ButtonRole, ButtonStyle } from '../button/button';
     <ht-button
       (click)="this.onClickBack()"
       class="back"
-      role="${ButtonRole.Primary}"
+      variant="${ButtonVariant.Primary}"
       display="${ButtonStyle.PlainText}"
       icon="${IconType.ArrowLeft}"
       label="Back"

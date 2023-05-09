@@ -1,6 +1,6 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 import { DateFormatMode, DateFormatOptions, queryListAndChanges$ } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle } from '@hypertrace/components';
+import { ButtonVariant, ButtonStyle } from '@hypertrace/components';
 import { map } from 'rxjs/operators';
 import { TimelineCardContainerComponent } from './container/timeline-card-container.component';
 
@@ -15,7 +15,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
           <ht-button
             *ngIf="!item.showAll; else showSimilarCards"
             label="See {{ item.similarCards.length }} more similar event{{ item.similarCards.length > 1 ? 's' : '' }} >"
-            role="${ButtonRole.Primary}"
+            variant="${ButtonVariant.Primary}"
             display="${ButtonStyle.Outlined}"
             (click)="item.showAll = true"
             class="button with-margin"

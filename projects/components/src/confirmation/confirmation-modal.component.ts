@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, TemplateRef } from '@angular/core';
 import { isString } from 'lodash-es';
-import { ButtonRole } from '../button/button';
+import { ButtonVariant } from '../button/button';
 import { ModalRef, MODAL_DATA } from '../modal/modal';
 
 @Component({
@@ -15,10 +15,14 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
         </div>
       </div>
       <div class="controls">
-        <ht-button [label]="this.cancelButtonLabel" role="${ButtonRole.Tertiary}" (click)="this.onCancel()"></ht-button>
+        <ht-button
+          [label]="this.cancelButtonLabel"
+          variant="${ButtonVariant.Tertiary}"
+          (click)="this.onCancel()"
+        ></ht-button>
         <ht-button
           [label]="this.confirmButtonLabel"
-          [role]="this.confirmButtonRole"
+          [variant]="this.confirmButtonUse"
           (click)="this.onConfirmation()"
         ></ht-button>
       </div>
@@ -28,17 +32,17 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
 export class ConfirmationModalComponent {
   private static readonly DEFAULT_CONFIRM_LABEL: string = 'Confirm';
   private static readonly DEFAULT_CANCEL_LABEL: string = 'Cancel';
-  private static readonly DEFAULT_CONFIRM_ROLE: ButtonRole = ButtonRole.Additive;
+  private static readonly DEFAULT_CONFIRM_USE: ButtonVariant = ButtonVariant.Additive;
   public readonly confirmButtonLabel: string;
   public readonly cancelButtonLabel: string;
-  public readonly confirmButtonRole: ButtonRole;
+  public readonly confirmButtonUse: ButtonVariant;
   public readonly descriptionText!: string;
   public readonly content!: TemplateRef<unknown>;
   public readonly isContentString: boolean;
 
   public constructor(private readonly modalRef: ModalRef<boolean>, @Inject(MODAL_DATA) config: ConfirmationModalData) {
     this.confirmButtonLabel = config.confirmButtonLabel ?? ConfirmationModalComponent.DEFAULT_CONFIRM_LABEL;
-    this.confirmButtonRole = config.confirmButtonRole ?? ConfirmationModalComponent.DEFAULT_CONFIRM_ROLE;
+    this.confirmButtonUse = config.confirmButtonUse ?? ConfirmationModalComponent.DEFAULT_CONFIRM_USE;
     this.cancelButtonLabel = config.cancelButtonLabel ?? ConfirmationModalComponent.DEFAULT_CANCEL_LABEL;
     this.isContentString = isString(config.content);
     if (isString(config.content)) {
@@ -60,6 +64,6 @@ export class ConfirmationModalComponent {
 export interface ConfirmationModalData {
   cancelButtonLabel?: string;
   confirmButtonLabel?: string;
-  confirmButtonRole?: ButtonRole;
+  confirmButtonUse?: ButtonVariant;
   content: string | TemplateRef<unknown>;
 }
