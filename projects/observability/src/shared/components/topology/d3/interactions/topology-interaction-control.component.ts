@@ -24,7 +24,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
   providers: [SubscriptionLifecycle],
   template: `
     <div class="control-container">
-      <button (click)="this.runLayout()" class="topology-control topology-button" role="button">
+      <button (click)="this.runLayout()" aria-label="Relayout" class="topology-control topology-button" role="button">
         <ht-icon
           icon="${IconType.Refresh}"
           [size]="this.iconSize"
@@ -34,7 +34,12 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
         ></ht-icon>
       </button>
       <ng-container *ngIf="this.canZoom()">
-        <button (click)="this.zoomToFit()" class="topology-control topology-button" role="button">
+        <button
+          (click)="this.zoomToFit()"
+          aria-label="Zoom to fit"
+          class="topology-control topology-button"
+          role="button"
+        >
           <ht-icon
             icon="${IconType.ZoomToFit}"
             [size]="this.iconSize"
@@ -44,7 +49,13 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
           ></ht-icon>
         </button>
         <div class="topology-control zoom-control">
-          <button (click)="this.decrementZoom()" [disabled]="!this.canDecrement" class="topology-button" role="button">
+          <button
+            (click)="this.decrementZoom()"
+            aria-label="Decrease Zoom"
+            [disabled]="!this.canDecrement"
+            class="topology-button"
+            role="button"
+          >
             <ht-icon
               icon="${IconType.Remove}"
               [size]="this.iconSize"
@@ -53,7 +64,13 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
               class="control-icon"
             ></ht-icon>
           </button>
-          <button (click)="this.incrementZoom()" [disabled]="!this.canIncrement" class="topology-button" role="button">
+          <button
+            (click)="this.incrementZoom()"
+            aria-label="Increase Zoom"
+            [disabled]="!this.canIncrement"
+            class="topology-button"
+            role="button"
+          >
             <ht-icon
               icon="${IconType.Add}"
               [size]="this.iconSize"
