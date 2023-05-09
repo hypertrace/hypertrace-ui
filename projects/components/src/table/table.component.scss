@@ -2,6 +2,7 @@
 @import 'layout';
 
 $header-height: 32px;
+
 .table {
   position: relative;
   display: flex;
@@ -37,7 +38,7 @@ $header-height: 32px;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
 
   .header-cell {
-    background: $gray-1;
+    background: $blue-1;
     border-bottom: 1px solid $gray-2;
   }
 }
@@ -110,6 +111,7 @@ $header-height: 32px;
   flex: 1 0;
   overflow: hidden;
   border-bottom: 1px solid $gray-1;
+  background-color: white;
 
   &.detail-expanded {
     border-bottom: unset;
@@ -122,6 +124,11 @@ $header-height: 32px;
   .data-cell-renderer {
     display: block;
     height: 100%;
+  }
+
+  .state-cell-container {
+    @include fill-container;
+    @include center-contents;
   }
 }
 
@@ -144,4 +151,18 @@ $header-height: 32px;
   width: 100%;
   bottom: 0;
   background: white;
+}
+
+.state-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+
+  &:nth-of-type(2) {
+    left: 32px;
+  }
+}
+
+.col-border-right {
+  border-right: 1px solid $gray-2;
 }

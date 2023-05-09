@@ -32,6 +32,7 @@ import { TableColumnConfigExtended } from '../table.service';
       *ngIf="this.columnConfig"
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
+      [ngClass]="{ 'state-col': this.isStateColumn }"
     >
       <ng-container *ngIf="!this.isStateColumn; else stateColumnTemplate">
         <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
