@@ -1,4 +1,3 @@
-/* eslint-disable @angular-eslint/template/cyclomatic-complexity */
 /* eslint-disable max-lines */
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
