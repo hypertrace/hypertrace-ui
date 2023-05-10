@@ -10,7 +10,7 @@ import {
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { merge, Observable, Subject } from 'rxjs';
-import { ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { SelectSize } from '../select/select-size';
 import { ToggleItem } from '../toggle-group/toggle-item';
 import { PageEvent } from './page.event';
@@ -33,11 +33,12 @@ import { PaginationProvider } from './paginator-api';
       </ht-label>
       <div class="pagination-buttons">
         <ht-button
-          class="button previous-button"
+          class="previous-button"
           [class.compact]="this.showCompactView"
           htTooltip="Go to previous page"
-          label="Prev"
+          label="{{ !this.showCompactView ? 'Prev' : '' }}"
           ariaLabel="Previous"
+          variant="${ButtonVariant.Primary}"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowLeft}"
@@ -46,11 +47,12 @@ import { PaginationProvider } from './paginator-api';
         >
         </ht-button>
         <ht-button
-          class="button next-button"
+          class="next-button"
           [class.compact]="this.showCompactView"
           htTooltip="Go to next page"
-          label="Next"
+          label="{{ !this.showCompactView ? 'Next' : '' }}"
           ariaLabel="Next"
+          variant="${ButtonVariant.Primary}"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowRight}"

@@ -9,15 +9,12 @@
   justify-content: center;
 
   height: $paginator-height;
-  padding: 6px 0;
   border-top: 1px solid $color-border;
-  gap: 12px;
+  gap: 8px;
+  padding-top: 6px;
 
   .label {
-    @include body-1-regular($gray-5);
-  }
-
-  .page-size-select {
+    @include body-1-regular($gray-9);
   }
 
   .pagination-buttons {
@@ -27,16 +24,20 @@
 
   .previous-button {
     ::ng-deep {
-      &.compact {
-        width: 32px;
-        border-radius: 6px 0 0 6px;
-        border-color: $gray-2;
-      }
-
       .button {
         width: 80px;
         border-radius: 20px 0 0 20px;
         border-color: $gray-2;
+      }
+    }
+
+    &.compact {
+      ::ng-deep {
+        .button {
+          width: 32px;
+          border-radius: 6px 0 0 6px;
+          border-color: $gray-2;
+        }
       }
     }
   }
@@ -44,16 +45,18 @@
   .next-button {
     ::ng-deep {
       .button {
-        &.compact {
+        width: 80px;
+        border-radius: 0 20px 20px 0;
+        border-color: $gray-2;
+      }
+    }
+
+    &.compact {
+      ::ng-deep {
+        .button {
           width: 32px;
           margin-left: -1px;
           border-radius: 0 6px 6px 0;
-          border-color: $gray-2;
-        }
-
-        .button {
-          width: 80px;
-          border-radius: 0 20px 20px 0;
           border-color: $gray-2;
         }
       }
