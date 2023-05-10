@@ -95,7 +95,7 @@
 
 @mixin disableable {
   &.disabled {
-    opacity: 0.4;
+    opacity: 0.58; // Minimal opacity to provide contrast for accessibility
     cursor: not-allowed;
   }
 }

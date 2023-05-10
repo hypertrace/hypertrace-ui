@@ -21,6 +21,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './m
           display="${ButtonStyle.Outlined}"
           size="${ButtonSize.Tiny}"
           htTooltip="Close modal"
+          ariaLabel="Close"
           (click)="this.close()"
         >
         </ht-button>
