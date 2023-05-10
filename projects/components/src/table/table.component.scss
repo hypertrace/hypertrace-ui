@@ -148,12 +148,6 @@ $data-row-border: 1px solid $gray-2;
   }
 }
 
-.last-row {
-  .data-cell {
-    border-color: transparent;
-  }
-}
-
 .state-watcher {
   top: $header-height;
   height: calc(100% - #{$header-height});
