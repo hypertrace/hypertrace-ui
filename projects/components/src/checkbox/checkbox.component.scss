@@ -12,6 +12,12 @@
     .mat-checkbox-mixedmark {
       background-color: white;
     }
+
+    .mat-checkbox-frame {
+      border-color: $gray-4;
+      border-width: 1px;
+      border-radius: 3px;
+    }
   }
 
   ::ng-deep .mat-checkbox-disabled {
