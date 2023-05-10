@@ -146,11 +146,6 @@ $data-row-border: 1px solid $gray-2;
     display: block;
     height: 100%;
   }
-
-  .state-cell-container {
-    @include fill-container;
-    @include center-contents;
-  }
 }
 
 .last-row {
@@ -172,6 +167,11 @@ $data-row-border: 1px solid $gray-2;
   width: 100%;
   bottom: 0;
   background: white;
+}
+
+.state-cell-container {
+  @include fill-container;
+  @include center-contents;
 }
 
 .state-col {

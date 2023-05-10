@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/template/cyclomatic-complexity */
 /* eslint-disable max-lines */
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
@@ -100,22 +101,39 @@ import { ModalSize } from '../modal/modal';
                 >
                   <div class="header-column-divider"></div>
                 </div>
-                <ht-table-header-cell-renderer
-                  class="header-cell-renderer"
-                  [editable]="!this.isTreeType()"
-                  [metadata]="this.metadata"
-                  [columnConfig]="columnDef"
-                  [defaultColumns]="this.columnDefaultConfigs"
-                  [availableColumns]="this.columnConfigs$ | async"
-                  [index]="index"
-                  [sort]="columnDef.sort"
-                  [indeterminateRowsSelected]="this.indeterminateRowsSelected"
-                  [rowsSelectionChecked]="this.allRowsSelectionChecked"
-                  (sortChange)="this.onSortChange($event, columnDef)"
-                  (allRowsSelectionChange)="this.onHeaderAllRowsSelectionChange($event)"
-                  (showEditColumnsChange)="this.showEditColumnsModal()"
+                <div
+                  *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
+                  class="state-cell-container"
                 >
-                </ht-table-header-cell-renderer>
+                  <ht-checkbox
+                    *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
+                    [htTooltip]="this.getHeaderCheckboxTooltip()"
+                    [checked]="this.allRowsSelectionChecked"
+                    [indeterminate]="this.indeterminateRowsSelected"
+                    (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
+                  ></ht-checkbox>
+                  <div
+                    *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
+                    [style.width]="columnDef?.width"
+                  ></div>
+                </div>
+
+                <ng-template #headerCellRendererTemplate>
+                  <ht-table-header-cell-renderer
+                    class="header-cell-renderer"
+                    [editable]="!this.isTreeType()"
+                    [metadata]="this.metadata"
+                    [columnConfig]="columnDef"
+                    [defaultColumns]="this.columnDefaultConfigs"
+                    [availableColumns]="this.columnConfigs$ | async"
+                    [index]="index"
+                    [sort]="columnDef.sort"
+                    [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                    (sortChange)="this.onSortChange($event, columnDef)"
+                    (showEditColumnsChange)="this.showEditColumnsModal()"
+                  >
+                  </ht-table-header-cell-renderer>
+                </ng-template>
               </cdk-header-cell>
               <cdk-cell
                 *cdkCellDef="let row"
@@ -132,7 +150,10 @@ import { ModalSize } from '../modal/modal';
                 }"
                 class="data-cell"
               >
-                <div *ngIf="this.isStateColumn(columnDef); else cellRendererTemplate" class="state-cell-container">
+                <div
+                  *ngIf="this.isStateColumn | htMemoize: columnDef; else cellRendererTemplate"
+                  class="state-cell-container"
+                >
                   <ht-checkbox
                     *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
                     [checked]="row.$$state.selected"
@@ -508,6 +529,14 @@ export class TableComponent
       this.resizeStartX = event.clientX;
       event.preventDefault();
     }
+  }
+
+  public getHeaderCheckboxTooltip(): string {
+    return this.indeterminateRowsSelected
+      ? 'Some rows are selected'
+      : this.allRowsSelectionChecked
+      ? 'All rows in the table are selected'
+      : 'None of the rows in the table are selected';
   }
 
   public getRowStyle(): Dictionary<string> {
