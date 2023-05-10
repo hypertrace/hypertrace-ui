@@ -51,7 +51,7 @@ export const enum Color {
   Red3 = '#FEA395',
   Red4 = '#fd7c68',
   Red5 = '#FD5138',
-  Red6 = '#F72202',
+  Red6 = '#e51f01',
   Red7 = '#bb1902',
   Red8 = '#6a0e01',
   Red9 = '#140300',
