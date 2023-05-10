@@ -29,6 +29,7 @@ import { LoggerService } from '@hypertrace/common';
         [rows]="this.rows"
         [disabled]="this.disabled"
         [placeholder]="this.placeholder"
+        [attr.aria-label]="this.ariaLabel || 'textarea'"
         [ngModel]="this.value"
         (ngModelChange)="this.onValueChange($event)"
       >
@@ -48,6 +49,9 @@ export class TextareaComponent implements ControlValueAccessor, OnInit {
 
   @Input()
   public rows: number = 2;
+
+  @Input()
+  public ariaLabel?: string;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
