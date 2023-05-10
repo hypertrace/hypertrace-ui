@@ -32,6 +32,7 @@ import { TableColumnConfigExtended } from '../table.service';
       *ngIf="this.columnConfig"
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
+      [ngClass]="{ sortable: this.isSortable }"
     >
       <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
@@ -132,6 +133,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public classes: string[] = [];
 
   public isFilterable: boolean = false;
+  public isSortable: boolean = false;
   public isEditableAvailableColumns: boolean = false;
   public isShowOptionButton: boolean = false;
 
@@ -151,6 +153,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
+      this.isSortable = this.isAttributeSortable();
       this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
       this.isShowOptionButton =
         this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
@@ -175,8 +178,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   private buildClasses(): string[] {
     return [
       ...(this.alignment !== undefined ? [this.alignment.toLowerCase()] : []),
-      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : []),
-      ...(this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig) ? ['sortable'] : [])
+      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : [])
     ];
   }
 
@@ -203,6 +205,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       this.columnConfig.attribute !== undefined &&
       this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.columnConfig.attribute.type)
     );
+  }
+
+  private isAttributeSortable(): boolean {
+    return (this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig)) ?? false;
   }
 
   private areAnyAvailableColumnsEditable(): boolean {
