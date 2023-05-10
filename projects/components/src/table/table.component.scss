@@ -2,6 +2,10 @@
 @import 'layout';
 
 $header-height: 32px;
+$header-border-color: #ceddea; // Not in color palette
+$header-border: 1px solid $header-border-color;
+
+$data-row-border: 1px solid $gray-2;
 
 .table {
   position: relative;
@@ -33,13 +37,22 @@ $header-height: 32px;
   position: sticky;
   top: 0;
   height: $header-height;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
 
   .header-cell {
     background: $blue-1;
-    border-bottom: 1px solid $gray-2;
+    border-bottom: $header-border;
+    border-top: $header-border;
+
+    &:first-of-type {
+      border-left: $header-border;
+      border-top-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-right: $header-border;
+      border-top-right-radius: 4px;
+    }
   }
 }
 
@@ -102,7 +115,7 @@ $header-height: 32px;
     .header-column-divider {
       width: 1px;
       height: 100%;
-      background-color: $gray-2;
+      background-color: $header-border-color;
     }
   }
 }
@@ -119,6 +132,14 @@ $header-height: 32px;
 
   &.hide-divider {
     border-bottom: unset;
+  }
+
+  &:first-of-type {
+    border-left: $data-row-border;
+  }
+
+  &:last-of-type {
+    border-right: $data-row-border;
   }
 
   .data-cell-renderer {
@@ -164,5 +185,5 @@ $header-height: 32px;
 }
 
 .col-border-right {
-  border-right: 1px solid $gray-2;
+  border-right: $data-row-border;
 }
