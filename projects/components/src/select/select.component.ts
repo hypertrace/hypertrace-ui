@@ -16,7 +16,7 @@ import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimple
 import { isEmpty, isEqual } from 'lodash-es';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { ButtonVariant, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode } from '../search-box/search-box.component';
 import { SelectControlOptionComponent, SelectControlOptionPosition } from './select-control-option.component';
@@ -41,6 +41,7 @@ import { SelectSize } from './select-size';
   template: `
     <div
       class="select"
+      [attr.aria-disabled]="this.disabled"
       [ngClass]="[
         this.size,
         this.groupPosition,
