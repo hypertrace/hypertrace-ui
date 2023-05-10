@@ -117,9 +117,6 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public sort?: TableSortDirection;
 
   @Input()
-  public rowsSelectionChecked?: boolean;
-
-  @Input()
   public indeterminateRowsSelected?: boolean;
 
   @Output()
