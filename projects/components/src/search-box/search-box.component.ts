@@ -20,13 +20,13 @@ import {
   SubscriptionLifecycle,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { BehaviorSubject, combineLatest, Observable, Subject, timer } from 'rxjs';
-import { debounce, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subject, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { PopoverService } from '../popover/popover.service';
-import { SearchHistoryService } from './history/search-history.service';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
+import { isEmpty, uniq } from 'lodash';
 
 @Component({
   selector: 'ht-search-box',
@@ -80,7 +80,7 @@ import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation }
           <section class="search-history-section">
             <ht-event-blocker event="click">
               <div
-                *ngFor="let searchText of this.searchHistory$ | async"
+                *ngFor="let searchText of this.filteredSearchHistory"
                 class="item"
                 (click)="this.onSearchedHistoryValueClick(searchText)"
               >
@@ -113,9 +113,6 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
   public enableSearchHistory: boolean = false; // Experimental
 
-  @Input()
-  public preferenceKey: string = 'application-search-history'; // Experimental
-
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
@@ -129,10 +126,11 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   @ViewChild('input')
   private readonly inputElement!: ElementRef<HTMLInputElement>;
 
-  private readonly prefKeyChangeSubject: BehaviorSubject<string> = new BehaviorSubject(this.preferenceKey);
-
   public readonly enableSearchOnTrigger$: Observable<boolean>;
-  public readonly searchHistory$: Observable<string[]>;
+
+  private lastEmittedValues: string[] = [];
+  public searchHistory: string[] = [];
+  public filteredSearchHistory: string[] = [];
 
   public popover?: PopoverRef;
 
@@ -140,17 +138,12 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private readonly host: ElementRef,
     private readonly popoverService: PopoverService,
-    private readonly searchHistoryService: SearchHistoryService,
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
     private readonly featureStateResolver: FeatureStateResolver
   ) {
     this.enableSearchOnTrigger$ = this.featureStateResolver
       .getFeatureState(ApplicationFeature.TriggerBasedSearch)
       .pipe(map(state => state === FeatureState.Enabled));
-
-    this.searchHistory$ = this.prefKeyChangeSubject
-      .asObservable()
-      .pipe(switchMap(key => this.searchHistoryService.getSearchHistory(key)));
   }
 
   public isFocused: boolean = false;
@@ -158,15 +151,15 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     this.setDebouncedSubscription();
+
+    if (this.enableSearchHistory) {
+      this.setSearchHistorySubscriptions();
+    }
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.debounceTime || changes.searchMode) {
       this.setDebouncedSubscription();
-    }
-
-    if (changes.preferenceKey) {
-      this.prefKeyChangeSubject.next(this.preferenceKey);
     }
   }
 
@@ -180,9 +173,6 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onSubmit(): void {
-    if (this.enableSearchHistory) {
-      this.searchHistoryService.addToSearchHistory(this.preferenceKey, this.value).subscribe();
-    }
     this.submit.emit(this.value);
   }
 
@@ -201,30 +191,18 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onInputFocus(): void {
-    if (this.enableSearchHistory) {
-      this.closePopover();
-
-      this.popover = this.popoverService.drawPopover({
-        position: {
-          type: PopoverPositionType.Relative,
-          origin: this.host,
-          locationPreferences: [
-            PopoverRelativePositionLocation.BelowLeftAligned,
-            PopoverRelativePositionLocation.BelowRightAligned,
-            PopoverRelativePositionLocation.AboveLeftAligned,
-            PopoverRelativePositionLocation.AboveRightAligned
-          ]
-        },
-        componentOrTemplate: this.searchHistoryTemplate,
-        backdrop: PopoverBackdrop.Transparent
-      });
-      this.popover.closeOnBackdropClick();
+    if (this.enableSearchHistory && this.filteredSearchHistory.length > 0) {
+      this.showPopover();
     }
 
     this.isFocused = true;
   }
 
   public onInputBlur(): void {
+    if (this.enableSearchHistory) {
+      this.handleSearchHistoryOnInputBlur();
+    }
+
     this.isFocused = false;
   }
 
@@ -260,9 +238,61 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     );
   }
 
+  private setSearchHistorySubscriptions(): void {
+    this.subscriptionLifecycle.add(
+      this.debouncedValueSubject.asObservable().subscribe(value => {
+        this.filteredSearchHistory = this.searchHistory.filter(text =>
+          text.toLowerCase().includes(value.toLowerCase())
+        );
+
+        if (this.filteredSearchHistory.length === 0 && this.popover !== undefined) {
+          this.closePopover();
+        } else if (this.filteredSearchHistory.length > 0 && this.popover === undefined) {
+          this.showPopover();
+        }
+
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptionLifecycle.add(
+      this.valueChange.asObservable().subscribe(emittedValue => {
+        if (!isEmpty(emittedValue)) {
+          this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+        }
+      })
+    );
+  }
+
+  private showPopover(): void {
+    this.closePopover();
+
+    this.popover = this.popoverService.drawPopover({
+      position: {
+        type: PopoverPositionType.Relative,
+        origin: this.host,
+        locationPreferences: [
+          PopoverRelativePositionLocation.BelowLeftAligned,
+          PopoverRelativePositionLocation.BelowRightAligned,
+          PopoverRelativePositionLocation.AboveLeftAligned,
+          PopoverRelativePositionLocation.AboveRightAligned
+        ]
+      },
+      componentOrTemplate: this.searchHistoryTemplate,
+      backdrop: PopoverBackdrop.Transparent
+    });
+    this.popover.closeOnBackdropClick();
+  }
+
   private closePopover(): void {
     this.popover?.close();
     this.popover = undefined;
+  }
+
+  private handleSearchHistoryOnInputBlur(): void {
+    this.closePopover();
+    this.searchHistory = [...uniq(this.lastEmittedValues), ...this.searchHistory];
+    this.filteredSearchHistory = [...this.searchHistory];
   }
 }
 
