@@ -12,6 +12,7 @@ import { TypedSimpleChanges } from '@hypertrace/common';
 import { merge, Observable, Subject } from 'rxjs';
 import { ButtonSize, ButtonStyle } from '../button/button';
 import { SelectSize } from '../select/select-size';
+import { ToggleItem } from '../toggle-group/toggle-item';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
 
@@ -33,7 +34,9 @@ import { PaginationProvider } from './paginator-api';
       <div class="pagination-buttons">
         <ht-button
           class="button previous-button"
+          [class.compact]="this.showCompactView"
           htTooltip="Go to previous page"
+          label="Prev"
           ariaLabel="Previous"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
@@ -44,7 +47,9 @@ import { PaginationProvider } from './paginator-api';
         </ht-button>
         <ht-button
           class="button next-button"
+          [class.compact]="this.showCompactView"
           htTooltip="Go to next page"
+          label="Next"
           ariaLabel="Next"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
@@ -55,7 +60,7 @@ import { PaginationProvider } from './paginator-api';
         </ht-button>
       </div>
       <ng-container *ngIf="!this.showCompactView">
-        <ht-label class="label" label="Rows per Page:"></ht-label>
+        <ht-label class="label" label="Show"></ht-label>
       </ng-container>
       <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
         <ht-select
@@ -68,6 +73,9 @@ import { PaginationProvider } from './paginator-api';
           </ht-select-option>
         </ht-select>
       </div>
+      <ng-container *ngIf="!this.showCompactView">
+        <ht-label class="label" label=" per page"></ht-label>
+      </ng-container>
     </div>
   `
 })
@@ -122,6 +130,11 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public readonly pageEvent$: Observable<PageEvent> = merge(this.pageChange, this.pageSizeInputSubject);
 
   public readonly minItemsBeforeDisplay: number = 10;
+
+  public readonly tabs: ToggleItem<PaginatorButtonType>[] = [
+    { label: PaginatorButtonType.Prev },
+    { label: PaginatorButtonType.Next }
+  ];
 
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
@@ -209,4 +222,9 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       pageSize: this.pageSize
     });
   }
+}
+
+const enum PaginatorButtonType {
+  Next = 'Next',
+  Prev = 'Prev'
 }
