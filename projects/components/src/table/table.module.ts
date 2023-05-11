@@ -15,6 +15,8 @@ import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './ce
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
 import { TableComponent } from './table.component';
 import { DraggableListModule } from '../draggable-list/draggable-list.module';
+import { ExpanderToggleModule } from '../expander/expander-toggle.module';
+import { MemoizeModule } from '@hypertrace/common';
 
 @NgModule({
   imports: [
@@ -29,7 +31,9 @@ import { DraggableListModule } from '../draggable-list/draggable-list.module';
     LetAsyncModule,
     ButtonModule,
     CheckboxModule,
-    DraggableListModule
+    DraggableListModule,
+    ExpanderToggleModule,
+    MemoizeModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
