@@ -5,8 +5,7 @@ import {
   LetAsyncModule,
   PageHeaderModule,
   PanelModule,
-  ToggleGroupModule,
-  TraceSearchBoxModule
+  ToggleGroupModule
 } from '@hypertrace/components';
 import { ExploreQueryEditorModule } from '../../shared/components/explore-query-editor/explore-query-editor.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
@@ -22,8 +21,7 @@ import { ExplorerComponent } from './explorer.component';
     PanelModule,
     PageHeaderModule,
     ToggleGroupModule,
-    LetAsyncModule,
-    TraceSearchBoxModule
+    LetAsyncModule
   ],
   declarations: [ExplorerComponent]
 })
