@@ -6,7 +6,7 @@ export const displayString = (provided?: unknown, defaultValueOnEmpty: string = 
   switch (typeof provided) {
     case 'object':
       return Array.isArray(provided)
-        ? `[${provided.map(value => displayString(value, defaultValueOnEmpty)).join(', ')}]`
+        ? `${provided.map(value => displayString(value, defaultValueOnEmpty)).join(', ')}`
         : 'Object';
     case 'undefined':
       return defaultValueOnEmpty;

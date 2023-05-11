@@ -79,7 +79,7 @@
 
 .bordered {
   &.primary {
-    @include button-style(inherit, $blue-1, $gray-7, $gray-7, $blue-5);
+    @include button-style(inherit, $blue-1, $blue-5, $blue-4, $blue-5);
   }
 
   &.secondary {
