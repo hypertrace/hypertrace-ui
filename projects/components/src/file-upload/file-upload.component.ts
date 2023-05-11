@@ -81,9 +81,6 @@ export class FileUploadComponent {
   @Output()
   public readonly filesAdded: EventEmitter<File[]> = new EventEmitter();
 
-  @Output()
-  public readonly selectedFileChanges: EventEmitter<File[]> = new EventEmitter();
-
   public files: File[] = [];
   public isDragHover: boolean = false;
   private readonly fileDisplayPipe: DisplayFileSizePipe = new DisplayFileSizePipe();
@@ -118,7 +115,6 @@ export class FileUploadComponent {
   private updateFileSelection(newFiles: File[]): void {
     this.files.push(...newFiles);
     this.filesAdded.emit(newFiles);
-    this.selectedFileChanges.emit(this.files);
   }
 
   /**
@@ -147,6 +143,12 @@ export class FileUploadComponent {
       return false;
     }
 
+    if (this.areFilesEmpty(fileList)) {
+      this.showEmptyFilesErrorToast();
+
+      return false;
+    }
+
     return true;
   }
 
@@ -163,11 +165,18 @@ export class FileUploadComponent {
       FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type)
     );
   }
+  private areFilesEmpty(fileList: FileList | null): boolean {
+    return this.getFilesFromFileList(fileList).some(file => file.size === 0);
+  }
 
   private showFileSizeErrorToast(): void {
     this.notificationService.createFailureToast(
       `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`
     );
+  }
+
+  private showEmptyFilesErrorToast(): void {
+    this.notificationService.createFailureToast(`File should not be empty`);
   }
 
   private showFileTypeErrorToast(): void {
