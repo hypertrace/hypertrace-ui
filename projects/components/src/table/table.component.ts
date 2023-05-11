@@ -54,6 +54,7 @@ import {
   TableColumnConfig,
   TableFilter,
   TableMode,
+  TablePaginatorLocation,
   TableRow,
   TableSelectionMode,
   TableSortDirection,
@@ -67,7 +68,11 @@ import { ModalSize } from '../modal/modal';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table">
+    <div
+      class="table"
+      [class.paginator-after-last-row]="this.paginatorLocation === '${TablePaginatorLocation.AfterLastRow}'"
+      [class.selection-mode-multiple]="this.selectionMode === '${TableSelectionMode.Multiple}'"
+    >
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
@@ -154,7 +159,7 @@ import { ModalSize } from '../modal/modal';
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row"></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row" sticky></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
@@ -189,11 +194,13 @@ import { ModalSize } from '../modal/modal';
       </ng-container>
 
       <!-- Pagination -->
-      <div
+      <!-- <div
         class="pagination-controls"
         *ngIf="this.pageable"
         [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
       >
+       -->
+      <div class="pagination-controls" *ngIf="this.pageable">
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
           (pageChange)="this.onPageChange($event)"
@@ -303,6 +310,9 @@ export class TableComponent
 
   @Input()
   public maxRowHeight?: string;
+
+  @Input()
+  public paginatorLocation: TablePaginatorLocation = TablePaginatorLocation.Overlay;
 
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();

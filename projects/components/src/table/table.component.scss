@@ -11,7 +11,12 @@ $header-height: 32px;
   height: 100%;
   width: 100%;
   overflow: auto;
-  background-color: white;
+  /* TODO: Fix the table overlapping the paginator when the table is nested inside another table */
+  &.paginator-after-last-row {
+    height: unset;
+    width: unset;
+    overflow: unset;
+  }
 }
 
 .title-row {
@@ -140,8 +145,11 @@ $header-height: 32px;
 }
 
 .pagination-controls {
-  position: fixed;
   width: 100%;
   bottom: 0;
   background: white;
 }
+.paginator-after-last-row .pagination-controls {
+  position: static;
+}
+/* TODO: centre paginator */
