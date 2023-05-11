@@ -237,6 +237,7 @@ import { ModalSize } from '../modal/modal';
       <!-- Pagination -->
       <div
         class="pagination-controls"
+        <!-- eslint-disable @angular-eslint/template/cyclomatic-complexity -->
         *ngIf="this.pageable"
         [style.position]="!this.showFloatingPaginator ? (this.isTableFullPage ? 'fixed' : 'sticky') : ''"
       >

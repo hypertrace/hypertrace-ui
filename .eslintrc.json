@@ -271,7 +271,7 @@
         "@angular-eslint/template/cyclomatic-complexity": [
           "error",
           {
-            "maxComplexity": 16
+            "maxComplexity": 15
           }
         ],
         "@angular-eslint/template/use-track-by-function": "off"
