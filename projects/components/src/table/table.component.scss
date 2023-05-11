@@ -2,7 +2,7 @@
 @import 'layout';
 
 $header-height: 32px;
-$header-border-color: #ceddea; // Not in color palette
+$header-border-color: $cloud-2;
 $header-border: 1px solid $header-border-color;
 
 $data-row-border: 1px solid $gray-2;
@@ -126,7 +126,7 @@ $data-row-border: 1px solid $gray-2;
   border-bottom: 1px solid $gray-1;
   background-color: white;
 
-  &.detail-expanded {
+  &.detail-expanded.state-col {
     border-bottom: unset;
   }
 
@@ -145,6 +145,18 @@ $data-row-border: 1px solid $gray-2;
   .data-cell-renderer {
     display: block;
     height: 100%;
+  }
+}
+
+.last-row {
+  .data-cell {
+    &:first-of-type {
+      border-bottom-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 4px;
+    }
   }
 }
 
@@ -175,6 +187,10 @@ $data-row-border: 1px solid $gray-2;
 
   &:nth-of-type(2) {
     left: 32px;
+  }
+
+  &.depth-greater-than-zero {
+    border: none;
   }
 }
 

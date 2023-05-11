@@ -145,7 +145,8 @@ import { ModalSize } from '../modal/modal';
                   'detail-expanded': this.isDetailExpanded(row),
                   'hide-divider': this.isDetailList(),
                   'state-col': this.isStateColumn | htMemoize: columnDef,
-                  'col-border-right': this.isLastStateColumn | htMemoize: visibleColumns:index
+                  'col-border-right': this.isLastStateColumn | htMemoize: visibleColumns:index,
+                  'depth-greater-than-zero': row.$$state.depth > 0
                 }"
                 class="data-cell"
               >
@@ -159,7 +160,7 @@ import { ModalSize } from '../modal/modal';
                     (checkedChange)="columnDef.onClick?.(row)"
                   ></ht-checkbox>
                   <ht-expander-toggle
-                    *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
+                    *ngIf="(this.isExpansionStateColumn | htMemoize: columnDef) && !row.$$state.leaf"
                     [expanded]="row.$$state.expanded"
                     (click)="columnDef.onClick?.(row)"
                   ></ht-expander-toggle>
