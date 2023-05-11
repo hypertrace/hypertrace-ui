@@ -9,7 +9,7 @@ describe('String formatter', () => {
     expect(displayString('value')).toBe('value');
     expect(displayString(15)).toBe('15');
     expect(displayString({})).toBe('Object');
-    expect(displayString([undefined])).toBe('[-]');
+    expect(displayString([undefined])).toBe('-');
     expect(displayString(() => 'hi')).toBe('Function');
     expect(displayString(Symbol('test symbol'))).toBe('Symbol(test symbol)');
     expect(displayString(false)).toBe('false');
@@ -23,7 +23,7 @@ describe('String formatter', () => {
     expect(displayString('value', 'none')).toBe('value');
     expect(displayString(15, 'none')).toBe('15');
     expect(displayString({}, 'none')).toBe('Object');
-    expect(displayString([undefined], 'none')).toBe('[none]');
+    expect(displayString([undefined], 'none')).toBe('none');
     expect(displayString(() => 'hi', 'none')).toBe('Function');
     expect(displayString(Symbol('test symbol'), 'none')).toBe('Symbol(test symbol)');
     expect(displayString(false, 'none')).toBe('false');
