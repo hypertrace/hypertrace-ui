@@ -26,7 +26,7 @@ import { IconSize } from '../icon/icon-size';
 import { PopoverService } from '../popover/popover.service';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash-es';
 
 @Component({
   selector: 'ht-search-box',
@@ -44,7 +44,7 @@ import { isEmpty, uniq } from 'lodash';
       <ht-icon
         icon="${IconType.Search}"
         size="${IconSize.Small}"
-        class="icon"
+        class="icon search"
         (click)="this.onSearchIconClick()"
       ></ht-icon>
       <input
@@ -182,6 +182,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public clearValue(): void {
+    this.inputElement.nativeElement.focus();
     if (this.value.length === 0) {
       return;
     }
@@ -207,6 +208,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   public onSearchedHistoryValueClick(value: string): void {
+    this.inputElement.nativeElement.focus();
     this.value = value.trim();
     this.debouncedValueSubject.next(this.value);
     this.cdr.detectChanges();
@@ -282,6 +284,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
       backdrop: PopoverBackdrop.Transparent
     });
     this.popover.closeOnBackdropClick();
+    this.popover.closeOnPopoverContentClick();
   }
 
   private closePopover(): void {
@@ -290,9 +293,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   private handleSearchHistoryOnInputBlur(): void {
-    this.closePopover();
     this.searchHistory = [...uniq(this.lastEmittedValues), ...this.searchHistory];
     this.filteredSearchHistory = [...this.searchHistory];
+    this.lastEmittedValues = [];
   }
 }
 
