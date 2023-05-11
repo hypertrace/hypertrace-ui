@@ -8,7 +8,11 @@ import { IconSize } from '@hypertrace/components';
   styleUrls: ['./explore-filter-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-link class="explore-filter" [paramsOrUrl]="this.paramsOrUrl">
+    <ht-link
+      class="explore-filter"
+      [ariaLabel]="this.ariaLabel || 'explore-filter-link'"
+      [paramsOrUrl]="this.paramsOrUrl"
+    >
       <ng-content></ng-content>
       <ht-icon class="filter-icon" size="${IconSize.ExtraSmall}" icon="${IconType.Filter}"></ht-icon>
     </ht-link>
@@ -17,4 +21,7 @@ import { IconSize } from '@hypertrace/components';
 export class ExploreFilterLinkComponent {
   @Input()
   public paramsOrUrl?: NavigationParams | string;
+
+  @Input()
+  public ariaLabel?: string;
 }
