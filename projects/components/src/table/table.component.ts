@@ -444,6 +444,9 @@ export class TableComponent
   private resizeStartX: number = 0;
   private resizeColumns?: ResizeColumns;
   public indeterminateRowsSelected?: boolean;
+  /**
+   *  This is to select all rows on the current page, we do not support selecting entirety of the data
+   */
   public allRowsSelectionChecked: boolean = false;
 
   public constructor(
