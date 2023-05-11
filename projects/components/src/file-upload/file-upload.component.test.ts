@@ -27,12 +27,12 @@ describe('File Upload Component', () => {
     });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload></ht-file-upload>`);
-    const selectionChangeSpy = jest.spyOn(spectator.component.selectedFileChanges, 'emit');
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     expect(spectator.query('.file-upload')).toExist();
 
     // Testing click to upload
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(selectionChangeSpy).toHaveBeenLastCalledWith([file]);
+    expect(filesAddedSpy).toHaveBeenLastCalledWith([file]);
   });
 
   test('should work correctly with drag and drop', () => {
@@ -41,7 +41,7 @@ describe('File Upload Component', () => {
     });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload></ht-file-upload>`);
-    const selectionChangeSpy = jest.spyOn(spectator.component.selectedFileChanges, 'emit');
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     // Testing drag hover
     spectator.triggerEventHandler('.upload-section', 'dragHover', true);
     expect(spectator.query('.upload-section.drag-hover')).toExist();
@@ -49,7 +49,7 @@ describe('File Upload Component', () => {
     // Testing drop
     spectator.triggerEventHandler('.upload-section', 'dropped', fileList);
     spectator.triggerEventHandler('.upload-section', 'dragHover', false);
-    expect(selectionChangeSpy).toHaveBeenLastCalledWith([file]);
+    expect(filesAddedSpy).toHaveBeenLastCalledWith([file]);
   });
 
   test('should show error when number of files exceeds limit', () => {
@@ -67,15 +67,15 @@ describe('File Upload Component', () => {
         config: config
       }
     });
-    const selectionChangeSpy = jest.spyOn(spectator.component.selectedFileChanges, 'emit');
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(selectionChangeSpy).not.toHaveBeenCalled();
+    expect(filesAddedSpy).not.toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
       `File count should not be more than ${config.maxNumberOfFiles}`
     );
   });
 
-  test('should show error when when file type selected is not supported', () => {
+  test('should show error when file type selected is not supported', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1000,
@@ -90,15 +90,15 @@ describe('File Upload Component', () => {
         config: config
       }
     });
-    const selectionChangeSpy = jest.spyOn(spectator.component.selectedFileChanges, 'emit');
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(selectionChangeSpy).not.toHaveBeenCalled();
+    expect(filesAddedSpy).not.toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
       `File type should be any of ${config.supportedFileTypes.join(', ')}`
     );
   });
 
-  test('should show error when when size exceeds max', () => {
+  test('should show error when size exceeds max', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1024,
@@ -114,11 +114,33 @@ describe('File Upload Component', () => {
         config: config
       }
     });
-    const selectionChangeSpy = jest.spyOn(spectator.component.selectedFileChanges, 'emit');
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(selectionChangeSpy).not.toHaveBeenCalled();
+    expect(filesAddedSpy).not.toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
       `File size should not be more than 1 KB`
     );
+  });
+
+  test('should show error when there is an empty file', () => {
+    const config: UploaderConfig = {
+      maxNumberOfFiles: 1,
+      maxFileSizeInBytes: 1024,
+      supportedFileTypes: [SupportedFileType.Json]
+    };
+    const file: File = new File([new Blob([''])], 'test-file.json', {
+      type: 'application/json'
+    });
+    Object.defineProperty(file, 'size', { value: 0 });
+    const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
+    const spectator = createHost(`<ht-file-upload [config]="config"></ht-file-upload>`, {
+      hostProps: {
+        config: config
+      }
+    });
+    const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
+    spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
+    expect(filesAddedSpy).not.toHaveBeenCalled();
+    expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(`File should not be empty`);
   });
 });
