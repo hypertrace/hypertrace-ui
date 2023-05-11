@@ -73,8 +73,11 @@ import { ModalSize } from '../modal/modal';
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
-        [ngClass]="[this.display, this.pageable && this.isTableFullPage ? 'bottom-margin' : '']"
-        class="table"
+        [ngClass]="[
+          this.display,
+          this.pageable && this.isTableFullPage ? 'bottom-margin' : '',
+          !this.showFloatingPaginator ? 'table' : ''
+        ]"
       >
         <!-- Columns -->
         <ng-container
@@ -154,7 +157,7 @@ import { ModalSize } from '../modal/modal';
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row"></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row" sticky></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
@@ -192,7 +195,7 @@ import { ModalSize } from '../modal/modal';
       <div
         class="pagination-controls"
         *ngIf="this.pageable"
-        [style.position]="this.isTableFullPage ? 'fixed' : 'sticky'"
+        [style.position]="!this.showFloatingPaginator ? (this.isTableFullPage ? 'fixed' : 'sticky') : ''"
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
@@ -293,6 +296,9 @@ export class TableComponent
 
   @Input()
   public pageSize?: number = 50;
+
+  @Input()
+  public showFloatingPaginator?: boolean = false;
 
   @Input()
   public loadingConfig?: LoadAsyncConfig;
@@ -490,7 +496,8 @@ export class TableComponent
   public getRowStyle(): Dictionary<string> {
     return {
       'min-height': this.rowHeight,
-      ...(!isNil(this.maxRowHeight) ? { 'max-height': this.maxRowHeight } : {})
+      ...(!isNil(this.maxRowHeight) ? { 'max-height': this.maxRowHeight } : {}),
+      ...(this.showFloatingPaginator ? { height: this.rowHeight } : {})
     };
   }
 
