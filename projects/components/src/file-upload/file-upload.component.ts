@@ -92,15 +92,14 @@ export class FileUploadComponent {
 
   public onDrop(list: FileList): void {
     if (this.validateFilesAndShowToastOnError(list)) {
-      const newFiles = this.getFilesFromFileList(list);
-      this.updateFileSelection(newFiles);
+      this.emitSelectedFiles(list);
     }
   }
 
   public onFilesSelection(event: Event): void {
     const list = (event.target as HTMLInputElement)?.files;
     if (this.validateFilesAndShowToastOnError(list)) {
-      this.updateFileSelection(this.getFilesFromFileList(list ?? undefined));
+      this.emitSelectedFiles(list);
     }
   }
 
@@ -109,10 +108,11 @@ export class FileUploadComponent {
   }
 
   /**
-   * Adds the new files at the last
+   * Emits selected files as File[]
    */
-  private updateFileSelection(newFiles: File[]): void {
-    this.filesAdded.emit(newFiles);
+  private emitSelectedFiles(fileList?: FileList | null): void {
+    const files: File[] = this.getFilesFromFileList(fileList);
+    this.filesAdded.emit(files);
   }
 
   /**
