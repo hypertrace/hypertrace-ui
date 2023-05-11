@@ -81,7 +81,6 @@ export class FileUploadComponent {
   @Output()
   public readonly filesAdded: EventEmitter<File[]> = new EventEmitter();
 
-  public files: File[] = [];
   public isDragHover: boolean = false;
   private readonly fileDisplayPipe: DisplayFileSizePipe = new DisplayFileSizePipe();
 
@@ -113,7 +112,6 @@ export class FileUploadComponent {
    * Adds the new files at the last
    */
   private updateFileSelection(newFiles: File[]): void {
-    this.files.push(...newFiles);
     this.filesAdded.emit(newFiles);
   }
 
