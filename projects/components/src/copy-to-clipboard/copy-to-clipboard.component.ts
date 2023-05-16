@@ -34,6 +34,7 @@ import { PopoverService } from '../popover/popover.service';
         [display]="this.display"
         [size]="this.size"
         [label]="this.label"
+        [ariaLabel]="this.icon"
       ></ht-button>
     </div>
     <ng-template #notification>
