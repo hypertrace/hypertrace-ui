@@ -39,7 +39,7 @@
     "@hypertrace/hyperdash-angular": "^3.0.0",
     "@types/d3-hierarchy": "^2.0.2",
     "@types/d3-transition": "1.1.5",
-    "apollo-angular": "^4.0.0",
+    "apollo-angular": "^5.0.0",
     "core-js": "^3.30.1",
     "d3-array": "^2.12.0",
     "d3-axis": "^2.1.0",
