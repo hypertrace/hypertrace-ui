@@ -20,6 +20,10 @@ export class ColorPalette {
     return this.getColorCombinations(colorSetSize)[Math.abs(hashCode(id)) % colorSetSize];
   }
 
+  /**
+   * @deprecated
+   * Use getContrastColor from ./color.ts instead
+   */
   public getContrast(rgbColorString: string): string {
     // Convert to RGB value
     const rgbColor = rgb(rgbColorString);
