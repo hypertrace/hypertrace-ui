@@ -1,7 +1,7 @@
 import { rgb } from 'd3-color';
 import { interpolateRgbBasis, quantize } from 'd3-interpolate';
 import { hashCode } from '../utilities/math/math-utilities';
-import { Color, ColorCombination } from './color';
+import { ColorCombination, getContrastColor } from './color';
 
 export class ColorPalette {
   private readonly basisColors: string[];
@@ -22,17 +22,12 @@ export class ColorPalette {
 
   /**
    * @deprecated
-   * Use getContrastColor from ./color.ts instead
+   * Use getContrastColor from ./color.ts instead.
+   * TODO: Cleanup after all usages are removed
    */
   public getContrast(rgbColorString: string): string {
     // Convert to RGB value
-    const rgbColor = rgb(rgbColorString);
-
-    // Get YIQ ratio
-    const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
-
-    // Check contrast
-    return yiq >= 128 ? Color.Gray9 : Color.White;
+    return getContrastColor(rgbColorString);
   }
 
   public forNColors(count: number): string[] {
