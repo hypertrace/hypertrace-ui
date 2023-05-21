@@ -80,6 +80,10 @@ import { TableColumnConfigExtended } from '../table.service';
                 </div>
               </ng-container>
 
+              <ng-container *ngIf="this.editable">
+                <div class="popover-item" (click)="this.onHideCurrentColumn()">Hide</div>
+              </ng-container>
+
               <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
                 <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
@@ -124,6 +128,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   @Output()
   public readonly showEditColumnsChange: EventEmitter<boolean> = new EventEmitter();
+
+  @Output()
+  public readonly hideCurrentColumnChange: EventEmitter<boolean> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
@@ -237,6 +244,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onEditColumns(): void {
     this.showEditColumnsChange.emit(true);
+  }
+
+  public onHideCurrentColumn(): void {
+    this.hideCurrentColumnChange.emit(true);
   }
 
   private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {

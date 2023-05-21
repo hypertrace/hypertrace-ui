@@ -18,8 +18,17 @@ import { IconSize } from '../../icon/icon-size';
         display="${ButtonStyle.PlainText}"
         (click)="this.onResetToDefault()"
       ></ht-button>
+      <ht-search-box
+        class="search-box"
+        placeholder="Search"
+        (valueChange)="this.onColumnItemSearch($event)"
+      ></ht-search-box>
+
       <ht-draggable-list class="column-items" (draggableListChange)="this.columnsReorder($event)">
-        <ht-draggable-item *ngFor="let column of this.editColumns; index as i" [data]="column">
+        <ht-draggable-item
+          *ngFor="let column of this.getFilteredColumns | htMemoize: this.searchText; index as i"
+          [data]="column"
+        >
           <div class="column-item-container">
             <ht-icon
               class="vertical-grab-handle-icon"
@@ -32,7 +41,7 @@ import { IconSize } from '../../icon/icon-size';
               [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
               [disabled]="!column.editable || this.isLastRemainingColumn(column)"
-              (checkedChange)="this.selectColumn($event, i)"
+              (checkedChange)="column.visible = !column.visible"
             ></ht-checkbox>
           </div>
         </ht-draggable-item>
@@ -56,6 +65,8 @@ import { IconSize } from '../../icon/icon-size';
 })
 export class TableEditColumnsModalComponent {
   public editColumns: TableColumnConfigExtended[];
+  public searchText: string = '';
+
   public readonly disabledTooltip: string = 'At least one column must be enabled';
 
   public constructor(
@@ -65,12 +76,10 @@ export class TableEditColumnsModalComponent {
     this.editColumns = this.filterMetadaDataColumnsAndOrderVisible(this.modalData.availableColumns);
   }
 
-  public selectColumn(checked: boolean, index: number): void {
-    this.editColumns[index] = {
-      ...this.editColumns[index],
-      visible: checked
-    };
-  }
+  public readonly getFilteredColumns = (searchText: string): TableColumnConfigExtended[] => {
+    const lowercaseSearch = searchText.toLowerCase();
+    return this.editColumns.filter(column => column.title?.toLowerCase()?.includes(lowercaseSearch));
+  };
 
   public isLastRemainingColumn(column: TableColumnConfigExtended): boolean {
     const visibleCount: number = this.editColumns.filter(editColumn => editColumn.visible).length;
@@ -94,11 +103,21 @@ export class TableEditColumnsModalComponent {
     this.editColumns = editColumns;
   }
 
+  public onColumnItemSearch(searchText: string): void {
+    this.searchText = searchText;
+  }
+
   private filterMetadaDataColumnsAndOrderVisible(columns: TableColumnConfigExtended[]): TableColumnConfigExtended[] {
-    return columns
+    const unsortedColumns = columns
       .map(column => ({ ...column })) // Using this map to generate and handle a new array
-      .filter(column => !this.isMetaTypeColumn(column))
-      .sort((a, b) => (a.visible === b.visible ? 0 : a.visible ? -1 : 1));
+      .filter(column => !this.isMetaTypeColumn(column));
+
+    const visibleColumns = unsortedColumns.filter(a => a.visible);
+    const otherColumnsSorted = unsortedColumns
+      .filter(a => !a.visible)
+      .sort((a, b) => (a.title?.toLocaleLowerCase() ?? '').localeCompare(b.title?.toLocaleLowerCase() ?? ''));
+
+    return [...visibleColumns, ...otherColumnsSorted];
   }
 
   private isMetaTypeColumn(column: TableColumnConfigExtended): boolean {
