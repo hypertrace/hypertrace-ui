@@ -38,9 +38,9 @@ import { IconSize } from '../../icon/icon-size';
             <ht-checkbox
               class="checkbox"
               [label]="column.title"
-              [htTooltip]="this.isLastRemainingColumn(column) ? this.disabledTooltip : column.titleTooltip"
+              [htTooltip]="!column.editable ? this.disabledTooltip : column.titleTooltip"
               [checked]="column.visible"
-              [disabled]="!column.editable || this.isLastRemainingColumn(column)"
+              [disabled]="!column.editable"
               (checkedChange)="column.visible = !column.visible"
             ></ht-checkbox>
           </div>
@@ -66,8 +66,7 @@ import { IconSize } from '../../icon/icon-size';
 export class TableEditColumnsModalComponent {
   public editColumns: TableColumnConfigExtended[];
   public searchText: string = '';
-
-  public readonly disabledTooltip: string = 'At least one column must be enabled';
+  public readonly disabledTooltip: string = 'This column is not editable';
 
   public constructor(
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
@@ -80,12 +79,6 @@ export class TableEditColumnsModalComponent {
     const lowercaseSearch = searchText.toLowerCase();
     return this.editColumns.filter(column => column.title?.toLowerCase()?.includes(lowercaseSearch));
   };
-
-  public isLastRemainingColumn(column: TableColumnConfigExtended): boolean {
-    const visibleCount: number = this.editColumns.filter(editColumn => editColumn.visible).length;
-
-    return visibleCount === 1 && !!column.visible;
-  }
 
   public onApply(): void {
     this.modalRef.close(this.editColumns); // $$state columns filtered out, but they are recreated by table

@@ -80,11 +80,11 @@ import { TableColumnConfigExtended } from '../table.service';
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable">
+              <ng-container *ngIf="this.columnConfig.editable">
                 <div class="popover-item" (click)="this.onHideCurrentColumn()">Hide</div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
+              <ng-container *ngIf="this.isEditableAvailableColumns">
                 <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
               </ng-container>
@@ -98,9 +98,6 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-
-  @Input()
-  public editable?: boolean = false;
 
   @Input()
   public metadata?: FilterAttribute[];

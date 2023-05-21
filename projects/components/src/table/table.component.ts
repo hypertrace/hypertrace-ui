@@ -69,8 +69,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="table">
-      <table
-        cdk-table
+      <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
@@ -87,9 +86,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
         <!-- Columns -->
         <ng-container *ngFor="let columnDef of this.visibleColumnConfigs; trackBy: this.trackItem; index as index">
           <ng-container [cdkColumnDef]="columnDef.id">
-            <th
+            <cdk-header-cell
               cdkDrag
-              cdk-header-cell
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
@@ -126,7 +124,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
               <ng-template #headerCellRendererTemplate>
                 <ht-table-header-cell-renderer
                   class="header-cell-renderer"
-                  [editable]="!this.isTreeType()"
                   [metadata]="this.metadata"
                   [columnConfig]="columnDef"
                   [defaultColumns]="this.columnDefaultConfigs"
@@ -140,9 +137,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
                 >
                 </ht-table-header-cell-renderer>
               </ng-template>
-            </th>
-            <td
-              cdk-cell
+            </cdk-header-cell>
+            <cdk-cell
               *cdkCellDef="let row"
               [style.flex-basis]="columnDef.width"
               [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
@@ -185,30 +181,30 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
                   (click)="this.onDataCellClick(row)"
                 ></ht-table-data-cell-renderer>
               </ng-template>
-            </td>
+            </cdk-cell>
           </ng-container>
         </ng-container>
 
         <!-- Expandable Detail Column -->
         <ng-container [cdkColumnDef]="this.expandedDetailColumnConfig.id" *ngIf="this.isDetailType()">
           <ng-container *htLetAsync="this.columnConfigs$ as columnConfigs">
-            <td cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfigs.length" class="expanded-cell">
+            <cdk-cell *cdkCellDef="let row" [attr.colspan]="columnConfigs.length" class="expanded-cell">
               <ht-table-expanded-detail-row-cell-renderer
                 [row]="row"
                 [expanded]="this.isRowExpanded(row)"
                 [content]="this.detailContent"
               ></ht-table-expanded-detail-row-cell-renderer>
-            </td>
+            </cdk-cell>
           </ng-container>
         </ng-container>
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <tr cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds" class="header-row" sticky></tr>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds" class="header-row" sticky></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
-        <tr
+        <cdk-row
           cdk-row
           *cdkRowDef="let row; columns: this.visibleColumnIds; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
@@ -221,13 +217,13 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
           }"
           class="data-row"
           [ngStyle]="this.getRowStyle()"
-        ></tr>
+        ></cdk-row>
 
         <!-- Expandable Detail Rows -->
         <ng-container *ngIf="this.isDetailType()">
-          <tr cdk-row *cdkRowDef="let row; columns: [this.expandedDetailColumnConfig.id]" class="expandable-row"></tr>
+          <cdk-row *cdkRowDef="let row; columns: [this.expandedDetailColumnConfig.id]" class="expandable-row"></cdk-row>
         </ng-container>
-      </table>
+      </cdk-table>
 
       <!-- State Watcher -->
       <ng-container *ngIf="this.dataSource?.loadingStateChange$ | async as loadingState">
@@ -404,15 +400,6 @@ export class TableComponent
 
   public visibleColumnConfigs: TableColumnConfigExtended[] = [];
   public visibleColumnIds: string[] = [];
-
-  // private readonly columnConfigsReorderSubject: BehaviorSubject<{fromIndex: number, toIndex: number}> = new BehaviorSubject(undefined);
-  // public readonly visibleColumnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigs$.pipe(
-  //   map(columns => columns.filter(column => column.visible)),
-  //   withLatestFrom(this.columnConfigsReorderSubject)
-  // );
-  // public readonly visibleColumnIds$: Observable<string[]> = this.visibleColumnConfigs$.pipe(
-  //   map(columns => columns.map(column => column.id))
-  // );
 
   /*
    * Column State
