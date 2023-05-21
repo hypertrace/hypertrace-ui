@@ -16,7 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
@@ -94,9 +94,12 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (valueChange)="this.searchOptions($event)"
                 [debounceTime]="200"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
+                [value]="this.searchText"
                 (submit)="this.searchOptions($event)"
                 [searchMode]="this.searchTriggerMode"
-                *ngIf="(this.allOptions$ | async)?.length > 5 || (this.isSearchTextPresent$ | async)"
+                *ngIf="
+                  (this.allOptions$ | async)?.length > 5 || (this.searchText !== undefined && this.searchText !== '')
+                "
               ></ht-search-box>
               <ht-divider class="divider"></ht-divider>
 
@@ -220,11 +223,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
   private readonly reorderSelectedItemsSubject: BehaviorSubject<void> = new BehaviorSubject<void>(undefined);
 
-  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
-    map(searchText => !isEmpty(searchText)),
-    startWith(false),
-    shareReplay(1)
-  );
+  public searchText: string = '';
 
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
@@ -249,6 +248,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public onPopoverClose(): void {
     this.popoverOpen = false;
+    this.searchOptions('');
     this.reorderSelectedItemsSubject.next();
   }
 
@@ -261,6 +261,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
       this.caseInsensitiveSearchSubject.next(searchText);
     }
 
+    this.searchText = searchText;
     this.searchValueChange.emit(searchText);
   }
 

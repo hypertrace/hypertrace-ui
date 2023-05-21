@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { InputAppearance, SelectOption } from '@hypertrace/components';
+import { InputAppearance, SelectOption, SelectSearchMode } from '@hypertrace/components';
 import { isEmpty, isNil, omit } from 'lodash-es';
 import { combineLatest, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators';
@@ -20,6 +20,7 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
           *ngIf="this.groupByAttributeOptions$ | async as attributeOptions"
           [showBorder]="true"
           class="group-by-selector"
+          searchMode="${SelectSearchMode.CaseInsensitive}"
           [selected]="currentGroupByExpression && currentGroupByExpression.metadata"
           (selectedChange)="this.onGroupByAttributeChange($event)"
         >
