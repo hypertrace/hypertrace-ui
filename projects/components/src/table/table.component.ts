@@ -13,7 +13,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -64,6 +64,7 @@ import {
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalSize } from '../modal/modal';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'ht-table',
@@ -471,6 +472,7 @@ export class TableComponent
   public allRowsSelectionChecked: boolean = false;
 
   public constructor(
+    @Inject(DOCUMENT) private readonly document: Document,
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
@@ -521,6 +523,7 @@ export class TableComponent
     setTimeout(() => {
       !this.dataSource && this.initializeData();
       this.initializeColumns();
+      this.addEventListeners();
     });
   }
 
@@ -531,6 +534,7 @@ export class TableComponent
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
     this.dataSource?.disconnect();
+    this.removeEventListeners();
   }
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
@@ -573,16 +577,25 @@ export class TableComponent
     };
   }
 
-  @HostListener('mousemove', ['$event'])
   public onResizeMouseMove(event: MouseEvent): void {
     if (this.resizable && this.resizeStartX > 0 && !isNil(this.columnResizeHandler)) {
       this.columnResizeHandler.style.right = `${this.resizeStartX - event.clientX}px`;
     }
   }
 
-  @HostListener('mouseup', ['$event'])
   public onResizeMouseUp(event: MouseEvent): void {
     this.checkAndResizeColumn(event);
+    this.changeDetector.detectChanges();
+  }
+
+  private addEventListeners(): void {
+    this.document.addEventListener('mousemove', event => this.onResizeMouseMove(event));
+    this.document.addEventListener('mouseup', event => this.onResizeMouseUp(event));
+  }
+
+  private removeEventListeners(): void {
+    this.document.removeEventListener('mousemove', event => this.onResizeMouseMove(event));
+    this.document.removeEventListener('mouseup', event => this.onResizeMouseMove(event));
   }
 
   private checkAndResizeColumn(event: MouseEvent): void {
