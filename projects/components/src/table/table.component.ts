@@ -243,10 +243,12 @@ import { ModalSize } from '../modal/modal';
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
-          (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
           [pageSize]="pagination?.pageSize"
           [pageIndex]="pagination?.pageIndex"
+          (pageChange)="this.onPageChange($event)"
+          (recordsDisplayedChange)="this.recordsDisplayedChange.emit($event)"
+          (totalRecordsChange)="this.totalRecordsChange.emit($event)"
         ></ht-paginator>
       </div>
     </div>
@@ -373,6 +375,12 @@ export class TableComponent
 
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
+
+  @Output()
+  public readonly recordsDisplayedChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  public readonly totalRecordsChange: EventEmitter<number> = new EventEmitter();
 
   @Output()
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
