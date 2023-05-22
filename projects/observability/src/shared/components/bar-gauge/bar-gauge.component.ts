@@ -136,6 +136,10 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   }
 
   public checkNearMaxValue(): void {
+    if (this.segmentBars.length === 0) {
+      return;
+    }
+
     /*
      * On the far right of each segment is a small 1px white vertical bar used to indicate the end of the segment.
      * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the

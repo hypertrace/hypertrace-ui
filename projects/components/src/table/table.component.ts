@@ -502,7 +502,11 @@ export class TableComponent
       this.initializeData();
     }
 
-    if (changes.selections) {
+    // Current and previous selections both should not be empty.
+    if (
+      changes.selections &&
+      !((changes.selections.previousValue?.length ?? 0) === 0 && (changes.selections.currentValue?.length ?? 0) === 0)
+    ) {
       this.toggleRowSelections(this.selections);
     }
   }
@@ -815,7 +819,13 @@ export class TableComponent
 
   public toggleRowExpanded(row: StatefulTableRow): void {
     row.$$state.expanded = !row.$$state.expanded;
-    this.rowStateSubject.next(row);
+    /**
+     * Only needed for the `tree` type table.
+     * For detail type, it is not needed since we're triggering change detection.
+     */
+    if (this.isTreeType()) {
+      this.rowStateSubject.next(row);
+    }
     this.toggleRowChange.emit(row);
     this.changeDetector.markForCheck();
   }
