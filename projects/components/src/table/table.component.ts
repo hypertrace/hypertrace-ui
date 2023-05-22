@@ -278,6 +278,8 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
+  private static readonly MIN_COLUMN_SIZE_PX: number = 12;
+  private static readonly COLUMN_RESIZE_HANDLER_COLOR: string = Color.Blue4;
   public readonly minColumnWidth: string = '80px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
@@ -552,7 +554,7 @@ export class TableComponent
   public onResizeMouseDown(event: MouseEvent, index: number): void {
     if (this.resizable) {
       this.columnResizeHandler = event.target as HTMLDivElement;
-      this.columnResizeHandler.style.backgroundColor = Color.Blue4;
+      this.columnResizeHandler.style.backgroundColor = TableComponent.COLUMN_RESIZE_HANDLER_COLOR;
 
       this.resizedColumn = this.buildColumnInfo(index);
       this.resizeStartX = event.clientX;
@@ -603,7 +605,10 @@ export class TableComponent
       const offsetX = event.clientX - this.resizeStartX;
 
       // At least 12px of the width should be there after resize
-      if (offsetX < 0 && this.resizedColumn.element.offsetWidth - Math.abs(offsetX) < 12) {
+      if (
+        offsetX < 0 &&
+        this.resizedColumn.element.offsetWidth - Math.abs(offsetX) < TableComponent.MIN_COLUMN_SIZE_PX
+      ) {
         this.setColumnResizeDefaults(this.columnResizeHandler);
 
         return;
