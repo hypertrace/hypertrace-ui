@@ -2,15 +2,18 @@ import { CommonModule } from '@angular/common';
 import { FactorySansProvider, ModuleWithProviders, NgModule } from '@angular/core';
 import {
   FilterBarModule,
+  FilterButtonModule,
   LetAsyncModule,
   PageHeaderModule,
   PanelModule,
   ToggleGroupModule
 } from '@hypertrace/components';
+import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { ExploreQueryEditorModule } from '../../shared/components/explore-query-editor/explore-query-editor.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { EXPLORER_DASHBOARD_BUILDER_FACTORY } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
+import { CartesianExplorerClickHandlerModel } from './interactions/cartesian-explorer-click-handler.model';
 
 @NgModule({
   imports: [
@@ -21,7 +24,11 @@ import { ExplorerComponent } from './explorer.component';
     PanelModule,
     PageHeaderModule,
     ToggleGroupModule,
-    LetAsyncModule
+    LetAsyncModule,
+    FilterButtonModule,
+    DashboardCoreModule.with({
+      models: [CartesianExplorerClickHandlerModel]
+    })
   ],
   declarations: [ExplorerComponent]
 })

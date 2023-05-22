@@ -158,6 +158,13 @@ export class CartesianWidgetModel<TInterval> {
   })
   public selectionHandler?: InteractionHandler;
 
+  @ModelProperty({
+    key: 'data-click-handler',
+    displayName: 'Data Click Handler',
+    type: ModelPropertyType.TYPE
+  })
+  public dataClickHandler?: InteractionHandler;
+
   @ModelInject(MODEL_API)
   private readonly api!: ModelApi;
 
