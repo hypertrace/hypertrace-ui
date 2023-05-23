@@ -15,7 +15,7 @@ import { LoaderType } from '../load-async.service';
       </ng-container>
 
       <ng-template #oldLoaderTemplate>
-        <img [ngClass]="[this.currentLoaderType]" [src]="this.imagePath" />
+        <img [ngClass]="[this.currentLoaderType]" [src]="this.imagePath" alt="Loader icon" />
       </ng-template>
     </div>
   `
