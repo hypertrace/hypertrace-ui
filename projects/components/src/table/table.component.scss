@@ -53,6 +53,10 @@ $data-row-border: 1px solid $gray-2;
       border-right: $header-border;
       border-top-right-radius: 4px;
     }
+
+    &:hover {
+      cursor: move;
+    }
   }
 }
 
