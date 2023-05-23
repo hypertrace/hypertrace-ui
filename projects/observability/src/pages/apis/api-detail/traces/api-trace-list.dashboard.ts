@@ -61,7 +61,7 @@ export const apiTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Errors',
-        width: '80px',
+        width: '100px',
         filterable: true,
         value: {
           type: 'attribute-specification',
