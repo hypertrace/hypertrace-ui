@@ -17,11 +17,13 @@ import { TableComponent } from './table.component';
 import { DraggableListModule } from '../draggable-list/draggable-list.module';
 import { ExpanderToggleModule } from '../expander/expander-toggle.module';
 import { MemoizeModule } from '@hypertrace/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
     CommonModule,
     CdkTableModule,
+    DragDropModule,
     IconModule,
     TooltipModule,
     TableCellsModule,
@@ -33,7 +35,8 @@ import { MemoizeModule } from '@hypertrace/common';
     CheckboxModule,
     DraggableListModule,
     ExpanderToggleModule,
-    MemoizeModule
+    MemoizeModule,
+    TraceSearchBoxModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
