@@ -45,9 +45,9 @@ describe('Table Header Cell Renderer', () => {
     spectator.click(sortIcons[0]);
     expect(sortChange).toHaveBeenLastCalledWith(TableSortDirection.Ascending);
 
-    // // Toggle
-    // spectator.click(sortIcons[0]);
-    // expect(sortChange).toHaveBeenLastCalledWith(undefined);
+    // Toggle
+    spectator.click(sortIcons[0]);
+    expect(sortChange).toHaveBeenLastCalledWith(undefined);
 
     // Click on second icon
     spectator.click(sortIcons[1]);
