@@ -267,7 +267,7 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
-  public readonly minColumnWidth: string = '80px';
+  public readonly minColumnWidth: string = '100px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
     width: '32px',
