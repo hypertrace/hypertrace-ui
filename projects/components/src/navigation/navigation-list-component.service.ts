@@ -37,7 +37,7 @@ export class NavigationListComponentService {
   public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
     return this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange).pipe(
       switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))),
-      defaultIfEmpty<NavItemConfig[]>([])
+      defaultIfEmpty([])
     );
   }
 

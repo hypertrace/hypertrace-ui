@@ -16,7 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { Observable, of, Subject } from 'rxjs';
 import { delay, finalize, switchMap } from 'rxjs/operators';
-import { ButtonVariant, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
@@ -72,7 +72,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   @ViewChild('notification', { static: true })
   public notificationTemplate!: TemplateRef<unknown>;
 
-  private readonly notificationSubject: Subject<boolean> = new Subject();
+  private readonly notificationSubject: Subject<void> = new Subject();
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,

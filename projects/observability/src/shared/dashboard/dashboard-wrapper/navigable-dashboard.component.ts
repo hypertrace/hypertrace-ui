@@ -55,7 +55,7 @@ export class NavigableDashboardComponent implements OnChanges {
   @Output()
   public readonly dashboardReady: EventEmitter<Dashboard> = new EventEmitter();
 
-  public dashboardJson$?: Observable<ModelJson>;
+  public dashboardJson$?: Observable<ModelJson | undefined>;
   public attributes$: Observable<AttributeMetadata[]> = of([]);
   private explicitFilters: Filter[] = [];
   private dashboard?: Dashboard;
