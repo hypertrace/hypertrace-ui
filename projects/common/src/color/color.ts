@@ -1,4 +1,5 @@
 import { hashCode } from '../utilities/math/math-utilities';
+import { rgb } from 'd3-color';
 
 export const enum Color {
   Blue1 = '#f0f6ff',
@@ -82,12 +83,27 @@ export interface ColorCombination {
 
 export const getHexColorForString = (id: string): string => {
   const hash = hashCode(id);
-  let rgb = '#';
+  let rgbString = '#';
   for (let i = 0; i < 3; i++) {
     // eslint-disable-next-line  no-bitwise
     const value = (hash >> (i * 8)) & 0xff;
-    rgb += `00${value.toString(16)}`.substr(-2);
+    rgbString += `00${value.toString(16)}`.substr(-2);
   }
 
-  return rgb;
+  return rgbString;
+};
+
+export const getContrastColor = (
+  rgbColorString: string,
+  darkColor: string = Color.Gray9,
+  lightColor: string = Color.White
+): string => {
+  // Convert to RGB value
+  const rgbColor = rgb(rgbColorString);
+
+  // Get YIQ ratio
+  const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
+
+  // Check contrast
+  return yiq >= 128 ? darkColor : lightColor;
 };

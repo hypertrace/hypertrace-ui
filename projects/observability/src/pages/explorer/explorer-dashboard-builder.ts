@@ -171,7 +171,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Type',
-            width: '80px',
+            width: '100px',
             display: CoreTableCellRendererType.Text,
             filterable: true,
             value: {
@@ -247,7 +247,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Errors',
-            width: '80px',
+            width: '100px',
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -455,7 +455,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Errors',
-            width: '80px',
+            width: '100px',
             filterable: true,
             value: {
               type: 'attribute-specification',

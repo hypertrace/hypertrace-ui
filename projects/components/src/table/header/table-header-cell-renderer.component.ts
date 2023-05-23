@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
 import { FilterAttribute } from '../../filtering/filter/filter-attribute';
 import { FilterOperator } from '../../filtering/filter/filter-operators';
@@ -32,23 +33,30 @@ import { TableColumnConfigExtended } from '../table.service';
       *ngIf="this.columnConfig"
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
-      [ngClass]="{ sortable: this.isSortable }"
     >
-      <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
-        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
-      </ng-container>
-      <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">
+      <div class="title" [ngClass]="this.classes">
         <span>{{ this.columnConfig.title }}</span>
-        <ng-container *ngIf="this.sort">
-          <ht-icon
-            class="sort-icon"
-            [icon]="this.sort === '${TableSortDirection.Descending}' ? '${IconType.ArrowDown}' : '${IconType.ArrowUp}'"
-            size="${IconSize.ExtraSmall}"
-          ></ht-icon>
-        </ng-container>
       </div>
 
-      <ng-container *ngIf="this.isShowOptionButton && !this.leftAlignFilterButton">
+      <div class="sort-icons" *ngIf="this.isSortable">
+        <ht-icon
+          class="sort-icon"
+          [class.active]="this.sort === '${TableSortDirection.Ascending}'"
+          [icon]="'${IconType.ArrowUp}'"
+          size="${IconSize.ExtraSmall}"
+          (click)="this.onClickSortAsc()"
+        ></ht-icon>
+
+        <ht-icon
+          class="sort-icon"
+          [class.active]="this.sort === '${TableSortDirection.Descending}'"
+          [icon]="'${IconType.ArrowDown}'"
+          size="${IconSize.ExtraSmall}"
+          (click)="this.onClickSortDesc()"
+        ></ht-icon>
+      </div>
+
+      <ng-container *ngIf="this.isShowOptionButton">
         <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
 
@@ -60,7 +68,7 @@ import { TableColumnConfigExtended } from '../table.service';
         <ht-popover class="options-button" [closeOnClick]="true">
           <ht-popover-trigger>
             <div #trigger>
-              <ht-icon icon="${IconType.MoreHorizontal}" size="${IconSize.Small}"></ht-icon>
+              <ht-icon icon="${IconType.MoreVertical}" size="${IconSize.Small}"></ht-icon>
             </div>
           </ht-popover-trigger>
           <ht-popover-content>
@@ -80,7 +88,11 @@ import { TableColumnConfigExtended } from '../table.service';
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
+              <ng-container *ngIf="this.columnConfig.editable">
+                <div class="popover-item" (click)="this.onHideCurrentColumn()">Hide</div>
+              </ng-container>
+
+              <ng-container *ngIf="this.isEditableAvailableColumns">
                 <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
               </ng-container>
@@ -94,9 +106,6 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-
-  @Input()
-  public editable?: boolean = false;
 
   @Input()
   public metadata?: FilterAttribute[];
@@ -124,6 +133,9 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   @Output()
   public readonly showEditColumnsChange: EventEmitter<boolean> = new EventEmitter();
+
+  @Output()
+  public readonly hideCurrentColumnChange: EventEmitter<boolean> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
@@ -179,8 +191,21 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     ];
   }
 
+  public onClickSortAsc(): void {
+    this.setSortAndEmit(isEqual(this.sort, this.SORT_ASC) ? undefined : this.SORT_ASC);
+  }
+
+  public onClickSortDesc(): void {
+    this.setSortAndEmit(isEqual(this.sort, this.SORT_DESC) ? undefined : this.SORT_DESC);
+  }
+
   public onSortChange(direction?: TableSortDirection): void {
-    this.sortChange.emit(direction ?? this.getNextSortDirection(this.sort));
+    this.setSortAndEmit(direction ?? this.getNextSortDirection(this.sort));
+  }
+
+  private setSortAndEmit(direction?: TableSortDirection): void {
+    this.sort = direction;
+    this.sortChange.emit(this.sort);
   }
 
   public getTooltip(
@@ -237,6 +262,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onEditColumns(): void {
     this.showEditColumnsChange.emit(true);
+  }
+
+  public onHideCurrentColumn(): void {
+    this.hideCurrentColumnChange.emit(true);
   }
 
   private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {

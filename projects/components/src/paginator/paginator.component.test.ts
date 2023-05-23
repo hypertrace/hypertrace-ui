@@ -18,12 +18,22 @@ describe('Paginator component', () => {
 
   test('should notify when page size selection changes', () => {
     const onPageChangeSpy = jest.fn();
+    const onRecordsDisplayedChangeSpy = jest.fn();
+    const onTotalRecordsChangeSpy = jest.fn();
+
     const spectator = createHost(
-      `<ht-paginator [totalItems]="totalItems" (pageChange)="onPageChange($event)"></ht-paginator>`,
+      `<ht-paginator
+        [totalItems]="totalItems"
+        (pageChange)="onPageChange($event)"
+        (recordsDisplayedChange)="onRecordsDisplayedChange($event)"
+        (totalRecordsChange)="onTotalRecordsChange($event)"
+        ></ht-paginator>`,
       {
         hostProps: {
           totalItems: totalResults,
-          onPageChange: onPageChangeSpy
+          onPageChange: onPageChangeSpy,
+          onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
+          onTotalRecordsChange: onTotalRecordsChangeSpy
         }
       }
     );
@@ -35,6 +45,36 @@ describe('Paginator component', () => {
       pageIndex: 0,
       pageSize: 25
     });
+
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(25);
+    expect(onTotalRecordsChangeSpy).toHaveBeenLastCalledWith(totalResults);
+  });
+
+  test('should notify when page size selection changes', () => {
+    const onRecordsDisplayedChangeSpy = jest.fn();
+    const onTotalRecordsChangeSpy = jest.fn();
+
+    const spectator = createHost(
+      `<ht-paginator
+        [totalItems]="totalItems"
+        (pageChange)="onPageChange($event)"
+        (recordsDisplayedChange)="onRecordsDisplayedChange($event)"
+        (totalRecordsChange)="onTotalRecordsChange($event)"
+        ></ht-paginator>`,
+      {
+        hostProps: {
+          totalItems: 10,
+          onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
+          onTotalRecordsChange: onTotalRecordsChangeSpy
+        }
+      }
+    );
+    expect(spectator.component.pageSize).toBe(defaultPageSize);
+
+    spectator.query(SelectComponent)!.selectedChange.emit(25);
+
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(10);
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(10);
   });
 
   test('should have the correct number of pages for the provided page size and total items', () => {
