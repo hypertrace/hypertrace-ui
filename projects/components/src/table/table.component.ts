@@ -686,7 +686,7 @@ export class TableComponent
   public onHideColumn(column: TableColumnConfigExtended): void {
     column.visible = false;
     const updatedColumns = this.columnConfigsSubject.value;
-    this.updateVisibleColumns(updatedColumns.filter(column => column.visible));
+    this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.columnConfigsSubject.next(updatedColumns);
   }
 
