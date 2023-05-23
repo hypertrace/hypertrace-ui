@@ -16,7 +16,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
 import { Observable, of, Subject } from 'rxjs';
 import { delay, finalize, switchMap } from 'rxjs/operators';
-import { ButtonVariant, ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverService } from '../popover/popover.service';
@@ -26,16 +26,19 @@ import { PopoverService } from '../popover/popover.service';
   styleUrls: ['./copy-to-clipboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-copy-to-clipboard" [htTooltip]="this.tooltip" (click)="this.onCopyToClipboard()">
-      <ht-button
-        class="icon"
-        [variant]="this.variant"
-        [icon]="this.icon"
-        [display]="this.display"
-        [size]="this.size"
-        [label]="this.label"
-      ></ht-button>
-    </div>
+    <ht-event-blocker event="click">
+      <div class="ht-copy-to-clipboard" [htTooltip]="this.tooltip" (click)="this.onCopyToClipboard()">
+        <ht-button
+          class="icon"
+          [variant]="this.variant"
+          [icon]="this.icon"
+          [display]="this.display"
+          [size]="this.size"
+          [label]="this.label"
+          [ariaLabel]="this.icon"
+        ></ht-button>
+      </div>
+    </ht-event-blocker>
     <ng-template #notification>
       <div class="notification"><span class="label">Copied!</span></div>
     </ng-template>

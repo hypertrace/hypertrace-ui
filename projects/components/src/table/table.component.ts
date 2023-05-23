@@ -244,10 +244,12 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
-          (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
           [pageSize]="pagination?.pageSize"
           [pageIndex]="pagination?.pageIndex"
+          (pageChange)="this.onPageChange($event)"
+          (recordsDisplayedChange)="this.recordsDisplayedChange.emit($event)"
+          (totalRecordsChange)="this.totalRecordsChange.emit($event)"
         ></ht-paginator>
       </div>
     </div>
@@ -267,7 +269,7 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
-  public readonly minColumnWidth: string = '80px';
+  public readonly minColumnWidth: string = '100px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
     width: '32px',
@@ -374,6 +376,12 @@ export class TableComponent
 
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
+
+  @Output()
+  public readonly recordsDisplayedChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  public readonly totalRecordsChange: EventEmitter<number> = new EventEmitter();
 
   @Output()
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
@@ -503,7 +511,11 @@ export class TableComponent
       this.initializeData();
     }
 
-    if (changes.selections) {
+    // Current and previous selections both should not be empty.
+    if (
+      changes.selections &&
+      !((changes.selections.previousValue?.length ?? 0) === 0 && (changes.selections.currentValue?.length ?? 0) === 0)
+    ) {
       this.toggleRowSelections(this.selections);
     }
   }
@@ -686,7 +698,7 @@ export class TableComponent
   public onHideColumn(column: TableColumnConfigExtended): void {
     column.visible = false;
     const updatedColumns = this.columnConfigsSubject.value;
-    this.updateVisibleColumns(updatedColumns.filter(column => column.visible));
+    this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.columnConfigsSubject.next(updatedColumns);
   }
 
@@ -829,7 +841,13 @@ export class TableComponent
 
   public toggleRowExpanded(row: StatefulTableRow): void {
     row.$$state.expanded = !row.$$state.expanded;
-    this.rowStateSubject.next(row);
+    /**
+     * Only needed for the `tree` type table.
+     * For detail type, it is not needed since we're triggering change detection.
+     */
+    if (this.isTreeType()) {
+      this.rowStateSubject.next(row);
+    }
     this.toggleRowChange.emit(row);
     this.changeDetector.markForCheck();
   }

@@ -77,6 +77,7 @@ export class TableEditColumnsModalComponent {
 
   public readonly getFilteredColumns = (searchText: string): TableColumnConfigExtended[] => {
     const lowercaseSearch = searchText.toLowerCase();
+
     return this.editColumns.filter(column => column.title?.toLowerCase()?.includes(lowercaseSearch));
   };
 
