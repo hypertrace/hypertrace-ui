@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { IsEmptyPipeModule, NavigationService } from '@hypertrace/common';
 import { PopoverComponent } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
@@ -23,7 +23,7 @@ import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule],
+    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule, IsEmptyPipeModule],
     providers: [
       mockProvider(NavigationService, {
         navigation$: NEVER
@@ -505,9 +505,7 @@ describe('Multi Select Component', () => {
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
 
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+    expect(spectator.component.searchText).toBe('');
 
     expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
@@ -563,15 +561,12 @@ describe('Multi Select Component', () => {
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
 
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+    expect(spectator.component.searchText).toBe('i');
 
     spectator.component.searchOptions('asdasd');
     spectator.tick();
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: true });
-    });
+
+    expect(spectator.component.searchText).toBe('asdasd');
 
     expect(spectator.query('.search-bar', { root: true })).toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
@@ -585,9 +580,8 @@ describe('Multi Select Component', () => {
     spectator.detectChanges();
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+
+    expect(spectator.component.searchText).toBe('');
 
     expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
