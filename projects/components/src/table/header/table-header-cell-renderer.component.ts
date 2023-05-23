@@ -44,6 +44,7 @@ import { TableColumnConfigExtended } from '../table.service';
           [class.active]="this.sort === '${TableSortDirection.Ascending}'"
           [icon]="'${IconType.ArrowUp}'"
           size="${IconSize.ExtraSmall}"
+          htTooltip="Sort Ascending"
           (click)="this.onClickSortAsc()"
         ></ht-icon>
 
@@ -52,6 +53,7 @@ import { TableColumnConfigExtended } from '../table.service';
           [class.active]="this.sort === '${TableSortDirection.Descending}'"
           [icon]="'${IconType.ArrowDown}'"
           size="${IconSize.ExtraSmall}"
+          htTooltip="Sort Descending"
           (click)="this.onClickSortDesc()"
         ></ht-icon>
       </div>
