@@ -18,7 +18,7 @@ import { NumberInputAppearance } from './number-input-appearance';
     <input
       type="number"
       class="number-input"
-      [attr.aria-label]="this.ariaLabel"
+      [attr.aria-label]="this.ariaLabel || 'number-input'"
       [ngClass]="this.getStyleClasses()"
       [disabled]="this.disabled"
       [ngModel]="this.value"
