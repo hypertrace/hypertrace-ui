@@ -65,6 +65,7 @@ import {
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ht-table',
@@ -82,117 +83,121 @@ import { DOCUMENT } from '@angular/common';
           this.pageable && this.isTableFullPage ? 'bottom-margin' : '',
           !this.showFloatingPaginator ? 'table' : ''
         ]"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="this.dropList($event)"
       >
         <!-- Columns -->
-        <ng-container *ngIf="this.visibleColumnConfigs$ | async as visibleColumns">
-          <ng-container *ngFor="let columnDef of visibleColumns; trackBy: this.trackItem; index as index">
-            <ng-container [cdkColumnDef]="columnDef.id">
-              <cdk-header-cell
-                [attr.data-column-index]="index"
-                *cdkHeaderCellDef
-                [style.flex-basis]="columnDef.width"
-                [style.max-width]="columnDef.width"
-                [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
-                class="header-cell"
-                [ngClass]="{
-                  'state-col': this.isStateColumn | htMemoize: columnDef,
-                  'col-border-right': this.isLastStateColumn | htMemoize: visibleColumns:index
-                }"
-                #headerCell
-              >
-                <div class="header-cell-container">
-                  <div
-                    *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
-                    class="state-cell-container"
-                  >
-                    <ht-checkbox
-                      *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
-                      [htTooltip]="this.getHeaderCheckboxTooltip()"
-                      [checked]="this.allRowsSelectionChecked"
-                      [indeterminate]="this.indeterminateRowsSelected"
-                      (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
-                    ></ht-checkbox>
-                    <div
-                      *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
-                      [style.width]="columnDef?.width"
-                    ></div>
-                  </div>
-
-                  <ng-template #headerCellRendererTemplate>
-                    <ht-table-header-cell-renderer
-                      class="header-cell-renderer"
-                      [editable]="!this.isTreeType()"
-                      [metadata]="this.metadata"
-                      [columnConfig]="columnDef"
-                      [defaultColumns]="this.columnDefaultConfigs"
-                      [availableColumns]="this.columnConfigs$ | async"
-                      [index]="index"
-                      [sort]="columnDef.sort"
-                      [indeterminateRowsSelected]="this.indeterminateRowsSelected"
-                      (sortChange)="this.onSortChange($event, columnDef)"
-                      (showEditColumnsChange)="this.showEditColumnsModal()"
-                    >
-                    </ht-table-header-cell-renderer>
-                  </ng-template>
-
-                  <!-- column divider -->
-                  <div *ngIf="this.showColumnDivider | htMemoize: visibleColumns:index" class="header-column-divider">
-                    <div class="bg-col-divider"></div>
-                  </div>
-                </div>
-
-                <!-- column resize handler -->
+        <ng-container *ngFor="let columnDef of this.visibleColumnConfigs; trackBy: this.trackItem; index as index">
+          <ng-container [cdkColumnDef]="columnDef.id">
+            <cdk-header-cell
+              cdkDrag
+              [attr.data-column-index]="index"
+              *cdkHeaderCellDef
+              [style.flex-basis]="columnDef.width"
+              [style.max-width]="columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
+              class="header-cell"
+              [ngClass]="{
+                'state-col': this.isStateColumn | htMemoize: columnDef,
+                'col-border-right': this.isLastStateColumn | htMemoize: this.visibleColumnConfigs:index
+              }"
+              #headerCell
+            >
+              <div class="header-cell-container">
                 <div
-                  *ngIf="this.showColumnResizeHandler | htMemoize: visibleColumns:index"
-                  class="header-column-resize-handle"
-                  (mousedown)="this.onResizeMouseDown($event, index)"
-                ></div>
-              </cdk-header-cell>
-              <cdk-cell
-                *cdkCellDef="let row"
-                [style.flex-basis]="columnDef.width"
-                [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
-                [style.max-width]="columnDef.width"
-                [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
-                [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
-                [ngClass]="{
-                  'detail-expanded': this.isDetailExpanded(row),
-                  'hide-divider': this.isDetailList(),
-                  'state-col': this.isStateColumn | htMemoize: columnDef,
-                  'col-border-right': this.isLastStateColumn | htMemoize: visibleColumns:index,
-                  'depth-greater-than-zero': row.$$state.depth > 0
-                }"
-                class="data-cell"
-              >
-                <div
-                  *ngIf="this.isStateColumn | htMemoize: columnDef; else cellRendererTemplate"
+                  *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
                   class="state-cell-container"
                 >
                   <ht-checkbox
                     *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
-                    [checked]="row.$$state.selected"
-                    (checkedChange)="columnDef.onClick?.(row)"
+                    [htTooltip]="this.getHeaderCheckboxTooltip()"
+                    [checked]="this.allRowsSelectionChecked"
+                    [indeterminate]="this.indeterminateRowsSelected"
+                    (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
                   ></ht-checkbox>
-                  <ht-expander-toggle
-                    *ngIf="(this.isExpansionStateColumn | htMemoize: columnDef) && !row.$$state.leaf"
-                    [expanded]="row.$$state.expanded"
-                    (click)="columnDef.onClick?.(row)"
-                  ></ht-expander-toggle>
+                  <div
+                    *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
+                    [style.width]="columnDef?.width"
+                  ></div>
                 </div>
 
-                <ng-template #cellRendererTemplate>
-                  <ht-table-data-cell-renderer
-                    class="data-cell-renderer"
+                <ng-template #headerCellRendererTemplate>
+                  <ht-table-header-cell-renderer
+                    class="header-cell-renderer"
                     [metadata]="this.metadata"
                     [columnConfig]="columnDef"
-                    [index]="this.columnIndex(columnDef, index)"
-                    [rowData]="row"
-                    [cellData]="row[columnDef.id]"
-                    (click)="this.onDataCellClick(row)"
-                  ></ht-table-data-cell-renderer>
+                    [defaultColumns]="this.columnDefaultConfigs"
+                    [availableColumns]="this.columnConfigs$ | async"
+                    [index]="index"
+                    [sort]="columnDef.sort"
+                    [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                    (sortChange)="this.onSortChange($event, columnDef)"
+                    (showEditColumnsChange)="this.showEditColumnsModal()"
+                  >
+                  </ht-table-header-cell-renderer>
                 </ng-template>
-              </cdk-cell>
-            </ng-container>
+
+                <!-- column divider -->
+                <div
+                  *ngIf="this.showColumnDivider | htMemoize: this.visibleColumnConfigs:index"
+                  class="header-column-divider"
+                >
+                  <div class="bg-col-divider"></div>
+                </div>
+              </div>
+
+              <!-- column resize handler -->
+              <div
+                *ngIf="this.showColumnResizeHandler | htMemoize: this.visibleColumnConfigs:index"
+                class="header-column-resize-handle"
+                (mousedown)="this.onResizeMouseDown($event, index)"
+              ></div>
+            </cdk-header-cell>
+            <cdk-cell
+              *cdkCellDef="let row"
+              [style.flex-basis]="columnDef.width"
+              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
+              [style.max-width]="columnDef.width"
+              [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
+              [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
+              [ngClass]="{
+                'detail-expanded': this.isDetailExpanded(row),
+                'hide-divider': this.isDetailList(),
+                'state-col': this.isStateColumn | htMemoize: columnDef,
+                'col-border-right': this.isLastStateColumn | htMemoize: this.visibleColumnConfigs:index,
+                'depth-greater-than-zero': row.$$state.depth > 0
+              }"
+              class="data-cell"
+            >
+              <div
+                *ngIf="this.isStateColumn | htMemoize: columnDef; else cellRendererTemplate"
+                class="state-cell-container"
+              >
+                <ht-checkbox
+                  *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
+                  [checked]="row.$$state.selected"
+                  (checkedChange)="columnDef.onClick?.(row, columnDef)"
+                ></ht-checkbox>
+                <ht-expander-toggle
+                  *ngIf="(this.isExpansionStateColumn | htMemoize: columnDef) && !row.$$state.leaf"
+                  [expanded]="row.$$state.expanded"
+                  (click)="columnDef.onClick?.(row, columnDef)"
+                ></ht-expander-toggle>
+              </div>
+
+              <ng-template #cellRendererTemplate>
+                <ht-table-data-cell-renderer
+                  class="data-cell-renderer"
+                  [metadata]="this.metadata"
+                  [columnConfig]="columnDef"
+                  [index]="this.columnIndex(columnDef, index)"
+                  [rowData]="row"
+                  [cellData]="row[columnDef.id]"
+                  (click)="this.onDataCellClick(row)"
+                ></ht-table-data-cell-renderer>
+              </ng-template>
+            </cdk-cell>
           </ng-container>
         </ng-container>
 
@@ -211,12 +216,13 @@ import { DOCUMENT } from '@angular/common';
 
         <!-- Header Row -->
         <ng-container *ngIf="this.isShowHeader()">
-          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds$ | async" class="header-row" sticky></cdk-header-row>
+          <cdk-header-row *cdkHeaderRowDef="this.visibleColumnIds" class="header-row" sticky></cdk-header-row>
         </ng-container>
 
         <!-- Data Rows -->
         <cdk-row
-          *cdkRowDef="let row; columns: this.visibleColumnIds$ | async; last as isLast"
+          cdk-row
+          *cdkRowDef="let row; columns: this.visibleColumnIds; last as isLast"
           (mouseenter)="this.onDataRowMouseEnter(row)"
           (mouseleave)="this.onDataRowMouseLeave()"
           [ngClass]="{
@@ -255,10 +261,12 @@ import { DOCUMENT } from '@angular/common';
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
-          (pageChange)="this.onPageChange($event)"
           [pageSizeOptions]="this.pageSizeOptions"
           [pageSize]="pagination?.pageSize"
           [pageIndex]="pagination?.pageIndex"
+          (pageChange)="this.onPageChange($event)"
+          (recordsDisplayedChange)="this.recordsDisplayedChange.emit($event)"
+          (totalRecordsChange)="this.totalRecordsChange.emit($event)"
         ></ht-paginator>
       </div>
     </div>
@@ -280,7 +288,7 @@ export class TableComponent
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
   private static readonly MIN_COLUMN_SIZE_PX: number = 12;
   private static readonly COLUMN_RESIZE_HANDLER_COLOR: string = Color.Blue4;
-  public readonly minColumnWidth: string = '80px';
+  public readonly minColumnWidth: string = '100px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
     width: '32px',
@@ -389,6 +397,12 @@ export class TableComponent
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   @Output()
+  public readonly recordsDisplayedChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  public readonly totalRecordsChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
   @Output()
@@ -413,12 +427,9 @@ export class TableComponent
   >([]);
   public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
   public columnDefaultConfigs?: TableColumnConfigExtended[];
-  public readonly visibleColumnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigs$.pipe(
-    map(columns => columns.filter(column => column.visible))
-  );
-  public readonly visibleColumnIds$: Observable<string[]> = this.visibleColumnConfigs$.pipe(
-    map(columns => columns.map(column => column.id))
-  );
+
+  public visibleColumnConfigs: TableColumnConfigExtended[] = [];
+  public visibleColumnIds: string[] = [];
 
   /*
    * Column State
@@ -491,6 +502,17 @@ export class TableComponent
       .subscribe(sort => this.updateSort(sort));
   }
 
+  public dropList(event: CdkDragDrop<TableColumnConfigExtended[]>): void {
+    if (event) {
+      const minIndex = (this.hasMultiSelect() ? 1 : 0) + (this.hasExpandableRows() ? 1 : 0);
+      if (event.currentIndex >= minIndex) {
+        moveItemInArray(this.visibleColumnConfigs, event.previousIndex, event.currentIndex);
+        this.updateVisibleColumns(this.visibleColumnConfigs);
+        this.visibleColumnIds = [...this.visibleColumnIds];
+      }
+    }
+  }
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.display) {
       this.isTableFullPage = this.display === TableStyle.FullPage;
@@ -548,7 +570,7 @@ export class TableComponent
   }
 
   private getVisibleColumnConfig(index: number): TableColumnConfigExtended {
-    return this.columnConfigsSubject.value.filter(cc => cc.visible)[index];
+    return this.visibleColumnConfigs[index];
   }
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
@@ -647,6 +669,8 @@ export class TableComponent
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
     }
+    this.updateVisibleColumns(columnConfigurations.filter(column => column.visible));
+
     this.columnConfigsSubject.next(columnConfigurations);
     this.checkAndUpdateColumnWidths();
   }
@@ -661,6 +685,11 @@ export class TableComponent
         });
       });
     }
+  }
+
+  private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
+    this.visibleColumnConfigs = visibleColumnConfigs;
+    this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
   }
 
   private initializeData(): void {
@@ -748,6 +777,13 @@ export class TableComponent
     }
   }
 
+  public onHideColumn(column: TableColumnConfigExtended): void {
+    column.visible = false;
+    const updatedColumns = this.columnConfigsSubject.value;
+    this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
+    this.columnConfigsSubject.next(updatedColumns);
+  }
+
   public showEditColumnsModal(): void {
     this.columnConfigs$
       .pipe(
@@ -768,7 +804,6 @@ export class TableComponent
       )
       .subscribe(editedColumnConfigs => {
         this.initializeColumns(editedColumnConfigs);
-        this.columnConfigsChange.emit(editedColumnConfigs);
       });
   }
 
