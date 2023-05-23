@@ -128,7 +128,7 @@ import { SelectSize } from './select-size';
             <ng-container
               *ngIf="
                 this.searchMode !== '${SelectSearchMode.Disabled}' &&
-                ((this.allOptions$ | async)?.length > 5 || (this.searchText !== undefined && this.searchText !== ''))
+                ((this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty))
               "
             >
               <ht-event-blocker event="click" [enabled]="true">
