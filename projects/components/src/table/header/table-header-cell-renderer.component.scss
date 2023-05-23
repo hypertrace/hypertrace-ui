@@ -7,9 +7,6 @@
   width: 100%;
   height: 32px;
   padding: 0 6px;
-  &.sortable {
-    cursor: pointer;
-  }
 
   &:hover {
     color: $gray-9;
@@ -49,10 +46,19 @@
     &.right {
       justify-content: flex-end;
     }
+  }
+
+  .sort-icons {
+    cursor: pointer;
+    margin-left: 4px;
+
+    display: flex;
+    color: $gray-2;
 
     .sort-icon {
-      margin-left: 4px;
-      color: $gray-9;
+      &.active {
+        color: $gray-9;
+      }
     }
   }
 
