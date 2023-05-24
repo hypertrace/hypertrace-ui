@@ -11,6 +11,7 @@ import { TraceSearchBoxModule } from '../search-box/search-box.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { XMoreModule } from '../x-more/x-more.module';
 import { MultiSelectComponent } from './multi-select.component';
+import { IsEmptyPipeModule } from '@hypertrace/common';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { MultiSelectComponent } from './multi-select.component';
     LoadAsyncModule,
     CheckboxModule,
     TooltipModule,
-    XMoreModule
+    XMoreModule,
+    IsEmptyPipeModule
   ],
   declarations: [MultiSelectComponent],
   exports: [MultiSelectComponent]
