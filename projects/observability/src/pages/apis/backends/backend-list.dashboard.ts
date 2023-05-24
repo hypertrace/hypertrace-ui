@@ -26,7 +26,7 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         type: 'table-widget-column',
         title: 'Type',
         display: ObservabilityTableCellType.BackendIcon,
-        width: '80px',
+        width: '100px',
         value: {
           type: 'attribute-specification',
           attribute: 'type'
