@@ -254,7 +254,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   @ContentChildren(SelectOptionComponent)
   private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
-  public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
+  public allOptions$: Observable<QueryList<SelectOptionComponent<V>>> = EMPTY;
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
 
   @ContentChildren(SelectControlOptionComponent)
