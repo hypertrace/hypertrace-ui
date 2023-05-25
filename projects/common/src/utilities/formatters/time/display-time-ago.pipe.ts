@@ -15,7 +15,7 @@ import { DateCoercer } from '../../coercers/date-coercer';
 export class DisplayTimeAgo implements PipeTransform {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
-  public transform(value?: DateOrMillis | null): string {
+  public transform(value?: DateOrMillis | null, suffix: string = 'ago'): string {
     if (value === null || value === undefined || value === 0) {
       return '-';
     }
@@ -25,7 +25,7 @@ export class DisplayTimeAgo implements PipeTransform {
       return 'Just now';
     }
 
-    return `${durationAgo.getMostSignificantUnitOnly().toLongString()} ago`;
+    return `${durationAgo.getMostSignificantUnitOnly().toLongString()} ${suffix}`;
   }
 
   private calcSecondsAgo(timestamp: DateOrMillis): number {
