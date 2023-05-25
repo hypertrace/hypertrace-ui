@@ -13,16 +13,19 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
   Output,
+  QueryList,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
+  Color,
   Dictionary,
   DomElementMeasurerService,
   isEqualIgnoreFunctions,
@@ -30,7 +33,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { debounce, isNil, without } from 'lodash-es';
+import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { switchMap, take, filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -61,6 +64,7 @@ import {
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalSize } from '../modal/modal';
+import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -87,7 +91,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
         <ng-container *ngFor="let columnDef of this.visibleColumnConfigs; trackBy: this.trackItem; index as index">
           <ng-container [cdkColumnDef]="columnDef.id">
             <cdk-header-cell
-              cdkDrag
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
@@ -98,45 +101,59 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
                 'state-col': this.isStateColumn | htMemoize: columnDef,
                 'col-border-right': this.isLastStateColumn | htMemoize: this.visibleColumnConfigs:index
               }"
+              #headerCell
             >
-              <div
-                *ngIf="this.showColumnResizeDivider | htMemoize: this.visibleColumnConfigs:index"
-                class="header-column-resize-handle"
-                [ngClass]="{ resizable: this.resizable }"
-                (mousedown)="this.onResizeMouseDown($event, index)"
-              >
-                <div class="header-column-divider"></div>
-              </div>
-              <div
-                *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
-                class="state-cell-container"
-              >
-                <ht-checkbox
-                  *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
-                  [htTooltip]="this.getHeaderCheckboxTooltip()"
-                  [checked]="this.allRowsSelectionChecked"
-                  [indeterminate]="this.indeterminateRowsSelected"
-                  (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
-                ></ht-checkbox>
-                <div *ngIf="this.isExpansionStateColumn | htMemoize: columnDef" [style.width]="columnDef?.width"></div>
+              <div cdkDrag class="header-cell-container">
+                <div class="header-cell-content">
+                  <div
+                    *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
+                    class="state-cell-container"
+                  >
+                    <ht-checkbox
+                      *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
+                      [htTooltip]="this.getHeaderCheckboxTooltip()"
+                      [checked]="this.allRowsSelectionChecked"
+                      [indeterminate]="this.indeterminateRowsSelected"
+                      (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
+                    ></ht-checkbox>
+                    <div
+                      *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
+                      [style.width]="columnDef?.width"
+                    ></div>
+                  </div>
+
+                  <ng-template #headerCellRendererTemplate>
+                    <ht-table-header-cell-renderer
+                      class="header-cell-renderer"
+                      [metadata]="this.metadata"
+                      [columnConfig]="columnDef"
+                      [defaultColumns]="this.columnDefaultConfigs"
+                      [availableColumns]="this.columnConfigs$ | async"
+                      [index]="index"
+                      [sort]="columnDef.sort"
+                      [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                      (sortChange)="this.onSortChange($event, columnDef)"
+                      (showEditColumnsChange)="this.showEditColumnsModal()"
+                    >
+                    </ht-table-header-cell-renderer>
+                  </ng-template>
+                </div>
+
+                <!-- column divider -->
+                <div
+                  *ngIf="this.showColumnDivider | htMemoize: this.visibleColumnConfigs:index"
+                  class="header-column-divider"
+                >
+                  <div class="bg-col-divider"></div>
+                </div>
               </div>
 
-              <ng-template #headerCellRendererTemplate>
-                <ht-table-header-cell-renderer
-                  class="header-cell-renderer"
-                  [metadata]="this.metadata"
-                  [columnConfig]="columnDef"
-                  [defaultColumns]="this.columnDefaultConfigs"
-                  [availableColumns]="this.columnConfigs$ | async"
-                  [index]="index"
-                  [sort]="columnDef.sort"
-                  [indeterminateRowsSelected]="this.indeterminateRowsSelected"
-                  (sortChange)="this.onSortChange($event, columnDef)"
-                  (hideCurrentColumnChange)="this.onHideColumn(columnDef)"
-                  (showEditColumnsChange)="this.showEditColumnsModal()"
-                >
-                </ht-table-header-cell-renderer>
-              </ng-template>
+              <!-- column resize handler -->
+              <div
+                *ngIf="this.showColumnResizeHandler | htMemoize: this.visibleColumnConfigs:index"
+                class="header-column-resize-handle"
+                (mousedown)="this.onResizeMouseDown($event, index)"
+              ></div>
             </cdk-header-cell>
             <cdk-cell
               *cdkCellDef="let row"
@@ -227,6 +244,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
       <!-- State Watcher -->
       <ng-container *ngIf="this.dataSource?.loadingStateChange$ | async as loadingState">
+        <!-- eslint-disable @angular-eslint/template/cyclomatic-complexity -->
         <div class="state-watcher" *ngIf="!loadingState.hide">
           <ng-container
             class="state-watcher"
@@ -269,6 +287,8 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
+  private static readonly MIN_COLUMN_SIZE_PX: number = 12;
+  private static readonly COLUMN_RESIZE_HANDLER_COLOR: string = Color.Blue4;
   public readonly minColumnWidth: string = '100px';
   private readonly expandableToggleColumnConfig: TableColumnConfig = {
     id: '$$expanded',
@@ -397,6 +417,9 @@ export class TableComponent
   @ViewChild(CdkHeaderRow, { read: ElementRef })
   public headerRowElement!: ElementRef;
 
+  @ViewChildren('headerCell', { read: ElementRef })
+  public headerCells!: QueryList<ElementRef>;
+
   /*
    * Column Config
    */
@@ -453,9 +476,9 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
-  private resizeHeaderOffsetLeft: number = 0;
   private resizeStartX: number = 0;
-  private resizeColumns?: ResizeColumns;
+  private columnResizeHandler?: HTMLDivElement;
+  private resizedColumn?: ColumnInfo;
   public indeterminateRowsSelected?: boolean;
   /**
    *  This is to select all rows on the current page, we do not support selecting entirety of the data
@@ -463,6 +486,7 @@ export class TableComponent
   public allRowsSelectionChecked: boolean = false;
 
   public constructor(
+    @Inject(DOCUMENT) private readonly document: Document,
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
@@ -524,6 +548,7 @@ export class TableComponent
     setTimeout(() => {
       !this.dataSource && this.initializeData();
       this.initializeColumns();
+      this.addEventListeners();
     });
   }
 
@@ -534,6 +559,7 @@ export class TableComponent
     this.columnStateSubject.complete();
     this.columnConfigsSubject.complete();
     this.dataSource?.disconnect();
+    this.removeEventListeners();
   }
 
   public trackItem(_index: number, column: TableColumnConfigExtended): string {
@@ -550,14 +576,12 @@ export class TableComponent
 
   public onResizeMouseDown(event: MouseEvent, index: number): void {
     if (this.resizable) {
-      this.resizeHeaderOffsetLeft = this.headerRowElement.nativeElement.offsetLeft;
+      this.columnResizeHandler = event.target as HTMLDivElement;
+      this.columnResizeHandler.style.backgroundColor = TableComponent.COLUMN_RESIZE_HANDLER_COLOR;
 
-      this.resizeColumns = {
-        left: this.buildColumnInfo(index - 1),
-        right: this.buildColumnInfo(index)
-      };
-
+      this.resizedColumn = this.buildColumnInfo(index);
       this.resizeStartX = event.clientX;
+
       event.preventDefault();
     }
   }
@@ -578,14 +602,52 @@ export class TableComponent
     };
   }
 
-  @HostListener('mousemove', ['$event'])
   public onResizeMouseMove(event: MouseEvent): void {
-    this.debouncedResizeColumn(event);
+    if (this.resizable && this.resizeStartX > 0 && !isNil(this.columnResizeHandler)) {
+      this.columnResizeHandler.style.right = `${this.resizeStartX - event.clientX}px`;
+    }
   }
 
-  @HostListener('mouseup')
-  public onResizeMouseUp(): void {
-    this.resizeColumns = undefined;
+  public onResizeMouseUp(event: MouseEvent): void {
+    this.checkAndResizeColumn(event);
+    this.changeDetector.detectChanges();
+  }
+
+  private addEventListeners(): void {
+    this.document.addEventListener('mousemove', event => this.onResizeMouseMove(event));
+    this.document.addEventListener('mouseup', event => this.onResizeMouseUp(event));
+  }
+
+  private removeEventListeners(): void {
+    this.document.removeEventListener('mousemove', event => this.onResizeMouseMove(event));
+    this.document.removeEventListener('mouseup', event => this.onResizeMouseMove(event));
+  }
+
+  private checkAndResizeColumn(event: MouseEvent): void {
+    if (!isNil(this.columnResizeHandler) && !isNil(this.resizedColumn)) {
+      const offsetX = event.clientX - this.resizeStartX;
+
+      // At least 12px of the width should be there after resize
+      if (
+        offsetX < 0 &&
+        this.resizedColumn.element.offsetWidth - Math.abs(offsetX) < TableComponent.MIN_COLUMN_SIZE_PX
+      ) {
+        this.setColumnResizeDefaults(this.columnResizeHandler);
+
+        return;
+      }
+
+      this.resizedColumn.config.width = `${this.resizedColumn.element.offsetWidth + offsetX}px`;
+      this.setColumnResizeDefaults(this.columnResizeHandler);
+    }
+  }
+
+  private setColumnResizeDefaults(columnResizeHandler: HTMLDivElement): void {
+    columnResizeHandler.style.backgroundColor = Color.Transparent;
+    columnResizeHandler.style.right = '2px';
+    this.columnResizeHandler = undefined;
+    this.resizeStartX = 0;
+    this.resizedColumn = undefined;
   }
 
   private buildColumnInfo(index: number): ColumnInfo {
@@ -603,10 +665,6 @@ export class TableComponent
     };
   }
 
-  private calcOffsetX(event: MouseEvent, startX: number, minX: number): number {
-    return Math.max(minX, event.clientX) - startX;
-  }
-
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
     const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
@@ -615,6 +673,19 @@ export class TableComponent
     this.updateVisibleColumns(columnConfigurations.filter(column => column.visible));
 
     this.columnConfigsSubject.next(columnConfigurations);
+    this.checkAndUpdateColumnWidths();
+  }
+
+  // This changes column config `width` properties to PX widths after initialization.
+  private checkAndUpdateColumnWidths(): void {
+    if (!isNil(this.headerCells)) {
+      this.headerCells.changes.pipe(take(1)).subscribe(headerCells => {
+        (headerCells as QueryList<ElementRef<HTMLElement>>).forEach((cell, index) => {
+          const config = this.getVisibleColumnConfig(index);
+          config.width = `${cell.nativeElement.offsetWidth}px`;
+        });
+      });
+    }
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
@@ -650,16 +721,28 @@ export class TableComponent
     return !!this.data && !!this.columnConfigs && (this.pageable ? !!this.paginator : true);
   }
 
-  public showColumnResizeDivider = (columns: TableColumnConfig[], index: number): boolean => {
-    if (index === 0) {
+  public showColumnDivider = (columns: TableColumnConfig[], index: number): boolean => {
+    if (index === columns.length - 1) {
       return false;
     }
 
-    if (this.isStateColumn(columns[index - 1])) {
+    if (this.isStateColumn(columns[index])) {
       return false;
     }
 
     return true;
+  };
+
+  public showColumnResizeHandler = (columns: TableColumnConfig[], index: number): boolean => {
+    if (!(this.resizable ?? true)) {
+      return false;
+    }
+
+    if (index === columns.length - 1) {
+      return true;
+    }
+
+    return this.showColumnDivider(columns, index);
   };
 
   public isSelectionStateColumn = (column?: TableColumnConfig): boolean => column?.id === '$$selected';
@@ -973,25 +1056,6 @@ export class TableComponent
         }
       : undefined;
   }
-
-  private resizeColumn(event: MouseEvent): void {
-    if (this.resizeColumns === undefined) {
-      return;
-    }
-
-    const offsetX = this.calcOffsetX(
-      event,
-      this.resizeStartX,
-      this.resizeHeaderOffsetLeft + this.resizeColumns.left.bounds.left
-    );
-
-    this.resizeColumns.left.config.width = `${this.resizeColumns.left.element.offsetWidth + offsetX}px`;
-    this.resizeStartX = this.resizeStartX + offsetX;
-  }
-
-  private readonly debouncedResizeColumn: (event: MouseEvent) => void = debounce(this.resizeColumn, 20, {
-    trailing: true
-  });
 }
 
 export interface SortedColumn<TCol extends TableColumnConfig> {
@@ -1002,11 +1066,6 @@ export interface SortedColumn<TCol extends TableColumnConfig> {
 interface ColumnBounds {
   left: number;
   right: number;
-}
-
-interface ResizeColumns {
-  left: ColumnInfo;
-  right: ColumnInfo;
 }
 
 interface ColumnInfo {

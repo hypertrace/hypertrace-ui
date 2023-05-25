@@ -1,7 +1,6 @@
 @import 'mixins';
 
 .table-header-cell-renderer {
-  @include ellipsis-overflow();
   display: flex;
   align-items: center;
   width: 100%;
@@ -34,6 +33,11 @@
     min-width: 0;
     flex: 1 1 auto;
     display: flex;
+
+    .title-text {
+      @include ellipsis-overflow;
+      width: 100%;
+    }
 
     &.left {
       justify-content: flex-start;

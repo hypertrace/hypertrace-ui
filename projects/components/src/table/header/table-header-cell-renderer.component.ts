@@ -35,7 +35,7 @@ import { TableColumnConfigExtended } from '../table.service';
       class="table-header-cell-renderer"
     >
       <div class="title" [ngClass]="this.classes">
-        <span>{{ this.columnConfig.title }}</span>
+        <span class="title-text">{{ this.columnConfig.title }}</span>
       </div>
 
       <div class="sort-icons" *ngIf="this.isSortable">
