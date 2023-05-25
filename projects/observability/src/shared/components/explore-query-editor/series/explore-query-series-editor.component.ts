@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { ButtonStyle, SelectOption } from '@hypertrace/components';
+import { ButtonStyle, SelectOption, SelectSearchMode } from '@hypertrace/components';
 import { combineLatest, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
@@ -22,6 +22,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
         <ht-select
           *ngIf="this.attributeOptions$ | async as attributeOptions"
           [selected]="this.selectedAttribute$ | async"
+          searchMode="${SelectSearchMode.CaseInsensitive}"
           (selectedChange)="this.onAttributeChange($event)"
           class="attribute-selector"
           [showBorder]="true"
@@ -35,6 +36,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
 
         <ht-select
           *ngIf="this.aggregationOptions$ | async as aggregationOptions"
+          searchMode="${SelectSearchMode.CaseInsensitive}"
           [selected]="this.selectedAggregation$ | async"
           (selectedChange)="this.onAggregationChange($event)"
           class="aggregation-selector"

@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { LoggerService, queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty, isEqual } from 'lodash-es';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, merge, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { IconSize } from '../icon/icon-size';
@@ -42,6 +42,7 @@ import { SelectSize } from './select-size';
     <div
       class="select"
       [attr.aria-disabled]="this.disabled"
+      *htLetAsync="this.selected$ as selected"
       [ngClass]="[
         this.size,
         this.groupPosition,
@@ -50,14 +51,13 @@ import { SelectSize } from './select-size';
         this.disabled ? 'disabled' : '',
         this.popoverOpen ? 'open' : ''
       ]"
-      *htLetAsync="this.selected$ as selected"
     >
       <ht-popover
         [disabled]="this.disabled"
         [closeOnClick]="true"
         class="select-container"
         (popoverOpen)="this.popoverOpen = true"
-        (popoverClose)="this.popoverOpen = false"
+        (popoverClose)="this.onPopoverClose()"
         [ngSwitch]="this.triggerDisplayMode"
       >
         <ht-popover-trigger>
@@ -127,13 +127,14 @@ import { SelectSize } from './select-size';
           <div class="select-content" [ngStyle]="{ 'minWidth.px': triggerContainer.offsetWidth }">
             <ng-container
               *ngIf="
-                this.searchMode === '${SelectSearchMode.EmitOnly}' &&
-                (this.items?.length > 5 || !(this.isSearchTextPresent$ | async))
+                this.searchMode !== '${SelectSearchMode.Disabled}' &&
+                ((this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty))
               "
             >
               <ht-event-blocker event="click" [enabled]="true">
                 <ht-search-box
                   class="search-bar"
+                  [value]="this.searchText"
                   (valueChange)="this.searchOptions($event)"
                   [debounceTime]="200"
                   displayMode="${SearchBoxDisplayMode.NoBorder}"
@@ -162,7 +163,10 @@ import { SelectSize } from './select-size';
             </ng-container>
 
             <ng-container
-              *ngTemplateOutlet="itemsTemplate; context: { items: items, showSelectionStatus: true }"
+              *ngTemplateOutlet="
+                itemsTemplate;
+                context: { items: (this.filteredOptions$ | async), showSelectionStatus: true }
+              "
             ></ng-container>
           </div>
           <ng-template #itemsTemplate let-items="items" let-showSelectionStatus="showSelectionStatus">
@@ -249,7 +253,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ContentChildren(SelectOptionComponent)
-  public items?: QueryList<SelectOptionComponent<V>>;
+  private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
+  public allOptions$: Observable<QueryList<SelectOptionComponent<V>>> = EMPTY;
+  public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
 
   @ContentChildren(SelectControlOptionComponent)
   public controlItems?: QueryList<SelectControlOptionComponent<V>>;
@@ -261,9 +267,8 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public groupPosition: SelectGroupPosition = SelectGroupPosition.Ungrouped;
 
   public topControlItems$?: Observable<SelectControlOptionComponent<V>[]>;
-  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
-    map(searchText => !isEmpty(searchText))
-  );
+  private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  public searchText: string = '';
 
   public popoverOpen: boolean = false;
 
@@ -278,6 +283,12 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngAfterContentInit(): void {
+    this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
+    this.filteredOptions$ = this.allOptions$.pipe(
+      map(options => options.toArray()),
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
+    );
+
     this.selected$ = this.buildObservableOfSelected();
     if (this.controlItems !== undefined) {
       this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
@@ -286,12 +297,17 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     }
   }
 
+  public onPopoverClose(): void {
+    this.popoverOpen = false;
+    this.searchOptions('');
+  }
+
   public getPrefixIcon(selectedOption: SelectOption<V> | undefined): string | undefined {
     return selectedOption?.icon ?? this.icon;
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (this.items !== undefined && changes.selected !== undefined) {
+    if (this.allOptionsList !== undefined && changes.selected !== undefined) {
       this.selected$ = this.buildObservableOfSelected();
     }
   }
@@ -310,15 +326,26 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
       return;
     }
 
+    if (this.searchMode === SelectSearchMode.CaseInsensitive) {
+      this.caseInsensitiveSearchSubject.next(searchText);
+    }
+
+    this.searchText = searchText;
     this.searchValueChange.emit(searchText);
   }
 
-  private buildObservableOfSelected(): Observable<SelectOption<V> | undefined> {
-    if (!this.items) {
-      return EMPTY;
-    }
+  private getFilteredOptions(optionsList: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(optionsList), this.caseInsensitiveSearchSubject]).pipe(
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? options
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
+  }
 
-    return queryListAndChanges$(this.items).pipe(
+  private buildObservableOfSelected(): Observable<SelectOption<V> | undefined> {
+    return this.allOptions$.pipe(
       switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
       map(() => this.findItem(this.selected))
     );
@@ -344,13 +371,13 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   }
 
   private findItem(value: V | undefined): SelectOption<V> | undefined {
-    if (this.items === undefined) {
+    if (this.allOptionsList === undefined) {
       this.loggerService.warn(`Invalid items for select option '${String(value)}'`);
 
       return undefined;
     }
 
-    return this.items.find(item => isEqual(item.value, value));
+    return this.allOptionsList.find(item => isEqual(item.value, value));
   }
 
   public getStyleClassesForSelectItem(size: SelectSize, item: SelectOptionComponent<V>): string[] {
@@ -400,5 +427,6 @@ export const enum SelectTriggerDisplayMode {
 
 export const enum SelectSearchMode {
   Disabled = 'disabled', // Search is not available
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
   EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }
