@@ -91,7 +91,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
         <ng-container *ngFor="let columnDef of this.visibleColumnConfigs; trackBy: this.trackItem; index as index">
           <ng-container [cdkColumnDef]="columnDef.id">
             <cdk-header-cell
-              cdkDrag
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
               [style.flex-basis]="columnDef.width"
@@ -104,39 +103,41 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
               }"
               #headerCell
             >
-              <div class="header-cell-container">
-                <div
-                  *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
-                  class="state-cell-container"
-                >
-                  <ht-checkbox
-                    *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
-                    [htTooltip]="this.getHeaderCheckboxTooltip()"
-                    [checked]="this.allRowsSelectionChecked"
-                    [indeterminate]="this.indeterminateRowsSelected"
-                    (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
-                  ></ht-checkbox>
+              <div cdkDrag class="header-cell-container">
+                <div class="header-cell-content">
                   <div
-                    *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
-                    [style.width]="columnDef?.width"
-                  ></div>
-                </div>
-
-                <ng-template #headerCellRendererTemplate>
-                  <ht-table-header-cell-renderer
-                    class="header-cell-renderer"
-                    [metadata]="this.metadata"
-                    [columnConfig]="columnDef"
-                    [defaultColumns]="this.columnDefaultConfigs"
-                    [availableColumns]="this.columnConfigs$ | async"
-                    [index]="index"
-                    [sort]="columnDef.sort"
-                    [indeterminateRowsSelected]="this.indeterminateRowsSelected"
-                    (sortChange)="this.onSortChange($event, columnDef)"
-                    (showEditColumnsChange)="this.showEditColumnsModal()"
+                    *ngIf="this.isStateColumn | htMemoize: columnDef; else headerCellRendererTemplate"
+                    class="state-cell-container"
                   >
-                  </ht-table-header-cell-renderer>
-                </ng-template>
+                    <ht-checkbox
+                      *ngIf="this.isSelectionStateColumn | htMemoize: columnDef"
+                      [htTooltip]="this.getHeaderCheckboxTooltip()"
+                      [checked]="this.allRowsSelectionChecked"
+                      [indeterminate]="this.indeterminateRowsSelected"
+                      (checkedChange)="this.onHeaderAllRowsSelectionChange($event)"
+                    ></ht-checkbox>
+                    <div
+                      *ngIf="this.isExpansionStateColumn | htMemoize: columnDef"
+                      [style.width]="columnDef?.width"
+                    ></div>
+                  </div>
+
+                  <ng-template #headerCellRendererTemplate>
+                    <ht-table-header-cell-renderer
+                      class="header-cell-renderer"
+                      [metadata]="this.metadata"
+                      [columnConfig]="columnDef"
+                      [defaultColumns]="this.columnDefaultConfigs"
+                      [availableColumns]="this.columnConfigs$ | async"
+                      [index]="index"
+                      [sort]="columnDef.sort"
+                      [indeterminateRowsSelected]="this.indeterminateRowsSelected"
+                      (sortChange)="this.onSortChange($event, columnDef)"
+                      (showEditColumnsChange)="this.showEditColumnsModal()"
+                    >
+                    </ht-table-header-cell-renderer>
+                  </ng-template>
+                </div>
 
                 <!-- column divider -->
                 <div

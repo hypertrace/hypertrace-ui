@@ -100,8 +100,13 @@ $data-row-border: 1px solid $gray-2;
     display: flex;
     overflow: hidden;
 
-    .header-cell-renderer {
-      width: 100%;
+    .header-cell-content {
+      min-width: 0;
+      flex: 1 1 auto;
+
+      .header-cell-renderer {
+        width: 100%;
+      }
     }
 
     .header-column-divider {
@@ -122,7 +127,7 @@ $data-row-border: 1px solid $gray-2;
     top: 0;
     right: 2px;
     background-color: transparent;
-    width: 1px;
+    width: 2px;
     height: 100%;
     z-index: 2;
     cursor: col-resize;
