@@ -54,6 +54,8 @@ export class TimeDuration {
 
   public getMostSignificantUnitOnly(): TimeDuration {
     const orderedUnits: ConvertibleTimeUnit[] = [
+      TimeUnit.Year,
+      TimeUnit.Month,
       TimeUnit.Week,
       TimeUnit.Day,
       TimeUnit.Hour,
@@ -135,6 +137,10 @@ export class TimeDuration {
 
   private unitInMillis(unit: ConvertibleTimeUnit): number {
     switch (unit) {
+      case TimeUnit.Year:
+        return 365 * 24 * 60 * 60 * 1000;
+      case TimeUnit.Month:
+        return 30 * 24 * 60 * 60 * 1000;
       case TimeUnit.Week:
         return 24 * 60 * 60 * 1000 * 7;
       case TimeUnit.Day:
@@ -154,6 +160,8 @@ export class TimeDuration {
 }
 
 type ConvertibleTimeUnit =
+  | TimeUnit.Year
+  | TimeUnit.Month
   | TimeUnit.Week
   | TimeUnit.Day
   | TimeUnit.Hour
