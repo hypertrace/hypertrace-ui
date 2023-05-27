@@ -64,7 +64,7 @@
     "mixpanel-browser": "^2.46.0",
     "ngx-color": "7.0.0",
     "rudder-sdk-js": "^2.33.0",
-    "rxjs": "~6.6.7",
+    "rxjs": "^7.4.0",
     "tslib": "^2.5.2",
     "uuid": "^8.3.2",
     "zone.js": "~0.11.8"

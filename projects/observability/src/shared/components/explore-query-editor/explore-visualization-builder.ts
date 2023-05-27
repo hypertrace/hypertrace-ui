@@ -11,7 +11,6 @@ import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
-import { AttributeMetadata } from '../../graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
@@ -208,7 +207,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return forkJoinSafeEmpty(
       state.series.map(series => this.metadataService.getAttribute(state.context, series.specification.name))
     ).pipe(
-      defaultIfEmpty<AttributeMetadata[]>([]),
+      defaultIfEmpty([]),
       map(attributes =>
         attributes
           .filter(attribute => !attribute.onlySupportsGrouping)

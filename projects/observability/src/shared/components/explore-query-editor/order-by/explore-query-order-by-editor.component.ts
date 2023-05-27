@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption } from '@hypertrace/components';
+import { isNil } from 'lodash-es';
 import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
@@ -9,6 +10,7 @@ import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql
 import { TraceType } from '../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { ExploreOrderBy } from '../explore-visualization-builder';
+
 @Component({
   selector: 'ht-explore-query-order-by-editor',
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
@@ -121,11 +123,11 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
-    if (changeObject.context) {
+    if (changeObject.context && !isNil(this.context)) {
       this.contextSubject.next(this.context);
     }
 
-    if (changeObject.orderByExpression) {
+    if (changeObject.orderByExpression && !isNil(this.orderByExpression)) {
       this.incomingOrderByExpressionSubject.next(this.orderByExpression);
     }
   }

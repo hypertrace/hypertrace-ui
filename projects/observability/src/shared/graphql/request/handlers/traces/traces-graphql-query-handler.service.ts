@@ -100,7 +100,7 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   private resultUnits(specification: Specification, scope: string): Observable<string | undefined> {
     return this.metadataService.getAttribute(scope, specification.name).pipe(
       map(attribute => (attribute.units !== '' ? attribute.units : undefined)),
-      defaultIfEmpty<string | undefined>(undefined)
+      defaultIfEmpty(undefined)
     );
   }
 }

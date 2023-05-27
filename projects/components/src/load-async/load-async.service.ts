@@ -12,7 +12,7 @@ export class LoadAsyncService {
       map(data => this.buildStateForEmittedData(data)),
       defaultIfEmpty(this.buildNoDataState()),
       catchError(error => of(this.buildStateForEmittedError(error))),
-      startWith({ type: LoadAsyncStateType.Loading })
+      startWith({ type: LoadAsyncStateType.Loading } as LoadingAsyncState)
     );
   }
 

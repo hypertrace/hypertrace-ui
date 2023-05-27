@@ -68,7 +68,7 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
         queryListAndChanges$(this.buttons)
           .pipe(
             tap(() => this.setButtonState()),
-            switchMap(() => merge<string>(...this.buttons!.map(button => button.labelClick)))
+            switchMap(() => merge(...this.buttons!.map(button => button.labelClick)))
           )
           .subscribe(selectedLabel => this.setSelectionChange(selectedLabel))
       );

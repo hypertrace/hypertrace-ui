@@ -75,7 +75,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   @ViewChild('notification', { static: true })
   public notificationTemplate!: TemplateRef<unknown>;
 
-  private readonly notificationSubject: Subject<boolean> = new Subject();
+  private readonly notificationSubject: Subject<void> = new Subject();
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
