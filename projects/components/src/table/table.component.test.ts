@@ -396,7 +396,8 @@ describe('Table component', () => {
           expect.objectContaining({
             id: '$$expanded',
             display: CoreTableCellRendererType.RowExpander,
-            visible: true
+            visible: true,
+            width: '32px'
           }),
           expect.objectContaining({
             id: 'firstId'
