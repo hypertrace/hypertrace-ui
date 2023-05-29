@@ -133,6 +133,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
                       [sort]="columnDef.sort"
                       [indeterminateRowsSelected]="this.indeterminateRowsSelected"
                       (sortChange)="this.onSortChange($event, columnDef)"
+                      (hideCurrentColumnChange)="this.onHideColumn(columnDef)"
                       (showEditColumnsChange)="this.showEditColumnsModal()"
                     >
                     </ht-table-header-cell-renderer>
