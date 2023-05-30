@@ -28,7 +28,7 @@ import { IconSize } from './icon-size';
         [attr.aria-label]="this.labelToUse"
         [htTooltip]="this.tooltip"
         [fontSet]="this.fontSet"
-        >{{ this.ligatureText }}</mat-icon
+      >{{ this.ligatureText }}</mat-icon
       >
     </ng-template>
   `
@@ -45,6 +45,9 @@ export class IconComponent implements OnChanges {
 
   @Input()
   public borderColor?: string;
+
+  @Input()
+  public backgroundColor?: string;
 
   @Input()
   public borderRadius?: string;
@@ -101,8 +104,8 @@ export class IconComponent implements OnChanges {
   public get customStyles(): Record<string, string> {
     return {
       color: this.color ?? '',
-      borderColor: this.borderType !== IconBorder.InsetBorder ? this.borderColor ?? '' : '',
-      background: this.borderType === IconBorder.InsetBorder ? this.borderColor ?? '' : '',
+      borderColor: this.borderColor ?? '',
+      background: this.backgroundColor ?? '',
       borderRadius: this.borderRadius ?? ''
     };
   }
