@@ -692,7 +692,6 @@ export class TableComponent
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
     this.visibleColumnConfigs = visibleColumnConfigs;
     this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
-    this.changeDetector.detectChanges();
   }
 
   private initializeData(): void {
