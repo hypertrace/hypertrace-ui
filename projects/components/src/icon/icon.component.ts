@@ -28,7 +28,7 @@ import { IconSize } from './icon-size';
         [attr.aria-label]="this.labelToUse"
         [htTooltip]="this.tooltip"
         [fontSet]="this.fontSet"
-      >{{ this.ligatureText }}</mat-icon
+        >{{ this.ligatureText }}</mat-icon
       >
     </ng-template>
   `
