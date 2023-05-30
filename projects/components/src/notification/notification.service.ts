@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
+import {
+  MatLegacySnackBar as MatSnackBar,
+  MatLegacySnackBarConfig as MatSnackBarConfig,
+  MatLegacySnackBarRef as MatSnackBarRef
+} from '@angular/material/legacy-snack-bar';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NotificationComponent, NotificationContent, NotificationMode } from './notification.component';

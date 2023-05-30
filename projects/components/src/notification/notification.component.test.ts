@@ -1,5 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
-import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MAT_LEGACY_SNACK_BAR_DATA as MAT_SNACK_BAR_DATA } from '@angular/material/legacy-snack-bar';
+
 import { IconType } from '@hypertrace/assets-library';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponents } from 'ng-mocks';
