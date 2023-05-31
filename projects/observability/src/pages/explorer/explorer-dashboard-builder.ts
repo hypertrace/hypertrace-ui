@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
@@ -27,6 +27,7 @@ import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observ
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 
+@Injectable()
 export class ExplorerDashboardBuilder {
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
 
