@@ -1,8 +1,7 @@
-import { Directive, inject, Inject, OnInit } from '@angular/core';
+import { Directive, Inject, OnInit } from '@angular/core';
 import { TableColumnConfig, TableRow } from '../table-api';
 import {
   TABLE_CELL_DATA,
-  TABLE_CELL_OPTIONS,
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
@@ -25,12 +24,9 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColu
   private _tooltip!: string;
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
-  protected readonly columnConfigOptions: TColumnConfigOptions | undefined = inject<TColumnConfigOptions | undefined>(
-    TABLE_CELL_OPTIONS
-  );
-
+  protected readonly columnConfigOptions: TColumnConfigOptions | undefined;
   public constructor(
-    @Inject(TABLE_COLUMN_CONFIG) private readonly columnConfig: TableColumnConfig,
+    @Inject(TABLE_COLUMN_CONFIG) private readonly columnConfig: TableColumnConfig<TColumnConfigOptions>,
     @Inject(TABLE_COLUMN_INDEX) private readonly index: number,
     @Inject(TABLE_DATA_PARSER) private readonly parser: TableCellParserBase<TCellData, TValue, unknown>,
     @Inject(TABLE_CELL_DATA) private readonly cellData: TCellData,
@@ -38,6 +34,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColu
   ) {
     this.clickable = this.columnConfig.onClick !== undefined;
     this.isFirstColumn = this.index === 0;
+    this.columnConfigOptions = this.columnConfig?.options;
   }
 
   public ngOnInit(): void {
