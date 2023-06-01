@@ -7,10 +7,9 @@
   },
   "license": "LicenseRef-LICENSE",
   "scripts": {
-    "postinstall": "ngcc --tsconfig './tsconfig.app.json' --use-program-dependencies && ngcc --source 'node_modules/@angular'",
     "ng": "ng",
-    "start": "NG_PERSISTENT_BUILD_CACHE=1 ng serve",
-    "build": "NG_PERSISTENT_BUILD_CACHE=1 ng build --configuration production",
+    "start": "ng serve",
+    "build": "ng build --configuration production",
     "build:ci": "node --max_old_space_size=3584 node_modules/@angular/cli/bin/ng build --configuration production --no-progress",
     "test": "ng test hypertrace-ui --cache --max-workers=2",
     "lint": "ng lint hypertrace-ui",

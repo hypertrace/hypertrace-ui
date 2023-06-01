@@ -96,7 +96,10 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run"
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "silent": true
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
