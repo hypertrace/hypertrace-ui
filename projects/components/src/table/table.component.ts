@@ -674,6 +674,19 @@ export class TableComponent
     this.updateVisibleColumns(columnConfigurations.filter(column => column.visible));
 
     this.columnConfigsSubject.next(columnConfigurations);
+    this.checkAndUpdateColumnWidths();
+  }
+
+  // This changes column config `width` properties to PX widths after initialization.
+  private checkAndUpdateColumnWidths(): void {
+    if (!isNil(this.headerCells)) {
+      this.headerCells.changes.pipe(take(1)).subscribe(headerCells => {
+        (headerCells as QueryList<ElementRef<HTMLElement>>).forEach((cell, index) => {
+          const config = this.getVisibleColumnConfig(index);
+          config.width = `${cell.nativeElement.offsetWidth}px`;
+        });
+      });
+    }
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
