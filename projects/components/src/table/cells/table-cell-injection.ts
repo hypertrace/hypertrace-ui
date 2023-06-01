@@ -9,6 +9,7 @@ export const TABLE_DATA_PARSER: InjectionToken<TableCellParserBase<unknown, unkn
 );
 export const TABLE_CELL_DATA: InjectionToken<unknown> = new InjectionToken('TABLE_CELL_DATA');
 export const TABLE_ROW_DATA: InjectionToken<unknown> = new InjectionToken('TABLE_ROW_DATA');
+export const TABLE_CELL_OPTIONS: InjectionToken<unknown> = new InjectionToken('TABLE_CELL_OPTIONS');
 
 export const createTableCellInjector = (
   columnConfig: TableColumnConfig,
@@ -35,6 +36,10 @@ export const createTableCellInjector = (
       {
         provide: TABLE_CELL_DATA,
         useValue: cellData
+      },
+      {
+        provide: TABLE_CELL_OPTIONS,
+        useValue: columnConfig?.options
       },
       {
         provide: TABLE_ROW_DATA,

@@ -1,7 +1,8 @@
-import { Directive, Inject, OnInit } from '@angular/core';
+import { Directive, inject, Inject, OnInit } from '@angular/core';
 import { TableColumnConfig, TableRow } from '../table-api';
 import {
   TABLE_CELL_DATA,
+  TABLE_CELL_OPTIONS,
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
@@ -13,7 +14,8 @@ import { CoreTableCellRendererType } from './types/core-table-cell-renderer-type
 import { TableCellAlignmentType } from './types/table-cell-alignment-type';
 
 @Directive() // Angular 9 Requires superclasses to be annotated as well in order to resolve injectables for constructor
-export abstract class TableCellRendererBase<TCellData, TValue = TCellData> implements OnInit {
+export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColumnConfigOptions = unknown>
+  implements OnInit {
   public static readonly type: CoreTableCellRendererType;
   public static readonly alignment: TableCellAlignmentType;
   public static readonly parser: CoreTableCellParserType;
@@ -23,6 +25,9 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
   private _tooltip!: string;
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
+  protected readonly columnConfigOptions: TColumnConfigOptions | undefined = inject<TColumnConfigOptions | undefined>(
+    TABLE_CELL_OPTIONS
+  );
 
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) private readonly columnConfig: TableColumnConfig,
