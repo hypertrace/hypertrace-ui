@@ -23,9 +23,9 @@ export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel
     key: 'selected',
     displayName: 'Selected',
     type: ARRAY_PROPERTY.type,
-    required: true
+    required: false
   })
-  public selected!: TableSelectControlOption[];
+  public selected: TableSelectControlOption[] = [];
 
   public getOptions(): Observable<TableSelectControlOption[]> {
     return super.getOptions().pipe(
