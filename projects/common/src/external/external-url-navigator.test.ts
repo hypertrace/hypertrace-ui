@@ -31,7 +31,7 @@ describe('External URL navigator', () => {
       paramMap: convertToParamMap({})
     } as ActivatedRouteSnapshot);
 
-    expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(1);
+    expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalledTimes(1);
 
     spectator.service.canActivate({
       paramMap: convertToParamMap({
