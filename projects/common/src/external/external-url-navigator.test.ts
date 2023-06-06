@@ -6,12 +6,19 @@ import {
   NavigationService
 } from '../navigation/navigation.service';
 import { ExternalUrlNavigator } from './external-url-navigator';
+import { EXTERNAL_URL_DOMAIN_ALLOWLIST } from '@hypertrace/common';
 
 describe('External URL navigator', () => {
   let spectator: SpectatorService<ExternalUrlNavigator>;
   const buildNavigator = createServiceFactory({
     service: ExternalUrlNavigator,
-    providers: [mockProvider(NavigationService)]
+    providers: [
+      mockProvider(NavigationService),
+      {
+        provide: EXTERNAL_URL_DOMAIN_ALLOWLIST,
+        useValue: ['traceable.ai']
+      }
+    ]
   });
 
   beforeEach(() => {
@@ -19,7 +26,7 @@ describe('External URL navigator', () => {
     window.open = jest.fn();
   });
 
-  test('goes back when unable to detect a url on navigation', () => {
+  test('goes to error page when unable to detect a url on navigation', () => {
     spectator.service.canActivate({
       paramMap: convertToParamMap({})
     } as ActivatedRouteSnapshot);
@@ -32,16 +39,34 @@ describe('External URL navigator', () => {
       })
     } as ActivatedRouteSnapshot);
 
-    expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(2);
+    expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalledTimes(2);
     expect(window.open).not.toHaveBeenCalled();
   });
 
-  test('navigates when a url is provided', () => {
+  test('navigates when an allowed url is provided', () => {
+    spectator.service.canActivate({
+      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.traceable.ai' })
+    } as ActivatedRouteSnapshot);
+
+    expect(window.open).toHaveBeenNthCalledWith(1, 'https://www.traceable.ai', '_self');
+
+    spectator.service.canActivate({
+      paramMap: convertToParamMap({
+        [ExternalNavigationPathParams.Url]: 'https://docs.traceable.ai',
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
+      })
+    } as ActivatedRouteSnapshot);
+
+    expect(window.open).toHaveBeenNthCalledWith(2, 'https://docs.traceable.ai', undefined);
+    expect(spectator.inject(NavigationService).navigateToErrorPage).not.toHaveBeenCalled();
+  });
+
+  test('navigates to error when a url for non-allowlisted domain is provided', () => {
     spectator.service.canActivate({
       paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
     } as ActivatedRouteSnapshot);
-
-    expect(window.open).toHaveBeenNthCalledWith(1, 'https://www.google.com', '_self');
+    expect(window.open).not.toHaveBeenCalled();
+    expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalled();
 
     spectator.service.canActivate({
       paramMap: convertToParamMap({
@@ -50,7 +75,7 @@ describe('External URL navigator', () => {
       })
     } as ActivatedRouteSnapshot);
 
-    expect(window.open).toHaveBeenNthCalledWith(2, 'https://www.bing.com', undefined);
-    expect(spectator.inject(NavigationService).navigateBack).not.toHaveBeenCalled();
+    expect(window.open).not.toHaveBeenCalled();
+    expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalled();
   });
 });
