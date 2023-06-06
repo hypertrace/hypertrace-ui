@@ -1,17 +1,11 @@
 import { NgModule } from '@angular/core';
 import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
-import {
-  ALTERNATE_COLOR_PALETTES,
-  APP_TITLE,
-  DEFAULT_COLOR_PALETTE,
-  externalUrlDomainAllowList
-} from '@hypertrace/common';
+import { ALTERNATE_COLOR_PALETTES, APP_TITLE, DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
 import { entityMetadata } from './entity-metadata';
 import { FeatureResolverModule } from './shared/feature-resolver/feature-resolver.module';
-import { EXTERNAL_URL_DOMAIN_ALLOWLIST } from '../../projects/common/src/constants/external-urls-allowlist';
 
 @NgModule({
   imports: [FeatureResolverModule],
@@ -53,10 +47,6 @@ import { EXTERNAL_URL_DOMAIN_ALLOWLIST } from '../../projects/common/src/constan
         theme: false,
         version: true
       }
-    },
-    {
-      provide: EXTERNAL_URL_DOMAIN_ALLOWLIST,
-      useValue: externalUrlDomainAllowList
     }
   ]
 })
