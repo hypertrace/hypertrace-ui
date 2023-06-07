@@ -135,7 +135,13 @@ export interface TopologyEdgeRenderDelegate<T extends TopologyEdge = TopologyEdg
     position: TopologyEdgePositionInformation,
     domRenderer: Renderer2
   ): void;
-  updateState(parentElement: SVGGElement, edge: T, state: TopologyEdgeState, domRenderer: Renderer2): void;
+  updateState(
+    parentElement: SVGGElement,
+    edge: T,
+    state: TopologyEdgeState,
+    domRenderer: Renderer2,
+    position?: TopologyEdgePositionInformation
+  ): void;
 }
 
 interface RenderedEdgeInfo {
