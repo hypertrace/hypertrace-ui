@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import {
   ApplicationRef,
@@ -10,7 +11,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
-import { isNil, throttle } from 'lodash-es';
+import { cloneDeep, isNil, throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -73,13 +74,14 @@ export class D3Topology implements Topology {
 
   private readonly topologyConverter: TopologyConverter = new TopologyConverter();
   private readonly neighborhoodFinder: TopologyNeighborhoodFinder = new TopologyNeighborhoodFinder();
+  // private cnt: number = 0;
 
   public constructor(
     protected readonly hostElement: Element,
     protected readonly injector: Injector,
     protected readonly config: TopologyConfiguration
   ) {
-    this.userNodes = config.nodes;
+    this.userNodes = this.multiplyArray(config.nodes, 1);
     this.nodeRenderer = config.nodeRenderer;
     this.edgeRenderer = config.edgeRenderer;
     this.domRenderer = injector.get(Renderer2 as Type<Renderer2>);
@@ -223,7 +225,9 @@ export class D3Topology implements Topology {
     const dataGroup = this.select(this.hostElement).select<SVGGElement>(`.${D3Topology.DATA_CLASS}`);
 
     this.drawNodesAndEdges(dataGroup.node()!, data, nodeRenderer, edgeRenderer);
-    this.dataClearCallbacks.push(() => data.edges.forEach(edge => edgeRenderer.destroyEdge(edge)));
+    this.dataClearCallbacks.push(() => {
+      data.edges.forEach(edge => edgeRenderer.destroyEdge(edge));
+    });
     this.dataClearCallbacks.push(() => data.nodes.forEach(node => nodeRenderer.destroyNode(node)));
 
     if (this.config.draggableNodes) {
@@ -295,13 +299,27 @@ export class D3Topology implements Topology {
   private drawNodesAndEdges(
     groupElement: SVGGElement,
     topologyData: RenderableTopology<TopologyNode, TopologyEdge>,
-    nodeRenderer: TopologyNodeRenderer,
+    _nodeRenderer: TopologyNodeRenderer,
     edgeRenderer: TopologyEdgeRenderer
   ): void {
-    topologyData.nodes.forEach(node => nodeRenderer.drawNode(groupElement, node));
-    topologyData.edges.forEach(edge => edgeRenderer.drawEdge(groupElement, edge));
-    topologyData.nodes.forEach(node => this.select(nodeRenderer.getElementForNode(node)!).raise());
-    this.zoom.updateBrushOverlayWithData(topologyData.nodes);
+    if (this.edgeRenderer.drawEdges) {
+      this.edgeRenderer.drawEdges(groupElement, topologyData.edges);
+    } else {
+      topologyData.edges.forEach(edge => edgeRenderer.drawEdge(groupElement, edge));
+    }
+    // topologyData.nodes.forEach(node => nodeRenderer.drawNode(groupElement, node));
+    // topologyData.nodes.forEach(node => this.select(nodeRenderer.getElementForNode(node)!).raise());
+    // this.zoom.updateBrushOverlayWithData(topologyData.nodes);
+  }
+
+  private multiplyArray<T>(data: T[], times: number): T[] {
+    const updated: T[] = [];
+
+    for (let i = 0; i < times; i++) {
+      updated.push(...cloneDeep(data));
+    }
+
+    return updated;
   }
 
   private updateMeasuredDimensions(): void {
@@ -317,6 +335,10 @@ export class D3Topology implements Topology {
 
   private clearAndDrawNewData(): void {
     this.runAndDrainCallbacks(this.dataClearCallbacks);
+    // if(this.cnt > 0) {
+    //   return;
+    // }
+    // this.cnt = this.cnt + 1;
     this.topologyData = this.topologyConverter.convertTopology(
       this.userNodes,
       this.stateManager,

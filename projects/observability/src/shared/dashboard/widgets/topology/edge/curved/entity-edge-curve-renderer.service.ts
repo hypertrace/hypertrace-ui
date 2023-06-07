@@ -30,6 +30,12 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private readonly edgeMetricValueClass: string = 'entity-edge-metric-value';
   private readonly numberFormatter: NumericFormatter = new NumericFormatter();
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
+  private readonly lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
+    TopologyEdgePositionInformation,
+    Position
+  >()
+    .x(datum => datum.x)
+    .y(datum => datum.y);
 
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
@@ -45,33 +51,30 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   public draw(
     element: SVGGElement,
     edge: EntityEdge,
-    position: TopologyEdgePositionInformation,
-    state: TopologyEdgeState<MetricAggregationSpecification>,
+    _position: TopologyEdgePositionInformation,
+    _state: TopologyEdgeState<MetricAggregationSpecification>,
     domRenderer: Renderer2
   ): void {
+    const edgeSelection = select(element);
     this.defineArrowMarkersIfNeeded(element, domRenderer);
-    this.d3Utils
-      .select(element, domRenderer)
+    edgeSelection
       .classed(this.edgeClass, true)
       .attr('data-sensitive-pii', true)
       .call(selection => this.drawLine(selection))
       .call(selection => this.drawMetricBubble(selection))
-      .call(selection => this.drawMetricText(selection));
-
-    this.updateState(element, edge, state, domRenderer);
-    this.updatePosition(element, edge, position, domRenderer);
+      .call(selection => this.drawMetricText(selection, edge));
   }
 
   public updatePosition(
     element: SVGGElement,
-    _: EntityEdge,
+    edge: EntityEdge,
     position: TopologyEdgePositionInformation,
     domRenderer: Renderer2
   ): void {
     const edgeSelection = this.d3Utils.select(element, domRenderer);
     this.updateLinePosition(edgeSelection, position);
     this.updateLabelPosition(edgeSelection, position);
-    this.updateLabelBubblePosition(edgeSelection);
+    this.updateLabelBubblePosition(edgeSelection, position, edge);
   }
 
   public updateState(
@@ -96,7 +99,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     this.visibilityUpdater.updateVisibility(selection, state.visibility);
 
     // State can change the text of the label, which effects the bubble position
-    this.updateLabelBubblePosition(selection);
+    // this.updateLabelBubblePosition(selection);
   }
 
   protected updateEdgeMetric(
@@ -104,8 +107,8 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     visibility: TopologyElementVisibility,
     primaryMetricCategory?: TopologyMetricCategoryData,
     secondaryMetricCategory?: TopologyMetricCategoryData,
-    primaryMetricAggregation?: MetricAggregation,
-    secondaryMetricAggregation?: MetricAggregation
+    _primaryMetricAggregation?: MetricAggregation,
+    _secondaryMetricAggregation?: MetricAggregation
   ): void {
     const edgeFocusedCategory = this.isEmphasizedOrFocused(visibility)
       ? this.getEdgeFocusedCategory(primaryMetricCategory, secondaryMetricCategory)
@@ -120,17 +123,6 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .select(selector(this.edgeMetricBubbleClass))
       .attr('fill', edgeFocusedCategory?.fillColor ?? '')
       .attr('stroke', edgeFocusedCategory?.strokeColor ?? 'none');
-
-    selection
-      .select(selector(this.edgeMetricValueClass))
-      .text(
-        this.getMetricValueString(
-          primaryMetricAggregation,
-          secondaryMetricAggregation,
-          primaryMetricCategory,
-          secondaryMetricCategory
-        )
-      );
 
     selection
       .select(selector(this.edgeLineClass))
@@ -154,10 +146,11 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 
   private drawLine(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    selection.append('g').classed(this.edgeLineClass, true);
+    const lineSelection = selection.append('g').classed(this.edgeLineClass, true);
+    lineSelection.append('path').classed('edge-path', true);
   }
 
-  private defineArrowMarkersIfNeeded(edgeElement: SVGGElement, domRenderer: Renderer2): void {
+  public defineArrowMarkersIfNeeded(edgeElement: SVGGElement, domRenderer: Renderer2): void {
     const allEdgeCategories = this.topologyDataSourceModelPropertiesService.getAllEdgeCategories();
     this.d3Utils
       .select(this.svgUtils.addDefinitionDeclarationToSvgIfNotExists(edgeElement, domRenderer), domRenderer)
@@ -182,35 +175,54 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 
   private drawMetricBubble(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    selection.append('rect').attr('rx', 8).attr('height', 16).classed(this.edgeMetricBubbleClass, true);
+    // const text = this.getMetricTextForEdge(edge);
+
+    // const width = textElem.textLength.baseVal.valueInSpecifiedUnits ?? 0;
+    // const height = this.getTextHeight();
+    // const x = Number(textElem.getAttribute('x') ?? 0) - (width / 2);
+    // const y = Number(textElem.getAttribute('y') ?? 0) - this.getBubbleYOffset();
+
+    selection.append('rect').attr('rx', 8).classed(this.edgeMetricBubbleClass, true);
+    // .attr('x', x - this.getTextBubbleHorizontalPadding())
+    //   .attr('y', y - this.getTextBubbleVerticalPadding())
+    //   .attr('width', width + 2 * this.getTextBubbleHorizontalPadding())
+    //   .attr('height', height + 2 * this.getTextBubbleVerticalPadding());
   }
 
-  private drawMetricText(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    selection.append('text').classed(this.edgeMetricValueClass, true).attr('dominant-baseline', 'middle');
+  private drawMetricText(selection: Selection<SVGGElement, unknown, null, undefined>, edge: EntityEdge): void {
+    const text = this.getMetricTextForEdge(edge);
+
+    selection.append('text').classed(this.edgeMetricValueClass, true).attr('dominant-baseline', 'middle').text(text);
+  }
+
+  private getMetricTextForEdge(edge: EntityEdge): string {
+    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
+    const secondaryMetric = this.topologyDataSourceModelPropertiesService.getSecondaryEdgeMetric();
+
+    const primaryMetricCategory = primaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const secondaryMetricCategory = secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const primaryMetricAggregation = primaryMetric?.extractDataForMetric(edge.data);
+    const secondaryMetricAggregation = secondaryMetric?.extractDataForMetric(edge.data);
+
+    return this.getMetricValueString(
+      primaryMetricAggregation,
+      secondaryMetricAggregation,
+      primaryMetricCategory,
+      secondaryMetricCategory
+    );
   }
 
   private updateLinePosition(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     position: TopologyEdgePositionInformation
   ): void {
-    const pathSelections = select(selection.node())
-      .select(selector(this.edgeLineClass))
-      .selectAll<SVGPathElement, TopologyEdgePositionInformation>('path')
-      .data([position]);
-
-    pathSelections.exit().remove();
-
-    const lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
-      TopologyEdgePositionInformation,
-      Position
-    >()
-      .x(datum => datum.x)
-      .y(datum => datum.y);
-
-    pathSelections.enter().append('path').merge(pathSelections).attr('d', lineGenerator).classed('edge-path', true);
+    selection
+      .select(`g.${this.edgeLineClass}`)
+      .select('path')
+      .attr('d', () => this.lineGenerator(position));
   }
 
-  private updateLabelPosition(
+  public updateLabelPosition(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     position: TopologyEdgePositionInformation
   ): void {
@@ -219,29 +231,54 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection.select(selector(this.edgeMetricValueClass)).attr('x', lineCenter.x).attr('y', lineCenter.y);
   }
 
-  private updateLabelBubblePosition(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    const metricLabelBox = this.getTextBBox(selection);
+  public updateLabelBubblePosition(
+    selection: Selection<SVGGElement, unknown, null, undefined>,
+    position: TopologyEdgePositionInformation,
+    edge: EntityEdge
+  ): void {
+    const textLen = this.getMetricTextForEdge(edge).length;
+    const lineCenter = this.generateLineCenterPoint(position);
+
+    const textWidth = textLen * this.getCharWidth();
+    const textHeight = this.getTextHeight();
+
+    const width = textWidth + 2 * this.getTextBubbleHorizontalPadding();
+    const height = textHeight + 2 * this.getTextBubbleVerticalPadding();
+    const x = lineCenter.x - textWidth / 2 - this.getTextBubbleHorizontalPadding();
+    const y = lineCenter.y - textHeight / 2 - this.getTextBubbleVerticalPadding();
 
     selection
       .select(selector(this.edgeMetricBubbleClass))
-      .attr('x', metricLabelBox.x - this.getTextBubbleHorizontalPadding())
-      .attr('y', metricLabelBox.y - this.getTextBubbleVerticalPadding())
-      .attr('width', metricLabelBox.width + 2 * this.getTextBubbleHorizontalPadding())
-      .attr('height', metricLabelBox.height + 2 * this.getTextBubbleVerticalPadding());
+      .attr('x', x)
+      .attr('y', y)
+      .attr('width', width)
+      .attr('height', height);
   }
 
-  private getTextBBox(selection: Selection<SVGGElement, unknown, null, undefined>): DOMRect {
+  public getTextBBox(selection: Selection<SVGGElement, unknown, null, undefined>): DOMRect {
     return this.domElementMeasurerService.measureSvgElement(
       selection.select<SVGTextElement>(selector(this.edgeMetricValueClass)).node()!
     );
   }
 
-  private getTextBubbleHorizontalPadding(): number {
+  public getTextBubbleHorizontalPadding(): number {
+    return 6;
+  }
+
+  public getTextBubbleVerticalPadding(): number {
+    return 2;
+  }
+
+  public getTextHeight(): number {
+    return 14;
+  }
+
+  public getBubbleYOffset(): number {
     return 8;
   }
 
-  private getTextBubbleVerticalPadding(): number {
-    return 2;
+  private getCharWidth(): number {
+    return 6;
   }
 
   private isEmphasizedOrFocused(visibility: TopologyElementVisibility): boolean {
@@ -255,7 +292,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     return secondaryMetricCategory?.highestPrecedence ? secondaryMetricCategory : primaryMetricCategory;
   }
 
-  private getMetricValueString(
+  public getMetricValueString(
     primaryMetricAggregation?: MetricAggregation,
     secondaryMetricAggregation?: MetricAggregation,
     primaryMetricCategory?: TopologyMetricCategoryData,

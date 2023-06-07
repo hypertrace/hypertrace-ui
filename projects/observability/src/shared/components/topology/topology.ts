@@ -124,6 +124,7 @@ export interface TopologyNodeRenderer {
 
 export interface TopologyEdgeRenderer {
   drawEdge(parentElement: SVGSVGElement | SVGGElement, edge: RenderableTopologyEdge): void;
+  drawEdges?(parentElement: SVGSVGElement | SVGGElement, edges: RenderableTopologyEdge[]): void;
   updateEdgePosition(edge: RenderableTopologyEdge): void;
   updateEdgeState(edge: RenderableTopologyEdge): void;
   getElementForEdge(edge: RenderableTopologyEdge): Element | undefined;

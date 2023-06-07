@@ -2,6 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { distanceBetweenPoints, getVectorAngleRad, normalizeAngleRadians } from '@hypertrace/common';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
 import { RenderableTopologyEdge, TopologyEdge, TopologyEdgeRenderer, TopologyEdgeState } from '../../topology';
+import { select } from 'd3-selection';
 
 @Injectable()
 export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
@@ -30,6 +31,57 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
       element: edgeElement,
       delegate: matchedDelegate
     });
+  }
+
+  public drawEdges(parentElement: Element, edges: RenderableTopologyEdge[]): void {
+    const labelWithTime = `edges - ${Date.now()}`;
+    console.time(labelWithTime);
+    const matchedDelegates = edges.map(edge => this.getMatchingDelegate(edge.userEdge));
+    const edgePositions = edges.map(edge => this.buildEdgePosition(edge));
+    const edgeElements: SVGGElement[] = [];
+    const drawable = matchedDelegates.every((delegate, index) => delegate && edgePositions[index]);
+
+    if (!drawable) {
+      return;
+    }
+
+    const edgeSelections = select(parentElement).selectAll<SVGGElement, RenderableTopologyEdge>('g').data(edges);
+
+    edgeSelections.exit().remove();
+
+    edgeSelections
+      .enter()
+      .append<SVGGElement>('svg:g')
+      .each((_, index, elements) => {
+        const edge = edges[index];
+        const element = elements[index];
+
+        edgeElements.push(element);
+        matchedDelegates[index]?.draw(
+          element,
+          edge.userEdge,
+          edgePositions[index]!,
+          edge.state,
+          edge.domElementRenderer
+        );
+      })
+      .merge(edgeSelections)
+      .each((_, index, elements) => {
+        const edge = edges[index];
+        const element = elements[index];
+
+        matchedDelegates[index]?.updateState(element, edge.userEdge, edge.state, edge.domElementRenderer);
+        matchedDelegates[index]?.updatePosition(element, edge.userEdge, edgePositions[index]!, edge.domElementRenderer);
+      });
+
+    edges.forEach((edge, index) => {
+      this.rendererEdgeMap.set(edge, {
+        element: edgeElements[index],
+        delegate: matchedDelegates[index]!
+      });
+    });
+
+    console.timeEnd(labelWithTime);
   }
 
   public updateEdgePosition(edge: RenderableTopologyEdge): void {
