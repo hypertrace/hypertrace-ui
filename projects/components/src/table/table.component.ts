@@ -33,7 +33,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, without } from 'lodash-es';
+import { isNil, isNumber, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { switchMap, take, filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -72,7 +72,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table">
+    <div class="table" (htLayoutChange)="this.onLayoutChange()" #table>
       <cdk-table
         *ngIf="this.dataSource"
         #cdkTable
@@ -415,6 +415,9 @@ export class TableComponent
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;
 
+  @ViewChild('table', { read: ElementRef })
+  private readonly table!: ElementRef;
+
   @ViewChild(CdkHeaderRow, { read: ElementRef })
   public headerRowElement!: ElementRef;
 
@@ -477,6 +480,7 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
+  private tableWidth: number = 0;
   private resizeStartX: number = 0;
   private columnResizeHandler?: HTMLDivElement;
   private resizedColumn?: ColumnInfo;
@@ -502,6 +506,18 @@ export class TableComponent
         filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
       )
       .subscribe(sort => this.updateSort(sort));
+  }
+
+  public onLayoutChange(): void {
+    const latestTableWidth = this.table.nativeElement.offsetWidth;
+
+    if (this.tableWidth === 0) {
+      this.tableWidth = latestTableWidth;
+
+      return;
+    }
+
+    this.updateColumnWidthsOnTableLayoutChange(latestTableWidth);
   }
 
   public dropList(event: CdkDragDrop<TableColumnConfigExtended[]>): void {
@@ -674,6 +690,19 @@ export class TableComponent
     this.updateVisibleColumns(columnConfigurations.filter(column => column.visible));
 
     this.columnConfigsSubject.next(columnConfigurations);
+    this.checkAndUpdateColumnWidths();
+  }
+
+  // This changes column config `width` properties to PX widths after initialization.
+  private checkAndUpdateColumnWidths(): void {
+    if (!isNil(this.headerCells)) {
+      this.headerCells.changes.pipe(take(1)).subscribe(headerCells => {
+        (headerCells as QueryList<ElementRef<HTMLElement>>).forEach((cell, index) => {
+          const config = this.getVisibleColumnConfig(index);
+          config.width = `${cell.nativeElement.offsetWidth}px`;
+        });
+      });
+    }
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
@@ -770,6 +799,7 @@ export class TableComponent
     column.visible = false;
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
+    this.distributeWidthToColumns(column.width ?? 0);
     this.columnConfigsSubject.next(updatedColumns);
   }
 
@@ -1043,6 +1073,41 @@ export class TableComponent
           direction: sortDirection
         }
       : undefined;
+  }
+
+  private updateColumnWidthsOnTableLayoutChange(latestWidth: number): void {
+    this.tableWidth = latestWidth;
+    let totalColWidth = 0;
+
+    this.visibleColumnConfigs.forEach(column => {
+      const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
+
+      totalColWidth += columnWidthInPx;
+    });
+
+    if (totalColWidth >= latestWidth) {
+      return;
+    }
+
+    this.distributeWidthToColumns(latestWidth - totalColWidth);
+  }
+
+  private distributeWidthToColumns(width: string | number): void {
+    const widthInPx = this.getColWidthInPx(width);
+    const nonStateVisibleColumnConfigs = this.visibleColumnConfigs.filter(column => !this.isStateColumn(column));
+    const widthPerColumn =
+      nonStateVisibleColumnConfigs.length > 0 ? widthInPx / nonStateVisibleColumnConfigs.length : 0;
+
+    nonStateVisibleColumnConfigs.forEach(column => {
+      const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
+
+      column.width = `${columnWidthInPx + widthPerColumn}px`;
+    });
+  }
+
+  // Converts width `123px` to `123`
+  private getColWidthInPx(width: string | number): number {
+    return isNumber(width) ? width : Number(width.substring(0, width.length - 2));
   }
 }
 
