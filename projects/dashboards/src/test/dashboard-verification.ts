@@ -2,6 +2,8 @@ import { StaticProvider } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ColorService,
+  FeatureState,
+  FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
   RelativeTimeRange,
@@ -35,6 +37,9 @@ export const mockDashboardProviders = [
   mockProvider(GraphQlRequestService),
   mockProvider(GraphQlQueryEventService),
   mockProvider(ColorService),
+  mockProvider(FeatureStateResolver, {
+    getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled))
+  }),
   mockProvider(LayoutChangeService, {
     layout$: of()
   }),
@@ -50,10 +55,17 @@ export const mockDashboardProviders = [
     getFilterAttributes: () => of([]),
     getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
   }),
+  // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/55803#discussioncomment-1341954
   mockProvider(LoggerService, {
-    warn: jest.fn().mockImplementation(fail),
-    info: jest.fn().mockImplementation(fail),
-    error: jest.fn().mockImplementation(fail)
+    warn: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    }),
+    info: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    }),
+    error: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    })
   }),
   mockProvider(ActivatedRoute, {
     queryParamMap: EMPTY

@@ -6,7 +6,6 @@ import { Observable, Subject } from 'rxjs';
 import { shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
 export abstract class WidgetRenderer<TModel extends object, TData = unknown> implements OnInit, OnDestroy {
   public readonly model: TModel;
   public timeRange?: TimeRange;

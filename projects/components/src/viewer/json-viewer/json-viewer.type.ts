@@ -1,5 +1,3 @@
-// tslint:disable: no-null-undefined-union
-
 import { JsonValue } from '@hypertrace/common';
 
 export interface JsonRecord {

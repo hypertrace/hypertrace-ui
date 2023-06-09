@@ -14,12 +14,12 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
-import { isEmpty, isEqual } from 'lodash-es';
+import { isEmpty, isEqual, partition } from 'lodash-es';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { map, shareReplay, startWith } from 'rxjs/operators';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { map, switchMap } from 'rxjs/operators';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
-import { SearchBoxDisplayMode } from '../search-box/search-box.component';
+import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
 import { SelectTriggerDisplayMode } from '../select/select.component';
@@ -44,7 +44,7 @@ import { MultiSelectJustify } from './multi-select-justify';
         [disabled]="this.disabled"
         class="multi-select-container"
         (popoverOpen)="this.popoverOpen = true"
-        (popoverClose)="this.popoverOpen = false"
+        (popoverClose)="this.onPopoverClose()"
       >
         <ht-popover-trigger>
           <div
@@ -94,14 +94,17 @@ import { MultiSelectJustify } from './multi-select-justify';
                 (valueChange)="this.searchOptions($event)"
                 [debounceTime]="200"
                 displayMode="${SearchBoxDisplayMode.NoBorder}"
-                *ngIf="(this.allOptions$ | async)?.length > 5 || (this.isSearchTextPresent$ | async)"
+                [value]="this.searchText"
+                (submit)="this.searchOptions($event)"
+                [searchMode]="this.searchTriggerMode"
+                *ngIf="(this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty)"
               ></ht-search-box>
               <ht-divider class="divider"></ht-divider>
 
               <ht-button
                 class="clear-selected"
                 *ngIf="this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
+                variant="${ButtonVariant.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Clear Selected"
                 (click)="this.onClearSelected()"
@@ -110,7 +113,7 @@ import { MultiSelectJustify } from './multi-select-justify';
               <ht-button
                 class="select-all"
                 *ngIf="this.showSelectAll && (this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
-                role="${ButtonRole.Primary}"
+                variant="${ButtonVariant.Primary}"
                 display="${ButtonStyle.Text}"
                 label="Select All"
                 (click)="this.onSelectAll()"
@@ -124,6 +127,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                   (click)="this.onSelectionChange(item)"
                   class="multi-select-option"
                   [ngClass]="{ disabled: item.disabled }"
+                  [htTooltip]="item.tooltip"
                 >
                   <ht-checkbox
                     class="checkbox"
@@ -183,6 +187,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   public searchMode: MultiSelectSearchMode = MultiSelectSearchMode.Disabled;
 
   @Input()
+  public searchTriggerMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
+
+  @Input()
   public justify: MultiSelectJustify = MultiSelectJustify.Left;
 
   @Input()
@@ -212,12 +219,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
   private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  private readonly reorderSelectedItemsSubject: BehaviorSubject<void> = new BehaviorSubject<void>(undefined);
 
-  public isSearchTextPresent$: Observable<boolean> = this.searchValueChange.pipe(
-    map(searchText => !isEmpty(searchText)),
-    startWith(false),
-    shareReplay(1)
-  );
+  public searchText: string = '';
 
   public popoverOpen: boolean = false;
   public triggerValues$: Observable<TriggerValues> = new Observable();
@@ -229,18 +233,21 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   public ngAfterContentInit(): void {
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
-    this.filteredOptions$ = combineLatest([this.allOptions$, this.caseInsensitiveSearchSubject]).pipe(
-      map(([options, searchText]) =>
-        isEmpty(searchText)
-          ? options.toArray()
-          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
-      )
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.reorderSelectedItemsSubject]).pipe(
+      map(([options]) => this.reorderSelectedItemsFirst(options.toArray(), this.selected)),
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
     );
     this.setTriggerLabel();
   }
 
   public ngOnChanges(): void {
     this.setTriggerLabel();
+  }
+
+  public onPopoverClose(): void {
+    this.popoverOpen = false;
+    this.searchOptions('');
+    this.reorderSelectedItemsSubject.next();
   }
 
   public searchOptions(searchText: string): void {
@@ -252,11 +259,12 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
       this.caseInsensitiveSearchSubject.next(searchText);
     }
 
+    this.searchText = searchText;
     this.searchValueChange.emit(searchText);
   }
 
   public onSelectAll(): void {
-    this.setSelection(this.allOptionsList!.map(item => item.value));
+    this.setSelection(this.allOptionsList!.filter(item => !item.disabled).map(item => item.value));
   }
 
   public onClearSelected(): void {
@@ -355,6 +363,30 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
   private propagateValueChangeToFormControl(value: V[] | undefined): void {
     this.propagateControlValueChange?.(value);
     this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  private reorderSelectedItemsFirst(
+    filteredOptions: SelectOptionComponent<V>[],
+    selected?: V[]
+  ): SelectOptionComponent<V>[] {
+    if (isEmpty(selected)) {
+      return filteredOptions;
+    }
+    const filteredOptionsPartitions = partition(filteredOptions, filteredOption =>
+      selected?.includes(filteredOption.value)
+    );
+
+    return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
+  }
+
+  private getFilteredOptions(optionsList: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(optionsList), this.caseInsensitiveSearchSubject]).pipe(
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? options
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
   }
 }
 

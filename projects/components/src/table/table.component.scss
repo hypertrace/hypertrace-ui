@@ -2,6 +2,11 @@
 @import 'layout';
 
 $header-height: 32px;
+$header-border-color: $cloud-2;
+$header-border: 1px solid $header-border-color;
+
+$data-row-border: 1px solid $gray-2;
+
 .table {
   position: relative;
   display: flex;
@@ -32,13 +37,26 @@ $header-height: 32px;
   position: sticky;
   top: 0;
   height: $header-height;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
 
   .header-cell {
-    background: $gray-1;
-    border-bottom: 1px solid $gray-2;
+    background: $blue-1;
+    border-bottom: $header-border;
+    border-top: $header-border;
+
+    &:first-of-type {
+      border-left: $header-border;
+      border-top-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-right: $header-border;
+      border-top-right-radius: 4px;
+    }
+
+    &:hover {
+      cursor: move;
+    }
   }
 }
 
@@ -74,34 +92,48 @@ $header-height: 32px;
 }
 
 .header-cell {
-  display: flex;
   flex: 1 0;
-  overflow: hidden;
+  position: relative;
 
-  .header-cell-renderer {
-    width: 100%;
-  }
+  .header-cell-container {
+    @include fill-container;
+    display: flex;
+    overflow: hidden;
 
-  .header-column-resize-handle {
-    padding: 6px 2px;
-    height: 100%;
+    .header-cell-content {
+      min-width: 0;
+      flex: 1 1 auto;
 
-    &.resizable {
-      cursor: col-resize;
-
-      &:hover {
-        padding: 0 2px;
-
-        .header-column-divider {
-          background-color: $gray-9;
-        }
+      .header-cell-renderer {
+        width: 100%;
       }
     }
 
     .header-column-divider {
-      width: 1px;
+      padding: 6px 2px;
       height: 100%;
-      background-color: $gray-2;
+
+      .bg-col-divider {
+        width: 1px;
+        height: 100%;
+        background-color: $header-border-color;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .header-column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    background-color: transparent;
+    width: 3px;
+    height: 100%;
+    z-index: 2;
+    cursor: col-resize;
+
+    &:hover {
+      background-color: $blue-4 !important;
     }
   }
 }
@@ -110,13 +142,22 @@ $header-height: 32px;
   flex: 1 0;
   overflow: hidden;
   border-bottom: 1px solid $gray-1;
+  background-color: white;
 
-  &.detail-expanded {
+  &.detail-expanded.state-col {
     border-bottom: unset;
   }
 
   &.hide-divider {
     border-bottom: unset;
+  }
+
+  &:first-of-type {
+    border-left: $data-row-border;
+  }
+
+  &:last-of-type {
+    border-right: $data-row-border;
   }
 
   .data-cell-renderer {
@@ -127,7 +168,13 @@ $header-height: 32px;
 
 .last-row {
   .data-cell {
-    border-color: transparent;
+    &:first-of-type {
+      border-bottom-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 4px;
+    }
   }
 }
 
@@ -140,8 +187,30 @@ $header-height: 32px;
 }
 
 .pagination-controls {
-  position: fixed;
   width: 100%;
   bottom: 0;
   background: white;
+}
+
+.state-cell-container {
+  @include fill-container;
+  @include center-contents;
+}
+
+.state-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+
+  &:nth-of-type(2) {
+    left: 32px;
+  }
+
+  &.depth-greater-than-zero {
+    border: none;
+  }
+}
+
+.col-border-right {
+  border-right: $data-row-border;
 }

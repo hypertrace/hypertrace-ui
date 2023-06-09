@@ -1,11 +1,14 @@
 @import 'color-palette';
 @import 'font';
 
+$border: 1px solid $gray-2;
+
 .table-expanded-cell-renderer {
-  padding: 0 0 6px 8px;
+  padding: 12px 12px 8px 32px;
 
   &.expanded {
-    border-bottom: 1px solid $gray-2;
+    border: $border;
+    border-top: none;
   }
 
   .expandable-column-row {

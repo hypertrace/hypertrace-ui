@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { MemoizeModule, NavigationService } from '@hypertrace/common';
+import { IsEmptyPipeModule, MemoizeModule, NavigationService } from '@hypertrace/common';
 import { IconComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -15,7 +15,7 @@ import { SelectModule } from './select.module';
 describe('Select Component', () => {
   const hostFactory = createHostFactory<SelectComponent<string>>({
     component: SelectComponent,
-    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule, MemoizeModule],
+    imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule, MemoizeModule, IsEmptyPipeModule],
     declareComponent: false,
     declarations: [MockComponent(IconComponent)],
     providers: [
@@ -195,7 +195,7 @@ describe('Select Component', () => {
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
       'select-level-icon'
     );
-    // tslint:disable-next-line:no-null-keyword
+
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(null);
 
     // Selection with no icon -> default icon and no color

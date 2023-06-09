@@ -10,7 +10,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
       - name: Set up Node 16
         uses: actions/setup-node@v2
         with:
@@ -32,7 +31,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
+      - name: Set up Node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -114,7 +117,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--testPathPattern "+.')
+        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--test-path-pattern "+.')
         env:
           CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
 

@@ -10,7 +10,6 @@ export class CartesianAxisModel {
     key: 'scale-type',
     required: false,
     displayName: 'Scale Type',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [ScaleType.Band, ScaleType.Linear, ScaleType.Time]

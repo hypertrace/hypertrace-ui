@@ -1,7 +1,7 @@
 import { StaticProvider } from '@angular/core';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { ButtonRole } from '../button/button';
+import { ButtonVariant } from '../button/button';
 import { ButtonComponent } from '../button/button.component';
 import { ModalRef, MODAL_DATA } from '../modal/modal';
 import { ConfirmationModalComponent, ConfirmationModalData } from './confirmation-modal.component';
@@ -39,7 +39,7 @@ describe('Confirmation modal', () => {
     expect(buttons.length).toBe(2);
 
     expect(buttons[0].label).toEqual('Cancel');
-    expect(buttons[1].role).toEqual(ButtonRole.Additive);
+    expect(buttons[1].variant).toEqual(ButtonVariant.Additive);
     expect(buttons[1].label).toEqual('Confirm');
   });
 
@@ -49,7 +49,7 @@ describe('Confirmation modal', () => {
         content: 'confirmation description',
         cancelButtonLabel: 'boom',
         confirmButtonLabel: 'good',
-        confirmButtonRole: ButtonRole.Destructive
+        confirmButtonUse: ButtonVariant.Destructive
       })
     );
 
@@ -57,7 +57,7 @@ describe('Confirmation modal', () => {
     expect(buttons.length).toBe(2);
 
     expect(buttons[0].label).toEqual('boom');
-    expect(buttons[1].role).toEqual(ButtonRole.Destructive);
+    expect(buttons[1].variant).toEqual(ButtonVariant.Destructive);
     expect(buttons[1].label).toEqual('good');
   });
 

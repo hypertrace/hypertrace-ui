@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle, FilterOperator, IconSize } from '@hypertrace/components';
+import { ButtonVariant, ButtonStyle, FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
 import { ExplorerService } from '../explorer/explorer-service';
@@ -55,7 +55,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
 
           <ht-button
             class="full-trace-button"
-            role="${ButtonRole.Tertiary}"
+            variant="${ButtonVariant.Tertiary}"
             display="${ButtonStyle.Bordered}"
             label="See Full Trace"
             (click)="this.navigateToFullTrace(traceDetails.traceId, traceDetails.startTime)"

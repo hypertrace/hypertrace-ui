@@ -10,8 +10,9 @@ import {
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { merge, Observable, Subject } from 'rxjs';
-import { ButtonSize, ButtonStyle } from '../button/button';
+import { ButtonSize, ButtonStyle, ButtonVariant } from '../button/button';
 import { SelectSize } from '../select/select-size';
+import { ToggleItem } from '../toggle-group/toggle-item';
 import { PageEvent } from './page.event';
 import { PaginationProvider } from './paginator-api';
 
@@ -23,7 +24,7 @@ import { PaginationProvider } from './paginator-api';
     <div
       class="paginator"
       [class.compact]="this.showCompactView"
-      *ngIf="this.totalItems && this.totalItems > this.minItemsBeforeDisplay"
+      *ngIf="this.totalItems && this.totalItems >= this.minItemsBeforeDisplay"
     >
       <ht-label
         class="label"
@@ -32,8 +33,12 @@ import { PaginationProvider } from './paginator-api';
       </ht-label>
       <div class="pagination-buttons">
         <ht-button
-          class="button previous-button"
+          class="previous-button"
+          [class.compact]="this.showCompactView"
           htTooltip="Go to previous page"
+          label="{{ !this.showCompactView ? 'Prev' : '' }}"
+          ariaLabel="Previous"
+          variant="${ButtonVariant.Primary}"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowLeft}"
@@ -42,8 +47,12 @@ import { PaginationProvider } from './paginator-api';
         >
         </ht-button>
         <ht-button
-          class="button next-button"
+          class="next-button"
+          [class.compact]="this.showCompactView"
           htTooltip="Go to next page"
+          label="{{ !this.showCompactView ? 'Next' : '' }}"
+          ariaLabel="Next"
+          variant="${ButtonVariant.Primary}"
           display="${ButtonStyle.Bordered}"
           size="${ButtonSize.Small}"
           icon="${IconType.ArrowRight}"
@@ -53,7 +62,7 @@ import { PaginationProvider } from './paginator-api';
         </ht-button>
       </div>
       <ng-container *ngIf="!this.showCompactView">
-        <ht-label class="label" label="Rows per Page:"></ht-label>
+        <ht-label class="label" label="Show"></ht-label>
       </ng-container>
       <div class="page-size-select" *ngIf="this.pageSizeOptions.length">
         <ht-select
@@ -66,6 +75,9 @@ import { PaginationProvider } from './paginator-api';
           </ht-select-option>
         </ht-select>
       </div>
+      <ng-container *ngIf="!this.showCompactView">
+        <ht-label class="label" label=" per page"></ht-label>
+      </ng-container>
     </div>
   `
 })
@@ -101,6 +113,9 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Input()
   public set totalItems(totalItems: number) {
     this._totalItems = totalItems;
+    this.totalRecordsChange.emit(totalItems);
+    this.recordsDisplayedChange.emit(Math.min(this.pageSize, totalItems));
+
     // This is for supporting the programmatic usage of paginator for the Table chart. This should go away with the Table refactor
     this.changeDetectorRef.markForCheck();
   }
@@ -116,10 +131,21 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter();
 
+  @Output()
+  public readonly recordsDisplayedChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  public readonly totalRecordsChange: EventEmitter<number> = new EventEmitter();
+
   // Caused either by a change in the provided page, or user change being emitted
   public readonly pageEvent$: Observable<PageEvent> = merge(this.pageChange, this.pageSizeInputSubject);
 
   public readonly minItemsBeforeDisplay: number = 10;
+
+  public readonly tabs: ToggleItem<PaginatorButtonType>[] = [
+    { label: PaginatorButtonType.Prev },
+    { label: PaginatorButtonType.Next }
+  ];
 
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
@@ -206,5 +232,11 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       pageIndex: this.pageIndex,
       pageSize: this.pageSize
     });
+    this.recordsDisplayedChange.emit(Math.min(this.pageSize, this.totalItems));
   }
+}
+
+const enum PaginatorButtonType {
+  Next = 'Next',
+  Prev = 'Prev'
 }

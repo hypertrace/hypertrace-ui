@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
   assertUnreachable,
@@ -58,7 +59,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
-// tslint:disable: max-file-line-count
 @Renderer({ modelClass: TableWidgetModel })
 @Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({
@@ -266,7 +266,7 @@ export class TableWidgetRendererComponent
 
           return {
             ...option,
-            applied: found?.applied || this.isFilterApplied(option.metaValue, filters)
+            applied: option.applied || found?.applied || this.isFilterApplied(option.metaValue, filters)
           };
         });
 

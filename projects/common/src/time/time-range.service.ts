@@ -52,6 +52,10 @@ export class TimeRangeService {
     return this.currentTimeRange;
   }
 
+  public maybeGetCurrentTimeRange(): TimeRange | undefined {
+    return this.currentTimeRange;
+  }
+
   public setRelativeRange(value: number, unit: TimeUnit): this {
     return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
   }
@@ -99,7 +103,9 @@ export class TimeRangeService {
   }
 
   private initializeTimeRange(): void {
-    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => this.applyTimeRangeChange(timeRangeFromInitialUrl));
+    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => {
+      this.applyTimeRangeChange(timeRangeFromInitialUrl);
+    });
 
     this.getPageTimeRangeChanges().subscribe(timeRange => {
       if (!this.timeRangeMatchesCurrentUrl(timeRange)) {

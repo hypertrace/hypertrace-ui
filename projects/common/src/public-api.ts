@@ -26,6 +26,7 @@ export * from './color/color';
 
 // Constants
 export * from './constants/application-constants';
+export * from './constants/external-urls-allowlist';
 
 // Custom Error
 export * from './custom-error/custom-error';
@@ -53,6 +54,7 @@ export * from './utilities/formatters/duration/display-duration.pipe';
 export * from './utilities/formatters/ordinal/ordinal.pipe';
 export * from './utilities/formatters/ordinal/ordinal-formatter';
 export * from './utilities/formatters/formatting.module';
+export * from './utilities/formatters/file-size/display-file-size.pipe';
 export * from './utilities/formatters/numeric/display-number.pipe';
 export * from './utilities/formatters/numeric/numeric-formatter';
 export * from './utilities/formatters/string/string-formatter';

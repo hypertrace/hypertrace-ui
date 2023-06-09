@@ -27,7 +27,6 @@ export class RepeatModel {
   public template!: ModelJson;
 
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: AutoContainerLayoutModel

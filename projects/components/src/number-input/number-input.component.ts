@@ -18,6 +18,7 @@ import { NumberInputAppearance } from './number-input-appearance';
     <input
       type="number"
       class="number-input"
+      [attr.aria-label]="this.ariaLabel || 'number-input'"
       [ngClass]="this.getStyleClasses()"
       [disabled]="this.disabled"
       [ngModel]="this.value"
@@ -40,6 +41,9 @@ export class NumberInputComponent implements ControlValueAccessor {
 
   @Input()
   public maxValue?: number;
+
+  @Input()
+  public ariaLabel?: string;
 
   @Output()
   public readonly valueChange: EventEmitter<number> = new EventEmitter();

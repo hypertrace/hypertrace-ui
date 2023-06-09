@@ -12,11 +12,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
+import { IconType } from '@hypertrace/assets-library';
 import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { merge, Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { StepperTabComponent } from './tab/stepper-tab.component';
 
@@ -25,6 +26,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
   template: `
     <div class="stepper" *htLoadAsync="this.steps$ as steps">
       <mat-stepper
+        role="tablist"
         [orientation]="this.orientation"
         [linear]="this.isLinear"
         #stepper
@@ -34,7 +36,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
           <-- NOTE: completed and step control both should not be present when in linear flow. So when step control is
           provided, we explicitly set completed to false so that the stepper can work with teh form validity status -->
           <mat-step
-            [completed]="step?.stepControl ? false : step.completed"
+            [completed]="step?.stepControl?.valid ?? step.completed"
             [stepControl]="step?.stepControl"
             [optional]="step.optional"
             [editable]="step.editable"
@@ -44,7 +46,10 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
             </ng-template>
             <ng-container *ngTemplateOutlet="step.content"></ng-container>
             <ng-template matStepperIcon="edit">
-              <ht-icon [icon]="step.icon" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ht-icon icon="${IconType.Edit}" size="${IconSize.ExtraSmall}"></ht-icon>
+            </ng-template>
+            <ng-template matStepperIcon="done">
+              <ht-icon icon="${IconType.Checkmark}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>
@@ -61,7 +66,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
               class="cancel"
               label="Cancel"
               (click)="this.cancelled.emit()"
-              role="${ButtonRole.Tertiary}"
+              variant="${ButtonVariant.Tertiary}"
             ></ht-button>
             <div class="back-next">
               <ht-button
@@ -69,10 +74,12 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
                 *ngIf="stepper.selectedIndex !== 0"
                 display="${ButtonStyle.Outlined}"
                 label="Back"
+                ariaLabel="Back"
                 (click)="stepper.previous()"
               ></ht-button>
               <ht-button
                 class="next"
+                ariaLabel="Next"
                 [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
                 (click)="this.nextOrSubmit(stepper)"
                 [disabled]="this.isNextDisabled(stepper.selectedIndex)"

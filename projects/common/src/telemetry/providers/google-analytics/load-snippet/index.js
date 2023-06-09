@@ -1,5 +1,3 @@
-// tslint:disable
-
 const loadGA = () => {
   /**
    * Creates a temporary global ga object and loads analytics.js.

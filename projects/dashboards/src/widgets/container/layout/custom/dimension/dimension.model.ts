@@ -20,7 +20,6 @@ export class DimensionModel implements CellDimension {
   @ModelProperty({
     key: 'unit',
     required: true,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [DimensionUnit.Px, DimensionUnit.Fr]
@@ -38,7 +37,6 @@ export class DimensionModel implements CellDimension {
   @ModelProperty({
     key: 'min-dimension-unit',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [DimensionUnit.Px]

@@ -14,7 +14,7 @@ export { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 // Button
 export { ButtonComponent } from './button/button.component';
 export { ButtonModule } from './button/button.module';
-export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
+export { ButtonVariant, ButtonSize, ButtonStyle } from './button/button';
 
 // Back Button
 export { BackButtonComponent } from './back-button/back-button.component';
@@ -108,13 +108,13 @@ export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
 // File Upload
-export * from './file-upload/file-upload-validators';
 export * from './file-upload/file-upload.component';
 export * from './file-upload/file-upload.module';
 export * from './file-upload/file-display/file-display.module';
 export * from './file-upload/file-display/file-display.component';
 
 export * from './file-upload/file-upload.service';
+export * from './file-upload/file-types';
 
 // Filter
 export * from './filtering/filter/filter';
@@ -214,6 +214,7 @@ export * from './load-async/load-async.directive';
 export * from './load-async/load-async.module';
 export * from './load-async/load-async.service';
 export * from './load-async/load-async-state.type';
+export * from './load-async/loader/loader.module';
 
 // Message Display
 export { MessageDisplayComponent } from './message-display/message-display.component';

@@ -1,4 +1,5 @@
 import { hashCode } from '../utilities/math/math-utilities';
+import { rgb } from 'd3-color';
 
 export const enum Color {
   Blue1 = '#f0f6ff',
@@ -8,6 +9,7 @@ export const enum Color {
   Blue6 = '#0043ad',
   Blue5 = '#0053d7',
   Blue7 = '#003385',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   BlueGray1 = '#70a7ff',
   BlueGray2 = '#648fd2',
   BlueGray3 = '#5777a4',
@@ -38,6 +40,7 @@ export const enum Color {
   Orange3 = '#FDC088',
   Orange4 = '#fca555',
   Orange5 = '#fb8b24',
+  Orange6 = '#bb5207',
   Purple1 = '#FCF4FD',
   Purple2 = '#f2d0f5',
   Purple3 = '#E295E9',
@@ -49,10 +52,12 @@ export const enum Color {
   Red3 = '#FEA395',
   Red4 = '#fd7c68',
   Red5 = '#FD5138',
-  Red6 = '#F72202',
+  Red6 = '#e51f01',
   Red7 = '#bb1902',
   Red8 = '#6a0e01',
   Red9 = '#140300',
+  Turquoise1 = '#ecffff',
+  Turquoise3 = '#48d1cc',
   Brown1 = '#9e4c41',
   White = '#FFFFFF',
   Yellow1 = '#fffbeb',
@@ -64,6 +69,7 @@ export const enum Color {
   Yellow7 = '#bd9d00',
   Yellow8 = '#6d5b00',
   Yellow9 = '#181400',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   Aurora = '#27C675',
   Teal = '#01BCD6',
   Transparent = 'transparent',
@@ -77,12 +83,27 @@ export interface ColorCombination {
 
 export const getHexColorForString = (id: string): string => {
   const hash = hashCode(id);
-  let rgb = '#';
+  let rgbString = '#';
   for (let i = 0; i < 3; i++) {
-    // tslint:disable-next-line: no-bitwise
+    // eslint-disable-next-line  no-bitwise
     const value = (hash >> (i * 8)) & 0xff;
-    rgb += `00${value.toString(16)}`.substr(-2);
+    rgbString += `00${value.toString(16)}`.substr(-2);
   }
 
-  return rgb;
+  return rgbString;
+};
+
+export const getContrastColor = (
+  rgbColorString: string,
+  darkColor: string = Color.Gray9,
+  lightColor: string = Color.White
+): string => {
+  // Convert to RGB value
+  const rgbColor = rgb(rgbColorString);
+
+  // Get YIQ ratio
+  const yiq = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
+
+  // Check contrast
+  return yiq >= 128 ? darkColor : lightColor;
 };

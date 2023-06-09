@@ -24,7 +24,6 @@ describe('Detail Sheet Interaction Handler Model', () => {
   test('should work with default values', () => {
     const modelJson = {
       type: 'text-widget',
-      // tslint:disable-next-line: no-invalid-template-strings
       text: '${source}'
     };
 
@@ -57,7 +56,6 @@ describe('Detail Sheet Interaction Handler Model', () => {
   test('should work with custom values', () => {
     const modelJson = {
       type: 'text-widget',
-      // tslint:disable-next-line: no-invalid-template-strings
       text: '${source.value}'
     };
 

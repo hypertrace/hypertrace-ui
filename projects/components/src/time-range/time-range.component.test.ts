@@ -12,8 +12,8 @@ import {
 } from '@hypertrace/common';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { ButtonRole } from '../button/button';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonVariant } from '../button/button';
+import { RefreshButtonComponent } from '../refresh-button/refresh-button.component';
 import { TimeRangeComponent } from './time-range.component';
 import { TimeRangeModule } from './time-range.module';
 
@@ -25,7 +25,6 @@ describe('Time range component', () => {
     componentProviders: [],
     providers: [
       mockProvider(NavigationService, {
-        // tslint:disable-next-line: no-object-literal-type-assertion
         navigation$: of({
           queryParamMap: of(convertToParamMap({}))
         } as ActivatedRoute)
@@ -138,11 +137,11 @@ describe('Time range component', () => {
 
   test('should update refresh button to primary after 5m', fakeAsync(() => {
     const spectator = createComponent();
-    const refreshButton = spectator.query('.refresh', { read: ButtonComponent })!;
+    const refreshButton = spectator.query('.refresh', { read: RefreshButtonComponent })!;
     expect(refreshButton).toExist();
-    expect(refreshButton.role).toBe(ButtonRole.Tertiary);
+    expect(refreshButton.variant).toBe(ButtonVariant.Tertiary);
     spectator.tick(new TimeDuration(5, TimeUnit.Minute).toMillis());
-    expect(refreshButton.role).toBe(ButtonRole.Primary);
+    expect(refreshButton.variant).toBe(ButtonVariant.Primary);
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');
     spectator.tick(new TimeDuration(30, TimeUnit.Second).toMillis());
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');

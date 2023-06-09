@@ -20,7 +20,6 @@ export class DetailSheetInteractionHandlerModel implements InteractionHandler {
   @ModelProperty({
     key: 'sheet-size',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [SheetSize.Small, SheetSize.Medium, SheetSize.Large, SheetSize.ExtraLarge, SheetSize.ResponsiveExtraLarge]

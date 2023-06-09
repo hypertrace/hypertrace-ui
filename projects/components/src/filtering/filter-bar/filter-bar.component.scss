@@ -81,7 +81,7 @@
 }
 
 .instructions {
-  @include body-small($gray-4);
+  @include body-small($gray-5);
   @include ellipsis-overflow();
   font-size: 12px;
   padding-left: 40px;

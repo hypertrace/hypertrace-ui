@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ImagesAssetPath } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle } from '../button/button';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { NotificationMode } from '../notification/notification.component';
 
 @Component({
@@ -27,7 +27,7 @@ import { NotificationMode } from '../notification/notification.component';
             label="Go to dashboard"
             (click)="this.goHome()"
             display="${ButtonStyle.Solid}"
-            role="${ButtonRole.Primary}"
+            variant="${ButtonVariant.Primary}"
           ></ht-button>
         </div>
       </div>

@@ -74,6 +74,8 @@ export const toGraphQlOperator = (operator: FilterOperator): GraphQlOperatorType
       return GraphQlOperatorType.NotIn;
     case FilterOperator.ContainsKey:
       return GraphQlOperatorType.ContainsKey;
+    case FilterOperator.NotContainsKey:
+      return GraphQlOperatorType.NotContainsKey;
     case FilterOperator.ContainsKeyLike:
       return GraphQlOperatorType.ContainsKeyLike;
     default:
@@ -112,6 +114,9 @@ export const toFilterOperator = (operator: GraphQlOperatorType): FilterOperator 
 
     case GraphQlOperatorType.ContainsKey:
       return FilterOperator.ContainsKey;
+
+    case GraphQlOperatorType.NotContainsKey:
+      return FilterOperator.NotContainsKey;
 
     case GraphQlOperatorType.ContainsKeyLike:
       return FilterOperator.ContainsKeyLike;

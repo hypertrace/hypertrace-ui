@@ -14,9 +14,9 @@ export const apiTraceSequenceDashboard: DashboardDefaultConfiguration = {
         title: 'Sequence Diagram',
         data: {
           type: 'api-trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
+
           'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
+
           'start-time': '${startTime}'
         }
       }

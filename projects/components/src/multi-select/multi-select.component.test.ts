@@ -1,9 +1,8 @@
-// tslint:disable: max-file-line-count
-
+/* eslint-disable max-lines */
 import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { IsEmptyPipeModule, NavigationService } from '@hypertrace/common';
 import { PopoverComponent } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
@@ -24,7 +23,7 @@ import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule],
+    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule, IsEmptyPipeModule],
     providers: [
       mockProvider(NavigationService, {
         navigation$: NEVER
@@ -175,8 +174,15 @@ describe('Multi Select Component', () => {
       });
     });
 
-    optionElements.forEach((element, index) => {
-      expect(element).toHaveText(selectionOptions[index].label);
+    // Selected items first (after reordering)
+    expect(optionElements[0]).toHaveText(selectionOptions[1].label);
+    expect(optionElements[1]).toHaveText(selectionOptions[2].label);
+    expect(optionElements[2]).toHaveText(selectionOptions[0].label);
+    expect(optionElements[3]).toHaveText(selectionOptions[3].label);
+    expect(optionElements[4]).toHaveText(selectionOptions[4].label);
+    expect(optionElements[5]).toHaveText(selectionOptions[5].label);
+
+    optionElements.forEach(element => {
       expect(element.querySelector('ht-icon')).toExist();
     });
   }));
@@ -499,9 +505,7 @@ describe('Multi Select Component', () => {
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
 
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+    expect(spectator.component.searchText).toBe('');
 
     expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
@@ -557,15 +561,12 @@ describe('Multi Select Component', () => {
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
 
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+    expect(spectator.component.searchText).toBe('i');
 
     spectator.component.searchOptions('asdasd');
     spectator.tick();
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: true });
-    });
+
+    expect(spectator.component.searchText).toBe('asdasd');
 
     expect(spectator.query('.search-bar', { root: true })).toExist();
     expect(spectator.query('.divider', { root: true })).toExist();
@@ -579,9 +580,8 @@ describe('Multi Select Component', () => {
     spectator.detectChanges();
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.component.isSearchTextPresent$).toBe('(x)', { x: false });
-    });
+
+    expect(spectator.component.searchText).toBe('');
 
     expect(spectator.query('.search-bar', { root: true })).not.toExist();
     expect(spectator.query('.divider', { root: true })).toExist();

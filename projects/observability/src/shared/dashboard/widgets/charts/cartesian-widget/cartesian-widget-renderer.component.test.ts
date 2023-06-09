@@ -90,7 +90,6 @@ describe('Cartesian widget renderer component', () => {
   ): SeriesModel<[number, number]> => {
     const series = new SeriesModel<[number, number]>();
     Object.assign(series, seriesPartial);
-    // tslint:disable-next-line: no-object-literal-type-assertion
     const mockApi = {
       getData: () => of(fetcher)
     } as ModelApi;

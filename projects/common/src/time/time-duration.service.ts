@@ -39,7 +39,6 @@ export class TimeDurationService {
   private static isValidUnit(unitString: string): unitString is TimeUnit {
     try {
       // Instantiating TimeDuration should throw if the unitString does not map to a valid TimeUnit
-      // tslint:disable-next-line:no-unused-expression
       new TimeDuration(1, unitString as TimeUnit);
     } catch (e) {
       return false;

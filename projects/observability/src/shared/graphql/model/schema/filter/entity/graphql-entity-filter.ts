@@ -32,7 +32,7 @@ export const findEntityFilterOrThrow = (filters: GraphQlFilter[]): GraphQlEntity
   return entityFilter;
 };
 
-// tslint:disable-next-line: interface-over-type-literal https://github.com/Microsoft/TypeScript/issues/15300
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type IdFilter = {
   value: GraphQlArgumentValue;
   operator: GraphQlEnumArgument<GraphQlOperatorType.Equals>;

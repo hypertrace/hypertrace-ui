@@ -1,4 +1,5 @@
-import { fakeAsync } from '@angular/core/testing';
+/* eslint-disable max-lines */
+import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -16,8 +17,8 @@ import { TableCdkRowUtil } from './data/table-cdk-row-util';
 import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, TableSortDirection } from './table-api';
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
+import { ModalService } from '../modal/modal.service';
 
-// tslint:disable max-file-line-count
 describe('Table component', () => {
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
@@ -71,6 +72,9 @@ describe('Table component', () => {
       }),
       mockProvider(TableService, {
         buildExtendedColumnConfigs: (columnConfigs: TableColumnConfig[]) => columnConfigs as TableColumnConfigExtended[]
+      }),
+      mockProvider(ModalService, {
+        createModal: jest.fn().mockReturnValue({ closed$: of([]) })
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
@@ -83,7 +87,7 @@ describe('Table component', () => {
     `
   });
 
-  test('pass custom page size options to paginator', () => {
+  test('pass custom page size options to paginator', fakeAsync(() => {
     const spectator = createHost(
       `<ht-table [columnConfigs]="columnConfigs" [data]="data" [pageSizeOptions]="pageSizeOptions"></ht-table>`,
       {
@@ -96,9 +100,10 @@ describe('Table component', () => {
     );
 
     expect(spectator.query(PaginatorComponent)?.pageSizeOptions).toEqual([10, 25]);
-  });
+    flush();
+  }));
 
-  test('does not alter the URL on paging if syncWithUrl false', () => {
+  test('does not alter the URL on paging if syncWithUrl false', fakeAsync(() => {
     const mockPageChange = jest.fn();
     const spectator = createHost(
       `<ht-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
@@ -123,9 +128,10 @@ describe('Table component', () => {
       pageIndex: 1,
       pageSize: 50
     });
-  });
+    flush();
+  }));
 
-  test('should not clear empty selections on page change', () => {
+  test('should not clear empty selections on page change', fakeAsync(() => {
     const rows = buildData();
     const mockSelectionsChange = jest.fn();
     const spectator = createHost(
@@ -146,9 +152,10 @@ describe('Table component', () => {
     });
 
     expect(mockSelectionsChange).not.toHaveBeenCalled();
-  });
+    flush();
+  }));
 
-  test('should clear non empty selections on page change', () => {
+  test('should clear non empty selections on page change', fakeAsync(() => {
     const rows = buildData();
     const mockSelectionsChange = jest.fn();
     const spectator = createHost(
@@ -170,9 +177,10 @@ describe('Table component', () => {
     });
 
     expect(mockSelectionsChange).toHaveBeenCalledWith([]);
-  });
+    flush();
+  }));
 
-  test('updates the URL on paging if syncWithUrl true', () => {
+  test('updates the URL on paging if syncWithUrl true', fakeAsync(() => {
     const mockPageChange = jest.fn();
     const spectator = createHost(
       `<ht-table [columnConfigs]="columnConfigs" [data]="data" [syncWithUrl]="syncWithUrl"
@@ -200,9 +208,10 @@ describe('Table component', () => {
       pageIndex: 1,
       pageSize: 50
     });
-  });
+    flush();
+  }));
 
-  test('reads page data from URL if syncWithUrl true', () => {
+  test('reads page data from URL if syncWithUrl true', fakeAsync(() => {
     const spectator = createHost(undefined, {
       hostProps: {
         columnConfigs: buildColumns(),
@@ -224,7 +233,8 @@ describe('Table component', () => {
     const paginator = spectator.query(PaginatorComponent);
     expect(paginator?.pageSize).toBe(100);
     expect(paginator?.pageIndex).toBe(1);
-  });
+    flush();
+  }));
 
   test('reads sort data from URL if syncWithUrl true', fakeAsync(() => {
     const spectator = createHost(undefined, {
@@ -254,7 +264,7 @@ describe('Table component', () => {
     );
   }));
 
-  test('does not alter the URL on sorting if syncWithUrl false', () => {
+  test('does not alter the URL on sorting if syncWithUrl false', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(undefined, {
       hostProps: {
@@ -267,9 +277,10 @@ describe('Table component', () => {
     spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).not.toHaveBeenCalled();
-  });
+    flush();
+  }));
 
-  test('updates the URL on sorting if syncWithUrl true', () => {
+  test('updates the URL on sorting if syncWithUrl true', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(undefined, {
       hostProps: {
@@ -285,7 +296,8 @@ describe('Table component', () => {
       'sort-by': 'firstId',
       'sort-direction': TableSortDirection.Ascending
     });
-  });
+    flush();
+  }));
 
   test('adds the multi select row column config for multi select mode', fakeAsync(() => {
     const columns = buildColumns();
@@ -371,19 +383,19 @@ describe('Table component', () => {
           map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig)))
         )
       ).toBe('x', {
-        x: [true, false, false, false]
+        x: [false, true, false, false]
       });
 
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            id: '$$expanded',
-            display: CoreTableCellRendererType.RowExpander,
+            id: '$$selected',
+            display: CoreTableCellRendererType.Checkbox,
             visible: true
           }),
           expect.objectContaining({
-            id: '$$selected',
-            display: CoreTableCellRendererType.Checkbox,
+            id: '$$expanded',
+            display: CoreTableCellRendererType.RowExpander,
             visible: true
           }),
           expect.objectContaining({
@@ -397,7 +409,7 @@ describe('Table component', () => {
     });
   }));
 
-  test('should emit selections on toggle select', () => {
+  test('should emit selections on toggle select', fakeAsync(() => {
     const mockSelectionsChange = jest.fn();
     const columns = buildColumns();
     const spectator = createHost(
@@ -430,7 +442,8 @@ describe('Table component', () => {
 
     spectator.component.toggleRowSelected(row);
     expect(mockSelectionsChange).toHaveBeenCalledWith([row]);
-  });
+    flush();
+  }));
 
   test('should select only selected rows', fakeAsync(() => {
     const columns = buildColumns();
@@ -457,14 +470,14 @@ describe('Table component', () => {
 
     // Change selections to just first stateful row
     const firstStatefulRow = statefulRows[0];
-    const spyUnselectRows = spyOn(spectator.component.dataSource!, 'unselectAllRows');
+    const spyUnselectRows = jest.spyOn(spectator.component.dataSource!, 'unselectAllRows');
     spectator.setHostInput('selections', [firstStatefulRow]);
     spectator.detectChanges();
     expect(spyUnselectRows).toHaveBeenCalled();
     expect(firstStatefulRow.$$state.selected).toBeTruthy();
   }));
 
-  test('row should be highlighted only in non multi selection mode', () => {
+  test('row should be highlighted only in non multi selection mode', fakeAsync(() => {
     const columns = buildColumns();
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
@@ -484,9 +497,10 @@ describe('Table component', () => {
 
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeTruthy();
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[1])).toBeFalsy();
-  });
+    flush();
+  }));
 
-  test('row should be highlighted (even) when in multi selection mode', () => {
+  test('row should be highlighted (even) when in multi selection mode', fakeAsync(() => {
     const columns = buildColumns();
     const rows = buildData();
     const statefulRows = TableCdkRowUtil.buildInitialRowStates(rows);
@@ -506,7 +520,8 @@ describe('Table component', () => {
 
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeTruthy();
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[1])).toBeFalsy();
-  });
+    flush();
+  }));
 
   test('should allow column width resize', fakeAsync(() => {
     const spectator = createHost(`<ht-table [columnConfigs]="columnConfigs" [data]="data"></ht-table>`, {
@@ -519,15 +534,17 @@ describe('Table component', () => {
     });
     spectator.tick();
 
+    const resizeHandlerElem = document.createElement('div');
+
     const mouseEvent = {
       clientX: 0,
       preventDefault: () => {
         /* No-op */
-      }
+      },
+      target: resizeHandlerElem
     };
 
     spectator.component.headerRowElement = {
-      // tslint:disable-next-line:no-object-literal-type-assertion
       nativeElement: {
         offsetLeft: 0,
         offsetWidth: 300
@@ -535,7 +552,6 @@ describe('Table component', () => {
     };
 
     spectator.component.queryHeaderCellElement = (index: number) =>
-      // tslint:disable-next-line:no-object-literal-type-assertion
       [
         {
           offsetLeft: 0,
@@ -547,7 +563,7 @@ describe('Table component', () => {
         }
       ][index] as HTMLElement;
 
-    spectator.component.onResizeMouseDown(mouseEvent as MouseEvent, 1);
+    spectator.component.onResizeMouseDown((mouseEvent as unknown) as MouseEvent, 1);
     spectator.dispatchMouseEvent('cdk-table', 'mousemove', 1, 0);
     spectator.dispatchMouseEvent('cdk-table', 'mouseup');
     spectator.tick(21);
@@ -559,7 +575,7 @@ describe('Table component', () => {
             width: 100
           }),
           expect.objectContaining({
-            width: 200
+            width: '200px'
           })
         ]
       });

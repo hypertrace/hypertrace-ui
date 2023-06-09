@@ -223,10 +223,8 @@ export abstract class D3VisualizationBuilderService<
     visualizationSelection.style('display', 'none');
     legendSelection.style('display', 'none');
     const outerRect = this.measurer.measureHtmlElement(parentElement);
-    // tslint:disable-next-line: no-null-keyword
     legendSelection.style('display', null);
     const legendRect = this.measurer.measureHtmlElement(legendElement);
-    // tslint:disable-next-line: no-null-keyword
     visualizationSelection.style('display', null);
 
     const isLegendVisible = this.isLegendVisible(config);

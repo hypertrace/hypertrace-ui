@@ -122,7 +122,7 @@ describe('GraphQl Request Service', () => {
 
   const buildQueryHandlerOne = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Query,
-    // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
@@ -131,7 +131,7 @@ describe('GraphQl Request Service', () => {
 
   const buildQueryHandlerTwo = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Query,
-    // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_TWO) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
@@ -142,7 +142,7 @@ describe('GraphQl Request Service', () => {
     requestOptions?: GraphQlRequestOptions
   ): GraphQlMutationHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Mutation,
-    // tslint:disable-next-line: no-any TS won't accept a mock for a type predicate
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),

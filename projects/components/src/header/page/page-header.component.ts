@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ApplicationFeature,
   Breadcrumb,
@@ -35,7 +35,12 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Row}'">
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
-          <ht-page-time-range *ngIf="!this.hidePageTimeRange" class="time-range"></ht-page-time-range>
+          <ng-container *ngIf="this.shouldShowTimeRange">
+            <ht-page-time-range class="time-range"></ht-page-time-range>
+          </ng-container>
+          <ng-container *ngIf="this.shouldShowRefreshButton">
+            <ht-refresh-button class="refresh-only-button" (click)="this.refresh.emit()"></ht-refresh-button>
+          </ng-container>
         </div>
         <ng-container *ngIf="this.contentAlignment === '${PageHeaderContentAlignment.Column}'">
           <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
@@ -97,10 +102,23 @@ export class PageHeaderComponent implements OnInit {
   public isBeta: boolean = false;
 
   @Input()
-  public hidePageTimeRange?: boolean = false;
+  public mode?: PageHeaderDisplayMode = PageHeaderDisplayMode.WithTimeRange;
+
+  /**
+   * The provided value is mapped to `mode` for backwards compatibility.
+   * Please use `mode` instead.
+   * @deprecated - Use the mode instead
+   */
+  @Input()
+  public set hidePageTimeRange(hidePageTimeRange: boolean) {
+    this.mode = hidePageTimeRange ? PageHeaderDisplayMode.Default : PageHeaderDisplayMode.WithTimeRange;
+  }
 
   @Input()
   public contentAlignment: PageHeaderContentAlignment = PageHeaderContentAlignment.Column;
+
+  @Output()
+  public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
@@ -121,6 +139,14 @@ export class PageHeaderComponent implements OnInit {
     this.subscriptionLifecycle.add(
       this.getPreferences().subscribe(preferences => this.navigateIfPersistedActiveTab(preferences))
     );
+  }
+
+  public get shouldShowTimeRange(): boolean {
+    return this.mode === PageHeaderDisplayMode.WithTimeRange;
+  }
+
+  public get shouldShowRefreshButton(): boolean {
+    return this.mode === PageHeaderDisplayMode.WithRefreshButton;
   }
 
   private navigateIfPersistedActiveTab(preferences: PageHeaderPreferences): void {
@@ -158,4 +184,13 @@ interface PageHeaderPreferences {
 export const enum PageHeaderContentAlignment {
   Column = 'column-alignment',
   Row = 'row-alignment'
+}
+
+/**
+ * @param Default - Default mode with no time range or refresh button
+ */
+export const enum PageHeaderDisplayMode {
+  Default = 'default',
+  WithTimeRange = 'with-time-range',
+  WithRefreshButton = 'with-refresh'
 }

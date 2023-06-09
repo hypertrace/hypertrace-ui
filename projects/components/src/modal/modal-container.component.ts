@@ -21,6 +21,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './m
           display="${ButtonStyle.Outlined}"
           size="${ButtonSize.Tiny}"
           htTooltip="Close modal"
+          ariaLabel="Close"
           (click)="this.close()"
         >
         </ht-button>
@@ -92,7 +93,6 @@ export class ModalContainerComponent {
   }
 
   private isModalDimension(size: unknown): size is ModalDimension {
-    // tslint:disable-next-line:strict-type-predicates
     return typeof size === 'object' && size !== null && 'width' in (size as ModalDimension);
   }
 

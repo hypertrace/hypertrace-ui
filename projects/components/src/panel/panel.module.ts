@@ -6,6 +6,7 @@ import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 import { ExpanderToggleModule } from '../expander/expander-toggle.module';
 import { LayoutChangeModule } from '../layout/layout-change.module';
 import { PanelBodyComponent } from './body/panel-body.component';
+import { PanelCollapsedBodyComponent } from './collapsed-body/panel-collapsed-body.component';
 import { PanelHeaderComponent } from './header/panel-header.component';
 import { PanelTitleComponent } from './header/title/panel-title.component';
 import { PanelComponent } from './panel.component';
@@ -19,7 +20,13 @@ import { PanelComponent } from './panel.component';
     EventBlockerModule,
     ButtonModule
   ],
-  declarations: [PanelComponent, PanelHeaderComponent, PanelBodyComponent, PanelTitleComponent],
-  exports: [PanelComponent, PanelHeaderComponent, PanelBodyComponent, PanelTitleComponent]
+  declarations: [
+    PanelComponent,
+    PanelHeaderComponent,
+    PanelBodyComponent,
+    PanelTitleComponent,
+    PanelCollapsedBodyComponent
+  ],
+  exports: [PanelComponent, PanelHeaderComponent, PanelBodyComponent, PanelTitleComponent, PanelCollapsedBodyComponent]
 })
 export class PanelModule {}

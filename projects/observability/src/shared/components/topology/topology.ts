@@ -1,5 +1,5 @@
 import { ElementRef, Renderer2 } from '@angular/core';
-import { DeepReadonly } from '@hypertrace/common';
+import { ClientRectBounds, DeepReadonly } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 
 export interface Topology {
@@ -147,7 +147,7 @@ export interface RenderableTopologyNode<TNode extends TopologyNode = TopologyNod
 
 export interface RenderableTopologyNodeRenderedData {
   getAttachmentPoint(angleRad: number): TopologyCoordinates;
-  getBoudingBox(): ClientRect;
+  getBoudingBox(): ClientRectBounds;
 }
 
 export interface RenderableTopologyEdge<

@@ -23,7 +23,6 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
 > {
   @ModelProperty({
     key: 'metric',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: ExploreSelectionSpecificationModel

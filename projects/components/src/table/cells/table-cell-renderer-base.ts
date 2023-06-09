@@ -13,8 +13,8 @@ import { CoreTableCellRendererType } from './types/core-table-cell-renderer-type
 import { TableCellAlignmentType } from './types/table-cell-alignment-type';
 
 @Directive() // Angular 9 Requires superclasses to be annotated as well in order to resolve injectables for constructor
-// tslint:disable-next-line:directive-class-suffix
-export abstract class TableCellRendererBase<TCellData, TValue = TCellData> implements OnInit {
+export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColumnConfigOptions = unknown>
+  implements OnInit {
   public static readonly type: CoreTableCellRendererType;
   public static readonly alignment: TableCellAlignmentType;
   public static readonly parser: CoreTableCellParserType;
@@ -24,9 +24,9 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
   private _tooltip!: string;
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
-
+  protected readonly columnConfigOptions: TColumnConfigOptions | undefined;
   public constructor(
-    @Inject(TABLE_COLUMN_CONFIG) private readonly columnConfig: TableColumnConfig,
+    @Inject(TABLE_COLUMN_CONFIG) private readonly columnConfig: TableColumnConfig<TColumnConfigOptions>,
     @Inject(TABLE_COLUMN_INDEX) private readonly index: number,
     @Inject(TABLE_DATA_PARSER) private readonly parser: TableCellParserBase<TCellData, TValue, unknown>,
     @Inject(TABLE_CELL_DATA) private readonly cellData: TCellData,
@@ -34,6 +34,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData> imple
   ) {
     this.clickable = this.columnConfig.onClick !== undefined;
     this.isFirstColumn = this.index === 0;
+    this.columnConfigOptions = this.columnConfig?.options;
   }
 
   public ngOnInit(): void {

@@ -7,12 +7,12 @@ import { ModalConfig, ModalRef, ModalSize, MODAL_DATA } from './modal';
 import { ModalContainerComponent } from './modal-container.component';
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'test-modal-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="test-modal-content">Test Component Content Data: {{ this.data }}</div>
-    <button class="test-close-button" (click)="this.modalRef.close('clicked')">Close</button>
+    <button class="test-close-button" role="button" (click)="this.modalRef.close('clicked')">Close</button>
   `
 })
 class TestComponent {

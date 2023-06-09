@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { IconRegistryService, IconType } from '@hypertrace/assets-library';
 import { assertUnreachable } from '@hypertrace/common';
+import { isEmpty, isNil } from 'lodash-es';
 import { IconBorder } from './icon-border';
 import { IconSize } from './icon-size';
 
@@ -10,20 +11,26 @@ import { IconSize } from './icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-icon
-      class="ht-icon"
-      [ngClass]="[this.size, this.borderType ? this.borderType : '']"
-      [ngStyle]="{
-        color: this.color ? this.color : '',
-        borderColor: this.borderType !== '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
-        background: this.borderType === '${IconBorder.InsetBorder}' && this.borderColor ? this.borderColor : '',
-        borderRadius: this.borderRadius ? this.borderRadius : ''
-      }"
+      *ngIf="this.svgIcon; else matIconTemplate"
+      class="ht-icon svg-icon"
+      [ngClass]="this.styleClasses"
+      [ngStyle]="this.customStyles"
       [attr.aria-label]="this.labelToUse"
-      [htTooltip]="this.showTooltip ? this.labelToUse : undefined"
-      [fontSet]="this.fontSet"
+      [htTooltip]="this.tooltip"
       [svgIcon]="this.svgIcon"
-      >{{ this.ligatureText }}</mat-icon
-    >
+    ></mat-icon>
+
+    <ng-template #matIconTemplate>
+      <mat-icon
+        class="ht-icon ligature-icon"
+        [ngClass]="this.styleClasses"
+        [ngStyle]="this.customStyles"
+        [attr.aria-label]="this.labelToUse"
+        [htTooltip]="this.tooltip"
+        [fontSet]="this.fontSet"
+        >{{ this.ligatureText }}</mat-icon
+      >
+    </ng-template>
   `
 })
 export class IconComponent implements OnChanges {
@@ -81,5 +88,26 @@ export class IconComponent implements OnChanges {
           assertUnreachable(iconRenderInfo);
       }
     }
+  }
+
+  public get isSvgIcon(): boolean {
+    return !isEmpty(this.svgIcon);
+  }
+
+  public get styleClasses(): string[] {
+    return [this.size, !isNil(this.borderType) ? this.borderType : ''];
+  }
+
+  public get customStyles(): Record<string, string> {
+    return {
+      color: this.color ?? '',
+      borderColor: this.borderType !== IconBorder.InsetBorder ? this.borderColor ?? '' : '',
+      background: this.borderType === IconBorder.InsetBorder ? this.borderColor ?? '' : '',
+      borderRadius: this.borderRadius ?? ''
+    };
+  }
+
+  public get tooltip(): string | undefined {
+    return this.showTooltip ? this.labelToUse : undefined;
   }
 }

@@ -105,7 +105,7 @@
       .link {
         margin-right: auto;
         @include link;
-        @include footnote($gray-5);
+        @include footnote($gray-2);
       }
     }
 

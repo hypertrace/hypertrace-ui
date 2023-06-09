@@ -30,6 +30,7 @@ export class FilterParserLookupService {
       case FilterOperator.NotIn:
         return new InNotInFilterParser();
       case FilterOperator.ContainsKey:
+      case FilterOperator.NotContainsKey:
       case FilterOperator.ContainsKeyLike:
         return new ContainsFilterParser();
       default:

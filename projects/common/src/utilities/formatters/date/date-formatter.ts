@@ -42,7 +42,11 @@ export const enum DateFormatMode {
   /**
    * `d MMM y h:mm a zzzz` -> `11 Nov 1990 11:11 AM UTC+00:30`
    */
-  DateWithYearAndTimeWithTimeZone
+  DateWithYearAndTimeWithTimeZone,
+  /**
+   * `HH:mm:ssZZZZZ` -> `21:00:00Z` or `21:00:00-08:00`
+   */
+  TimeWithTimeZoneOffset
 }
 
 export class DateFormatter {
@@ -58,25 +62,27 @@ export class DateFormatter {
     this.options = this.applyOptionDefaults(options);
   }
 
-  public format(value: Date | number | undefined | string): string {
-    return this.convertDateToString(value);
+  public format(value: Date | number | undefined | string, timezone?: string): string {
+    return this.convertDateToString(value, timezone);
   }
 
   protected applyOptionDefaults(options: DateFormatOptions): Readonly<Required<DateFormatOptions>> {
     return defaults({}, options, DateFormatter.DEFAULT_OPTIONS);
   }
 
-  protected convertDateToString(value: Date | number | string | undefined): string {
+  protected convertDateToString(value: Date | number | string | undefined, timezone?: string): string {
     const coercedValue = this.dateCoercer.coerce(value);
     if (coercedValue === undefined) {
       return '-';
     }
 
-    return formatDate(coercedValue, this.getFormatString(), 'en_US');
+    return formatDate(coercedValue, this.getFormatString(), 'en_US', timezone);
   }
 
   private getFormatString(): string {
     switch (this.options.mode) {
+      case DateFormatMode.TimeWithTimeZoneOffset:
+        return `HH:mm:ssZZZZZ`;
       case DateFormatMode.TimeWithSeconds:
         return 'hh:mm:ss a';
       case DateFormatMode.TimeOnly:
