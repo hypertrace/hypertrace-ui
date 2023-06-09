@@ -18,6 +18,7 @@ import { DraggableListModule } from '../draggable-list/draggable-list.module';
 import { ExpanderToggleModule } from '../expander/expander-toggle.module';
 import { MemoizeModule } from '@hypertrace/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutChangeModule } from '../layout/layout-change.module';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     DraggableListModule,
     ExpanderToggleModule,
     MemoizeModule,
-    TraceSearchBoxModule
+    TraceSearchBoxModule,
+    LayoutChangeModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
