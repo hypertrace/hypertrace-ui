@@ -3,6 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockModule } from 'ng-mocks';
 import { ToggleSwitchSize } from './toggle-switch-size';
 import { ToggleSwitchComponent } from './toggle-switch.component';
 
@@ -12,7 +13,7 @@ describe('Toggle Switch Component', () => {
   const createHost = createHostFactory({
     component: ToggleSwitchComponent,
     shallow: true,
-    imports: [MatSlideToggleModule, FormsModule, CommonModule, ReactiveFormsModule]
+    imports: [MockModule(MatSlideToggleModule), MockModule(FormsModule), MockModule(CommonModule), ReactiveFormsModule]
   });
 
   test('should pass properties to Mat Slide toggle correctly', fakeAsync(() => {

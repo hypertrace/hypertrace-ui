@@ -1,6 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { Color, DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
-import { select, Selection } from 'd3-selection';
+import { Color, NumericFormatter, selector } from '@hypertrace/common';
+import { Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { TopologyNodeRendererDelegate } from '../../../../../components/topology/renderers/node/topology-node-renderer.service';
@@ -39,7 +39,6 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   public constructor(
     private readonly entityNavigationService: EntityNavigationService,
-    private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly svgUtils: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
     private readonly entityIconLookupService: EntityIconLookupService,
@@ -205,26 +204,34 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     startX: number,
     iconContent?: SVGElement
   ): void {
-    const width = this.nodeLabelWidth(startX, iconContent !== undefined);
+    const maxWidth = this.nodeLabelWidth(startX, iconContent !== undefined);
+    const truncatedText = this.getTruncatedText(this.getLabelForNode(node), maxWidth);
+    const y = this.getCenterY() + 1;
+
     nodeSelection
       .append('text')
       .classed('entity-label', true)
-      .text(this.getLabelForNode(node))
-      .attr('y', this.getCenterY() + 1)
-      .each((_, index, groups) => {
-        const currentElement = groups[index];
-        this.svgUtils.truncateText(currentElement, width);
-        select(currentElement).attr(
-          'x',
-          startX + this.domElementMeasurerService.getComputedTextLength(currentElement) / 2
-        );
-      })
+      .text(truncatedText)
+      .attr('transform', `translate(${startX} , 0)`)
+      .attr('y', y)
       .attr('dominant-baseline', 'central')
       .on('click', () => this.entityNavigationService.navigateToEntity(node.data));
 
     if (iconContent) {
       this.appendEntityIcon(nodeSelection, this.entityIconStartX(), iconContent);
     }
+  }
+
+  private getTruncatedText(text: string, maxWidth: number): string {
+    const textWidth = text.length * this.getCharWidth();
+
+    if (textWidth <= maxWidth) {
+      return text;
+    }
+
+    const eachSideTotalChars = Math.floor((maxWidth - 3 * this.getCharWidth()) / 2 / this.getCharWidth());
+
+    return `${text.slice(0, eachSideTotalChars)}...${text.slice(text.length - eachSideTotalChars)}`;
   }
 
   private appendEntityIcon(
@@ -312,7 +319,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   protected nodeLabelWidth(startX: number, withIcon: boolean = false): number {
     if (withIcon) {
-      return this.entityIconStartX() - startX - this.getInsideMargin();
+      return this.entityIconStartX() - startX - 4 * this.getInsideMargin();
     }
 
     return this.boxWidth() - startX - 2 * this.getPadding();
@@ -359,7 +366,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   private entityStartX(): number {
-    return this.metricCategoryStartX() + this.metricCategoryWidth() + this.getInsideMargin();
+    return this.metricCategoryStartX() + 2 * this.metricCategoryWidth() + this.getInsideMargin();
   }
 
   protected entityIconStartX(): number {
@@ -381,6 +388,11 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   protected getLabelForNode(entityNode: EntityNode): string {
     return entityNode.data[entityNode.specification.titleSpecification.resultAlias()] as string;
+  }
+
+  // This is the average char width for the font sans-serif
+  protected getCharWidth(): number {
+    return 6;
   }
 
   private defineDropshadowFilterIfNotExists(element: SVGGElement, domElementRenderer: Renderer2): void {
