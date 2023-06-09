@@ -799,7 +799,7 @@ export class TableComponent
     column.visible = false;
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
-    this.distributeWidthToColumns(column.width ?? 0);
+    this.updateColumnWidthsOnHideColumn();
     this.columnConfigsSubject.next(updatedColumns);
   }
 
@@ -1090,6 +1090,22 @@ export class TableComponent
     }
 
     this.distributeWidthToColumns(latestWidth - totalColWidth);
+  }
+
+  private updateColumnWidthsOnHideColumn(): void {
+    let remainingWidth = 0;
+
+    this.visibleColumnConfigs.forEach(column => {
+      const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
+
+      remainingWidth += columnWidthInPx;
+    });
+
+    if (remainingWidth >= this.tableWidth) {
+      return;
+    }
+
+    this.distributeWidthToColumns(this.tableWidth - remainingWidth);
   }
 
   private distributeWidthToColumns(width: string | number): void {
