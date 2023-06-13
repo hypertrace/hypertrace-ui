@@ -1,4 +1,9 @@
-import { FixedTimeRange, NavigationParamsType, TimeRangeService } from '@hypertrace/common';
+import {
+  ExternalNavigationWindowHandling,
+  FixedTimeRange,
+  NavigationParamsType,
+  TimeRangeService
+} from '@hypertrace/common';
 import { FilterBuilderLookupService, FilterOperator, toUrlFilterOperator } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -48,6 +53,8 @@ describe('Explorer service', () => {
     })
   }));
 
+  const mockTimeRange = new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z'));
+
   const createService = createServiceFactory({
     service: ExplorerService,
     providers: [
@@ -85,6 +92,24 @@ describe('Explorer service', () => {
     });
   });
 
+  test('creates external nav params correctly when timeRange is not provided', () => {
+    runFakeRxjs(({ expectObservable }) => {
+      const spectator = createService();
+      expectObservable(
+        spectator.service.buildExternalNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+          { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
+          { field: 'status', operator: FilterOperator.Equals, value: 404 }
+        ])
+      ).toBe('(x|)', {
+        x: {
+          navType: NavigationParamsType.External,
+          url: '/explorer?filter=duration_gt_200&filter=status_eq_404&scope=endpoint-traces',
+          windowHandling: ExternalNavigationWindowHandling.NewWindow
+        }
+      });
+    });
+  });
+
   test('creates nav params correctly when timeRange is provided', () => {
     runFakeRxjs(({ expectObservable }) => {
       const spectator = createService();
@@ -95,7 +120,7 @@ describe('Explorer service', () => {
             { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
             { field: 'status', operator: FilterOperator.Equals, value: 404 }
           ],
-          new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z'))
+          mockTimeRange
         )
       ).toBe('(x|)', {
         x: {
@@ -109,6 +134,30 @@ describe('Explorer service', () => {
               new Date('2019-09-19T16:55:45.141Z')
             ).toUrlString()
           }
+        }
+      });
+    });
+  });
+
+  test('creates external nav params correctly when timeRange is provided', () => {
+    runFakeRxjs(({ expectObservable }) => {
+      const spectator = createService();
+      expectObservable(
+        spectator.service.buildExternalNavParamsWithFilters(
+          ScopeQueryParam.EndpointTraces,
+          [
+            { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
+            { field: 'status', operator: FilterOperator.Equals, value: 404 }
+          ],
+          mockTimeRange
+        )
+      ).toBe('(x|)', {
+        x: {
+          navType: NavigationParamsType.External,
+          url:
+            '/explorer?filter=duration_gt_200&filter=status_eq_404&scope=endpoint-traces' +
+            `&time=${mockTimeRange.toUrlString()}`,
+          windowHandling: ExternalNavigationWindowHandling.NewWindow
         }
       });
     });
