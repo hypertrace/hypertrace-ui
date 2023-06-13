@@ -710,11 +710,6 @@ export class TableComponent
     this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
   }
 
-  private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
-    this.visibleColumnConfigs = visibleColumnConfigs;
-    this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
-  }
-
   private initializeData(): void {
     if (!this.canBuildDataSource()) {
       this.dataSource = undefined;
