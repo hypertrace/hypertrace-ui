@@ -1,0 +1,33 @@
+@import 'mixins';
+
+.metric-card {
+  @include frame-border;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+
+  .value-with-icon {
+    display: flex;
+    justify-content: space-between;
+
+    .value {
+      @include header-4($gray-9);
+    }
+  }
+
+  .text {
+    @include body-1-medium($gray-5);
+  }
+}
+
+.selected {
+  background-color: $blue-1;
+  border-color: $blue-4;
+}
+
+.clickable {
+  cursor: pointer;
+}
