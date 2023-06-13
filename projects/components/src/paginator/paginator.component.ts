@@ -150,7 +150,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.totalItems) {
+    if (changes.totalItems && changes.totalItems.currentValue !== changes.totalItems.previousValue) {
       this.gotoFirstPage();
     }
     if (changes.pageIndex || changes.pageSize) {
