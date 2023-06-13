@@ -9,9 +9,14 @@
   cursor: pointer;
 
   .label,
-  .icon {
+  .icon,
+  .tag {
     z-index: 1; // Needs to stack above the active element
     pointer-events: none; // Make this label ignore hover so active element gets it
+  }
+
+  .tag {
+    margin-left: 8px;
   }
 
   &:hover {

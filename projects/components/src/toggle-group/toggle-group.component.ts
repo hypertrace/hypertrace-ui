@@ -32,6 +32,9 @@ import { ToggleItemComponent } from './toggle-item.component';
             class="tab"
             [label]="item.label"
             [icon]="item.icon"
+            [tagValue]="item.tagValue"
+            [tagColor]="item.tagColor"
+            [tagBackgroundColor]="item.tagBackgroundColor"
             (click)="this.setActiveItem(item)"
           ></ht-toggle-item>
         </div>
