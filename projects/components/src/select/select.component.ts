@@ -128,7 +128,7 @@ import { SelectSize } from './select-size';
             <ng-container
               *ngIf="
                 this.searchMode !== '${SelectSearchMode.Disabled}' &&
-                ((this.allOptions$ | async)?.length > 5 || (this.searchText !== undefined && this.searchText !== ''))
+                ((this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty))
               "
             >
               <ht-event-blocker event="click" [enabled]="true">
@@ -254,7 +254,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 
   @ContentChildren(SelectOptionComponent)
   private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
-  public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
+  public allOptions$: Observable<QueryList<SelectOptionComponent<V>>> = EMPTY;
   public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
 
   @ContentChildren(SelectControlOptionComponent)

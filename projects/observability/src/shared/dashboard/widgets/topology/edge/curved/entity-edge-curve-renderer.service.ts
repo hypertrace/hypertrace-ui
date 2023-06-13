@@ -1,5 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { Color, DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
+import { Color, NumericFormatter, selector } from '@hypertrace/common';
 import { select, Selection } from 'd3-selection';
 import { Link, linkHorizontal } from 'd3-shape';
 import {
@@ -32,7 +32,6 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
 
   public constructor(
-    private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly svgUtils: SvgUtilService,
     private readonly d3Utils: D3UtilService,
     private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService
@@ -64,21 +63,22 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
   public updatePosition(
     element: SVGGElement,
-    _: EntityEdge,
+    edge: EntityEdge,
     position: TopologyEdgePositionInformation,
     domRenderer: Renderer2
   ): void {
     const edgeSelection = this.d3Utils.select(element, domRenderer);
     this.updateLinePosition(edgeSelection, position);
     this.updateLabelPosition(edgeSelection, position);
-    this.updateLabelBubblePosition(edgeSelection);
+    this.updateLabelBubblePosition(edgeSelection, position, edge);
   }
 
   public updateState(
     element: SVGGElement,
     edge: EntityEdge,
     state: TopologyEdgeState<MetricAggregationSpecification>,
-    domRenderer: Renderer2
+    domRenderer: Renderer2,
+    position?: TopologyEdgePositionInformation
   ): void {
     const selection = this.d3Utils.select(element, domRenderer);
 
@@ -96,7 +96,9 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     this.visibilityUpdater.updateVisibility(selection, state.visibility);
 
     // State can change the text of the label, which effects the bubble position
-    this.updateLabelBubblePosition(selection);
+    if (position) {
+      this.updateLabelBubblePosition(selection, position, edge);
+    }
   }
 
   protected updateEdgeMetric(
@@ -219,21 +221,57 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection.select(selector(this.edgeMetricValueClass)).attr('x', lineCenter.x).attr('y', lineCenter.y);
   }
 
-  private updateLabelBubblePosition(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    const metricLabelBox = this.getTextBBox(selection);
+  private updateLabelBubblePosition(
+    selection: Selection<SVGGElement, unknown, null, undefined>,
+    position: TopologyEdgePositionInformation,
+    edge: EntityEdge
+  ): void {
+    const textLen = this.getMetricTextForEdge(edge).length;
+    const lineCenter = this.generateLineCenterPoint(position);
+
+    const textWidth = textLen * this.getCharWidth();
+    const textHeight = this.getTextHeight();
+
+    const width = textWidth + 2 * this.getTextBubbleHorizontalPadding();
+    const height = textHeight + 2 * this.getTextBubbleVerticalPadding();
+    const x = lineCenter.x - textWidth / 2 - this.getTextBubbleHorizontalPadding();
+    const y = lineCenter.y - textHeight / 2 - this.getTextBubbleVerticalPadding();
 
     selection
       .select(selector(this.edgeMetricBubbleClass))
-      .attr('x', metricLabelBox.x - this.getTextBubbleHorizontalPadding())
-      .attr('y', metricLabelBox.y - this.getTextBubbleVerticalPadding())
-      .attr('width', metricLabelBox.width + 2 * this.getTextBubbleHorizontalPadding())
-      .attr('height', metricLabelBox.height + 2 * this.getTextBubbleVerticalPadding());
+      .attr('x', x)
+      .attr('y', y)
+      .attr('width', width)
+      .attr('height', height);
   }
 
-  private getTextBBox(selection: Selection<SVGGElement, unknown, null, undefined>): DOMRect {
-    return this.domElementMeasurerService.measureSvgElement(
-      selection.select<SVGTextElement>(selector(this.edgeMetricValueClass)).node()!
+  private getMetricTextForEdge(edge: EntityEdge): string {
+    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
+    const secondaryMetric = this.topologyDataSourceModelPropertiesService.getSecondaryEdgeMetric();
+
+    const primaryMetricCategory = primaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const secondaryMetricCategory = secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const primaryMetricAggregation = primaryMetric?.extractDataForMetric(edge.data);
+    const secondaryMetricAggregation = secondaryMetric?.extractDataForMetric(edge.data);
+
+    return this.getMetricValueString(
+      primaryMetricAggregation,
+      secondaryMetricAggregation,
+      primaryMetricCategory,
+      secondaryMetricCategory
     );
+  }
+
+  private getTextHeight(): number {
+    return 14;
+  }
+
+  public getBubbleYOffset(): number {
+    return 8;
+  }
+
+  private getCharWidth(): number {
+    return 6;
   }
 
   private getTextBubbleHorizontalPadding(): number {

@@ -97,9 +97,7 @@ import { MultiSelectJustify } from './multi-select-justify';
                 [value]="this.searchText"
                 (submit)="this.searchOptions($event)"
                 [searchMode]="this.searchTriggerMode"
-                *ngIf="
-                  (this.allOptions$ | async)?.length > 5 || (this.searchText !== undefined && this.searchText !== '')
-                "
+                *ngIf="(this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty)"
               ></ht-search-box>
               <ht-divider class="divider"></ht-divider>
 

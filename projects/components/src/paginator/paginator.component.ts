@@ -113,6 +113,9 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Input()
   public set totalItems(totalItems: number) {
     this._totalItems = totalItems;
+    this.totalRecordsChange.emit(totalItems);
+    this.recordsDisplayedChange.emit(Math.min(this.pageSize, totalItems));
+
     // This is for supporting the programmatic usage of paginator for the Table chart. This should go away with the Table refactor
     this.changeDetectorRef.markForCheck();
   }
@@ -128,6 +131,12 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Output()
   public readonly pageChange: EventEmitter<PageEvent> = new EventEmitter();
 
+  @Output()
+  public readonly recordsDisplayedChange: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  public readonly totalRecordsChange: EventEmitter<number> = new EventEmitter();
+
   // Caused either by a change in the provided page, or user change being emitted
   public readonly pageEvent$: Observable<PageEvent> = merge(this.pageChange, this.pageSizeInputSubject);
 
@@ -141,7 +150,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.totalItems) {
+    if (changes.totalItems && changes.totalItems.currentValue !== changes.totalItems.previousValue) {
       this.gotoFirstPage();
     }
     if (changes.pageIndex || changes.pageSize) {
@@ -223,6 +232,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       pageIndex: this.pageIndex,
       pageSize: this.pageSize
     });
+    this.recordsDisplayedChange.emit(Math.min(this.pageSize, this.totalItems));
   }
 }
 

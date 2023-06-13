@@ -92,34 +92,48 @@ $data-row-border: 1px solid $gray-2;
 }
 
 .header-cell {
-  display: flex;
   flex: 1 0;
-  overflow: hidden;
+  position: relative;
 
-  .header-cell-renderer {
-    width: 100%;
-  }
+  .header-cell-container {
+    @include fill-container;
+    display: flex;
+    overflow: hidden;
 
-  .header-column-resize-handle {
-    padding: 6px 2px;
-    height: 100%;
+    .header-cell-content {
+      min-width: 0;
+      flex: 1 1 auto;
 
-    &.resizable {
-      cursor: col-resize;
-
-      &:hover {
-        padding: 0 2px;
-
-        .header-column-divider {
-          background-color: $gray-9;
-        }
+      .header-cell-renderer {
+        width: 100%;
       }
     }
 
     .header-column-divider {
-      width: 1px;
+      padding: 6px 2px;
       height: 100%;
-      background-color: $header-border-color;
+
+      .bg-col-divider {
+        width: 1px;
+        height: 100%;
+        background-color: $header-border-color;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .header-column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    background-color: transparent;
+    width: 3px;
+    height: 100%;
+    z-index: 2;
+    cursor: col-resize;
+
+    &:hover {
+      background-color: $blue-4 !important;
     }
   }
 }
