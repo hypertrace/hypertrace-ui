@@ -15,3 +15,4 @@ export {
 export { GraphQlSelection } from './model/graphql-selection';
 export * from './model/graphql-argument';
 export { GraphQlModule } from './graphql.module';
+export * from './mutation-tracker/mutation-tracker.service';
