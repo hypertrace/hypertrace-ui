@@ -11,7 +11,7 @@ import {
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
 import { isNil, throttle } from 'lodash-es';
-import { take } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
   RenderableTopology,
@@ -202,6 +202,31 @@ export class D3Topology implements Topology {
       scroll: this.config.zoomable ? zoomScrollConfig : undefined,
       pan: this.config.zoomable ? zoomPanConfig : undefined,
       showBrush: this.config.showBrush
+    });
+
+    const box = svg.node()!.getBoundingClientRect();
+    console.log(box);
+
+    this.zoom.zoomChange$.pipe(debounceTime(400)).subscribe(zoom => {
+      const updatableNodes = this.topologyData.nodes.filter(node => {
+        const x = node.x * zoom;
+        const y = node.y * zoom;
+        const boundaryX1 = 0;
+        const boundaryX2 = box.width + 200;
+        const boundaryY1 = 0;
+        const boundaryY2 = box.height + 500;
+
+        const isInside = x >= boundaryX1 && y >= boundaryY1 && x <= boundaryX2 && y <= boundaryY2;
+
+        return !isInside;
+      });
+      const updatableUserNode = updatableNodes.map(d => d.userNode);
+
+      this.stateManager.updateState({
+        nodes: updatableUserNode,
+        update: { visibility: TopologyElementVisibility.Hidden }
+      });
+      this.updateRenderedState();
     });
 
     this.onDestroy(() => {

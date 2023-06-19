@@ -84,7 +84,7 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       nodeDataSpecifiers: this.nodeDataSpecifiers,
       edgeDataSpecifiers: this.edgeDataSpecifiers,
       tooltipRenderer: this.tooltipRenderer,
-      showBrush: this.showBrush,
+      showBrush: false,
       shouldAutoZoomToFit: this.shouldAutoZoomToFit,
       nodeInteractionHandler: this.nodeInteractionHandler,
       edgeInteractionHandler: this.edgeInteractionHandler,

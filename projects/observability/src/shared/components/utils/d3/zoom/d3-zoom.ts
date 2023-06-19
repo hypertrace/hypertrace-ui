@@ -184,6 +184,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
   }
 
   protected updateZoom(transform: ZoomTransform): void {
+    console.log(this.config, transform);
     this.getTargetSelectionOrThrow().attr('transform', transform.toString());
     this.zoomChangeSubject.next(transform.k);
   }

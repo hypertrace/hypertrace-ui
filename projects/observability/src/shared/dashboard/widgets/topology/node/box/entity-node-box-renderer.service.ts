@@ -2,7 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color, NumericFormatter, selector } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { TopologyNodeRendererDelegate } from '../../../../../components/topology/renderers/node/topology-node-renderer.service';
 import {
   TopologyCoordinates,
@@ -165,14 +165,14 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   protected addEntityWithIcon(
-    nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
-    node: EntityNode,
-    domElementRenderer: Renderer2
+    _nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
+    _node: EntityNode,
+    _domElementRenderer: Renderer2
   ): void {
-    const entity = node.data;
-    this.buildIconForEntity(entity, domElementRenderer)
-      .pipe(takeUntil(this.getNodeDestructionObservable(entity)))
-      .subscribe(iconContent => this.addEntity(nodeSelection, node, this.entityStartX(), iconContent));
+    // const entity = node.data;
+    // this.buildIconForEntity(entity, domElementRenderer)
+    //   .pipe(takeUntil(this.getNodeDestructionObservable(entity)))
+    //   .subscribe(iconContent => this.addEntity(nodeSelection, node, this.entityStartX(), iconContent));
   }
 
   protected addOuterBand(nodeSelection: Selection<SVGGElement, unknown, null, undefined>): void {
@@ -198,7 +198,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
       .attr('r', '4');
   }
 
-  private addEntity(
+  public addEntity(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: EntityNode,
     startX: number,
@@ -365,7 +365,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     return this.getPadding();
   }
 
-  private entityStartX(): number {
+  public entityStartX(): number {
     return this.metricCategoryStartX() + 2 * this.metricCategoryWidth() + this.getInsideMargin();
   }
 
@@ -420,13 +420,13 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     return angle === (3 * Math.PI) / 2;
   }
 
-  private buildIconForEntity(entity: Entity, domElementRenderer: Renderer2): Observable<SVGElement> {
+  public buildIconForEntity(entity: Entity, domElementRenderer: Renderer2): Observable<SVGElement> {
     const iconType = this.entityIconLookupService.forEntity(entity);
 
     return this.d3Utils.buildIcon(iconType, domElementRenderer);
   }
 
-  private getNodeDestructionObservable(entity: Entity): Observable<EntityNode> {
+  public getNodeDestructionObservable(entity: Entity): Observable<EntityNode> {
     return this.destroyed$.pipe(filter(node => node.data === entity));
   }
 }

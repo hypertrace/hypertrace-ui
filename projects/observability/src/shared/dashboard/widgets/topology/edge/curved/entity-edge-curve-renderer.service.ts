@@ -1,7 +1,7 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color, NumericFormatter, selector } from '@hypertrace/common';
 import { select, Selection } from 'd3-selection';
-import { Link, linkHorizontal } from 'd3-shape';
+// import { Link, linkHorizontal } from 'd3-shape';
 import {
   TopologyEdgePositionInformation,
   TopologyEdgeRenderDelegate
@@ -53,9 +53,9 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .select(element, domRenderer)
       .classed(this.edgeClass, true)
       .attr('data-sensitive-pii', true)
-      .call(selection => this.drawLine(selection))
-      .call(selection => this.drawMetricBubble(selection))
-      .call(selection => this.drawMetricText(selection));
+      .call(selection => this.drawLine(selection));
+    // .call(selection => this.drawMetricBubble(selection))
+    // .call(selection => this.drawMetricText(selection));
 
     this.updateState(element, edge, state, domRenderer);
     this.updatePosition(element, edge, position, domRenderer);
@@ -155,7 +155,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     return `${this.edgeArrowClass}-${category}`;
   }
 
-  private drawLine(selection: Selection<SVGGElement, unknown, null, undefined>): void {
+  public drawLine(selection: Selection<SVGGElement, unknown, null, undefined>): void {
     selection.append('g').classed(this.edgeLineClass, true);
   }
 
@@ -183,11 +183,11 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .attr('d', 'M2,2 L5,5 L2,8');
   }
 
-  private drawMetricBubble(selection: Selection<SVGGElement, unknown, null, undefined>): void {
+  public drawMetricBubble(selection: Selection<SVGGElement, unknown, null, undefined>): void {
     selection.append('rect').attr('rx', 8).attr('height', 16).classed(this.edgeMetricBubbleClass, true);
   }
 
-  private drawMetricText(selection: Selection<SVGGElement, unknown, null, undefined>): void {
+  public drawMetricText(selection: Selection<SVGGElement, unknown, null, undefined>): void {
     selection.append('text').classed(this.edgeMetricValueClass, true).attr('dominant-baseline', 'middle');
   }
 
@@ -197,19 +197,27 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   ): void {
     const pathSelections = select(selection.node())
       .select(selector(this.edgeLineClass))
-      .selectAll<SVGPathElement, TopologyEdgePositionInformation>('path')
+      .selectAll<SVGLineElement, TopologyEdgePositionInformation>('line')
       .data([position]);
 
     pathSelections.exit().remove();
 
-    const lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
-      TopologyEdgePositionInformation,
-      Position
-    >()
-      .x(datum => datum.x)
-      .y(datum => datum.y);
+    // const lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
+    //   TopologyEdgePositionInformation,
+    //   Position
+    // >()
+    //   .x(datum => datum.x)
+    //   .y(datum => datum.y);
 
-    pathSelections.enter().append('path').merge(pathSelections).attr('d', lineGenerator).classed('edge-path', true);
+    pathSelections
+      .enter()
+      .append('line')
+      .merge(pathSelections)
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y)
+      .classed('edge-path', true);
   }
 
   private updateLabelPosition(
@@ -313,7 +321,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 }
 
-interface Position {
-  x: number;
-  y: number;
-}
+// interface Position {
+//   x: number;
+//   y: number;
+// }

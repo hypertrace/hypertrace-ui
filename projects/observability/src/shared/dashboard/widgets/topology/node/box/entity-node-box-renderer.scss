@@ -59,6 +59,10 @@
         cursor: grabbing;
       }
 
+      &.hidden {
+        display: none;
+      }
+
       .entity-label {
         @include link-hover(true);
         @include body-2-medium($gray-7);
