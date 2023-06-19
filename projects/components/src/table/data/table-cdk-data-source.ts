@@ -28,7 +28,7 @@ type WatchedObservables = [
 ];
 
 export class TableCdkDataSource implements DataSource<TableRow> {
-  private static readonly DEFAULT_PAGE_SIZE: number = 1000;
+  private static readonly DEFAULT_PAGE_SIZE: number = 5000;
 
   private readonly columnConfigs: Map<string, TableColumnConfigExtended> = new Map<string, TableColumnConfigExtended>();
   private cachedData: CachedData = { rows: [], total: 0 };
