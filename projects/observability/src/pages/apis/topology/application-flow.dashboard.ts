@@ -10,7 +10,7 @@ import {
 } from '../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
 
-export const getTopologyJson = (options?: { showBrush?: boolean }): ModelJson => ({
+export const getTopologyJson = (options?: TopologyJsonOptions): ModelJson => ({
   type: 'topology-widget',
   showBrush: options?.showBrush ?? true, // Default to `true`
   layoutType: '${layoutType}',
@@ -208,3 +208,7 @@ export const applicationFlowDefaultJson: DashboardDefaultConfiguration = {
     children: [getTopologyJson()]
   }
 };
+
+export interface TopologyJsonOptions {
+  showBrush?: boolean;
+}
