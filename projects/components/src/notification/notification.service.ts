@@ -49,9 +49,10 @@ export class NotificationService {
     return EMPTY;
   }
 
-  public createInfoToast(message: NotificationContent): void {
+  public createInfoToast(message: NotificationContent, configOverride: Partial<MatSnackBarConfig> = {}): void {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
+      ...configOverride,
       data: { message: message, mode: NotificationMode.Info, closedObserver: this.closedObserver$ }
     });
   }
@@ -77,5 +78,9 @@ export class NotificationService {
     failureMessage: NotificationContent
   ): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) => this.wrapWithNotification(source, successMessage, failureMessage);
+  }
+
+  public close(): void {
+    this.snackbarRef?.dismiss();
   }
 }

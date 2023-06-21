@@ -341,3 +341,10 @@ $font-family: 'Work Sans', sans-serif;
 $mat-typography: mat.define-legacy-typography-config(
   $font-family: $font-family
 );
+
+@mixin line-clamp($maxLines: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $maxLines;
+}
