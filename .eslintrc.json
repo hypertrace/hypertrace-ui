@@ -101,6 +101,9 @@
         ],
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/restrict-plus-operands": "error",
+        "no-console": ["error", {
+          "allow": ["warn","error"]
+        }],
         "arrow-body-style": ["error", "as-needed"],
         "complexity": ["error", 20],
         "default-case": "error",
