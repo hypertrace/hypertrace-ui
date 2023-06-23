@@ -67,11 +67,12 @@ import {
 
           <ht-select
             *ngIf="!selectControl.isMultiSelect"
-            [selected]="this.appliedFilters(selectControl)"
+            [selected]="this.appliedFilters(selectControl)?.[0]"
             [placeholder]="selectControl.placeholder"
             class="control select"
             [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"
+            [showClearSelected]="selectControl.showClearSelected"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
             (selectedChange)="this.onSelectChange(selectControl, $event)"
           >
