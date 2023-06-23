@@ -38,6 +38,7 @@ export interface TablePropertyControlOption {
 export interface TableSelectControl {
   placeholder: string;
   prefix?: string;
+  showClearSelected?: boolean;
   isMultiSelect: boolean;
   options: TableSelectControlOption[];
 }
