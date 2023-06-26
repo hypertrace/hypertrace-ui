@@ -396,6 +396,127 @@ export class ExplorerDashboardBuilder {
             'click-handler': {
               type: 'api-trace-navigation-handler'
             }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Types',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipTypes'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Is BOT IP',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipIsBot'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'User Country',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'userCountry'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Reputation Score',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipReputationScore'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP is TOR',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipIsTor'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP is VPN',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipIsVpn'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP is Proxy',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipIsProxy'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Reputation level',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipReputationLevel'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Abuse velocity',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipAbuseVelocity'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP ASN',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipAsn'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'IP Connection Type',
+            width: '1',
+            visible: false,
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'ipConnectionType'
+            }
           }
         ];
       case SPAN_SCOPE:

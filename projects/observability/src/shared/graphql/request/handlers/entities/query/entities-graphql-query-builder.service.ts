@@ -106,6 +106,7 @@ export interface GraphQlEntitiesRequest {
   includeTotal?: boolean;
   includeInactive?: boolean;
   ignoreGlobalFilters?: boolean;
+  doNotAutoFetchWithId?: boolean;
 }
 
 export interface EntitiesResponse {
