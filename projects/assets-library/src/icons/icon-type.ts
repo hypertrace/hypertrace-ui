@@ -22,7 +22,7 @@ export const enum IconType {
   Cancel = 'cancel',
   CheckCircle = 'svg:check-circle',
   CheckCircleFill = 'svg:check-circle-fill',
-  Checkmark = 'checkmark',
+  Checkmark = 'done',
   ChevronDown = 'svg:chevron-down',
   ChevronLeft = 'svg:chevron-left',
   ChevronRight = 'svg:chevron-right',
