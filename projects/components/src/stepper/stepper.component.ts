@@ -49,7 +49,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
               <ht-icon icon="${IconType.Edit}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
             <ng-template matStepperIcon="done">
-              <ht-icon icon="${IconType.Checkmark}" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ht-icon icon="${IconType.Done}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>
