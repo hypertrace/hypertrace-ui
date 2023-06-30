@@ -182,7 +182,7 @@ import { SelectSize } from './select-size';
               <ht-icon
                 class="status-icon"
                 *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
-                icon="${IconType.Checkmark}"
+                icon="${IconType.Done}"
                 size="${IconSize.Small}"
               ></ht-icon>
             </div>
