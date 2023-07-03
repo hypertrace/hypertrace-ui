@@ -61,7 +61,7 @@ import {
       <div *ngIf="this.showLegend" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
-          <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
+          <span class="legend-value">{{ segment.value | number }}</span>
           <span class="legend-label">{{ segment.label }}</span>
         </div>
       </div>
