@@ -37,7 +37,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
   private readonly bubbleScaleBuilder: BubbleScaleBuilder = new BubbleScaleBuilder();
   private readonly containLayout: ContainLayout = new ContainLayout(this.bubbleScaleBuilder);
 
-  private static readonly CHECKMARK_ICON_TYPE: IconType = IconType.Checkmark;
+  private static readonly CHECKMARK_ICON_TYPE: IconType = IconType.Done;
   private static readonly MAX_CHECKMARK_ICON_SIZE: number = 20;
   private static readonly BUBBLE_CHART_PADDING: BubbleChartPadding = {
     right: 2,
