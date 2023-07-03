@@ -36,4 +36,4 @@ export abstract class FeatureStateResolver {
   }
 }
 
-export type FeatureFlagValue = boolean | string | number | Dictionary<string> | undefined;
+export type FeatureFlagValue = boolean | string | string[] | number | Dictionary<string> | undefined;
