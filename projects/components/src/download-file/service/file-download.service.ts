@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { isEmpty, startCase } from 'lodash-es';
-import { combineLatest, Observable, of } from 'rxjs';
-import { catchError, map, take } from 'rxjs/operators';
+import { combineLatest, from, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,6 +20,17 @@ export class FileDownloadService {
    */
   public downloadAsText(config: FileDownloadBaseConfig): Observable<FileDownloadEvent> {
     return this.download({ ...config }, data => `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`);
+  }
+
+  public downloadPngFromUrl(config: PngFromUrlDownloadConfig): Observable<FileDownloadEvent> {
+    return this.download({ ...config, dataSource: this.pngToDataUrl(config.url) }, url => url);
+  }
+
+  private pngToDataUrl(url: string): Observable<string> {
+    return from(fetch(url)).pipe(
+      switchMap(response => from(response.blob())),
+      map(blob => URL.createObjectURL(blob))
+    );
   }
 
   /**
@@ -114,6 +125,10 @@ export interface FileDownloadBaseConfig<T = string> {
   fileName: string; // Include the file extension (.txt, .csv etc)
   successMsg?: string;
   failureMsg?: string;
+}
+
+export interface PngFromUrlDownloadConfig extends Omit<FileDownloadBaseConfig, 'dataSource'> {
+  url: string;
 }
 
 export const enum FileDownloadEventType {
