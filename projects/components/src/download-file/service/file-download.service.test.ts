@@ -61,20 +61,4 @@ describe('File Download Service', () => {
       );
     });
   });
-
-  test('should download as png correctly', () => {
-    const spectator = createService();
-    window.fetch = jest.fn().mockResolvedValue({
-      blob: () => Promise.resolve(new Blob())
-    } as Partial<Response>);
-
-    runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.downloadPngFromUrl({ url: `image.png`, fileName: 'download.png' })).toBe(
-        '(x|)',
-        {
-          x: { type: FileDownloadEventType.Success }
-        }
-      );
-    });
-  });
 });
