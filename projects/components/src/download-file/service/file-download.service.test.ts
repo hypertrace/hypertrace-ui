@@ -61,4 +61,29 @@ describe('File Download Service', () => {
       );
     });
   });
+
+  test('should download as png correctly', () => {
+    const spectator = createService();
+    jest.spyOn(window, 'fetch').mockReturnValue(
+      new Promise((resolve, reject) => {
+        resolve({
+          blob: () =>
+            new Promise((blobResolve, blobReject) => {
+              blobResolve(new Blob());
+              blobReject();
+            })
+        } as Response);
+        reject();
+      })
+    );
+    // With correct data
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.downloadPngFromUrl({ url: `image.png`, fileName: 'download.png' })).toBe(
+        '(x|)',
+        {
+          x: { type: FileDownloadEventType.Success }
+        }
+      );
+    });
+  });
 });
