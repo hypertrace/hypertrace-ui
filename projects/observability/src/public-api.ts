@@ -21,7 +21,8 @@ export * from './shared/graphql/request/builders/specification/trace/trace-statu
 
 // Dashboard Graphql
 export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
-export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+export * from './shared/dashboard/data/graphql/filter/graphql-id-scope-filter.model';
+export * from './shared/dashboard/data/graphql/filter/graphql-key-value-filter.model';
 export * from './shared/dashboard/data/graphql/graphql-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-query-event.service';
 export * from './shared/dashboard/data/graphql/graphql-data-source.module';
