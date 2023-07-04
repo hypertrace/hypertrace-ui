@@ -61,4 +61,32 @@ describe('File Download Service', () => {
       );
     });
   });
+
+  test('should download as png correctly', () => {
+    const spectator = createService();
+    /** jsdom does not implement `createObjectURL` method on `URL` object
+     * hence, defining it if its undefined.
+     * Else clause is to guard for the case when `createObjectURL` is defined, may be in a future version
+     */
+    if (typeof window.URL.createObjectURL === 'undefined') {
+      Object.defineProperty(window.URL, 'createObjectURL', { value: 'image.png' });
+    } else {
+      jest.spyOn(URL, 'createObjectURL').mockReturnValue('image.png');
+    }
+
+    window.fetch = jest.fn().mockReturnValueOnce(
+      Promise.resolve({
+        blob: () => Promise.resolve(new Blob())
+      } as Partial<Response>)
+    );
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.downloadPngFromUrl({ url: `image.png`, fileName: 'download.png' })).toBe(
+        '(x|)',
+        {
+          x: { type: FileDownloadEventType.Success }
+        }
+      );
+    });
+  });
 });
