@@ -23,7 +23,7 @@ export class FileDownloadService {
   }
 
   public downloadBlob(config: BlobDownloadFileConfig): Observable<FileDownloadEvent> {
-    return this.download({ ...config }, blob => URL.createObjectURL(blob));
+    return this.download({ ...config }, URL.createObjectURL);
   }
 
   /**

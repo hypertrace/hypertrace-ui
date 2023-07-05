@@ -62,13 +62,13 @@ describe('File Download Service', () => {
     });
   });
 
-  test('should download as png correctly', () => {
+  test('should download blob correctly', () => {
     const spectator = createService();
     const pngData$ = of(new Blob());
 
     // With correct data
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.downloadBlob({ dataSource: pngData$, fileName: 'download.png' })).toBe(
+      expectObservable(spectator.service.downloadBlob({ dataSource: pngData$, fileName: 'download-file.png' })).toBe(
         '(x|)',
         {
           x: { type: FileDownloadEventType.Success }
