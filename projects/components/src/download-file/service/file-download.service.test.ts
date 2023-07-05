@@ -61,4 +61,19 @@ describe('File Download Service', () => {
       );
     });
   });
+
+  test('should download as png correctly', () => {
+    const spectator = createService();
+    const pngData$ = of(new Blob());
+
+    // With correct data
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.downloadBlob({ dataSource: pngData$, fileName: 'download.png' })).toBe(
+        '(x|)',
+        {
+          x: { type: FileDownloadEventType.Success }
+        }
+      );
+    });
+  });
 });
