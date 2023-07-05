@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { isEmpty, startCase } from 'lodash-es';
-import { combineLatest, from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
 
 @Injectable({ providedIn: 'root' })
@@ -22,15 +22,8 @@ export class FileDownloadService {
     return this.download({ ...config }, data => `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`);
   }
 
-  public downloadPngFromUrl(config: PngFromUrlDownloadConfig): Observable<FileDownloadEvent> {
-    return this.download({ ...config, dataSource: this.pngToDataUrl(config.url) }, url => url);
-  }
-
-  private pngToDataUrl(url: string): Observable<string> {
-    return from(fetch(url)).pipe(
-      switchMap(response => from(response.blob())),
-      map(blob => URL.createObjectURL(blob))
-    );
+  public downloadBlob(config: BlobDownloadFileConfig): Observable<FileDownloadEvent> {
+    return this.download({ ...config }, blob => URL.createObjectURL(blob));
   }
 
   /**
@@ -81,7 +74,7 @@ export class FileDownloadService {
    * @param getHref Href provider to download
    * @param fileType Download File Type
    */
-  private download(config: FileDownloadBaseConfig, getHref: (data: string) => string): Observable<FileDownloadEvent> {
+  private download<T>(config: FileDownloadBaseConfig<T>, getHref: (data: T) => string): Observable<FileDownloadEvent> {
     return config.dataSource.pipe(
       take(1),
       map(data => {
@@ -127,9 +120,7 @@ export interface FileDownloadBaseConfig<T = string> {
   failureMsg?: string;
 }
 
-export interface PngFromUrlDownloadConfig extends Omit<FileDownloadBaseConfig, 'dataSource'> {
-  url: string;
-}
+export type BlobDownloadFileConfig = FileDownloadBaseConfig<Blob>;
 
 export const enum FileDownloadEventType {
   Failure = 'failure',
