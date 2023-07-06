@@ -8,6 +8,7 @@ import {
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 import { EXTERNAL_URL_CONSTANTS, ExternalUrlConstants } from '../constants/external-url-constants';
+import { isEmpty } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class ExternalUrlNavigator implements CanActivate {
@@ -21,7 +22,7 @@ export class ExternalUrlNavigator implements CanActivate {
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
       : undefined;
-    if (this.isExternalUrlNavigable(encodedUrl)) {
+    if (!isEmpty(encodedUrl) && this.isExternalUrlNavigable(encodedUrl)) {
       this.navigateToUrl(encodedUrl, windowHandling);
     } else {
       this.navService.navigateToErrorPage();
