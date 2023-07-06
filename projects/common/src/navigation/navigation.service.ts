@@ -141,7 +141,11 @@ export class NavigationService {
     return {
       path: params.path,
       extras: {
-        queryParams: { ...this.buildQueryParam(), ...(params?.queryParams ?? {}) },
+        queryParams: {
+          ...this.buildQueryParam(),
+          ...(params?.queryParams ?? {}),
+          [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
+        },
         queryParamsHandling: params?.queryParamsHandling,
         replaceUrl: params?.replaceCurrentHistory,
         relativeTo: params?.relativeTo
@@ -206,7 +210,7 @@ export class NavigationService {
       return {
         navType: NavigationParamsType.External,
         url: url,
-        windowHandling: ExternalNavigationWindowHandling.SameWindow
+        windowHandling: NavigationWindowHandling.SameWindow
       };
     }
 
@@ -404,12 +408,13 @@ export interface InAppNavigationParams {
   queryParams?: QueryParamObject;
   queryParamsHandling?: 'merge' | 'preserve';
   relativeTo?: ActivatedRoute;
+  windowHandling?: NavigationWindowHandling;
 }
 
 export interface ExternalNavigationParams {
   navType: NavigationParamsType.External;
   url: string;
-  windowHandling: ExternalNavigationWindowHandling; // Currently an enum called NavigationType
+  windowHandling: NavigationWindowHandling; // Currently an enum called NavigationType
   useGlobalParams?: boolean;
 }
 
@@ -418,7 +423,7 @@ export const enum ExternalNavigationPathParams {
   WindowHandling = 'windowHandling'
 }
 
-export const enum ExternalNavigationWindowHandling {
+export const enum NavigationWindowHandling {
   SameWindow = 'same_window',
   NewWindow = 'new_window'
 }

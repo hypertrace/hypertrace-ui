@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
 import {
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   GlobalHeaderHeightProviderService,
   LayoutChangeService,
   NavigationParamsType
@@ -161,14 +161,14 @@ describe('Sheet Overlay component', () => {
       pageNavParams: {
         navType: NavigationParamsType.External,
         url: '/test',
-        windowHandling: ExternalNavigationWindowHandling.NewWindow
+        windowHandling: NavigationWindowHandling.NewWindow
       }
     });
 
     expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toEqual({
       navType: NavigationParamsType.External,
       url: '/test',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: NavigationWindowHandling.NewWindow
     });
   });
 

@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import {
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   FeatureState,
   FeatureStateResolver,
   MemoizeModule,
@@ -88,7 +88,7 @@ describe('Navigation List Component', () => {
     expect(spectator.query(LinkComponent)?.paramsOrUrl).toMatchObject({
       navType: NavigationParamsType.External,
       url: 'http://test',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: NavigationWindowHandling.NewWindow
     });
   });
 

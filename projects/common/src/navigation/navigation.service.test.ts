@@ -7,7 +7,7 @@ import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import {
   ExternalNavigationPathParams,
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   NavigationParams,
   NavigationParamsType,
   NavigationService
@@ -263,7 +263,7 @@ describe('Navigation Service', () => {
       navType: NavigationParamsType.External,
       useGlobalParams: true,
       url: '/some/internal/path/of/app',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: NavigationWindowHandling.NewWindow
     };
 
     spectator.service.addQueryParametersToUrl({ time: '1h', environment: 'development' });
@@ -316,7 +316,7 @@ describe('Navigation Service', () => {
       spectator.service.getShareableUrl({
         navType: NavigationParamsType.External,
         url: 'http://test-url',
-        windowHandling: ExternalNavigationWindowHandling.SameWindow
+        windowHandling: NavigationWindowHandling.SameWindow
       })
     ).toEqual('http://test-url');
     expect(

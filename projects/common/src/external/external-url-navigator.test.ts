@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, convertToParamMap } from '@angular/router';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import {
   ExternalNavigationPathParams,
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   NavigationService
 } from '../navigation/navigation.service';
 import { ExternalUrlNavigator } from './external-url-navigator';
@@ -28,7 +28,7 @@ describe('External URL navigator', () => {
 
     spectator.service.canActivate({
       paramMap: convertToParamMap({
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
+        [ExternalNavigationPathParams.WindowHandling]: NavigationWindowHandling.NewWindow
       })
     } as ActivatedRouteSnapshot);
 
@@ -46,7 +46,7 @@ describe('External URL navigator', () => {
     spectator.service.canActivate({
       paramMap: convertToParamMap({
         [ExternalNavigationPathParams.Url]: 'https://www.bing.com',
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
+        [ExternalNavigationPathParams.WindowHandling]: NavigationWindowHandling.NewWindow
       })
     } as ActivatedRouteSnapshot);
 

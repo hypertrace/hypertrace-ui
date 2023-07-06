@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import {
   ExternalNavigationParams,
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   NavigationParamsType,
   NavigationService,
   TypedSimpleChanges
@@ -127,7 +127,7 @@ export class NavigationListComponent implements OnChanges {
     return {
       navType: NavigationParamsType.External,
       url: url,
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: NavigationWindowHandling.NewWindow
     };
   }
 

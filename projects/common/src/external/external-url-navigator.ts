@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import {
   ExternalNavigationPathParams,
-  ExternalNavigationWindowHandling,
+  NavigationWindowHandling,
   NavigationService
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
@@ -15,7 +15,7 @@ export class ExternalUrlNavigator implements CanActivate {
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url);
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
-      ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
+      ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as NavigationWindowHandling)
       : undefined;
     if (encodedUrl !== null && encodedUrl.length > 0) {
       this.navigateToUrl(encodedUrl, windowHandling);
@@ -28,16 +28,16 @@ export class ExternalUrlNavigator implements CanActivate {
 
   private navigateToUrl(
     url: string,
-    windowHandling: ExternalNavigationWindowHandling = ExternalNavigationWindowHandling.SameWindow
+    windowHandling: NavigationWindowHandling = NavigationWindowHandling.SameWindow
   ): void {
     window.open(url, this.asWindowName(windowHandling));
   }
 
-  private asWindowName(windowHandling: ExternalNavigationWindowHandling): string | undefined {
+  private asWindowName(windowHandling: NavigationWindowHandling): string | undefined {
     switch (windowHandling) {
-      case ExternalNavigationWindowHandling.SameWindow:
+      case NavigationWindowHandling.SameWindow:
         return '_self';
-      case ExternalNavigationWindowHandling.NewWindow:
+      case NavigationWindowHandling.NewWindow:
         return undefined;
       default:
         assertUnreachable(windowHandling);
