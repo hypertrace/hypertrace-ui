@@ -6,8 +6,8 @@ export const externalUrlConstants: ExternalUrlConstants = {
 };
 
 export interface ExternalUrlConstants {
-  urlAllowList: string[];
-  domainAllowList: string[];
+  urlAllowList: string[]; // Use for static urls
+  domainAllowList: string[]; // Use for dynamic urls
 }
 
 export const EXTERNAL_URL_CONSTANTS = new InjectionToken<ExternalUrlConstants>('EXTERNAL_URL_CONSTANTS');

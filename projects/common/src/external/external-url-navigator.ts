@@ -37,10 +37,20 @@ export class ExternalUrlNavigator implements CanActivate {
    *  Or If it is related to the current app-domain
    */
   private isExternalUrlNavigable(url: string): boolean {
+    let correctUrl: string = '';
+
+    // Check whether given url is a correct url or not.
+    try {
+      new URL(url);
+      correctUrl = url;
+    } catch {
+      correctUrl = `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+    }
+
     return (
-      this.externalUrlConstants.urlAllowList.includes(url) ||
-      this.isExternalDomainAllowed(url) ||
-      this.isCurrentAppDomain(url)
+      this.externalUrlConstants.urlAllowList.includes(correctUrl) ||
+      this.isExternalDomainAllowed(correctUrl) ||
+      this.isCurrentAppDomain(correctUrl)
     );
   }
 
