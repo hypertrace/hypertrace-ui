@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import {
@@ -7,23 +7,53 @@ import {
   NavigationService
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
+import { EXTERNAL_URL_CONSTANTS, ExternalUrlConstants } from '../constants/external-url-constants';
 
 @Injectable({ providedIn: 'root' })
 export class ExternalUrlNavigator implements CanActivate {
-  public constructor(private readonly navService: NavigationService) {}
+  public constructor(
+    @Inject(EXTERNAL_URL_CONSTANTS) private readonly externalUrlConstants: ExternalUrlConstants,
+    private readonly navService: NavigationService
+  ) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url);
+    const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url) ?? '';
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
       : undefined;
-    if (encodedUrl !== null && encodedUrl.length > 0) {
+    if (this.isExternalUrlNavigable(encodedUrl)) {
       this.navigateToUrl(encodedUrl, windowHandling);
     } else {
-      this.navService.navigateBack();
+      this.navService.navigateToErrorPage();
     }
 
     return of(false); // Can't navigate, but we've already navigated anyway
+  }
+
+  /**
+   * An external URL is navigable,
+   *  If it is present in the defined enumerated external URL list
+   *  Or If the domain is present in the defined domain allow list
+   *  Or If it is related to the current app-domain
+   */
+  private isExternalUrlNavigable(url: string): boolean {
+    return (
+      this.externalUrlConstants.urlAllowList.includes(url) ||
+      this.isExternalDomainAllowed(url) ||
+      this.isCurrentAppDomain(url)
+    );
+  }
+
+  private isExternalDomainAllowed(url: string): boolean {
+    const hostName = new URL(url).hostname;
+    const hostNameParts = hostName.split('.');
+    const domain = (hostNameParts.length > 2 ? hostNameParts.slice(hostNameParts.length - 2) : hostNameParts).join('.');
+
+    return this.externalUrlConstants.domainAllowList.includes(domain);
+  }
+
+  private isCurrentAppDomain(url: string): boolean {
+    return new URL(url).hostname === window.location.hostname;
   }
 
   private navigateToUrl(
