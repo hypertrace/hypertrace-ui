@@ -13,6 +13,12 @@ export class ExternalUrlNavigator implements CanActivate {
   public constructor(private readonly navService: NavigationService) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+    if (!this.navService.canGoBackWithoutLeavingApp()) {
+      this.navService.navigateToErrorPage();
+
+      return of(false);
+    }
+
     const encodedUrl = route.paramMap.get(ExternalNavigationPathParams.Url);
     const windowHandling = route.paramMap.has(ExternalNavigationPathParams.WindowHandling)
       ? (route.paramMap.get(ExternalNavigationPathParams.WindowHandling) as ExternalNavigationWindowHandling)
