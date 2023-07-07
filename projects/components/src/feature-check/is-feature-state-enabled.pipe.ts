@@ -4,7 +4,7 @@ import { FeatureState } from '@hypertrace/common';
 @Pipe({
   name: 'htIsFeatureEnabled'
 })
-export class IsFeatureStateEnabled implements PipeTransform {
+export class IsFeatureStateEnabledPipe implements PipeTransform {
   public transform(value?: FeatureState): boolean {
     return value === FeatureState.Enabled;
   }
