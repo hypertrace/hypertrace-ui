@@ -266,7 +266,7 @@ export class TableWidgetRendererComponent
 
           return {
             ...option,
-            applied: found?.applied || this.isFilterApplied(option.metaValue, filters)
+            applied: option.applied || found?.applied || this.isFilterApplied(option.metaValue, filters)
           };
         });
 

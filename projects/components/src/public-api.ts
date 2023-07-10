@@ -278,6 +278,10 @@ export * from './radio/radio-group.component';
 export * from './radio/radio-option';
 export * from './radio/radio.module';
 
+// Refresh Button
+export * from './refresh-button/refresh-button.component';
+export * from './refresh-button/refresh-button.module';
+
 // Search box
 export * from './search-box/search-box.component';
 export * from './search-box/search-box.module';

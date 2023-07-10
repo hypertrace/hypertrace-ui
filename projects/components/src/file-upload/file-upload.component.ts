@@ -81,10 +81,6 @@ export class FileUploadComponent {
   @Output()
   public readonly filesAdded: EventEmitter<File[]> = new EventEmitter();
 
-  @Output()
-  public readonly selectedFileChanges: EventEmitter<File[]> = new EventEmitter();
-
-  public files: File[] = [];
   public isDragHover: boolean = false;
   private readonly fileDisplayPipe: DisplayFileSizePipe = new DisplayFileSizePipe();
 
@@ -96,15 +92,14 @@ export class FileUploadComponent {
 
   public onDrop(list: FileList): void {
     if (this.validateFilesAndShowToastOnError(list)) {
-      const newFiles = this.getFilesFromFileList(list);
-      this.updateFileSelection(newFiles);
+      this.emitSelectedFiles(list);
     }
   }
 
   public onFilesSelection(event: Event): void {
     const list = (event.target as HTMLInputElement)?.files;
     if (this.validateFilesAndShowToastOnError(list)) {
-      this.updateFileSelection(this.getFilesFromFileList(list ?? undefined));
+      this.emitSelectedFiles(list);
     }
   }
 
@@ -113,12 +108,11 @@ export class FileUploadComponent {
   }
 
   /**
-   * Adds the new files at the last
+   * Emits selected files as File[]
    */
-  private updateFileSelection(newFiles: File[]): void {
-    this.files.push(...newFiles);
-    this.filesAdded.emit(newFiles);
-    this.selectedFileChanges.emit(this.files);
+  private emitSelectedFiles(fileList?: FileList | null): void {
+    const files: File[] = this.getFilesFromFileList(fileList);
+    this.filesAdded.emit(files);
   }
 
   /**
@@ -147,6 +141,12 @@ export class FileUploadComponent {
       return false;
     }
 
+    if (this.areFilesEmpty(fileList)) {
+      this.showEmptyFilesErrorToast();
+
+      return false;
+    }
+
     return true;
   }
 
@@ -163,11 +163,18 @@ export class FileUploadComponent {
       FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type)
     );
   }
+  private areFilesEmpty(fileList: FileList | null): boolean {
+    return this.getFilesFromFileList(fileList).some(file => file.size === 0);
+  }
 
   private showFileSizeErrorToast(): void {
     this.notificationService.createFailureToast(
       `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`
     );
+  }
+
+  private showEmptyFilesErrorToast(): void {
+    this.notificationService.createFailureToast(`File should not be empty`);
   }
 
   private showFileTypeErrorToast(): void {

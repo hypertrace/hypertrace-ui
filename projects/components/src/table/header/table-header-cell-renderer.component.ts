@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual } from 'lodash-es';
 import { InFilterModalComponent, InFilterModalData } from '../../filtering/filter-modal/in-filter-modal.component';
 import { FilterAttribute } from '../../filtering/filter/filter-attribute';
 import { FilterOperator } from '../../filtering/filter/filter-operators';
@@ -33,38 +34,33 @@ import { TableColumnConfigExtended } from '../table.service';
       [htTooltip]="this.getTooltip(this.columnConfig.titleTooltip, this.columnConfig.title)"
       class="table-header-cell-renderer"
     >
-      <ng-container *ngIf="!this.isStateColumn; else stateColumnTemplate">
-        <ng-container *ngIf="this.isShowOptionButton && this.leftAlignFilterButton">
-          <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
-        </ng-container>
-        <div class="title" [ngClass]="this.classes" (click)="this.onSortChange()">
-          <span>{{ this.columnConfig.title }}</span>
-          <ng-container *ngIf="this.sort">
-            <ht-icon
-              class="sort-icon"
-              [icon]="
-                this.sort === '${TableSortDirection.Descending}' ? '${IconType.ArrowDown}' : '${IconType.ArrowUp}'
-              "
-              size="${IconSize.ExtraSmall}"
-            ></ht-icon>
-          </ng-container>
-        </div>
+      <div class="title" [ngClass]="this.classes">
+        <span class="title-text">{{ this.columnConfig.title }}</span>
+      </div>
 
-        <ng-container *ngIf="this.isShowOptionButton && !this.leftAlignFilterButton">
-          <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
-        </ng-container>
+      <div class="sort-icons" *ngIf="this.isSortable">
+        <ht-icon
+          class="sort-icon"
+          [class.active]="this.sort === '${TableSortDirection.Ascending}'"
+          [icon]="'${IconType.ArrowUp}'"
+          size="${IconSize.ExtraSmall}"
+          htTooltip="Sort Ascending"
+          (click)="this.onClickSortAsc()"
+        ></ht-icon>
+
+        <ht-icon
+          class="sort-icon"
+          [class.active]="this.sort === '${TableSortDirection.Descending}'"
+          [icon]="'${IconType.ArrowDown}'"
+          size="${IconSize.ExtraSmall}"
+          htTooltip="Sort Descending"
+          (click)="this.onClickSortDesc()"
+        ></ht-icon>
+      </div>
+
+      <ng-container *ngIf="this.isShowOptionButton">
+        <ng-container *ngTemplateOutlet="optionsButton"></ng-container>
       </ng-container>
-
-      <ng-template #stateColumnTemplate>
-        <ng-container *ngIf="this.isMultipleSelectionStateColumn">
-          <ht-checkbox
-            class="state-checkbox"
-            [htTooltip]="this.getHeaderCheckboxTooltip()"
-            [indeterminate]="this.indeterminateRowsSelected"
-            (checkedChange)="this.onToggleAllSelectedChange($event)"
-          ></ht-checkbox>
-        </ng-container>
-      </ng-template>
 
       <ng-template #htmlTooltip>
         <div [innerHTML]="this.columnConfig?.titleTooltip"></div>
@@ -74,7 +70,7 @@ import { TableColumnConfigExtended } from '../table.service';
         <ht-popover class="options-button" [closeOnClick]="true">
           <ht-popover-trigger>
             <div #trigger>
-              <ht-icon icon="${IconType.MoreHorizontal}" size="${IconSize.Small}"></ht-icon>
+              <ht-icon icon="${IconType.MoreVertical}" size="${IconSize.Small}"></ht-icon>
             </div>
           </ht-popover-trigger>
           <ht-popover-content>
@@ -94,7 +90,11 @@ import { TableColumnConfigExtended } from '../table.service';
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="this.editable && this.isEditableAvailableColumns">
+              <ng-container *ngIf="this.columnConfig.editable">
+                <div class="popover-item" (click)="this.onHideCurrentColumn()">Hide</div>
+              </ng-container>
+
+              <ng-container *ngIf="this.isEditableAvailableColumns">
                 <div class="popover-item-divider"></div>
                 <div class="popover-item" (click)="this.onEditColumns()">Edit Columns</div>
               </ng-container>
@@ -108,9 +108,6 @@ import { TableColumnConfigExtended } from '../table.service';
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
   public readonly SORT_DESC: TableSortDirection = TableSortDirection.Descending;
-
-  @Input()
-  public editable?: boolean = false;
 
   @Input()
   public metadata?: FilterAttribute[];
@@ -137,21 +134,19 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly sortChange: EventEmitter<TableSortDirection | undefined> = new EventEmitter();
 
   @Output()
-  public readonly allRowsSelectionChange: EventEmitter<boolean> = new EventEmitter();
+  public readonly showEditColumnsChange: EventEmitter<boolean> = new EventEmitter();
 
   @Output()
-  public readonly showEditColumnsChange: EventEmitter<boolean> = new EventEmitter();
+  public readonly hideCurrentColumnChange: EventEmitter<boolean> = new EventEmitter();
 
   public alignment?: TableCellAlignmentType;
   public leftAlignFilterButton: boolean = false;
   public classes: string[] = [];
 
   public isFilterable: boolean = false;
+  public isSortable: boolean = false;
   public isEditableAvailableColumns: boolean = false;
   public isShowOptionButton: boolean = false;
-  public isStateColumn: boolean = false;
-  public isMultipleSelectionStateColumn: boolean = false;
-  private allRowsSelected: boolean = false;
 
   @ViewChild('htmlTooltip')
   public htmlTooltipTemplate?: TemplateRef<unknown>;
@@ -169,11 +164,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
     if (changes.columnConfig || changes.metadata) {
       this.isFilterable = this.isAttributeFilterable();
+      this.isSortable = this.isAttributeSortable();
       this.isEditableAvailableColumns = this.areAnyAvailableColumnsEditable();
       this.isShowOptionButton =
         this.isFilterable || this.isEditableAvailableColumns || this.columnConfig?.sortable === true;
-      this.isStateColumn = this.columnConfig?.id === '$$selected' || this.columnConfig?.id === '$$expanded';
-      this.isMultipleSelectionStateColumn = this.columnConfig?.id === '$$selected';
     }
   }
 
@@ -192,29 +186,28 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
     this.classes = this.buildClasses();
   }
 
-  public onToggleAllSelectedChange(allSelected: boolean): void {
-    this.allRowsSelected = allSelected;
-    this.allRowsSelectionChange.emit(allSelected);
-  }
-
-  public getHeaderCheckboxTooltip(): string {
-    return this.indeterminateRowsSelected
-      ? 'Some rows are selected'
-      : this.allRowsSelected
-      ? 'All rows in the table are selected'
-      : 'None of the rows in the table are selected';
-  }
-
   private buildClasses(): string[] {
     return [
       ...(this.alignment !== undefined ? [this.alignment.toLowerCase()] : []),
-      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : []),
-      ...(this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig) ? ['sortable'] : [])
+      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : [])
     ];
   }
 
+  public onClickSortAsc(): void {
+    this.setSortAndEmit(isEqual(this.sort, this.SORT_ASC) ? undefined : this.SORT_ASC);
+  }
+
+  public onClickSortDesc(): void {
+    this.setSortAndEmit(isEqual(this.sort, this.SORT_DESC) ? undefined : this.SORT_DESC);
+  }
+
   public onSortChange(direction?: TableSortDirection): void {
-    this.sortChange.emit(direction ?? this.getNextSortDirection(this.sort));
+    this.setSortAndEmit(direction ?? this.getNextSortDirection(this.sort));
+  }
+
+  private setSortAndEmit(direction?: TableSortDirection): void {
+    this.sort = direction;
+    this.sortChange.emit(this.sort);
   }
 
   public getTooltip(
@@ -236,6 +229,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
       this.columnConfig.attribute !== undefined &&
       this.filterParserLookupService.isParsableOperatorForType(FilterOperator.In, this.columnConfig.attribute.type)
     );
+  }
+
+  private isAttributeSortable(): boolean {
+    return (this.columnConfig && TableCdkColumnUtil.isColumnSortable(this.columnConfig)) ?? false;
   }
 
   private areAnyAvailableColumnsEditable(): boolean {
@@ -267,6 +264,10 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public onEditColumns(): void {
     this.showEditColumnsChange.emit(true);
+  }
+
+  public onHideCurrentColumn(): void {
+    this.hideCurrentColumnChange.emit(true);
   }
 
   private getNextSortDirection(sortDirection?: TableSortDirection): TableSortDirection | undefined {

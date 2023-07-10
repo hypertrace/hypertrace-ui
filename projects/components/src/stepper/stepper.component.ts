@@ -26,6 +26,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
   template: `
     <div class="stepper" *htLoadAsync="this.steps$ as steps">
       <mat-stepper
+        role="tablist"
         [orientation]="this.orientation"
         [linear]="this.isLinear"
         #stepper
@@ -48,7 +49,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
               <ht-icon icon="${IconType.Edit}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
             <ng-template matStepperIcon="done">
-              <ht-icon icon="${IconType.Checkmark}" size="${IconSize.ExtraSmall}"></ht-icon>
+              <ht-icon icon="${IconType.Done}" size="${IconSize.ExtraSmall}"></ht-icon>
             </ng-template>
           </mat-step>
         </ng-container>
@@ -73,10 +74,12 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
                 *ngIf="stepper.selectedIndex !== 0"
                 display="${ButtonStyle.Outlined}"
                 label="Back"
+                ariaLabel="Back"
                 (click)="stepper.previous()"
               ></ht-button>
               <ht-button
                 class="next"
+                ariaLabel="Next"
                 [label]="this.getActionButtonLabel | htMemoize: stepper.selectedIndex:steps"
                 (click)="this.nextOrSubmit(stepper)"
                 [disabled]="this.isNextDisabled(stepper.selectedIndex)"

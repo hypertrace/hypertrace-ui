@@ -15,11 +15,16 @@ import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './ce
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
 import { TableComponent } from './table.component';
 import { DraggableListModule } from '../draggable-list/draggable-list.module';
+import { ExpanderToggleModule } from '../expander/expander-toggle.module';
+import { MemoizeModule } from '@hypertrace/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutChangeModule } from '../layout/layout-change.module';
 
 @NgModule({
   imports: [
     CommonModule,
     CdkTableModule,
+    DragDropModule,
     IconModule,
     TooltipModule,
     TableCellsModule,
@@ -29,7 +34,11 @@ import { DraggableListModule } from '../draggable-list/draggable-list.module';
     LetAsyncModule,
     ButtonModule,
     CheckboxModule,
-    DraggableListModule
+    DraggableListModule,
+    ExpanderToggleModule,
+    MemoizeModule,
+    TraceSearchBoxModule,
+    LayoutChangeModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent]
