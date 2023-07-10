@@ -38,7 +38,7 @@ import { isEmpty, uniq } from 'lodash-es';
       class="ht-search-box"
       [ngClass]="this.displayMode"
       [class.focused]="this.isFocused"
-      [class.experimental-search-history]="this.enableSearchHistory"
+      [class.with-search-history]="this.enableSearchHistory"
       [class.has-value]="!(this.value | htIsEmpty)"
     >
       <ht-icon

@@ -31,9 +31,8 @@
     }
   }
 
-  &.experimental-search-history {
+  &.with-search-history {
     width: 48px;
-    transition: width 200ms ease;
 
     .input {
       width: 0;
