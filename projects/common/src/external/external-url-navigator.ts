@@ -13,13 +13,7 @@ export class ExternalUrlNavigator implements CanActivate {
   public constructor(private readonly navService: NavigationService) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const urlSegment = route.url[0]; // External URL only has one URL segment
-    const paramsString = Object.keys(urlSegment.parameters)
-      .map(param => `${param}=${urlSegment.parameters[param]}`)
-      .join(';');
-    const externalUrl = `/${urlSegment.path};${paramsString}`;
-
-    if (externalUrl === this.navService.firstNavigatedUrl) {
+    if (this.navService.firstNavigatedUrl.startsWith('/external')) {
       this.navService.navigateToErrorPage();
 
       return of(false);
