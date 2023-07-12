@@ -25,7 +25,7 @@ describe('Icon Registry Service', () => {
       'hypertrace',
       spectator.inject(DomSanitizer).bypassSecurityTrustResourceUrl('test-url')
     );
-    expect(spectator.service.registeredIcons).toMatchObject([IconType.Hypertrace]);
+    expect(spectator.service.getRegisteredIcons()).toMatchObject([IconType.Hypertrace]);
   });
 
   test('looks up ligature icons', () => {

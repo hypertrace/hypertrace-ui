@@ -8,18 +8,14 @@ import { Observable } from 'rxjs';
 export class IconRegistryService {
   private static readonly SVG_ICON_PREFIX: string = 'svg:';
 
-  private _registeredIcons: string[] = [];
+  private registeredIcons: string[] = [];
 
   public constructor(private readonly matIconRegistry: MatIconRegistry, private readonly sanitizer: DomSanitizer) {}
 
-  public get registeredIcons(): string[] {
-    return this._registeredIcons;
-  }
-
   public registerSvgIcon(iconInfo: SvgIconRegistrationInfo): void {
-    if (!this._registeredIcons.includes(iconInfo.key)) {
-      this._registeredIcons.push(iconInfo.key);
-      this._registeredIcons = orderBy(this.registeredIcons, key => key, 'asc');
+    if (!this.registeredIcons.includes(iconInfo.key)) {
+      this.registeredIcons.push(iconInfo.key);
+      this.registeredIcons = orderBy(this.registeredIcons, key => key, 'asc');
     }
 
     this.matIconRegistry.addSvgIcon(
@@ -53,6 +49,10 @@ export class IconRegistryService {
     return icon.startsWith(IconRegistryService.SVG_ICON_PREFIX)
       ? icon.substring(IconRegistryService.SVG_ICON_PREFIX.length)
       : icon;
+  }
+
+  public getRegisteredIcons(): string[] {
+    return this.registeredIcons;
   }
 }
 
