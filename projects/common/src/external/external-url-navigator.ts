@@ -13,7 +13,7 @@ export class ExternalUrlNavigator implements CanActivate {
   public constructor(private readonly navService: NavigationService) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    if (!this.navService.canGoBackWithoutLeavingApp()) {
+    if (this.navService.firstNavigatedUrl.startsWith('/external')) {
       this.navService.navigateToErrorPage();
 
       return of(false);
