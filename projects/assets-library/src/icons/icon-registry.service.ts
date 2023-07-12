@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, orderBy } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class IconRegistryService {
   private static readonly SVG_ICON_PREFIX: string = 'svg:';
 
+  public registeredIcons: string[] = [];
+
   public constructor(private readonly matIconRegistry: MatIconRegistry, private readonly sanitizer: DomSanitizer) {}
 
   public registerSvgIcon(iconInfo: SvgIconRegistrationInfo): void {
+    if (!this.registeredIcons.includes(iconInfo.key)) {
+      this.registeredIcons.push(iconInfo.key);
+      this.registeredIcons = orderBy(this.registeredIcons, key => key, 'asc');
+    }
+
     this.matIconRegistry.addSvgIcon(
       this.getIconNameWithoutPrefix(iconInfo.key),
       this.sanitizer.bypassSecurityTrustResourceUrl(iconInfo.url)
@@ -38,7 +45,7 @@ export class IconRegistryService {
     };
   }
 
-  private getIconNameWithoutPrefix(icon: string): string {
+  public getIconNameWithoutPrefix(icon: string): string {
     return icon.startsWith(IconRegistryService.SVG_ICON_PREFIX)
       ? icon.substring(IconRegistryService.SVG_ICON_PREFIX.length)
       : icon;
