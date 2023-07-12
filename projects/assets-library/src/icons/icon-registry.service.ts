@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { isEmpty, orderBy } from 'lodash-es';
+import { isEmpty } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class IconRegistryService {
   private static readonly SVG_ICON_PREFIX: string = 'svg:';
 
-  private registeredIcons: string[] = [];
+  private readonly registeredIcons: string[] = [];
 
   public constructor(private readonly matIconRegistry: MatIconRegistry, private readonly sanitizer: DomSanitizer) {}
 
   public registerSvgIcon(iconInfo: SvgIconRegistrationInfo): void {
     if (!this.registeredIcons.includes(iconInfo.key)) {
       this.registeredIcons.push(iconInfo.key);
-      this.registeredIcons = orderBy(this.registeredIcons, key => key, 'asc');
     }
 
     this.matIconRegistry.addSvgIcon(
