@@ -44,6 +44,10 @@ export class NavigationService {
     this.event$(RoutesRecognized)
       .pipe(
         tap(event => {
+          // In case of reloading a correct URL, we only have a single event
+          // Due to that we are getting `this.isFirstNavigation = true` since
+          // we're not reaching to .subscribe due to skip(1) and causing external navigation failure from the app
+          // So we're storing the first navigated URL to check whether it is external URL or not.
           if (isEmpty(this.firstNavigatedUrl)) {
             this.firstNavigatedUrl = decodeURIComponent(event.url);
           }
