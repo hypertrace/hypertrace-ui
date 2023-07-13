@@ -12,7 +12,8 @@ describe('External URL navigator', () => {
     service: ExternalUrlNavigator,
     providers: [
       mockProvider(NavigationService, {
-        canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(true)
+        canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(true),
+        firstNavigatedUrl: '/test-url'
       })
     ]
   });
@@ -25,7 +26,8 @@ describe('External URL navigator', () => {
     const spectator = buildNavigator({
       providers: [
         mockProvider(NavigationService, {
-          canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(false)
+          canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(false),
+          firstNavigatedUrl: '/external'
         })
       ]
     });
