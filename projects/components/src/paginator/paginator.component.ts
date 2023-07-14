@@ -21,14 +21,12 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      class="paginator"
-      [class.compact]="this.showCompactView"
-      *ngIf="this.totalItems && this.totalItems >= this.minItemsBeforeDisplay"
-    >
+    <div class="paginator" [class.compact]="this.showCompactView" *ngIf="this.shouldDisplayTotal()">
       <ht-label
         class="label"
-        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
+        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{
+          this.totalItems === -1 ? 'many' : this.totalItems
+        }}"
       >
       </ht-label>
       <div class="pagination-buttons">
@@ -161,6 +159,10 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     }
   }
 
+  public shouldDisplayTotal(): boolean {
+    return this.totalItems >= this.minItemsBeforeDisplay || this.totalItems === -1;
+  }
+
   public onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this.gotoFirstPage();
@@ -192,6 +194,10 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
 
   public hasNextPage(): boolean {
+    if (this.totalItems === -1) {
+      return true;
+    }
+
     return this.pageIndex < this.maxPageIndex() && this.pageSize !== 0;
   }
 
@@ -209,6 +215,10 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
 
   private itemsInPage(): number {
     if (this.pageIndex < this.maxPageIndex()) {
+      return this.pageSize;
+    }
+
+    if (this.totalItems === -1) {
       return this.pageSize;
     }
 

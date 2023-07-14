@@ -1,11 +1,11 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../../../shared/graphql/model/schema/filter/graphql-filter';
-import { TraceType, TRACE_SCOPE } from '../../../../../../shared/graphql/model/schema/trace';
+import { TRACE_SCOPE, TraceType } from '../../../../../../shared/graphql/model/schema/trace';
 import {
   GraphQlTracesRequest,
-  TracesResponse,
-  TRACES_GQL_REQUEST
+  TRACES_GQL_REQUEST,
+  TracesResponse
 } from '../../../../../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model'; // Todo: Fix this dependency
 import { TableDataSourceModel } from '../table-data-source.model';
@@ -43,10 +43,13 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
     };
   }
 
-  protected buildTableResponse(response: TracesResponse): TableDataResponse<TableRow> {
+  protected buildTableResponse(
+    response: TracesResponse,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): TableDataResponse<TableRow> {
     return {
       data: response.results,
-      totalCount: response.total
+      totalCount: response.results.length < request.position.limit ? response.total : -1
     };
   }
 }
