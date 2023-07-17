@@ -49,6 +49,9 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
   ): TableDataResponse<TableRow> {
     return {
       data: response.results,
+      // We want to avoid showing real totals for traces table.
+      // Provide the `last` code when results are lesser than the limit (aka, we know there are no more results)
+      // Provide the `unknown` code otherwise
       totalCount:
         response.results.length < request.position.limit ? PaginatorTotalCode.Last : PaginatorTotalCode.Unknown
     };
