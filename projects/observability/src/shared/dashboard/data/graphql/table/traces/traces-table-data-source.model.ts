@@ -1,11 +1,11 @@
 import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../../../shared/graphql/model/schema/filter/graphql-filter';
-import { TraceType, TRACE_SCOPE } from '../../../../../../shared/graphql/model/schema/trace';
+import { TRACE_SCOPE, TraceType } from '../../../../../../shared/graphql/model/schema/trace';
 import {
   GraphQlTracesRequest,
-  TracesResponse,
-  TRACES_GQL_REQUEST
+  TRACES_GQL_REQUEST,
+  TracesResponse
 } from '../../../../../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model'; // Todo: Fix this dependency
 import { TableDataSourceModel } from '../table-data-source.model';
@@ -31,7 +31,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
     return {
       requestType: TRACES_GQL_REQUEST,
       traceType: this.traceType,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.filter(column => column.visible).map(column => column.specification),
       limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       sort: request.sort && {
