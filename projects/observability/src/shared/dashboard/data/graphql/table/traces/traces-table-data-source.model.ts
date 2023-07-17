@@ -1,4 +1,4 @@
-import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
+import { PaginatorTotalCode, TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../../../shared/graphql/model/schema/filter/graphql-filter';
 import { TRACE_SCOPE, TraceType } from '../../../../../../shared/graphql/model/schema/trace';
@@ -32,7 +32,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
       requestType: TRACES_GQL_REQUEST,
       traceType: this.traceType,
       properties: request.columns.map(column => column.specification),
-      limit: request.position.limit * 2, // Prefetch 2 pages
+      limit: request.position.limit,
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
@@ -49,7 +49,8 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
   ): TableDataResponse<TableRow> {
     return {
       data: response.results,
-      totalCount: response.results.length < request.position.limit ? response.total : -1
+      totalCount:
+        response.results.length < request.position.limit ? PaginatorTotalCode.Last : PaginatorTotalCode.Unknown
     };
   }
 }

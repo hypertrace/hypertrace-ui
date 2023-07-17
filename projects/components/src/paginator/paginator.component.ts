@@ -24,9 +24,7 @@ import { PaginationProvider } from './paginator-api';
     <div class="paginator" [class.compact]="this.showCompactView" *ngIf="this.shouldDisplayTotal()">
       <ht-label
         class="label"
-        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{
-          this.totalItems === -1 ? 'many' : this.totalItems
-        }}"
+        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalCountLabel }}"
       >
       </ht-label>
       <div class="pagination-buttons">
@@ -160,7 +158,11 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
 
   public shouldDisplayTotal(): boolean {
-    return this.totalItems >= this.minItemsBeforeDisplay || this.totalItems === -1;
+    return (
+      this.totalItems >= this.minItemsBeforeDisplay ||
+      this.totalItems === PaginatorTotalCode.Unknown ||
+      this.totalItems === PaginatorTotalCode.Last
+    );
   }
 
   public onPageSizeChange(pageSize: number): void {
@@ -194,7 +196,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
 
   public hasNextPage(): boolean {
-    if (this.totalItems === -1) {
+    if (this.totalItems === PaginatorTotalCode.Unknown) {
       return true;
     }
 
@@ -209,6 +211,18 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     return this.itemIndexAtPage() + this.itemsInPage();
   }
 
+  public get totalCountLabel(): string {
+    if (this.totalItems === PaginatorTotalCode.Unknown) {
+      return 'many';
+    }
+
+    if (this.totalItems === PaginatorTotalCode.Last) {
+      return 'last';
+    }
+
+    return this.totalItems.toString();
+  }
+
   private itemIndexAtPage(): number {
     return this.pageIndex * this.pageSize;
   }
@@ -218,7 +232,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       return this.pageSize;
     }
 
-    if (this.totalItems === -1) {
+    if (this.totalItems === PaginatorTotalCode.Unknown || this.totalItems === PaginatorTotalCode.Last) {
       return this.pageSize;
     }
 
@@ -250,3 +264,8 @@ const enum PaginatorButtonType {
   Next = 'Next',
   Prev = 'Prev'
 }
+
+export const PaginatorTotalCode: { Unknown: number; Last: number } = {
+  Unknown: -1,
+  Last: -2
+};
