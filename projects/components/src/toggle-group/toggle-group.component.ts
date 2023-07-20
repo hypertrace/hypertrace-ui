@@ -32,6 +32,7 @@ import { ToggleItemComponent } from './toggle-item.component';
             class="tab"
             [label]="item.label"
             [icon]="item.icon"
+            [htTooltip]="item.tooltip"
             (click)="this.setActiveItem(item)"
           ></ht-toggle-item>
         </div>
