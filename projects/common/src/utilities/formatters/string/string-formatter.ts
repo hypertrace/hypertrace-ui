@@ -1,31 +1,19 @@
-import { isEmpty } from 'lodash-es';
+export const displayString = (provided?: unknown, defaultValueOnEmpty: string = '-'): string => {
+  if (provided === null || provided === 'null') {
+    return defaultValueOnEmpty;
+  }
 
-export const titleCaseFromKebabCase = (kebabCaseString: string): string =>
-  kebabCaseString
-    .split('-')
-    .map(str => (str.length === 0 ? str : str[0].toUpperCase() + str.slice(1)))
-    .join(' ');
-
-export const titleCaseFromSnakeCase = (snakeCaseString: string): string =>
-  snakeCaseString
-    .split('_')
-    .map(str => (str.length === 0 ? str : str[0].toUpperCase() + str.slice(1)))
-    .join(' ');
-
-export const displayString = (provided?: unknown): string => {
   switch (typeof provided) {
     case 'object':
       return Array.isArray(provided)
-        ? `[${provided.map(displayString).join(', ')}]`
-        : provided === null
-        ? 'Unknown'
+        ? `${provided.map(value => displayString(value, defaultValueOnEmpty)).join(', ')}`
         : 'Object';
     case 'undefined':
-      return 'Unknown';
+      return defaultValueOnEmpty;
     case 'function':
       return 'Function';
     case 'string':
-      return isEmpty(provided) ? 'Unknown' : provided;
+      return provided;
     case 'boolean':
     case 'number':
     case 'bigint':
@@ -38,3 +26,9 @@ export const displayString = (provided?: unknown): string => {
 export const collapseWhitespace = (str: string): string =>
   // Replace all whitespace with a single space
   str.replace(/\s\s+/g, ' ');
+
+export const getStringsFromCommaSeparatedList = (text: string): string[] =>
+  text
+    .split(',')
+    .map(part => part.trim())
+    .filter(part => part !== '');

@@ -1,13 +1,13 @@
 import { fakeAsync } from '@angular/core/testing';
 import { createHostFactory } from '@ngneat/spectator/jest';
 
-import { CheckboxComponent, InputComponent, InputModule, TraceCheckboxModule } from '@hypertrace/components';
+import { CheckboxComponent, CheckboxModule, InputComponent, InputModule } from '@hypertrace/components';
 import { ExploreQueryLimitEditorComponent } from './explore-query-limit-editor.component';
 
 describe('Explore Query Limit Editor component', () => {
   const hostBuilder = createHostFactory({
     component: ExploreQueryLimitEditorComponent,
-    imports: [InputModule, TraceCheckboxModule],
+    imports: [InputModule, CheckboxModule],
     shallow: true
   });
 
@@ -24,25 +24,6 @@ describe('Explore Query Limit Editor component', () => {
     );
 
     expect(spectator.query(InputComponent)!.value).toBe(12);
-  });
-
-  test('sets limit as disabled and display to Auto when disabled', () => {
-    const spectator = hostBuilder(
-      `
-    <ht-explore-query-limit-editor [limit]="limit" [disabled]="disabled">
-    </ht-explore-query-limit-editor>`,
-      {
-        hostProps: {
-          limit: 12,
-          disabled: true
-        }
-      }
-    );
-
-    expect(spectator.query(InputComponent)!.value).toBe('Auto');
-    expect(spectator.query(InputComponent)!.type).toBe('text');
-    expect(spectator.query(InputComponent)!.disabled).toBe(true);
-    expect(spectator.query('.limit-label')).toHaveClass('disabled');
   });
 
   test('updates when the provided limit changes', () => {

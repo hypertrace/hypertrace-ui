@@ -1,5 +1,5 @@
 import { assertUnreachable } from '@hypertrace/common';
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
+import { MetricAggregationType } from '../../../../model/metrics/metric-aggregation';
 import { GraphQlMetricAggregationPath } from '../../../../model/schema/metric/graphql-metric-aggregation';
 
 export const convertToGraphQlMetricAggregationPath = (value: MetricAggregationType): GraphQlMetricAggregationPath => {
@@ -24,6 +24,8 @@ export const convertToGraphQlMetricAggregationPath = (value: MetricAggregationTy
       return GraphQlMetricAggregationPath.Count;
     case MetricAggregationType.DistinctCount:
       return GraphQlMetricAggregationPath.DistinctCount;
+    case MetricAggregationType.DistinctArray:
+      return GraphQlMetricAggregationPath.DistinctArray;
     default:
       return assertUnreachable(value);
   }

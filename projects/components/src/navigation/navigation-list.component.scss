@@ -1,17 +1,19 @@
-@import 'color-palette';
-@import 'font';
+@import 'mixins';
 
 .navigation-list {
+  @include nav-secondary-background;
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 18px 12px;
 
   height: 100%;
   width: 100%;
   justify-content: space-between;
 
-  .content {
+  .content-container {
+    padding: 18px 0 12px 12px;
+    height: 100%;
+
     .nav-header {
       padding-top: 24px;
       padding-left: 14px;
@@ -21,16 +23,37 @@
       align-items: center;
 
       .label {
-        @include overline($gray-9);
+        @include overline($blue-2);
       }
 
       .beta {
-        margin-left: 8px;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  &.navigation-dark {
+    .content-container {
+      .content {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        scrollbar-width: thin;
+        &::-webkit-scrollbar {
+          @include nav-secondary-background;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background-color: $gray-6;
+          border: 3px solid $blue-9;
+        }
       }
     }
   }
 
   .resize-tab-button {
+    @include nav-secondary-background;
     position: absolute;
     display: flex;
     align-items: center;
@@ -38,11 +61,9 @@
     right: -12px;
     height: 28px;
     width: 12px;
-    border: 1px solid $gray-2;
-    border-left-color: white;
     border-radius: 0 6px 6px 0;
     cursor: pointer;
-    color: $gray-7;
+    color: white;
 
     &:hover {
       color: $gray-4;
@@ -55,34 +76,107 @@
   }
 
   .footer {
+    display: flex;
+    flex-direction: column;
     position: relative;
-    margin-left: 6px;
     color: $gray-5;
+    padding: 0px 12px 12px;
 
     .footer-item {
       display: flex;
       align-items: center;
-      margin-left: 8px;
+      justify-content: center;
+
+      .nav-group-icon {
+        width: 140px;
+        height: 140px;
+        opacity: 0.15;
+        color: $blue-gray-4;
+      }
+
+      .nav-group-label {
+        margin: 0 auto 0 0;
+        padding-right: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: $gray-4;
+      }
 
       .link {
+        margin-right: auto;
         @include link;
-        @include footnote($gray-5);
+        @include footnote($gray-2);
       }
     }
 
     .nav-divider {
-      position: absolute;
-      top: -6px;
-      left: 8px;
-      margin: 0;
+      margin: 8px auto 8px 0;
       height: 1px;
       width: 16px;
-      background-color: $gray-2;
-      border: none;
+      background-color: $gray-4;
+    }
+  }
+
+  &:not(.expanded) {
+    .footer .footer-item .link {
+      margin-right: 0;
+    }
+
+    .footer .nav-divider {
+      margin: 8px auto;
+    }
+
+    .content-container {
+      padding: 18px 0 12px 0;
+    }
+  }
+
+  &:not(.navigation-dark) {
+    background: white;
+
+    .content-container {
+      padding: 18px 12px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    &:not(.expanded) {
+      .content-container {
+        padding: 18px 12px;
+      }
+    }
+
+    .content-container .nav-header .label {
+      @include overline($gray-9);
+    }
+
+    .footer {
+      margin-left: 6px;
+
+      .footer-item {
+        margin-left: 12px;
+        justify-content: unset;
+      }
+      .nav-divider {
+        position: absolute;
+        top: 0;
+        left: 24px;
+        margin: 0;
+        height: 1px;
+        width: 16px;
+        background-color: $gray-2;
+        border: none;
+      }
+    }
+
+    .resize-tab-button {
+      border: 1px solid $gray-2;
+      border-left-color: white;
+      color: $gray-7;
+      background: white;
     }
   }
 }
 
 .expanded {
-  width: 220px;
+  width: 244px;
 }

@@ -8,6 +8,7 @@ import {
   OnChanges,
   Output,
   QueryList,
+  TemplateRef,
   ViewChildren
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -25,10 +26,17 @@ import { ToggleItemComponent } from './toggle-item.component';
           class="active"
           [style.left.px]="this.activeElementPosition.left"
           [style.width.px]="this.activeElementPosition.width"
+          [htTooltip]="this.activeItemTooltip"
         ></div>
         <div class="container" *ngFor="let item of this.items; let index = index">
           <div class="divider" *ngIf="index !== 0" [class.hide-divider]="this.shouldHideDivider(index)"></div>
-          <ht-toggle-item class="tab" [label]="item.label" (click)="this.setActiveItem(item)"></ht-toggle-item>
+          <ht-toggle-item
+            class="tab"
+            [label]="item.label"
+            [icon]="item.icon"
+            [htTooltip]="item.tooltip"
+            (click)="this.setActiveItem(item)"
+          ></ht-toggle-item>
         </div>
       </div>
     </div>
@@ -50,6 +58,7 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges {
   private readonly toggleItemElements!: QueryList<ToggleItemComponent>;
 
   public initialized: boolean = false;
+  public activeItemTooltip?: string | TemplateRef<unknown>;
   public activeElementPosition: ElementPosition = ToggleGroupComponent.DEFAULT_POSITION;
   private activeItemIndex?: number;
 
@@ -80,6 +89,7 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges {
 
     this.activeItemIndex = this.items.indexOf(activeItem);
     this.activeElementPosition = this.getElementPosition(activeItem, this.activeItemIndex);
+    this.activeItemTooltip = this.items?.[this.activeItemIndex]?.tooltip;
     this.activeItemChange.emit(activeItem);
   }
 

@@ -1,0 +1,19 @@
+@import 'font';
+@import 'color-palette';
+@import 'interaction';
+
+.context-menu-container {
+  box-shadow: -1px -1px 8px rgba(0, 0, 0, 0.08), -3px 1px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: white;
+  z-index: 1;
+}
+
+.context-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px 20px;
+  gap: 4px;
+}

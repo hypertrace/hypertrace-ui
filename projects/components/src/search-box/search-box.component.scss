@@ -1,33 +1,50 @@
-@import 'color-palette';
-@import 'font';
+@import 'mixins';
 
 .ht-search-box {
   @include font-placeholder;
   display: flex;
   position: relative;
   align-items: center;
-  border: 1px solid $color-border;
-  border-radius: 6px;
   padding: 0 8px;
+  width: 100%;
 
   .icon {
-    color: $gray-5;
+    color: $gray-7;
     position: absolute;
     padding: 0 6px;
     cursor: pointer;
   }
 
   .close {
+    color: $gray-5;
     right: 0;
   }
 
   &.focused {
     caret-color: $blue-5;
     border: 1px solid $blue-5;
+    border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0, 83, 215, 0.16);
 
     &:hover {
       border: 1px solid $blue-5;
+    }
+  }
+
+  &.with-search-history {
+    width: 48px;
+
+    .input {
+      width: 0;
+    }
+
+    &.focused,
+    &.has-value {
+      width: 100%;
+
+      .input {
+        width: 100%;
+      }
     }
   }
 
@@ -39,20 +56,83 @@
     @include body-1-regular($gray-9);
     height: 34px;
     line-height: 34px;
-    width: 420px;
+    width: 100%;
     background: transparent;
     border: 1px solid transparent;
-    padding-left: 40px;
+    padding-left: 28px;
     padding-right: 36px;
     border-radius: 4px;
 
     &::placeholder {
-      @include body-1-regular($gray-5);
+      @include body-1-regular($gray-7);
       line-height: 30px;
     }
 
     &:focus {
       outline: none;
+    }
+  }
+}
+
+.border {
+  border: 1px solid $color-border;
+  border-radius: 6px;
+}
+
+.no-border {
+  &:hover {
+    border: none;
+  }
+}
+
+.search-history {
+  @include popover-menu-content;
+  width: 420px;
+  max-height: 268px;
+  padding: 20px 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: white;
+
+  .search-history-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $gray-2;
+    padding-left: 20px;
+
+    .title {
+      @include body-1-semibold($gray-6);
+    }
+  }
+
+  .search-history-section {
+    min-height: 0;
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 12px 4px 20px;
+
+      .text {
+        @include ellipsis-overflow;
+        @include body-small($gray-6);
+      }
+
+      &:hover {
+        background-color: $gray-1;
+      }
     }
   }
 }

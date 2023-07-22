@@ -1,3 +1,5 @@
-import { InjectionToken } from '@angular/core';
-
-export const GLOBAL_HEADER_HEIGHT = new InjectionToken<string>('Global Header Height');
+export const enum ApplicationFeature {
+  PageTimeRange = 'ui.page-time-range',
+  FeatureDefaultTimeRangeMap = 'ui.feature-default-time-range-map',
+  TriggerBasedSearch = 'ui.trigger-based-search'
+}

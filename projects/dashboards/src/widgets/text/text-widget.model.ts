@@ -1,4 +1,6 @@
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../properties/enums/enum-property-type';
+import { PrimaryTextStyle } from './text-widget-types';
 
 @Model({
   type: 'text-widget'
@@ -17,4 +19,14 @@ export class TextWidgetModel {
     required: false
   })
   public secondaryText?: string;
+
+  @ModelProperty({
+    key: 'primary-text-style',
+    required: false,
+    type: {
+      key: ENUM_TYPE.type,
+      values: [PrimaryTextStyle.Title, PrimaryTextStyle.SectionTitle]
+    } as EnumPropertyTypeInstance
+  })
+  public primaryTextStyle?: string = PrimaryTextStyle.Title;
 }

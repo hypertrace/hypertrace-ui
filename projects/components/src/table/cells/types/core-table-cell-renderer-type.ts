@@ -1,8 +1,15 @@
 export const enum CoreTableCellRendererType {
   Checkbox = 'checkbox',
+  Code = 'code',
+  Duration = 'duration',
   Icon = 'icon',
   Number = 'number',
   RowExpander = 'row-expander',
+  RelativeTimestamp = 'relative-timestamp',
+  StringArray = 'string-array',
+  StringEnum = 'string-enum',
   Text = 'text',
-  Timestamp = 'timestamp'
+  TextWithCopyAction = 'text-with-copy-action',
+  Timestamp = 'timestamp',
+  TimeAgo = 'time-ago'
 }

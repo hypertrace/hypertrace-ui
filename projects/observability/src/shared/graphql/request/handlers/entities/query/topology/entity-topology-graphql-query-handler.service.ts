@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import {
-  GlobalGraphQlFilterService,
-  GraphQlFilter,
-  GraphQlSelectionBuilder,
-  GraphQlTimeRange,
-  Specification,
-  SpecificationBuilder
-} from '@hypertrace/distributed-tracing';
 import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hypertrace/graphql-client';
 import { fromPairs } from 'lodash-es';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
+import { GlobalGraphQlFilterService } from '../../../../../model/schema/filter/global-graphql-filter.service';
+import { GraphQlFilter } from '../../../../../model/schema/filter/graphql-filter';
 import { GraphQlMetricAggregation } from '../../../../../model/schema/metric/graphql-metric-aggregation';
 import { MetricAggregationSpecification } from '../../../../../model/schema/specifications/metric-aggregation-specification';
+import { Specification } from '../../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../../model/schema/timerange/graphql-time-range';
 import { GraphQlObservabilityArgumentBuilder } from '../../../../builders/argument/graphql-observability-argument-builder';
+import { GraphQlSelectionBuilder } from '../../../../builders/selections/graphql-selection-builder';
+import { SpecificationBuilder } from '../../../../builders/specification/specification-builder';
 
 @Injectable({ providedIn: 'root' })
 export class EntityTopologyGraphQlQueryHandlerService
@@ -37,7 +35,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     return {
       path: 'entities',
       arguments: [
-        this.argBuilder.forEntityType(request.rootNodeType),
+        this.argBuilder.forScope(request.rootNodeType),
         this.argBuilder.forLimit(request.rootNodeLimit),
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forFilters(
@@ -80,7 +78,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     return Array.from(this.getSpecMapForDirection(edgeDirection, request).entries()).map(([entityType, spec]) => ({
       path: this.getEdgeQueryKey(edgeDirection),
       alias: this.buildEdgeAlias(edgeDirection, entityType),
-      arguments: [this.argBuilder.forNeighborType(entityType)],
+      arguments: [this.argBuilder.forNeighborType(entityType), ...this.argBuilder.forFilters(request.edgeFilters)],
       children: [
         {
           path: 'results',
@@ -125,8 +123,10 @@ export class EntityTopologyGraphQlQueryHandlerService
     }
   }
 
-  public convertResponse(response: TopologyServerResponse, request: GraphQlEntityTopologyRequest): EntityNode[] {
-    return this.convertToEntityNodes(request, response.results);
+  public convertResponse(response: unknown, request: GraphQlEntityTopologyRequest): EntityNode[] {
+    const serverResponse = response as TopologyServerResponse;
+
+    return this.convertToEntityNodes(request, serverResponse.results);
   }
 
   private convertToEntityNodes(
@@ -263,6 +263,7 @@ export interface GraphQlEntityTopologyRequest {
   rootNodeType: ObservabilityEntityType;
   rootNodeSpecification: TopologyNodeSpecification;
   rootNodeFilters?: GraphQlFilter[];
+  edgeFilters?: GraphQlFilter[];
   rootNodeLimit: number; // TODO should downstream/upstream nodes of same type match root spec?
   downstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   upstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;

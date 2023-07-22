@@ -1,8 +1,8 @@
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import {
   ExploreSpecification,
   ExploreSpecificationBuilder,
+  MetricAggregationType,
   TraceValueDataSourceModel
 } from '@hypertrace/observability';
 import { Observable } from 'rxjs';

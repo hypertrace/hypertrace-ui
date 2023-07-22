@@ -1,85 +1,144 @@
-import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
-import { isEmpty } from 'lodash-es';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  IterableDiffer,
+  IterableDiffers,
+  OnChanges,
+  Output,
+  TemplateRef
+} from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
+import { TypedSimpleChanges } from '@hypertrace/common';
+import { isEqual, isNil } from 'lodash-es';
+import { IconSize } from '../../icon/icon-size';
+import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
+import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
+import { SearchBoxEmitMode } from '../../search-box/search-box.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
-import { SelectChange, SelectFilter } from './table-controls-api';
+import { StatefulTableRow } from '../table-api';
+import {
+  TableCheckboxChange,
+  TableCheckboxControl,
+  TableSelectChange,
+  TableSelectControl,
+  TableSelectControlOption
+} from './table-controls-api';
 
 @Component({
   selector: 'ht-table-controls',
   styleUrls: ['./table-controls.component.scss'],
-  providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="table-controls" *ngIf="this.anyControlsEnabled">
-      <!-- Filters -->
-      <div class="filter-controls">
+      <!-- Left -->
+      <div class="table-controls-left">
         <!-- Search -->
         <ht-search-box
           *ngIf="this.searchEnabled"
           class="control search-box"
-          [placeholder]="this.searchPlaceholder"
+          [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
+          [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
+          (submit)="this.onSearchChange($event)"
+          searchMode="${SearchBoxEmitMode.OnSubmit}"
         ></ht-search-box>
 
         <!-- Selects -->
-        <ht-select
-          *ngFor="let selectFilterItem of this.selectFilterItems"
-          [placeholder]="selectFilterItem.placeholder"
-          class="control select"
-          (selectedChange)="this.onSelectChange(selectFilterItem, $event)"
-        >
-          <ht-select-option
-            *ngFor="let option of selectFilterItem.options"
-            [label]="option.label"
-            [value]="option.value"
-          ></ht-select-option>
-        </ht-select>
+        <ng-container *ngFor="let selectControl of this.selectControls">
+          <ht-multi-select
+            *ngIf="selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)"
+            [placeholder]="selectControl.placeholder"
+            [prefix]="selectControl.prefix"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onMultiSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-multi-select>
 
-        <!-- Filter Toggle -->
-        <ht-toggle-group
-          *ngIf="this.filterItemsEnabled"
-          class="control filter-toggle-group"
-          [items]="this.filterItems"
-          [activeItem]="this.activeFilterItem"
-          (activeItemChange)="this.onFilterChange($event)"
-        ></ht-toggle-group>
-
-        <!-- Checkbox Filter -->
-        <ht-checkbox
-          *ngIf="this.checkboxEnabled"
-          class="control filter-checkbox"
-          [label]="this.checkboxLabel"
-          [checked]="this.checkboxChecked"
-          (checkedChange)="this.checkboxCheckedChange.emit($event)"
-        ></ht-checkbox>
+          <ht-select
+            *ngIf="!selectControl.isMultiSelect"
+            [selected]="this.appliedFilters(selectControl)?.[0]"
+            [placeholder]="selectControl.placeholder"
+            class="control select"
+            [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
+            showBorder="true"
+            [showClearSelected]="selectControl.showClearSelected"
+            searchMode="${MultiSelectSearchMode.CaseInsensitive}"
+            (selectedChange)="this.onSelectChange(selectControl, $event)"
+          >
+            <ht-select-option
+              *ngFor="let option of selectControl.options"
+              [label]="option.label"
+              [value]="option"
+            ></ht-select-option>
+          </ht-select>
+        </ng-container>
       </div>
 
-      <!-- Mode Toggle -->
-      <ht-toggle-group
-        *ngIf="this.viewToggleEnabled"
-        class="control mode-toggle-group"
-        [items]="this.viewItems"
-        [activeItem]="this.activeViewItem"
-        (activeItemChange)="this.onModeChange($event)"
-      ></ht-toggle-group>
+      <!-- Right -->
+      <div class="table-controls-right">
+        <!-- Checkbox Filters -->
+        <ht-multi-select
+          class="filter-multi-select"
+          *ngIf="this.checkboxControlsEnabled"
+          justify="${MultiSelectJustify.Center}"
+          triggerLabelDisplayMode="${TriggerLabelDisplayMode.Icon}"
+          icon="${IconType.Settings}"
+          iconSize="${IconSize.Large}"
+          [selected]="this.checkboxSelections"
+          (selectedChange)="this.onCheckboxChange($event)"
+        >
+          <ht-select-option
+            *ngFor="let checkboxControl of this.checkboxControls"
+            [label]="checkboxControl.label"
+            [value]="checkboxControl.label"
+          >
+          </ht-select-option>
+        </ht-multi-select>
+
+        <!-- Mode Toggle -->
+        <ht-toggle-group
+          *ngIf="this.viewToggleEnabled"
+          class="control mode-toggle-group"
+          [items]="this.viewItems"
+          [activeItem]="this.activeViewItem"
+          (activeItemChange)="this.onViewChange($event)"
+        ></ht-toggle-group>
+
+        <!-- Custom Control -->
+        <ng-container *ngIf="this.customControlContent">
+          <ng-container
+            *ngTemplateOutlet="this.customControlContent; context: { selectedRows: this.selectedRows }"
+          ></ng-container>
+        </ng-container>
+      </div>
     </div>
   `
 })
 export class TableControlsComponent implements OnChanges {
+  public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
+
   @Input()
   public searchEnabled?: boolean;
 
   @Input()
-  public searchPlaceholder?: string = 'Search...';
+  public searchPlaceholder?: string;
 
   @Input()
-  public selectFilterItems?: SelectFilter[] = [];
+  public selectControls?: TableSelectControl[] = [];
 
   @Input()
-  public filterItems?: ToggleItem[] = [];
+  public checkboxControls?: TableCheckboxControl[] = [];
 
   @Input()
   public activeFilterItem?: ToggleItem;
@@ -90,55 +149,59 @@ export class TableControlsComponent implements OnChanges {
   @Input()
   public activeViewItem?: ToggleItem;
 
-  // Checkbox filter
   @Input()
-  public checkboxLabel?: string;
+  public selectedRows?: StatefulTableRow[] = [];
 
   @Input()
-  public checkboxChecked?: boolean;
-
-  @Output()
-  public readonly selectChange: EventEmitter<SelectChange> = new EventEmitter<SelectChange>();
-
-  @Output()
-  public readonly checkboxCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public customControlContent?: TemplateRef<{ selectedRows?: StatefulTableRow[] }>;
 
   @Output()
   public readonly searchChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output()
-  public readonly filterChange: EventEmitter<ToggleItem> = new EventEmitter<ToggleItem>();
+  public readonly selectChange: EventEmitter<TableSelectChange> = new EventEmitter<TableSelectChange>();
+
+  @Output()
+  public readonly checkboxChange: EventEmitter<TableCheckboxChange> = new EventEmitter<TableCheckboxChange>();
 
   @Output()
   public readonly viewChange: EventEmitter<string> = new EventEmitter<string>();
+
+  private readonly selectSelections: Map<TableSelectControl, TableSelectControlOption[]> = new Map<
+    TableSelectControl,
+    TableSelectControlOption[]
+  >();
+
+  public checkboxSelections: string[] = [];
+  private readonly checkboxDiffer?: IterableDiffer<string>;
 
   public get viewToggleEnabled(): boolean {
     return !!this.viewItems && this.viewItems.length > 0;
   }
 
-  public get checkboxEnabled(): boolean {
-    return !isEmpty(this.checkboxLabel);
+  public get selectControlsEnabled(): boolean {
+    return !!this.selectControls && this.selectControls.length > 0;
   }
 
-  public get filterItemsEnabled(): boolean {
-    return !!this.filterItems && this.filterItems.length > 0;
+  public get checkboxControlsEnabled(): boolean {
+    return !!this.checkboxControls && this.checkboxControls.length > 0;
   }
 
   public get anyControlsEnabled(): boolean {
-    return this.viewToggleEnabled || this.checkboxEnabled || this.filterItemsEnabled || !!this.searchEnabled;
+    return !!this.searchEnabled || this.viewToggleEnabled || this.selectControlsEnabled || this.checkboxControlsEnabled;
   }
 
-  private readonly searchDebounceSubject: Subject<string> = new Subject<string>();
-
-  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {
-    this.subscriptionLifecycle.add(
-      this.searchDebounceSubject.pipe(debounceTime(200)).subscribe(text => this.searchChange.emit(text))
-    );
+  public constructor(private readonly differFactory: IterableDiffers) {
+    this.checkboxDiffer = this.differFactory.find([]).create();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.filterItems) {
-      this.setActiveFilterItem();
+    if (changes.selectControls) {
+      this.diffSelections();
+    }
+
+    if (changes.checkboxControls) {
+      this.diffCheckboxes();
     }
 
     if (changes.viewItems) {
@@ -146,34 +209,101 @@ export class TableControlsComponent implements OnChanges {
     }
   }
 
-  private setActiveFilterItem(): void {
-    if (this.filterItems !== undefined) {
-      this.activeFilterItem = this.filterItems.find(item => item === this.activeFilterItem) ?? this.filterItems[0];
-    }
+  private diffSelections(): void {
+    this.selectSelections.clear();
+    this.selectControls?.forEach(selectControl => {
+      this.selectSelections.set(
+        selectControl,
+        selectControl.options.filter(option => option.applied)
+      );
+    });
+  }
+
+  private diffCheckboxes(): void {
+    this.checkboxSelections = this.checkboxControls
+      ? this.checkboxControls.filter(control => control.value).map(control => control.label)
+      : [];
+
+    this.checkboxDiffer?.diff(this.checkboxSelections);
+  }
+
+  public appliedFilters(selectControl: TableSelectControl): TableSelectControlOption[] {
+    return this.selectSelections.get(selectControl) || [];
   }
 
   private setActiveViewItem(): void {
     if (this.viewItems !== undefined) {
-      this.activeViewItem = this.viewItems.find(item => item === this.activeViewItem) ?? this.viewItems[0];
+      this.activeViewItem = this.findViewItem(this.activeViewItem);
     }
   }
 
-  public onSelectChange(select: SelectFilter, keyValue: KeyValue<string, unknown>): void {
-    this.selectChange.emit({
-      select: select,
-      value: keyValue
-    });
-  }
-
-  public onFilterChange(item: ToggleItem): void {
-    this.filterChange.emit(item);
-  }
-
   public onSearchChange(text: string): void {
-    this.searchDebounceSubject.next(text);
+    this.searchChange.emit(text);
   }
 
-  public onModeChange(item: ToggleItem<string>): void {
+  public onMultiSelectChange(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    this.applySelections(selectControl, selections);
+
+    this.selectChange.emit({
+      select: selectControl,
+      values: selections
+    });
+    this.diffSelections();
+  }
+
+  private applySelections(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
+    selectControl.options.forEach(
+      option => (option.applied = selections.find(selection => isEqual(selection, option)) !== undefined)
+    );
+  }
+
+  public onSelectChange(selectControl: TableSelectControl, selection?: TableSelectControlOption): void {
+    this.selectChange.emit({
+      select: selectControl,
+      values: !isNil(selection) ? [selection] : []
+    });
+    this.diffSelections();
+  }
+
+  public onCheckboxChange(checked: string[]): void {
+    const diff = this.checkboxDiffer?.diff(checked);
+    if (!diff) {
+      return;
+    }
+
+    diff.forEachAddedItem(addedItem => {
+      const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
+        control => control.label === addedItem.item
+      );
+      if (found) {
+        this.checkboxChange.emit({
+          checkbox: found,
+          option: found.options[0] // First index is always the true option
+        });
+      }
+    });
+
+    diff.forEachRemovedItem(removedItem => {
+      const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
+        control => control.label === removedItem.item
+      );
+      if (found) {
+        this.checkboxChange.emit({
+          checkbox: found,
+          option: found.options[1] // Second index is always the false option
+        });
+      }
+    });
+
+    this.checkboxSelections = checked;
+    this.checkboxDiffer?.diff(this.checkboxSelections);
+  }
+
+  public onViewChange(item: ToggleItem<string>): void {
     this.viewChange.emit(item.value);
+  }
+
+  private findViewItem(viewItem?: ToggleItem): ToggleItem | undefined {
+    return this.viewItems?.find(item => isEqual(item, viewItem)) ?? this.viewItems![0];
   }
 }

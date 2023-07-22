@@ -1,0 +1,64 @@
+@import 'mixins';
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+  &.optional {
+    margin-bottom: 18px;
+  }
+
+  .info-label {
+    display: flex;
+    padding-bottom: 4px;
+
+    .label {
+      @include body-2-medium($gray-7);
+      display: block;
+    }
+
+    .optional-label {
+      @include body-2-regular($gray-5);
+      padding-left: 4px;
+    }
+
+    .infobox {
+      cursor: pointer;
+      color: $gray-5;
+      padding-left: 6px;
+    }
+  }
+
+  .content {
+    flex: 1 1 auto;
+    display: flex;
+    width: 100%;
+    background-color: white;
+
+    &.show-border {
+      border: 1px solid $gray-2;
+      border-radius: 6px;
+    }
+
+    &.error-border {
+      border: 1px solid $red-3;
+      border-radius: 6px;
+    }
+  }
+
+  .error {
+    display: flex;
+    align-items: center;
+    color: $red-6;
+    margin-top: 4px;
+
+    .error-label {
+      @include footnote($red-6);
+      margin-left: 4px;
+    }
+  }
+
+  .error-message {
+    @include footnote($red-6);
+  }
+}

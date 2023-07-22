@@ -12,7 +12,7 @@ import { FilterOperator } from '../../filter/filter-operators';
 import { FilterParserLookupService } from '../../filter/parser/filter-parser-lookup.service';
 import { ComparisonFilterParser } from '../../filter/parser/types/comparison-filter-parser';
 import { ContainsFilterParser } from '../../filter/parser/types/contains-filter-parser';
-import { InFilterParser } from '../../filter/parser/types/in-filter-parser';
+import { InNotInFilterParser } from '../../filter/parser/types/in-not-in-filter-parser';
 import { FilterChipService } from './filter-chip.service';
 
 describe('Filter Chip service', () => {
@@ -57,12 +57,15 @@ describe('Filter Chip service', () => {
             case FilterOperator.LessThanOrEqualTo:
             case FilterOperator.GreaterThan:
             case FilterOperator.GreaterThanOrEqualTo:
+            case FilterOperator.Contains:
             case FilterOperator.Like:
               return new ComparisonFilterParser();
             case FilterOperator.In:
-              return new InFilterParser();
+            case FilterOperator.NotIn:
+              return new InNotInFilterParser();
             case FilterOperator.ContainsKey:
-            case FilterOperator.ContainsKeyValue:
+            case FilterOperator.NotContainsKey:
+            case FilterOperator.ContainsKeyLike:
               return new ContainsFilterParser();
             default:
               assertUnreachable(operator);
@@ -162,6 +165,18 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.NotEquals,
         userString: `${attribute.displayName} ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName} ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotIn,
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
       }
     ]);
   });
@@ -211,6 +226,12 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.In,
         userString: `${attribute.displayName} ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotIn,
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
       }
     ]);
   });
@@ -236,25 +257,140 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.In,
         userString: `${attribute.displayName} ${FilterOperator.In}`
-      }
-    ]);
-  });
-
-  test('correctly autocompletes operator filters for string map attribute once space key is entered', () => {
-    const attribute = getTestFilterAttribute(FilterAttributeType.StringMap);
-
-    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute.testKey ')).toEqual([
-      {
-        metadata: attribute,
-        field: attribute.name,
-        operator: FilterOperator.ContainsKey,
-        userString: `${attribute.displayName} ${FilterOperator.ContainsKey} testKey`
       },
       {
         metadata: attribute,
         field: attribute.name,
-        operator: FilterOperator.ContainsKeyValue,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.ContainsKeyValue}`
+        operator: FilterOperator.NotIn,
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName} ${FilterOperator.Like}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Contains,
+        userString: `${attribute.displayName} ${FilterOperator.Contains}`
+      }
+    ]);
+  });
+
+  test('correctly autocompletes operator filters for string map attribute', () => {
+    const attribute = getTestFilterAttribute(FilterAttributeType.StringMap);
+
+    // Contains key or subpath operators if no subpath specified but could be
+    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute')).toEqual([
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKey,
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKey}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotContainsKey,
+        userString: `${attribute.displayName} ${FilterOperator.NotContainsKey}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Equals,
+        userString: `${attribute.displayName}.example ${FilterOperator.Equals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotEquals,
+        userString: `${attribute.displayName}.example ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName}.example ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotIn,
+        userString: `${attribute.displayName}.example ${FilterOperator.NotIn}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName}.example ${FilterOperator.Like}`
+      }
+    ]);
+
+    // Regular operators only once subpath included
+    expect(spectator.service.autocompleteFilters(attributes, 'String Map Attribute.testKey')).toEqual([
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.NotContainsKey,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      expect.objectContaining({
+        metadata: attribute,
+        field: attribute.name,
+        operator: FilterOperator.ContainsKeyLike,
+        // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+      }),
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.Equals,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Equals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.NotEquals,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.NotEquals}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.In,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.In}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.NotIn,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.NotIn}`
+      },
+      {
+        metadata: attribute,
+        field: attribute.name,
+        subpath: 'testKey',
+        operator: FilterOperator.Like,
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Like}`
       }
     ]);
   });

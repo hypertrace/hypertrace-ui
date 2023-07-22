@@ -1,21 +1,19 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import {
-  AttributeMetadataType,
-  GraphQlQueryEventService,
-  GraphQlTimeRange,
-  MetricAggregationType
-} from '@hypertrace/distributed-tracing';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { DonutSeriesResults } from '../../../../../components/donut/donut';
+import { AttributeMetadataType } from '../../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../../graphql/request/handlers/explore/explore-query';
+import { GraphQlQueryEventService } from '../../graphql-query-event.service';
 import { TraceDonutDataSourceModel } from './trace-donut-data-source.model';
 
 describe('Donut data source model', () => {
@@ -65,7 +63,8 @@ describe('Donut data source model', () => {
           timeRange: GraphQlTimeRange.fromTimeRange(mockTimeRange),
           filters: [],
           groupBy: {
-            keys: ['bar']
+            keyExpressions: [{ key: 'bar' }],
+            limit: 3
           },
           limit: 3,
           selections: [
@@ -97,7 +96,7 @@ describe('Donut data source model', () => {
             {
               'sum(foo)': {
                 value: 10,
-                type: AttributeMetadataType.Number
+                type: AttributeMetadataType.Long
               },
               bar: {
                 value: 'first',
@@ -107,7 +106,7 @@ describe('Donut data source model', () => {
             {
               'sum(foo)': {
                 value: 15,
-                type: AttributeMetadataType.Number
+                type: AttributeMetadataType.Long
               },
               bar: {
                 value: 'second',

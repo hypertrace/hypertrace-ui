@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { forkJoinSafeEmpty } from '@hypertrace/common';
 import { WidgetRenderer } from '@hypertrace/dashboards';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -14,12 +13,14 @@ import { INTERACTION_SCOPE } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { TopologyData } from '../../data/graphql/topology/topology-data-source.model';
 import { EntityEdgeCurveRendererService } from './edge/curved/entity-edge-curve-renderer.service';
 import { ApiNodeBoxRendererService } from './node/box/api-node-renderer/api-node-box-renderer.service';
 import { BackendNodeBoxRendererService } from './node/box/backend-node-renderer/backend-node-box-renderer.service';
 import { ServiceNodeBoxRendererService } from './node/box/service-node-renderer/service-node-box-renderer.service';
 import { TopologyEntityTooltipComponent } from './tooltip/topology-entity-tooltip.component';
+import { TopologyDataSourceModelPropertiesService } from './topology-data-source-model-properties.service';
 import { TopologyWidgetModel } from './topology-widget.model';
 
 @Renderer({ modelClass: TopologyWidgetModel })
@@ -30,39 +31,57 @@ import { TopologyWidgetModel } from './topology-widget.model';
     './edge/curved/entity-edge-curve-renderer.scss',
     './topology-widget-renderer.component.scss'
   ],
-  providers: [TopologyNodeRendererService, TopologyEdgeRendererService, TopologyTooltipRendererService],
+  providers: [
+    TopologyNodeRendererService,
+    TopologyEdgeRendererService,
+    TopologyTooltipRendererService,
+    EntityEdgeCurveRendererService,
+    ApiNodeBoxRendererService,
+    BackendNodeBoxRendererService,
+    ServiceNodeBoxRendererService,
+    TopologyDataSourceModelPropertiesService
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-titled-content [title]="this.model.title | htDisplayTitle">
-      <div class="visualization" *htLoadAsync="this.data$ as data">
-        <div class="legend">
-          <div class="latency">
-            <div class="label">P99 Latency:</div>
-            <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
-              <div [ngClass]="entry.categoryClass" class="symbol"></div>
-              <span class="label">{{ entry.label }}</span>
+    <div class="topology-container" [ngClass]="{ 'box-style': this.model.enableBoxStyle }">
+      <ht-titled-content
+        [title]="this.model.title | htDisplayTitle"
+        [link]="this.model.link?.url"
+        [linkLabel]="this.model.link?.displayText"
+      >
+        <div class="visualization" *htLoadAsync="this.data$ as data">
+          <div *ngIf="this.model.showLegend" class="legend">
+            <div class="latency">
+              <div class="label">P99 Latency:</div>
+              <div class="entry" *ngFor="let entry of this.getLatencyLegendConfig()">
+                <div [ngClass]="entry.categoryClass" class="symbol"></div>
+                <span class="label">{{ entry.label }}</span>
+              </div>
+            </div>
+            <div class="error-percentage">
+              <div class="label">Errors:</div>
+              <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
+                <div [ngClass]="entry.categoryClass" class="symbol"></div>
+                <span class="label">{{ entry.label }}</span>
+              </div>
             </div>
           </div>
-          <div class="error-percentage">
-            <div class="label">Errors:</div>
-            <div class="entry" *ngFor="let entry of this.getErrorPercentageLegendConfig()">
-              <div [ngClass]="entry.categoryClass" class="symbol"></div>
-              <span class="label">{{ entry.label }}</span>
-            </div>
-          </div>
+          <ht-topology
+            class="topology"
+            [nodes]="data.nodes"
+            [nodeRenderer]="this.nodeRenderer"
+            [edgeRenderer]="this.edgeRenderer"
+            [tooltipRenderer]="this.tooltipRenderer"
+            [nodeDataSpecifiers]="data.nodeSpecs"
+            [edgeDataSpecifiers]="data.edgeSpecs"
+            [showBrush]="this.model.showBrush"
+            [shouldAutoZoomToFit]="this.model.shouldAutoZoomToFit"
+            [layoutType]="this.model.layoutType"
+          >
+          </ht-topology>
         </div>
-        <ht-topology
-          class="topology"
-          [nodes]="data.nodes"
-          [nodeRenderer]="this.nodeRenderer"
-          [edgeRenderer]="this.edgeRenderer"
-          [tooltipRenderer]="this.tooltipRenderer"
-          [nodeDataSpecifiers]="data.nodeSpecs"
-          [edgeDataSpecifiers]="data.edgeSpecs"
-        >
-        </ht-topology>
-      </div>
-    </ht-titled-content>
+      </ht-titled-content>
+    </div>
   `
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
@@ -73,6 +92,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     public readonly edgeRenderer: TopologyEdgeRendererService,
     public readonly tooltipRenderer: TopologyTooltipRendererService,
     private readonly metadataService: MetadataService,
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
@@ -94,6 +114,8 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
         if (data.nodes.length === 0) {
           return EMPTY;
         }
+
+        this.topologyDataSourceModelPropertiesService.setModelProperties(data.nodeMetrics, data.edgeMetrics);
 
         return forkJoinSafeEmpty([of(data), this.buildNodeDataSpecifiers(data), this.buildEdgeDataSpecifiers(data)]);
       }),
@@ -176,7 +198,7 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
   }
 }
 
-interface TopologyTemplateData {
+export interface TopologyTemplateData {
   nodeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   edgeSpecs: TopologyDataSpecifier<MetricAggregationSpecification>[];
   nodes: TopologyNode[];

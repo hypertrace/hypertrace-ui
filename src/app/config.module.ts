@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { ALTERNATE_COLOR_PALETTES, DEFAULT_COLOR_PALETTE, GLOBAL_HEADER_HEIGHT } from '@hypertrace/common';
+import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
+import { ALTERNATE_COLOR_PALETTES, APP_TITLE, DEFAULT_COLOR_PALETTE } from '@hypertrace/common';
 import { GRAPHQL_OPTIONS } from '@hypertrace/graphql-client';
 import { ENTITY_METADATA, RED_COLOR_PALETTE } from '@hypertrace/observability';
 import { environment } from '../environments/environment';
@@ -15,10 +16,6 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
         uri: environment.graphqlUri,
         batchSize: 5
       }
-    },
-    {
-      provide: GLOBAL_HEADER_HEIGHT,
-      useValue: '56px'
     },
     {
       provide: DEFAULT_COLOR_PALETTE,
@@ -38,6 +35,18 @@ import { FeatureResolverModule } from './shared/feature-resolver/feature-resolve
     {
       provide: ENTITY_METADATA,
       useValue: entityMetadata
+    },
+    {
+      provide: APP_TITLE,
+      useValue: environment.appTitle
+    },
+    {
+      provide: MATERIAL_SANITY_CHECKS,
+      useValue: {
+        doctype: true,
+        theme: false,
+        version: true
+      }
     }
   ]
 })

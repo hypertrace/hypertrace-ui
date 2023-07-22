@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListViewComponent, ListViewRecord } from './list-view.component';
+import { NavigationService } from '@hypertrace/common';
+import { mockProvider } from '@ngneat/spectator/jest';
+import { ListViewComponent, ListViewHeader, ListViewRecord } from './list-view.component';
 
 describe('List View Component', () => {
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
   @Component({
     selector: 'ht-test-host-component',
-    template: ` <ht-list-view [records]="this.records"></ht-list-view> `
+    template: ` <ht-list-view [records]="this.records" [header]="this.header"></ht-list-view> `
   })
   class TestHostComponent {
     public records: ListViewRecord[] = [
@@ -19,6 +22,11 @@ describe('List View Component', () => {
         value: 'Response 2'
       }
     ];
+
+    public header: ListViewHeader = {
+      keyLabel: 'key',
+      valueLabel: 'value'
+    };
   }
 
   let fixture: ComponentFixture<TestHostComponent>;
@@ -27,17 +35,29 @@ describe('List View Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestHostComponent, ListViewComponent],
-      imports: [CommonModule]
+      imports: [CommonModule],
+      providers: [mockProvider(NavigationService)]
     });
 
     fixture = TestBed.createComponent(TestHostComponent);
     hostComp = fixture.componentInstance;
   });
 
-  test('should display rows for each data', () => {
+  test('should display rows for each data and should display header', () => {
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
+
+    const headerElement = element.querySelector<HTMLElement>('.header-row');
+    expect(headerElement).not.toBeNull();
+
+    const headerKeyLabelElement = element.querySelector<HTMLElement>('.header-key-label');
+    expect(headerKeyLabelElement).not.toBeNull();
+    expect(headerKeyLabelElement?.textContent).toEqual(hostComp.header.keyLabel);
+
+    const headerValueLabelElement = element.querySelector<HTMLElement>('.header-value-label');
+    expect(headerValueLabelElement).not.toBeNull();
+    expect(headerValueLabelElement?.textContent).toEqual(hostComp.header.valueLabel);
 
     const rowElements = element.querySelectorAll<HTMLElement>('.data-row');
     expect(rowElements).not.toBeNull();

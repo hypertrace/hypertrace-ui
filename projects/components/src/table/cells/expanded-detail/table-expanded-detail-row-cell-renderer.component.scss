@@ -1,20 +1,17 @@
 @import 'color-palette';
 @import 'font';
 
+$border: 1px solid $gray-2;
+
 .table-expanded-cell-renderer {
-  padding: 0 0 16px 18px; // Using 18px for the right padding aligns the dotted line with the expander arrow
+  padding: 12px 12px 8px 32px;
 
   &.expanded {
-    border-bottom: 1px solid $gray-2;
+    border: $border;
+    border-top: none;
   }
 
   .expandable-column-row {
     overflow: hidden;
-
-    // Left dashed border 4px dash, 4px space
-    background-image: linear-gradient($gray-4 50%, rgba(255, 255, 255, 0) 0%);
-    background-position: left;
-    background-size: 1px 8px;
-    background-repeat: repeat-y;
   }
 }

@@ -8,7 +8,8 @@
   padding: 0 12px;
   cursor: pointer;
 
-  .label {
+  .label,
+  .icon {
     z-index: 1; // Needs to stack above the active element
     pointer-events: none; // Make this label ignore hover so active element gets it
   }

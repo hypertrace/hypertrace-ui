@@ -2,6 +2,8 @@ import { StaticProvider } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ColorService,
+  FeatureState,
+  FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
   RelativeTimeRange,
@@ -9,10 +11,10 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { MetadataService } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { DashboardManagerService, LoggerService, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { GraphQlQueryEventService, MetadataService } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
@@ -33,7 +35,11 @@ export const isValidModelJson = (
 
 export const mockDashboardProviders = [
   mockProvider(GraphQlRequestService),
+  mockProvider(GraphQlQueryEventService),
   mockProvider(ColorService),
+  mockProvider(FeatureStateResolver, {
+    getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled))
+  }),
   mockProvider(LayoutChangeService, {
     layout$: of()
   }),
@@ -49,10 +55,17 @@ export const mockDashboardProviders = [
     getFilterAttributes: () => of([]),
     getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
   }),
+  // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/55803#discussioncomment-1341954
   mockProvider(LoggerService, {
-    warn: jest.fn().mockImplementation(fail),
-    info: jest.fn().mockImplementation(fail),
-    error: jest.fn().mockImplementation(fail)
+    warn: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    }),
+    info: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    }),
+    error: jest.fn().mockReturnValue(() => {
+      throw new Error();
+    })
   }),
   mockProvider(ActivatedRoute, {
     queryParamMap: EMPTY

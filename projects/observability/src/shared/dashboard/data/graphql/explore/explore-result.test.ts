@@ -1,5 +1,6 @@
-import { AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
+import { GQL_EXPLORE_RESULT_INTERVAL_KEY } from '../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from './explore-result';
 
 describe('Explore result', () => {
@@ -9,21 +10,21 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
         },
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(2)
         }
@@ -52,7 +53,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -62,7 +63,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
@@ -72,7 +73,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'third',
@@ -82,7 +83,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+    expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
       { keys: ['second'], value: 15 },
       { keys: ['third'], value: 20 }
@@ -95,7 +96,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -105,7 +106,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: '__Other',
@@ -115,7 +116,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual([
+    expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
       { keys: ['Others'], value: 15 }
     ]);
@@ -127,7 +128,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -138,7 +139,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'first',
@@ -149,7 +150,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
@@ -160,7 +161,7 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 25,
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           },
           group: {
             value: 'second',
@@ -171,7 +172,7 @@ describe('Explore result', () => {
       ]
     });
 
-    expect(result.getGroupedTimeSeriesData(['group'], 'foo', MetricAggregationType.Sum)).toEqual(
+    expect(result.getGroupedTimeSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual(
       new Map([
         [
           ['first'],

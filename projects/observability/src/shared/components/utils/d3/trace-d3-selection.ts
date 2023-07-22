@@ -12,7 +12,6 @@ import {
 import { Transition } from 'd3-transition';
 import { D3UtilService } from './d3-util.service';
 
-// tslint:disable: no-null-keyword wrapping D3 which uses null
 export class TraceD3Selection<
   TElement extends BaseType,
   TData = undefined,
@@ -335,7 +334,7 @@ export class TraceD3Selection<
   ): ValueOrSelection<typeof value, T, WElement, WData, QElement, QData> {
     // Unwrap any returned value (which is going to d3) that are instances of trace selections
     if (value instanceof TraceD3Selection) {
-      return value.d3Selection;
+      return (value as TraceD3Selection<WElement, WData, QElement, QData>).d3Selection;
     }
 
     return value as ValueOrSelection<typeof value, T, WElement, WData, QElement, QData>;
@@ -360,7 +359,7 @@ export class TraceD3Selection<
     return value instanceof selectionFunction;
   }
 
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private wrapFunction<TFunction extends (...args: any[]) => unknown>(provided: TFunction): TFunction {
     return ((...args: Parameters<TFunction>) =>
       this.valueOrUnwrappedSelection(

@@ -1,12 +1,16 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
+import { Provider } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
   DEFAULT_COLOR_PALETTE,
+  FeatureState,
+  FeatureStateResolver,
   LayoutChangeService,
   NavigationService,
+  PreferenceService,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
@@ -16,17 +20,9 @@ import {
   FilterAttributeType,
   FilterBarComponent,
   FilterBuilderLookupService,
-  FilterOperator
+  FilterOperator,
+  ToggleGroupComponent
 } from '@hypertrace/components';
-import {
-  GraphQlFieldFilter,
-  GraphQlOperatorType,
-  MetadataService,
-  MetricAggregationType,
-  SPANS_GQL_REQUEST,
-  SPAN_SCOPE,
-  TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
@@ -34,10 +30,21 @@ import { EMPTY, NEVER, of } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreQueryEditorComponent } from '../../shared/components/explore-query-editor/explore-query-editor.component';
+import { ExploreQueryGroupByEditorComponent } from '../../shared/components/explore-query-editor/group-by/explore-query-group-by-editor.component';
+import { ExploreQueryIntervalEditorComponent } from '../../shared/components/explore-query-editor/interval/explore-query-interval-editor.component';
+import { ExploreQueryLimitEditorComponent } from '../../shared/components/explore-query-editor/limit/explore-query-limit-editor.component';
+import { ExploreQuerySeriesEditorComponent } from '../../shared/components/explore-query-editor/series/explore-query-series-editor.component';
+import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
+import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { EntitiesGraphqlQueryBuilderService } from '../../shared/graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
-import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST } from '../../shared/graphql/request/handlers/explore/explore-query';
+import { SPANS_GQL_REQUEST } from '../../shared/graphql/request/handlers/spans/spans-graphql-query-handler.service';
+import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';
@@ -80,6 +87,9 @@ describe('Explorer component', () => {
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       }),
+      mockProvider(FeatureStateResolver, {
+        getCombinedFeatureState: () => of(FeatureState.Enabled)
+      }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: () => testTimeRange,
         getTimeRangeAndChanges: () => NEVER.pipe(startWith(testTimeRange))
@@ -98,6 +108,9 @@ describe('Explorer component', () => {
           colors: ['black', 'white']
         }
       },
+      mockProvider(PreferenceService, {
+        get: jest.fn().mockReturnValue(of(true))
+      }),
       ...getMockFlexLayoutProviders()
     ]
   });
@@ -111,13 +124,24 @@ describe('Explorer component', () => {
 
   const detectQueryChange = () => {
     spectator.detectChanges(); // Detect whatever caused the change
-    spectator.tick(200); // Query emits async, tick here triggers building the DOM for the query
-    discardPeriodicTasks(); // Some of the newly instantiated components also uses async, need to wait for them to settle
-    spectator.tick(200);
+    spectator.tick(50); // Query emits async, tick here triggers building the DOM for the query
+    // Break up the ticks into multiple to account for various async handoffs
+    spectator.tick();
+    spectator.tick(100);
   };
 
-  const init = (...params: Parameters<typeof createComponent>) => {
-    spectator = createComponent(...params);
+  const init = (...mockProviders: Provider[]) => {
+    spectator = createComponent({
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParamMap: of(convertToParamMap({}))
+          }
+        },
+        ...mockProviders
+      ]
+    });
     spectator.tick();
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
@@ -125,23 +149,22 @@ describe('Explorer component', () => {
   };
 
   test('fires query on init for traces', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
+
     // Traces tab is auto selected
     expect(querySpy).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
-        limit: 500,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        limit: 1000,
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -151,22 +174,18 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
   test('fires query on filter change for traces', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
-    querySpy.mockClear();
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],
@@ -177,6 +196,7 @@ describe('Explorer component', () => {
         urlString: ''
       }
     ]);
+    querySpy.mockClear();
 
     detectQueryChange();
     // Spans tab is auto selected
@@ -185,32 +205,30 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
-        limit: 500,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
+        limit: 1000,
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')],
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
   test('fires query on init for spans', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
     querySpy.mockClear();
 
     // Select Spans tab
@@ -222,10 +240,10 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 500,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        limit: 1000,
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -235,18 +253,17 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
   test('fires query on init for traces', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
+
     // Select traces tab
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     detectQueryChange();
@@ -255,7 +272,6 @@ describe('Explorer component', () => {
 
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],
@@ -274,11 +290,11 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 500,
-        interval: new TimeDuration(15, TimeUnit.Second),
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
+        limit: 1000,
+        interval: new TimeDuration(1, TimeUnit.Minute),
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -286,20 +302,18 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
         limit: 100,
-        filters: [new GraphQlFieldFilter('first', GraphQlOperatorType.Equals, 'foo')]
+        filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
   test('traces table fires query on series change', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
 
     detectQueryChange();
@@ -317,13 +331,11 @@ describe('Explorer component', () => {
   }));
 
   test('visualization fires query on series change', fakeAsync(() => {
-    init({
-      providers: [
-        mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
-        })
-      ]
-    });
+    init(
+      mockProvider(GraphQlRequestService, {
+        query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
+      })
+    );
     querySpy.mockClear();
 
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
@@ -342,46 +354,60 @@ describe('Explorer component', () => {
     );
   }));
 
-  test('updates URL with query param when context toggled', fakeAsync(() => {
+  test('updates URL with query param when query updated', fakeAsync(() => {
     init();
-    const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
-    // Select Spans tab
+    const queryParamChangeSpy = jest.spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
+    spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
+    spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(5, TimeUnit.Minute));
+    spectator.query(ExploreQueryEditorComponent)!.updateGroupByExpression(
+      {
+        keyExpressions: [{ key: 'apiName' }],
+        limit: 6,
+        includeRest: true
+      },
+      { key: 'apiName' }
+    );
     detectQueryChange();
-    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'spans' }));
-
-    // Select Endpoint traces tab
-    spectator.click(spectator.queryAll('ht-toggle-item')[0]);
-    detectQueryChange();
-    expect(queryParamChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ scope: 'endpoint-traces' }));
+    expect(queryParamChangeSpy).toHaveBeenLastCalledWith({
+      scope: 'spans',
+      series: ['column:avg(second)'],
+      group: ['apiName'],
+      limit: 6,
+      other: true,
+      interval: '5m'
+    });
   }));
 
-  test('selects tab based on url', fakeAsync(() => {
+  test('sets state based on url', fakeAsync(() => {
     init({
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParamMap: of(convertToParamMap({ scope: 'spans' }))
-          }
-        }
-      ]
+      provide: ActivatedRoute,
+      useValue: {
+        queryParamMap: of(
+          convertToParamMap({
+            scope: 'spans',
+            series: 'line:distinct_count(apiName)',
+            group: 'apiName',
+            limit: '6',
+            other: 'true',
+            interval: '5m'
+          })
+        )
+      }
     });
-    expect(spectator.component.context).toBe(SPAN_SCOPE);
-  }));
-
-  test('defaults to endpoints and sets url', fakeAsync(() => {
-    init({
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParamMap: of(convertToParamMap({}))
-          }
-        }
-      ]
+    expect(spectator.query(ToggleGroupComponent)?.activeItem?.label).toBe('Spans');
+    expect(spectator.query(ExploreQueryGroupByEditorComponent)?.groupByExpression).toEqual({ key: 'apiName' });
+    expect(spectator.query(ExploreQueryLimitEditorComponent)?.limit).toBe(6);
+    expect(spectator.query(ExploreQueryLimitEditorComponent)?.includeRest).toBe(true);
+    expect(spectator.query(ExploreQuerySeriesEditorComponent)?.series).toEqual({
+      specification: expect.objectContaining({
+        aggregation: MetricAggregationType.DistinctCount,
+        name: 'apiName'
+      }),
+      visualizationOptions: { type: CartesianSeriesVisualizationType.Line }
     });
-    expect(spectator.component.context).toBe(ObservabilityTraceType.Api);
-    expect(spectator.inject(NavigationService).getQueryParameter('scope', 'unset')).toEqual('endpoint-traces');
+    expect(spectator.query(ExploreQueryIntervalEditorComponent)?.interval).toEqual(
+      new TimeDuration(5, TimeUnit.Minute)
+    );
   }));
 });

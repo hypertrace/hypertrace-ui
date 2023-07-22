@@ -62,4 +62,46 @@ describe('Card List component', () => {
     expect(spectator.query('.selected-card')).not.toBe(cardElements[1]);
     expect(spectator.query('.selected-card')).not.toBe(cardElements[2]);
   });
+
+  test('should apply grouped style class', () => {
+    const data = [
+      {
+        name: 'first',
+        grouped: true
+      },
+      {
+        name: 'second',
+        grouped: false
+      },
+      {
+        name: 'third',
+        grouped: false
+      }
+    ];
+
+    spectator = createHost(
+      `
+    <ht-card-list [mode]="mode">
+      <ht-card-container *ngFor="let cardData of this.data; first" showGroupedStyle="cardData.grouped">
+        <div class="custom-card">
+          <div class="title">{{cardData.name}}</div>
+        </div>
+      </ht-card-container>
+    </ht-card-list>
+    `,
+      {
+        hostProps: {
+          data: data,
+          mode: CardListMode.Card
+        }
+      }
+    );
+
+    // Test selection style
+    const cardElements = spectator.queryAll('.card');
+    spectator.click(cardElements[0]);
+    expect(spectator.query('.grouped-style')).toBe(cardElements[0]);
+    expect(spectator.query('.grouped-style')).not.toBe(cardElements[1]);
+    expect(spectator.query('.grouped-style')).not.toBe(cardElements[2]);
+  });
 });

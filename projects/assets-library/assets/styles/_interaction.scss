@@ -9,12 +9,25 @@
 
 @mixin card-hover {
   &:hover {
-    @include dropdown-box-shadow();
+    @include box-shadow-2dp();
     cursor: pointer;
   }
 }
 
+@mixin raised-shadow-hover {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(63, 71, 74, 0.16), 0 2px 12px rgba(63, 71, 74, 0.08), 0 1px 8px rgba(63, 71, 74, 0.08);
+    transform: scale(1.01, 1.01);
+  }
+}
+
 @mixin filter-box-shadow {
+  @include box-shadow-2dp();
+}
+
+@mixin box-shadow-2dp {
   box-shadow: 2px 2px 2px rgba(225, 228, 229, 0.5), 2px -2px 4px rgba(225, 228, 229, 0.2),
     0px 2px 4px rgba(225, 228, 229, 0.2);
 }
@@ -78,4 +91,41 @@
 
 @mixin top-bar-dark-button-foreground {
   @include body-1-medium(white);
+}
+
+@mixin disableable {
+  &.disabled {
+    opacity: 0.58; // Minimal opacity to provide contrast for accessibility
+    cursor: not-allowed;
+  }
+}
+
+@mixin nav-primary-background {
+  background: $blue-6;
+  opacity: 0.95;
+}
+
+@mixin nav-primary-background-hover {
+  background: $blue-8;
+  opacity: 0.95;
+}
+
+@mixin nav-secondary-background {
+  background: $blue-9;
+  opacity: 0.95;
+}
+
+@mixin scrollbar-dark-thin {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    background: $gray-9;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $gray-9;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $gray-3;
+    border: 4px solid $gray-9;
+  }
 }

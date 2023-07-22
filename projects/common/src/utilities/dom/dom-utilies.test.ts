@@ -16,22 +16,28 @@ describe('Dom Utilities', () => {
   });
 
   test('should convert to union of client rects', () => {
-    const clientRect1: ClientRect = {
+    const clientRect1: DOMRect = {
       left: 20,
       right: 40,
       top: 10,
       bottom: 40,
       height: 30,
-      width: 20
+      width: 20,
+      x: 0,
+      y: 0,
+      toJSON: () => ''
     };
 
-    const clientRect2: ClientRect = {
+    const clientRect2: DOMRect = {
       left: 0,
       right: 45,
       top: 5,
       bottom: 55,
       height: 50,
-      width: 45
+      width: 45,
+      x: 0,
+      y: 0,
+      toJSON: () => ''
     };
 
     expect(unionOfClientRects(clientRect1, clientRect2)).toEqual({

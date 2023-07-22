@@ -9,7 +9,6 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from './popover';
 import { PopoverContentComponent } from './popover-content.component';
 import { PopoverRef } from './popover-ref';
@@ -51,12 +50,14 @@ export class PopoverComponent implements OnDestroy {
   @ContentChild(PopoverContentComponent, { static: true })
   public content!: PopoverContentComponent;
 
-  private subscription?: Subscription;
+  private popover?: PopoverRef;
 
   public constructor(private readonly popoverService: PopoverService, private readonly popoverElement: ElementRef) {}
 
   public ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    if (!this.popover?.closed) {
+      this.popover?.close();
+    }
   }
 
   @HostListener('click')
@@ -65,7 +66,7 @@ export class PopoverComponent implements OnDestroy {
       return;
     }
 
-    const popover = this.popoverService.drawPopover({
+    this.popover = this.popoverService.drawPopover({
       position: {
         type: PopoverPositionType.Relative,
         origin: this.popoverElement,
@@ -76,17 +77,17 @@ export class PopoverComponent implements OnDestroy {
     });
 
     // Closing can happen internal to the Popover for things like closeOnBackdropClick. Let the consumer know.
-    this.subscription = popover.closed$.subscribe(() => this.popoverClose.emit());
+    this.popover.closed$.subscribe(() => this.popoverClose.emit());
 
-    popover.closeOnBackdropClick();
+    this.popover.closeOnBackdropClick();
 
     if (this.closeOnClick) {
-      popover.closeOnPopoverContentClick();
+      this.popover.closeOnPopoverContentClick();
     }
     if (this.closeOnNavigate) {
-      popover.closeOnNavigation();
+      this.popover.closeOnNavigation();
     }
 
-    this.popoverOpen.emit(popover);
+    this.popoverOpen.emit(this.popover);
   }
 }

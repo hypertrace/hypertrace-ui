@@ -11,6 +11,9 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly COLUMN_ROUNDING_RADIUS: number = 2;
 
   public drawSvg(element: BaseType): void {
+    if (this.series.hide === true) {
+      return;
+    }
     const seriesGroup = select(element).append('g').classed(CartesianColumn.CSS_CLASS, true);
 
     this.drawSvgColumns(seriesGroup);
@@ -34,12 +37,16 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       );
 
       context.closePath();
-      context.strokeStyle = this.series.color;
-      context.fillStyle = this.series.color;
+      context.strokeStyle = this.getColorForDatum(datum);
+      context.fillStyle = this.getColorForDatum(datum);
       context.fill();
       context.stroke();
       context.resetTransform();
     });
+  }
+
+  private getColorForDatum(datum: TData): string {
+    return this.series.getColor?.(datum) ?? this.series.color;
   }
 
   protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Series<TData>> {
@@ -58,7 +65,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       .append('path')
       .classed('column', true)
       .attr('d', datum => this.generateColumnPathString(columnWidth, this.getDatumHeight(datum)))
-      .attr('fill', this.series.color)
+      .style('fill', datum => this.getColorForDatum(datum))
       .attr(
         'transform',
         datum => `translate(${this.getBarOriginX(datum, columnXAdjustment)}, ${this.getBarOriginY(datum)})`

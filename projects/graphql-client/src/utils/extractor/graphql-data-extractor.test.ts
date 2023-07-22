@@ -8,9 +8,7 @@ describe('GraphQL Data Extractor', () => {
   let mockRequestBuilder: GraphQlRequestBuilder;
 
   beforeEach(() => {
-    // tslint:disable-next-line: no-object-literal-type-assertion
     mockRequestBuilder = ({
-      // tslint:disable-next-line: strict-boolean-expressions
       getKeyForSelection: jest.fn((selection: GraphQlSelection) => {
         if (keyLookupMap.has(selection)) {
           return keyLookupMap.get(selection)!;

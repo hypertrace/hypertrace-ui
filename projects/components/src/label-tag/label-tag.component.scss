@@ -2,18 +2,26 @@
 @import 'font';
 
 .label-tag {
-  // Default color. Could be overridden by the component
-  @include overline($gray-9);
-
   width: fit-content;
-  height: 16px;
+  height: 22px;
   padding: 3px 8px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
 
   // Default color. Could be overridden by the component
-  background-color: $gray-1;
-  border-radius: 8px;
+  background-color: $blue-1;
+  border-radius: 4px;
+
+  border: 1px solid transparent;
+
+  &.uppercase {
+    @include overline($gray-9);
+  }
+
+  &.regular {
+    @include body-small($gray-9);
+  }
 }

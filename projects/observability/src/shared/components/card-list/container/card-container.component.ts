@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '@hypertrace/components';
 
 @Component({
@@ -6,4 +6,10 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '@hypertrace/components';
   template: CONTENT_HOLDER_TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardContainerComponent extends ContentHolder {}
+export class CardContainerComponent extends ContentHolder {
+  @Input()
+  public showGroupedStyle: boolean = false;
+
+  @Input()
+  public disabled: boolean = false;
+}

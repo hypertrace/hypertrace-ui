@@ -1,14 +1,22 @@
 @import 'mixins';
 @import 'layout';
 
+$header-height: 32px;
+$header-border-color: $cloud-2;
+$header-border: 1px solid $header-border-color;
+
+$data-row-border: 1px solid $gray-2;
+
 .table {
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 1;
+  min-height: inherit;
   height: 100%;
   width: 100%;
   overflow: auto;
+  background-color: white;
 }
 
 .title-row {
@@ -28,76 +36,128 @@
   flex-direction: row;
   position: sticky;
   top: 0;
-  height: 32px;
-  background: $gray-1;
-  border-bottom: 1px solid $gray-2;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  height: $header-height;
   z-index: 10; // Allows content to use "isolation: isolate" to create a new stacking context with index below the header
+
+  .header-cell {
+    background: $blue-1;
+    border-bottom: $header-border;
+    border-top: $header-border;
+
+    &:first-of-type {
+      border-left: $header-border;
+      border-top-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-right: $header-border;
+      border-top-right-radius: 4px;
+    }
+
+    &:hover {
+      cursor: move;
+    }
+  }
 }
 
 .data-row {
   display: flex;
   flex-direction: row;
-  height: 44px;
-  min-height: 44px;
-  cursor: pointer;
+
+  &.selectable {
+    cursor: pointer;
+  }
 
   &.selected-row {
-    background: $blue-1;
-    border-bottom: 1px solid $blue-2;
-    border-top: 1px solid $blue-2;
+    .data-cell {
+      background: $blue-1;
+      border-bottom: 1px solid $blue-2;
+      border-top: 1px solid $blue-2;
+    }
 
     &.hovered-row {
-      background: $blue-2;
-      border-bottom: 1px solid $blue-5;
-      border-top: 1px solid $blue-5;
+      .data-cell {
+        background: $blue-2;
+        border-bottom: 1px solid $blue-5;
+        border-top: 1px solid $blue-5;
+      }
     }
   }
 
   &.hovered-row {
-    background: $gray-1;
+    .data-cell {
+      background: $gray-1;
+    }
   }
 }
 
 .header-cell {
-  display: flex;
-  flex: 1 1;
-  overflow: hidden;
+  flex: 1 0;
+  position: relative;
 
-  .header-cell-renderer {
-    width: 100%;
-    padding: 10px 12px;
-  }
+  .header-cell-container {
+    @include fill-container;
+    display: flex;
+    overflow: hidden;
 
-  .header-column-resize-handle {
-    padding: 6px 2px;
-    height: 100%;
-    cursor: col-resize;
+    .header-cell-content {
+      min-width: 0;
+      flex: 1 1 auto;
 
-    &:hover {
-      padding: 0 2px;
-
-      .header-column-divider {
-        background-color: $gray-9;
+      .header-cell-renderer {
+        width: 100%;
       }
     }
 
     .header-column-divider {
-      width: 1px;
+      padding: 6px 2px;
       height: 100%;
-      background-color: $gray-2;
+
+      .bg-col-divider {
+        width: 1px;
+        height: 100%;
+        background-color: $header-border-color;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .header-column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    background-color: transparent;
+    width: 3px;
+    height: 100%;
+    z-index: 2;
+    cursor: col-resize;
+
+    &:hover {
+      background-color: $blue-4 !important;
     }
   }
 }
 
 .data-cell {
-  flex: 1 1;
+  flex: 1 0;
   overflow: hidden;
   border-bottom: 1px solid $gray-1;
+  background-color: white;
 
-  &.detail-expanded {
+  &.detail-expanded.state-col {
     border-bottom: unset;
+  }
+
+  &.hide-divider {
+    border-bottom: unset;
+  }
+
+  &:first-of-type {
+    border-left: $data-row-border;
+  }
+
+  &:last-of-type {
+    border-right: $data-row-border;
   }
 
   .data-cell-renderer {
@@ -106,16 +166,51 @@
   }
 }
 
+.last-row {
+  .data-cell {
+    &:first-of-type {
+      border-bottom-left-radius: 4px;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 4px;
+    }
+  }
+}
+
 .state-watcher {
-  height: calc(100% - #{$paginator-height});
+  top: $header-height;
+  height: calc(100% - #{$header-height});
   width: 100%;
   position: absolute;
   background: transparent;
 }
 
 .pagination-controls {
-  position: fixed;
   width: 100%;
   bottom: 0;
   background: white;
+}
+
+.state-cell-container {
+  @include fill-container;
+  @include center-contents;
+}
+
+.state-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+
+  &:nth-of-type(2) {
+    left: 32px;
+  }
+
+  &.depth-greater-than-zero {
+    border: none;
+  }
+}
+
+.col-border-right {
+  border-right: $data-row-border;
 }

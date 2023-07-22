@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { LayoutChangeModule } from '@hypertrace/components';
 import { LegendModule } from '../legend/legend.module';
@@ -7,6 +8,6 @@ import { DonutComponent } from './donut.component';
 @NgModule({
   declarations: [DonutComponent],
   exports: [DonutComponent],
-  imports: [LayoutChangeModule, LegendModule, ChartTooltipModule]
+  imports: [CommonModule, LayoutChangeModule, LegendModule, ChartTooltipModule]
 })
 export class DonutModule {}

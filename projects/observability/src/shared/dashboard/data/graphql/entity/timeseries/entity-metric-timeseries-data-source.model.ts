@@ -1,9 +1,9 @@
 import { TimeDuration } from '@hypertrace/common';
-import { MetricAggregation } from '@hypertrace/distributed-tracing';
 import { Model, ModelModelPropertyTypeInstance, ModelProperty, ModelPropertyType } from '@hypertrace/hyperdash';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetricTimeseriesInterval } from '../../../../../graphql/model/metric/metric-timeseries';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { MetricTimeseriesSpecificationModel } from '../../specifiers/metric-timeseries-specification.model';
@@ -18,7 +18,6 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
 > {
   @ModelProperty({
     key: 'metric',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricTimeseriesSpecificationModel
@@ -29,8 +28,7 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval),
-      getRequestedInterval: () => this.specification.getIntervalDuration()
+      getData: interval => this.getAllData(interval)
     });
   }
 

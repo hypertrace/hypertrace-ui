@@ -7,7 +7,7 @@ export class TimeDuration {
 
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
     this.toUnitString(); // Fail if unrecognized TimeUnit
-    this.millis = this.normalizeToMillis(value, unit);
+    this.millis = this.normalizeToMillis(isNaN(value) ? 0 : value, unit);
   }
 
   public toMillis(): number {
@@ -54,6 +54,8 @@ export class TimeDuration {
 
   public getMostSignificantUnitOnly(): TimeDuration {
     const orderedUnits: ConvertibleTimeUnit[] = [
+      TimeUnit.Year,
+      TimeUnit.Month,
       TimeUnit.Week,
       TimeUnit.Day,
       TimeUnit.Hour,
@@ -62,7 +64,6 @@ export class TimeDuration {
       TimeUnit.Millisecond
     ];
 
-    // tslint:disable-next-line: strict-boolean-expressions
     const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
 
@@ -136,6 +137,10 @@ export class TimeDuration {
 
   private unitInMillis(unit: ConvertibleTimeUnit): number {
     switch (unit) {
+      case TimeUnit.Year:
+        return 365 * 24 * 60 * 60 * 1000;
+      case TimeUnit.Month:
+        return 30 * 24 * 60 * 60 * 1000;
       case TimeUnit.Week:
         return 24 * 60 * 60 * 1000 * 7;
       case TimeUnit.Day:
@@ -155,6 +160,8 @@ export class TimeDuration {
 }
 
 type ConvertibleTimeUnit =
+  | TimeUnit.Year
+  | TimeUnit.Month
   | TimeUnit.Week
   | TimeUnit.Day
   | TimeUnit.Hour

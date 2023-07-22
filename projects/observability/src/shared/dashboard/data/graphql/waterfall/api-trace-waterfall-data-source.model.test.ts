@@ -1,20 +1,16 @@
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import {
-  GraphQlQueryEventService,
-  MetadataService,
-  spanIdKey,
-  SpanType,
-  Trace,
-  traceIdKey,
-  traceTypeKey,
-  TRACE_GQL_REQUEST,
-  WaterfallData
-} from '@hypertrace/distributed-tracing';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import { spanIdKey, SpanType } from '../../../../graphql/model/schema/span';
+import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schema/trace';
+import { TRACE_GQL_REQUEST } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
+import { GraphQlQueryEventService } from '../graphql-query-event.service';
 import { ApiTraceWaterfallDataSourceModel } from './api-trace-waterfall-data-source.model';
 
 describe('Api Trace Waterfall data source model', () => {
@@ -27,7 +23,10 @@ describe('Api Trace Waterfall data source model', () => {
           })
         )
       }),
-      mockProvider(GraphQlQueryEventService)
+      mockProvider(GraphQlQueryEventService),
+      mockProvider(LogEventsService, {
+        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([])
+      })
     ]
   });
 
@@ -98,6 +97,20 @@ describe('Api Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
+            })
+          ],
+          logEventProperties: [
+            expect.objectContaining({
+              name: 'attributes'
+            }),
+            expect.objectContaining({
+              name: 'timestamp'
+            }),
+            expect.objectContaining({
+              name: 'summary'
             })
           ]
         }
@@ -156,6 +169,20 @@ describe('Api Trace Waterfall data source model', () => {
             }),
             expect.objectContaining({
               name: 'type'
+            }),
+            expect.objectContaining({
+              name: 'errorCount'
+            })
+          ],
+          logEventProperties: [
+            expect.objectContaining({
+              name: 'attributes'
+            }),
+            expect.objectContaining({
+              name: 'timestamp'
+            }),
+            expect.objectContaining({
+              name: 'summary'
             })
           ]
         }
@@ -189,7 +216,8 @@ describe('Api Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 1',
               protocolName: 'Protocol Name 1',
               type: SpanType.Entry,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             },
             {
               [spanIdKey]: 'second-id',
@@ -201,7 +229,8 @@ describe('Api Trace Waterfall data source model', () => {
               displaySpanName: 'Span Name 2',
               protocolName: 'Protocol Name 2',
               type: SpanType.Exit,
-              spanTags: {}
+              spanTags: {},
+              logEvents: []
             }
           ]
         })
@@ -218,10 +247,11 @@ describe('Api Trace Waterfall data source model', () => {
               units: 'ms'
             },
             serviceName: 'Entity Name 1',
-            name: 'Span Name 1',
+            apiName: 'Span Name 1',
             protocolName: 'Protocol Name 1',
             spanType: SpanType.Entry,
-            tags: {}
+            tags: {},
+            logEvents: []
           },
           {
             id: 'second-id',
@@ -234,10 +264,11 @@ describe('Api Trace Waterfall data source model', () => {
               units: 'ms'
             },
             serviceName: 'Entity Name 2',
-            name: 'Span Name 2',
+            apiName: 'Span Name 2',
             protocolName: 'Protocol Name 2',
             spanType: SpanType.Exit,
-            tags: {}
+            tags: {},
+            logEvents: []
           }
         ]
       });

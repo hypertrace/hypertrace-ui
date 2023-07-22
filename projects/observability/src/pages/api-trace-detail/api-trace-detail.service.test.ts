@@ -7,23 +7,18 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import {
-  AttributeMetadataType,
-  MetadataService,
-  traceIdKey,
-  traceTypeKey,
-  TRACE_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { traceIdKey, traceTypeKey } from '../../shared/graphql/model/schema/trace';
+import { TRACE_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ApiTraceDetailService } from './api-trace-detail.service';
 
 describe('Api TraceDetailService', () => {
-  let spectator: SpectatorService<ApiTraceDetailService>;
-
   const createService = createServiceFactory({
     service: ApiTraceDetailService,
     providers: [
@@ -55,7 +50,7 @@ describe('Api TraceDetailService', () => {
             name: attributeKey,
             displayName: 'Duration',
             units: 'ms',
-            type: AttributeMetadataType.Number,
+            type: AttributeMetadataType.Long,
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
@@ -65,11 +60,8 @@ describe('Api TraceDetailService', () => {
     ]
   });
 
-  beforeEach(() => {
-    spectator = createService();
-  });
-
   test('should map fetch and map trace details', () => {
+    const spectator = createService();
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.service.fetchTraceDetails()).toBe('(x|)', {
         x: {
@@ -87,6 +79,7 @@ describe('Api TraceDetailService', () => {
   });
 
   test('should build correct query request with timestamp', () => {
+    const spectator = createService();
     const graphqlService = spectator.inject(GraphQlRequestService);
     graphqlService.query.mockClear();
 
@@ -119,6 +112,60 @@ describe('Api TraceDetailService', () => {
       ],
       spanProperties: [],
       spanLimit: 1
+    });
+  });
+
+  test('should fetch and map logEvents', () => {
+    const spectator = createService({
+      providers: [
+        mockProvider(ActivatedRoute, {
+          paramMap: of({
+            get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792')
+          })
+        }),
+        mockProvider(GraphQlRequestService, {
+          query: jest.fn().mockReturnValue(
+            of({
+              [traceTypeKey]: 'API_TRACE',
+              spans: [
+                {
+                  logEvents: {
+                    results: [
+                      {
+                        timestamp: 'time',
+                        attributes: undefined,
+                        summary: 'summary'
+                      }
+                    ]
+                  },
+                  displayEntityName: 'service',
+                  displaySpanName: 'span',
+                  protocolName: 'protocol',
+                  startTime: 1608151401295
+                }
+              ]
+            })
+          )
+        })
+      ]
+    });
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.service.fetchLogEvents()).toBe('(x|)', {
+        x: [
+          {
+            timestamp: 'time',
+            attributes: undefined,
+            summary: 'summary',
+            $$spanName: {
+              serviceName: 'service',
+              protocolName: 'protocol',
+              apiName: 'span'
+            },
+            spanStartTime: 1608151401295
+          }
+        ]
+      });
     });
   });
 });

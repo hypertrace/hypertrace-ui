@@ -1,0 +1,41 @@
+@import 'color-palette';
+@import 'font';
+
+.call-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title {
+    @include font-heading;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+
+    .toggle-button {
+      align-self: flex-end;
+    }
+
+    .body-viewer {
+      width: 100%;
+      flex: 1 1 auto;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid $gray-2;
+      border-radius: 8px;
+    }
+
+    .pre-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}

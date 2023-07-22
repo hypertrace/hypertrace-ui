@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { sortUnknown } from '@hypertrace/common';
-import { ButtonRole } from '../../button/button';
+import { ButtonVariant } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
-import { IncompleteFilter } from '../filter/filter';
+import { FilterValue, IncompleteFilter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterOperator } from '../filter/filter-operators';
 import { FilterUrlService } from '../filter/filter-url.service';
@@ -28,13 +28,13 @@ import { FilterUrlService } from '../filter/filter-url.service';
         <ht-button
           label="Cancel"
           class="cancel-button"
-          role="${ButtonRole.Tertiary}"
+          variant="${ButtonVariant.Tertiary}"
           (click)="this.onCancel()"
         ></ht-button>
         <ht-button
           label="Apply"
           class="action-button"
-          role="${ButtonRole.Additive}"
+          variant="${ButtonVariant.Additive}"
           (click)="this.onApply()"
         ></ht-button>
       </div>
@@ -43,7 +43,7 @@ import { FilterUrlService } from '../filter/filter-url.service';
 })
 export class InFilterModalComponent {
   public isSupported: boolean = false;
-  public selected: Set<unknown> = new Set<unknown>();
+  public selected: Set<FilterValue> = new Set<FilterValue>();
 
   public constructor(
     private readonly modalRef: ModalRef<never>,
@@ -91,7 +91,7 @@ export class InFilterModalComponent {
     this.modalRef.close();
   }
 
-  public onChecked(checked: boolean, value: unknown): void {
+  public onChecked(checked: boolean, value: FilterValue): void {
     checked ? this.selected.add(value) : this.selected.delete(value);
   }
 }

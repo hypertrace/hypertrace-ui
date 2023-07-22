@@ -1,16 +1,14 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ColorService, DomElementMeasurerService, FormattingModule } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
-import { BarGaugeComponent } from '@hypertrace/observability';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockProvider } from 'ng-mocks';
+import { BarGaugeComponent } from './bar-gauge.component';
 
 describe('Bar Gauge component', () => {
   let spectator: Spectator<BarGaugeComponent>;
 
-  const setMeasureHtmlElement = (right: number = 33): ((element: HTMLElement) => ClientRect) => (
-    element: HTMLElement
-  ) => {
+  const setMeasureHtmlElement = (right: number = 33): ((element: HTMLElement) => DOMRect) => (element: HTMLElement) => {
     switch (element.getAttribute('class')) {
       case 'segment-bar':
         return {
@@ -19,7 +17,10 @@ describe('Bar Gauge component', () => {
           left: 0,
           right: right,
           top: 0,
-          width: 33
+          width: 33,
+          x: 0,
+          y: 0,
+          toJSON: () => ''
         };
       case 'max-value-bar':
       default:
@@ -29,7 +30,10 @@ describe('Bar Gauge component', () => {
           left: 0,
           right: 100,
           top: 0,
-          width: 100
+          width: 100,
+          x: 0,
+          y: 0,
+          toJSON: () => ''
         };
     }
   };
@@ -53,6 +57,7 @@ describe('Bar Gauge component', () => {
         title="Test Title"
         [segments]="segments"
         [maxValue]="maxValue"
+        [isUnlimited]="isUnlimited"
       ></ht-bar-gauge>
     `
   });
@@ -72,7 +77,8 @@ describe('Bar Gauge component', () => {
             label: 'test-segment-yellow'
           }
         ],
-        maxValue: 100
+        maxValue: 100,
+        isUnlimited: false
       }
     });
     spectator.tick();
@@ -94,6 +100,7 @@ describe('Bar Gauge component', () => {
         value: 33
       }
     ]);
+    expect(spectator.component.isUnlimited).toEqual(false);
   }));
 
   test('assigns correct values when near full', fakeAsync(() => {
@@ -215,5 +222,38 @@ describe('Bar Gauge component', () => {
         value: 33
       }
     ]);
+    expect(spectator.query('.unlimited-symbol')).not.toExist();
+  }));
+
+  test('should display unlimited value', fakeAsync(() => {
+    spectator = createHost(undefined, {
+      providers: [
+        MockProvider(DomElementMeasurerService, {
+          measureHtmlElement: setMeasureHtmlElement(100)
+        })
+      ],
+      hostProps: {
+        segments: [
+          {
+            value: 100,
+            color: 'red',
+            label: 'test-segment-red'
+          }
+        ],
+        maxValue: 100,
+        isUnlimited: true
+      }
+    });
+    spectator.tick();
+    expect(spectator.component.totalValue).toEqual(100);
+    expect(spectator.component.barSegments).toEqual([
+      {
+        value: 100,
+        color: 'red',
+        percentage: 100,
+        label: 'test-segment-red'
+      }
+    ]);
+    expect(spectator.query('.unlimited-symbol')).toExist();
   }));
 });

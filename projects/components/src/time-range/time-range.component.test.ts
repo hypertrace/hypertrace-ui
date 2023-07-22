@@ -2,11 +2,18 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { NavigationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
+import {
+  FixedTimeRange,
+  NavigationService,
+  RelativeTimeRange,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { ButtonRole } from '../button/button';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonVariant } from '../button/button';
+import { RefreshButtonComponent } from '../refresh-button/refresh-button.component';
 import { TimeRangeComponent } from './time-range.component';
 import { TimeRangeModule } from './time-range.module';
 
@@ -18,10 +25,12 @@ describe('Time range component', () => {
     componentProviders: [],
     providers: [
       mockProvider(NavigationService, {
-        // tslint:disable-next-line: no-object-literal-type-assertion
         navigation$: of({
           queryParamMap: of(convertToParamMap({}))
         } as ActivatedRoute)
+      }),
+      mockProvider(TimeRangeService, {
+        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
       })
     ]
   });
@@ -38,7 +47,15 @@ describe('Time range component', () => {
   });
 
   test('should show predefined time range when Last 15 minutes is selected', () => {
-    const spectator = createComponent();
+    const spectator = createComponent({
+      providers: [
+        mockProvider(TimeRangeService, {
+          getTimeRangeAndChanges: jest
+            .fn()
+            .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute))))
+        })
+      ]
+    });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[1]);
     expect(spectator.query('.trigger-label')).toHaveText('Last 15 minutes');
@@ -65,7 +82,15 @@ describe('Time range component', () => {
   });
 
   test('should show custom time range when custom time applied ', () => {
-    const spectator = createComponent();
+    const spectator = createComponent({
+      providers: [
+        mockProvider(TimeRangeService, {
+          getTimeRangeAndChanges: jest
+            .fn()
+            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))))
+        })
+      ]
+    });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
@@ -83,7 +108,15 @@ describe('Time range component', () => {
   });
 
   test('should not show refresh button when time range is fixed', () => {
-    const spectator = createComponent();
+    const spectator = createComponent({
+      providers: [
+        mockProvider(TimeRangeService, {
+          getTimeRangeAndChanges: jest
+            .fn()
+            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))))
+        })
+      ]
+    });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
     expect(spectator.query('.custom-time-range-selection', { root: true })).toExist();
@@ -97,18 +130,18 @@ describe('Time range component', () => {
 
   test('should publish new time range when refresh is clicked', () => {
     const spectator = createComponent();
-    const spy = jest.spyOn(spectator.inject(TimeRangeService), 'setRelativeRange');
+    const spy = jest.spyOn(spectator.inject(TimeRangeService), 'refresh');
     spectator.click('.refresh');
     expect(spy).toHaveBeenCalled();
   });
 
   test('should update refresh button to primary after 5m', fakeAsync(() => {
     const spectator = createComponent();
-    const refreshButton = spectator.query('.refresh', { read: ButtonComponent })!;
+    const refreshButton = spectator.query('.refresh', { read: RefreshButtonComponent })!;
     expect(refreshButton).toExist();
-    expect(refreshButton.role).toBe(ButtonRole.Secondary);
+    expect(refreshButton.variant).toBe(ButtonVariant.Tertiary);
     spectator.tick(new TimeDuration(5, TimeUnit.Minute).toMillis());
-    expect(refreshButton.role).toBe(ButtonRole.Primary);
+    expect(refreshButton.variant).toBe(ButtonVariant.Primary);
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');
     spectator.tick(new TimeDuration(30, TimeUnit.Second).toMillis());
     expect(refreshButton.label).toBe('Refresh - updated 5m ago');

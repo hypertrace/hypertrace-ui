@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import { ApplicationFeature, FeatureFlagValue, FeatureStateResolver } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class FeatureResolverService extends FeatureStateResolver {
-  public getFeatureState(_: string): Observable<FeatureState> {
-    return of(FeatureState.Enabled);
+  public getFeatureFlagValue<T extends FeatureFlagValue = FeatureFlagValue>(feature: string): Observable<T> {
+    switch (feature) {
+      case ApplicationFeature.PageTimeRange:
+        return of(false as T);
+      case ApplicationFeature.FeatureDefaultTimeRangeMap:
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        return of({} as T);
+      case ApplicationFeature.TriggerBasedSearch:
+        return of(false as T);
+      default:
+        return of(true as T);
+    }
   }
 }

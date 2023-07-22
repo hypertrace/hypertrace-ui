@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { GraphQlTimeRange, Specification } from '@hypertrace/distributed-tracing';
 import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
@@ -10,6 +9,8 @@ import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../model/schema/filter/entity/graphql-entity-filter';
+import { Specification } from '../../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../../model/schema/timerange/graphql-time-range';
 import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-builder.service';
 import {
   EntitiesGraphQlQueryHandlerService,
@@ -56,7 +57,11 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
       limit: 1,
       timeRange: request.timeRange,
       properties: request.properties,
-      filters: [new GraphQlEntityFilter(request.id, request.entityType)]
+      filters: [new GraphQlEntityFilter(request.id, request.entityType)],
+      // If querying for a single API by ID, then usually want to includeInactive
+      includeInactive: request.includeInactive !== false,
+      // If querying for a single API by ID, ignore all global filters on entities query
+      ignoreGlobalFilters: true
     };
   }
 }
@@ -69,4 +74,5 @@ export interface GraphQlEntityRequest {
   id: string;
   properties: Specification[];
   timeRange: GraphQlTimeRange;
+  includeInactive?: boolean;
 }

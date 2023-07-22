@@ -1,5 +1,5 @@
 import { IconType } from '@hypertrace/assets-library';
-import { Breadcrumb, NavigationService, RouteData } from '@hypertrace/common';
+import { Breadcrumb, HtRouteData, NavigationService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of, throwError } from 'rxjs';
@@ -118,6 +118,6 @@ interface ActivatedRouteSnapshotBuildData {
 
 interface ActivatedRouteSnapshotMock {
   pathFromRoot: ActivatedRouteSnapshotMock[];
-  data: RouteData;
+  data: HtRouteData;
   url: { path: string }[];
 }

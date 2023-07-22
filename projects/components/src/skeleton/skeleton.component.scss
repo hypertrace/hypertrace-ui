@@ -1,0 +1,161 @@
+@import 'color-palette';
+
+@mixin loading-animation {
+  content: '';
+  animation: skeleton-animation 1.2s infinite;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateX(-100%);
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+}
+@keyframes skeleton-animation {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@mixin donut-animation {
+  content: '';
+  animation: donut-spin 1.2s linear infinite;
+  transform-origin: 50% 0%;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+}
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@mixin initial-location {
+  top: initial;
+  left: initial;
+  transform: initial;
+}
+
+@mixin block-parent-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.skeleton {
+  @include block-parent-center;
+  &::after {
+    @include loading-animation;
+  }
+  position: relative;
+  background-color: $gray-2;
+  overflow: hidden;
+  border-radius: 6px;
+
+  &.rectangle {
+    height: 80%;
+    width: 80%;
+  }
+
+  &.text {
+    @include initial-location;
+    height: 1.3rem;
+    width: 90%;
+    margin: 10px;
+  }
+
+  &.circle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+  }
+
+  &.square {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &.table-row {
+    @include initial-location;
+    height: 1.3rem;
+    width: 90%;
+    margin-left: 10px;
+  }
+
+  &.donut {
+    display: inline-block;
+    background-color: $gray-2;
+    border-radius: 50%;
+    width: 40%;
+    padding-bottom: 40%;
+
+    .donut-inner {
+      @include block-parent-center;
+      width: 70%;
+      height: 70%;
+      position: absolute;
+      background-color: white;
+      z-index: 1;
+      border-radius: 50%;
+    }
+  }
+
+  &.donut::after {
+    @include donut-animation;
+  }
+
+  &.list-item {
+    @include initial-location;
+    background-color: white;
+    display: flex;
+    justify-content: flex-start;
+
+    .item-circle {
+      background-color: $gray-2;
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 50%;
+    }
+    .item-circle::after {
+      @include loading-animation;
+    }
+
+    .item-column {
+      display: flex;
+      flex-direction: column;
+      padding-left: 1rem;
+      width: 100%;
+
+      .item-line {
+        background-color: $gray-2;
+        height: 0.7rem;
+        border-radius: 6px;
+        width: 90%;
+
+        &:last-child {
+          margin-top: 5px;
+          width: 80%;
+        }
+      }
+    }
+
+    .item-column > div::after {
+      @include loading-animation;
+    }
+  }
+
+  &.repeating {
+    margin-top: 1rem;
+  }
+}

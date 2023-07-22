@@ -1,11 +1,10 @@
-// tslint:disable: max-file-line-count
+/* eslint-disable max-lines */
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Renderer2 } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { IconLibraryTestingModule, IconRegistryService } from '@hypertrace/assets-library';
-import { DomElementMeasurerService, selector } from '@hypertrace/common';
+import { Color, DomElementMeasurerService, selector } from '@hypertrace/common';
 import { mockDashboardWidgetProviders } from '@hypertrace/dashboards/testing';
-import { MetricAggregationType, MetricHealth } from '@hypertrace/distributed-tracing';
 import { addWidthAndHeightToSvgElForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { uniq } from 'lodash-es';
@@ -13,6 +12,8 @@ import { of } from 'rxjs';
 import { TopologyNodeRendererService } from '../../../components/topology/renderers/node/topology-node-renderer.service';
 import { D3UtilService } from '../../../components/utils/d3/d3-util.service';
 import { EntityMetadata, ENTITY_METADATA } from '../../../constants/entity-metadata';
+import { MetricAggregationType } from '../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../graphql/model/metrics/metric-health';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../graphql/model/schema/entity';
 import { ErrorPercentageMetricValueCategory } from '../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
@@ -23,6 +24,10 @@ import {
 } from '../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { ObservabilityIconLibraryModule } from '../../../icons/observability-icon-library.module';
 import { ObservabilityIconType } from '../../../icons/observability-icon-type';
+import { MetricAggregationSpecificationModel } from '../../data/graphql/specifiers/metric-aggregation-specification.model';
+import { TopologyMetricCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-category.model';
+import { TopologyMetricWithCategoryModel } from '../../data/graphql/topology/metrics/topology-metric-with-category.model';
+import { TopologyMetricsModel } from './../../data/graphql/topology/metrics/topology-metrics.model';
 import { BackendNodeBoxRendererService } from './node/box/backend-node-renderer/backend-node-box-renderer.service';
 import { TopologyWidgetRendererComponent } from './topology-widget-renderer.component';
 import { TopologyWidgetModule } from './topology-widget.module';
@@ -30,22 +35,70 @@ import { TopologyWidgetModule } from './topology-widget.module';
 describe('Topology Widget renderer', () => {
   let mockResponse: EntityNode[] = [];
   const specBuilder = new ObservabilitySpecificationBuilder();
-  const nodeSpec = {
-    titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-    metricSpecifications: [
-      specBuilder.metricAggregationSpecForKey('metric1', MetricAggregationType.Average),
-      specBuilder.metricAggregationSpecForKey('metric2', MetricAggregationType.Max),
-      specBuilder.metricAggregationSpecForLatency(MetricAggregationType.P99, 'p99Latency'),
-      specBuilder.metricAggregationSpecForErrorPercentage(MetricAggregationType.Average)
-    ]
+
+  const createCategoryModel = (
+    name: string,
+    minValue: number,
+    fillColor: Color,
+    strokeColor: Color,
+    focusColor: Color,
+    maxValue?: number
+  ): TopologyMetricCategoryModel => {
+    const categoryModel = new TopologyMetricCategoryModel();
+    categoryModel.name = name;
+    categoryModel.minValue = minValue;
+    categoryModel.maxValue = maxValue;
+    categoryModel.fillColor = fillColor;
+    categoryModel.strokeColor = strokeColor;
+    categoryModel.focusColor = focusColor;
+
+    return categoryModel;
   };
-  const edgeSpec = {
-    metricSpecifications: [
-      specBuilder.metricAggregationSpecForKey('metric3', MetricAggregationType.Sum),
-      specBuilder.metricAggregationSpecForKey('metric4', MetricAggregationType.Min),
-      specBuilder.metricAggregationSpecForLatency(MetricAggregationType.P99, 'p99Latency'),
-      specBuilder.metricAggregationSpecForErrorPercentage(MetricAggregationType.Average)
-    ]
+
+  const createSpecificationModel = (metric: string, aggregation: MetricAggregationType) => {
+    const specification = new MetricAggregationSpecificationModel();
+    specification.metric = metric;
+    specification.aggregation = aggregation;
+
+    specification.modelOnInit();
+
+    return specification;
+  };
+
+  const createMetricWithCategory = (
+    spec: MetricAggregationSpecificationModel,
+    categories: TopologyMetricCategoryModel[]
+  ) => {
+    const model = new TopologyMetricWithCategoryModel();
+    model.specification = spec;
+    model.categories = categories;
+
+    return model;
+  };
+
+  const createTopologyMetricsModel = (prefix: string) => {
+    const primary = createMetricWithCategory(
+      createSpecificationModel(`${prefix}-metric-1`, MetricAggregationType.Average),
+      [createCategoryModel(`${prefix}-first-1`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)]
+    );
+
+    const secondary = createMetricWithCategory(
+      createSpecificationModel(`${prefix}-metric-2`, MetricAggregationType.Average),
+      [createCategoryModel(`${prefix}-first-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)]
+    );
+
+    const others = [
+      createMetricWithCategory(createSpecificationModel(`${prefix}-metric-3`, MetricAggregationType.Average), [
+        createCategoryModel(`${prefix}-others-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)
+      ])
+    ];
+
+    const metricsModel: TopologyMetricsModel = new TopologyMetricsModel();
+    metricsModel.primary = primary;
+    metricsModel.secondary = secondary;
+    metricsModel.others = others;
+
+    return metricsModel;
   };
 
   const findNodeWithTypeAndName = (
@@ -75,15 +128,36 @@ describe('Topology Widget renderer', () => {
     return node!;
   };
 
+  const getSpecifications = (metricsModel: TopologyMetricsModel) =>
+    [
+      metricsModel.primary.specification,
+      metricsModel.secondary?.specification ?? [],
+      (metricsModel.others ?? []).map(model => model.specification)
+    ].flat();
+
+  const nodeMetrics = createTopologyMetricsModel('topo');
+  const edgeMetrics = createTopologyMetricsModel('topo');
+
+  const nodeSpec = {
+    titleSpecification: specBuilder.attributeSpecificationForKey('name'),
+    metricSpecifications: getSpecifications(nodeMetrics)
+  };
+  const edgeSpec = {
+    metricSpecifications: getSpecifications(edgeMetrics)
+  };
+
   const mockModel = {
     getData: jest.fn(() =>
       of({
         nodes: mockResponse,
         nodeSpecification: nodeSpec,
         edgeSpecification: edgeSpec,
-        nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey]))
+        nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey])),
+        nodeMetrics: nodeMetrics,
+        edgeMetrics: edgeMetrics
       })
-    )
+    ),
+    showLegend: true
   };
 
   const createComponent = createComponentFactory<TopologyWidgetRendererComponent>({
@@ -153,7 +227,7 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'avg(metric1)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.Healthy
           }
@@ -166,7 +240,7 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Api,
           name: 'Api 2',
-          'avg(metric1)': {
+          'avg(topo-metric-1)': {
             value: 456,
             health: MetricHealth.Warning
           }
@@ -178,7 +252,11 @@ describe('Topology Widget renderer', () => {
         data: {
           [entityIdKey]: '3',
           [entityTypeKey]: ObservabilityEntityType.Backend,
-          name: 'Backend 3'
+          name: 'Backend 3',
+          'avg(topo-metric-3)': {
+            value: 456,
+            health: MetricHealth.Warning
+          }
         },
         specification: nodeSpec
       }
@@ -210,17 +288,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -237,16 +315,16 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 2',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -263,16 +341,16 @@ describe('Topology Widget renderer', () => {
       fromNode: mockResponse[0],
       toNode: mockResponse[1],
       data: {
-        'p99(duration)': {
+        'avg(topo-metric-1)': {
           value: 123,
           health: MetricHealth.NotSpecified
         },
-        'avg(errorCount)_avg(numCalls)': {
+        'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
           category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
         },
-        'sum(metric3)': {
+        'avg(topo-metric-3)': {
           value: 345,
           health: MetricHealth.NotSpecified
         },
@@ -306,17 +384,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -333,17 +411,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 2',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -360,17 +438,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '3',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 3',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -387,16 +465,16 @@ describe('Topology Widget renderer', () => {
       fromNode: mockResponse[0],
       toNode: mockResponse[1],
       data: {
-        'p99(duration)': {
+        'avg(topo-metric-1)': {
           value: 0,
           health: MetricHealth.NotSpecified
         },
-        'avg(errorCount)_avg(numCalls)': {
+        'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
           category: ErrorPercentageMetricValueCategory.LessThan5
         },
-        'sum(metric3)': {
+        'avg(topo-metric-3)': {
           value: 345,
           health: MetricHealth.NotSpecified
         },
@@ -414,16 +492,16 @@ describe('Topology Widget renderer', () => {
       fromNode: mockResponse[1],
       toNode: mockResponse[2],
       data: {
-        'p99(duration)': {
+        'avg(topo-metric-1)': {
           value: 1,
           health: MetricHealth.NotSpecified
         },
-        'avg(errorCount)_avg(numCalls)': {
+        'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
           category: ErrorPercentageMetricValueCategory.LessThan5
         },
-        'sum(metric3)': {
+        'avg(topo-metric-3)': {
           value: 345,
           health: MetricHealth.NotSpecified
         },
@@ -486,17 +564,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -513,22 +591,49 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 2',
-          'p99(duration)': {
-            value: 234,
+          'avg(topo-metric-1)': {
+            value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
-            value: 456,
+          'avg(topo-metric-2)': {
+            value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
-            value: 567,
+          'avg(topo-metric-3)': {
+            value: 345,
             health: MetricHealth.NotSpecified
           },
           'max(metric2)': {
-            value: 789,
+            value: 456,
+            health: MetricHealth.NotSpecified
+          }
+        },
+        specification: nodeSpec
+      },
+      {
+        edges: [],
+        data: {
+          [entityIdKey]: '3',
+          [entityTypeKey]: ObservabilityEntityType.Service,
+          name: 'Service 3',
+          'avg(topo-metric-1)': {
+            value: 123,
+            health: MetricHealth.NotSpecified,
+            category: PercentileLatencyMetricValueCategory.From100To500
+          },
+          'avg(topo-metric-2)': {
+            value: 234,
+            health: MetricHealth.NotSpecified,
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+          },
+          'avg(topo-metric-3)': {
+            value: 345,
+            health: MetricHealth.NotSpecified
+          },
+          'avg(metric2)': {
+            value: 456,
             health: MetricHealth.NotSpecified
           }
         },
@@ -540,16 +645,16 @@ describe('Topology Widget renderer', () => {
       fromNode: mockResponse[0],
       toNode: mockResponse[1],
       data: {
-        'p99(duration)': {
-          value: 321,
+        'avg(topo-metric-1)': {
+          value: 0,
           health: MetricHealth.NotSpecified
         },
-        'avg(errorCount)_avg(numCalls)': {
+        'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
           category: ErrorPercentageMetricValueCategory.LessThan5
         },
-        'sum(metric3)': {
+        'avg(topo-metric-3)': {
           value: 345,
           health: MetricHealth.NotSpecified
         },
@@ -563,12 +668,40 @@ describe('Topology Widget renderer', () => {
     mockResponse[0].edges.push(edge0To1);
     mockResponse[1].edges.push(edge0To1);
 
+    const edge1To2: EntityEdge = {
+      fromNode: mockResponse[1],
+      toNode: mockResponse[2],
+      data: {
+        'avg(topo-metric-1)': {
+          value: 1,
+          health: MetricHealth.NotSpecified
+        },
+        'avg(topo-metric-2)': {
+          value: 234,
+          health: MetricHealth.NotSpecified,
+          category: ErrorPercentageMetricValueCategory.LessThan5
+        },
+        'avg(topo-metric-3)': {
+          value: 345,
+          health: MetricHealth.NotSpecified
+        },
+        'min(metric4)': {
+          value: 456,
+          health: MetricHealth.NotSpecified
+        }
+      },
+      specification: edgeSpec
+    };
+
+    mockResponse[1].edges.push(edge1To2);
+    mockResponse[2].edges.push(edge1To2);
+
     const spectator = createComponent();
     spectator.tick();
     // Can't use normal angular querying against svgs
 
     const getService = findNodeWithTypeAndName.bind(undefined, spectator, ObservabilityEntityType.Service, 'Service 1');
-    const getEdge = findEdgeWithMetricValue.bind(undefined, spectator, 321);
+    const getEdge = findEdgeWithMetricValue.bind(undefined, spectator, 0);
 
     spectator.dispatchMouseEvent(getService(), 'mouseenter');
     spectator.tick(500); // Trigger popup
@@ -581,12 +714,15 @@ describe('Topology Widget renderer', () => {
     });
     let metricRowElements = container.querySelectorAll('.metric-row');
 
-    expect(metricRowElements.length).toBe(4);
-    expect(metricRowElements[0].querySelector('.metric-label')).toContainText('Metric1');
-    expect(metricRowElements[0].querySelector('.metric-value')).toContainText('345');
+    expect(metricRowElements.length).toBe(3);
+    expect(metricRowElements[0].querySelector('.metric-label')).toContainText('Topo-metric-1');
+    expect(metricRowElements[0].querySelector('.metric-value')).toContainText('123');
 
-    expect(metricRowElements[1].querySelector('.metric-label')).toContainText('Max. Metric2');
-    expect(metricRowElements[1].querySelector('.metric-value')).toContainText('456');
+    expect(metricRowElements[1].querySelector('.metric-label')).toContainText('Topo-metric-2');
+    expect(metricRowElements[1].querySelector('.metric-value')).toContainText('234');
+
+    expect(metricRowElements[2].querySelector('.metric-label')).toContainText('Topo-metric-3');
+    expect(metricRowElements[2].querySelector('.metric-value')).toContainText('345');
 
     spectator.dispatchMouseEvent(getService(), 'mouseleave');
     expect(spectator.query('.tooltip-container', { root: true })).not.toExist();
@@ -600,11 +736,11 @@ describe('Topology Widget renderer', () => {
       text: `Service 1Service 2`
     });
     metricRowElements = container.querySelectorAll('.metric-row');
-    expect(metricRowElements[0].querySelector('.metric-label')).toContainText('Sum Metric3');
-    expect(metricRowElements[0].querySelector('.metric-value')).toContainText('345');
+    expect(metricRowElements[0].querySelector('.metric-label')).toContainText('Topo-metric-1');
+    expect(metricRowElements[0].querySelector('.metric-value')).toContainText('0');
 
-    expect(metricRowElements[1].querySelector('.metric-label')).toContainText('Min. Metric4');
-    expect(metricRowElements[1].querySelector('.metric-value')).toContainText('456');
+    expect(metricRowElements[1].querySelector('.metric-label')).toContainText('Topo-metric-2');
+    expect(metricRowElements[1].querySelector('.metric-value')).toContainText('234');
 
     spectator.dispatchMouseEvent(getEdge(), 'mouseleave');
     expect(spectator.query('.tooltip-container', { root: true })).not.toExist();
@@ -618,17 +754,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -645,16 +781,16 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 2',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -671,16 +807,16 @@ describe('Topology Widget renderer', () => {
       fromNode: mockResponse[0],
       toNode: mockResponse[1],
       data: {
-        'p99(duration)': {
+        'avg(topo-metric-1)': {
           value: 123,
           health: MetricHealth.NotSpecified
         },
-        'avg(errorCount)_avg(numCalls)': {
+        'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
           category: ErrorPercentageMetricValueCategory.LessThan5
         },
-        'sum(metric3)': {
+        'avg(topo-metric-3)': {
           value: 345,
           health: MetricHealth.NotSpecified
         },
@@ -699,7 +835,7 @@ describe('Topology Widget renderer', () => {
     // Can't use normal angular querying against svgs
 
     const getService = findNodeWithTypeAndName.bind(undefined, spectator, ObservabilityEntityType.Service, 'Service 1');
-    const getEdge = findEdgeWithMetricValue.bind(undefined, spectator, 123);
+    const getEdge = findEdgeWithMetricValue.bind(undefined, spectator, 234);
     const getCloseButton = () => spectator.query('.hide-tooltip-button', { root: true })!;
     const getTooltip = () => spectator.query('.tooltip-container', { root: true })!;
 
@@ -734,17 +870,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '1',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 1',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 345,
             health: MetricHealth.NotSpecified
           },
@@ -761,17 +897,17 @@ describe('Topology Widget renderer', () => {
           [entityIdKey]: '2',
           [entityTypeKey]: ObservabilityEntityType.Service,
           name: 'Service 2',
-          'p99(duration)': {
+          'avg(topo-metric-1)': {
             value: 234,
             health: MetricHealth.NotSpecified,
             category: PercentileLatencyMetricValueCategory.From100To500
           },
-          'avg(errorCount)_avg(numCalls)': {
+          'avg(topo-metric-2)': {
             value: 456,
             health: MetricHealth.NotSpecified,
             category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
           },
-          'avg(metric1)': {
+          'avg(topo-metric-3)': {
             value: 567,
             health: MetricHealth.NotSpecified
           },
@@ -863,15 +999,9 @@ describe('Topology Widget renderer', () => {
       }
     ];
     const spectator = createComponent();
-    const nodeRendererDestroySpy = spyOn(
-      spectator.inject(TopologyNodeRendererService, true),
-      'destroyNode'
-    ).and.callThrough();
+    const nodeRendererDestroySpy = jest.spyOn(spectator.inject(TopologyNodeRendererService, true), 'destroyNode');
 
-    const backendRendererDestroySpy = spyOn(
-      spectator.inject(BackendNodeBoxRendererService, true),
-      'destroy'
-    ).and.callThrough();
+    const backendRendererDestroySpy = jest.spyOn(spectator.inject(BackendNodeBoxRendererService, true), 'destroy');
 
     spectator.tick();
     expect(nodeRendererDestroySpy).not.toHaveBeenCalled();
@@ -903,8 +1033,8 @@ describe('Topology Widget renderer', () => {
       }
     ];
     const spectator = createComponent({});
-    const spy = spyOn(spectator.inject(IconRegistryService), 'getIconRenderInfo');
-    spy.and.returnValue({
+    const spy = jest.spyOn(spectator.inject(IconRegistryService), 'getIconRenderInfo');
+    spy.mockReturnValue({
       iconRenderType: 'ligature',
       ligatureText: 'test',
       label: 'test',

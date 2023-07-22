@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../../combo-box/combo-box-api';
+import { ComboBoxComponent } from '../../../combo-box/combo-box.component';
 import { Filter, IncompleteFilter } from '../../filter/filter';
 import { FilterAttribute } from '../../filter/filter-attribute';
 import { FilterChipService } from './filter-chip.service';
@@ -14,6 +24,7 @@ import { FilterChipService } from './filter-chip.service';
       <ht-combo-box
         class="combo-box"
         mode="${ComboBoxMode.Chip}"
+        [ariaLabel]="this.ariaLabel"
         [exactMatch]="false"
         [autoSize]="this.text !== undefined"
         [text]="this.text"
@@ -32,16 +43,22 @@ export class FilterChipComponent implements OnInit, OnChanges {
   public attributes?: FilterAttribute[];
 
   @Input()
-  public filter?: Filter;
+  public ariaLabel?: string;
 
   @Input()
   public clearOnEnter?: boolean = false;
+
+  @Input()
+  public filter?: Filter;
 
   @Output()
   public readonly apply: EventEmitter<Filter> = new EventEmitter();
 
   @Output()
   public readonly clear: EventEmitter<void> = new EventEmitter();
+
+  @ViewChild(ComboBoxComponent)
+  public readonly comboBox?: ComboBoxComponent;
 
   public text?: string;
   public options?: ComboBoxOption<IncompleteFilter>[];
@@ -86,6 +103,10 @@ export class FilterChipComponent implements OnInit, OnChanges {
     this.clear.emit();
   }
 
+  public focus(): void {
+    this.comboBox?.focus();
+  }
+
   private isValidFilter(result: ComboBoxResult<IncompleteFilter>): result is ComboBoxResult<Filter> {
     return result.option?.value !== undefined && result.option?.value.value !== undefined;
   }
@@ -103,8 +124,7 @@ export class FilterChipComponent implements OnInit, OnChanges {
   private mapToComboBoxOption(filter: IncompleteFilter): ComboBoxOption<IncompleteFilter> {
     return {
       text: filter.userString,
-      value: filter,
-      tooltip: `${filter.userString} (${filter.field})`
+      value: filter
     };
   }
 }

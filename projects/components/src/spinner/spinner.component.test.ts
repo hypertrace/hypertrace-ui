@@ -35,7 +35,7 @@ describe('Spinner component', () => {
         }
       });
 
-      expectObservable(spectator.component.state$!).toBe('(y)', { y: 'loading' });
+      expectObservable(spectator.component.state$).toBe('(y)', { y: 'loading' });
     });
   }));
 
@@ -52,7 +52,7 @@ describe('Spinner component', () => {
         }
       );
 
-      expectObservable(spectator.component.state$!).toBe('(x-y|)', { x: 'loading', y: 'success' });
+      expectObservable(spectator.component.state$).toBe('(x-y|)', { x: 'loading', y: 'success' });
     });
   }));
 
@@ -69,7 +69,7 @@ describe('Spinner component', () => {
         }
       );
 
-      expectObservable(spectator.component.state$!).toBe('(x-y|)', { x: 'loading', y: 'error' });
+      expectObservable(spectator.component.state$).toBe('(x-y|)', { x: 'loading', y: 'error' });
     });
   }));
 });

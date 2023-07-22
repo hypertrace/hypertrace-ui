@@ -54,6 +54,10 @@
       }
     }
 
+    .marker {
+      cursor: pointer;
+    }
+
     .hovered-row {
       .backdrop {
         fill-opacity: 100;
@@ -64,7 +68,7 @@
     .selected-row {
       .backdrop {
         fill-opacity: 100;
-        fill: $blue-1;
+        fill: $gray-1;
       }
 
       .backdrop-border-top {

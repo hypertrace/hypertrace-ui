@@ -5,7 +5,13 @@ import { Color } from '@hypertrace/common';
   selector: 'ht-beta-tag',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ht-label-tag label="Beta" backgroundColor="${Color.Purple2}" labelColor="${Color.Purple5}"></ht-label-tag>
+    <ht-label-tag
+      htTooltip="Beta Feature"
+      class="beta-tag"
+      label="Beta"
+      backgroundColor="${Color.Purple2}"
+      labelColor="${Color.Purple5}"
+    ></ht-label-tag>
   `
 })
 export class BetaTagComponent {}

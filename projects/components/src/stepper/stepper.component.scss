@@ -1,0 +1,74 @@
+@import 'mixins';
+
+:host {
+  ::ng-deep {
+    .mat-step-header {
+      .mat-step-label {
+        @include overline($gray-5);
+        text-transform: uppercase;
+      }
+
+      .mat-step-label-selected {
+        @include overline($gray-7);
+        text-transform: uppercase;
+      }
+
+      .mat-step-icon {
+        @include overline(white);
+        @include frame-border;
+        border-color: $blue-4;
+        color: $blue-4;
+      }
+
+      .mat-step-icon-selected {
+        background-color: $blue-4;
+        color: white;
+      }
+    }
+
+    .mat-stepper-horizontal {
+      display: block;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+
+    .mat-horizontal-stepper-wrapper {
+      @include fill-container;
+    }
+
+    .mat-horizontal-content-container {
+      min-height: 0;
+      flex: 1 1 auto;
+      padding-bottom: 8px;
+    }
+
+    .mat-horizontal-stepper-content {
+      @include fill-container;
+    }
+  }
+}
+
+.stepper {
+  @include fill-container;
+  @include flex-layout(column);
+  justify-content: space-between;
+  position: relative;
+
+  .footer {
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid $gray-1;
+    padding-top: 8px;
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .back-next {
+        display: flex;
+        gap: 16px;
+      }
+    }
+  }
+}

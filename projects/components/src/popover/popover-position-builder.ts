@@ -1,6 +1,6 @@
 import { ConnectionPositionPair, GlobalPositionStrategy, Overlay, PositionStrategy } from '@angular/cdk/overlay';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { assertUnreachable, GLOBAL_HEADER_HEIGHT } from '@hypertrace/common';
+import { Injectable } from '@angular/core';
+import { assertUnreachable, GlobalHeaderHeightProviderService } from '@hypertrace/common';
 import {
   PopoverFixedPosition,
   PopoverFixedPositionLocation,
@@ -15,7 +15,7 @@ import { MousePositionStrategy } from './position-strategy/mouse-position-strate
 export class PopoverPositionBuilder {
   public constructor(
     private readonly overlay: Overlay,
-    @Optional() @Inject(GLOBAL_HEADER_HEIGHT) private readonly headerHeight?: string
+    private readonly headerHeightProvider: GlobalHeaderHeightProviderService
   ) {}
 
   public buildPositionStrategy(position: PopoverPosition): PositionStrategy | undefined {
@@ -28,7 +28,13 @@ export class PopoverPositionBuilder {
         return this.overlay
           .position()
           .flexibleConnectedTo(position.origin)
-          .withPositions(position.locationPreferences.map(location => this.getPositionPairForLocation(location)));
+          .withPositions(
+            position.locationPreferences.map(location => ({
+              ...this.getPositionPairForLocation(location),
+              offsetX: position.offsetX,
+              offsetY: position.offsetY
+            }))
+          );
       case PopoverPositionType.Hidden:
       default:
         return undefined;
@@ -104,14 +110,21 @@ export class PopoverPositionBuilder {
 
   private buildFixedPositionStrategy(popoverPosition: PopoverFixedPosition): GlobalPositionStrategy {
     const globalPosition = this.overlay.position().global();
+
     switch (popoverPosition.location) {
       case PopoverFixedPositionLocation.Centered:
         return globalPosition.centerHorizontally().centerVertically();
       case PopoverFixedPositionLocation.Right:
         return globalPosition.right('0').top('0');
+      case PopoverFixedPositionLocation.Custom:
+        return globalPosition
+          .left(`${popoverPosition.customLocation!.x}px`)
+          .top(`${popoverPosition.customLocation!.y}px`);
+      case PopoverFixedPositionLocation.BottomCenter:
+        return globalPosition.centerHorizontally().centerVertically().bottom();
       case PopoverFixedPositionLocation.RightUnderHeader:
       default:
-        return globalPosition.right('0').top(this.headerHeight ?? '0');
+        return globalPosition.right('0').top(this.headerHeightProvider.globalHeaderHeight ?? '0');
     }
   }
 }

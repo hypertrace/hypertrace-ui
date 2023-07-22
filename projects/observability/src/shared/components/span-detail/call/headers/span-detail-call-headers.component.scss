@@ -1,0 +1,16 @@
+@import 'font';
+
+.call-headers {
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    @include font-heading;
+    padding-bottom: 12px;
+  }
+
+  .container {
+    overflow: auto;
+    flex: 1;
+  }
+}

@@ -1,14 +1,25 @@
-import { Location } from '@angular/common';
+import { Location, PlatformLocation } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { Router, UrlSegment } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { APP_TITLE } from '@hypertrace/common';
 import { patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { NavigationParamsType, NavigationService } from './navigation.service';
+import {
+  ExternalNavigationPathParams,
+  ExternalNavigationWindowHandling,
+  NavigationParams,
+  NavigationParamsType,
+  NavigationService
+} from './navigation.service';
 
 describe('Navigation Service', () => {
   const firstChildRouteConfig = {
     path: 'child',
-    children: []
+    children: [],
+    data: {
+      title: 'child1'
+    }
   };
   const defaultChildRouteConfig = {
     path: '**',
@@ -23,7 +34,7 @@ describe('Navigation Service', () => {
     children: [secondFirstChildRouteConfig]
   };
   const secondSecondChildRouteConfig = {
-    path: 'second-second',
+    path: 'second-second/:id',
     children: []
   };
   const secondChildRouteConfig = {
@@ -36,11 +47,17 @@ describe('Navigation Service', () => {
 
   const buildService = createServiceFactory({
     service: NavigationService,
-    providers: [mockProvider(Location)],
+    providers: [
+      mockProvider(Location),
+      mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
+      { provide: APP_TITLE, useValue: 'defaultAppTitle' },
+      mockProvider(PlatformLocation, { href: 'https://test.hypertrace.org' })
+    ],
     imports: [
       RouterTestingModule.withRoutes([
         {
           path: 'root',
+          data: { features: ['test-feature'] },
           children: [firstChildRouteConfig, secondChildRouteConfig]
         }
       ])
@@ -76,6 +93,12 @@ describe('Navigation Service', () => {
   test('can flatten and match a multisegment path', () => {
     router.navigate(['root']);
     expect(spectator.service.getRouteConfig(['second/second-second'])).toEqual(secondSecondChildRouteConfig);
+  });
+
+  test('skips partial matches', () => {
+    router.navigate(['root']);
+    // Shouldn't match "second-first" or "second-second"
+    expect(spectator.service.getRouteConfig(['second', 'second'])).toBeUndefined();
   });
 
   test('can build a url tree from segments', () => {
@@ -233,5 +256,82 @@ describe('Navigation Service', () => {
       expect.objectContaining({ path: 'child' })
     ]);
     expect(spectator.service.getCurrentActivatedRoute().snapshot.queryParams).toEqual({ global: 'foo' });
+  });
+
+  test('construct external url in case useGlobalParams is set to true', () => {
+    const externalNavigationParams: NavigationParams = {
+      navType: NavigationParamsType.External,
+      useGlobalParams: true,
+      url: '/some/internal/path/of/app',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    };
+
+    spectator.service.addQueryParametersToUrl({ time: '1h', environment: 'development' });
+    spectator.service.registerGlobalQueryParamKey('time');
+    spectator.service.registerGlobalQueryParamKey('environment');
+
+    externalNavigationParams.useGlobalParams = true;
+
+    expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
+    expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
+      ExternalNavigationPathParams.Url
+    );
+
+    let pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
+    expect(typeof pathParam).not.toBe('string');
+
+    if (typeof pathParam !== 'string') {
+      expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
+        `${externalNavigationParams.url}?time=1h&environment=development`
+      );
+    }
+
+    externalNavigationParams.url = '/some/internal/path/of/app?type=json';
+
+    expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
+    expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
+      ExternalNavigationPathParams.Url
+    );
+
+    pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
+    expect(typeof pathParam).not.toBe('string');
+
+    if (typeof pathParam !== 'string') {
+      expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
+        `/some/internal/path/of/app?type=json&time=1h&environment=development`
+      );
+    }
+  });
+
+  test('setting title should work as expected', () => {
+    router.navigate(['root', 'child']);
+    expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle | child1');
+
+    router.navigate(['root']);
+    expect(spectator.inject(Title).setTitle).toHaveBeenCalledWith('defaultAppTitle');
+  });
+
+  test('can create shareableUrl correctly', () => {
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.External,
+        url: 'http://test-url',
+        windowHandling: ExternalNavigationWindowHandling.SameWindow
+      })
+    ).toEqual('http://test-url');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: ['root', 'child'],
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.hypertrace.org/root/child?env=test');
+    expect(
+      spectator.service.getShareableUrl({
+        navType: NavigationParamsType.InApp,
+        path: 'url',
+        queryParams: { env: 'test' }
+      })
+    ).toEqual('https://test.hypertrace.org/url?env=test');
   });
 });

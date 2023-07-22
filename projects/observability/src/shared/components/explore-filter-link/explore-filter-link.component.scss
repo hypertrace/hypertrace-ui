@@ -1,0 +1,18 @@
+@import 'font';
+@import 'color-palette';
+
+.explore-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .filter-icon {
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    .filter-icon {
+      transform: scale(1.2);
+    }
+  }
+}

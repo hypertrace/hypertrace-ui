@@ -1,4 +1,5 @@
 @import 'font';
+@import 'layout';
 
 .explorer {
   display: flex;
@@ -11,21 +12,19 @@
   }
 
   .explorer-content {
+    @include scrollable-container(24px);
     display: flex;
     flex-direction: column;
-    padding: 24px 24px 0;
-    flex: 1;
-    min-height: 0;
   }
 
   .explorer-data-toggle {
     flex: 0;
-    padding-bottom: 16px;
+    padding: 24px 24px 16px;
   }
 
   .explorer-filter-bar {
     flex: 0;
-    padding-bottom: 8px;
+    padding: 0 24px 8px;
   }
 
   .panel-title {
@@ -49,14 +48,9 @@
 
   .results-panel {
     flex: 1;
-    overflow: hidden;
 
     .label {
       @include body-1-medium;
-    }
-
-    .results-panel-content {
-      padding-top: 12px;
     }
   }
 }

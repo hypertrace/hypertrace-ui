@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TableCellAlignmentType, TableCellRenderer, TableCellRendererBase } from '@hypertrace/components';
-import { Entity } from '../../../../graphql/model/schema/entity';
 import { ObservabilityTableCellType } from '../../observability-table-cell-type';
+import { MaybeInactiveEntity } from './entity-table-cell-parser';
 
 @Component({
   selector: 'ht-entity-table-cell-renderer',
@@ -9,7 +9,11 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fill-container entity-cell" [ngClass]="{ 'first-column': this.isFirstColumn }">
-      <ht-entity-renderer [entity]="this.value" [navigable]="true"></ht-entity-renderer>
+      <ht-entity-renderer
+        [entity]="this.value"
+        [inactive]="this.value?.isInactive === true"
+        [navigable]="true"
+      ></ht-entity-renderer>
     </div>
   `
 })
@@ -18,4 +22,4 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
   alignment: TableCellAlignmentType.Left,
   parser: ObservabilityTableCellType.Entity
 })
-export class EntityTableCellRendererComponent extends TableCellRendererBase<Entity | undefined> {}
+export class EntityTableCellRendererComponent extends TableCellRendererBase<MaybeInactiveEntity | undefined> {}

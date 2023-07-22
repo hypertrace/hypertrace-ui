@@ -1,7 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, TrackDirective } from '@hypertrace/common';
 import { byText, createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { EMPTY } from 'rxjs';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsModule } from './breadcrumbs.module';
@@ -13,7 +15,8 @@ describe('BreadcrumbsComponent', () => {
   const createHost = createHostFactory({
     declareComponent: false,
     component: BreadcrumbsComponent,
-    imports: [BreadcrumbsModule, HttpClientTestingModule, IconLibraryTestingModule],
+    imports: [BreadcrumbsModule, HttpClientTestingModule, IconLibraryTestingModule, RouterTestingModule],
+    declarations: [MockDirective(TrackDirective)],
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
@@ -30,16 +33,20 @@ describe('BreadcrumbsComponent', () => {
             label: 'First',
             type: 'First Type',
             icon: 'firstIcon',
-            url: ['first', 'second']
+            url: ['first', 'second'],
+            alwaysShowIcon: false
           },
           {
-            label: 'Second'
+            label: 'Second',
+            icon: 'secondIcon',
+            alwaysShowIcon: true
           },
           {
             label: 'Third',
             type: 'Third Type',
-            icon: 'secondIcon',
-            url: ['first', 'second', 'third']
+            icon: 'thirdIcon',
+            url: ['first', 'second', 'third'],
+            alwaysShowIcon: false
           }
         ]
       }
@@ -53,12 +60,20 @@ describe('BreadcrumbsComponent', () => {
     expect(spectator.queryAll('.breadcrumbs .breadcrumb').length).toBe(3);
   });
 
-  it('should show icon only on the first crumb', () => {
+  it('should show icon on the first crumb', () => {
     const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
     expect(crumbs[0].querySelector('ht-icon')).toExist();
+  });
 
-    crumbs.shift();
-    crumbs.forEach(crumb => expect(crumb.querySelector('ht-icon')).toBeNull());
+  it('should display the icon', () => {
+    const crumbs = spectator.queryAll('.breadcrumbs .breadcrumb');
+    crumbs.forEach((crumb, index) => {
+      if (index < crumbs.length - 1) {
+        expect(crumb.querySelector('ht-icon')).toExist();
+      } else {
+        expect(crumb.querySelector('ht-icon')).toBeNull();
+      }
+    });
   });
 
   it('should make last crumb inactive', () => {

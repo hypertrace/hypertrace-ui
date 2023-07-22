@@ -1,0 +1,78 @@
+@use 'mixins' as m;
+
+.file-upload {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .upload-section {
+    @include m.center-contents;
+    flex-direction: column;
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid m.$gray-2;
+    border-radius: 8px;
+
+    .title {
+      @include m.body-2-regular;
+      display: flex;
+      align-items: center;
+
+      .click-to-upload {
+        color: m.$blue-5;
+        padding-right: 4px;
+        cursor: pointer;
+
+        &:hover {
+          color: m.$blue-6;
+        }
+      }
+    }
+
+    .sub-text {
+      @include m.body-2-regular(m.$gray-4);
+    }
+
+    &.drag-hover {
+      border: 1px dashed m.$blue-4;
+    }
+
+    &.disabled {
+      pointer-events: none;
+      background-color: m.$gray-1;
+      opacity: 0.8;
+    }
+  }
+
+  .bulk-progress-bar {
+    padding-left: 12px;
+  }
+
+  .files-section {
+    width: 100%;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.file-requirements-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .item {
+    @include m.footnote(m.$gray-5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .icon {
+      color: m.$green-4;
+    }
+  }
+}

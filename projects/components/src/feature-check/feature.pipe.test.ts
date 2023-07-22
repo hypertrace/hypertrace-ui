@@ -99,7 +99,6 @@ describe('Feature pipe', () => {
     expect(getCombinedFeatureStateMock).toHaveBeenCalledTimes(2);
 
     spectator.setHostInput({
-      // tslint:disable-next-line: no-null-keyword
       features: null
     });
     expect(spectator.element).toHaveExactText(FeatureState.Enabled);

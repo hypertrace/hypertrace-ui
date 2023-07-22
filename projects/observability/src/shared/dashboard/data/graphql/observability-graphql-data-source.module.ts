@@ -10,19 +10,27 @@ import { ExploreGraphQlQueryHandlerService } from '../../../graphql/request/hand
 import { ApiCallsCountDataSourceModel } from './api-calls-count/api-calls-count-data-source-model';
 import { EntityMetricAggregationDataSourceModel } from './entity/aggregation/entity-metric-aggregation-data-source.model';
 import { EntitiesAttributeDataSourceModel } from './entity/attribute/entities-attribute-data-source.model';
+import { EntitiesAttributeOptionsDataSourceModel } from './entity/attribute/entities-attribute-options-data-source.model';
 import { EntityAttributeDataSourceModel } from './entity/attribute/entity-attribute-data-source.model';
 import { EntityErrorPercentageTimeseriesDataSourceModel } from './entity/timeseries/entity-error-percentage-timeseries-data-source.model';
 import { EntityMetricTimeseriesDataSourceModel } from './entity/timeseries/entity-metric-timeseries-data-source.model';
-import { ExploreCartesianDataSourceModel } from './explore/explore-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from './explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation/metric-aggregation-data-source.model';
 import { PercentageCompositeDataSourceModel } from './percentage/percentage-composite-data-source.model';
 import { EntitySpecificationModel } from './specifiers/entity-specification.model';
 import { ErrorPercentageMetricAggregationSpecificationModel } from './specifiers/error-percentage-metric-aggregation.model';
+import { ExploreSelectionSpecificationModel } from './specifiers/explore-selection-specification.model';
+import { ExploreIntervalTimestampSelectionSpecificationModel } from './specifiers/explore/explorer-interval-timestamp-selection.model';
+import { MetricTimeseriesBandSpecificationModel } from './specifiers/metric-timeseries-band-specification.model';
 import { MetricTimeseriesSpecificationModel } from './specifiers/metric-timeseries-specification.model';
 import { NeighborEntitySpecificationModel } from './specifiers/neighbor-entity-specification.model';
 import { PercentileLatencyAggregationSpecificationModel } from './specifiers/percentile-latency-metric-aggregation.model';
 import { EntityTableDataSourceModel } from './table/entity/entity-table-data-source.model';
+import { ExploreTableDataSourceModel } from './table/explore/explore-table-data-source.model';
 import { InteractionsTableDataSourceModel } from './table/interactions/interactions-table-data-source.model';
+import { TopologyMetricCategoryModel } from './topology/metrics/topology-metric-category.model';
+import { TopologyMetricWithCategoryModel } from './topology/metrics/topology-metric-with-category.model';
+import { TopologyMetricsModel } from './topology/metrics/topology-metrics.model';
 import { TopologyDataSourceModel } from './topology/topology-data-source.model';
 import { TraceMetricAggregationDataSourceModel } from './trace/aggregation/trace-metric-aggregation-data-source.model';
 import { TraceDonutDataSourceModel } from './trace/donut/trace-donut-data-source.model';
@@ -41,23 +49,31 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
     ]),
     DashboardCoreModule.with({
       models: [
+        ExploreSelectionSpecificationModel,
+        ExploreIntervalTimestampSelectionSpecificationModel,
+        ExploreTableDataSourceModel,
         ApiTraceWaterfallDataSourceModel,
         EntityMetricTimeseriesDataSourceModel,
         EntityMetricAggregationDataSourceModel,
         TopologyDataSourceModel,
+        TopologyMetricsModel,
+        TopologyMetricWithCategoryModel,
+        TopologyMetricCategoryModel,
         EntityTableDataSourceModel,
         InteractionsTableDataSourceModel,
         EntityAttributeDataSourceModel,
         EntitiesAttributeDataSourceModel,
+        EntitiesAttributeOptionsDataSourceModel,
         EntitySpecificationModel,
         NeighborEntitySpecificationModel,
-        ExploreCartesianDataSourceModel,
+        ExplorerVisualizationCartesianDataSourceModel,
         ApiCallsCountDataSourceModel,
         EntityErrorPercentageTimeseriesDataSourceModel,
         TraceMetricTimeseriesDataSourceModel,
         TraceMetricAggregationDataSourceModel,
         TraceDonutDataSourceModel,
         MetricTimeseriesSpecificationModel,
+        MetricTimeseriesBandSpecificationModel,
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
         PercentageCompositeDataSourceModel,

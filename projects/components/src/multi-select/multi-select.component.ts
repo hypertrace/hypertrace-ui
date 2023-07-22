@@ -1,72 +1,164 @@
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
+  TemplateRef
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
-import { LoggerService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import { queryListAndChanges$, SubscriptionLifecycle } from '@hypertrace/common';
+import { isEmpty, isEqual, partition } from 'lodash-es';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ButtonVariant, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
-import { SelectJustify } from '../select/select-justify';
-import { SelectOption } from '../select/select-option';
+import { SearchBoxDisplayMode, SearchBoxEmitMode } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
 import { SelectSize } from '../select/select-size';
+import { SelectTriggerDisplayMode } from '../select/select.component';
+import { XMoreDisplay } from '../x-more/x-more.component';
+import { MultiSelectJustify } from './multi-select-justify';
 
 @Component({
   selector: 'ht-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    SubscriptionLifecycle,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MultiSelectComponent,
+      multi: true
+    }
+  ],
   template: `
-    <div
-      class="multi-select"
-      [ngClass]="[this.size, this.showBorder ? 'border' : '', this.disabled ? 'disabled' : '']"
-      *htLetAsync="this.selected$ as selected"
-    >
-      <ht-popover [disabled]="this.disabled" class="multi-select-container">
+    <div class="multi-select" [ngClass]="[this.size, this.disabled ? 'disabled' : '', this.popoverOpen ? 'open' : '']">
+      <ht-popover
+        [disabled]="this.disabled"
+        class="multi-select-container"
+        (popoverOpen)="this.popoverOpen = true"
+        (popoverClose)="this.onPopoverClose()"
+      >
         <ht-popover-trigger>
-          <div class="trigger-content" [ngClass]="this.justifyClass" #triggerContainer>
-            <ht-icon *ngIf="this.icon" class="trigger-prefix-icon" [icon]="this.icon" size="${IconSize.Small}">
-            </ht-icon>
-            <ht-label class="trigger-label" [label]="this.triggerLabel"></ht-label>
-            <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" size="${IconSize.Small}"></ht-icon>
+          <div
+            class="trigger-content"
+            [style.justify-content]="this.justify"
+            [ngClass]="[
+              this.triggerLabelDisplayMode,
+              this.popoverOpen ? 'open' : '',
+              this.size,
+              this.disabled ? 'disabled' : '',
+              this.showBorder ? 'border' : '',
+              this.triggerDisplayMode
+            ]"
+            #triggerContainer
+          >
+            <ht-icon *ngIf="this.icon" [icon]="this.icon" [size]="this.iconSize"></ht-icon>
+            <ng-container *ngIf="!this.isIconOnlyMode()">
+              <div class="trigger-label-container" *ngIf="this.triggerValues$ | async as triggerValues">
+                <ht-label class="trigger-label" [label]="triggerValues.label"></ht-label>
+
+                <ht-x-more
+                  *ngIf="triggerValues.overflowItemsCount"
+                  class="trigger-more-items"
+                  [count]="triggerValues.overflowItemsCount"
+                  displayStyle="${XMoreDisplay.Gray}"
+                  [htTooltip]="triggerXMoreValues"
+                  [htTooltipContext]="{ $implicit: triggerValues.overflowLabel }"
+                ></ht-x-more>
+                <ht-icon class="trigger-icon" icon="${IconType.ChevronDown}" [size]="this.iconSize"></ht-icon>
+              </div>
+            </ng-container>
           </div>
         </ht-popover-trigger>
         <ht-popover-content>
-          <div class="multi-select-content" [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth }">
-            <ng-container *ngIf="this.showAllOptionControl">
-              <div class="multi-select-option all-options" (click)="this.onAllSelectionChange()">
-                <input class="checkbox" type="checkbox" [checked]="this.areAllOptionsSelected()" />
-                <span class="label">All</span>
-              </div>
+          <div
+            class="multi-select-content"
+            [ngStyle]="{ 'min-width.px': triggerContainer.offsetWidth, 'max-height.px': this.maxHeight }"
+          >
+            <!-- Custom Control -->
+            <div class="custom-control" *ngIf="this.customControlTemplate">
+              <ng-container *ngTemplateOutlet="this.customControlTemplate"></ng-container>
+            </div>
 
-              <ht-divider></ht-divider>
+            <ng-container *ngIf="this.searchMode !== '${MultiSelectSearchMode.Disabled}'">
+              <ht-search-box
+                class="search-bar"
+                (valueChange)="this.searchOptions($event)"
+                [debounceTime]="200"
+                displayMode="${SearchBoxDisplayMode.NoBorder}"
+                [value]="this.searchText"
+                (submit)="this.searchOptions($event)"
+                [searchMode]="this.searchTriggerMode"
+                *ngIf="(this.allOptions$ | async)?.length > 5 || !(this.searchText | htIsEmpty)"
+              ></ht-search-box>
+              <ht-divider class="divider"></ht-divider>
+
+              <ht-button
+                class="clear-selected"
+                *ngIf="this.isAnyOptionSelected()"
+                variant="${ButtonVariant.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Clear Selected"
+                (click)="this.onClearSelected()"
+              ></ht-button>
+
+              <ht-button
+                class="select-all"
+                *ngIf="this.showSelectAll && (this.allOptions$ | async)?.length > 0 && !this.isAnyOptionSelected()"
+                variant="${ButtonVariant.Primary}"
+                display="${ButtonStyle.Text}"
+                label="Select All"
+                (click)="this.onSelectAll()"
+              ></ht-button>
             </ng-container>
 
-            <div *ngFor="let item of items" (click)="this.onSelectionChange(item)" class="multi-select-option">
-              <input class="checkbox" type="checkbox" [checked]="this.isSelectedItem(item)" />
-              <ht-icon
-                class="icon"
-                *ngIf="item.icon"
-                [icon]="item.icon"
-                size="${IconSize.ExtraSmall}"
-                [color]="item.iconColor"
-              ></ht-icon>
-              <span class="label">{{ item.label }}</span>
+            <div class="multi-select-options">
+              <ng-container *htLoadAsync="this.filteredOptions$ as filteredOptions">
+                <div
+                  *ngFor="let item of filteredOptions"
+                  (click)="this.onSelectionChange(item)"
+                  class="multi-select-option"
+                  [ngClass]="{ disabled: item.disabled }"
+                  [htTooltip]="item.tooltip"
+                >
+                  <ht-checkbox
+                    class="checkbox"
+                    (click)="this.preventClickDefault($event)"
+                    [checked]="this.isSelectedItem(item)"
+                    [disabled]="item.disabled"
+                  ></ht-checkbox>
+                  <ht-icon
+                    class="icon"
+                    *ngIf="item.icon"
+                    [icon]="item.icon"
+                    size="${IconSize.ExtraSmall}"
+                    [color]="item.iconColor"
+                  ></ht-icon>
+                  <span class="label">{{ item.label }}</span>
+                </div>
+              </ng-container>
             </div>
           </div>
         </ht-popover-content>
       </ht-popover>
     </div>
+
+    <ng-template #triggerXMoreValues let-values>
+      <div class="trigger-x-more-values">
+        {{ values }}
+      </div>
+    </ng-template>
   `
 })
-export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
+export class MultiSelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
   public size: SelectSize = SelectSize.Medium;
 
@@ -77,7 +169,13 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public icon?: string;
 
   @Input()
+  public iconSize: IconSize = IconSize.Small;
+
+  @Input()
   public placeholder?: string;
+
+  @Input()
+  public prefix?: string;
 
   @Input()
   public disabled: boolean = false;
@@ -86,113 +184,227 @@ export class MultiSelectComponent<V> implements AfterContentInit, OnChanges {
   public showBorder: boolean = false;
 
   @Input()
-  public justify?: SelectJustify;
+  public searchMode: MultiSelectSearchMode = MultiSelectSearchMode.Disabled;
 
   @Input()
-  public showAllOptionControl?: boolean = false;
+  public searchTriggerMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
+
+  @Input()
+  public justify: MultiSelectJustify = MultiSelectJustify.Left;
+
+  @Input()
+  public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
 
   @Input()
   public triggerLabelDisplayMode: TriggerLabelDisplayMode = TriggerLabelDisplayMode.Selection;
 
+  @Input()
+  public maxHeight: number = 360;
+
+  @Input()
+  public showSelectAll: boolean = true;
+
+  @Input()
+  public customControlTemplate?: TemplateRef<unknown>;
+
   @Output()
   public readonly selectedChange: EventEmitter<V[]> = new EventEmitter<V[]>();
 
+  @Output()
+  public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();
+
   @ContentChildren(SelectOptionComponent)
-  public items?: QueryList<SelectOptionComponent<V>>;
+  private readonly allOptionsList?: QueryList<SelectOptionComponent<V>>;
+  public allOptions$!: Observable<QueryList<SelectOptionComponent<V>>>;
 
-  public selected$?: Observable<SelectOption<V>[] | undefined>;
-  public triggerLabel?: string;
+  public filteredOptions$!: Observable<SelectOptionComponent<V>[]>;
+  private readonly caseInsensitiveSearchSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  private readonly reorderSelectedItemsSubject: BehaviorSubject<void> = new BehaviorSubject<void>(undefined);
 
-  public get justifyClass(): string {
-    if (this.justify !== undefined) {
-      return this.justify;
-    }
+  public searchText: string = '';
 
-    return this.showBorder ? SelectJustify.Left : SelectJustify.Right;
-  }
+  public popoverOpen: boolean = false;
+  public triggerValues$: Observable<TriggerValues> = new Observable();
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  private propagateControlValueChange?: (value: V[] | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: V[] | undefined) => void;
+
+  public constructor(private readonly cdr: ChangeDetectorRef) {}
 
   public ngAfterContentInit(): void {
-    this.selected$ = this.buildObservableOfSelected();
+    this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
+    this.filteredOptions$ = combineLatest([this.allOptions$, this.reorderSelectedItemsSubject]).pipe(
+      map(([options]) => this.reorderSelectedItemsFirst(options.toArray(), this.selected)),
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
+    );
     this.setTriggerLabel();
   }
 
-  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (this.items !== undefined && changes.selected !== undefined) {
-      this.selected$ = this.buildObservableOfSelected();
+  public ngOnChanges(): void {
+    this.setTriggerLabel();
+  }
+
+  public onPopoverClose(): void {
+    this.popoverOpen = false;
+    this.searchOptions('');
+    this.reorderSelectedItemsSubject.next();
+  }
+
+  public searchOptions(searchText: string): void {
+    if (this.searchMode === MultiSelectSearchMode.Disabled) {
+      return;
     }
-    this.setTriggerLabel();
+
+    if (this.searchMode === MultiSelectSearchMode.CaseInsensitive) {
+      this.caseInsensitiveSearchSubject.next(searchText);
+    }
+
+    this.searchText = searchText;
+    this.searchValueChange.emit(searchText);
   }
 
-  public onAllSelectionChange(): void {
-    this.selected = this.areAllOptionsSelected() ? [] : this.items!.map(item => item.value); // Select All or none
-    this.setSelection();
+  public onSelectAll(): void {
+    this.setSelection(this.allOptionsList!.filter(item => !item.disabled).map(item => item.value));
   }
 
-  public areAllOptionsSelected(): boolean {
-    return this.selected !== undefined && this.items !== undefined && this.selected.length === this.items.length;
+  public onClearSelected(): void {
+    this.setSelection([]);
+  }
+
+  public isIconOnlyMode(): boolean {
+    return this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Icon;
+  }
+
+  public isAnyOptionSelected(): boolean {
+    return this.selected !== undefined && this.allOptionsList !== undefined && this.selected.length > 0;
   }
 
   public onSelectionChange(item: SelectOptionComponent<V>): void {
-    this.selected = this.isSelectedItem(item)
-      ? this.selected?.filter(value => value !== item.value)
+    if (item.disabled) {
+      return;
+    }
+
+    const selected = this.isSelectedItem(item)
+      ? this.selected?.filter(value => !isEqual(value, item.value))
       : (this.selected ?? []).concat(item.value);
 
-    this.setSelection();
+    this.setSelection(selected ?? []);
   }
 
   public isSelectedItem(item: SelectOptionComponent<V>): boolean {
-    return this.selected !== undefined && this.selected.filter(value => value === item.value).length > 0;
+    return Array.isArray(this.selected) && this.selected.filter(value => isEqual(value, item.value)).length > 0;
   }
 
-  private setSelection(): void {
+  public preventClickDefault(event: Event): void {
+    event.preventDefault();
+  }
+
+  public writeValue(value?: V[]): void {
+    this.setSelection(value ?? []);
+    this.cdr.markForCheck();
+  }
+
+  public registerOnChange(onChange: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value: V[] | undefined) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
+  private setSelection(selected: V[]): void {
+    this.selected = selected;
     this.setTriggerLabel();
-    this.selected$ = this.buildObservableOfSelected();
     this.selectedChange.emit(this.selected);
+    this.propagateValueChangeToFormControl(this.selected);
   }
 
   private setTriggerLabel(): void {
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
-      this.triggerLabel = this.placeholder;
+      this.triggerValues$ = of({
+        label: this.placeholder,
+        overflowItemsCount: 0
+      });
 
       return;
     }
 
-    const selectedItems: SelectOptionComponent<V>[] | undefined = this.items?.filter(item => this.isSelectedItem(item));
-    if (selectedItems === undefined || selectedItems.length === 0) {
-      this.triggerLabel = this.placeholder;
-    } else if (selectedItems.length === 1) {
-      this.triggerLabel = selectedItems[0].label;
-    } else {
-      this.triggerLabel = `${selectedItems[0].label} and ${selectedItems.length - 1} more`;
-    }
-  }
+    this.triggerValues$ = this.allOptions$?.pipe(
+      map(options => {
+        const selectedItems: SelectOptionComponent<V>[] = options.filter(item => this.isSelectedItem(item));
+        const isMultiSelection = selectedItems.length > 1;
 
-  private buildObservableOfSelected(): Observable<SelectOption<V>[] | undefined> {
-    if (!this.items) {
-      return EMPTY;
-    }
-
-    return queryListAndChanges$(this.items).pipe(
-      switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
-      map(() => this.findItems(this.selected))
+        return {
+          label: this.getLabel(selectedItems),
+          overflowItemsCount: isMultiSelection ? selectedItems.length - 1 : 0,
+          overflowLabel: isMultiSelection
+            ? selectedItems
+                .slice(1)
+                .map(item => item.label)
+                .join(', ')
+            : undefined
+        };
+      })
     );
   }
 
-  // Find the select option object for a value
-  private findItems(value: V[] | undefined): SelectOption<V>[] | undefined {
-    if (this.items === undefined) {
-      this.loggerService.warn(`Invalid items for select option '${String(value)}'`);
-
-      return undefined;
+  private getLabel(selectedItems: SelectOptionComponent<V>[]): string {
+    if (selectedItems.length === 0) {
+      return this.placeholder === undefined ? '' : this.placeholder;
     }
 
-    return this.items.filter(item => this.isSelectedItem(item));
+    return this.prefix === undefined ? selectedItems[0]?.label : `${this.prefix}${selectedItems[0]?.label}`.trim();
+  }
+
+  private propagateValueChangeToFormControl(value: V[] | undefined): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  private reorderSelectedItemsFirst(
+    filteredOptions: SelectOptionComponent<V>[],
+    selected?: V[]
+  ): SelectOptionComponent<V>[] {
+    if (isEmpty(selected)) {
+      return filteredOptions;
+    }
+    const filteredOptionsPartitions = partition(filteredOptions, filteredOption =>
+      selected?.includes(filteredOption.value)
+    );
+
+    return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
+  }
+
+  private getFilteredOptions(optionsList: SelectOptionComponent<V>[]): Observable<SelectOptionComponent<V>[]> {
+    return combineLatest([of(optionsList), this.caseInsensitiveSearchSubject]).pipe(
+      map(([options, searchText]) =>
+        isEmpty(searchText)
+          ? options
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    );
   }
 }
 
+interface TriggerValues {
+  label: string | undefined;
+  overflowItemsCount: number;
+  overflowLabel?: string;
+}
+
 export const enum TriggerLabelDisplayMode {
-  Placeholder = 'placeholder',
-  Selection = 'selection'
+  // These may be used as css classes
+  Placeholder = 'placeholder-mode',
+  Selection = 'selection-mode',
+  Icon = 'icon-mode'
+}
+
+export const enum MultiSelectSearchMode {
+  Disabled = 'disabled', // Search is not available
+  CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
+  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
 }

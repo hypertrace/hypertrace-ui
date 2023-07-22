@@ -1,24 +1,21 @@
 import { DateCoercer, Dictionary } from '@hypertrace/common';
-import {
-  AttributeMetadata,
-  GraphQlDataSourceModel,
-  MetadataService,
-  Span,
-  spanIdKey,
-  SpanType,
-  SPAN_SCOPE,
-  SpecificationBuilder,
-  Trace,
-  TraceGraphQlQueryHandlerService,
-  traceIdKey,
-  TRACE_GQL_REQUEST,
-  WaterfallData
-} from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AttributeMetadata } from '../../../../graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import { Span, spanIdKey, SpanType, SPAN_SCOPE } from '../../../../graphql/model/schema/span';
+import { Trace, traceIdKey } from '../../../../graphql/model/schema/trace';
+import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
+import {
+  TraceGraphQlQueryHandlerService,
+  TRACE_GQL_REQUEST
+} from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
+import { LogEventsService } from '../../../../services/log-events/log-events.service';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { LogEvent, WaterfallData } from '../../../widgets/waterfall/waterfall/waterfall-chart';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 @Model({
   type: 'api-trace-waterfall-data-source'
@@ -41,6 +38,9 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
+  @ModelInject(LogEventsService)
+  private readonly logEventsService!: LogEventsService;
+
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
@@ -60,8 +60,13 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       'protocolName',
       'spanTags',
       'startTime',
-      'type'
+      'type',
+      'errorCount'
     ];
+  }
+
+  protected getLogEventAttributes(): string[] {
+    return ['attributes', 'timestamp', 'summary'];
   }
 
   private getTraceData(): Observable<Trace | undefined> {
@@ -73,6 +78,9 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
       timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.getSpanAttributes().map(attribute =>
+        this.specificationBuilder.attributeSpecificationForKey(attribute)
+      ),
+      logEventProperties: this.getLogEventAttributes().map(attribute =>
         this.specificationBuilder.attributeSpecificationForKey(attribute)
       )
     });
@@ -103,10 +111,15 @@ export class ApiTraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Wat
         units: duration.units
       },
       serviceName: span.displayEntityName as string,
-      name: span.displaySpanName as string,
       protocolName: span.protocolName as string,
+      apiName: span.displaySpanName as string,
       spanType: span.type as SpanType,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
+      errorCount: span.errorCount as number,
+      logEvents: this.logEventsService.getLogEventsWithSpanStartTime(
+        span.logEvents as Dictionary<LogEvent[]>,
+        span.startTime as number
+      )
     };
   }
 }

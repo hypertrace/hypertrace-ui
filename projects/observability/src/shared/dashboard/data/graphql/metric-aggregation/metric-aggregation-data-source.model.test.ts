@@ -1,19 +1,17 @@
 import { fakeAsync } from '@angular/core/testing';
-import {
-  AttributeMetadataType,
-  GraphQlFieldFilter,
-  GraphQlOperatorType,
-  MetricAggregationType,
-  ObservedGraphQlRequest
-} from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
+import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
+import { ObservedGraphQlRequest } from '../graphql-query-event.service';
 import { ExploreSelectionSpecificationModel } from '../specifiers/explore-selection-specification.model';
 import { MetricAggregationDataSourceModel } from './metric-aggregation-data-source.model';
 
@@ -51,7 +49,7 @@ describe('Metric aggregation data source model', () => {
               {
                 [callCountSpec.resultAlias()]: {
                   value: 10,
-                  type: AttributeMetadataType.Number
+                  type: AttributeMetadataType.Long
                 }
               }
             ]
@@ -78,7 +76,7 @@ describe('Metric aggregation data source model', () => {
         }),
         filters: [
           expect.objectContaining({
-            key: 'duration',
+            keyOrExpression: 'duration',
             operator: GraphQlOperatorType.GreaterThan,
             value: 500
           })

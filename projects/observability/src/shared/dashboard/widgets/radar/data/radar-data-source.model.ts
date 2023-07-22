@@ -1,8 +1,9 @@
 import { forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { GraphQlDataSourceModel, GraphQlTimeRange } from '@hypertrace/distributed-tracing';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { RadarPoint } from '../../../../components/radar/radar';
+import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
+import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 
 export abstract class RadarDataSourceModel extends GraphQlDataSourceModel<RadarWidgetDataFetcher> {
   protected abstract fetchData(timeRange: GraphQlTimeRange): Observable<RadarPoint[]>;

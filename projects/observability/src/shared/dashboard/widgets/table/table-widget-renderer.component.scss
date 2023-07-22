@@ -1,0 +1,18 @@
+@import 'layout';
+
+.table-content-container {
+  @include flex-layout(column);
+
+  &.titled {
+    padding-top: 12px;
+  }
+}
+
+.table {
+  flex: 1;
+  min-height: 0;
+}
+
+.header-margin {
+  margin-top: 16px;
+}

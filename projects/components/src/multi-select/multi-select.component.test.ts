@@ -1,20 +1,43 @@
+/* eslint-disable max-lines */
+import { CommonModule } from '@angular/common';
 import { fakeAsync, flush } from '@angular/core/testing';
-import { IconType } from '@hypertrace/assets-library';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
+import { IsEmptyPipeModule, NavigationService } from '@hypertrace/common';
+import { PopoverComponent } from '@hypertrace/components';
+import { runFakeRxjs } from '@hypertrace/test-utils';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
+import { NEVER } from 'rxjs';
+import { ButtonComponent } from '../button/button.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { DividerComponent } from '../divider/divider.component';
 import { LabelComponent } from '../label/label.component';
-import { LetAsyncModule } from '../let-async/let-async.module';
-import { SelectJustify } from '../select/select-justify';
+import { LoadAsyncModule } from '../load-async/load-async.module';
+import { PopoverModule } from '../popover/popover.module';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 import { SelectOptionComponent } from '../select/select-option.component';
-import { MultiSelectComponent, TriggerLabelDisplayMode } from './multi-select.component';
+import { XMoreComponent } from '../x-more/x-more.component';
+import { MultiSelectJustify } from './multi-select-justify';
+import { MultiSelectComponent, MultiSelectSearchMode, TriggerLabelDisplayMode } from './multi-select.component';
 
 describe('Multi Select Component', () => {
   const hostFactory = createHostFactory<MultiSelectComponent<string>>({
     component: MultiSelectComponent,
-    imports: [LetAsyncModule],
-    entryComponents: [SelectOptionComponent],
-    declarations: [MockComponent(LabelComponent), MockComponent(DividerComponent)],
+    imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule, IsEmptyPipeModule],
+    providers: [
+      mockProvider(NavigationService, {
+        navigation$: NEVER
+      })
+    ],
+    declarations: [
+      SelectOptionComponent,
+      MockComponent(LabelComponent),
+      MockComponent(DividerComponent),
+      MockComponent(SearchBoxComponent),
+      MockComponent(ButtonComponent),
+      MockComponent(CheckboxComponent),
+      MockComponent(XMoreComponent)
+    ],
     shallow: true
   });
 
@@ -23,35 +46,86 @@ describe('Multi Select Component', () => {
   const selectionOptions = [
     { label: 'first', value: 'first-value' },
     { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value' }
+    { label: 'third', value: 'third-value' },
+    { label: 'fourth', value: 'fourth-value' },
+    { label: 'fifth', value: 'fifth-value' },
+    { label: 'sixth', value: 'sixth-value' }
   ];
 
   test('should display initial selections', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected">
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
       {
         hostProps: {
           options: selectionOptions,
-          selected: [selectionOptions[1].value]
+          selected: [selectionOptions[1].value],
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
         }
       }
     );
+
     spectator.tick();
 
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          overflowItemsCount: 0,
+          overflowLabel: undefined
+        }
+      });
+    });
+
+    const popoverComponent = spectator.query(PopoverComponent);
+    expect(popoverComponent?.closeOnClick).toEqual(false);
+    expect(popoverComponent?.closeOnNavigate).toEqual(true);
+
     spectator.click('.trigger-content');
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .search-bar', { root: true })).toExist();
+    expect(spectator.query('.multi-select-content .multi-select-option', { root: true })).toExist();
+
+    expect(spectator.query('.multi-select-content', { root: true })).toExist();
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+
+    expect(optionElements.length).toEqual(6);
 
     spectator.setHostInput({
       selected: [selectionOptions[1].value, selectionOptions[2].value]
     });
 
     spectator.tick();
-    const selectedElements = spectator.queryAll('input:checked', { root: true });
-    expect(selectedElements.length).toBe(2);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(1);
+
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
+    ).toBe(2);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
+        }
+      });
+    });
   }));
 
   test('should display provided options with icons when clicked', fakeAsync(() => {
@@ -78,15 +152,67 @@ describe('Multi Select Component', () => {
     spectator.click('.trigger-content');
     const optionElements = spectator.queryAll('.multi-select-option:not(.all-options)', { root: true });
     expect(spectator.query('.multi-select-content', { root: true })).toExist();
-    expect(optionElements.length).toBe(3);
+    expect(optionElements.length).toBe(6);
 
-    const selectedElements = spectator.queryAll('input:checked', { root: true });
-    expect(selectedElements.length).toBe(2);
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(1);
 
-    optionElements.forEach((element, index) => {
-      expect(element).toHaveText(selectionOptions[index].label);
+    expect(
+      selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
+        .length
+    ).toBe(2);
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: 'second',
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
+        }
+      });
+    });
+
+    // Selected items first (after reordering)
+    expect(optionElements[0]).toHaveText(selectionOptions[1].label);
+    expect(optionElements[1]).toHaveText(selectionOptions[2].label);
+    expect(optionElements[2]).toHaveText(selectionOptions[0].label);
+    expect(optionElements[3]).toHaveText(selectionOptions[3].label);
+    expect(optionElements[4]).toHaveText(selectionOptions[4].label);
+    expect(optionElements[5]).toHaveText(selectionOptions[5].label);
+
+    optionElements.forEach(element => {
       expect(element.querySelector('ht-icon')).toExist();
     });
+  }));
+
+  test('should block prevent default when checkbox is clicked', fakeAsync(() => {
+    const onChange = jest.fn();
+    spectator = hostFactory(
+      `
+    <ht-multi-select (selectedChange)="onChange($event)" [selected]="selected">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [],
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+    const selectedCheckboxElement = spectator.queryAll('ht-checkbox', { root: true })[0];
+    expect(spectator.dispatchFakeEvent(selectedCheckboxElement, 'click', true).defaultPrevented).toBe(true);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith([selectionOptions[0].value]);
+    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+    flush();
   }));
 
   test('should notify and update selection when selection is changed', fakeAsync(() => {
@@ -116,7 +242,19 @@ describe('Multi Select Component', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
-    expect(spectator.query(LabelComponent)?.label).toEqual('second and 1 more');
+    expect(spectator.query('.trigger-more-items')).toExist();
+    expect(spectator.query(LabelComponent)?.label).toEqual('second');
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: 'second',
+          overflowItemsCount: 1,
+          overflowLabel: 'third'
+        }
+      });
+    });
+
     flush();
   }));
 
@@ -143,12 +281,12 @@ describe('Multi Select Component', () => {
     flush();
   }));
 
-  test('should notify and update selection when all checkbox is selected', fakeAsync(() => {
+  test('should show select all and clear selected buttons', fakeAsync(() => {
     const onChange = jest.fn();
 
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [showAllOptionControl]="showAllOptionControl">
+    <ht-multi-select [selected]="selected" (selectedChange)="onChange($event)" [placeholder]="placeholder" [searchMode]="searchMode">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -157,7 +295,7 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           placeholder: 'Select options',
-          showAllOptionControl: true,
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
           onChange: onChange
         }
       }
@@ -166,19 +304,50 @@ describe('Multi Select Component', () => {
     spectator.tick();
     spectator.click('.trigger-content');
 
-    const allOptionElement = spectator.query('.all-options', { root: true });
+    expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+
+    expect(spectator.component.isAnyOptionSelected()).toEqual(true);
+    const clearSelectedButton = spectator.query('.clear-selected', { root: true });
+    expect(clearSelectedButton).toExist();
+    spectator.click(clearSelectedButton!);
+
+    spectator.tick();
+
+    expect(
+      spectator
+        .queryAll('ht-checkbox', { root: true })
+        .filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+    ).toBe(0);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+
+    expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
+
+    const allOptionElement = spectator.query('.select-all', { root: true });
     expect(allOptionElement).toExist();
     spectator.click(allOptionElement!);
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
-    expect(spectator.query(LabelComponent)?.label).toEqual('first and 2 more');
+    spectator.tick();
+    const selectedCheckboxElements = spectator.queryAll('ht-checkbox', { root: true });
+    expect(selectedCheckboxElements.length).toBe(6);
 
-    // De select all
-    spectator.click(allOptionElement!);
-    expect(onChange).toHaveBeenCalledTimes(2);
-    expect(onChange).toHaveBeenLastCalledWith([]);
-    expect(spectator.query(LabelComponent)?.label).toEqual('Select options');
+    expect(onChange).toHaveBeenCalledWith(selectionOptions.map(option => option.value));
+    expect(spectator.query(LabelComponent)?.label).toEqual('first');
+
+    const triggerMoreItems = spectator.query(XMoreComponent);
+    expect(triggerMoreItems).toExist();
+    expect(triggerMoreItems?.count).toEqual(5);
+
+    spectator.setHostInput({
+      searchMode: MultiSelectSearchMode.Disabled
+    });
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).not.toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
 
     flush();
   }));
@@ -212,13 +381,24 @@ describe('Multi Select Component', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([selectionOptions[1].value, selectionOptions[2].value]);
     expect(spectator.query(LabelComponent)?.label).toEqual('Placeholder');
+    expect(spectator.query('.trigger-more-items')).not.toExist();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('(x|)', {
+        x: {
+          label: 'Placeholder',
+          overflowItemsCount: 0
+        }
+      });
+    });
+
     flush();
   }));
 
-  test('should set correct label alignment', fakeAsync(() => {
+  test('should set correct justification', fakeAsync(() => {
     spectator = hostFactory(
       `
-    <ht-multi-select [selected]="selected" [showBorder]="showBorder">
+    <ht-multi-select [selected]="selected" [showBorder]="showBorder" [justify]="justify">
       <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
       </ht-select-option>
     </ht-multi-select>`,
@@ -226,41 +406,282 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
-          showBorder: true
+          showBorder: true,
+          justify: MultiSelectJustify.Left
         }
       }
     );
     spectator.tick();
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
-
-    spectator.setInput({
-      showBorder: false
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.triggerValues$).toBe('x', {
+        x: {
+          label: selectionOptions[1].label,
+          overflowItemsCount: 0
+        }
+      });
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
+    expect(spectator.query('.trigger-content')).toExist();
+    expect(spectator.query('.trigger-label-container')).toExist();
+    expect(spectator.query('.trigger-label')).toExist();
+    expect(spectator.query('.trigger-icon')).toExist();
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-start;');
 
     spectator.setInput({
-      justify: SelectJustify.Left
+      justify: MultiSelectJustify.Center
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: center;');
 
     spectator.setInput({
-      justify: SelectJustify.Right
+      justify: MultiSelectJustify.Right
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
+    expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
+  }));
 
-    spectator.setInput({
-      justify: SelectJustify.Center
+  test('should show searchbox if applicable and function as expected', fakeAsync(() => {
+    const onSearchValueChangeSpy = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select [searchMode]="searchMode" (searchValueChange)="onSearchValueChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          onSearchValueChange: onSearchValueChangeSpy
+        }
+      }
+    );
+
+    spectator.click('.trigger-content');
+
+    const searchBar = spectator.query('.search-bar', { root: true });
+    expect(searchBar).toExist();
+
+    spectator.component.searchOptions('fi');
+    spectator.tick();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('fi');
+
+    let options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(2);
+    expect(options[0]).toContainText('first');
+
+    spectator.component.searchOptions('i');
+    spectator.tick();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('i');
+
+    options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(4);
+    expect(options[0]).toContainText('first');
+    expect(options[1]).toContainText('third');
+
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist(); // Due to initial selection
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
+    // Set options list to less than 5 and search control buttons should be hidden
+    spectator.component.searchOptions('');
+    spectator.setHostInput({
+      options: []
     });
 
-    expect(spectator.element).toHaveText(selectionOptions[1].label);
-    expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-center'));
+    spectator.tick(2);
+    spectator.detectChanges();
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
+
+    // Set options list to less than 5 and search control buttons should be hidden
+    spectator.setHostInput({
+      options: selectionOptions.slice(0, 3)
+    });
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+
+    expect(spectator.component.searchText).toBe('');
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
+    flush();
+  }));
+
+  test('should show search box and emit only when search mode is emit only', fakeAsync(() => {
+    const onSearchValueChangeSpy = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select [searchMode]="searchMode" (searchValueChange)="onSearchValueChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          searchMode: MultiSelectSearchMode.EmitOnly,
+          onSearchValueChange: onSearchValueChangeSpy
+        }
+      }
+    );
+
+    spectator.click('.trigger-content');
+
+    const searchBar = spectator.query('.search-bar', { root: true });
+    expect(searchBar).toExist();
+
+    spectator.component.searchOptions('fi');
+    spectator.tick();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('fi');
+
+    // No change in options length since for this test, externally we did not filter any option
+    let options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(6);
+    spectator.component.searchOptions('i');
+    spectator.tick();
+    expect(onSearchValueChangeSpy).toHaveBeenLastCalledWith('i');
+
+    options = spectator.queryAll('.multi-select-option', { root: true });
+    expect(options.length).toBe(6);
+
+    // Set selected options to less than 5 with search text and search box and buttons should still be visible
+    spectator.setHostInput({
+      options: selectionOptions.slice(0, 3)
+    });
+    spectator.tick();
+    spectator.detectChanges();
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+
+    expect(spectator.component.searchText).toBe('i');
+
+    spectator.component.searchOptions('asdasd');
+    spectator.tick();
+
+    expect(spectator.component.searchText).toBe('asdasd');
+
+    expect(spectator.query('.search-bar', { root: true })).toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).toExist();
+
+    // Set selected options to less than 5 with empty search text. search box and buttons should not be visible
+    spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', '');
+    spectator.component.searchOptions('');
+    spectator.tick();
+    spectator.detectChanges();
+
+    expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
+
+    expect(spectator.component.searchText).toBe('');
+
+    expect(spectator.query('.search-bar', { root: true })).not.toExist();
+    expect(spectator.query('.divider', { root: true })).toExist();
+    expect(spectator.query('.clear-selected', { root: true })).not.toExist();
+    expect(spectator.query('.select-all', { root: true })).toExist();
+    flush();
+  }));
+
+  test('should disable select options as expected', fakeAsync(() => {
+    const onChange = jest.fn();
+
+    spectator = hostFactory(
+      `
+    <ht-multi-select (selectedChange)="onChange($event)">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value" [disabled]="option.disabled"></ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: [
+            { label: 'first', value: 'first-value' },
+            { label: 'second', value: 'second-value', disabled: true },
+            {
+              label: 'third',
+              value: 'third-value',
+              selectedLabel: 'Third Value!!!',
+              icon: 'test-icon',
+              iconColor: 'red'
+            }
+          ],
+          onChange: onChange
+        }
+      }
+    );
+
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    const optionElements = spectator.queryAll('.multi-select-option', { root: true });
+    expect(optionElements.length).toBe(3);
+    expect(optionElements[0]).not.toHaveClass('disabled');
+    expect(optionElements[1]).toHaveClass('disabled');
+    expect(optionElements[2]).not.toHaveClass('disabled');
+    spectator.click(optionElements[1]);
+
+    expect(onChange).not.toHaveBeenCalled();
+    flush();
+  }));
+
+  test('should not show the select all button', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [showSelectAll]="showSelectAll">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>`,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          showSelectAll: false,
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
+        }
+      }
+    );
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    expect(spectator.query('.select-all', { root: true })).not.toExist();
+
+    // Custom control should not exist
+    expect(spectator.query('.custom-control', { root: true })).not.toExist();
+  }));
+
+  test('should show customControl template when present', fakeAsync(() => {
+    spectator = hostFactory(
+      `
+    <ht-multi-select [selected]="selected" [triggerLabelDisplayMode]="triggerLabelDisplayMode" [searchMode]="searchMode" [customControlTemplate]="testTemplate">
+      <ht-select-option *ngFor="let option of options" [label]="option.label" [value]="option.value">
+      </ht-select-option>
+    </ht-multi-select>
+
+    <ng-template #testTemplate>
+      <div class="test-template">Test Control Template</div>
+    </ng-template>
+
+    `,
+      {
+        hostProps: {
+          options: selectionOptions,
+          selected: [selectionOptions[1].value],
+          searchMode: MultiSelectSearchMode.CaseInsensitive,
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
+        }
+      }
+    );
+    spectator.tick();
+    spectator.click('.trigger-content');
+
+    expect(spectator.component.customControlTemplate).toBeDefined();
+    expect(spectator.query('.custom-control', { root: true })).toExist();
   }));
 });

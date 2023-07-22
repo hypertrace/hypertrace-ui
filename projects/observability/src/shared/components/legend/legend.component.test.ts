@@ -1,5 +1,5 @@
 import { createComponentFactory } from '@ngneat/spectator/jest';
-import { LegendComponent, LegendLayout, LegendPosition } from './legend.component';
+import { LegendComponent, LegendFontSize, LegendLayout, LegendPosition } from './legend.component';
 
 describe('Legend component', () => {
   const componentFactory = createComponentFactory({
@@ -8,6 +8,7 @@ describe('Legend component', () => {
     providers: LegendComponent.buildProviders({
       layout: LegendLayout.Column,
       position: LegendPosition.Right,
+      fontSize: LegendFontSize.ExtraSmall,
       series: []
     })
   });
@@ -17,6 +18,7 @@ describe('Legend component', () => {
       providers: LegendComponent.buildProviders({
         layout: LegendLayout.Column,
         position: LegendPosition.Right,
+        fontSize: LegendFontSize.Small,
         series: [
           {
             name: 'alpha',
@@ -39,6 +41,7 @@ describe('Legend component', () => {
     expect(entries[1].querySelector<HTMLElement>('.legend-symbol')!.style.backgroundColor).toBe('red');
 
     expect(spectator.query('.legend-entries')).toHaveClass('legend-column');
+    expect(spectator.query('.legend-entry')).toHaveClass('font-size-small');
   });
 
   test('should render in requested orientation', () => {
@@ -46,6 +49,7 @@ describe('Legend component', () => {
       providers: LegendComponent.buildProviders({
         layout: LegendLayout.Row,
         position: LegendPosition.Right,
+        fontSize: LegendFontSize.ExtraSmall,
         series: [
           {
             name: 'alpha',

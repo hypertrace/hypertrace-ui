@@ -1,0 +1,22 @@
+:host {
+  min-width: 0;
+}
+
+.description {
+  display: flex;
+}
+
+.description-button {
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+  &-more {
+    margin-left: 5px;
+  }
+}
+
+.truncated-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

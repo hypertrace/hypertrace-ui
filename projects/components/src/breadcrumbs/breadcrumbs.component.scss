@@ -3,7 +3,6 @@
 .breadcrumbs {
   .breadcrumb-section {
     display: flex;
-    padding-bottom: 12px;
 
     .breadcrumb {
       @include body-small($blue-5);

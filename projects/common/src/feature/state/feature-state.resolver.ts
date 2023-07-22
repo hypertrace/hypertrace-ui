@@ -1,10 +1,21 @@
 import { Observable } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
 import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
+import { Dictionary } from '../../utilities/types/types';
 import { FeatureState } from './feature.state';
 
 export abstract class FeatureStateResolver {
-  public abstract getFeatureState(feature: string): Observable<FeatureState>;
+  public abstract getFeatureFlagValue<T extends FeatureFlagValue = FeatureFlagValue>(feature: string): Observable<T>;
+
+  public getFeatureState(feature: string): Observable<FeatureState> {
+    return this.getFeatureFlagValue(feature).pipe(
+      map(featureFlagValue => this.convertFlagValueToFeatureState(featureFlagValue))
+    );
+  }
+
+  private convertFlagValueToFeatureState(flagValue: FeatureFlagValue): FeatureState {
+    return Boolean(flagValue) ? FeatureState.Enabled : FeatureState.Disabled;
+  }
 
   public getCombinedFeatureState(features: string[]): Observable<FeatureState> {
     return forkJoinSafeEmpty(features.map(feature => this.getFeatureState(feature))).pipe(
@@ -24,3 +35,5 @@ export abstract class FeatureStateResolver {
     return FeatureState.Enabled;
   }
 }
+
+export type FeatureFlagValue = boolean | string | string[] | number | Dictionary<string> | undefined;

@@ -1,11 +1,23 @@
-import { Component, Inject, InjectionToken, Injector } from '@angular/core';
-import { createComponentFactory } from '@ngneat/spectator/jest';
+/* eslint-disable max-classes-per-file */
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  InjectionToken,
+  Injector,
+  Optional,
+  ViewContainerRef
+} from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+import { createComponentFactory, createServiceFactory } from '@ngneat/spectator/jest';
 import { DynamicComponentService } from './dynamic-component.service';
 
 describe('Dynamic component service', () => {
   const injectionToken = new InjectionToken<string>('test token');
+
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
   @Component({
-    // tslint:disable-next-line: component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'dynamic-component',
     template: 'Dynamic component {{this.injected}}'
   })
@@ -36,5 +48,53 @@ describe('Dynamic component service', () => {
     expect(componentRef.instance).toBeInstanceOf(DynamicComponent);
     spectator.detectChanges(); // Need a cycle to update the binding
     expect(spectator.element).toHaveText('injected value');
+  });
+
+  describe('Test attachComponentToViewContainer method', () => {
+    const MOCK_TOKEN = new InjectionToken<string>('test token');
+
+    @Component({
+      selector: 'ht-mock-component',
+      template: `
+        <div class="title">
+          {{ this.title }}
+        </div>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class MockComponent {
+      public constructor(
+        public readonly vcr: ViewContainerRef,
+        @Optional() @Inject(MOCK_TOKEN) public readonly title: string
+      ) {}
+    }
+
+    const createService = createServiceFactory({
+      service: DynamicComponentService
+    });
+
+    const createComponent = createComponentFactory({
+      component: MockComponent
+    });
+
+    test('should render the component correctly with the props passed', fakeAsync(() => {
+      const spectator = createService();
+      const mockComponent = createComponent();
+      const component = spectator.service.insertComponentToViewContainer<MockComponent>(
+        MockComponent,
+        mockComponent.component.vcr,
+        [
+          {
+            provide: MOCK_TOKEN,
+            useValue: 'test'
+          }
+        ]
+      );
+
+      mockComponent.tick();
+      expect(component).toBeDefined();
+      const compElRef = component?.location.nativeElement as HTMLDivElement;
+      expect(compElRef.textContent?.trim()).toEqual('test');
+    }));
   });
 });

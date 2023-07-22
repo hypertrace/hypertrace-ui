@@ -1,4 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
+import { IconType } from '@hypertrace/assets-library';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
@@ -23,6 +24,7 @@ describe('Toggle Group Component', () => {
       },
       {
         label: 'Second',
+        icon: IconType.Add,
         value: 'second-value'
       }
     ];

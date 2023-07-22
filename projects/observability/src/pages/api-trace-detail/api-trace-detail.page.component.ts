@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
-import { NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
-import { ButtonRole, ButtonStyle, IconSize } from '@hypertrace/components';
-
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+import { NavigationParams, NavigationService, SubscriptionLifecycle } from '@hypertrace/common';
+import { ButtonVariant, ButtonStyle, FilterOperator, IconSize } from '@hypertrace/components';
 import { Observable } from 'rxjs';
+import { LogEvent } from '../../shared/dashboard/widgets/waterfall/waterfall/waterfall-chart';
+import { ExplorerService } from '../explorer/explorer-service';
+import { ScopeQueryParam } from '../explorer/explorer.component';
 import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.service';
 
 @Component({
@@ -32,12 +33,21 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
             icon="${IconType.Time}"
             [value]="traceDetails.timeString"
           ></ht-summary-value>
-          <ht-summary-value
-            class="summary-value"
-            icon="${IconType.TraceId}"
-            label="Trace ID"
-            [value]="traceDetails.traceId"
-          ></ht-summary-value>
+
+          <div class="filterable-summary-value">
+            <ht-summary-value
+              class="summary-value"
+              icon="${IconType.TraceId}"
+              label="Trace ID"
+              [value]="traceDetails.traceId"
+            ></ht-summary-value>
+            <ht-explore-filter-link
+              class="filter-link"
+              [paramsOrUrl]="getExplorerNavigationParams | htMemoize: traceDetails | async"
+              htTooltip="See traces in Explorer"
+            >
+            </ht-explore-filter-link>
+          </div>
 
           <div class="separation"></div>
 
@@ -45,7 +55,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
 
           <ht-button
             class="full-trace-button"
-            role="${ButtonRole.Tertiary}"
+            variant="${ButtonVariant.Tertiary}"
             display="${ButtonStyle.Bordered}"
             label="See Full Trace"
             (click)="this.navigateToFullTrace(traceDetails.traceId, traceDetails.startTime)"
@@ -53,13 +63,15 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
         </div>
       </div>
 
+      <ht-navigable-tab-group class="tabs">
+        <ht-navigable-tab path="sequence"> Sequence </ht-navigable-tab>
+        <ng-container *ngIf="this.logEvents$ | async as logEvents">
+          <ht-navigable-tab path="logs" [labelTag]="logEvents.length"> Logs </ht-navigable-tab>
+        </ng-container>
+      </ht-navigable-tab-group>
+
       <div class="scrollable-container">
-        <ht-application-aware-dashboard
-          [json]="this.defaultJson"
-          [padding]="0"
-          (dashboardReady)="this.onDashboardReady($event)"
-        >
-        </ht-application-aware-dashboard>
+        <router-outlet></router-outlet>
       </div>
     </div>
   `
@@ -68,45 +80,15 @@ export class ApiTraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
 
   public readonly traceDetails$: Observable<ApiTraceDetails>;
-
-  public readonly defaultJson: ModelJson = {
-    type: 'container-widget',
-    layout: {
-      type: 'auto-container-layout',
-      'enable-style': false
-    },
-    children: [
-      {
-        type: 'waterfall-widget',
-        title: 'Sequence Diagram',
-        data: {
-          type: 'api-trace-waterfall-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'trace-id': '${traceId}',
-          // tslint:disable-next-line: no-invalid-template-strings
-          'start-time': '${startTime}'
-        }
-      }
-    ]
-  };
+  public readonly logEvents$: Observable<LogEvent[]>;
 
   public constructor(
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
     protected readonly navigationService: NavigationService,
-    private readonly apiTraceDetailService: ApiTraceDetailService
+    private readonly apiTraceDetailService: ApiTraceDetailService,
+    private readonly explorerService: ExplorerService
   ) {
     this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
-  }
-
-  public onDashboardReady(dashboard: Dashboard): void {
-    this.subscriptionLifecycle.add(
-      this.traceDetails$.subscribe(traceDetails => {
-        dashboard.setVariable('traceId', traceDetails.id);
-        dashboard.setVariable('traceType', traceDetails.type);
-        dashboard.setVariable('startTime', traceDetails.startTime);
-        dashboard.refresh();
-      })
-    );
+    this.logEvents$ = this.apiTraceDetailService.fetchLogEvents();
   }
 
   public onClickBack(): void {
@@ -116,4 +98,9 @@ export class ApiTraceDetailPageComponent {
   public navigateToFullTrace(traceId: string, startTime: string): void {
     this.navigationService.navigateWithinApp(['/trace', traceId, { startTime: startTime }]);
   }
+
+  public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
+    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.traceId }
+    ]);
 }

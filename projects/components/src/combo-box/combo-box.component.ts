@@ -9,10 +9,14 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { DomElementScrollIntoViewService, isNonEmptyString, TypedSimpleChanges } from '@hypertrace/common';
+import { isEmpty, isNil } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { PopoverRef } from '../popover/popover-ref';
 import { PopoverComponent } from '../popover/popover.component';
@@ -22,13 +26,30 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
   selector: 'ht-combo-box',
   styleUrls: ['./combo-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: ComboBoxComponent
+    }
+  ],
   template: `
-    <ht-popover (popoverOpen)="this.onPopoverOpen($event)" (popoverClose)="this.onPopoverClose()" class="combo-box">
+    <ht-popover
+      class="combo-box"
+      [disabled]="this.disabled"
+      (popoverOpen)="this.onPopoverOpen($event)"
+      (popoverClose)="this.onPopoverClose()"
+    >
       <ht-popover-trigger>
         <div
           #trigger
           class="popover-trigger"
-          [ngClass]="this.mode"
+          [ngClass]="{
+            input: this.mode === '${ComboBoxMode.Input}',
+            chip: this.mode === '${ComboBoxMode.Chip}',
+            'show-border': this.showBorder,
+            disabled: this.disabled
+          }"
           [class.has-text]="this.text"
           [class.input-focused]="input.matches(':focus')"
         >
@@ -41,6 +62,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
           <input
             #input
             class="trigger-input"
+            [attr.aria-label]="this.ariaLabel || 'trigger input'"
             [style.width]="this.width"
             [class.has-icon]="this.icon"
             [class.has-text]="this.text"
@@ -64,6 +86,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
 
           <!-- Clear Button -->
           <div
+            *ngIf="!this.disabled"
             [class.has-text]="this.text"
             [class.input-focused]="input.matches(':focus')"
             [ngClass]="this.mode"
@@ -80,22 +103,37 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
           [style.min-width.px]="trigger.offsetWidth"
           class="popover-content"
         >
-          <!-- Simple string list when user does not provide a template (User option templates coming soon!) -->
+          <div class="option-list" *ngIf="this.isFilteredOptionAvailable()">
+            <!-- Simple string list when user does not provide a template (User option templates coming soon!) -->
+            <div
+              #optionElement
+              *ngFor="let option of this.filteredOptions; index as i"
+              [class.selected]="this.highlightedOptionIndex === i"
+              (click)="this.onOptionClick(option)"
+              [htTooltip]="option.tooltip"
+              class="popover-item"
+            >
+              <ht-icon class="option-icon" [icon]="option.icon" *ngIf="option.icon"></ht-icon>
+              <div [innerHtml]="option.text | htHighlight: { text: this.text, highlightType: 'mark' }"></div>
+            </div>
+          </div>
           <div
-            *ngFor="let option of this.filteredOptions; index as i"
-            [class.selected]="this.highlightedOptionIndex === i"
-            (click)="this.onOptionClick(option)"
-            [htTooltip]="option.tooltip"
-            class="popover-item"
+            *ngIf="this.isCreateOptionAvailable()"
+            [class.selected]="this.highlightedOptionIndex === -1"
+            (click)="this.onEnter()"
+            [htTooltip]="this.createOption?.tooltip"
+            class="popover-item create-option"
+            [class.option-divider]="this.filteredOptions.length > 0"
           >
-            <div [innerHtml]="option.text | htHighlight: { text: this.text!, highlightType: 'mark' }"></div>
+            <ht-icon class="option-icon" [icon]="this.createOption?.icon" *ngIf="this.createOption?.icon"></ht-icon>
+            <span>{{ this.createOption?.text }}</span>
           </div>
         </div>
       </ht-popover-content>
     </ht-popover>
   `
 })
-export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy {
+export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
   public mode?: ComboBoxMode = ComboBoxMode.Input;
 
@@ -104,6 +142,9 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   @Input()
   public placeholder?: string;
+
+  @Input()
+  public ariaLabel?: string;
 
   @Input()
   public disabled: boolean = false;
@@ -115,10 +156,19 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   public autoSize: boolean = false;
 
   @Input()
+  public provideCreateOption: boolean = false;
+
+  @Input()
+  public createOptionLabel?: string = 'Create';
+
+  @Input()
   public text?: string = '';
 
   @Input()
   public options?: ComboBoxOption<TValue>[] = [];
+
+  @Input()
+  public showBorder: boolean = true;
 
   @Output()
   public readonly textChange: EventEmitter<string> = new EventEmitter();
@@ -144,21 +194,32 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   @ViewChild('invisibleText', { read: ElementRef })
   public readonly invisibleText!: ElementRef;
 
+  @ViewChildren('optionElement', { read: ElementRef })
+  public readonly optionElements!: QueryList<ElementRef>;
+
   private popoverRef: PopoverRef | undefined;
 
   public highlightedOptionIndex: number = 0;
   public filteredOptions: ComboBoxOption<TValue>[] = [];
   public width: string = '100%';
 
-  public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  public createOption?: ComboBoxOption<TValue>;
+
+  private propagateControlValueChange?: (value: string | undefined) => void;
+  private propagateControlValueChangeOnTouch?: (value: string | undefined) => void;
+
+  public constructor(
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly scrollIntoViewService: DomElementScrollIntoViewService
+  ) {}
 
   public ngAfterViewInit(): void {
     this.measureText();
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.options) {
-      this.setFilteredOptions();
+    if (changes.options || changes.text) {
+      this.setFilteredOptions(this.text);
     }
   }
 
@@ -166,9 +227,28 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
     this.popoverRef?.close();
   }
 
-  private setFilteredOptions(text?: string): void {
-    this.filteredOptions = (this.options ?? []).filter(option => text === undefined || option.text.includes(text));
+  private buildCreateOption(text: string): ComboBoxOption<TValue> {
+    return {
+      text: `${this.createOptionLabel} "${text}"`,
+      tooltip: text,
+      icon: IconType.AddCircleOutline
+    };
+  }
+
+  private setFilteredOptions(searchText?: string): void {
+    this.filteredOptions = isEmpty(searchText)
+      ? this.options ?? []
+      : (this.options ?? []).filter(option => option.text.toLowerCase().includes(searchText!.toLowerCase()));
+    this.createOption = this.isShowCreateOption(searchText) ? this.buildCreateOption(searchText) : undefined;
     this.setHighlightedOptionIndex();
+  }
+
+  private isShowCreateOption(searchText?: string): searchText is string {
+    return (
+      this.provideCreateOption &&
+      isNonEmptyString(searchText) &&
+      this.filteredOptions.find(option => option.text === searchText) === undefined
+    );
   }
 
   private setText(text: string = ''): void {
@@ -178,14 +258,17 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
       this.measureText();
       this.setHighlightedOptionIndex();
       this.textChange.emit(this.text);
+      this.propagateValueChangeToFormControl(this.text);
     }
   }
 
   private setHighlightedOptionIndex(): void {
-    this.highlightedOptionIndex = Math.max(
-      this.filteredOptions.findIndex(o => o.text === this.text),
-      0
-    );
+    this.highlightedOptionIndex = this.provideCreateOption
+      ? this.filteredOptions.findIndex(option => option.text === this.text)
+      : Math.max(
+          this.filteredOptions.findIndex(option => option.text === this.text),
+          0
+        );
   }
 
   public onInputChange(text: string): void {
@@ -204,31 +287,69 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   public onOptionClick(option: ComboBoxOption<TValue>): void {
     this.setText(option.text);
     this.hidePopover();
-    this.input.nativeElement.focus();
+    this.focus();
     this.selection.emit(this.buildResult());
   }
 
   public onEnter(): void {
     if (this.arePopoverOptionsAvailable()) {
-      this.setText(this.filteredOptions[this.highlightedOptionIndex].text);
+      if (this.highlightedOptionIndex >= 0) {
+        this.setText(this.filteredOptions[this.highlightedOptionIndex].text);
+      } else {
+        this.setText(this.text);
+      }
       this.hidePopover();
     }
     this.enter.emit(this.buildResult());
   }
 
   public onNextOption(event: KeyboardEvent): void {
-    if (this.arePopoverOptionsAvailable()) {
-      this.highlightedOptionIndex = ++this.highlightedOptionIndex % this.filteredOptions.length;
-      event.preventDefault(); // Prevent tabbing to next control on page
+    event.preventDefault(); // Prevent tabbing to next control on page
+
+    if (!this.arePopoverOptionsAvailable()) {
+      return;
     }
+
+    if (this.isCreateOptionAvailable() && this.isNextOptionBoundaryIndex()) {
+      if (this.highlightedOptionIndex < 0) {
+        this.highlightedOptionIndex = 0;
+      } else if (this.highlightedOptionIndex >= this.filteredOptions.length - 1) {
+        this.highlightedOptionIndex = -1;
+      }
+    } else {
+      this.highlightedOptionIndex = ++this.highlightedOptionIndex % this.filteredOptions.length;
+    }
+
+    this.scrollIntoViewService.scrollIntoView(this.optionElements.get(this.highlightedOptionIndex)?.nativeElement);
+  }
+
+  private isNextOptionBoundaryIndex(): boolean {
+    return this.highlightedOptionIndex < 0 || this.highlightedOptionIndex >= this.filteredOptions.length - 1;
   }
 
   public onPrevOption(event: KeyboardEvent): void {
-    if (this.arePopoverOptionsAvailable()) {
+    event.preventDefault(); // Prevent tabbing to prev control on page
+
+    if (!this.arePopoverOptionsAvailable()) {
+      return;
+    }
+
+    if (this.isCreateOptionAvailable() && this.isPrevOptionBoundaryIndex()) {
+      if (this.highlightedOptionIndex < 0) {
+        this.highlightedOptionIndex = this.filteredOptions.length - 1;
+      } else if (this.highlightedOptionIndex === 0) {
+        this.highlightedOptionIndex = -1;
+      }
+    } else {
       this.highlightedOptionIndex =
         (--this.highlightedOptionIndex + this.filteredOptions.length) % this.filteredOptions.length;
-      event.preventDefault(); // Prevent tabbing to prev control on page
     }
+
+    this.scrollIntoViewService.scrollIntoView(this.optionElements.get(this.highlightedOptionIndex)?.nativeElement);
+  }
+
+  private isPrevOptionBoundaryIndex(): boolean {
+    return this.highlightedOptionIndex <= 0;
   }
 
   public onSelect(): void {
@@ -236,7 +357,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
      * This might just be a mac or browser specific thing, but when an input box gets tabbed into it doesn't
      * get focus, but the entire text content is selected. Let's use that to give ourselves focus as well.
      */
-    this.input.nativeElement.focus();
+    this.focus();
   }
 
   public onEscape(): void {
@@ -248,7 +369,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   public onPopoverOpen(popoverRef: PopoverRef): void {
-    this.setFilteredOptions();
+    this.setFilteredOptions(this.text);
     this.popoverRef = popoverRef;
   }
 
@@ -269,7 +390,19 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
   }
 
   public arePopoverOptionsAvailable(): boolean {
-    return !!this.popoverRef?.visible && this.filteredOptions.length > 0;
+    return !!this.popoverRef?.visible && (this.isFilteredOptionAvailable() || this.isCreateOptionAvailable());
+  }
+
+  public isFilteredOptionAvailable(): boolean {
+    return this.filteredOptions.length > 0;
+  }
+
+  public isCreateOptionAvailable(): boolean {
+    return this.createOption !== undefined && !isNil(this.text);
+  }
+
+  public focus(): void {
+    this.input.nativeElement.focus();
   }
 
   private buildResult(): ComboBoxResult<TValue> {
@@ -303,5 +436,27 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
           : '100%';
       this.changeDetectorRef.markForCheck(); // Yes, required
     });
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValueChangeToFormControl(value?: string): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
+  }
+
+  public writeValue(text?: string): void {
+    this.text = text;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public registerOnChange(onChange: (value?: string) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: string) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
   }
 }

@@ -1,21 +1,32 @@
 import { Injectable } from '@angular/core';
-import { forkJoinSafeEmpty, NavigationParams, NavigationParamsType } from '@hypertrace/common';
+import {
+  forkJoinSafeEmpty,
+  NavigationParams,
+  NavigationParamsType,
+  TimeRange,
+  TimeRangeService
+} from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
-import { MetadataService, SPAN_SCOPE, toFilterAttributeType } from '@hypertrace/distributed-tracing';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ScopeQueryParam } from './explorer.component';
 
 @Injectable({ providedIn: 'root' })
 export class ExplorerService {
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
+    private readonly timeRangeService: TimeRangeService
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
-    filters: DrilldownFilter[]
+    filters: ExplorerDrilldownFilter[],
+    timeRange?: TimeRange
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
@@ -29,7 +40,7 @@ export class ExplorerService {
             filterAttribute =>
               this.filterBuilderLookupService
                 .lookup(filterAttribute.type)
-                .buildFilter(filterAttribute, filter.operator, filter.value).urlString
+                .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString
           )
         )
     );
@@ -40,11 +51,12 @@ export class ExplorerService {
         path: '/explorer',
         queryParams: {
           filter: filterStrings,
-          scope: scopeQueryParam
+          scope: scopeQueryParam,
+          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
         }
       }))
     );
   }
 }
 
-type DrilldownFilter = Omit<Filter, 'metadata' | 'userString' | 'urlString'>;
+export type ExplorerDrilldownFilter = Omit<Filter, 'metadata' | 'userString' | 'urlString'>;

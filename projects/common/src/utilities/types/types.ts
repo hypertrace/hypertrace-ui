@@ -1,4 +1,4 @@
-// tslint:disable:no-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Long story, but standard Omit does not distribute across union types.
 // Below code taken from https://github.com/Microsoft/TypeScript/issues/28339
@@ -7,13 +7,15 @@ export type DistributiveOmit<T, K extends UnionKeys<T>> = T extends any ? Omit<T
 
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type RequireBy<T, K extends keyof T> = T & Required<Pick<T, K>>;
+export type KeysWithType<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
+
 export interface Dictionary<T> {
   [key: string]: T;
 }
 
 export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
 export type DeepReadonly<T> = T extends (infer R)[]
-  ? DeepReadonlyArray<R> // tslint:disable-next-line: ban-types
+  ? DeepReadonlyArray<R>
   : T extends Function
   ? T
   : T extends object

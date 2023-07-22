@@ -1,11 +1,5 @@
 import { ElementRef, Injector } from '@angular/core';
-import {
-  PopoverBackdrop,
-  PopoverPositionType,
-  PopoverRef,
-  PopoverRelativePositionLocation,
-  PopoverService
-} from '@hypertrace/components';
+import { PopoverBackdrop, PopoverPositionType, PopoverRef, PopoverService } from '@hypertrace/components';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TopologyEdge, TopologyNode, TopologyTooltip, TopologyTooltipOptions } from '../../topology';
@@ -26,12 +20,12 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     private readonly injector: Injector,
     private readonly popoverService: PopoverService
   ) {
-    this.popoverSubject = new BehaviorSubject(this.buildPopover(false));
+    this.popoverSubject = new BehaviorSubject(this.buildPopover(false, this.container));
     this.hidden$ = this.popoverSubject.pipe(switchMap(popover => merge(popover.hidden$, popover.closed$)));
   }
 
-  public showWithNodeData(node: TopologyNode, options: TopologyTooltipOptions = {}): void {
-    this.rebuildPopoverIfNeeded(options);
+  public showWithNodeData(node: TopologyNode, origin: ElementRef, options: TopologyTooltipOptions = {}): void {
+    this.rebuildPopoverIfNeeded(origin, options);
     this.dataSubject.next({
       type: 'node',
       node: node,
@@ -40,8 +34,8 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popover.show();
   }
 
-  public showWithEdgeData(edge: TopologyEdge, options: TopologyTooltipOptions = {}): void {
-    this.rebuildPopoverIfNeeded(options);
+  public showWithEdgeData(edge: TopologyEdge, origin: ElementRef, options: TopologyTooltipOptions = {}): void {
+    this.rebuildPopoverIfNeeded(origin, options);
     this.dataSubject.next({
       type: 'edge',
       edge: edge,
@@ -60,17 +54,17 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.popoverSubject.complete();
   }
 
-  private rebuildPopoverIfNeeded(options: TopologyTooltipOptions): void {
+  private rebuildPopoverIfNeeded(origin: ElementRef, options: TopologyTooltipOptions): void {
     const modal = !!options.modal;
     if (modal === this.popover.hasBackdrop()) {
       return;
     }
 
     this.popover.close(); // Close existing popover
-    this.popoverSubject.next(this.buildPopover(modal));
+    this.popoverSubject.next(this.buildPopover(!!options.modal, origin));
   }
 
-  private buildPopover(modal: boolean): PopoverRef {
+  private buildPopover(modal: boolean, origin: ElementRef): PopoverRef {
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
@@ -86,9 +80,10 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     }
 
     popover.updatePositionStrategy({
-      type: PopoverPositionType.Relative,
-      locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
-      origin: this.container
+      type: PopoverPositionType.FollowMouse,
+      boundingElement: modal ? origin.nativeElement : this.container.nativeElement,
+      offsetX: 50,
+      offsetY: 30
     });
 
     return popover;

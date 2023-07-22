@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '@hypertrace/common';
 import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-holder';
@@ -19,10 +19,19 @@ export class NavigableTabComponent extends ContentHolder {
   public hidden: boolean = false;
 
   @Input()
-  public features: string[] = [];
+  public labelTag?: string;
+
+  @Input()
+  public replaceHistory?: boolean;
+
+  @Input()
+  public features?: string[];
+
+  @Input()
+  public info?: string | TemplateRef<unknown>;
 
   public get featureFlags(): string[] {
-    return [...this.routeFeatures(), ...this.features];
+    return [...this.routeFeatures(), ...(this.features ?? [])];
   }
 
   private routeFeatures(): string[] {

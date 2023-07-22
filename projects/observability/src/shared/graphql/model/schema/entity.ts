@@ -42,5 +42,7 @@ export const enum BackendType {
   RabbitMQ = 'RABBIT_MQ',
   Redis = 'REDIS',
   Tyk = 'TYK',
-  JDBC = 'JDBC'
+  JDBC = 'JDBC',
+  KAFKA = 'KAFKA',
+  SQS = 'SQS'
 }

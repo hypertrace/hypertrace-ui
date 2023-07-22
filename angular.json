@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist/hypertrace-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -32,11 +31,6 @@
               },
               {
                 "glob": "**/*",
-                "input": "./projects/distributed-tracing/assets",
-                "output": "./assets"
-              },
-              {
-                "glob": "**/*",
                 "input": "./projects/observability/assets",
                 "output": "./assets"
               }
@@ -46,7 +40,13 @@
               "includePaths": ["./projects/assets-library/assets/styles", "./node_modules"]
             },
             "scripts": [],
-            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"]
+            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -59,9 +59,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -77,7 +75,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -97,272 +96,19 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "no-cache": true
-          }
+          "builder": "@angular-builders/jest:run"
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "common": {
-      "root": "projects/common",
-      "sourceRoot": "projects/common",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/common/tsconfig.lib.json",
-            "project": "projects/common/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/common/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/common/tsconfig.lib.json", "projects/common/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "graphql-client": {
-      "root": "projects/graphql-client",
-      "sourceRoot": "projects/graphql-client",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/graphql-client/tsconfig.lib.json",
-            "project": "projects/graphql-client/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/graphql-client/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/graphql-client/tsconfig.lib.json", "projects/graphql-client/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "distributed-tracing": {
-      "root": "projects/distributed-tracing",
-      "sourceRoot": "projects/distributed-tracing",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/distributed-tracing/tsconfig.lib.json",
-            "project": "projects/distributed-tracing/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/distributed-tracing/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/distributed-tracing/tsconfig.lib.json",
-              "projects/distributed-tracing/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "components": {
-      "root": "projects/components",
-      "sourceRoot": "projects/components",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/components/tsconfig.lib.json",
-            "project": "projects/components/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/components/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/components/tsconfig.lib.json", "projects/components/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "dashboards": {
-      "root": "projects/dashboards",
-      "sourceRoot": "projects/dashboards",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/dashboards/tsconfig.lib.json",
-            "project": "projects/dashboards/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/dashboards/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/dashboards/tsconfig.lib.json", "projects/dashboards/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "test-utils": {
-      "root": "projects/test-utils",
-      "sourceRoot": "projects/test-utils",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/test-utils/tsconfig.lib.json",
-            "project": "projects/test-utils/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/test-utils/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/test-utils/tsconfig.lib.json", "projects/test-utils/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "observability": {
-      "projectType": "library",
-      "root": "projects/observability",
-      "sourceRoot": "projects/observability/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/observability/tsconfig.lib.json",
-            "project": "projects/observability/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/observability/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {}
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/observability/tsconfig.lib.json", "projects/observability/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "assets-library": {
-      "projectType": "library",
-      "root": "projects/assets-library",
-      "sourceRoot": "projects/assets-library/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/assets-library/tsconfig.lib.json",
-            "project": "projects/assets-library/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/assets-library/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "no-cache": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["projects/assets-library/tsconfig.lib.json", "projects/assets-library/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["/**/*.ts", "**/*.html"]
           }
         }
       }
     }
   },
-  "defaultProject": "hypertrace-ui",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

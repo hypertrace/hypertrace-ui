@@ -1,5 +1,6 @@
 @import 'font';
 @import 'color-palette';
+@import 'interaction';
 
 .limit-container {
   display: flex;
@@ -15,10 +16,6 @@
       height: 32px;
       line-height: 32px;
       margin-bottom: 12px;
-
-      &.disabled {
-        opacity: 0.4;
-      }
     }
 
     .limit-input-wrapper {

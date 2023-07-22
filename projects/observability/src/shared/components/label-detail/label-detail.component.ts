@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
-  ButtonRole,
+  ButtonVariant,
   ButtonSize,
   ButtonStyle,
   IconSize,
@@ -25,23 +25,23 @@ import {
           <ht-popover-trigger>
             <div
               class="label-detail-trigger"
-              (mouseenter)="this.showdetailButton = true"
-              (mouseleave)="this.showdetailButton = false"
+              (mouseenter)="this.showDetailButton = true"
+              (mouseleave)="this.showDetailButton = false"
             >
               <ht-button
-                *ngIf="this.showdetailButton"
+                *ngIf="this.showDetailButton"
                 class="expand icon detail-button"
                 icon="${IconType.Collapsed}"
                 size="${ButtonSize.ExtraSmall}"
-                role="${ButtonRole.Tertiary}"
+                variant="${ButtonVariant.Tertiary}"
                 display="${ButtonStyle.Text}"
                 htTooltip="Show Details for {{ this.label }}"
               ></ht-button>
               <ht-icon
-                *ngIf="this.icon && !this.showdetailButton"
+                *ngIf="this.icon && !this.showDetailButton"
                 class="icon label-icon"
                 [icon]="this.icon"
-                size="${IconSize.Small}"
+                size="${IconSize.ExtraSmall}"
               ></ht-icon>
               <ht-label
                 [label]="this.label"
@@ -58,7 +58,7 @@ import {
                   class="expanded close"
                   icon="${IconType.Expanded}"
                   size="${ButtonSize.ExtraSmall}"
-                  role="${ButtonRole.Secondary}"
+                  variant="${ButtonVariant.Secondary}"
                   display="${ButtonStyle.Text}"
                   (click)="this.onClickClose()"
                 ></ht-button>
@@ -94,7 +94,7 @@ export class LabelDetailComponent {
   @Input()
   public additionalDetails?: string[] = [];
 
-  public showdetailButton: boolean = false;
+  public showDetailButton: boolean = false;
   public locationPreferences: PopoverRelativePositionLocation[] = [PopoverRelativePositionLocation.OverLeftAligned];
 
   private popoverRef?: PopoverRef;

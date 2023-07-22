@@ -1,8 +1,10 @@
 import { forkJoinSafeEmpty, getPercentage } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
 import { Model, ModelProperty, ModelPropertyType, ModelPropertyTypeInstance } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../graphql/model/metrics/metric-health';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-aggregation-data-source.model';
 
 @Model({
@@ -11,7 +13,6 @@ import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-a
 export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'numerator',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationDataSourceModel
@@ -22,7 +23,6 @@ export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<M
 
   @ModelProperty({
     key: 'denominator',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationDataSourceModel

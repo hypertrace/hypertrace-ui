@@ -1,7 +1,10 @@
 import { RouterLinkWithHref } from '@angular/router';
-import { NavigationService } from '@hypertrace/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NavigationService, TrackDirective } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
+import { of } from 'rxjs';
+import { LetAsyncModule } from '../let-async/let-async.module';
 import { LinkComponent } from './link.component';
 
 describe('Link component', () => {
@@ -9,18 +12,21 @@ describe('Link component', () => {
 
   const createHost = createHostFactory({
     component: LinkComponent,
+    imports: [LetAsyncModule, RouterTestingModule],
     providers: [mockProvider(NavigationService)],
-    declarations: [MockDirective(RouterLinkWithHref)]
+    declarations: [MockDirective(RouterLinkWithHref), MockDirective(TrackDirective)]
   });
 
-  test('Link should not be displayed if url is undefined', () => {
+  test('Link contents should be displayed if params/url is undefined', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       props: {
         paramsOrUrl: undefined
       }
     });
 
-    expect(spectator.query('.ht-link')).not.toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).toHaveClass('ht-link disabled');
   });
 
   test('Link should navigate correctly to external URLs', () => {
@@ -30,21 +36,25 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({
-            path: [
-              '/external',
-              {
-                url: 'http://test.hypertrace.ai',
-                navType: 'same_window'
-              }
-            ],
-            extras: { skipLocationChange: true }
-          })
+          buildNavigationParams$: jest.fn().mockReturnValue(
+            of({
+              path: [
+                '/external',
+                {
+                  url: 'http://test.hypertrace.ai',
+                  navType: 'same_window'
+                }
+              ],
+              extras: { skipLocationChange: true }
+            })
+          )
         })
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();
@@ -68,12 +78,14 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['test'], extras: {} })
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['test'], extras: {} }))
         })
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();
@@ -91,12 +103,40 @@ describe('Link component', () => {
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams: jest.fn().mockReturnValue({ path: ['/test'], extras: {} })
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
         })
       ]
     });
 
-    expect(spectator.query('.ht-link')).toExist();
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).not.toHaveClass('disabled');
+    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+
+    expect(routerLinkDirective).toBeDefined();
+    expect(routerLinkDirective?.routerLink).toEqual(['/test']);
+    expect(routerLinkDirective?.skipLocationChange).toBeUndefined();
+    expect(routerLinkDirective?.queryParams).toBeUndefined();
+    expect(routerLinkDirective?.queryParamsHandling).toBeUndefined();
+    expect(routerLinkDirective?.replaceUrl).toBeUndefined();
+  });
+
+  test('should apply disabled style when disabled', () => {
+    spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl" [disabled]="true"></ht-link>`, {
+      hostProps: {
+        paramsOrUrl: '/test'
+      },
+      providers: [
+        mockProvider(NavigationService, {
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
+        })
+      ]
+    });
+
+    const anchorElement = spectator.query('.ht-link');
+    expect(anchorElement).toExist();
+    expect(anchorElement).toHaveClass('ht-link disabled');
+
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 
     expect(routerLinkDirective).toBeDefined();

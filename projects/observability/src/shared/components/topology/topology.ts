@@ -1,5 +1,5 @@
 import { ElementRef, Renderer2 } from '@angular/core';
-import { DeepReadonly } from '@hypertrace/common';
+import { ClientRectBounds, DeepReadonly } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 
 export interface Topology {
@@ -45,6 +45,16 @@ export interface TopologyConfiguration {
   zoomable: boolean;
 
   /**
+   * If true, brush will be shown
+   */
+  showBrush?: boolean;
+
+  /**
+   * If true, it will be automatic zoom to fit
+   */
+  shouldAutoZoomToFit?: boolean;
+
+  /**
    * A list of specifiers for node data. Up to one will be selectable to the user,
    * and provided to the node renderer.
    */
@@ -75,6 +85,18 @@ export interface TopologyConfiguration {
    * Used to render tooltips. If not provided, no tooltips are rendered.
    */
   tooltipRenderer?: TopologyTooltipRenderer;
+
+  /**
+   * Used to handle interactions on node in a custom way (by avoiding default behavior)
+   */
+  nodeInteractionHandler?: TopologyNodeInteractionHandler;
+
+  /**
+   * Used to handle interactions on edge in a custom way (by avoiding default behavior)
+   */
+  edgeInteractionHandler?: TopologyEdgeInteractionHandler;
+
+  layoutType?: TopologyLayoutType;
 }
 
 export interface TopologyNode {
@@ -125,7 +147,7 @@ export interface RenderableTopologyNode<TNode extends TopologyNode = TopologyNod
 
 export interface RenderableTopologyNodeRenderedData {
   getAttachmentPoint(angleRad: number): TopologyCoordinates;
-  getBoudingBox(): ClientRect;
+  getBoudingBox(): ClientRectBounds;
 }
 
 export interface RenderableTopologyEdge<
@@ -166,6 +188,13 @@ export interface TopologyDataSpecifier<T = unknown> {
   value: T;
 }
 
+export const enum TopologyLayoutType {
+  ForceLayout = 'force-layout',
+  TreeLayout = 'tree-layout',
+  CustomTreeLayout = 'custom-tree-layout',
+  GraphLayout = 'graph-layout'
+}
+
 export const enum TopologyElementVisibility {
   Normal = 'normal',
   Emphasized = 'emphasized',
@@ -179,8 +208,8 @@ export interface TopologyTooltipRenderer {
 }
 
 export interface TopologyTooltip {
-  showWithNodeData(node: TopologyNode, options?: TopologyTooltipOptions): void;
-  showWithEdgeData(edge: TopologyEdge, options?: TopologyTooltipOptions): void;
+  showWithNodeData(node: TopologyNode, origin: ElementRef, options?: TopologyTooltipOptions): void;
+  showWithEdgeData(edge: TopologyEdge, origin: ElementRef, options?: TopologyTooltipOptions): void;
   hide(): void;
   destroy(): void;
   hidden$: Observable<void>;
@@ -189,3 +218,11 @@ export interface TopologyTooltip {
 export interface TopologyTooltipOptions {
   modal?: boolean;
 }
+
+export interface TopologyInteractionHandler<T = unknown> {
+  click?(data: T): Observable<true>; // Observable is used to reset visibility (Eg. closed$ for popover)
+  disableTooltipOnHover?: boolean; // Default to `false`
+}
+
+export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
+export type TopologyEdgeInteractionHandler = TopologyInteractionHandler<TopologyEdge>;

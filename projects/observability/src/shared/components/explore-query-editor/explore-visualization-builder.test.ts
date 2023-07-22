@@ -1,12 +1,22 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FixedTimeRange, IntervalDurationService, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
-import { MetadataService, MetricAggregationType } from '@hypertrace/distributed-tracing';
+import {
+  FeatureState,
+  FeatureStateResolver,
+  FixedTimeRange,
+  IntervalDurationService,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 import { ExploreVisualizationBuilder, ExploreVisualizationRequest } from './explore-visualization-builder';
 
@@ -26,6 +36,9 @@ describe('Explore visualization builder', () => {
       }),
       mockProvider(IntervalDurationService, {
         getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getFeatureState: () => of(FeatureState.Enabled)
       })
     ]
   });
@@ -43,7 +56,7 @@ describe('Explore visualization builder', () => {
   const expectedQuery = (queryPartial: Partial<ExploreVisualizationRequest> = {}): ExploreVisualizationRequest =>
     expect.objectContaining({
       context: ObservabilityTraceType.Api,
-      interval: new TimeDuration(3, TimeUnit.Minute),
+      interval: 'AUTO',
       series: [matchSeriesWithName('calls')],
       ...queryPartial
     });
@@ -64,62 +77,35 @@ describe('Explore visualization builder', () => {
 
   test('defaults to single series query', () => {
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
     });
   });
 
   test('plays back current query for late subscribers', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
       tick(10000);
-      expectObservable(spectator.service.visualizationRequest$).toBe('x', { x: expectedQuery() });
+      expectObservable(spectator.service.visualizationRequest$).toBe('10ms x', { x: expectedQuery() });
     });
   }));
 
-  test('notifies on query change', () => {
+  test('debounces then notifies on query change', () => {
     runFakeRxjs(({ expectObservable }) => {
       const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
 
       spectator.service
         .setSeries([buildSeries('test1')])
         .groupBy({
-          keys: ['testGroupBy']
+          keyExpressions: [{ key: 'testGroupBy' }],
+          limit: 15
         })
-        .groupByLimit(15)
         .setSeries([buildSeries('test2')]);
 
-      expectObservable(recordedRequests).toBe('(abcde)', {
-        a: expectedQuery(),
-        b: expectedQuery({
-          series: [matchSeriesWithName('test1')]
-        }),
-        c: expectedQuery({
-          series: [matchSeriesWithName('test1')],
-          groupBy: { keys: ['testGroupBy'] },
-          groupByLimit: 5
-        }),
-        d: expectedQuery({
-          series: [matchSeriesWithName('test1')],
-          groupBy: { keys: ['testGroupBy'] },
-          groupByLimit: 15
-        }),
-        e: expectedQuery({
+      expectObservable(recordedRequests).toBe('10ms x', {
+        x: expectedQuery({
           series: [matchSeriesWithName('test2')],
-          groupBy: { keys: ['testGroupBy'] },
-          groupByLimit: 15
+          groupBy: { keyExpressions: [{ key: 'testGroupBy' }], limit: 15 }
         })
-      });
-    });
-  });
-
-  test('clears full query on empty', () => {
-    runFakeRxjs(({ expectObservable }) => {
-      const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
-      spectator.service.setSeries([buildSeries('test1')]).empty();
-
-      expectObservable(recordedRequests).toBe('(xyx)', {
-        x: expectedQuery(),
-        y: expectedQuery({ series: [matchSeriesWithName('test1')] })
       });
     });
   });
@@ -129,10 +115,44 @@ describe('Explore visualization builder', () => {
       const recordedRequests = recordObservable(spectator.service.visualizationRequest$);
       spectator.service.setSeries([buildSeries('test1')]).reset();
 
-      expectObservable(recordedRequests).toBe('(xyz)', {
-        x: expectedQuery(),
-        y: expectedQuery({ series: [matchSeriesWithName('test1')] }),
-        z: expectedQuery()
+      expectObservable(recordedRequests).toBe('10ms x', {
+        x: expectedQuery()
+      });
+    });
+  });
+
+  test('emits new request with updated interval when time range changes', () => {
+    runFakeRxjs(({ expectObservable, cold }) => {
+      spectator.inject(IntervalDurationService).castToWritable().getAutoDuration = jest.fn(timeRange => {
+        if (timeRange?.toUrlString() === '1h') {
+          return new TimeDuration(1, TimeUnit.Minute);
+        }
+        if (timeRange?.toUrlString() === '1d') {
+          return new TimeDuration(1, TimeUnit.Hour);
+        }
+
+        // Should never be reached
+        return new TimeDuration(0, TimeUnit.Minute);
+      });
+
+      // Send first time range immediately, then change it 50ms later
+      cold('x 50ms y', {
+        x: new TimeDuration(1, TimeUnit.Hour),
+        y: new TimeDuration(1, TimeUnit.Day)
+      }).subscribe(duration => timeRangeService.setRelativeRange(duration.value, duration.unit));
+
+      const recordedIntervals = recordObservable(
+        spectator.service.visualizationRequest$.pipe(
+          switchMap(request => request.exploreQuery$),
+          map(query => query.interval)
+        )
+      );
+      spectator.service.setSeries([buildSeries('test1')]);
+
+      // First time range is 10ms due to debounced explorer emission, but interval will update as soon as time range changes (50ms total)
+      expectObservable(recordedIntervals).toBe('10ms x 40ms y', {
+        x: new TimeDuration(1, TimeUnit.Minute),
+        y: new TimeDuration(1, TimeUnit.Hour)
       });
     });
   });

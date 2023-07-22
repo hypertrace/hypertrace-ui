@@ -7,10 +7,11 @@ import {
   ENTITY_GQL_REQUEST
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
-import { GraphQlTimeRange, SpecificationBuilder } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
+import { GraphQlTimeRange } from '../../../shared/graphql/model/schema/timerange/graphql-time-range';
+import { SpecificationBuilder } from '../../../shared/graphql/request/builders/specification/specification-builder';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
 import { BackendEntity } from './backend-detail.service';
 
@@ -32,7 +33,8 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
         take(1),
         map(backend => ({
           label: backend.name,
-          icon: this.iconLookupService.forBackendEntity(backend, this.getBackendTypeAttributeName())
+          icon: this.iconLookupService.forBackendEntity(backend, this.getBackendTypeAttributeName()),
+          alwaysShowIcon: true
         }))
       )
     );

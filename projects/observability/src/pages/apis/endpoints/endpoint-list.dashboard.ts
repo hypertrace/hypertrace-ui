@@ -1,10 +1,8 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import {
-  DashboardDefaultConfiguration,
-  MetricAggregationType,
-  TracingTableCellType
-} from '@hypertrace/distributed-tracing';
 import { ObservabilityTableCellType } from '../../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../../shared/components/table/tracing-table-cell-type';
+import { DashboardDefaultConfiguration } from '../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 
 export const endpointListDashboard: DashboardDefaultConfiguration = {
@@ -22,17 +20,18 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
         mode: TableMode.Flat,
         style: TableStyle.FullPage,
         searchAttribute: 'name',
-        selectFilterOptions: [
+        'select-control-options': [
           {
-            type: 'table-widget-select-filter',
-            attribute: 'serviceName',
-            'unset-option': 'All Services',
+            type: 'table-widget-multi-select-option',
+            'unique-values': true,
+            placeholder: 'Services',
             data: {
-              type: 'entities-attribute-data-source',
-              entity: ObservabilityEntityType.Service,
+              type: 'entities-attribute-options-data-source',
+              // Use API so we can inherit API filters
+              entity: ObservabilityEntityType.Api,
               attribute: {
                 type: 'attribute-specification',
-                attribute: 'name'
+                attribute: 'serviceName'
               }
             }
           }
@@ -63,12 +62,12 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             type: 'table-widget-column',
             title: 'p99 Latency',
             display: TracingTableCellType.Metric,
+            sort: TableSortDirection.Descending,
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: 'p99'
-            },
-            sort: TableSortDirection.Descending
+              aggregation: MetricAggregationType.P99
+            }
           },
           {
             type: 'table-widget-column',
@@ -77,7 +76,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: 'avgrate_sec'
+              aggregation: MetricAggregationType.AvgrateSecond
             }
           },
           {
@@ -87,13 +86,24 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: 'avgrate_sec'
+              aggregation: MetricAggregationType.AvgrateSecond
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Calls',
+            display: CoreTableCellRendererType.Number,
+            visible: false,
+            value: {
+              type: 'metric-aggregation',
+              metric: 'numCalls',
+              aggregation: MetricAggregationType.Sum
             }
           },
           {
             type: 'table-widget-column',
             title: 'Last Called',
-            display: CoreTableCellRendererType.Timestamp,
+            display: CoreTableCellRendererType.TimeAgo,
             value: {
               type: 'metric-aggregation',
               metric: 'endTime',

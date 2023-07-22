@@ -1,11 +1,11 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { LoggerService } from '@hypertrace/common';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { TextareaComponent } from './textarea.component';
 import { TraceTextareaModule } from './textarea.module';
 
 describe('Textarea Component', () => {
   let spectator: Spectator<TextareaComponent>;
-  let logSpy: jasmine.Spy;
 
   const createHost = createHostFactory({
     component: TextareaComponent,
@@ -13,24 +13,31 @@ describe('Textarea Component', () => {
     declareComponent: false
   });
 
-  beforeEach(() => {
-    logSpy = spyOn(console, 'warn');
-  });
-
   test('should warn when placeholder is not provided', () => {
-    spectator = createHost(`<ht-textarea></ht-textarea>`);
+    spectator = createHost(`<ht-textarea></ht-textarea>`, {
+      providers: [
+        mockProvider(LoggerService, {
+          warn: jest.fn()
+        })
+      ]
+    });
 
-    expect(logSpy).toHaveBeenCalled();
+    expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
   });
 
   test('should not warn when placeholder is provided', () => {
     spectator = createHost(`<ht-textarea [placeholder]="placeholder"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST'
-      }
+      },
+      providers: [
+        mockProvider(LoggerService, {
+          warn: jest.fn()
+        })
+      ]
     });
 
-    expect(logSpy).not.toHaveBeenCalled();
+    expect(spectator.inject(LoggerService).warn).not.toHaveBeenCalled();
   });
 
   test('should apply disabled attribute when disabled', () => {
@@ -44,5 +51,18 @@ describe('Textarea Component', () => {
     const disabled = spectator.query('textarea')!.getAttribute('ng-reflect-disabled');
 
     expect(disabled).toBe('true');
+  });
+
+  test('should match the rows with the number of rows in the textarea', () => {
+    const rows = 10;
+
+    spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rows]="rows"></ht-textarea>`, {
+      hostProps: {
+        placeholder: 'TEST',
+        rows: rows
+      }
+    });
+
+    expect((spectator.query('.textarea') as HTMLTextAreaElement).rows).toBe(rows);
   });
 });

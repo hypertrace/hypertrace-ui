@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { NavigationService, Time } from '@hypertrace/common';
+import { MemoizeModule, NavigationService, Time } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
@@ -14,7 +14,7 @@ describe('Time Picker Component', () => {
   const createHost = createHostFactory({
     component: TimePickerComponent,
     shallow: true,
-    imports: [PopoverModule],
+    imports: [PopoverModule, MemoizeModule],
     providers: [
       mockProvider(PredefinedTimeService, {
         getPredefinedTimes: jest

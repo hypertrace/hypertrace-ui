@@ -35,12 +35,7 @@ describe('Interval duration service', () => {
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe(marblePattern, {
-        x: [
-          new TimeDuration(15, TimeUnit.Second),
-          new TimeDuration(30, TimeUnit.Second),
-          new TimeDuration(1, TimeUnit.Minute),
-          new TimeDuration(5, TimeUnit.Minute)
-        ],
+        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)],
         y: [
           new TimeDuration(1, TimeUnit.Minute),
           new TimeDuration(5, TimeUnit.Minute),
@@ -74,12 +69,7 @@ describe('Interval duration service', () => {
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe('x--', {
-        x: [
-          new TimeDuration(15, TimeUnit.Second),
-          new TimeDuration(30, TimeUnit.Second),
-          new TimeDuration(1, TimeUnit.Minute),
-          new TimeDuration(5, TimeUnit.Minute)
-        ]
+        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)]
       });
     });
   });
@@ -114,6 +104,24 @@ describe('Interval duration service', () => {
       new TimeDuration(6, TimeUnit.Hour),
       new TimeDuration(12, TimeUnit.Hour)
     ]);
+  });
+
+  test('provides a default max interval for a long time range', () => {
+    const spectator = serviceBuilder();
+
+    expect(
+      spectator.service.getAvailableIntervalsForTimeRange(
+        new FixedTimeRange(new Date('2018-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z'))
+      )
+    ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
+
+    // Low max data points
+    expect(
+      spectator.service.getAvailableIntervalsForTimeRange(
+        new FixedTimeRange(new Date('2018-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z')),
+        50
+      )
+    ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
   });
 
   test('calculates the closest match to an interval from a list', () => {

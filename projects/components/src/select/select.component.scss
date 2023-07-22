@@ -2,7 +2,6 @@
 
 :host {
   width: 100%;
-  max-width: 240px;
 
   .select {
     .trigger-label {
@@ -12,12 +11,16 @@
 }
 
 .select {
+  @include disableable;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  border: 1px solid $color-border;
-  border-radius: 6px;
   width: 100%;
-  height: 34px;
+  height: 36px;
+
+  &.extra-small {
+    height: 24px;
+  }
 
   &.small {
     height: 32px;
@@ -32,8 +35,9 @@
     height: 100%;
   }
 
-  &.disabled {
-    opacity: 0.4;
+  &.open {
+    background-color: $gray-2;
+    border-radius: 6px;
   }
 
   &.border {
@@ -56,12 +60,35 @@
     }
   }
 
+  .trigger-container {
+    width: 100%;
+    height: 100%;
+  }
+
   .trigger-content {
     display: flex;
     align-items: center;
-    padding: 0 8px;
-    cursor: pointer;
+    padding-left: 8px;
     height: 100%;
+
+    &.menu-with-border {
+      border: 1px solid $color-border;
+      border-radius: 6px;
+    }
+
+    &.menu-with-background {
+      background-color: $gray-1;
+      padding-top: 1px;
+      border-radius: 4px;
+
+      .trigger-label {
+        @include body-2-medium();
+      }
+
+      .trigger-icon {
+        padding-top: 1px;
+      }
+    }
 
     &.justify-left {
       justify-content: flex-start;
@@ -89,13 +116,50 @@
       margin-left: auto;
       color: $gray-7;
     }
+
+    &:hover {
+      background-color: $gray-1;
+      border-radius: 6px;
+    }
+  }
+
+  .icon-only {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      padding: 6px;
+      border: 1px solid white;
+      box-sizing: border-box;
+
+      &:hover {
+        background: $blue-1;
+        border: 1px solid $blue-2;
+        border-radius: 50%;
+      }
+    }
+
+    &.open {
+      background-color: white;
+
+      .icon {
+        background: $blue-2;
+        border: 1px solid $blue-3;
+        border-radius: 50%;
+      }
+    }
+
+    &.selected {
+      color: $blue-5;
+    }
   }
 }
 
 .select-content {
   @include dropdown();
-  min-width: 120px;
   max-height: 204px;
+  display: flex;
+  flex-direction: column;
 
   .select-option {
     display: flex;
@@ -105,6 +169,22 @@
     font-size: 14px;
     align-items: center;
     justify-content: space-between;
+    white-space: nowrap;
+
+    &.disabled {
+      color: $gray-5;
+      cursor: not-allowed;
+    }
+
+    .select-option-info {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      & > * {
+        margin-right: 8px;
+      }
+    }
 
     .label {
       padding-right: 8px;
@@ -126,4 +206,17 @@
       height: 44px;
     }
   }
+}
+
+.search-bar {
+  display: flex;
+  height: 34px;
+  margin-top: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  align-items: center;
+}
+
+.divider {
+  padding: 0 16px;
 }

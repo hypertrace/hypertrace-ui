@@ -1,5 +1,5 @@
 import { Dictionary } from '@hypertrace/common';
-import { MetricAggregation } from '@hypertrace/distributed-tracing';
+import { MetricAggregation } from '../../metrics/metric-aggregation';
 import { MetricAggregationSpecification } from './metric-aggregation-specification';
 
 export interface ErrorPercentageMetricAggregationSpecification extends MetricAggregationSpecification {

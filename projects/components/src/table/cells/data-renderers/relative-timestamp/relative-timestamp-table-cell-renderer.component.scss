@@ -1,0 +1,9 @@
+@import 'font';
+
+.relative-timestamp {
+  @include ellipsis-overflow();
+
+  &.first-column {
+    @include body-2-medium($gray-9);
+  }
+}

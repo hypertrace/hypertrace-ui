@@ -1,16 +1,35 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-textarea',
   styleUrls: ['./textarea.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: TextareaComponent
+    }
+  ],
   template: `
-    <mat-form-field class="full-page">
+    <mat-form-field class="fill-container" [ngClass]="{ disabled: this.disabled }" floatLabel="never">
       <textarea
+        class="textarea"
         matInput
+        [rows]="this.rows"
         [disabled]="this.disabled"
         [placeholder]="this.placeholder"
+        [attr.aria-label]="this.ariaLabel || 'textarea'"
         [ngModel]="this.value"
         (ngModelChange)="this.onValueChange($event)"
       >
@@ -18,7 +37,7 @@ import { LoggerService } from '@hypertrace/common';
     </mat-form-field>
   `
 })
-export class TextareaComponent implements OnInit {
+export class TextareaComponent implements ControlValueAccessor, OnInit {
   @Input()
   public placeholder!: string;
 
@@ -28,20 +47,51 @@ export class TextareaComponent implements OnInit {
   @Input()
   public disabled: boolean | undefined;
 
+  @Input()
+  public rows: number = 2;
+
+  @Input()
+  public ariaLabel?: string;
+
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
-  public constructor(private readonly loggerService: LoggerService) {}
+  public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
-    // tslint:disable-next-line:strict-type-predicates
     if (this.placeholder === undefined) {
       this.loggerService.warn('TextareaComponent requires "placeholder" input');
     }
   }
 
+  private propagateControlValueChange?: (value?: string) => void;
+  private propagateControlValueChangeOnTouch?: (value?: string) => void;
+
   public onValueChange(value: string): void {
     this.value = value;
     this.valueChange.emit(value);
+    this.propagateValueChangeToFormControl(value);
+  }
+
+  public writeValue(value?: string): void {
+    this.value = value;
+    this.cdr.markForCheck();
+  }
+
+  public registerOnChange(onChange: (value?: string) => void): void {
+    this.propagateControlValueChange = onChange;
+  }
+
+  public registerOnTouched(onTouch: (value?: string) => void): void {
+    this.propagateControlValueChangeOnTouch = onTouch;
+  }
+
+  public setDisabledState(isDisabled?: boolean): void {
+    this.disabled = isDisabled ?? false;
+  }
+
+  private propagateValueChangeToFormControl(value?: string): void {
+    this.propagateControlValueChange?.(value);
+    this.propagateControlValueChangeOnTouch?.(value);
   }
 }

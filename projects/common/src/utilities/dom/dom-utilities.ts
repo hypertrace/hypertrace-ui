@@ -23,12 +23,12 @@ export const selector = (name: string, type: SelectorType = SelectorType.Class):
  * Converts provided strings into the requested selector type
  */
 
-// tslint:disable-next-line: no-unnecessary-callback-wrapper
 export const selectorAny = (...names: string[]): string => names.map(name => selector(name)).join(',');
 
-export const unionOfClientRects = (...rects: ClientRect[]): ClientRect => {
-  type ClientRectBounds = Omit<ClientRect, 'width' | 'height'>;
-  const bounds = (rects as ClientRectBounds[]).reduce((currentUnion, domRect) => ({
+export type ClientRectBounds = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
+
+export const unionOfClientRects = (...rects: ClientRectBounds[]): ClientRectBounds => {
+  const bounds = (rects as Omit<ClientRectBounds, 'width' | 'height'>[]).reduce((currentUnion, domRect) => ({
     left: Math.min(currentUnion.left, domRect.left),
     right: Math.max(currentUnion.right, domRect.right),
     top: Math.min(currentUnion.top, domRect.top),

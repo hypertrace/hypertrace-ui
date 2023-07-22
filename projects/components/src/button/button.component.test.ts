@@ -1,8 +1,10 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconType } from '@hypertrace/assets-library';
+import { TrackDirective } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockDirective } from 'ng-mocks';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle } from './button';
+import { ButtonVariant, ButtonSize, ButtonStyle, ButtonType } from './button';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -12,6 +14,7 @@ describe('Button Component', () => {
   const createHost = createHostFactory({
     component: ButtonComponent,
     imports: [ButtonModule, RouterTestingModule],
+    declarations: [MockDirective(TrackDirective)],
     providers: [],
     declareComponent: false
   });
@@ -23,7 +26,22 @@ describe('Button Component', () => {
       }
     });
 
-    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
+    const buttonEl = spectator.query('.button');
+    expect(buttonEl).toHaveClass('button secondary small solid');
+    expect(buttonEl).toHaveAttribute('type', 'button');
+  });
+
+  test('should set correct button type', () => {
+    spectator = createHost(`<ht-button [label]="label" [type]="type"></ht-button>`, {
+      hostProps: {
+        label: 'Button',
+        type: ButtonType.Submit
+      }
+    });
+
+    const buttonEl = spectator.query('.button');
+    expect(buttonEl).toHaveClass('button secondary small solid');
+    expect(buttonEl).toHaveAttribute('type', 'submit');
   });
 
   test('should have correct style class for selected role', () => {
@@ -35,25 +53,31 @@ describe('Button Component', () => {
 
     // Primary
     spectator.setInput({
-      role: ButtonRole.Primary
+      variant: ButtonVariant.Primary
     });
     expect(spectator.query('.button')).toHaveClass('button primary small solid');
 
     // Secondary
     spectator.setInput({
-      role: ButtonRole.Secondary
+      variant: ButtonVariant.Secondary
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small solid');
 
     // Tertiary
     spectator.setInput({
-      role: ButtonRole.Tertiary
+      variant: ButtonVariant.Tertiary
     });
     expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
 
+    // Quaternary
+    spectator.setInput({
+      variant: ButtonVariant.Quaternary
+    });
+    expect(spectator.query('.button')).toHaveClass('button quaternary small solid');
+
     // Destructive
     spectator.setInput({
-      role: ButtonRole.Destructive
+      variant: ButtonVariant.Destructive
     });
     expect(spectator.query('.button')).toHaveClass('button destructive small solid');
   });
@@ -74,7 +98,7 @@ describe('Button Component', () => {
       size: ButtonSize.ExtraSmall
     });
     expect(spectator.query('.button')).toHaveClass('button secondary extra-small');
-    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.ExtraSmall);
 
     // Large
     spectator.setInput({
@@ -95,7 +119,7 @@ describe('Button Component', () => {
       size: ButtonSize.Medium
     });
     expect(spectator.query('.button')).toHaveClass('button secondary medium');
-    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Medium);
 
     // Tiny
     spectator.setInput({
@@ -146,6 +170,12 @@ describe('Button Component', () => {
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small text');
 
+    // Text
+    spectator.setInput({
+      display: ButtonStyle.PlainText
+    });
+    expect(spectator.query('.button')).toHaveClass('button secondary small plain-text');
+
     // Solid
     spectator.setInput({
       display: ButtonStyle.Solid
@@ -153,7 +183,7 @@ describe('Button Component', () => {
     expect(spectator.query('.button')).toHaveClass('button secondary small solid');
   });
 
-  test('should render Icon and label correctly', () => {
+  test('should render Icons and label correctly', () => {
     spectator = createHost(`<ht-button [icon]="icon"></ht-button>`, {
       hostProps: {
         icon: IconType.Add
@@ -175,12 +205,24 @@ describe('Button Component', () => {
 
     // Set Label
     spectator.setInput({
-      trailingIcon: true
+      trailingIcon: IconType.Add
+    });
+
+    expect(spectator.query('.icon.trailing')).toExist();
+    expect(spectator.query('.icon.leading')).toExist();
+    expect(spectator.query('.label')).toExist();
+    expect('.conditional-padding.leading').toExist();
+    expect('.conditional-padding.trailing').toExist();
+
+    // Set Label
+    spectator.setInput({
+      icon: undefined
     });
 
     expect(spectator.query('.icon.trailing')).toExist();
     expect(spectator.query('.icon.leading')).not.toExist();
     expect(spectator.query('.label')).toExist();
+    expect('.conditional-padding.leading').not.toExist();
     expect('.conditional-padding.trailing').toExist();
   });
 });

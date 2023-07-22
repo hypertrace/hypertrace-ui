@@ -1,4 +1,6 @@
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../model/schema/entity';
+import { TraceStatusType } from '../../../../model/schema/trace';
+import { TraceStatusSpecificationBuilder } from './../trace/trace-status/trace-status-specification-builder';
 import { EntitySpecificationBuilder } from './entity-specification-builder';
 
 describe('Entity Specification Builder', () => {
@@ -16,8 +18,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -26,8 +28,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
@@ -36,8 +38,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute1',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute1'
+            name: 'expression',
+            value: { key: 'attribute1' }
           }
         ]
       },
@@ -46,8 +48,8 @@ describe('Entity Specification Builder', () => {
         alias: 'attribute2',
         arguments: [
           {
-            name: 'key',
-            value: 'attribute2'
+            name: 'expression',
+            value: { key: 'attribute2' }
           }
         ]
       }
@@ -69,6 +71,115 @@ describe('Entity Specification Builder', () => {
     });
   });
 
+  test('correctly builds entity specification with explicit entity type and additional specification', () => {
+    const traceSpec = new TraceStatusSpecificationBuilder().build();
+
+    const entitySpec = entitySpecificationBuilder.build(
+      'id',
+      'name',
+      ObservabilityEntityType.Api,
+      ['attribute1', 'attribute2'],
+
+      [traceSpec]
+    );
+
+    expect(entitySpec.asGraphQlSelections()).toEqual([
+      {
+        path: 'attribute',
+        alias: 'id',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'id' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'name',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'name' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'attribute1',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'attribute1' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'attribute2',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'attribute2' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'status',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'status' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'statusCode',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'statusCode' }
+          }
+        ]
+      },
+      {
+        path: 'attribute',
+        alias: 'statusMessage',
+        arguments: [
+          {
+            name: 'expression',
+            value: { key: 'statusMessage' }
+          }
+        ]
+      }
+    ]);
+
+    expect(
+      entitySpec.extractFromServerData({
+        id: 'test-id',
+        name: 'test-name',
+        attribute1: 'test-value-attrib1',
+        attribute2: 'test-value-attrib2',
+        status: TraceStatusType.FAIL,
+        statusCode: '404',
+        statusMessage: 'Not Found'
+      })
+    ).toEqual({
+      [entityIdKey]: 'test-id',
+      [entityTypeKey]: ObservabilityEntityType.Api,
+      name: 'test-name',
+      attribute1: 'test-value-attrib1',
+      attribute2: 'test-value-attrib2',
+      [traceSpec.name]: {
+        status: TraceStatusType.FAIL,
+        statusCode: '404',
+        statusMessage: 'Not Found'
+      }
+    });
+  });
+
   test('correctly builds entity specification without entity type', () => {
     const entitySpec = entitySpecificationBuilder.build('id', 'name');
 
@@ -78,8 +189,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -88,8 +199,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },
@@ -120,8 +231,8 @@ describe('Entity Specification Builder', () => {
         alias: 'id',
         arguments: [
           {
-            name: 'key',
-            value: 'id'
+            name: 'expression',
+            value: { key: 'id' }
           }
         ]
       },
@@ -130,8 +241,8 @@ describe('Entity Specification Builder', () => {
         alias: 'name',
         arguments: [
           {
-            name: 'key',
-            value: 'name'
+            name: 'expression',
+            value: { key: 'name' }
           }
         ]
       },

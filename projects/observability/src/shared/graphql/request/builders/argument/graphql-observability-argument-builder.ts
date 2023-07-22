@@ -1,25 +1,16 @@
 import { TimeDuration } from '@hypertrace/common';
-import {
-  convertToGraphQlMetricAggregationType,
-  GraphQlArgumentBuilder,
-  GraphQlSortBySpecification,
-  MetricAggregationType,
-  TraceType
-} from '@hypertrace/distributed-tracing';
 import { GraphQlArgument, GraphQlEnumArgument } from '@hypertrace/graphql-client';
+import { isNil } from 'lodash-es';
+import { MetricAggregationType } from '../../../model/metrics/metric-aggregation';
 import { EntityType } from '../../../model/schema/entity';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
 import { GraphQlIntervalUnit } from '../../../model/schema/interval/graphql-interval-unit';
+import { convertToGraphQlMetricAggregationType } from '../../../model/schema/metrics/graphql-metric-aggregation-type';
+import { TraceType } from '../../../model/schema/trace';
 import { convertToGraphQlIntervalUnit } from '../specification/metric/metric-interval-unit-converter';
+import { GraphQlArgumentBuilder } from './graphql-argument-builder';
 
 export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder {
-  public forEntityType(type: EntityType): GraphQlArgument {
-    return {
-      name: 'type',
-      value: new GraphQlEnumArgument(type)
-    };
-  }
-
   public forIncludeInactive(includeInactive?: boolean): GraphQlArgument[] {
     return includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : [];
   }
@@ -110,26 +101,6 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
       : [{ name: 'aggregation', value: new GraphQlEnumArgument(convertToGraphQlMetricAggregationType(aggregation)) }];
   }
 
-  public forOrderBy(orderBy?: GraphQlSortBySpecification): GraphQlArgument[] {
-    return this.forOrderBys(orderBy && [orderBy]);
-  }
-
-  public forOrderBys(orderBys: GraphQlSortBySpecification[] = []): GraphQlArgument[] {
-    if (orderBys.length === 0) {
-      return [];
-    }
-
-    return [
-      {
-        name: 'orderBy',
-        value: orderBys.map(orderBy => ({
-          ...orderBy.key.asGraphQlOrderByFragment(),
-          direction: new GraphQlEnumArgument(orderBy.direction)
-        }))
-      }
-    ];
-  }
-
   public forGroupBy(groupBy?: GraphQlGroupBy): GraphQlArgument[] {
     if (!groupBy) {
       return [];
@@ -138,16 +109,11 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
     return [
       {
         name: 'groupBy',
-        value:
-          // Remove includeRest key if undefined
-          groupBy.includeRest === undefined
-            ? {
-                keys: groupBy.keys
-              }
-            : {
-                keys: groupBy.keys,
-                includeRest: groupBy.includeRest
-              }
+        value: {
+          expressions: groupBy.keyExpressions.map(expression => this.buildAttributeExpression(expression)),
+          groupLimit: groupBy.limit,
+          ...(isNil(groupBy.includeRest) ? {} : { includeRest: groupBy.includeRest })
+        }
       }
     ];
   }

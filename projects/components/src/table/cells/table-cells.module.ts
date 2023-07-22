@@ -1,14 +1,17 @@
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, NgModule } from '@angular/core';
-import { FormattingModule } from '@hypertrace/common';
-import { TraceCheckboxModule } from '../../checkbox/checkbox.module';
+import { FormattingModule, MemoizeModule } from '@hypertrace/common';
+import { CheckboxModule } from '../../checkbox/checkbox.module';
+import { CopyToClipboardModule } from '../../copy-to-clipboard/copy-to-clipboard.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
 import { FilterButtonModule } from '../../filtering/filter-button/filter-button.module';
 import { FilterModalModule } from '../../filtering/filter-modal/filter-modal.module';
 import { IconModule } from '../../icon/icon.module';
+import { LabelModule } from '../../label/label.module';
 import { PopoverModule } from '../../popover/popover.module';
 import { TooltipModule } from '../../tooltip/tooltip.module';
+import { XMoreModule } from '../../x-more/x-more.module';
 import { TableHeaderCellRendererComponent } from '../header/table-header-cell-renderer.component';
 import { TableCellBooleanParser } from './data-parsers/table-cell-boolean-parser';
 import { TableCellIconParser } from './data-parsers/table-cell-icon-parser';
@@ -16,10 +19,17 @@ import { TableCellNoOpParser } from './data-parsers/table-cell-no-op-parser';
 import { TableCellNumberParser } from './data-parsers/table-cell-number-parser';
 import { TableCellStringParser } from './data-parsers/table-cell-string-parser';
 import { TableCellTimestampParser } from './data-parsers/table-cell-timestamp-parser';
+import { CodeTableCellRendererComponent } from './data-renderers/code/code-table-cell-renderer.component';
+import { DurationTableCellRendererComponent } from './data-renderers/duration/duration-table-cell-renderer.component';
+import { StringEnumTableCellRendererComponent } from './data-renderers/enum/string-enum-table-cell-renderer.component';
 import { IconTableCellRendererComponent } from './data-renderers/icon/icon-table-cell-renderer.component';
 import { NumericTableCellRendererComponent } from './data-renderers/numeric/numeric-table-cell-renderer.component';
+import { RelativeTimestampTableCellRendererComponent } from './data-renderers/relative-timestamp/relative-timestamp-table-cell-renderer.component';
+import { StringArrayTableCellRendererComponent } from './data-renderers/string-array/string-array-table-cell-renderer.component';
 import { TableDataCellRendererComponent } from './data-renderers/table-data-cell-renderer.component';
+import { TextWithCopyActionTableCellRendererComponent } from './data-renderers/text-with-copy/text-with-copy-table-cell-renderer.component';
 import { TextTableCellRendererComponent } from './data-renderers/text/text-table-cell-renderer.component';
+import { TimeAgoTableCellRendererComponent } from './data-renderers/time-ago/time-ago-table-cell-renderer.component';
 import { TimestampTableCellRendererComponent } from './data-renderers/timestamp/timestamp-table-cell-renderer.component';
 import { TableExpandedDetailRowCellRendererComponent } from './expanded-detail/table-expanded-detail-row-cell-renderer.component';
 import { TableCellStateParser } from './state-parsers/table-cell-state-parser';
@@ -41,10 +51,14 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     FormattingModule,
     IconModule,
     TooltipModule,
-    TraceCheckboxModule,
+    CheckboxModule,
     FilterButtonModule,
     FilterModalModule,
-    PopoverModule
+    PopoverModule,
+    CopyToClipboardModule,
+    LabelModule,
+    XMoreModule,
+    MemoizeModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
@@ -60,7 +74,14 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     TableExpanderCellRendererComponent,
     TableHeaderCellRendererComponent,
     TextTableCellRendererComponent,
-    TimestampTableCellRendererComponent
+    TimestampTableCellRendererComponent,
+    TimeAgoTableCellRendererComponent,
+    CodeTableCellRendererComponent,
+    StringArrayTableCellRendererComponent,
+    StringEnumTableCellRendererComponent,
+    TextWithCopyActionTableCellRendererComponent,
+    RelativeTimestampTableCellRendererComponent,
+    DurationTableCellRendererComponent
   ],
   providers: [
     {
@@ -71,7 +92,14 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCheckboxCellRendererComponent,
         TableExpanderCellRendererComponent,
         TextTableCellRendererComponent,
-        TimestampTableCellRendererComponent
+        TimestampTableCellRendererComponent,
+        TimeAgoTableCellRendererComponent,
+        CodeTableCellRendererComponent,
+        StringArrayTableCellRendererComponent,
+        StringEnumTableCellRendererComponent,
+        TextWithCopyActionTableCellRendererComponent,
+        RelativeTimestampTableCellRendererComponent,
+        DurationTableCellRendererComponent
       ],
       multi: true
     },

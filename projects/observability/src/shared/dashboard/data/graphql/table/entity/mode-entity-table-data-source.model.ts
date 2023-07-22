@@ -1,12 +1,10 @@
 import { assertUnreachable } from '@hypertrace/common';
 import { TableDataRequest, TableDataResponse, TableMode, TableRow } from '@hypertrace/components';
 import { ModelTemplatePropertyType } from '@hypertrace/dashboards';
-import {
-  GraphQlFilter,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
 import { Model, ModelJson, ModelProperty } from '@hypertrace/hyperdash';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
+import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
   type: 'mode-entity-table-data-source'

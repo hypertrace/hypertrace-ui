@@ -7,16 +7,17 @@ import {
   TableSortDirection
 } from '@hypertrace/components';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
-import { GraphQlTimeRange, SpecificationBackedTableColumnDef } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { mockProvider } from '@ngneat/spectator/jest';
+import { of } from 'rxjs';
 import { ObservabilityEntityType } from '../../../../../graphql/model/schema/entity';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
+import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
+import { GraphQlFilterBuilderService } from '../../../../../services/filter-builder/graphql-filter-builder.service';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
 import { entityIdKey, entityTypeKey } from './../../../../../graphql/model/schema/entity';
 import { ENTITIES_GQL_REQUEST } from './../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
-
-import { of } from 'rxjs';
-import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import { EntityTableDataSourceModel } from './entity-table-data-source.model';
 
 describe('Entity table data source model', () => {
@@ -49,13 +50,18 @@ describe('Entity table data source model', () => {
     const mockApi: Partial<ModelApi> = {
       getTimeRange: jest.fn(() => testTimeRange)
     };
-    spectator = buildModel(EntityTableDataSourceModel);
-    spectator.model.api = mockApi as ModelApi;
-    spectator.model.entityType = ObservabilityEntityType.Service;
-    spectator.model.childEntityDataSource = new EntityTableDataSourceModel();
-    spectator.model.childEntityDataSource.api = mockApi as ModelApi;
-    spectator.model.childEntityDataSource.entityType = ObservabilityEntityType.Api;
-    spectator.model.childEntityDataSource.query$.subscribe(query => (lastEmittedQuery = query.buildRequest([])));
+    const childEntityDataSource = new EntityTableDataSourceModel();
+    childEntityDataSource.api = mockApi as ModelApi;
+    childEntityDataSource.entityType = ObservabilityEntityType.Api;
+    childEntityDataSource.query$.subscribe(query => (lastEmittedQuery = query.buildRequest([])));
+    spectator = buildModel(EntityTableDataSourceModel, {
+      api: mockApi,
+      properties: {
+        entityType: ObservabilityEntityType.Service,
+        childEntityDataSource: childEntityDataSource
+      }
+    });
+    childEntityDataSource.graphQlFilterBuilderService = spectator.get(GraphQlFilterBuilderService);
 
     spectator.model.query$.subscribe(query => (lastEmittedQuery = query.buildRequest([])));
     spectator.model.getData().subscribe(dataSource => (tableDataSource = dataSource));

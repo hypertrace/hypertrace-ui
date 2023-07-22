@@ -30,11 +30,11 @@ export class CartesianAxisCrosshair {
       position,
       locationData.map(data => data.location)
     );
-    crosshairSelection.classed('hidden', false);
+    crosshairSelection.attr('hidden', null);
   }
 
   public hide(axisElement: SVGGElement): void {
-    this.getCrosshairSelection(axisElement).classed('hidden', true);
+    this.getCrosshairSelection(axisElement).attr('hidden', true);
   }
 
   private initializeCrosshairIfMissing(axisElement: SVGGElement): void {

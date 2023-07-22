@@ -80,6 +80,10 @@ export class SvgUtilService {
     throw Error('No parent SVG tag found for provided element');
   }
 
+  public getElementTextLength(element: SVGTextElement): number {
+    return this.domElementMeasurerService.getComputedTextLength(element);
+  }
+
   public truncateText(element: SVGTextElement, width: number): void {
     let textLength = this.domElementMeasurerService.getComputedTextLength(element);
 
@@ -146,12 +150,16 @@ export class SvgUtilService {
           this.truncateText(tspan.node()!, width);
         } else {
           // Move this word to next line
+          const y = textSelection.attr('y');
+          const dy = parseFloat(textSelection.attr('dy') ?? '0');
 
           currentLine.pop();
           tspan.text(currentLine.join(' '));
           currentLine = [word];
           tspan = appendTSpan()
-            .attr('dy', `${++lineNumber * 1.1}em`)
+            .attr('x', 0)
+            .attr('y', y)
+            .attr('dy', `${++lineNumber * 1.1 + dy}em`)
             .text(word);
         }
       }

@@ -1,8 +1,56 @@
 @import 'color-palette';
 @import 'font';
 
-:host {
+.toggle-switch {
+  display: flex;
+  align-items: center;
+
   ::ng-deep {
+    .mat-slide-toggle {
+      &.disabled {
+        .mat-slide-toggle-thumb {
+          background: $gray-7;
+        }
+
+        .mat-slide-toggle-bar {
+          background: $gray-3;
+        }
+      }
+
+      &.small-slide-toggle {
+        height: 20px;
+        line-height: 20px;
+
+        &.mat-checked .mat-slide-toggle-thumb-container {
+          transform: translate3d(7px, 0, 0) !important;
+        }
+
+        .mat-slide-toggle-label {
+          .mat-slide-toggle-bar .mat-slide-toggle-thumb-container {
+            width: 12px;
+            height: 12px;
+
+            .mat-slide-toggle-ripple {
+              top: calc(50% - 7px);
+              left: calc(50% - 7px);
+              height: 14px;
+              width: 14px;
+            }
+          }
+
+          .mat-slide-toggle-thumb {
+            height: 12px;
+            width: 12px;
+          }
+
+          .mat-slide-toggle-bar {
+            width: 18px;
+            height: 6px;
+          }
+        }
+      }
+    }
+
     .mat-checked {
       .mat-slide-toggle-thumb-container {
         margin-left: 1px;

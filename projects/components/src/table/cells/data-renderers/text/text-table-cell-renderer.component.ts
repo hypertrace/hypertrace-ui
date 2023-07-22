@@ -15,7 +15,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
       class="text-cell"
       [htTooltip]="this.value"
     >
-      {{ this.value }}
+      {{ this.value | htDisplayString }}
     </div>
   `
 })

@@ -1,0 +1,27 @@
+@import 'font';
+
+.tags-details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid $gray-2;
+  border-radius: 8px;
+  padding: 16px;
+
+  .tag-value {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto min-content;
+
+    .filter-link {
+      visibility: hidden;
+      margin-left: 12px;
+    }
+
+    &:hover .filter-link {
+      visibility: visible;
+    }
+  }
+}

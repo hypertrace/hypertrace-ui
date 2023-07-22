@@ -7,7 +7,9 @@ import { DatetimePickerModule } from '../datetime-picker/datetime-picker.module'
 import { IconModule } from '../icon/icon.module';
 import { InputModule } from '../input/input.module';
 import { LabelModule } from '../label/label.module';
+import { LayoutChangeModule } from '../layout/layout-change.module';
 import { PopoverModule } from '../popover/popover.module';
+import { RefreshButtonModule } from '../refresh-button/refresh-button.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { CustomTimeRangeSelectionComponent } from './custom-time-range-selection.component';
 import { PredefinedTimeRangeSelectionComponent } from './predefined-time-range-selection.component';
@@ -24,7 +26,9 @@ import { TimeRangeComponent } from './time-range.component';
     PopoverModule,
     DatetimePickerModule,
     TooltipModule,
-    MemoizeModule
+    MemoizeModule,
+    LayoutChangeModule,
+    RefreshButtonModule
   ],
   declarations: [TimeRangeComponent, PredefinedTimeRangeSelectionComponent, CustomTimeRangeSelectionComponent],
   exports: [TimeRangeComponent]

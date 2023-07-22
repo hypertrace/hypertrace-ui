@@ -23,7 +23,6 @@ export class WidgetHeaderModel {
 
   @ModelProperty({
     key: 'title-position',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TitlePosition.Footer, TitlePosition.Header]
@@ -42,17 +41,10 @@ export class WidgetHeaderModel {
   @ModelProperty({
     key: 'link',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: LinkWidgetModel
     } as ModelModelPropertyTypeInstance
   })
   public link?: LinkWidgetModel;
-
-  @ModelProperty({
-    key: 'top-margin',
-    type: BOOLEAN_PROPERTY.type
-  })
-  public topMargin?: boolean = false;
 }

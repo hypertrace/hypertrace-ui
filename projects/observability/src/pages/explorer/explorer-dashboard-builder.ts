@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { InjectionToken } from '@angular/core';
 import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
@@ -7,23 +8,24 @@ import {
   TableSortDirection,
   TableStyle
 } from '@hypertrace/components';
-import {
-  AttributeMetadata,
-  AttributeMetadataType,
-  GraphQlFilter,
-  GraphQlFilterDataSourceModel,
-  MetadataService,
-  SPAN_SCOPE,
-  toFilterAttributeType,
-  TracingTableCellType
-} from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
-import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../shared/components/table/tracing-table-cell-type';
+import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
+import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+import {
+  AttributeMetadata,
+  AttributeMetadataType,
+  toFilterAttributeType
+} from '../../shared/graphql/model/metadata/attribute-metadata';
+import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
+import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 
 export class ExplorerDashboardBuilder {
   private readonly requestSubject: Subject<ExploreVisualizationRequest> = new ReplaySubject(1);
@@ -60,11 +62,15 @@ export class ExplorerDashboardBuilder {
         type: 'cartesian-widget',
         'selectable-interval': false,
         'series-from-data': true,
-        'legend-position': LegendPosition.Bottom
+        'legend-position': LegendPosition.Bottom,
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler',
+          'show-context-menu': false
+        }
       },
       onReady: dashboard => {
-        dashboard.createAndSetRootDataFromModelClass(ExploreCartesianDataSourceModel);
-        const dataSource = dashboard.getRootDataSource<ExploreCartesianDataSourceModel>()!;
+        dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
+        const dataSource = dashboard.getRootDataSource<ExplorerVisualizationCartesianDataSourceModel>()!;
         dataSource.request = request;
       }
     });
@@ -113,7 +119,7 @@ export class ExplorerDashboardBuilder {
           type: 'span-detail-widget',
           data: {
             type: 'span-detail-data-source',
-            // tslint:disable-next-line: no-invalid-template-strings
+
             span: '${row}'
           }
         },
@@ -134,7 +140,7 @@ export class ExplorerDashboardBuilder {
         type: 'trace-detail-widget',
         data: {
           type: 'api-trace-detail-data-source',
-          // tslint:disable-next-line: no-invalid-template-strings
+
           trace: '${row}',
           attributes: ['requestUrl']
         }
@@ -148,7 +154,8 @@ export class ExplorerDashboardBuilder {
 
   private getRendererForType(type: AttributeMetadataType): string {
     switch (type) {
-      case AttributeMetadataType.Number:
+      case AttributeMetadataType.Long:
+      case AttributeMetadataType.Double:
         return CoreTableCellRendererType.Number;
       case AttributeMetadataType.Timestamp:
         return CoreTableCellRendererType.Timestamp;
@@ -164,7 +171,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Type',
-            width: '80px',
+            width: '100px',
             display: CoreTableCellRendererType.Text,
             filterable: true,
             value: {
@@ -203,12 +210,48 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Exit Calls',
+            filterable: false,
+            display: ObservabilityTableCellType.ExitCalls,
+            value: {
+              type: 'composite-specification',
+              specifications: [
+                {
+                  type: 'attribute-specification',
+                  attribute: 'apiExitCalls'
+                },
+                {
+                  type: 'attribute-specification',
+                  attribute: 'apiCalleeNameCount'
+                }
+              ],
+              'order-by': 'apiExitCalls'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Status',
             width: '184px',
             display: TracingTableCellType.TraceStatus,
             filterable: true,
             value: {
               type: 'trace-status-specification'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            title: 'Errors',
+            width: '100px',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'apiTraceErrorSpanCount'
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
@@ -244,9 +287,24 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'End Time',
+            width: '220px',
+            display: CoreTableCellRendererType.Timestamp,
+            visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'endTime'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'API Boundary Type',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiBoundaryType'
@@ -260,6 +318,7 @@ export class ExplorerDashboardBuilder {
             title: 'API Discovery State',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiDiscoveryState'
@@ -273,6 +332,7 @@ export class ExplorerDashboardBuilder {
             title: 'API ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiId'
@@ -286,6 +346,7 @@ export class ExplorerDashboardBuilder {
             title: 'Entry Span ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'apiTraceId'
@@ -299,6 +360,7 @@ export class ExplorerDashboardBuilder {
             title: 'Service ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'serviceId'
@@ -312,6 +374,7 @@ export class ExplorerDashboardBuilder {
             title: 'Trace ID',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
@@ -325,6 +388,7 @@ export class ExplorerDashboardBuilder {
             title: 'Request URL',
             width: '1',
             visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'requestUrl'
@@ -390,6 +454,19 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'Errors',
+            width: '100px',
+            filterable: true,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'errorCount'
+            },
+            'click-handler': {
+              type: 'api-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
             title: 'Duration',
             width: '100px',
             display: TracingTableCellType.Metric,
@@ -418,7 +495,22 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            title: 'End Time',
+            width: '220px',
+            display: CoreTableCellRendererType.Timestamp,
             visible: false,
+            value: {
+              type: 'attribute-specification',
+              attribute: 'endTime'
+            },
+            'click-handler': {
+              type: 'span-trace-navigation-handler'
+            }
+          },
+          {
+            type: 'table-widget-column',
+            visible: false,
+            filterable: true,
             value: {
               type: 'attribute-specification',
               attribute: 'traceId'
@@ -437,9 +529,26 @@ export class ExplorerDashboardBuilder {
   protected getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
     switch (context) {
       case ObservabilityTraceType.Api:
-        return new Set(['protocol', 'apiName', 'statusCode', 'duration', 'startTime', 'calls']);
+        return new Set([
+          'protocol',
+          'serviceName',
+          'apiName',
+          'statusCode',
+          'apiTraceErrorSpanCount',
+          'duration',
+          'startTime',
+          'calls'
+        ]);
       case SPAN_SCOPE:
-        return new Set(['protocolName', 'displaySpanName', 'statusCode', 'duration', 'startTime']);
+        return new Set([
+          'protocolName',
+          'serviceName',
+          'displaySpanName',
+          'statusCode',
+          'errorCount',
+          'duration',
+          'startTime'
+        ]);
       default:
         return assertUnreachable(context);
     }

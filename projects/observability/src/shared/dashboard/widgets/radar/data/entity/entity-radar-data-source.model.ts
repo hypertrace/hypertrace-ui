@@ -1,10 +1,13 @@
-import { GraphQlFilter, GraphQlTimeRange, MetricAggregation, Specification } from '@hypertrace/distributed-tracing';
 import { ARRAY_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RadarPoint } from '../../../../../components/radar/radar';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { Entity } from '../../../../../graphql/model/schema/entity';
 import { findEntityFilterOrThrow } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { SubscriptionLifecycle, throwIfNil } from '@hypertrace/common';
 
@@ -24,7 +24,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
   providers: [SubscriptionLifecycle],
   template: `
     <div class="control-container">
-      <button (click)="this.runLayout()" class="topology-control topology-button">
+      <button (click)="this.runLayout()" class="topology-control topology-button" role="button">
         <ht-icon
           icon="${IconType.Refresh}"
           [size]="this.iconSize"
@@ -34,7 +34,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
         ></ht-icon>
       </button>
       <ng-container *ngIf="this.canZoom()">
-        <button (click)="this.zoomToFit()" class="topology-control topology-button">
+        <button (click)="this.zoomToFit()" class="topology-control topology-button" role="button">
           <ht-icon
             icon="${IconType.ZoomToFit}"
             [size]="this.iconSize"
@@ -44,7 +44,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
           ></ht-icon>
         </button>
         <div class="topology-control zoom-control">
-          <button (click)="this.decrementZoom()" [disabled]="!this.canDecrement" class="topology-button">
+          <button (click)="this.decrementZoom()" [disabled]="!this.canDecrement" class="topology-button" role="button">
             <ht-icon
               icon="${IconType.Remove}"
               [size]="this.iconSize"
@@ -53,7 +53,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
               class="control-icon"
             ></ht-icon>
           </button>
-          <button (click)="this.incrementZoom()" [disabled]="!this.canIncrement" class="topology-button">
+          <button (click)="this.incrementZoom()" [disabled]="!this.canIncrement" class="topology-button" role="button">
             <ht-icon
               icon="${IconType.Add}"
               [size]="this.iconSize"
@@ -69,11 +69,11 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
     </div>
   `
 })
-export class TopologyInteractionControlComponent {
+export class TopologyInteractionControlComponent implements OnInit {
   public currentZoomPercentage: string = '100';
   public canIncrement: boolean = true;
   public canDecrement: boolean = true;
-  public readonly iconSize: IconSize = IconSize.Medium;
+  public readonly iconSize: IconSize = IconSize.Small;
   public readonly edgeDataSpecifiers: TopologyDataSpecifier[];
   public readonly nodeDataSpecifiers: TopologyDataSpecifier[];
   public get selectedEdgeDataSpecifier(): TopologyDataSpecifier | undefined {
@@ -109,6 +109,12 @@ export class TopologyInteractionControlComponent {
 
     this.edgeDataSpecifiers = interactionControlData.topologyConfig.edgeDataSpecifiers;
     this.nodeDataSpecifiers = interactionControlData.topologyConfig.nodeDataSpecifiers;
+  }
+
+  public ngOnInit(): void {
+    if (this.interactionControlData.topologyConfig.shouldAutoZoomToFit) {
+      this.zoomToFit();
+    }
   }
 
   // TODO should make the increments logarithmic

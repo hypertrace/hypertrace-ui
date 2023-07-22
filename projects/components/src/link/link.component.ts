@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
+import { EMPTY, Observable } from 'rxjs';
 
 @Component({
   selector: 'ht-link',
@@ -8,13 +10,17 @@ import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
-      *ngIf="this.navigationPath"
+      *htLetAsync="this.navData$ as navData"
       class="ht-link"
-      [routerLink]="this.navigationPath"
-      [queryParams]="this.navigationOptions?.queryParams"
-      [queryParamsHandling]="this.navigationOptions?.queryParamsHandling"
-      [skipLocationChange]="this.navigationOptions?.skipLocationChange"
-      [replaceUrl]="this.navigationOptions?.replaceUrl"
+      [ngClass]="{ disabled: this.disabled || !navData }"
+      [routerLink]="navData?.path"
+      [queryParams]="navData?.extras?.queryParams"
+      [queryParamsHandling]="navData?.extras?.queryParamsHandling"
+      [skipLocationChange]="navData?.extras?.skipLocationChange"
+      [replaceUrl]="navData?.extras?.replaceUrl"
+      [htTrack]
+      htTrackLabel="{{ navData && navData.path ? navData.path : '' }}"
+      [attr.aria-label]="this.ariaLabel"
     >
       <ng-content></ng-content>
     </a>
@@ -22,22 +28,24 @@ import { NavigationParams, NavigationPath, NavigationService } from '@hypertrace
 })
 export class LinkComponent implements OnChanges {
   @Input()
-  public paramsOrUrl?: NavigationParams | string;
+  public paramsOrUrl?: NavigationParams | string | null;
 
-  public navigationPath?: NavigationPath;
-  public navigationOptions?: NavigationExtras;
+  @Input()
+  public disabled?: boolean;
+
+  @Input()
+  public ariaLabel?: string;
+
+  public navData$: Observable<NavData> = EMPTY;
 
   public constructor(private readonly navigationService: NavigationService) {}
 
   public ngOnChanges(): void {
-    this.setNavigationParams();
+    this.navData$ = isNil(this.paramsOrUrl) ? EMPTY : this.navigationService.buildNavigationParams$(this.paramsOrUrl);
   }
+}
 
-  private setNavigationParams(): void {
-    if (this.paramsOrUrl !== undefined) {
-      const { path, extras } = this.navigationService.buildNavigationParams(this.paramsOrUrl);
-      this.navigationPath = path;
-      this.navigationOptions = extras;
-    }
-  }
+interface NavData {
+  path: NavigationPath;
+  extras?: NavigationExtras;
 }

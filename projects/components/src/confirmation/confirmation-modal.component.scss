@@ -14,7 +14,9 @@
   .description {
     @include body-1-regular($gray-7);
     text-align: center;
-    word-break: break-all;
+    word-break: break-word;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .controls {

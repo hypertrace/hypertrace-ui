@@ -1,10 +1,4 @@
-import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
-import {
-  GraphQlFilter,
-  Specification,
-  SpecificationBackedTableColumnDef,
-  TableDataSourceModel
-} from '@hypertrace/distributed-tracing';
+import { TableDataRequest, TableDataResponse, TableRow, TableSortDirection } from '@hypertrace/components';
 import {
   ARRAY_PROPERTY,
   Model,
@@ -17,11 +11,15 @@ import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, EntityType } from '../../../../../graphql/model/schema/entity';
 import { GraphQlEntityFilter } from '../../../../../graphql/model/schema/filter/entity/graphql-entity-filter';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
   ENTITIES_GQL_REQUEST,
   GraphQlEntitiesQueryRequest
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
+import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
+import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
   type: 'entity-table-data-source'
@@ -36,7 +34,6 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   @ModelProperty({
     key: 'child-data-source',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: EntityTableDataSourceModel
@@ -67,13 +64,16 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       properties: request.columns.map(column => column.specification).concat(...this.additionalSpecifications),
       limit: this.limit !== undefined ? this.limit : request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
-      sort: request.sort && {
-        direction: request.sort.direction,
-        key: request.sort.column.specification
-      },
+      sort: request.sort
+        ? {
+            direction: request.sort.direction,
+            key: request.sort.column.specification
+          }
+        : this.buildDefaultSortArg(request.columns),
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
-      includeTotal: true
+      includeTotal: true,
+      includeInactive: request.includeInactive
     };
   }
 
@@ -129,5 +129,16 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       },
       sort: parentRequest.sort
     };
+  }
+
+  private buildDefaultSortArg(columns: SpecificationBackedTableColumnDef[]): GraphQlEntitiesQueryRequest['sort'] {
+    const defaultSortColumn = columns.find(column => column.sort);
+
+    return defaultSortColumn
+      ? {
+          key: defaultSortColumn.specification,
+          direction: defaultSortColumn.sort ?? TableSortDirection.Ascending
+        }
+      : undefined;
   }
 }

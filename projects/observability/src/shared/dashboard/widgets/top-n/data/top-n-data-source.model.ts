@@ -1,17 +1,17 @@
 import { TableSortDirection } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { GraphQlDataSourceModel } from '@hypertrace/distributed-tracing';
 import { ARRAY_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Entity, entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
+import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 @Model({
@@ -20,7 +20,6 @@ import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selectio
 export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFetcher> {
   @ModelProperty({
     key: 'entity',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]
@@ -65,7 +64,8 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       selections: [labelAttributeSpec, idAttributeSpec, metricSpec.metric],
       filters: (filters ?? []).concat(metricSpec.filters ?? []),
       groupBy: {
-        keys: [labelAttributeSpec.name, idAttributeSpec.name]
+        keyExpressions: [{ key: labelAttributeSpec.name }, { key: idAttributeSpec.name }],
+        limit: this.resultLimit
       },
       orderBy: [
         {

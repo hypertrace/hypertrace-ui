@@ -1,6 +1,7 @@
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 
 export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
   location: 'SERVICE_METRICS',
@@ -200,6 +201,28 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
             'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
+            'show-y-axis': true,
+            'y-axis': {
+              type: 'cartesian-axis',
+              'show-grid-lines': true,
+              'min-upper-limit': 25
+            },
+            bands: [
+              {
+                type: 'band',
+                name: 'Average Baseline',
+                'upper-bound-name': 'Average Upper Bound',
+                'lower-bound-name': 'Average Lower Bound',
+                data: {
+                  type: 'entity-metric-timeseries-data-source',
+                  metric: {
+                    type: 'metric-timeseries-band',
+                    metric: 'duration',
+                    aggregation: MetricAggregationType.Average
+                  }
+                }
+              }
+            ],
             series: [
               {
                 type: 'series',
@@ -253,7 +276,10 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'container-widget',
@@ -313,7 +339,11 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                       type: 'entity-error-percentage-timeseries-data-source'
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               },
               {
                 type: 'cartesian-widget',
@@ -321,6 +351,22 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                 'legend-position': LegendPosition.None,
                 'show-summary': true,
                 title: 'Error Rate',
+                bands: [
+                  {
+                    type: 'band',
+                    name: 'Baseline',
+                    'upper-bound-name': 'Upper Bound',
+                    'lower-bound-name': 'Lower Bound',
+                    data: {
+                      type: 'entity-metric-timeseries-data-source',
+                      metric: {
+                        type: 'metric-timeseries-band',
+                        metric: 'errorCount',
+                        aggregation: MetricAggregationType.AvgrateSecond
+                      }
+                    }
+                  }
+                ],
                 series: [
                   {
                     type: 'series',
@@ -336,7 +382,11 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
                       }
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               }
             ]
           }
@@ -344,12 +394,18 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'text-widget',
-        text: 'Calls per minute'
+        text: 'Calls'
       },
       {
         type: 'cartesian-widget',
         'selectable-interval': true,
         'legend-position': LegendPosition.None,
+        'show-y-axis': true,
+        'y-axis': {
+          type: 'cartesian-axis',
+          'show-grid-lines': true,
+          'min-upper-limit': 25
+        },
         series: [
           {
             type: 'series',
@@ -365,7 +421,11 @@ export const serviceMetricsDashboard: DashboardDefaultConfiguration = {
               }
             }
           }
-        ]
+        ],
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler',
+          'show-context-menu': true
+        }
       }
     ]
   }

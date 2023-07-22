@@ -1,9 +1,9 @@
-import { InteractionHandler } from '@hypertrace/distributed-tracing';
 import { Model } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { Entity } from '../../../../graphql/model/schema/entity';
 import { EntityNavigationService } from '../../../../services/navigation/entity/entity-navigation.service';
+import { InteractionHandler } from '../../../interaction/interaction-handler';
 
 @Model({
   type: 'entity-navigation-handler'

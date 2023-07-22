@@ -10,7 +10,8 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { DateCoercer, DateFormatter, TimeRange } from '@hypertrace/common';
+import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
+
 import { defaults } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
@@ -19,12 +20,15 @@ import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/de
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
+import { CartesianSelectedData, ChartEvent } from './chart-interactivty';
+import { ChartSyncService } from './chart-sync-service';
 import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-data-accessors';
 
 @Component({
   selector: 'ht-cartesian-chart',
   styleUrls: ['./cartesian-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
@@ -56,13 +60,24 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public timeRange?: TimeRange;
 
   @Input()
+  public rangeSelectionEnabled: boolean = false;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
   public selectedInterval?: IntervalValue;
 
+  @Input()
+  public groupId?: string;
+
   @Output()
   public readonly selectedIntervalChange: EventEmitter<IntervalValue> = new EventEmitter();
+
+  @Output()
+  public readonly selectionChange: EventEmitter<
+    MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
+  > = new EventEmitter();
 
   @ViewChild('chartContainer', { static: true })
   public readonly container!: ElementRef;
@@ -74,7 +89,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public constructor(
     private readonly chartBuilderService: ChartBuilderService,
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
+    private readonly chartSyncService: ChartSyncService<TData>,
+    private readonly subscriptionLifeCycle: SubscriptionLifecycle
   ) {}
 
   public ngOnChanges(): void {
@@ -87,13 +104,41 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     this.chart = this.chartBuilderService
-      .build<TData>(this.strategy, this.container.nativeElement, this.renderer)
+      .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.groupId)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
           this.convertToDefaultTooltipRenderData(data)
         )
+      )
+      .withEventListener(ChartEvent.Hover, data => {
+        this.chartSyncService.mouseLocationChange(data!, this.groupId, this);
+      })
+      .withEventListener(ChartEvent.MouseLeave, _data => {
+        this.chartSyncService.mouseLeave(this.groupId, this);
+      });
+
+    if (this.rangeSelectionEnabled) {
+      this.chart.withEventListener(ChartEvent.Select, selectedData => {
+        this.selectionChange.emit(selectedData);
+      });
+    }
+
+    this.subscriptionLifeCycle.unsubscribe();
+
+    if (this.groupId !== undefined) {
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
+          this.chart?.showCrosshair(data);
+        })
       );
+
+      this.subscriptionLifeCycle.add(
+        this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(() => {
+          this.chart?.hideCrosshair();
+        })
+      );
+    }
 
     if (this.bands) {
       this.chart.withBands(...this.bands);
@@ -165,18 +210,25 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       return undefined;
     }
 
-    const firstXValue = defaultXDataAccessor<unknown>(data[0].dataPoint);
-    const xAsDate = this.dateCoercer.coerce(firstXValue);
-    const title = xAsDate ? this.dateFormatter.format(xAsDate) : String(firstXValue);
-
     return {
-      title: title,
+      title: this.resolveTooltipTitle(data[0]),
       labeledValues: data.map(singleValue => ({
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
         units: singleValue.context.units,
-        color: singleValue.context.color
+        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
       }))
     };
+  }
+
+  private resolveTooltipTitle(location: MouseLocationData<TData, Series<TData>>): string {
+    const series = location.context;
+    if (series.getTooltipTitle) {
+      return series.getTooltipTitle(location.dataPoint);
+    }
+    const xValue = defaultXDataAccessor<unknown>(location.dataPoint);
+    const xAsDate = this.dateCoercer.coerce(xValue);
+
+    return xAsDate ? this.dateFormatter.format(xAsDate) : String(xValue);
   }
 }

@@ -35,7 +35,10 @@ describe('Entity table cell renderer component', () => {
 
   test('should render a milliseconds only value', () => {
     const spectator = buildComponent();
-    expect(spectator.component.value).toEqual(entity);
+    expect(spectator.component.value).toEqual({
+      ...entity,
+      isInactive: false
+    });
   });
 
   test('should render first column with additional css class', () => {

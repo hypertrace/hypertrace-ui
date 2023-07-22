@@ -48,4 +48,8 @@ export abstract class CartesianData<TData, TVisualization> {
   protected buildYScale(): AnyCartesianScale<TData> {
     return this.scaleBuilder.build(AxisType.Y);
   }
+
+  public getXAxisValue(x: number): Date {
+    return new Date(this.xScale.invert(x));
+  }
 }

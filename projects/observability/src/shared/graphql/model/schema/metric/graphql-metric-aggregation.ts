@@ -6,11 +6,18 @@ export const enum GraphQlMetricAggregationPath {
   Avgrate = 'avgrate',
   Count = 'count',
   Percentile = 'percentile',
-  DistinctCount = 'distinctcount'
+  DistinctCount = 'distinctcount',
+  DistinctArray = 'distinct_array'
 }
 
 export interface GraphQlMetricAggregation {
   value: number;
+}
+
+export interface GraphQlMetricBandAggregation {
+  value: number;
+  upperBound: number;
+  lowerBound: number;
 }
 
 export type GraphQlMetricAggregationContainer<

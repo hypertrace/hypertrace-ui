@@ -1,30 +1,35 @@
-import { ColorService, TimeDuration, TimeUnit } from '@hypertrace/common';
+import { ColorService, FixedTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { createModelFactory } from '@hypertrace/dashboards/testing';
-import {
-  AttributeMetadataType,
-  GraphQlQueryEventService,
-  GraphQlTimeRange,
-  MetadataService,
-  MetricAggregationType
-} from '@hypertrace/distributed-tracing';
+import { Model } from '@hypertrace/hyperdash';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
-import { CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
-import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
-import { ObservabilityTraceType } from '../../../../graphql/model/schema/observability-traces';
+import { CartesianSeriesVisualizationType } from '../../../../components/cartesian/chart';
+import {
+  ExploreRequestState,
+  ExploreSeries
+} from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { AttributeMetadataType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import {
-  EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../graphql/request/handlers/explore/explore-query';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { GraphQlQueryEventService } from '../graphql-query-event.service';
+import { GraphQlGroupBy } from './../../../../graphql/model/schema/groupby/graphql-group-by';
 import { ExploreCartesianDataSourceModel, ExplorerData } from './explore-cartesian-data-source.model';
 
 describe('Explore cartesian data source model', () => {
   const testInterval = new TimeDuration(5, TimeUnit.Minute);
+  const startTime = new Date('2021-05-11T00:20:00.000Z');
+  const firstIntervalTime = new Date(startTime.getTime() + testInterval.toMillis());
+  const secondIntervalTime = new Date(startTime.getTime() + 2 * testInterval.toMillis());
+  const endTime = new Date(startTime.getTime() + 3 * testInterval.toMillis());
 
   const modelFactory = createModelFactory({
     providers: [
@@ -43,7 +48,7 @@ describe('Explore cartesian data source model', () => {
               name: name,
               displayName: 'Duration',
               units: 'ms',
-              type: AttributeMetadataType.Number,
+              type: AttributeMetadataType.Long,
               scope: context,
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,
@@ -53,258 +58,296 @@ describe('Explore cartesian data source model', () => {
       })
     ]
   });
-  let model: ExploreCartesianDataSourceModel;
+  let model: TestExploreCartesianDataSourceModel;
 
-  const getDataForQueryResponse = (response: GraphQlExploreResponse): Observable<Series<ExplorerData>[]> => {
+  const getDataForQueryResponse = (
+    response: GraphQlExploreResponse,
+    requestInterval?: TimeDuration
+  ): Observable<CartesianResult<ExplorerData>> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
       query.responseObserver.complete();
     });
 
-    return model.getData().pipe(mergeMap(fetcher => fetcher.getData(testInterval)));
+    return model.getData().pipe(mergeMap(fetcher => fetcher.getData(requestInterval)));
   };
 
-  const buildVisualizationRequest = (partialRequest: TestExplorePartial) => ({
-    exploreQuery$: of({
-      requestType: EXPLORE_GQL_REQUEST,
-      context: ObservabilityTraceType.Api,
-      limit: 1000,
-      offset: 0,
-      interval: partialRequest.interval as TimeDuration,
-      groupBy: partialRequest.groupBy,
-      selections: partialRequest.series.map(series => series.specification)
-    } as const),
-    resultsQuery$: EMPTY,
-    series: partialRequest.series,
-    groupBy: partialRequest.groupBy,
-    interval: partialRequest.interval,
-    context: ObservabilityTraceType.Api
-  });
-
   beforeEach(() => {
-    model = modelFactory(ExploreCartesianDataSourceModel, {
+    model = modelFactory(TestExploreCartesianDataSourceModel, {
       api: {
-        getTimeRange: jest.fn().mockReturnValue(new GraphQlTimeRange(2, 3))
+        getTimeRange: () => new FixedTimeRange(startTime, endTime)
       }
     }).model;
   });
 
   test('can build timeseries data', () => {
-    model.request = buildVisualizationRequest({
-      interval: 'AUTO',
-      groupBy: undefined,
-      series: [
-        {
-          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-          visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Line
-          }
+    model.series = [
+      {
+        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+        visualizationOptions: {
+          type: CartesianSeriesVisualizationType.Line
         }
-      ]
-    });
+      }
+    ];
+    model.groupBy = undefined;
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
-      ).toBe('(x|)', {
-        x: [
+        getDataForQueryResponse(
           {
-            color: 'first color',
-            name: 'sum(foo)',
-            type: CartesianSeriesVisualizationType.Line,
-            data: [
+            results: [
               {
-                timestamp: new Date(0),
-                value: 10
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Long
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
-                timestamp: new Date(1),
-                value: 15
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Long
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               }
             ]
-          }
-        ]
+          },
+          testInterval
+        )
+      ).toBe('(x|)', {
+        x: {
+          series: [
+            {
+              color: 'first color',
+              name: 'sum(foo)',
+              type: CartesianSeriesVisualizationType.Line,
+              data: [
+                {
+                  timestamp: startTime,
+                  value: 10
+                },
+                {
+                  timestamp: firstIntervalTime,
+                  value: 0
+                },
+                {
+                  timestamp: secondIntervalTime,
+                  value: 15
+                }
+              ],
+              groupName: 'sum(foo)'
+            }
+          ],
+          bands: []
+        }
       });
     });
   });
 
   test('can build grouped series data', () => {
-    model.request = buildVisualizationRequest({
-      interval: undefined,
-      groupBy: {
-        keys: ['baz']
-      },
-      series: [
-        {
-          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-          visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Column
-          }
+    model.series = [
+      {
+        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+        visualizationOptions: {
+          type: CartesianSeriesVisualizationType.Column
         }
-      ]
-    });
+      }
+    ];
+
+    model.groupBy = {
+      keyExpressions: [{ key: 'baz' }],
+      includeRest: true,
+      limit: 5
+    };
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
-              }
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              }
-            }
-          ]
-        })
-      ).toBe('(x|)', {
-        x: [
+        getDataForQueryResponse(
           {
-            color: 'first color',
-            name: 'sum(foo)',
-            type: CartesianSeriesVisualizationType.Column,
-            data: [
-              ['first', 10],
-              ['second', 15]
+            results: [
+              {
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                }
+              },
+              {
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                }
+              }
             ]
-          }
-        ]
+          },
+          undefined
+        )
+      ).toBe('(x|)', {
+        x: {
+          series: [
+            {
+              color: 'first color',
+              name: 'sum(foo)',
+              type: CartesianSeriesVisualizationType.Column,
+              data: [
+                ['first', 10],
+                ['second', 15]
+              ],
+              groupName: 'sum(foo)'
+            }
+          ],
+          bands: []
+        }
       });
     });
   });
 
   test('can build grouped timeseries data', () => {
-    model.request = buildVisualizationRequest({
-      interval: 'AUTO',
-      groupBy: {
-        keys: ['baz']
-      },
-      series: [
-        {
-          specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
-          visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Area
-          }
+    model.series = [
+      {
+        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
+        visualizationOptions: {
+          type: CartesianSeriesVisualizationType.Area
         }
-      ]
-    });
+      }
+    ];
+
+    model.groupBy = {
+      keyExpressions: [{ key: 'baz' }],
+      limit: 5
+    };
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        getDataForQueryResponse({
-          results: [
-            {
-              'sum(foo)': {
-                value: 10,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 15,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'first',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            },
-            {
-              'sum(foo)': {
-                value: 20,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
-            },
-            {
-              'sum(foo)': {
-                value: 25,
-                type: AttributeMetadataType.Number
-              },
-              baz: {
-                value: 'second',
-                type: AttributeMetadataType.String
-              },
-              [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-            }
-          ]
-        })
-      ).toBe('(x|)', {
-        x: [
+        getDataForQueryResponse(
           {
-            color: 'first color',
-            name: 'sum(foo): first',
-            type: CartesianSeriesVisualizationType.Area,
-            data: [
+            results: [
               {
-                timestamp: new Date(0),
-                value: 10
+                'sum(foo)': {
+                  value: 10,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
               },
               {
-                timestamp: new Date(1),
-                value: 15
+                'sum(foo)': {
+                  value: 15,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'first',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
+              },
+              {
+                'sum(foo)': {
+                  value: 20,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
+              },
+              {
+                'sum(foo)': {
+                  value: 25,
+                  type: AttributeMetadataType.Long
+                },
+                baz: {
+                  value: 'second',
+                  type: AttributeMetadataType.String
+                },
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
               }
             ]
           },
-          {
-            color: 'second color',
-            name: 'sum(foo): second',
-            type: CartesianSeriesVisualizationType.Area,
-            data: [
-              {
-                timestamp: new Date(0),
-                value: 20
-              },
-              {
-                timestamp: new Date(1),
-                value: 25
-              }
-            ]
-          }
-        ]
+          testInterval
+        )
+      ).toBe('(x|)', {
+        x: {
+          series: [
+            {
+              color: 'first color',
+              name: 'first',
+              type: CartesianSeriesVisualizationType.Area,
+              data: [
+                {
+                  timestamp: startTime,
+                  value: 10
+                },
+                {
+                  timestamp: firstIntervalTime,
+                  value: 0
+                },
+                {
+                  timestamp: secondIntervalTime,
+                  value: 15
+                }
+              ],
+              groupName: 'sum(foo)'
+            },
+            {
+              color: 'second color',
+              name: 'second',
+              type: CartesianSeriesVisualizationType.Area,
+              data: [
+                {
+                  timestamp: startTime,
+                  value: 20
+                },
+                {
+                  timestamp: firstIntervalTime,
+                  value: 0
+                },
+                {
+                  timestamp: secondIntervalTime,
+                  value: 25
+                }
+              ],
+              groupName: 'sum(foo)'
+            }
+          ],
+          bands: []
+        }
       });
     });
   });
 });
 
-interface TestExplorePartial extends Pick<ExploreVisualizationRequest, 'series' | 'groupBy' | 'interval'> {}
+@Model({
+  type: 'test-explore-cartesian-data-source'
+})
+export class TestExploreCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
+  public series?: ExploreSeries[];
+  public context?: string = 'context_scope';
+  public groupBy?: GraphQlGroupBy;
+  public resultLimit: number = 100;
+
+  protected buildRequestState(interval?: TimeDuration | 'AUTO'): ExploreRequestState | undefined {
+    if ((this.series ?? [])?.length === 0 || this.context === undefined) {
+      return undefined;
+    }
+
+    return {
+      series: this.series!,
+      context: this.context,
+      interval: interval,
+      groupBy: this.groupBy,
+      resultLimit: this.resultLimit
+    };
+  }
+}

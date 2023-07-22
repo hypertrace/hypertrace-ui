@@ -1,38 +1,60 @@
 import { TimeRange } from '@hypertrace/common';
+import { AxisDomain } from 'd3-axis';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
+import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
 import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.component';
 
-export interface CartesianChart<TData> {
+export interface CartesianChart<TInterval> {
   destroy(): this;
+
   draw(): this;
+
   isDrawn(): boolean;
-  withSeries(...series: Series<TData>[]): this;
-  withBands(...bands: Band<TData>[]): this;
+
+  withSeries(...series: Series<TInterval>[]): this;
+
+  withBands(...bands: Band<TInterval>[]): this;
+
   withLegend(legendPosition: LegendPosition): this;
-  withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this;
+
+  withEventListener(eventType: ChartEvent, listener: ChartEventListener<TInterval>): this;
+
   withAxis(axis: Axis): this;
+
   withIntervalData(intervalData: CartesianIntervalData): this;
-  withTooltip(tooltip: ChartTooltipRef<TData>): this;
+
+  withTooltip(tooltip: ChartTooltipRef<TInterval>): this;
+
   withTimeRange(timeRange: TimeRange): this;
+
+  showCrosshair(locationData: MouseLocationData<TInterval, Series<TInterval> | Band<TInterval>>[]): void;
+
+  hideCrosshair(): void;
 }
 
-export interface Series<TData> {
-  data: TData[];
+export interface Series<TInterval> {
+  data: TInterval[];
   units?: string;
   summary?: Summary;
   color: string;
   name: string;
+  groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
   stacking?: boolean;
   hide?: boolean;
+
+  // Override the default color string using a method that takes data point as input
+  getColor?(datum?: TInterval): string;
+
+  getTooltipTitle?(datum: TInterval): string;
 }
 
-export interface Band<TData> {
-  upper: Series<TData>;
-  lower: Series<TData>;
+export interface Band<TInterval> {
+  upper: Series<TInterval>;
+  lower: Series<TInterval>;
   color: string;
   opacity: number;
   name: string;
@@ -58,11 +80,11 @@ export const enum RenderingStrategy {
 }
 
 export const enum CartesianSeriesVisualizationType {
-  Column,
-  Line,
-  DashedLine,
-  Scatter,
-  Area
+  Column = 'column',
+  Line = 'line',
+  DashedLine = 'dashed-line',
+  Scatter = 'scatter',
+  Area = 'area'
 }
 
 export const enum AxisType {
@@ -120,11 +142,23 @@ export interface Axis {
    * Maximum value of the axis. If unset, defaults to maximum value of provided data.
    */
   max?: number;
+
+  /**
+   * Determine the tick count labels
+   */
+  tickCount?: number;
+
+  /**
+   * What to do if label overflows
+   */
+  labelOverflow?: LabelOverflow;
+
+  getLabel?(domainValue: AxisDomain, index: number): string;
 }
 
 export interface AxisCrosshair {
   /**
-   * If true, snaps to closest data point to mouse. If false, follows exact mouse location. Defaults to true.
+   * If true, snaps to the closest data point to mouse. If false, follows exact mouse location. Defaults to true.
    */
   snap?: boolean;
 }
@@ -133,4 +167,9 @@ export enum ScaleType {
   Linear = 'linear',
   Time = 'time',
   Band = 'band'
+}
+
+export enum LabelOverflow {
+  Wrap = 'wrap',
+  Rotate = 'rotate'
 }

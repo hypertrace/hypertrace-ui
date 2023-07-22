@@ -1,9 +1,11 @@
 import { TimeDuration, TimeUnit } from '@hypertrace/common';
-import { GraphQlFilter, GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
+import { MetricAggregationType } from '../../../../../graphql/model/metrics/metric-aggregation';
+import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
+import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
-import { EXPLORE_GQL_REQUEST } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { TraceMetricTimeseriesDataSourceModel } from './trace-metric-timeseries-data-source.model';
 
 describe('Trace metric timeseries data source model', () => {
@@ -30,6 +32,7 @@ describe('Trace metric timeseries data source model', () => {
       requestType: EXPLORE_GQL_REQUEST,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       context: ObservabilityTraceType.Api,
+      filters: [],
       interval: testInterval,
       limit: 10000,
       selections: [model.specification]

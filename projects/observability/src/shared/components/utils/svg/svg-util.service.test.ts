@@ -26,7 +26,7 @@ describe('SvgUtilService', () => {
   beforeEach(() => {
     spectator = createHost('<test-svg></test-svg>');
     svgUtilService = spectator.inject(SvgUtilService);
-    textElement = spectator.query('text', { root: true })! as SVGTextElement;
+    textElement = spectator.query('text', { root: true })!;
   });
 
   test('truncate text to less than width by adding ellipsis in the middle', () => {

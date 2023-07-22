@@ -18,10 +18,12 @@ const iconsRootPath = 'assets/icons';
       { key: ObservabilityIconType.Cassandra, url: `${iconsRootPath}/cassandra.svg` },
       { key: ObservabilityIconType.Elastic, url: `${iconsRootPath}/elastic.svg` },
       { key: ObservabilityIconType.Edge, url: `${iconsRootPath}/edge.svg` },
+      { key: ObservabilityIconType.EdgeCalls, url: `${iconsRootPath}/edge-calls.svg` },
       { key: ObservabilityIconType.Gateway, url: `${iconsRootPath}/gateway.svg` },
       { key: ObservabilityIconType.Helm, url: `${iconsRootPath}/helm.svg` },
       { key: ObservabilityIconType.HTTP, url: `${iconsRootPath}/http.svg` },
       { key: ObservabilityIconType.JDBC, url: `${iconsRootPath}/jdbc.svg` },
+      { key: ObservabilityIconType.Kafka, url: `${iconsRootPath}/kafka.svg` },
       { key: ObservabilityIconType.Kong, url: `${iconsRootPath}/kong.svg` },
       { key: ObservabilityIconType.Kubernetes, url: `${iconsRootPath}/kubernetes.svg` },
       { key: ObservabilityIconType.MicrosoftAzure, url: `${iconsRootPath}/microsoft-azure.svg` },
@@ -37,6 +39,7 @@ const iconsRootPath = 'assets/icons';
       { key: ObservabilityIconType.Serverless, url: `${iconsRootPath}/serverless.svg` },
       { key: ObservabilityIconType.Service, url: `${iconsRootPath}/service.svg` },
       { key: ObservabilityIconType.ServicesList, url: `${iconsRootPath}/services_list.svg` },
+      { key: ObservabilityIconType.SQS, url: `${iconsRootPath}/amazon-sqs.svg` },
       { key: ObservabilityIconType.Tyk, url: `${iconsRootPath}/tyk.svg` }
     ])
   ]

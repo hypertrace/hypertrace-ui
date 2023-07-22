@@ -1,10 +1,11 @@
-@import 'interaction';
+@import 'mixins';
 
 .menu-item {
   @include popover-menu-item;
+  @include body-1-regular;
+  @include disableable;
 
-  &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  .icon {
+    padding-right: 8px;
   }
 }

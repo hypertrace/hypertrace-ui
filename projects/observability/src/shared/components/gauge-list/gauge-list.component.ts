@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { maxBy } from 'lodash-es';
+import { maxBy, sum } from 'lodash-es';
 
 @Component({
   selector: 'ht-gauge-list',
   styleUrls: ['./gauge-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="gauge-list">
+    <div class="gauge-list" [ngClass]="{ 'with-label': this.showLabels }">
       <ng-container *ngFor="let item of this.itemOptions">
-        <div class="border-top"></div>
+        <div class="border-top" *ngIf="this.showItemBorders"></div>
         <div
           class="label"
+          *ngIf="this.showLabels"
           [htTooltip]="item.label"
           (click)="this.onItemClick(item)"
           [ngClass]="{ clickable: this.itemClickable }"
@@ -19,11 +20,12 @@ import { maxBy } from 'lodash-es';
         >
           {{ item.label }}
         </div>
-        <div class="progress">
+        <div class="progress" [htTooltip]="item.label">
           <div class="progress-value" [ngStyle]="{ width: item.width, backgroundColor: item.color }"></div>
         </div>
         <div class="value">
           <span>{{ item.value | htDisplayNumber }}</span>
+          <span *ngIf="this.showPercentages"> ({{ item.percentage | htDisplayNumber }}%)</span>
         </div>
       </ng-container>
     </div>
@@ -38,6 +40,15 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
 
   @Input()
   public determineColor?: (colorKey: string) => string;
+
+  @Input()
+  public showLabels: boolean = true;
+
+  @Input()
+  public showPercentages: boolean = false;
+
+  @Input()
+  public showItemBorders: boolean = true;
 
   @Output()
   public readonly itemClick: EventEmitter<T> = new EventEmitter();
@@ -66,12 +77,14 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
     }
 
     const colorLookupMap = this.buildColorLookupForData(this.items);
+    const totalCount = sum(this.items.map((gaugeItem: GaugeItem) => gaugeItem.value));
 
     this.itemOptions = this.items.map(option => ({
       label: option.label,
       color: colorLookupMap.get(option.colorKey ?? option.label),
       width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
       value: option.value,
+      percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
       original: option
     }));
   }
@@ -88,6 +101,7 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
 export interface GaugeItem {
   label: string;
   value: number;
+  percentage?: number;
   colorKey?: string;
 }
 

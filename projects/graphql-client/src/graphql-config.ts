@@ -39,7 +39,8 @@ export interface GraphQlRequestOptions {
 
 export const enum GraphQlRequestCacheability {
   NotCacheable = 'no-cache', // Values used by apollo
-  Cacheable = 'cache-first'
+  Cacheable = 'cache-first',
+  RefreshCache = 'network-only'
 }
 
 export const enum GraphQlHandlerType {

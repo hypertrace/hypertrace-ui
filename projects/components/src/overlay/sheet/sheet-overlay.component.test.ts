@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject, Injector, Optional } from '@angular/core';
-import { GLOBAL_HEADER_HEIGHT, LayoutChangeService } from '@hypertrace/common';
-import { POPOVER_DATA } from '@hypertrace/components';
+import {
+  ExternalNavigationWindowHandling,
+  GlobalHeaderHeightProviderService,
+  LayoutChangeService,
+  NavigationParamsType
+} from '@hypertrace/common';
+import { OpenInNewTabComponent, POPOVER_DATA } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { ButtonComponent } from '../../button/button.component';
@@ -9,7 +14,7 @@ import { SheetOverlayConfig, SheetSize, SHEET_DATA } from './sheet';
 import { SheetOverlayComponent } from './sheet-overlay.component';
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'test-sheet-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="test-modal-content">Test Component Content</div> `
@@ -26,17 +31,16 @@ describe('Sheet Overlay component', () => {
 
   const createHost = createHostFactory({
     component: SheetOverlayComponent,
-    declarations: [MockComponent(ButtonComponent), TestComponent],
+    declarations: [MockComponent(ButtonComponent), TestComponent, MockComponent(OpenInNewTabComponent)],
     shallow: true,
     template: `
   <ht-sheet-overlay>
   </ht-sheet-overlay>
     `,
     providers: [
-      {
-        provide: GLOBAL_HEADER_HEIGHT,
-        useValue: 20
-      },
+      mockProvider(GlobalHeaderHeightProviderService, {
+        globalHeaderHeight: '56px'
+      }),
       mockProvider(LayoutChangeService)
     ]
   });
@@ -48,6 +52,7 @@ describe('Sheet Overlay component', () => {
           provide: PopoverRef,
           useValue: {
             height: jest.fn(),
+            width: jest.fn(),
             close: jest.fn()
           }
         },
@@ -60,6 +65,7 @@ describe('Sheet Overlay component', () => {
               title: 'test title',
               content: TestComponent,
               size: SheetSize.Small,
+              closeOnEscapeKey: true,
               ...configOverrides
             },
             injector: Injector.create({
@@ -85,11 +91,39 @@ describe('Sheet Overlay component', () => {
     expect(spectator.query('.header')).toHaveText('expected title');
   });
 
-  test('uses the requested size', () => {
+  test('uses the requested size for small', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.Small
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('320px');
+  });
+
+  test('uses the requested size for medium', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.Medium
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('600px');
+  });
+
+  test('uses the requested size for large', () => {
     spectator = createConfiguredHost({
       size: SheetSize.Large
     });
-    expect(spectator.query('.sheet-overlay')).toHaveClass('sheet-size-large');
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('840px');
+  });
+
+  test('uses the requested size for extra large', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.ExtraLarge
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('1280px');
+  });
+
+  test('uses the requested size for responsive extra large', () => {
+    spectator = createConfiguredHost({
+      size: SheetSize.ResponsiveExtraLarge
+    });
+    expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('60%');
   });
 
   test('closes on close button click', () => {
@@ -98,6 +132,14 @@ describe('Sheet Overlay component', () => {
     spectator.click('.close-button');
     expect(spectator.query('.sheet-overlay')).toBeNull();
     expect(spectator.inject(PopoverRef).close).toHaveBeenCalled();
+  });
+
+  test('closes on press ESC key', () => {
+    spectator = createConfiguredHost();
+
+    spectator.dispatchKeyboardEvent(document, 'keydown', { key: 'Escape', keyCode: 27 });
+    expect(spectator.inject(PopoverRef).close).toHaveBeenCalled();
+    expect(spectator.query('.sheet-overlay')).toBeNull();
   });
 
   test('displays contents provided', () => {
@@ -112,5 +154,27 @@ describe('Sheet Overlay component', () => {
     });
 
     expect(spectator.query(TestComponent)?.data).toBe(42);
+  });
+
+  test('should show open in new tab button if applicable', () => {
+    spectator = createConfiguredHost({
+      pageNavParams: {
+        navType: NavigationParamsType.External,
+        url: '/test',
+        windowHandling: ExternalNavigationWindowHandling.NewWindow
+      }
+    });
+
+    expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toEqual({
+      navType: NavigationParamsType.External,
+      url: '/test',
+      windowHandling: ExternalNavigationWindowHandling.NewWindow
+    });
+  });
+
+  test('should not show open in new tab button if config is empty', () => {
+    spectator = createConfiguredHost();
+
+    expect(spectator.query(OpenInNewTabComponent)).not.toExist();
   });
 });

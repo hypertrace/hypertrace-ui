@@ -1,0 +1,35 @@
+@import 'font';
+
+:host {
+  width: 100%; // Have to style host here, sorry
+  height: 100%;
+}
+
+.span-detail {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .toggle-group {
+    margin-top: 18px;
+  }
+
+  .title-header {
+    flex: 0;
+  }
+
+  .summary-container {
+    width: 100%;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+    flex: 0;
+  }
+
+  .tab-container {
+    margin-top: 24px;
+    overflow-y: auto;
+  }
+}

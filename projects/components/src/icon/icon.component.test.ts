@@ -1,4 +1,3 @@
-// tslint:disable:completed-docs
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatIcon } from '@angular/material/icon';
 import { IconLibraryTestingModule, IconType } from '@hypertrace/assets-library';
@@ -22,6 +21,8 @@ describe('Icon component', () => {
     );
 
     expect(spectator.query(MatIcon)!.svgIcon).toBe('hypertrace');
+    expect(spectator.query('.svg-icon')).toExist();
+    expect(spectator.query('.ligature-icon')).not.toExist();
     expect(spectator).toHaveExactText('');
     expect(spectator.query('.ht-icon')).toHaveAttribute('aria-label', 'hypertrace');
   });
@@ -41,7 +42,8 @@ describe('Icon component', () => {
        </ht-icon>`
     );
 
-    expect(spectator.query(MatIcon)!.svgIcon).toBe('');
+    expect(spectator.query('.svg-icon')).not.toExist();
+    expect(spectator.query('.ligature-icon')).toExist();
     expect(spectator.query('.ht-icon')).toHaveExactText(IconType.Add);
     expect(spectator.query('.ht-icon')).toHaveAttribute('aria-label', 'other label');
   });

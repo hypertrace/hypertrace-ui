@@ -1,32 +1,14 @@
 @import 'mixins';
 
-:host {
-  width: 100%; // Sorry...
-}
-
 .table-header-cell-renderer {
-  @include ellipsis-overflow();
-  @include overline($gray-5);
   display: flex;
-
-  &.sortable {
-    cursor: pointer;
-  }
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 6px;
 
   &:hover {
     color: $gray-9;
-  }
-
-  &.left {
-    text-align: left;
-  }
-
-  &.center {
-    text-align: center;
-  }
-
-  &.right {
-    text-align: right;
   }
 
   .options-button {
@@ -46,23 +28,46 @@
   }
 
   .title {
+    @include overline($gray-5);
+
     min-width: 0;
-    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
 
-    &:after {
-      display: inline-block;
+    .title-text {
+      @include ellipsis-overflow;
+      width: 100%;
     }
 
-    &.desc:after {
-      content: '▼';
-      font-size: 9px;
+    &.left {
+      justify-content: flex-start;
     }
 
-    &.asc:after {
-      content: '▼';
-      font-size: 10px;
-      transform: scale(1, -1) translateY(1.5px); // That's right! Half pixels!
+    &.center {
+      justify-content: center;
     }
+
+    &.right {
+      justify-content: flex-end;
+    }
+  }
+
+  .sort-icons {
+    cursor: pointer;
+    margin-left: 4px;
+
+    display: flex;
+    color: $gray-2;
+
+    .sort-icon {
+      &.active {
+        color: $gray-9;
+      }
+    }
+  }
+
+  &.state-col {
+    justify-content: center;
   }
 }
 

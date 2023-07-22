@@ -1,92 +1,132 @@
-import { ColorService, forkJoinSafeEmpty, RequireBy } from '@hypertrace/common';
-import { GraphQlDataSourceModel, MetadataService } from '@hypertrace/distributed-tracing';
-import { Model } from '@hypertrace/hyperdash';
+import { ColorService, forkJoinSafeEmpty, RequireBy, TimeDuration } from '@hypertrace/common';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
-import { EMPTY, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { NEVER, Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { Series } from '../../../../components/cartesian/chart';
-import { ExploreVisualizationRequest } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
+import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
+import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
+  EXPLORE_GQL_REQUEST,
+  GraphQlExploreRequest,
   GraphQlExploreResponse
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
-import { MetricSeriesFetcher } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+} from '../../../../graphql/request/handlers/explore/explore-query';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
+import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { ExploreResult } from './explore-result';
-@Model({
-  type: 'explore-cartesian-data-source'
-})
-export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<MetricSeriesFetcher<ExplorerData>> {
-  public request?: ExploreVisualizationRequest;
 
+export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<
+  CartesianDataFetcher<ExplorerData>
+> {
   @ModelInject(ColorService)
   private readonly colorService!: ColorService;
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
 
-  public getData(): Observable<MetricSeriesFetcher<ExplorerData>> {
-    return (this.request ? this.request.exploreQuery$ : EMPTY).pipe(
-      switchMap(request =>
-        this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters => {
-          // Add inherited filters
-          request.filters?.push(...inheritedFilters);
+  protected abstract buildRequestState(interval: TimeDuration | 'AUTO'): ExploreRequestState | undefined;
 
-          return {
-            ...request,
-            timeRange: this.getTimeRangeOrThrow()
-          };
-        })
-      ),
-      map(response => ({
-        getData: () => this.getAllData(response)
+  public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
+    return of({
+      getData: (interval: TimeDuration) => this.fetchResults(interval)
+    });
+  }
+
+  protected fetchResults(interval: TimeDuration | 'AUTO'): Observable<CartesianResult<ExplorerData>> {
+    const requestState = this.buildRequestState(interval);
+    const timeRange = this.getTimeRangeOrThrow();
+    if (requestState === undefined) {
+      return NEVER;
+    }
+
+    return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
+      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters), timeRange)
+    ).pipe(
+      mergeMap(response =>
+        this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange)
+      )
+    );
+  }
+
+  protected mapResponseData(
+    requestState: ExploreRequestState,
+    response: GraphQlExploreResponse,
+    interval: TimeDuration,
+    timeRange: GraphQlTimeRange
+  ): Observable<CartesianResult<ExplorerData>> {
+    return this.getAllData(requestState, response, interval, timeRange).pipe(
+      map(explorerResults => ({
+        series: explorerResults,
+        bands: []
       }))
     );
   }
 
-  private getAllData(response: GraphQlExploreResponse): Observable<ExplorerSeries[]> {
-    return this.buildAllSeries(this.request!, new ExploreResult(response));
+  protected buildExploreRequest(
+    requestState: ExploreRequestState,
+    filters: GraphQlFilter[],
+    timeRange: GraphQlTimeRange
+  ): GraphQlExploreRequest {
+    return {
+      requestType: EXPLORE_GQL_REQUEST,
+      selections: requestState.series.map(series => series.specification),
+      context: requestState.context,
+      limit: requestState.resultLimit,
+      timeRange: timeRange,
+      interval: requestState.interval as TimeDuration,
+      filters: filters,
+      groupBy: requestState.groupBy
+    };
   }
 
-  protected buildAllSeries(request: ExploreVisualizationRequest, result: ExploreResult): Observable<ExplorerSeries[]> {
+  private getAllData(
+    request: ExploreRequestState,
+    response: GraphQlExploreResponse,
+    interval?: TimeDuration,
+    timeRange?: GraphQlTimeRange
+  ): Observable<ExplorerSeries[]> {
+    return this.buildAllSeries(request, new ExploreResult(response, interval, timeRange));
+  }
+
+  protected buildAllSeries(request: ExploreRequestState, result: ExploreResult): Observable<ExplorerSeries[]> {
     const seriesData = this.gatherSeriesData(request, result);
     const colors = this.colorService.getColorPalette().forNColors(seriesData.length);
 
     return forkJoinSafeEmpty(seriesData.map((data, index) => this.buildSeries(request, data, colors[index])));
   }
 
-  private gatherSeriesData(request: ExploreVisualizationRequest, result: ExploreResult): SeriesData[] {
+  private gatherSeriesData(request: ExploreRequestState, result: ExploreResult): SeriesData[] {
     const aggregatableSpecs = request.series
       .map(series => series.specification)
       .filter(
         (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
       );
 
-    const groupByKeys = request.groupBy?.keys ?? [];
-    const isGroupBy = groupByKeys.length > 0;
+    const groupByExpressions = request.groupBy?.keyExpressions ?? [];
+    const isGroupBy = groupByExpressions.length > 0;
 
     if (!isGroupBy && request.interval) {
       return aggregatableSpecs.map(spec => this.buildTimeseriesData(spec, result));
     }
 
     if (isGroupBy && !request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByKeys, result));
+      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByExpressions, result));
     }
 
     if (isGroupBy && request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByKeys, result)).flat();
+      return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByExpressions, result)).flat();
     }
 
     return [];
   }
 
-  private buildSeries(
-    request: ExploreVisualizationRequest,
-    result: SeriesData,
-    color: string
-  ): Observable<ExplorerSeries> {
+  private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
@@ -95,11 +135,9 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
         data: result.data,
         units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
         type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
-        name: isEmpty(result.groupName)
-          ? obj.specDisplayName
-          : request.useGroupName
-          ? result.groupName!
-          : `${obj.specDisplayName}: ${result.groupName}`,
+        name: !isEmpty(result.groupName) ? result.groupName! : obj.specDisplayName,
+        groupName:
+          !isEmpty(result.groupName) && (request.useGroupName ?? false) ? result.groupName! : obj.specDisplayName,
         color: color
       }))
     );
@@ -112,10 +150,14 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
     };
   }
 
-  public buildGroupedSeriesData(spec: AggregatableSpec, groupByKeys: string[], result: ExploreResult): SeriesData {
+  public buildGroupedSeriesData(
+    spec: AggregatableSpec,
+    groupByExpressions: AttributeExpression[],
+    result: ExploreResult
+  ): SeriesData {
     return {
       data: result
-        .getGroupedSeriesData(groupByKeys, spec.name, spec.aggregation)
+        .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
         .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
       spec: spec
     };
@@ -123,10 +165,10 @@ export class ExploreCartesianDataSourceModel extends GraphQlDataSourceModel<Metr
 
   public buildGroupedTimeseriesData(
     spec: AggregatableSpec,
-    groupByKeys: string[],
+    groupByExpressions: AttributeExpression[],
     result: ExploreResult
   ): SeriesData[] {
-    return Array.from(result.getGroupedTimeSeriesData(groupByKeys, spec.name, spec.aggregation).entries()).map(
+    return Array.from(result.getGroupedTimeSeriesData(groupByExpressions, spec.name, spec.aggregation).entries()).map(
       ([groupNames, data]) => ({
         data: data,
         groupName: this.buildGroupedSeriesName(groupNames),

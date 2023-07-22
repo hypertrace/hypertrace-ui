@@ -1,3 +1,4 @@
+import { Dictionary } from '@hypertrace/common';
 import { Observable } from 'rxjs';
 import { StatefulTableRow, TableFilter, TableMode, TableRow, TableSelectionMode } from '../table-api';
 import { TableColumnConfigExtended } from '../table.service';
@@ -13,6 +14,7 @@ export interface ColumnConfigProvider {
 
 export interface FiltersProvider {
   filters$: Observable<TableFilter[]>;
+  queryProperties$: Observable<Dictionary<unknown>>;
 }
 
 export interface ColumnStateChangeProvider {

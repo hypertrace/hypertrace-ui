@@ -1,8 +1,9 @@
+/* eslint-disable max-classes-per-file */
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
-import { GLOBAL_HEADER_HEIGHT, NavigationService } from '@hypertrace/common';
-import { OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
+import { GlobalHeaderHeightProviderService, NavigationService } from '@hypertrace/common';
+import { OverlayService, PopoverBackdrop, SheetRef, SheetSize } from '@hypertrace/components';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
 import { OverlayModule } from './overlay.module';
@@ -13,7 +14,7 @@ describe('Overlay service', () => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
       <div class="test-sheet-content">Test Component Content Data: {{ this.data }}</div>
-      <button class="test-close-button" (click)="this.onClose()">Close</button>
+      <button class="test-close-button" role="button" (click)="this.onClose()">Close</button>
     `
   })
   class TestComponent {
@@ -33,10 +34,9 @@ describe('Overlay service', () => {
       mockProvider(NavigationService, {
         navigation$: EMPTY
       }),
-      {
-        provide: GLOBAL_HEADER_HEIGHT,
-        useValue: 100
-      }
+      mockProvider(GlobalHeaderHeightProviderService, {
+        globalHeaderHeight: '56px'
+      })
     ],
     template: `<host></host>`
   });
@@ -56,6 +56,8 @@ describe('Overlay service', () => {
     expect(spectator.query('.test-sheet-content', { root: true })).toContainText(
       'Test Component Content Data: custom input'
     );
+    expect(spectator.query('.opaque-backdrop', { root: true })).not.toExist();
+    expect(spectator.query('.cdk-overlay-transparent-backdrop', { root: true })).not.toExist();
   }));
 
   test('sheet can be closed and return a result', fakeAsync(() => {
@@ -80,5 +82,23 @@ describe('Overlay service', () => {
     expect(subscription.closed).toBe(true);
 
     flush(); // CDK timer to remove overlay
+  }));
+
+  test('can create a sheet that has a backdrop preventing interaction with components outside the sheet', fakeAsync(() => {
+    const spectator = createHost();
+    spectator.inject(OverlayService).createSheet({
+      content: TestComponent,
+      size: SheetSize.Small,
+      title: 'Test title',
+      showHeader: true,
+      data: 'custom input',
+      backdrop: PopoverBackdrop.Opaque
+    });
+
+    spectator.tick();
+
+    expect(spectator.query('.opaque-backdrop', { root: true })).toExist();
+
+    flush();
   }));
 });

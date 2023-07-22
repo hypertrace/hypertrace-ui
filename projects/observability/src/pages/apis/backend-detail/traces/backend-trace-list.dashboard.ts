@@ -1,5 +1,5 @@
 import { CoreTableCellRendererType, TableMode, TableSortDirection, TableStyle } from '@hypertrace/components';
-import { TracingTableCellType } from '@hypertrace/distributed-tracing';
+import { TracingTableCellType } from '../../../../shared/components/table/tracing-table-cell-type';
 import { ObservabilityTraceType } from '../../../../shared/graphql/model/schema/observability-traces';
 
 export const backendTraceListDashboard = {
@@ -31,6 +31,26 @@ export const backendTraceListDashboard = {
       },
       {
         type: 'table-widget-column',
+        title: 'Operation',
+        width: '10%',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'operation'
+        }
+      },
+      {
+        type: 'table-widget-column',
+        title: 'Destination',
+        width: '30%',
+        filterable: true,
+        value: {
+          type: 'attribute-specification',
+          attribute: 'destination'
+        }
+      },
+      {
+        type: 'table-widget-column',
         title: 'Duration',
         width: '10%',
         display: TracingTableCellType.Metric,
@@ -58,7 +78,7 @@ export const backendTraceListDashboard = {
       type: 'trace-detail-widget',
       data: {
         type: 'api-trace-detail-data-source',
-        // tslint:disable-next-line: no-invalid-template-strings
+
         trace: '${row}'
       }
     },

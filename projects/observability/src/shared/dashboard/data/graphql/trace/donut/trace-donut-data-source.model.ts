@@ -1,4 +1,3 @@
-import { AttributeSpecificationModel, GraphQlDataSourceModel, Specification } from '@hypertrace/distributed-tracing';
 import {
   Model,
   ModelModelPropertyTypeInstance,
@@ -11,13 +10,16 @@ import { map } from 'rxjs/operators';
 import { DonutSeries, DonutSeriesResults } from '../../../../../components/donut/donut';
 import { ObservabilityTraceType } from '../../../../../graphql/model/schema/observability-traces';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
+import { Specification } from '../../../../../graphql/model/schema/specifier/specification';
 import { ExploreSpecificationBuilder } from '../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
+import { ExploreGraphQlQueryHandlerService } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
-  ExploreGraphQlQueryHandlerService,
   EXPLORE_GQL_REQUEST,
   GraphQlExploreResponse
-} from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+} from '../../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from '../../explore/explore-result';
+import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
+import { AttributeSpecificationModel } from '../../specifiers/attribute-specification.model';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 
 @Model({
@@ -26,7 +28,6 @@ import { MetricAggregationSpecificationModel } from '../../specifiers/metric-agg
 export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSeriesResults> {
   @ModelProperty({
     key: 'metric',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: MetricAggregationSpecificationModel
@@ -37,7 +38,6 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
 
   @ModelProperty({
     key: 'groupBy',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: AttributeSpecificationModel
@@ -63,7 +63,8 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
       timeRange: this.getTimeRangeOrThrow(),
       filters: filters,
       groupBy: {
-        keys: [this.groupBy.name]
+        keyExpressions: [{ key: this.groupBy.name }],
+        limit: this.maxResults
       }
     })).pipe(map(exploreResponse => this.buildDonutResults(exploreResponse, this.metric)));
   }
@@ -75,7 +76,7 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
     let total = 0;
 
     const series: DonutSeries[] = new ExploreResult(exploreResponse)
-      .getGroupedSeriesData([this.groupBy.name], metric.name, metric.aggregation)
+      .getGroupedSeriesData([{ key: this.groupBy.name }], metric.name, metric.aggregation)
       .map(seriesTuple => {
         total = total + seriesTuple.value;
 

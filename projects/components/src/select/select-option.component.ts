@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input, OnChanges } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Observable, Subject } from 'rxjs';
+import { IconBorder } from '../icon/icon-border';
+import { IconSize } from '../icon/icon-size';
+import { SelectOptionRendererDirective } from './directive/select-option-renderer.directive';
 import { SelectOption } from './select-option';
 
 @Component({
   selector: 'ht-select-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '' // No template, just gathering data
+  template: ``
 })
 export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   @Input()
@@ -16,13 +19,37 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   public label!: string;
 
   @Input()
+  public selectedLabel?: string;
+
+  @Input()
   public style: SelectOptionStyle = SelectOptionStyle.Default;
 
   @Input()
   public icon?: IconType;
 
   @Input()
+  public iconSize?: IconSize = IconSize.Small;
+
+  @Input()
   public iconColor?: string;
+
+  @Input()
+  public iconBorderType?: IconBorder;
+
+  @Input()
+  public iconBorderColor?: string;
+
+  @Input()
+  public iconBorderRadius?: string;
+
+  @Input()
+  public disabled?: boolean;
+
+  @Input()
+  public tooltip?: string;
+
+  @ContentChild(SelectOptionRendererDirective)
+  public selectOptionRenderer?: SelectOptionRendererDirective;
 
   private readonly optionChangeSubject$: Subject<V> = new Subject<V>();
   public readonly optionChange$: Observable<V> = this.optionChangeSubject$.asObservable();

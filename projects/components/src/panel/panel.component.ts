@@ -11,7 +11,9 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import { Color } from '@hypertrace/common';
 import { PanelBodyComponent } from './body/panel-body.component';
+import { PanelCollapsedBodyComponent } from './collapsed-body/panel-collapsed-body.component';
 import { PanelHeaderComponent } from './header/panel-header.component';
 
 @Component({
@@ -19,12 +21,20 @@ import { PanelHeaderComponent } from './header/panel-header.component';
   styleUrls: ['./panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ht-panel fill-container" [htLayoutChangeTrigger]="this.expanded">
+    <div
+      class="ht-panel fill-container"
+      [htLayoutChangeTrigger]="this.expanded"
+      [style.backgroundColor]="this.backgroundColor"
+      [ngClass]="{ bordered: this.showBorder }"
+    >
       <div *ngIf="this.header" [ngClass]="{ disabled: this.disabled, expanded: this.expanded }" class="header">
         <ng-container #headerContainer></ng-container>
       </div>
       <div class="body" *ngIf="this.expanded && this.body">
         <ng-container *ngTemplateOutlet="this.body!.content"></ng-container>
+      </div>
+      <div class="collapsed-body" *ngIf="!this.expanded && this.collapsedBody">
+        <ng-container *ngTemplateOutlet="this.collapsedBody.content"></ng-container>
       </div>
     </div>
   `
@@ -36,6 +46,12 @@ export class PanelComponent implements AfterViewInit {
   @Input()
   public disabled: boolean = false;
 
+  @Input()
+  public backgroundColor: string = Color.White;
+
+  @Input()
+  public showBorder: boolean = false;
+
   @Output()
   public readonly expandedChange: EventEmitter<boolean> = new EventEmitter();
 
@@ -44,6 +60,9 @@ export class PanelComponent implements AfterViewInit {
 
   @ContentChild(PanelBodyComponent, { static: true })
   public readonly body?: PanelBodyComponent;
+
+  @ContentChild(PanelCollapsedBodyComponent, { static: true })
+  public readonly collapsedBody?: PanelCollapsedBodyComponent;
 
   @ViewChild('headerContainer', { read: ViewContainerRef, static: false })
   public readonly headerContainer?: ViewContainerRef;

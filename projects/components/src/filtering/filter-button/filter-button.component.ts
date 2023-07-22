@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
-import { Filter } from '../filter/filter';
+import { Filter, FilterValue } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterUrlService } from '../filter/filter-url.service';
 
@@ -45,7 +45,7 @@ export class FilterButtonComponent implements OnChanges {
   public attribute?: FilterAttribute;
 
   @Input()
-  public value?: unknown;
+  public value?: FilterValue;
 
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();

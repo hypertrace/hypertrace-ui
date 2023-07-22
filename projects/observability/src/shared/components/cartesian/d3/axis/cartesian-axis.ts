@@ -3,7 +3,7 @@ import { BaseType, select, Selection } from 'd3-selection';
 import { defaultsDeep } from 'lodash-es';
 import { MouseLocationData } from '../../../utils/mouse-tracking/mouse-tracking';
 import { SvgUtilService } from '../../../utils/svg/svg-util.service';
-import { Axis, AxisLocation, AxisType } from '../../chart';
+import { Axis, AxisLocation, AxisType, LabelOverflow } from '../../chart';
 import { CartesianNoDataMessage } from '../cartesian-no-data-message';
 import { ScaleInitializationData } from '../scale/cartesian-scale';
 import { AnyCartesianScale, CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
@@ -21,6 +21,7 @@ export class CartesianAxis<TData = {}> {
 
   public constructor(
     configuration: Axis,
+    private readonly axisDimension: AxisDimension,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
     protected readonly svgUtilService: SvgUtilService
   ) {
@@ -36,6 +37,9 @@ export class CartesianAxis<TData = {}> {
     const axis = this.getAxisConstructor()(this.scale.d3Implementation as AxisScale<AxisDomain>);
 
     this.addTicksToAxis(axis);
+    if (this.configuration.getLabel) {
+      axis.tickFormat(this.configuration.getLabel);
+    }
 
     const axisSvgSelection = select(element)
       .append('g')
@@ -48,7 +52,6 @@ export class CartesianAxis<TData = {}> {
       .attr('transform', this.getAxisTransform())
       .node()!;
 
-    this.maybeTruncateAxisTicks(axisSvgSelection);
     this.addGridLinesIfNeeded();
 
     return this;
@@ -79,15 +82,105 @@ export class CartesianAxis<TData = {}> {
     if (!this.configuration.tickLabels) {
       selection.selectAll('.tick text').remove();
     }
+
+    if (this.configuration.location === AxisLocation.Bottom || this.configuration.location === AxisLocation.Top) {
+      const maxTextTickTextLength = this.getMaxTickTextLength(selection);
+
+      if (this.configuration.labelOverflow === LabelOverflow.Wrap) {
+        this.tickTextWrap(selection, maxTextTickTextLength);
+      } else {
+        const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
+        this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+      }
+    } else {
+      this.maybeTruncateAxisTicks(selection);
+    }
+  }
+
+  private getMaxTickTextLength(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): number {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const allElementLength: number[] = [];
+
+    ticksSelection.each((_, index, nodes) =>
+      allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
+    );
+
+    return Math.max(...allElementLength);
   }
 
   private maybeTruncateAxisTicks(axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
-    const tickBandwidth = Math.abs(this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
 
-    ticksSelection.each((_datum, index, nodes) =>
-      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, tickBandwidth)
+    ticksSelection.each((_, index, nodes) =>
+      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, this.axisDimension.yAxisWidth)
     );
+  }
+
+  private getTickTransformValue(tick: Selection<BaseType, unknown, null, undefined>, axis: 'x' | 'y'): number {
+    const tickTranslateAxis = axis === 'x' ? 0 : 1;
+
+    const tickTranslateValues = tick.attr('transform').replace(/.*\(|\).*/g, '');
+    const tickTranslateValue = tickTranslateValues.split(',')[tickTranslateAxis] ?? '0';
+
+    return parseInt(tickTranslateValue);
+  }
+
+  private removeOverflowedTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextTickTextLength: number,
+    isLabelRotated: boolean
+  ): void {
+    axisSvgSelection.selectAll('.tick').each((_, i, n) => {
+      const currentTick = select(n[i]);
+
+      const currentTickPosition = this.getTickTransformValue(currentTick, 'x');
+      const isTickOutOfLeftEdge = currentTickPosition < maxTextTickTextLength / 2;
+      const isTickOutOfRightEdge =
+        this.scale.initData.bounds.endX - (currentTickPosition + (isLabelRotated ? 0 : maxTextTickTextLength / 2)) < 0;
+
+      if (isTickOutOfLeftEdge || isTickOutOfRightEdge) {
+        currentTick.remove();
+      }
+    });
+  }
+
+  private tickTextWrap(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextLength: number
+  ): void {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+
+    if (maxTextLength > tickBandwidth) {
+      axisSvgSelection
+        .selectAll('.tick text')
+        .style('font-size', '100%')
+        .attr('y', '3')
+        .each((_, index, nodes) => this.svgUtilService.wrapTextIfNeeded(nodes[index] as SVGTextElement, tickBandwidth));
+    }
+  }
+
+  private rotateAxisTicks(
+    axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
+    maxTextLength: number
+  ): boolean {
+    const ticksSelection = axisSvgSelection.selectAll('text');
+
+    const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
+
+    const isLabelRotate = maxTextLength > tickBandwidth;
+
+    if (isLabelRotate) {
+      axisSvgSelection
+        .selectAll('.tick text')
+        .style('text-anchor', 'end')
+        .style('font-size', '100%')
+        .attr('y', '3')
+        .attr('transform', `rotate(-35)`);
+    }
+
+    return isLabelRotate;
   }
 
   private getAxisTransform(): string {
@@ -119,6 +212,10 @@ export class CartesianAxis<TData = {}> {
   }
 
   private calculateAxisTickCount(): number {
+    if (this.configuration?.tickCount !== undefined) {
+      return this.configuration.tickCount;
+    }
+
     return 6;
   }
 
@@ -166,4 +263,11 @@ export class CartesianAxis<TData = {}> {
   }
 }
 
-type DefaultedAxisConfig = Axis & Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max'>;
+type DefaultedAxisConfig = Axis &
+  Omit<Required<Axis>, 'scale' | 'crosshair' | 'min' | 'max' | 'tickCount' | 'labelOverflow' | 'getLabel'>;
+
+export interface AxisDimension {
+  xAxisHeight: number;
+  yAxisWidth: number;
+  margin: number;
+}

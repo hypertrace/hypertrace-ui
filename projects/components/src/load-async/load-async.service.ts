@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
+import { IconType } from '@hypertrace/assets-library';
 import { CustomError } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { catchError, defaultIfEmpty, map, startWith } from 'rxjs/operators';
@@ -50,18 +51,55 @@ export interface LoadAsyncContext {
   $implicit: unknown;
 }
 
-export type AsyncState = ErrorAsyncState | SuccessAsyncState | LoadingAsyncState;
+export interface LoadAsyncConfig {
+  load?: LoadingStateConfig;
+  noData?: NoDataOrErrorStateConfig;
+  error?: NoDataOrErrorStateConfig;
+}
+
+export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
+
+export const enum LoaderType {
+  Spinner = 'spinner',
+  ExpandableRow = 'expandable-row',
+  Page = 'page',
+  Rectangle = 'rectangle',
+  Text = 'text',
+  Square = 'square',
+  Circle = 'circle',
+  TableRow = 'table-row',
+  ListItem = 'list-item',
+  Donut = 'donut'
+}
 
 interface LoadingAsyncState {
   type: LoadAsyncStateType.Loading;
 }
-
 interface SuccessAsyncState {
   type: LoadAsyncStateType.Success;
   context: LoadAsyncContext;
 }
 
-export interface ErrorAsyncState {
+export interface NoDataOrErrorAsyncState {
   type: LoadAsyncStateType.GenericError | LoadAsyncStateType.NoData;
   description?: string;
+}
+
+interface LoadingStateConfig {
+  loaderType?: LoaderType;
+}
+
+export type NoDataOrErrorStateConfig = NoDataOrErrorStateConfigDefault | NoDataOrErrorStateConfigWithCustomTemplate;
+
+export interface NoDataOrErrorStateConfigDefault {
+  icon?: IconType;
+  showIcon?: boolean;
+  title?: string;
+  description?: string;
+}
+
+export interface NoDataOrErrorStateConfigWithCustomTemplate {
+  icon?: IconType;
+  showIcon?: boolean;
+  template: TemplateRef<LoadAsyncContext>;
 }

@@ -39,8 +39,9 @@ describe('Filter URL service', () => {
     ),
     new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
-      FilterOperator.ContainsKeyValue,
-      ['myKey', 'myValue']
+      FilterOperator.Equals,
+      'myValue',
+      'myKey'
     )
   ];
 
@@ -50,7 +51,7 @@ describe('Filter URL service', () => {
       'numberAttribute_neq_415',
       'numberAttribute_lte_707',
       'stringAttribute_eq_test',
-      'stringMapAttribute_ckv_myKey%3AmyValue'
+      'stringMapAttribute.myKey_eq_myValue'
     ]
   };
 
@@ -61,7 +62,8 @@ describe('Filter URL service', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
-        addQueryParametersToUrl: (paramObject: QueryParamObject) => (testQueryParamObject = paramObject),
+        addQueryParametersToUrl: (paramObject: QueryParamObject) =>
+          (testQueryParamObject = { ...testQueryParamObject, ...paramObject }),
         getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
       })
     ]
@@ -232,19 +234,41 @@ describe('Filter URL service', () => {
     });
 
     /*
-     * Add a StringMap CONTAINS_KEY_VALUE that should not replace any existing filters
+     * Add a StringMap EQUALS that should not replace any existing filters
      */
     spectator.service.addUrlFilter(
       attributes,
       new StringMapFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.StringMap),
-        FilterOperator.ContainsKeyValue,
-        ['myKey', 'myValue']
+        FilterOperator.Equals,
+        'myValue',
+        'myKey'
       )
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984', 'stringMapAttribute_ckv_myKey%3AmyValue']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984', 'stringMapAttribute.myKey_eq_myValue']
+    });
+
+    /*
+     * Add a second StringMap EQUALS that should not replace any existing filters
+     */
+    spectator.service.addUrlFilter(
+      attributes,
+      new StringMapFilterBuilder().buildFilter(
+        getTestFilterAttribute(FilterAttributeType.StringMap),
+        FilterOperator.Equals,
+        'myValue',
+        'mySecondKey'
+      )
+    );
+    expect(testQueryParamObject).toEqual({
+      filter: [
+        'stringAttribute_neq_test',
+        'numberAttribute_in_1984',
+        'stringMapAttribute.myKey_eq_myValue',
+        'stringMapAttribute.mySecondKey_eq_myValue'
+      ]
     });
 
     /*
@@ -263,7 +287,8 @@ describe('Filter URL service', () => {
       filter: [
         'stringAttribute_neq_test',
         'numberAttribute_in_1984',
-        'stringMapAttribute_ckv_myKey%3AmyValue',
+        'stringMapAttribute.myKey_eq_myValue',
+        'stringMapAttribute.mySecondKey_eq_myValue',
         'stringMapAttribute_ck_myTestKey'
       ]
     });
@@ -283,7 +308,7 @@ describe('Filter URL service', () => {
     spectator.service.removeUrlFilter(attributes, testFilter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_eq_test', 'stringMapAttribute_ckv_myKey%3AmyValue']
+      filter: ['stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
     });
   });
 
@@ -300,7 +325,7 @@ describe('Filter URL service', () => {
     spectator.service.removeUrlFilter(attributes, testFilter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['numberAttribute_lte_707', 'stringAttribute_eq_test', 'stringMapAttribute_ckv_myKey%3AmyValue']
+      filter: ['numberAttribute_lte_707', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
     });
   });
 
@@ -326,14 +351,40 @@ describe('Filter URL service', () => {
         'numberAttribute_neq_217',
         'numberAttribute_lte_707',
         'stringAttribute_eq_test',
-        'stringMapAttribute_ckv_myKey%3AmyValue'
+
+        'stringMapAttribute.myKey_eq_myValue'
       ]
     });
 
     spectator.service.removeUrlFilter(attributes, test2Filter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['numberAttribute_neq_217', 'stringAttribute_eq_test', 'stringMapAttribute_ckv_myKey%3AmyValue']
+      filter: ['numberAttribute_neq_217', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
     });
+  });
+
+  test('correctly gets filters and group by from url', () => {
+    testQueryParamObject = {
+      ...expectedQueryParamObject,
+      ['group-by']: ['field1,field2']
+    };
+    expect(spectator.service.getUrlFilters(attributes)).toEqual(filters);
+    expect(spectator.service.getUrlGroupBy()).toEqual(['field1', 'field2']);
+  });
+
+  test('correctly sets filters and group by in url', () => {
+    spectator.service.setUrlGroupBy(['field1', 'field2']);
+    spectator.service.setUrlFilters(filters);
+
+    expect(testQueryParamObject).toEqual({
+      ...expectedQueryParamObject,
+      ['group-by']: ['field1,field2']
+    });
+  });
+
+  test('correctly build url filters and group by nav query params', () => {
+    expect(
+      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(filters.slice(0, 1), attributes.slice(0, 1))
+    ).toMatchObject({ filter: ['numberAttribute_neq_217'], 'group-by': ['booleanAttribute'] });
   });
 });

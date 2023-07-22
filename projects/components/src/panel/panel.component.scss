@@ -2,7 +2,6 @@
 @import 'color-palette';
 
 .ht-panel {
-  padding: 4px;
   display: flex;
   flex-direction: column;
 
@@ -22,6 +21,19 @@
     flex: 1;
     overflow: auto;
     height: 100%;
+    padding: 0 12px 12px;
+  }
+
+  .collapsed-body {
+    flex: 1;
+    overflow: auto;
+    height: 100%;
+    padding: 0 12px 12px;
+  }
+
+  &.bordered {
+    border: 1px solid $gray-2;
+    border-radius: 10px;
   }
 }
 

@@ -3,13 +3,14 @@ import {
   ColorService,
   DomElementMeasurerService,
   DynamicComponentService,
+  NumericFormatter,
   PartialBy,
   selector
 } from '@hypertrace/common';
 import { BaseType, Selection } from 'd3-selection';
 import { arc, pie, PieArcDatum } from 'd3-shape';
 import { isEmpty } from 'lodash-es';
-import { LegendPosition, LegendSeries } from '../legend/legend.component';
+import { LegendFontSize, LegendPosition, LegendSeries } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
 import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/default-chart-tooltip.component';
 import { D3UtilService } from '../utils/d3/d3-util.service';
@@ -38,8 +39,12 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly DONUT_VALUE_CLASS: string = 'donut-value';
   private static readonly DONUT_ARC_CLASS: string = 'donut-arc';
 
-  private static readonly DONUT_PADDING_PX: number = 60;
-  private static readonly LEGEND_SIZE_MULTIPLE: number = 1.5;
+  private static readonly DONUT_PADDING_PX: number = 10;
+  private static readonly MIN_FONT_SIZE_FOR_TITLE: number = 12;
+  private static readonly MAX_FONT_SIZE_FOR_TITLE: number = 15;
+  private static readonly MAX_FONT_SIZE_FOR_VALUE: number = 64;
+
+  private readonly numberFormatter: NumericFormatter = new NumericFormatter();
 
   public constructor(
     d3: D3UtilService,
@@ -70,11 +75,22 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_TITLE_CLASS))
-      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`);
+      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 2})`)
+      .attr(
+        'font-size',
+        Math.min(
+          Math.max(DonutBuilderService.MIN_FONT_SIZE_FOR_TITLE, Math.floor(dimensions.donutInnerRadius / 8)),
+          DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE
+        )
+      );
 
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_VALUE_CLASS))
-      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`);
+      .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`)
+      .attr(
+        'font-size',
+        Math.min(Math.floor(dimensions.donutInnerRadius / 2), DonutBuilderService.MAX_FONT_SIZE_FOR_VALUE)
+      );
   }
 
   protected drawVisualization(
@@ -103,7 +119,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       textGroupSelection
         .append('text')
         .classed(DonutBuilderService.DONUT_VALUE_CLASS, true)
-        .text(() => String(config.center!.value));
+        .text(() => String(this.numberFormatter.format(config.center!.value)));
     }
   }
 
@@ -128,17 +144,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   protected decorateDimensions(calculatedDimensions: ChartDimensions): DonutDimensions {
     let diameter = Math.min(calculatedDimensions.visualizationWidth, calculatedDimensions.visualizationHeight);
 
-    // Save available width before reducing width by adding padding
-    const chartWidth = calculatedDimensions.visualizationWidth;
-
-    // Legend takes up to width of donut or remaining available space (This needs more work to look good in all cases)
-    calculatedDimensions.legendWidth = Math.min(
-      diameter * DonutBuilderService.LEGEND_SIZE_MULTIPLE,
-      chartWidth - diameter
-    );
-
-    // Reduce diameter by padding amount (don't need to do this with legend since it provides its own padding)
-    diameter -= DonutBuilderService.DONUT_PADDING_PX * 2;
+    diameter -= DonutBuilderService.DONUT_PADDING_PX;
 
     // Reduce visualization area to diameter
     calculatedDimensions.visualizationWidth = diameter;
@@ -163,7 +169,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       center: provided.center,
       legend: provided.legendPosition === undefined ? LegendPosition.None : provided.legendPosition,
       tooltipOption: provided.tooltipOption === undefined ? { title: '' } : provided.tooltipOption,
-      displayLegendCounts: provided.displayLegendCounts ?? true
+      displayLegendCounts: provided.displayLegendCounts ?? true,
+      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall
     };
   }
 

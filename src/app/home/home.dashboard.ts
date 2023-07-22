@@ -3,12 +3,13 @@ import { CoreTableCellRendererType, TableMode, TableStyle, TitlePosition } from 
 import {
   DashboardDefaultConfiguration,
   GraphQlOperatorType,
+  LegendPosition,
   MetricAggregationType,
+  ObservabilityTableCellType,
   TracingTableCellType
-} from '@hypertrace/distributed-tracing';
-import { LegendPosition, ObservabilityTableCellType } from '@hypertrace/observability';
+} from '@hypertrace/observability';
 
-// tslint:disable: max-file-line-count
+/* eslint-disable max-lines */
 export const homeDashboard: DashboardDefaultConfiguration = {
   location: 'HOME_DASHBOARD',
   json: {
@@ -406,7 +407,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             type: 'cartesian-widget',
             title: 'Latency',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
@@ -417,6 +418,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
+
             series: [
               {
                 type: 'series',
@@ -476,13 +480,16 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'cartesian-widget',
             title: 'Calls',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
@@ -493,6 +500,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
             series: [
               {
                 type: 'series',
@@ -553,13 +562,16 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'cartesian-widget',
             title: 'Errors',
             'legend-position': LegendPosition.None,
-            'selectable-interval': false,
+            'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': false
@@ -570,6 +582,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'show-grid-lines': true,
               'min-upper-limit': 25
             },
+            'mouse-sync': true,
+            'sync-group-id': 'HOME_DASHBOARD',
             series: [
               {
                 type: 'series',
@@ -630,7 +644,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           }
         ]
       },

@@ -3,20 +3,26 @@
 
 .ht-entity-renderer {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: inherit;
-  @include body-1-regular();
+  width: 100%;
+  height: 100%;
 
-  .icon {
-    padding-right: 12px;
-  }
+  .name-with-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: inherit;
 
-  .name {
-    @include ellipsis-overflow();
+    .icon {
+      padding-right: 12px;
+    }
+
+    .name {
+      @include ellipsis-overflow();
+    }
   }
 }
 
-.navigable {
-  @include link-hover();
+.default-text-style {
+  color: $gray-9;
+  @include body-2-regular(currentColor);
 }

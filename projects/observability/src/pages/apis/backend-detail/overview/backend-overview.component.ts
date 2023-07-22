@@ -1,10 +1,12 @@
+/* eslint-disable max-lines */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Color, SubscriptionLifecycle } from '@hypertrace/common';
 import { CoreTableCellRendererType, TableStyle } from '@hypertrace/components';
-import { MetricAggregationType, TracingTableCellType } from '@hypertrace/distributed-tracing';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../../../shared/components/table/observability-table-cell-type';
+import { TracingTableCellType } from '../../../../shared/components/table/tracing-table-cell-type';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 import { BackendDetailService } from '../backend-detail.service';
 
 @Component({
@@ -214,7 +216,7 @@ export class BackendOverviewComponent {
           {
             type: 'cartesian-widget',
             title: 'Latency',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -286,12 +288,15 @@ export class BackendOverviewComponent {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'cartesian-widget',
             title: 'Errors',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -364,12 +369,15 @@ export class BackendOverviewComponent {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'cartesian-widget',
             title: 'Calls',
-            'selectable-interval': false,
+            'selectable-interval': true,
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
@@ -442,7 +450,10 @@ export class BackendOverviewComponent {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           }
         ]
       },
@@ -452,8 +463,7 @@ export class BackendOverviewComponent {
         style: TableStyle.Embedded,
         header: {
           type: 'widget-header',
-          title: 'Services',
-          'top-margin': true
+          title: 'Services'
         },
         pageable: false,
         columns: [
@@ -505,5 +515,4 @@ export class BackendOverviewComponent {
   public onDashboardReady(dashboard: Dashboard): void {
     this.subscriptionLifecycle.add(this.backendDetailService.applyFiltersToDashboard(dashboard));
   }
-  // tslint:disable-next-line: max-file-line-count
 }

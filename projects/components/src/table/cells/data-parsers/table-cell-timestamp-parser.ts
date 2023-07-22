@@ -1,3 +1,4 @@
+import { DateCoercer } from '@hypertrace/common';
 import { TableCellParser } from '../table-cell-parser';
 import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
@@ -6,6 +7,7 @@ import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
   type: CoreTableCellParserType.Timestamp
 })
 export class TableCellTimestampParser extends TableCellParserBase<CellData, Value, Value> {
+  private readonly dateCoercer: DateCoercer = new DateCoercer();
   public parseValue(cellData: CellData): Value {
     switch (typeof cellData) {
       case 'number':
@@ -13,7 +15,7 @@ export class TableCellTimestampParser extends TableCellParserBase<CellData, Valu
       case 'object':
         return cellData instanceof Date ? cellData : cellData.value;
       default:
-        return undefined;
+        return this.dateCoercer.coerce(cellData);
     }
   }
 
@@ -22,5 +24,5 @@ export class TableCellTimestampParser extends TableCellParserBase<CellData, Valu
   }
 }
 
-type CellData = Date | number | { value: Date | number };
+type CellData = Date | number | string | { value: Date | number };
 type Value = Date | number | undefined;

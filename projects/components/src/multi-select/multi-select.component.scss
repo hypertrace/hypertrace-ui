@@ -1,10 +1,9 @@
 @import 'mixins';
 
 .multi-select {
+  @include disableable;
   display: flex;
   align-items: center;
-  border: 1px solid $color-border;
-  border-radius: 6px;
   height: 100%;
   width: 100%;
 
@@ -12,8 +11,10 @@
     width: 100%;
   }
 
-  &.disabled {
-    opacity: 0.4;
+  &.open .trigger-content.icon-mode {
+    color: $blue-5;
+    background: $blue-1;
+    border-color: $blue-3;
   }
 
   .trigger-content {
@@ -22,49 +23,129 @@
     padding: 0 8px;
     cursor: pointer;
     height: 34px;
+    border-radius: 6px;
 
-    &.justify-left {
-      justify-content: flex-start;
+    &.disabled {
+      cursor: not-allowed;
     }
 
-    &.justify-right {
-      justify-content: flex-end;
+    &.extra-small {
+      height: 24px;
     }
 
-    &.justify-center {
-      justify-content: center;
+    &.small {
+      height: 32px;
     }
 
-    .trigger-prefix-icon {
-      padding-right: 8px;
+    &.medium {
+      height: 36px;
     }
 
-    .trigger-label {
-      @include body-2-medium();
-      padding-left: 8px;
+    &.large {
+      height: 44px;
     }
 
-    .trigger-icon {
-      padding: 0 8px;
-      margin-left: auto;
+    &.open {
+      background-color: $gray-2;
+    }
+
+    &.border {
+      border: 1px solid $color-border;
+      border-radius: 6px;
+    }
+
+    &.icon-mode {
+      border: 1px solid transparent;
+      border-radius: 64px;
+      padding: 0 4px;
+
+      &.open {
+        background: $blue-2;
+        border-color: $blue-3;
+      }
+
+      &:hover {
+        color: $blue-5;
+        background: $blue-1;
+        border-color: $blue-3;
+      }
+    }
+
+    .trigger-label-container {
+      display: flex;
+      width: 100%;
+      align-items: center;
+
+      .trigger-label {
+        @include body-2-medium();
+        padding-left: 8px;
+        width: calc(100% - 32px - 38px);
+        flex-grow: 1;
+      }
+
+      .trigger-more-items {
+        margin-left: 8px;
+        max-width: 38px;
+      }
+
+      .trigger-icon {
+        padding: 0 8px;
+        margin-left: auto;
+      }
+    }
+
+    &:hover {
+      background-color: $gray-1;
+    }
+
+    &.menu-with-background {
+      background-color: $gray-1;
     }
   }
 }
 
 .multi-select-content {
-  @include dropdown();
+  @include dropdown(6px);
   min-width: 120px;
+  display: flex;
+  height: 100%;
+  max-height: 360px;
+  flex-direction: column;
+
+  .divider {
+    padding: 0 16px 4px 16px;
+  }
+
+  .custom-control {
+    padding: 8px 16px 4px 16px;
+  }
+
+  .multi-select-options {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: auto;
+  }
 
   .multi-select-option {
     display: flex;
     height: 34px;
     padding: 4px 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     align-items: center;
 
+    &.disabled {
+      color: $gray-5;
+      cursor: not-allowed;
+    }
+
     .checkbox {
-      margin: 0px;
+      margin: 0;
+      color: $gray-3;
+
+      ::ng-deep .mat-ripple {
+        display: none;
+      }
     }
 
     .icon {
@@ -79,4 +160,19 @@
       background: $gray-1;
     }
   }
+
+  .search-bar {
+    display: flex;
+    height: 34px;
+    margin-top: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    align-items: center;
+  }
+}
+
+.trigger-x-more-values {
+  max-width: 300px;
+  max-height: 300px;
+  overflow: auto;
 }

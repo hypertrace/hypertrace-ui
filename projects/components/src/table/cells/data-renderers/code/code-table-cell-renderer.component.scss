@@ -1,0 +1,13 @@
+@import 'font';
+@import 'color-palette';
+
+.code-cell {
+  @include code($gray-7);
+  @include ellipsis-overflow();
+  background-color: $gray-2;
+  border-radius: 4px;
+  padding: 0 4px;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: text-bottom;
+}

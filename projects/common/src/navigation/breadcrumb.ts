@@ -3,4 +3,5 @@ export interface Breadcrumb {
   icon?: string;
   url?: string[];
   hide?: boolean;
+  alwaysShowIcon?: boolean;
 }

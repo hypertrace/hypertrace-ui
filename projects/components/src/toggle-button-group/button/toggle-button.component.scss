@@ -1,5 +1,6 @@
 @import 'color-palette';
 @import 'font';
+@import 'interaction';
 
 :host {
   &:not(:first-child) {
@@ -12,6 +13,7 @@
 .ht-toggle-button {
   .button {
     @include body-2-medium;
+    @include disableable;
     font-family: $font-family;
     width: 100%;
     height: 100%;
@@ -23,10 +25,6 @@
 
     &:hover {
       cursor: pointer;
-    }
-
-    &.disabled {
-      opacity: 0.4;
     }
   }
 

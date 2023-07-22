@@ -1,7 +1,7 @@
 import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavigationService } from '@hypertrace/common';
+import { NavigationService, RelativeTimeRange, TimeDuration, TimeRangeService, TimeUnit } from '@hypertrace/common';
 import { GraphQlRequestCacheability, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { patchRouterNavigateForTest, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -10,10 +10,11 @@ import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../sh
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
 import { EntityIconLookupService } from '../../../shared/services/entity/entity-icon-lookup.service';
+import { EntityBreadcrumb } from './../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { ServiceDetailBreadcrumbResolver } from './service-detail-breadcrumb.resolver';
 
 describe('Service detail breadcrumb resolver', () => {
-  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver>;
+  let spectator: SpectatorService<ServiceDetailBreadcrumbResolver<EntityBreadcrumb>>;
   let activatedRouteSnapshot: ActivatedRouteSnapshot;
   const buildResolver = createServiceFactory({
     service: ServiceDetailBreadcrumbResolver,
@@ -29,6 +30,9 @@ describe('Service detail breadcrumb resolver', () => {
       }),
       mockProvider(EntityIconLookupService, {
         forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Service)
+      }),
+      mockProvider(TimeRangeService, {
+        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
       })
     ],
     imports: [
@@ -55,8 +59,11 @@ describe('Service detail breadcrumb resolver', () => {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(breadcrumb$).toBe('(x|)', {
           x: {
+            [entityTypeKey]: ObservabilityEntityType.Service,
+            [entityIdKey]: 'test-id',
             label: 'test service',
-            icon: ObservabilityIconType.Service
+            icon: ObservabilityIconType.Service,
+            name: 'test service'
           }
         });
       });
@@ -69,7 +76,7 @@ describe('Service detail breadcrumb resolver', () => {
         entityType: ObservabilityEntityType.Service,
         id: 'test-id'
       }),
-      { cacheability: GraphQlRequestCacheability.NotCacheable }
+      { cacheability: GraphQlRequestCacheability.Cacheable }
     );
   }));
 });

@@ -1,3 +1,131 @@
-.radio-button {
-  padding-right: 16px;
+@use 'layout' as l;
+@import 'color-palette';
+@import 'font';
+
+.title {
+  @include body-2-medium($gray-7);
+  display: block;
+  padding-bottom: 8px;
+}
+
+.radio-group {
+  display: flex;
+
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  ::ng-deep .radio-button {
+    line-height: 18px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+
+    &.mat-radio-checked {
+      .mat-radio-container {
+        height: 18px;
+        width: 18px;
+
+        .mat-radio-outer-circle {
+          background: $blue-4;
+          height: 18px;
+          width: 18px;
+        }
+
+        .mat-radio-outer-circle {
+          border-width: 0;
+        }
+
+        .mat-radio-inner-circle {
+          height: 16px;
+          width: 16px;
+          top: 1px;
+          left: 1px;
+          background: white;
+        }
+      }
+    }
+
+    .mat-radio-container {
+      height: 18px;
+      width: 18px;
+
+      .mat-radio-outer-circle {
+        border-color: $gray-2;
+        border-width: 1px;
+        height: 18px;
+        width: 18px;
+      }
+
+      .mat-radio-label-content {
+        padding-left: 9px;
+        margin-top: 1px;
+      }
+    }
+
+    .radio-button-item {
+      @include l.flex-layout(row);
+      gap: 8px;
+
+      .radio-button-label {
+        @include body-2-regular($gray-7);
+      }
+
+      .info-icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .radio-button-description {
+      margin-top: 4px;
+      @include body-1-regular($gray-5);
+    }
+
+    &.disabled {
+      &.mat-radio-checked .mat-radio-container .mat-radio-outer-circle {
+        background: $gray-3;
+      }
+
+      .mat-radio-container .mat-radio-outer-circle {
+        cursor: not-allowed;
+        background: $gray-1;
+      }
+
+      .radio-button-label {
+        cursor: not-allowed;
+        color: $gray-5;
+      }
+    }
+
+    &.column {
+      .mat-radio-label-content {
+        display: flex;
+        flex-direction: column;
+
+        .radio-button-description {
+          white-space: break-spaces;
+        }
+      }
+    }
+
+    &.row {
+      max-width: 50%;
+      .mat-radio-label-content {
+        display: flex;
+        flex-direction: column;
+
+        .radio-button-description {
+          white-space: break-spaces;
+        }
+      }
+    }
+  }
+
+  .radio-button:last-child {
+    margin-bottom: 0;
+  }
 }

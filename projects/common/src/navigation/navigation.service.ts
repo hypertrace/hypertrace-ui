@@ -1,9 +1,11 @@
 import { Location, PlatformLocation } from '@angular/common';
-import { Injectable, Type } from '@angular/core';
+import { Inject, Injectable, Optional, Type } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
   Event,
+  Navigation,
   NavigationEnd,
   NavigationExtras,
   ParamMap,
@@ -13,11 +15,12 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
+import { isArray, isEmpty, isString } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
-import { filter, map, share, skip, take } from 'rxjs/operators';
-import { throwIfNil } from '../utilities/lang/lang-utils';
+import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
 import { Dictionary } from '../utilities/types/types';
-import { TraceRoute } from './trace-route';
+import { APP_TITLE, HtRoute } from './ht-route';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -28,22 +31,54 @@ export class NavigationService {
 
   private isFirstNavigation: boolean = true;
   private readonly globalQueryParams: Set<string> = new Set();
+  private pendingQueryParams: QueryParamObject = {};
+  public firstNavigatedUrl: string = '';
 
   public constructor(
     private readonly router: Router,
     private readonly location: Location,
-    private readonly platformLocation: PlatformLocation
+    private readonly platformLocation: PlatformLocation,
+    private readonly titleService: Title,
+    @Optional() @Inject(APP_TITLE) private readonly appTitle: string
   ) {
     this.event$(RoutesRecognized)
-      .pipe(skip(1), take(1))
+      .pipe(
+        tap(event => {
+          // In case of reloading a correct URL, we only have a single event
+          // Due to that we are getting `this.isFirstNavigation = true` since
+          // we're not reaching to .subscribe due to skip(1) and causing external navigation failure from the app
+          // So we're storing the first navigated URL to check whether it is external URL or not.
+          if (isEmpty(this.firstNavigatedUrl)) {
+            this.firstNavigatedUrl = decodeURIComponent(event.url);
+          }
+        }),
+        skip(1),
+        filter(() => !this.getActiveNavigation()?.extras.skipLocationChange),
+        take(1)
+      )
       .subscribe(() => (this.isFirstNavigation = false));
+
+    this.navigation$
+      .pipe(
+        switchMap(route => route.data),
+        tap(routeData => {
+          this.pendingQueryParams = {};
+          this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle);
+        })
+      )
+      .subscribe();
   }
 
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
+    this.pendingQueryParams = {
+      ...this.pendingQueryParams,
+      ...newParams
+    };
+
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: [],
-      queryParams: newParams,
+      queryParams: this.pendingQueryParams,
       queryParamsHandling: 'merge',
       replaceCurrentHistory: true
     });
@@ -73,6 +108,22 @@ export class NavigationService {
     return this.currentParamMap.getAll(parameterName);
   }
 
+  public constructExternalUrl(urlString: string): string {
+    const inputUrlTree: UrlTree = this.router.parseUrl(urlString);
+    const globalQueryParams: Params = {};
+
+    this.globalQueryParams.forEach(key => {
+      const paramValue = this.getQueryParameter(key, '');
+      if (paramValue !== '') {
+        globalQueryParams[key] = paramValue;
+      }
+    });
+
+    inputUrlTree.queryParams = { ...inputUrlTree.queryParams, ...globalQueryParams };
+
+    return this.router.serializeUrl(inputUrlTree);
+  }
+
   public buildNavigationParams(
     paramsOrUrl: NavigationParams | string
   ): { path: NavigationPath; extras?: NavigationExtras } {
@@ -84,7 +135,9 @@ export class NavigationService {
         path: [
           '/external',
           {
-            [ExternalNavigationPathParams.Url]: params.url,
+            [ExternalNavigationPathParams.Url]: params.useGlobalParams
+              ? this.constructExternalUrl(params.url)
+              : params.url,
             [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
           }
         ],
@@ -98,12 +151,27 @@ export class NavigationService {
     return {
       path: params.path,
       extras: {
-        queryParams: params?.queryParams ?? this.buildQueryParam(),
+        queryParams: { ...this.buildQueryParam(), ...(params?.queryParams ?? {}) },
         queryParamsHandling: params?.queryParamsHandling,
         replaceUrl: params?.replaceCurrentHistory,
         relativeTo: params?.relativeTo
       }
     };
+  }
+
+  public getActiveNavigation(): Navigation | undefined {
+    return this.router.getCurrentNavigation() ?? undefined;
+  }
+
+  public buildNavigationParams$(
+    paramsOrUrl: NavigationParams | string
+  ): Observable<{ path: NavigationPath; extras?: NavigationExtras }> {
+    return this.navigation$.pipe(
+      startWith(this.getCurrentActivatedRoute()),
+      switchMap(route => route.queryParams),
+      map(() => this.buildNavigationParams(paramsOrUrl)),
+      distinctUntilChanged(isEqualIgnoreFunctions)
+    );
   }
 
   /**
@@ -167,6 +235,20 @@ export class NavigationService {
     return route;
   }
 
+  public isPathActiveAndChanges(path: string[]): Observable<boolean> {
+    const urlTree = this.router.createUrlTree(path);
+
+    return this.router.events.pipe(
+      startWith(),
+      map(() => this.router.isActive(urlTree, false)),
+      distinctUntilChanged()
+    );
+  }
+
+  public isPathActive(path: string[]): boolean {
+    return this.router.isActive(this.router.createUrlTree(path), false);
+  }
+
   public isRelativePathActive(path: string[], relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()): boolean {
     return this.router.isActive(this.router.createUrlTree(path, { relativeTo: relativeTo }), false);
   }
@@ -179,7 +261,7 @@ export class NavigationService {
   public getRouteConfig(
     path: string[],
     relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()
-  ): TraceRoute | undefined {
+  ): HtRoute | undefined {
     const childRoutes =
       relativeTo === this.rootRoute() ? this.router.config : relativeTo.routeConfig && relativeTo.routeConfig.children;
 
@@ -190,7 +272,7 @@ export class NavigationService {
     return this.router.routerState.root;
   }
 
-  public currentRouteConfig(): TraceRoute {
+  public currentRouteConfig(): HtRoute {
     return throwIfNil(this.getCurrentActivatedRoute().routeConfig);
   }
 
@@ -215,6 +297,25 @@ export class NavigationService {
   public getAbsoluteCurrentUrl(): string {
     // Technically bad to use platform location, but seems cleaner than using off window directly
     return this.platformLocation.href;
+  }
+
+  public getShareableUrl(navParams: NavigationParams): string {
+    return navParams.navType === NavigationParamsType.InApp
+      ? this.getShareableUrlForInAppNavParams(navParams)
+      : this.getShareableUrlForExternalNavParams(navParams);
+  }
+
+  private getShareableUrlForInAppNavParams(navParams: InAppNavigationParams): string {
+    const host = new URL(this.getAbsoluteCurrentUrl()).origin;
+    const path = isString(navParams.path) ? [navParams.path] : isArray(navParams.path) ? navParams.path : [];
+
+    return `${host}${this.router.createUrlTree(path, { queryParams: navParams.queryParams }).toString()}`;
+  }
+
+  private getShareableUrlForExternalNavParams(navParams: ExternalNavigationParams): string {
+    return navParams.useGlobalParams
+      ? `${navParams.url}${this.router.createUrlTree([], { queryParams: this.buildQueryParam() }).toString()}`
+      : navParams.url;
   }
 
   /**
@@ -260,7 +361,7 @@ export class NavigationService {
     });
   }
 
-  private findRouteConfig(path: string[], routes: TraceRoute[]): TraceRoute | undefined {
+  private findRouteConfig(path: string[], routes: HtRoute[]): HtRoute | undefined {
     if (path.length === 0) {
       return undefined;
     }
@@ -277,13 +378,13 @@ export class NavigationService {
     return this.router.routerState.snapshot.root.queryParamMap;
   }
 
-  private findMatchingRoute(pathSegment: string, routes: TraceRoute[]): TraceRoute | undefined {
+  private findMatchingRoute(pathSegment: string, routes: HtRoute[]): HtRoute | undefined {
     return routes
       .filter(
         // First, filter to anything that potentially matches
         route =>
-          (route.path === pathSegment && route.pathMatch === 'full') || // Exact match
-          (typeof route.path === 'string' && route.path.startsWith(pathSegment) && route.pathMatch !== 'full') || // Prefix match
+          route.path === pathSegment || // Regular match (either full or prefix)
+          (route.path?.startsWith(`${pathSegment}/`) && route.pathMatch !== 'full') || // Prefix that continues on
           route.path === '**' || // Wildcard match
           (route.path === '' && route.pathMatch !== 'full') // Pass through
       )
@@ -299,12 +400,13 @@ export class NavigationService {
 }
 
 export interface QueryParamObject extends Params {
-  [key: string]: string | string[] | number | number[] | undefined;
+  [key: string]: string | string[] | boolean | boolean[] | number | number[] | undefined;
 }
 
 export type NavigationPath = string | (string | Dictionary<string>)[];
 
-export type NavigationParams = InAppNavigationParams | ExternalNavigationParamsNew;
+export type NavigationParams = InAppNavigationParams | ExternalNavigationParams;
+
 export interface InAppNavigationParams {
   navType: NavigationParamsType.InApp;
   path: NavigationPath;
@@ -314,11 +416,11 @@ export interface InAppNavigationParams {
   relativeTo?: ActivatedRoute;
 }
 
-export interface ExternalNavigationParamsNew {
+export interface ExternalNavigationParams {
   navType: NavigationParamsType.External;
   url: string;
   windowHandling: ExternalNavigationWindowHandling; // Currently an enum called NavigationType
-  queryParams?: QueryParamObject;
+  useGlobalParams?: boolean;
 }
 
 export const enum ExternalNavigationPathParams {

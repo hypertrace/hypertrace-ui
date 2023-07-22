@@ -1,4 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
+import { ClientRectBounds } from '@hypertrace/common';
 import { D3UtilService } from '../../../utils/d3/d3-util.service';
 import {
   RenderableTopologyNode,
@@ -113,7 +114,7 @@ export class TopologyNodeRendererService implements TopologyNodeRenderer {
     return this.rendererDelegates.find(delegate => delegate.matches(node));
   }
 
-  private getBoundingBox(node: RenderableTopologyNode, delegate: TopologyNodeRendererDelegate): ClientRect {
+  private getBoundingBox(node: RenderableTopologyNode, delegate: TopologyNodeRendererDelegate): ClientRectBounds {
     const width = delegate.width(node.userNode);
     const height = delegate.height(node.userNode);
 

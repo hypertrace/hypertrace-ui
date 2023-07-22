@@ -1,21 +1,18 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Dictionary, FixedTimeRange } from '@hypertrace/common';
-import {
-  AttributeMetadataType,
-  GraphQlFilterType,
-  GraphQlOperatorType,
-  GraphQlTimeRange,
-  MetadataService,
-  MetricAggregationType,
-  MetricHealth,
-  Specification
-} from '@hypertrace/distributed-tracing';
 import { GraphQlEnumArgument } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { ENTITY_METADATA } from '../../../../../../constants/entity-metadata';
+import { MetadataService } from '../../../../../../services/metadata/metadata.service';
+import { AttributeMetadataType } from '../../../../../model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../../../../model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../../model/metrics/metric-health';
 import { entityIdKey, entityTypeKey, ObservabilityEntityType } from '../../../../../model/schema/entity';
+import { GraphQlFilterType, GraphQlOperatorType } from '../../../../../model/schema/filter/graphql-filter';
+import { Specification } from '../../../../../model/schema/specifier/specification';
+import { GraphQlTimeRange } from '../../../../../model/schema/timerange/graphql-time-range';
 import { ObservabilitySpecificationBuilder } from '../../../../builders/selections/observability-specification-builder';
 import {
   GraphQlInteractionsRequest,
@@ -33,7 +30,7 @@ describe('Interactions graphql query handler', () => {
             name: attributeKey,
             displayName: 'Duration',
             units: 'ms',
-            type: AttributeMetadataType.Number,
+            type: AttributeMetadataType.Long,
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
@@ -73,7 +70,7 @@ describe('Interactions graphql query handler', () => {
     expect(spectator.service.convertRequest(buildRequest())).toEqual({
       path: 'entities',
       arguments: [
-        { name: 'type', value: new GraphQlEnumArgument(ObservabilityEntityType.Backend) },
+        { name: 'scope', value: ObservabilityEntityType.Backend },
         { name: 'limit', value: 1 },
         {
           name: 'between',
@@ -92,6 +89,10 @@ describe('Interactions graphql query handler', () => {
               idType: new GraphQlEnumArgument(ObservabilityEntityType.Backend)
             }
           ]
+        },
+        {
+          name: 'includeInactive',
+          value: false
         }
       ],
       children: [
@@ -109,7 +110,7 @@ describe('Interactions graphql query handler', () => {
                     {
                       path: 'metric',
                       alias: 'duration',
-                      arguments: [{ name: 'key', value: 'duration' }],
+                      arguments: [{ name: 'expression', value: { key: 'duration' } }],
                       children: [
                         {
                           path: 'avg',
@@ -123,7 +124,11 @@ describe('Interactions graphql query handler', () => {
                       path: 'neighbor',
                       children: [
                         { path: 'id' },
-                        { path: 'attribute', alias: 'name', arguments: [{ name: 'key', value: 'name' }] }
+                        {
+                          path: 'attribute',
+                          alias: 'name',
+                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                        }
                       ]
                     }
                   ]

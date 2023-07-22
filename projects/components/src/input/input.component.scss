@@ -1,7 +1,13 @@
+@import 'mixins';
 @import 'color-palette';
 
 :host {
   ::ng-deep {
+    &.disabled {
+      background-color: $gray-2;
+      cursor: not-allowed;
+    }
+
     .border {
       &.mat-form-field {
         height: inherit;
@@ -31,6 +37,7 @@
         padding-bottom: 0;
 
         .mat-form-field-label {
+          @include body-1-regular($gray-7);
           padding: 0 0 0 8px;
           line-height: initial;
           color: $gray-5;

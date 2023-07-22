@@ -20,6 +20,7 @@ export class ApiDetailService extends EntityDetailService<ApiEntity> {
 
 export interface ApiEntity extends Entity {
   apiType: ApiType;
+  name: string;
 }
 
 export const enum ApiType {

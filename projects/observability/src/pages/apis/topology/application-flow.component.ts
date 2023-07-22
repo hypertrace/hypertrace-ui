@@ -1,105 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MetricAggregationType } from '@hypertrace/distributed-tracing';
-import { ModelJson } from '@hypertrace/hyperdash';
+import { Dictionary } from '@hypertrace/common';
+import { TopologyLayoutType } from '../../../shared/components/topology/topology';
+import { DashboardDefaultConfiguration } from '../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { applicationFlowDefaultJson } from './application-flow.dashboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="vertical-flex-layout">
       <ht-page-header></ht-page-header>
-      <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson"> </ht-navigable-dashboard>
+      <ht-navigable-dashboard [navLocation]="this.defaultJson.location" [variables]="this.variables">
+      </ht-navigable-dashboard>
     </div>
   `
 })
 export class ApplicationFlowComponent {
-  public readonly location: string = 'APPLICATION_FLOW';
-  public readonly defaultJson: ModelJson = {
-    type: 'container-widget',
-    layout: {
-      type: 'auto-container-layout',
-      'enable-style': false
-    },
-    children: [
-      {
-        type: 'topology-widget',
-        data: {
-          type: 'topology-data-source',
-          entity: 'SERVICE',
-          'downstream-entities': ['SERVICE', 'BACKEND'],
-          'node-metrics': [
-            {
-              type: 'percentile-latency-metric-aggregation',
-              'display-name': 'P99 Latency'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'duration',
-              aggregation: MetricAggregationType.P50,
-              'display-name': 'P50 Latency'
-            },
-            {
-              type: 'error-percentage-metric-aggregation',
-              aggregation: MetricAggregationType.Average,
-              'display-name': 'Error %'
-            },
-
-            {
-              type: 'metric-aggregation',
-              metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Error Count'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond,
-              'display-name': 'Call Rate/sec'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Call Count'
-            }
-          ],
-          'edge-metrics': [
-            {
-              type: 'percentile-latency-metric-aggregation',
-              'display-name': 'P99 Latency'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'duration',
-              aggregation: MetricAggregationType.P50,
-              'display-name': 'P50 Latency'
-            },
-            {
-              type: 'error-percentage-metric-aggregation',
-              aggregation: MetricAggregationType.Average,
-              'display-name': 'Error %'
-            },
-
-            {
-              type: 'metric-aggregation',
-              metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Error Count'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond,
-              'display-name': 'Call Rate/sec'
-            },
-            {
-              type: 'metric-aggregation',
-              metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum,
-              'display-name': 'Call Count'
-            }
-          ]
-        }
-      }
-    ]
-  };
+  public readonly defaultJson: DashboardDefaultConfiguration = applicationFlowDefaultJson;
+  public variables: Dictionary<unknown> = { layoutType: TopologyLayoutType.CustomTreeLayout };
 }

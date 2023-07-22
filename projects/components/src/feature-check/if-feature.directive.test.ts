@@ -9,25 +9,39 @@ describe('If feature directive', () => {
   });
 
   const getTestDiv = () => spectator.query('.test-div');
+  const getElseDiv = () => spectator.query('.else-div');
 
   beforeEach(() => {
-    spectator = createHost(`<div class="test-div" *htIfFeature="state as featureState">{{featureState}}</div>`);
+    spectator = createHost(
+      `
+      <ng-container *htIfFeature="state as featureState; else elseTemplate">
+        <div class="test-div">{{featureState}}</div>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <div class="else-div">Else template</div>
+      </ng-template>
+      `
+    );
   });
 
-  test('does not render template if feature disabled', () => {
+  test('does not render template if feature disabled and renders else template if present', () => {
     spectator.setHostInput({
       state: FeatureState.Disabled
     });
     expect(getTestDiv()).not.toExist();
+    expect(getElseDiv()).toExist();
+
     spectator.setHostInput({
       state: FeatureState.Enabled
     });
-
     expect(getTestDiv()).toExist();
+    expect(getElseDiv()).not.toExist();
+
     spectator.setHostInput({
       state: FeatureState.Disabled
     });
     expect(getTestDiv()).not.toExist();
+    expect(getElseDiv()).toExist();
   });
 
   test('provides feature state variable in context when rendered', () => {
@@ -40,9 +54,15 @@ describe('If feature directive', () => {
       state: FeatureState.Preview
     });
     expect(getTestDiv()).toHaveText(FeatureState.Preview);
+
+    spectator.setHostInput({
+      state: FeatureState.Disabled
+    });
+    expect(getElseDiv()).toHaveText('Else template');
   });
 });
 
 interface IfFeatureHost {
   state?: FeatureState;
 }
+//

@@ -17,16 +17,16 @@
       color: $gray-9;
     }
 
+    ::ng-deep .ht-link:hover {
+      color: $gray-9;
+    }
+
     ::ng-deep .mat-ink-bar {
       // Required deep since added dynamically by material
       height: 4px;
-      background-color: $gray-7;
+      background-color: $gray-9;
     }
   }
-}
-
-.tab-group {
-  height: 48px;
 }
 
 .divider {
@@ -52,14 +52,14 @@
       background: $gray-3 radial-gradient(circle, transparent 1%, $gray-3 1%) center/12000%;
 
       &.active {
-        background-color: $gray-6;
+        background-color: $gray-9;
       }
     }
   }
 
   &:active {
     .ink-bar {
-      background-color: $gray-7;
+      background-color: $gray-9;
       background-size: 100%;
       transition: background 0s;
     }
@@ -67,13 +67,19 @@
 }
 
 .tab-link {
-  height: 46px; // plus ink-bar is 48
+  height: auto;
   min-width: 0;
   padding: 0;
   font-size: 16px;
   font-weight: 500;
-  color: $gray-5;
   opacity: 1;
+  padding-bottom: 6px;
+}
+
+.tab-link-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .ink-bar {
@@ -84,7 +90,7 @@
   transition: background 0.6s;
 
   &.active {
-    background-color: $gray-7;
+    background-color: $gray-9;
   }
 }
 
@@ -94,7 +100,6 @@
   flex-direction: row;
   vertical-align: center;
   align-items: center;
-  margin-left: 4px;
 }
 
 .soon {

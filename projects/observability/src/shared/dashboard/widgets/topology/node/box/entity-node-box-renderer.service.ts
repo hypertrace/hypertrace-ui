@@ -1,32 +1,33 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
-import { MetricAggregation, MetricHealth } from '@hypertrace/distributed-tracing';
-import { select, Selection } from 'd3-selection';
+import { Color, NumericFormatter, selector } from '@hypertrace/common';
+import { Selection } from 'd3-selection';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { TopologyNodeRendererDelegate } from '../../../../../components/topology/renderers/node/topology-node-renderer.service';
-import { TopologyCoordinates, TopologyNode, TopologyNodeState } from '../../../../../components/topology/topology';
+import {
+  TopologyCoordinates,
+  TopologyElementVisibility,
+  TopologyNode,
+  TopologyNodeState
+} from '../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../components/utils/d3/d3-util.service';
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
+import { MetricHealth } from '../../../../../graphql/model/metrics/metric-health';
 import { Entity } from '../../../../../graphql/model/schema/entity';
-import { ErrorPercentageMetricAggregation } from '../../../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
-import { PercentileLatencyMetricAggregation } from '../../../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
 import { EntityNode } from '../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { EntityIconLookupService } from '../../../../../services/entity/entity-icon-lookup.service';
 import { EntityNavigationService } from '../../../../../services/navigation/entity/entity-navigation.service';
-import {
-  getAllCategoryClasses,
-  getErrorPercentageCategoryClass,
-  getErrorPercentageMetric,
-  getLatencyCategoryClass,
-  getLatencyMetric
-} from '../../metric/metric-category';
+import { TopologyMetricCategoryData } from '../../../../data/graphql/topology/metrics/topology-metric-category.model';
+import { TopologyDataSourceModelPropertiesService } from '../../topology-data-source-model-properties.service';
 import { VisibilityUpdater } from '../../visibility-updater';
 
 @Injectable() // Annotate so parameters still provide metadata for children
 export abstract class EntityNodeBoxRendererService implements TopologyNodeRendererDelegate<EntityNode> {
   private readonly entityMetricClass: string = 'entity-metric-value';
+  private readonly entityOuterBandClass: string = 'entity-outer-band';
+  private readonly metricCategoryClass: string = 'metric-category';
   private readonly dropshadowFilterId: string = 'entity-node-dropshadow-filter';
   private readonly nodeSelectionMap: WeakMap<
     EntityNode,
@@ -38,10 +39,10 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   public constructor(
     private readonly entityNavigationService: EntityNavigationService,
-    private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly svgUtils: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
-    private readonly entityIconLookupService: EntityIconLookupService
+    private readonly entityIconLookupService: EntityIconLookupService,
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService
   ) {}
 
   public abstract matches(node: TopologyNode & Partial<EntityNode>): node is EntityNode;
@@ -101,13 +102,14 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     domElementRenderer: Renderer2
   ): void {
     const elementSelection = this.d3Utils.select(element, domElementRenderer);
-    const metricSpecifications = state.dataSpecifiers?.map(specifier => specifier.value);
+    const primaryMetricCategory = this.topologyDataSourceModelPropertiesService
+      .getPrimaryNodeMetric()
+      ?.extractAndGetDataCategoryForMetric(node.data);
+    const secondaryMetricCategory = this.topologyDataSourceModelPropertiesService
+      .getSecondaryNodeMetric()
+      ?.extractAndGetDataCategoryForMetric(node.data);
 
-    this.updateNodeMetric(
-      elementSelection,
-      getLatencyMetric(node.data, metricSpecifications),
-      getErrorPercentageMetric(node.data, metricSpecifications)
-    );
+    this.updateNodeMetric(elementSelection, state.visibility, primaryMetricCategory, secondaryMetricCategory);
     this.visibilityUpdater.updateVisibility(elementSelection, state.visibility);
 
     elementSelection.classed('dragging', state.dragging);
@@ -127,14 +129,35 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   protected updateNodeMetric(
     selection: Selection<SVGGElement, unknown, null, undefined>,
-    latencyMetric?: PercentileLatencyMetricAggregation,
-    errorPercentageMetric?: ErrorPercentageMetricAggregation
+    visibility: TopologyElementVisibility,
+    primaryMetric?: TopologyMetricCategoryData,
+    secondaryMetric?: TopologyMetricCategoryData
   ): void {
     selection
-      .classed(getAllCategoryClasses().join(' '), false)
-      .classed(getLatencyCategoryClass(latencyMetric?.category), true)
-      .classed(getErrorPercentageCategoryClass(errorPercentageMetric?.category), true)
+      .classed(primaryMetric?.getCategoryClassName() ?? '', true)
+      .classed(secondaryMetric?.getCategoryClassName() ?? '', true)
       .select(selector(this.entityMetricClass));
+
+    // For primary category
+    selection.select(selector(this.metricCategoryClass)).attr('fill', primaryMetric?.fillColor!);
+
+    // For secondary category
+    selection
+      .select(selector(this.entityOuterBandClass))
+      .style('fill', () => {
+        if (visibility === TopologyElementVisibility.Focused || visibility === TopologyElementVisibility.Emphasized) {
+          return this.focusedOrEmphasizedColor();
+        }
+
+        return secondaryMetric?.fillColor ?? '';
+      })
+      .style('stroke', () => {
+        if (visibility === TopologyElementVisibility.Focused) {
+          return secondaryMetric?.highestPrecedence === true ? secondaryMetric?.focusColor : primaryMetric?.focusColor!;
+        }
+
+        return secondaryMetric?.strokeColor ?? '';
+      });
   }
 
   protected isEntityNode(node: TopologyNode & Partial<EntityNode>): node is EntityNode {
@@ -155,7 +178,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   protected addOuterBand(nodeSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     nodeSelection
       .append('rect')
-      .classed('entity-outer-band', true)
+      .classed(this.entityOuterBandClass, true)
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', this.boxWidth())
@@ -168,7 +191,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   protected addMetricCategory(nodeSelection: Selection<SVGGElement, unknown, null, undefined>): void {
     nodeSelection
       .append('circle')
-      .classed('metric-category', true)
+      .classed(this.metricCategoryClass, true)
       .attr('transform', `translate(${this.getPadding()}, ${(this.boxHeight() - this.metricCategoryWidth()) / 2})`)
       .attr('cx', '4')
       .attr('cy', '4')
@@ -181,26 +204,34 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     startX: number,
     iconContent?: SVGElement
   ): void {
-    const width = this.nodeLabelWidth(startX, iconContent !== undefined);
+    const maxWidth = this.nodeLabelWidth(startX, iconContent !== undefined);
+    const truncatedText = this.getTruncatedText(this.getLabelForNode(node), maxWidth);
+    const y = this.getCenterY() + 1;
+
     nodeSelection
       .append('text')
       .classed('entity-label', true)
-      .text(this.getLabelForNode(node))
-      .attr('y', this.getCenterY() + 1)
-      .each((_, index, groups) => {
-        const currentElement = groups[index];
-        this.svgUtils.truncateText(currentElement, width);
-        select(currentElement).attr(
-          'x',
-          startX + this.domElementMeasurerService.getComputedTextLength(currentElement) / 2
-        );
-      })
+      .text(truncatedText)
+      .attr('transform', `translate(${startX} , 0)`)
+      .attr('y', y)
       .attr('dominant-baseline', 'central')
       .on('click', () => this.entityNavigationService.navigateToEntity(node.data));
 
     if (iconContent) {
       this.appendEntityIcon(nodeSelection, this.entityIconStartX(), iconContent);
     }
+  }
+
+  private getTruncatedText(text: string, maxWidth: number): string {
+    const textWidth = text.length * this.getCharWidth();
+
+    if (textWidth <= maxWidth) {
+      return text;
+    }
+
+    const eachSideTotalChars = Math.floor((maxWidth - 3 * this.getCharWidth()) / 2 / this.getCharWidth());
+
+    return `${text.slice(0, eachSideTotalChars)}...${text.slice(text.length - eachSideTotalChars)}`;
   }
 
   private appendEntityIcon(
@@ -246,6 +277,14 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
       .each((_datum, index, groups) => this.svgUtils.truncateText(groups[index], 30));
   }
 
+  protected focusedOrEmphasizedColor(): string {
+    return Color.White;
+  }
+
+  protected focusedBandColor(): string {
+    return Color.Blue4;
+  }
+
   protected boxWidth(): number {
     return 240;
   }
@@ -280,7 +319,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
 
   protected nodeLabelWidth(startX: number, withIcon: boolean = false): number {
     if (withIcon) {
-      return this.entityIconStartX() - startX - this.getInsideMargin();
+      return this.entityIconStartX() - startX - 4 * this.getInsideMargin();
     }
 
     return this.boxWidth() - startX - 2 * this.getPadding();
@@ -327,7 +366,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   private entityStartX(): number {
-    return this.metricCategoryStartX() + this.metricCategoryWidth() + this.getInsideMargin();
+    return this.metricCategoryStartX() + 2 * this.metricCategoryWidth() + this.getInsideMargin();
   }
 
   protected entityIconStartX(): number {
@@ -351,6 +390,11 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     return entityNode.data[entityNode.specification.titleSpecification.resultAlias()] as string;
   }
 
+  // This is the average char width for the font sans-serif
+  protected getCharWidth(): number {
+    return 6;
+  }
+
   private defineDropshadowFilterIfNotExists(element: SVGGElement, domElementRenderer: Renderer2): void {
     this.svgUtils.addDropshadowFilterToParentSvgIfNotExists(
       element,
@@ -365,7 +409,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   }
 
   private isAngleInIQuadrant(angle: number): boolean {
-    return angle > 0 && angle < Math.PI / 2;
+    return angle >= 0 && angle < Math.PI / 2;
   }
 
   private isAnglePerpendicularlyAbove(angle: number): boolean {

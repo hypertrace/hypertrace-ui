@@ -1,8 +1,16 @@
 .ht-icon {
   display: flex;
+  justify-content: center;
+  align-items: center;
 
   .mat-icon {
     font-size: inherit;
+  }
+
+  &.micro {
+    font-size: 8px;
+    width: 8px;
+    height: 8px;
   }
 
   &.extra-small {
@@ -35,6 +43,12 @@
     width: 32px;
   }
 
+  &.extra-larger {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+  }
+
   &.hodor {
     font-size: 64px;
     height: 64px;
@@ -42,8 +56,21 @@
   }
 
   &.inherit {
-    font-size: 32px;
-    height: 32px;
+    font-size: inherit;
+    height: inherit;
     width: inherit;
+  }
+
+  &.no-border {
+    border-style: none;
+  }
+
+  &.inset-border {
+    box-sizing: border-box;
+  }
+
+  &.outset-border {
+    border-width: 2px;
+    border-style: solid;
   }
 }

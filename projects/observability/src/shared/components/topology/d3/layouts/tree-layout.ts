@@ -42,7 +42,7 @@ export class TreeLayout implements TopologyLayout {
     return Math.min(hierarchyNode.x, ...(hierarchyNode.children ?? []).map(node => this.getMinYPosition(node)));
   }
 
-  private buildHierarchyProxyNodes(
+  protected buildHierarchyProxyNodes(
     nodes: RenderableTopologyNode[],
     startingLocation: TopologyCoordinates
   ): D3ProxyNode {
@@ -66,7 +66,7 @@ export class TreeLayout implements TopologyLayout {
     return level0RootNode;
   }
 
-  private getNodeWidth(root: HierarchyNode<D3ProxyNode>): number {
+  protected getNodeWidth(root: HierarchyNode<D3ProxyNode>): number {
     const leaf = first(root.leaves());
     let leafWidth = 240;
 
@@ -81,7 +81,7 @@ export class TreeLayout implements TopologyLayout {
     return leafWidth + 160;
   }
 
-  private getNodeHeight(root: HierarchyNode<D3ProxyNode>): number {
+  protected getNodeHeight(root: HierarchyNode<D3ProxyNode>): number {
     return this.getRenderedNodeHeight(first(root.leaves()));
   }
 
@@ -99,7 +99,7 @@ export class TreeLayout implements TopologyLayout {
     return defaultNodeHeight;
   }
 
-  private buildTopologyHierarchyNodeMap(
+  protected buildTopologyHierarchyNodeMap(
     nodes: RenderableTopologyNode[],
     startingLocation: TopologyCoordinates
   ): Map<RenderableTopologyNode, D3ProxyNode> {
@@ -163,7 +163,7 @@ export class TreeLayout implements TopologyLayout {
   }
 }
 
-interface D3ProxyNode {
+export interface D3ProxyNode {
   sourceNode: RenderableTopologyNode | undefined;
   hasIncomingEdges: boolean;
   children: D3ProxyNode[];

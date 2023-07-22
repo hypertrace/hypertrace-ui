@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { defaults } from 'lodash-es';
 import { D3Topology } from './d3/d3-topology';
-import { Topology, TopologyConfiguration } from './topology';
+import { Topology, TopologyConfiguration, TopologyLayoutType } from './topology';
 
 @Injectable({ providedIn: 'root' })
 export class TopologyBuilderService {
@@ -13,7 +13,8 @@ export class TopologyBuilderService {
     clickableNodes: true,
     clickableEdges: true,
     nodeDataSpecifiers: [],
-    edgeDataSpecifiers: []
+    edgeDataSpecifiers: [],
+    layoutType: TopologyLayoutType.CustomTreeLayout
   };
 
   public build(hostEl: Element, injector: Injector, config: RequiredTopologyConfig): Topology {

@@ -1,6 +1,7 @@
-import { DashboardDefaultConfiguration, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { LegendPosition } from '../../../../shared/components/legend/legend.component';
 import { RED_COLOR_PALETTE } from '../../../../shared/constants/color-palette';
+import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
+import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 
 export const backendMetricsDashboard: DashboardDefaultConfiguration = {
   location: 'BACKEND_METRICS',
@@ -200,6 +201,12 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
             'color-palette': RED_COLOR_PALETTE,
             'selectable-interval': true,
             'legend-position': LegendPosition.TopLeft,
+            'show-y-axis': true,
+            'y-axis': {
+              type: 'cartesian-axis',
+              'show-grid-lines': true,
+              'min-upper-limit': 25
+            },
             series: [
               {
                 type: 'series',
@@ -253,7 +260,10 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   }
                 }
               }
-            ]
+            ],
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler'
+            }
           },
           {
             type: 'container-widget',
@@ -313,7 +323,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                       type: 'entity-error-percentage-timeseries-data-source'
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               },
               {
                 type: 'cartesian-widget',
@@ -336,7 +350,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                       }
                     }
                   }
-                ]
+                ],
+                'selection-handler': {
+                  type: 'cartesian-explorer-selection-handler',
+                  'show-context-menu': true
+                }
               }
             ]
           }
@@ -344,12 +362,18 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
       },
       {
         type: 'text-widget',
-        text: 'Calls per minute'
+        text: 'Calls'
       },
       {
         type: 'cartesian-widget',
         'selectable-interval': true,
         'legend-position': LegendPosition.None,
+        'show-y-axis': true,
+        'y-axis': {
+          type: 'cartesian-axis',
+          'show-grid-lines': true,
+          'min-upper-limit': 25
+        },
         series: [
           {
             type: 'series',
@@ -365,7 +389,11 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
               }
             }
           }
-        ]
+        ],
+        'selection-handler': {
+          type: 'cartesian-explorer-selection-handler',
+          'show-context-menu': true
+        }
       }
     ]
   }

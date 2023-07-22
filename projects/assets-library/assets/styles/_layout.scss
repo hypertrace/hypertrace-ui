@@ -46,6 +46,11 @@ $paginator-height: 48px;
   border: 1px solid $color-border;
 }
 
+@mixin frame-box-shadow {
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(63, 71, 74, 0.16), 0 2px 2px rgba(63, 71, 74, 0.12), 0 0 2px rgba(63, 71, 74, 0.16);
+}
+
 @mixin vertical-divider($height: 16px) {
   height: $height;
   margin: 0 2px;

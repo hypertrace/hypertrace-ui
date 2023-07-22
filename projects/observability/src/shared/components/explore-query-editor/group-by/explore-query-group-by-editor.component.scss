@@ -3,12 +3,29 @@
 
 .group-by-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 24px;
 
-  .group-by-label {
-    @include body-1-medium($gray-9);
-    height: 32px;
-    line-height: 32px;
-    margin-bottom: 12px;
+  .group-by-input-container {
+    display: flex;
+    flex-direction: column;
+
+    .group-by-label {
+      @include body-1-medium($gray-9);
+      height: 32px;
+      line-height: 32px;
+      margin-bottom: 12px;
+    }
+
+    .group-by-path-wrapper {
+      width: 100px;
+
+      .group-by-path-input {
+        @include body-2-regular($gray-9);
+        width: 100%;
+        height: 100%;
+        line-height: 32px;
+      }
+    }
   }
 }

@@ -2,6 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync, flush } from '@angular/core/testing';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import {
+  FeatureState,
+  FeatureStateResolver,
   FixedTimeRange,
   IntervalDurationService,
   NavigationService,
@@ -9,10 +11,11 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import { AttributeMetadata, AttributeMetadataType, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { EMPTY, of } from 'rxjs';
+import { AttributeMetadata, AttributeMetadataType } from '../../graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryEditorModule } from './explore-query-editor.module';
@@ -29,22 +32,24 @@ describe('Explore query editor', () => {
       scope: ObservabilityTraceType.Api,
       displayName: 'First',
       units: 'ms',
-      type: AttributeMetadataType.Number,
+      type: AttributeMetadataType.Long,
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false
+      groupable: false,
+      isCustom: false
     },
     {
       name: 'second',
       scope: ObservabilityTraceType.Api,
       displayName: 'Second',
       units: 'ms',
-      type: AttributeMetadataType.Number,
+      type: AttributeMetadataType.Long,
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
-      groupable: false
+      groupable: false,
+      isCustom: false
     },
     {
       name: 'first groupable',
@@ -55,7 +60,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true
+      groupable: true,
+      isCustom: false
     },
     {
       name: 'second groupable',
@@ -66,7 +72,8 @@ describe('Explore query editor', () => {
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
       allowedAggregations: [],
-      groupable: true
+      groupable: true,
+      isCustom: false
     }
   ];
 
@@ -83,8 +90,11 @@ describe('Explore query editor', () => {
       }),
       mockProvider(IntervalDurationService, {
         availableIntervals$: of('AUTO'),
-        getAutoDurationFromTimeDurations: () => new TimeDuration(15, TimeUnit.Second),
-        getAutoDuration: () => new TimeDuration(15, TimeUnit.Second)
+        getAutoDurationFromTimeDurations: () => new TimeDuration(1, TimeUnit.Minute),
+        getAutoDuration: () => new TimeDuration(1, TimeUnit.Minute)
+      }),
+      mockProvider(FeatureStateResolver, {
+        getCombinedFeatureState: () => of(FeatureState.Disabled)
       }),
       mockProvider(NavigationService, {
         navigation$: EMPTY
@@ -103,7 +113,7 @@ describe('Explore query editor', () => {
 
   const expectedDefaultQuery = (): ExploreVisualizationRequest =>
     expect.objectContaining({
-      interval: new TimeDuration(15, TimeUnit.Second),
+      interval: 'AUTO',
       series: [defaultSeries]
     });
 
@@ -119,7 +129,7 @@ describe('Explore query editor', () => {
       }
     );
 
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenCalledWith(expectedDefaultQuery());
 
@@ -139,16 +149,16 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
-
+    spectator.tick(10);
     spectator.click('.add-series-button');
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenCalledWith(
       expect.objectContaining({
         series: [defaultSeries, defaultSeries]
       })
     );
+    discardPeriodicTasks();
   }));
 
   test('emits changes to the query on group by change', fakeAsync(() => {
@@ -163,20 +173,20 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(510); // Debounced
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         series: [defaultSeries],
-        groupByLimit: 5, // Default group by limit
         groupBy: {
-          keys: ['first groupable']
+          keyExpressions: [{ key: 'first groupable' }],
+          limit: 5 // Default group by limit
         }
       })
     );
@@ -196,26 +206,26 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     // First pick a group by to enable limit selection
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(510);
 
     const limitInputEl = spectator.query('ht-explore-query-limit-editor input') as HTMLInputElement;
     limitInputEl.value = '6';
     spectator.dispatchFakeEvent(limitInputEl, 'input');
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onQueryChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         series: [defaultSeries],
-        groupByLimit: 6,
         groupBy: {
-          keys: ['first groupable']
+          keyExpressions: [{ key: 'first groupable' }],
+          limit: 6
         }
       })
     );
@@ -234,13 +244,13 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     spectator.click(spectator.query('.interval .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[0]);
 
-    spectator.tick();
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -263,16 +273,18 @@ describe('Explore query editor', () => {
         }
       }
     );
-    spectator.tick();
+    spectator.tick(10);
 
     // First pick a group by to enable limit selection
     spectator.click(spectator.query('.group-by .trigger-content')!);
     const options = spectator.queryAll('.select-option', { root: true });
     spectator.click(options[1]);
 
-    spectator.tick();
+    spectator.tick(510); // Debounced
 
     spectator.click('.limit-include-rest-container input[type="checkbox"]');
+
+    spectator.tick(10);
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({

@@ -11,7 +11,7 @@ import { TextWidgetModel } from './text-widget.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="text-widget">
-      <span class="primary-text">{{ this.model.text }}</span>
+      <span class="primary-text" [ngClass]="this.model.primaryTextStyle">{{ this.model.text }}</span>
       <span class="secondary-text">{{ this.model.secondaryText }}</span>
     </div>
   `

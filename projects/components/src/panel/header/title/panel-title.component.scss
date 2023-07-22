@@ -1,18 +1,37 @@
-@import 'font';
+@import 'mixins';
 
 .ht-panel-title {
   @include subtitle-2;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 2px;
-
-  .label {
-    margin-left: 10px;
-  }
+  border-radius: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  justify-content: space-between;
 
   &:hover {
     background: $gray-1;
     cursor: pointer;
+  }
+
+  .left-section {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .label {
+    flex: 1;
+  }
+
+  .right-section {
+    .button {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid $gray-2;
+      border-radius: 6px;
+    }
   }
 }

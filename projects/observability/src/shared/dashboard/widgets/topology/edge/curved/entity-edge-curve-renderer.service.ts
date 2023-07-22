@@ -1,11 +1,7 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { DomElementMeasurerService, NumericFormatter, selector } from '@hypertrace/common';
+import { Color, NumericFormatter, selector } from '@hypertrace/common';
 import { select, Selection } from 'd3-selection';
-import { linkHorizontal } from 'd3-shape';
-import {
-  ErrorPercentageMetricAggregation,
-  ErrorPercentageMetricValueCategory
-} from '../../../../..//graphql/model/schema/specifications/error-percentage-aggregation-specification';
+import { Link, linkHorizontal } from 'd3-shape';
 import {
   TopologyEdgePositionInformation,
   TopologyEdgeRenderDelegate
@@ -18,20 +14,14 @@ import {
 } from '../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../components/utils/d3/d3-util.service';
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
+import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { MetricAggregationSpecification } from '../../../../../graphql/model/schema/specifications/metric-aggregation-specification';
-import { PercentileLatencyMetricAggregation } from '../../../../../graphql/model/schema/specifications/percentile-latency-aggregation-specification';
 import { EntityEdge } from '../../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
-import {
-  allErrorPercentageMetricCategories,
-  allLatencyMetricCategories,
-  getErrorPercentageCategoryClass,
-  getErrorPercentageMetric,
-  getLatencyCategoryClass,
-  getLatencyMetric
-} from '../../metric/metric-category';
+import { TopologyMetricCategoryData } from '../../../../data/graphql/topology/metrics/topology-metric-category.model';
+import { TopologyDataSourceModelPropertiesService } from '../../topology-data-source-model-properties.service';
 import { VisibilityUpdater } from '../../visibility-updater';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegate<EntityEdge> {
   private readonly edgeClass: string = 'entity-edge';
   private readonly edgeLineClass: string = 'entity-edge-line';
@@ -42,9 +32,9 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private readonly visibilityUpdater: VisibilityUpdater = new VisibilityUpdater();
 
   public constructor(
-    private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly svgUtils: SvgUtilService,
-    private readonly d3Utils: D3UtilService
+    private readonly d3Utils: D3UtilService,
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService
   ) {}
 
   public matches(edge: TopologyEdge & Partial<EntityEdge>): edge is EntityEdge {
@@ -73,56 +63,83 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
   public updatePosition(
     element: SVGGElement,
-    _: EntityEdge,
+    edge: EntityEdge,
     position: TopologyEdgePositionInformation,
     domRenderer: Renderer2
   ): void {
     const edgeSelection = this.d3Utils.select(element, domRenderer);
     this.updateLinePosition(edgeSelection, position);
     this.updateLabelPosition(edgeSelection, position);
-    this.updateLabelBubblePosition(edgeSelection);
+    this.updateLabelBubblePosition(edgeSelection, position, edge);
   }
 
   public updateState(
     element: SVGGElement,
     edge: EntityEdge,
     state: TopologyEdgeState<MetricAggregationSpecification>,
-    domRenderer: Renderer2
+    domRenderer: Renderer2,
+    position?: TopologyEdgePositionInformation
   ): void {
     const selection = this.d3Utils.select(element, domRenderer);
-    const metricSpecifications = state.dataSpecifiers?.map(specifier => specifier.value);
+
+    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
+    const secondaryMetric = this.topologyDataSourceModelPropertiesService.getSecondaryEdgeMetric();
 
     this.updateEdgeMetric(
       selection,
       state.visibility,
-      getLatencyMetric(edge.data, metricSpecifications),
-      getErrorPercentageMetric(edge.data, metricSpecifications)
+      primaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
+      secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
+      primaryMetric?.extractDataForMetric(edge.data),
+      secondaryMetric?.extractDataForMetric(edge.data)
     );
     this.visibilityUpdater.updateVisibility(selection, state.visibility);
 
     // State can change the text of the label, which effects the bubble position
-    this.updateLabelBubblePosition(selection);
+    if (position) {
+      this.updateLabelBubblePosition(selection, position, edge);
+    }
   }
 
   protected updateEdgeMetric(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     visibility: TopologyElementVisibility,
-    latencyMetric?: PercentileLatencyMetricAggregation,
-    errorPercentageMetric?: ErrorPercentageMetricAggregation
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData,
+    primaryMetricAggregation?: MetricAggregation,
+    secondaryMetricAggregation?: MetricAggregation
   ): void {
-    const edgeCategoryClass = this.getEdgeCategoryClass(latencyMetric, errorPercentageMetric);
-    selection.classed(this.getAllCategoryClasses().join(' '), false).classed(edgeCategoryClass, true);
+    const edgeFocusedCategory = this.isEmphasizedOrFocused(visibility)
+      ? this.getEdgeFocusedCategory(primaryMetricCategory, secondaryMetricCategory)
+      : undefined;
+
+    selection
+      .select(selector(this.edgeLineClass))
+      .select('.edge-path')
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? Color.Gray2);
+
+    selection
+      .select(selector(this.edgeMetricBubbleClass))
+      .attr('fill', edgeFocusedCategory?.fillColor ?? '')
+      .attr('stroke', edgeFocusedCategory?.strokeColor ?? 'none');
 
     selection
       .select(selector(this.edgeMetricValueClass))
-      .text(this.getMetricValueString(latencyMetric, errorPercentageMetric));
+      .text(
+        this.getMetricValueString(
+          primaryMetricAggregation,
+          secondaryMetricAggregation,
+          primaryMetricCategory,
+          secondaryMetricCategory
+        )
+      );
 
     selection
       .select(selector(this.edgeLineClass))
       .attr(
         'marker-end',
-        visibility === TopologyElementVisibility.Emphasized || visibility === TopologyElementVisibility.Focused
-          ? `url(#${this.getMarkerIdForCategory(edgeCategoryClass)})`
+        this.isEmphasizedOrFocused(visibility)
+          ? `url(#${this.getMarkerIdForCategory(edgeFocusedCategory?.getCategoryClassName() ?? '')})`
           : 'none'
       );
   }
@@ -143,22 +160,26 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   }
 
   private defineArrowMarkersIfNeeded(edgeElement: SVGGElement, domRenderer: Renderer2): void {
+    const allEdgeCategories = this.topologyDataSourceModelPropertiesService.getAllEdgeCategories();
     this.d3Utils
       .select(this.svgUtils.addDefinitionDeclarationToSvgIfNotExists(edgeElement, domRenderer), domRenderer)
       .selectAll('marker')
-      .data(this.getAllCategoryClasses())
+      .data(allEdgeCategories)
       .enter()
       .append('marker')
-      .attr('id', category => this.getMarkerIdForCategory(category))
+      .attr('id', category => this.getMarkerIdForCategory(category.getCategoryClassName()))
       .attr('viewBox', '0 0 10 10')
       .attr('refX', 5)
       .attr('refY', 5)
       .attr('markerWidth', 12)
       .attr('markerHeight', 12)
       .attr('orient', 'auto-start-reverse')
+      .attr('fill', category => category.fillColor)
       .append('path')
       .classed(this.edgeArrowClass, true)
-      .each((category, index, elements) => this.d3Utils.select(elements[index], domRenderer).classed(category, true))
+      .each((category, index, elements) =>
+        this.d3Utils.select(elements[index], domRenderer).classed(category.getCategoryClassName(), true)
+      )
       .attr('d', 'M2,2 L5,5 L2,8');
   }
 
@@ -181,16 +202,14 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
     pathSelections.exit().remove();
 
-    pathSelections
-      .enter()
-      .append('path')
-      .merge(pathSelections)
-      .attr('d', data =>
-        linkHorizontal<TopologyEdgePositionInformation, Position>()
-          .x(datum => datum.x)
-          .y(datum => datum.y)(data)
-      )
-      .classed('edge-path', true);
+    const lineGenerator: Link<unknown, TopologyEdgePositionInformation, Position> = linkHorizontal<
+      TopologyEdgePositionInformation,
+      Position
+    >()
+      .x(datum => datum.x)
+      .y(datum => datum.y);
+
+    pathSelections.enter().append('path').merge(pathSelections).attr('d', lineGenerator).classed('edge-path', true);
   }
 
   private updateLabelPosition(
@@ -202,21 +221,57 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     selection.select(selector(this.edgeMetricValueClass)).attr('x', lineCenter.x).attr('y', lineCenter.y);
   }
 
-  private updateLabelBubblePosition(selection: Selection<SVGGElement, unknown, null, undefined>): void {
-    const metricLabelBox = this.getTextBBox(selection);
+  private updateLabelBubblePosition(
+    selection: Selection<SVGGElement, unknown, null, undefined>,
+    position: TopologyEdgePositionInformation,
+    edge: EntityEdge
+  ): void {
+    const textLen = this.getMetricTextForEdge(edge).length;
+    const lineCenter = this.generateLineCenterPoint(position);
+
+    const textWidth = textLen * this.getCharWidth();
+    const textHeight = this.getTextHeight();
+
+    const width = textWidth + 2 * this.getTextBubbleHorizontalPadding();
+    const height = textHeight + 2 * this.getTextBubbleVerticalPadding();
+    const x = lineCenter.x - textWidth / 2 - this.getTextBubbleHorizontalPadding();
+    const y = lineCenter.y - textHeight / 2 - this.getTextBubbleVerticalPadding();
 
     selection
       .select(selector(this.edgeMetricBubbleClass))
-      .attr('x', metricLabelBox.x - this.getTextBubbleHorizontalPadding())
-      .attr('y', metricLabelBox.y - this.getTextBubbleVerticalPadding())
-      .attr('width', metricLabelBox.width + 2 * this.getTextBubbleHorizontalPadding())
-      .attr('height', metricLabelBox.height + 2 * this.getTextBubbleVerticalPadding());
+      .attr('x', x)
+      .attr('y', y)
+      .attr('width', width)
+      .attr('height', height);
   }
 
-  private getTextBBox(selection: Selection<SVGGElement, unknown, null, undefined>): DOMRect {
-    return this.domElementMeasurerService.measureSvgElement(
-      selection.select<SVGTextElement>(selector(this.edgeMetricValueClass)).node()!
+  private getMetricTextForEdge(edge: EntityEdge): string {
+    const primaryMetric = this.topologyDataSourceModelPropertiesService.getPrimaryEdgeMetric();
+    const secondaryMetric = this.topologyDataSourceModelPropertiesService.getSecondaryEdgeMetric();
+
+    const primaryMetricCategory = primaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const secondaryMetricCategory = secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data);
+    const primaryMetricAggregation = primaryMetric?.extractDataForMetric(edge.data);
+    const secondaryMetricAggregation = secondaryMetric?.extractDataForMetric(edge.data);
+
+    return this.getMetricValueString(
+      primaryMetricAggregation,
+      secondaryMetricAggregation,
+      primaryMetricCategory,
+      secondaryMetricCategory
     );
+  }
+
+  private getTextHeight(): number {
+    return 14;
+  }
+
+  public getBubbleYOffset(): number {
+    return 8;
+  }
+
+  private getCharWidth(): number {
+    return 6;
   }
 
   private getTextBubbleHorizontalPadding(): number {
@@ -227,44 +282,30 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     return 2;
   }
 
-  protected getAllCategoryClasses(): string[] {
-    return [
-      ...allLatencyMetricCategories.map(getLatencyCategoryClass),
-      ...allErrorPercentageMetricCategories.map(getErrorPercentageCategoryClass)
-    ];
+  private isEmphasizedOrFocused(visibility: TopologyElementVisibility): boolean {
+    return visibility === TopologyElementVisibility.Emphasized || visibility === TopologyElementVisibility.Focused;
   }
 
-  private getEdgeCategoryClass(
-    latencyMetric?: PercentileLatencyMetricAggregation,
-    errorPercentageMetric?: ErrorPercentageMetricAggregation
-  ): string {
-    if (errorPercentageMetric?.category === ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5) {
-      return getErrorPercentageCategoryClass(errorPercentageMetric?.category);
-    }
-
-    if (latencyMetric) {
-      return getLatencyCategoryClass(latencyMetric.category);
-    }
-
-    return '';
+  private getEdgeFocusedCategory(
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData
+  ): TopologyMetricCategoryData | undefined {
+    return secondaryMetricCategory?.highestPrecedence ? secondaryMetricCategory : primaryMetricCategory;
   }
 
   private getMetricValueString(
-    latencyMetric?: PercentileLatencyMetricAggregation,
-    errorPercentageMetric?: ErrorPercentageMetricAggregation
+    primaryMetricAggregation?: MetricAggregation,
+    secondaryMetricAggregation?: MetricAggregation,
+    primaryMetricCategory?: TopologyMetricCategoryData,
+    secondaryMetricCategory?: TopologyMetricCategoryData
   ): string {
-    if (
-      errorPercentageMetric &&
-      (errorPercentageMetric.category === ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5 || !latencyMetric)
-    ) {
-      return this.formattedMetricValue(errorPercentageMetric.value, errorPercentageMetric.units);
+    if (secondaryMetricAggregation && (secondaryMetricCategory?.highestPrecedence === true || !primaryMetricCategory)) {
+      return this.formattedMetricValue(secondaryMetricAggregation.value, secondaryMetricAggregation?.units);
     }
 
-    if (latencyMetric) {
-      return this.formattedMetricValue(latencyMetric.value, latencyMetric.units);
-    }
-
-    return '-';
+    return primaryMetricAggregation
+      ? this.formattedMetricValue(primaryMetricAggregation.value, primaryMetricAggregation?.units)
+      : '-';
   }
 
   private formattedMetricValue(valueToShow: number, unit?: string): string {

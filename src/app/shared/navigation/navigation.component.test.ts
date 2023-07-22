@@ -1,12 +1,28 @@
 import { ActivatedRoute } from '@angular/router';
-import { NavigationService, PreferenceService } from '@hypertrace/common';
-import { LetAsyncModule, NavigationListComponent } from '@hypertrace/components';
+import {
+  LoggerService,
+  NavigationService,
+  PageTimeRangePreferenceService,
+  PreferenceService,
+  RelativeTimeRange,
+  TimeDuration,
+  TimeRangeService,
+  TimeUnit
+} from '@hypertrace/common';
+import {
+  LetAsyncModule,
+  NavigationListComponent,
+  NavigationListComponentService,
+  NavigationListService,
+  NavItemConfig
+} from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import { NavigationComponent } from './navigation.component';
 
 describe('NavigationComponent', () => {
+  const mockTimeRange = () => new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   const createComponent = createComponentFactory({
     component: NavigationComponent,
     shallow: true,
@@ -20,8 +36,27 @@ describe('NavigationComponent', () => {
           }
         })
       }),
+      mockProvider(NavigationListComponentService, {
+        resolveNavItemConfigTimeRanges: jest.fn().mockImplementation((navItems: NavItemConfig[]) =>
+          of(
+            navItems.map(navItem => ({
+              ...navItem,
+              pageLevelTimeRangeIsEnabled: true,
+              timeRangeResolver: mockTimeRange
+            }))
+          )
+        )
+      }),
+      mockProvider(TimeRangeService),
+      mockProvider(NavigationListService, {
+        decorateNavItem: jest
+          .fn()
+          .mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] } as NavItemConfig))
+      }),
       mockProvider(ActivatedRoute),
-      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) })
+      mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),
+      mockProvider(PageTimeRangePreferenceService),
+      mockProvider(LoggerService)
     ]
   });
   test('should decorate the config list', () => {
@@ -41,5 +76,12 @@ describe('NavigationComponent', () => {
     });
     spectator.triggerEventHandler(NavigationListComponent, 'collapsedChange', true);
     expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith('app-navigation.collapsed', true);
+  });
+
+  test('should decorate the config list with time ranges', () => {
+    const spectator = createComponent();
+    expect(spectator.query(NavigationListComponent)?.navItems).toContainEqual(
+      expect.objectContaining({ timeRangeResolver: mockTimeRange })
+    );
   });
 });

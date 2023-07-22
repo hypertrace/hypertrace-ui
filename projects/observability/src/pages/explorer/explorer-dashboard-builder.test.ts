@@ -1,13 +1,4 @@
 import { FilterBuilderLookupService, TableMode, TableStyle } from '@hypertrace/components';
-import {
-  AttributeMetadataType,
-  GraphQlFieldFilter,
-  GraphQlFilterDataSourceModel,
-  GraphQlOperatorType,
-  MetadataService,
-  MetricAggregationType,
-  TRACES_GQL_REQUEST
-} from '@hypertrace/distributed-tracing';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { capitalize } from 'lodash-es';
@@ -16,9 +7,16 @@ import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
-import { ExploreCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
+import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
+import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
+import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
+import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
+import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 
 describe('Explorer dashboard builder', () => {
@@ -43,7 +41,11 @@ describe('Explorer dashboard builder', () => {
             type: 'cartesian-widget',
             'selectable-interval': false,
             'series-from-data': true,
-            'legend-position': LegendPosition.Bottom
+            'legend-position': LegendPosition.Bottom,
+            'selection-handler': {
+              type: 'cartesian-explorer-selection-handler',
+              'show-context-menu': false
+            }
           },
           onReady: expect.any(Function)
         }
@@ -58,7 +60,9 @@ describe('Explorer dashboard builder', () => {
           getRootDataSource: jest.fn().mockReturnValue(mockDataSource)
         };
         generatedDashboard.onReady(mockDashboard as Dashboard);
-        expect(mockDashboard.createAndSetRootDataFromModelClass).toHaveBeenCalledWith(ExploreCartesianDataSourceModel);
+        expect(mockDashboard.createAndSetRootDataFromModelClass).toHaveBeenCalledWith(
+          ExplorerVisualizationCartesianDataSourceModel
+        );
         expect(mockDataSource.request).toBe(mockRequest);
         done();
       });
@@ -67,13 +71,12 @@ describe('Explorer dashboard builder', () => {
 
   test('can build dashboard JSON for traces', done => {
     const builder = new ExplorerDashboardBuilder(
-      // tslint:disable-next-line: no-object-literal-type-assertion
       {
         getAttribute: (_: never, name: string) =>
           of({
             name: name,
             displayName: capitalize(name),
-            type: AttributeMetadataType.Number
+            type: AttributeMetadataType.Long
           })
       } as MetadataService,
       MockService(FilterBuilderLookupService)
@@ -85,6 +88,7 @@ describe('Explorer dashboard builder', () => {
       const mockRequest: ExploreVisualizationRequest = {
         context: ObservabilityTraceType.Api,
         series: [series],
+        resultLimit: 1000,
         exploreQuery$: EMPTY,
         resultsQuery$: of({
           requestType: TRACES_GQL_REQUEST,
@@ -111,7 +115,7 @@ describe('Explorer dashboard builder', () => {
               type: 'trace-detail-widget',
               data: {
                 type: 'api-trace-detail-data-source',
-                // tslint:disable-next-line: no-invalid-template-strings
+
                 trace: '${row}',
                 attributes: ['requestUrl']
               }
@@ -120,9 +124,12 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Type' }),
               expect.objectContaining({ title: 'Service' }),
               expect.objectContaining({ title: 'Endpoint' }),
+              expect.objectContaining({ title: 'Exit Calls' }),
               expect.objectContaining({ title: 'Status' }),
+              expect.objectContaining({ title: 'Errors' }),
               expect.objectContaining({ title: 'Duration' }),
               expect.objectContaining({ title: 'Start Time' }),
+              expect.objectContaining({ title: 'End Time' }),
               expect.objectContaining({ title: 'API Boundary Type' }),
               expect.objectContaining({ title: 'API Discovery State' }),
               expect.objectContaining({ title: 'API ID' }),

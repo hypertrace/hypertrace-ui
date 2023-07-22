@@ -1,13 +1,11 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { GraphQlTimeRange, MetricAggregationType } from '@hypertrace/distributed-tracing';
 import { ModelApi } from '@hypertrace/hyperdash';
 import { mergeMap } from 'rxjs/operators';
+import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity';
+import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
-import {
-  EXPLORE_GQL_REQUEST,
-  GraphQlExploreRequest
-} from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
+import { EXPLORE_GQL_REQUEST, GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { TopNDataSourceModel } from './top-n-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
@@ -63,7 +61,7 @@ describe('Top N Data Source Model', () => {
         ]),
         filters: [],
         groupBy: expect.objectContaining({
-          keys: ['nameKey', 'idKey']
+          keyExpressions: [{ key: 'nameKey' }, { key: 'idKey' }]
         })
       })
     );

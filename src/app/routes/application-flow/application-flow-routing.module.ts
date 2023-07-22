@@ -1,10 +1,10 @@
 import { RouterModule } from '@angular/router';
 
 import { NgModule } from '@angular/core';
-import { TraceRoute } from '@hypertrace/common';
+import { HtRoute } from '@hypertrace/common';
 import { ApplicationFlowComponent, ApplicationFlowModule } from '@hypertrace/observability';
 
-const ROUTE_CONFIG: TraceRoute[] = [
+const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
     component: ApplicationFlowComponent

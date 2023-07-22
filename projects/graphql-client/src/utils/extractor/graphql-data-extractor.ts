@@ -31,7 +31,7 @@ export class GraphQlDataExtractor {
     response: T | T[]
   ): T[P] | T[P][] {
     if (Array.isArray(response)) {
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return response.map(singleResponse => this.getDataFromObject(propertyPath, singleResponse as any));
     }
 

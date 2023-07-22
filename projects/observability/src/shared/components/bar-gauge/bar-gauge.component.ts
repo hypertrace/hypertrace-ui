@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -24,13 +25,22 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bar-gauge" (htLayoutChange)="this.checkNearMaxValue()">
-      <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
-      <div class="count">
-        {{ this.totalValue | number }} / {{ this.maxValue | number }}
-        <span class="units" *ngIf="this.units">{{ this.units }}</span>
+      <div *ngIf="this.display !== '${BarGaugeStyle.SingleBar}'" class="header-data" [ngClass]="this.display">
+        <div *ngIf="this.title" class="title">{{ this.title | htDisplayTitle }}</div>
+        <div class="count" *ngIf="this.showCount">
+          <span>{{ this.totalValue | htDisplayNumber }}</span>
+          <span> / </span>
+          <span *ngIf="!this.isUnlimited">{{ this.maxValue | htDisplayNumber }}</span>
+          <span class="unlimited-symbol" *ngIf="this.isUnlimited">&#8734;</span>
+          <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
+        </div>
       </div>
-      <div class="bar">
-        <div #maxValueBar class="max-value-bar" [ngClass]="{ 'over-max-value': this.overMaxValue }">
+      <div class="bar" [ngClass]="[this.display, this.size]">
+        <div
+          #maxValueBar
+          class="max-value-bar"
+          [ngClass]="{ 'over-max-value': this.overMaxValue && this.isOverMaxBorderActive }"
+        >
           <div class="segment-bars">
             <div
               #segmentBars
@@ -39,16 +49,19 @@ import {
               [ngClass]="{ 'hide-last-divider': this.nearMaxValue }"
               [style.background]="segment.color"
               [style.width.%]="segment.percentage"
+              [htTooltip]="segment.tooltip ?? plainTooltip"
+              [htTooltipContext]="{ $implicit: segment }"
             >
               <div class="divider"></div>
+              <ng-template #plainTooltip> {{ segment.label }} : {{ segment.value | htDisplayNumber }} </ng-template>
             </div>
           </div>
         </div>
       </div>
-      <div class="legend">
+      <div *ngIf="this.showLegend" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
-          <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
+          <span class="legend-value">{{ segment.value | number }}</span>
           <span class="legend-label">{{ segment.label }}</span>
         </div>
       </div>
@@ -79,6 +92,24 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   @Input()
   public segments?: Segment[] = [];
 
+  @Input()
+  public isOverMaxBorderActive: boolean = true;
+
+  @Input()
+  public display: BarGaugeStyle = BarGaugeStyle.Regular;
+
+  @Input()
+  public size: BarGaugeSize = BarGaugeSize.Small; // Only used for single-bar display type as of now
+
+  @Input()
+  public isUnlimited: boolean = false;
+
+  @Input()
+  public showCount: boolean = true;
+
+  @Input()
+  public showLegend: boolean = false;
+
   public barSegments: BarSegment[] = [];
   public totalValue: number = 0;
   public overMaxValue: boolean = false;
@@ -105,6 +136,10 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   }
 
   public checkNearMaxValue(): void {
+    if (this.segmentBars.length === 0) {
+      return;
+    }
+
     /*
      * On the far right of each segment is a small 1px white vertical bar used to indicate the end of the segment.
      * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the
@@ -143,8 +178,24 @@ export interface Segment {
   label: string;
   value: number;
   color?: string;
+  tooltip?: string | TemplateRef<SegmentContext>;
 }
 
 interface BarSegment extends Segment {
   percentage: number;
+}
+
+export interface SegmentContext {
+  $implicit: BarSegment;
+}
+
+export const enum BarGaugeStyle {
+  Regular = 'regular',
+  Compact = 'compact',
+  SingleBar = 'single-bar'
+}
+
+export const enum BarGaugeSize {
+  Small = 'small',
+  Large = 'large'
 }
