@@ -91,7 +91,12 @@ export class LinkComponent implements OnChanges {
     }
 
     if (typeof this.paramsOrUrl !== 'string' && this.paramsOrUrl.navType === NavigationParamsType.External) {
-      return this.paramsOrUrl;
+      return {
+        ...this.paramsOrUrl,
+        url: this.paramsOrUrl.useGlobalParams
+          ? this.navigationService.constructExternalUrl(this.paramsOrUrl.url)
+          : this.paramsOrUrl.url
+      };
     }
 
     return undefined;
