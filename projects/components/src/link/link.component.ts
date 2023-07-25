@@ -6,7 +6,8 @@ import {
   NavigationParams,
   NavigationParamsType,
   NavigationPath,
-  NavigationService
+  NavigationService,
+  assertUnreachable
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
@@ -26,12 +27,8 @@ import { EMPTY, Observable } from 'rxjs';
           class="ht-link external"
           [ngClass]="{ disabled: this.disabled || !navData }"
           [attr.href]="this.externalNavParams.url"
-          [attr.target]="
-            this.externalNavParams.windowHandling === '${ExternalNavigationWindowHandling.NewWindow}'
-              ? '_blank'
-              : undefined
-          "
           [attr.aria-label]="this.ariaLabel"
+          (click)="this.onExternalLinkClick($event, this.externalNavParams)"
         >
           <ng-container *ngTemplateOutlet="contentHolder"></ng-container>
         </a>
@@ -75,6 +72,22 @@ export class LinkComponent implements OnChanges {
   public ngOnChanges(): void {
     this.externalNavParams = this.checkAndBuildExternalNavParams();
     this.navData$ = isNil(this.paramsOrUrl) ? EMPTY : this.navigationService.buildNavigationParams$(this.paramsOrUrl);
+  }
+
+  public onExternalLinkClick(event: MouseEvent, externalNavParams: ExternalNavigationParams): void {
+    event.preventDefault();
+    window.open(externalNavParams.url, this.asWindowName(externalNavParams.windowHandling));
+  }
+
+  private asWindowName(windowHandling: ExternalNavigationWindowHandling): string | undefined {
+    switch (windowHandling) {
+      case ExternalNavigationWindowHandling.SameWindow:
+        return '_self';
+      case ExternalNavigationWindowHandling.NewWindow:
+        return undefined;
+      default:
+        assertUnreachable(windowHandling);
+    }
   }
 
   private checkAndBuildExternalNavParams(): ExternalNavigationParams | undefined {

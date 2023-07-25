@@ -35,6 +35,8 @@ describe('Link component', () => {
   });
 
   test('Link should navigate correctly to external URLs', () => {
+    window.open = jest.fn();
+
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
         paramsOrUrl: 'http://test.hypertrace.ai'
@@ -62,7 +64,8 @@ describe('Link component', () => {
     expect(anchorElement).toExist();
     expect(anchorElement).not.toHaveClass('disabled');
     expect(anchorElement.href).toBe('http://test.hypertrace.ai/');
-    expect(anchorElement.target).toBe('');
+    spectator.click(anchorElement);
+    expect(window.open).toHaveBeenLastCalledWith('http://test.hypertrace.ai', '_self');
 
     // With new window
     spectator.setHostInput({
@@ -73,7 +76,8 @@ describe('Link component', () => {
       }
     });
     expect(anchorElement.href).toBe('http://localhost/test');
-    expect(anchorElement.target).toBe('_blank');
+    spectator.click(anchorElement);
+    expect(window.open).toHaveBeenLastCalledWith('/test', undefined);
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
