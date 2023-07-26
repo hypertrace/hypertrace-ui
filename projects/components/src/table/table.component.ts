@@ -288,6 +288,7 @@ export class TableComponent
   private static readonly PAGE_SIZE_URL_PARAM: string = 'page-size';
   private static readonly SORT_COLUMN_URL_PARAM: string = 'sort-by';
   private static readonly SORT_DIRECTION_URL_PARAM: string = 'sort-direction';
+  private static readonly SCROLLBAR_WIDTH_IN_PX: number = 15;
   private static readonly MIN_COLUMN_SIZE_PX: number = 12;
   private static readonly COLUMN_RESIZE_HANDLER_COLOR: string = Color.Blue4;
   public readonly minColumnWidth: string = '100px';
@@ -418,6 +419,9 @@ export class TableComponent
   @ViewChild('table', { read: ElementRef })
   private readonly table!: ElementRef;
 
+  @ViewChild('cdkTable', { read: ElementRef })
+  private readonly cdkTable!: ElementRef;
+
   @ViewChild(CdkHeaderRow, { read: ElementRef })
   public headerRowElement!: ElementRef;
 
@@ -480,6 +484,9 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
+  private hasColumnResized: boolean = false;
+  private initialColumnConfigIdWidthMap: Map<string, string | number> = new Map<string, string | number>();
+
   private tableWidth: number = 0;
   private resizeStartX: number = 0;
   private columnResizeHandler?: HTMLDivElement;
@@ -514,6 +521,10 @@ export class TableComponent
     if (this.tableWidth === 0) {
       this.tableWidth = latestTableWidth;
 
+      return;
+    }
+
+    if (!this.hasColumnResized) {
       return;
     }
 
@@ -654,8 +665,24 @@ export class TableComponent
         return;
       }
 
-      this.resizedColumn.config.width = `${this.resizedColumn.element.offsetWidth + offsetX}px`;
+      if (!this.hasColumnResized) {
+        this.updateColumnsWithPixelWidths();
+      }
+
+      const resizedWidth = `${this.resizedColumn.element.offsetWidth + offsetX}px`;
+      this.resizedColumn.config.width = resizedWidth;
+      this.initialColumnConfigIdWidthMap.set(this.resizedColumn.config.id, resizedWidth);
       this.setColumnResizeDefaults(this.columnResizeHandler);
+      this.hasColumnResized = true;
+    }
+  }
+
+  private updateColumnsWithPixelWidths(): void {
+    if (!isNil(this.headerCells)) {
+      (this.headerCells as QueryList<ElementRef<HTMLElement>>).forEach((cell, index) => {
+        const config = this.getVisibleColumnConfig(index);
+        config.width = `${cell.nativeElement.offsetWidth}px`;
+      });
     }
   }
 
@@ -687,22 +714,11 @@ export class TableComponent
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
     }
-    this.updateVisibleColumns(columnConfigurations.filter(column => column.visible));
+    const visibleColumns = columnConfigurations.filter(column => column.visible);
+    this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
+    this.updateVisibleColumns(visibleColumns);
 
     this.columnConfigsSubject.next(columnConfigurations);
-    this.checkAndUpdateColumnWidths();
-  }
-
-  // This changes column config `width` properties to PX widths after initialization.
-  private checkAndUpdateColumnWidths(): void {
-    if (!isNil(this.headerCells)) {
-      this.headerCells.changes.pipe(take(1)).subscribe(headerCells => {
-        (headerCells as QueryList<ElementRef<HTMLElement>>).forEach((cell, index) => {
-          const config = this.getVisibleColumnConfig(index);
-          config.width = `${cell.nativeElement.offsetWidth}px`;
-        });
-      });
-    }
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
@@ -1076,6 +1092,10 @@ export class TableComponent
   }
 
   private updateColumnWidthsOnTableLayoutChange(latestWidth: number): void {
+    if (!this.hasColumnResized) {
+      return;
+    }
+
     this.tableWidth = latestWidth;
     let totalColWidth = 0;
 
@@ -1093,12 +1113,32 @@ export class TableComponent
   }
 
   private distributeWidthToColumns(width: string | number): void {
-    const widthInPx = this.getColWidthInPx(width);
-    const nonStateVisibleColumnConfigs = this.visibleColumnConfigs.filter(column => !this.isStateColumn(column));
-    const widthPerColumn =
-      nonStateVisibleColumnConfigs.length > 0 ? widthInPx / nonStateVisibleColumnConfigs.length : 0;
+    if (!this.hasColumnResized) {
+      return;
+    }
 
-    nonStateVisibleColumnConfigs.forEach(column => {
+    const hasScrollbar =
+      this.table.nativeElement.scrollHeight -
+        this.table.nativeElement.offsetHeight +
+        (this.cdkTable.nativeElement.scrollHeight - this.cdkTable.nativeElement.offsetHeight) >
+      0;
+
+    const widthInPx = this.getColWidthInPx(width) - (hasScrollbar ? TableComponent.SCROLLBAR_WIDTH_IN_PX : 0);
+
+    const nonStateResizableVisibleColumnConfigs = this.visibleColumnConfigs
+      .filter(column => !this.isStateColumn(column))
+      .filter(column => {
+        const colWidth = this.initialColumnConfigIdWidthMap.get(column.id) ?? -1;
+        const isPxWidthColumn =
+          typeof colWidth === 'string' ? colWidth.substring(colWidth.length - 2) === 'px' : colWidth > -1;
+
+        return !isPxWidthColumn;
+      });
+
+    const widthPerColumn =
+      nonStateResizableVisibleColumnConfigs.length > 0 ? widthInPx / nonStateResizableVisibleColumnConfigs.length : 0;
+
+    nonStateResizableVisibleColumnConfigs.forEach(column => {
       const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
 
       column.width = `${columnWidthInPx + widthPerColumn}px`;
