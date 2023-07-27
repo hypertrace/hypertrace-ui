@@ -107,7 +107,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   private _pageSize?: number;
 
   @Input()
-  public set totalItems(totalItems: number) {
+  public set totalItems(totalItems: number | PaginatorTotalCode) {
     this._totalItems = totalItems;
     this.totalRecordsChange.emit(totalItems);
     this.recordsDisplayedChange.emit(Math.min(this.pageSize, totalItems));
@@ -265,7 +265,7 @@ const enum PaginatorButtonType {
   Prev = 'Prev'
 }
 
-export const PaginatorTotalCode: { Unknown: number; Last: number } = {
-  Unknown: -1,
-  Last: -2
-};
+export enum PaginatorTotalCode {
+  Unknown = -1,
+  Last = -2
+}
