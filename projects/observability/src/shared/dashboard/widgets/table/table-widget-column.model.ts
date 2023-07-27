@@ -2,6 +2,7 @@ import {
   CoreTableCellRendererType,
   TableCellAlignmentType,
   TableColumnConfig,
+  TableColumnWidth,
   TableRow,
   TableSortDirection
 } from '@hypertrace/components';
@@ -46,7 +47,7 @@ export class TableWidgetColumnModel {
     displayName: 'Width',
     type: STRING_PROPERTY.type
   })
-  public width?: string;
+  public width?: TableColumnWidth;
 
   @ModelProperty({
     key: 'alignment',

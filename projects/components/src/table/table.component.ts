@@ -55,6 +55,7 @@ import { TableDataSource } from './data/table-data-source';
 import {
   StatefulTableRow,
   TableColumnConfig,
+  TableColumnWidth,
   TableFilter,
   TableMode,
   TableRow,
@@ -683,6 +684,10 @@ export class TableComponent
   }
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
+    columnConfigs?.forEach(column => {
+      this.checkColumnWidthCompatibility(column.width);
+      this.checkColumnWidthCompatibility(column.minWidth);
+    });
     const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
@@ -691,6 +696,21 @@ export class TableComponent
 
     this.columnConfigsSubject.next(columnConfigurations);
     this.checkAndUpdateColumnWidths();
+  }
+
+  private checkColumnWidthCompatibility(width?: TableColumnWidth): void {
+    if (isNil(width) || typeof width === 'number') {
+      return;
+    }
+
+    const value = Number(width.substring(0, width.length - 2));
+    const unit = width.substring(width.length - 2);
+
+    if (!Number.isNaN(value) && (unit === 'px' || unit === '%')) {
+      return;
+    }
+
+    throw new Error(`Column width: ${width} is not compatible`);
   }
 
   // This changes column config `width` properties to PX widths after initialization.
