@@ -684,7 +684,7 @@ export class TableComponent
   }
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
-    columnConfigs?.forEach(column => {
+    (columnConfigs ?? this.columnConfigs ?? []).forEach(column => {
       this.checkColumnWidthCompatibility(column.width);
       this.checkColumnWidthCompatibility(column.minWidth);
     });
