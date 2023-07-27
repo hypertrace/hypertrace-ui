@@ -5,8 +5,8 @@ import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphq
 import { SPAN_SCOPE } from '../../../../../graphql/model/schema/span';
 import {
   GraphQlSpansRequest,
-  SpansResponse,
-  SPANS_GQL_REQUEST
+  SPANS_GQL_REQUEST,
+  SpansResponse
 } from '../../../../../graphql/request/handlers/spans/spans-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model'; // Todo: Fix this dependency
 import { TableDataSourceModel } from '../table-data-source.model';
@@ -25,7 +25,7 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
   ): GraphQlSpansRequest {
     return {
       requestType: SPANS_GQL_REQUEST,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns.filter(column => column.visible).map(column => column.specification),
       limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       sort: request.sort && {
