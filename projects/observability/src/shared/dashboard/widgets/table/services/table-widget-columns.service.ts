@@ -52,7 +52,7 @@ export class TableWidgetColumnsService {
       title: attribute.displayName,
       titleTooltip: attribute.displayName,
       alignment: this.lookupAlignment(attribute.type),
-      width: 1,
+      width: '1',
       visible: false,
       editable: true,
       filterable: this.isFilterable(attribute.type),

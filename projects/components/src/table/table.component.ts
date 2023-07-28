@@ -715,8 +715,8 @@ export class TableComponent
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
     (columnConfigs ?? this.columnConfigs ?? []).forEach(column => {
-      this.checkColumnWidthCompatibility(column.width);
-      this.checkColumnWidthCompatibility(column.minWidth);
+      this.checkColumnWidthCompatibilityOrThrow(column.width);
+      this.checkColumnWidthCompatibilityOrThrow(column.minWidth);
     });
     const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
@@ -729,19 +729,10 @@ export class TableComponent
     this.columnConfigsSubject.next(columnConfigurations);
   }
 
-  private checkColumnWidthCompatibility(width?: TableColumnWidth): void {
-    if (isNil(width) || typeof width === 'number') {
-      return;
+  private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
+    if (!TableColumnWidthUtil.isWidthCompatible(width)) {
+      throw new Error(`Column width: ${width} is not compatible`);
     }
-
-    const value = Number(width.substring(0, width.length - 2));
-    const unit = width.substring(width.length - 2);
-
-    if (!Number.isNaN(value) && (unit === 'px' || unit === '%')) {
-      return;
-    }
-
-    throw new Error(`Column width: ${width} is not compatible`);
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {

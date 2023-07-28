@@ -26,7 +26,7 @@ export interface TableColumnConfig<TableColumnOptions = unknown> {
   filterable?: boolean;
   alignment?: TableCellAlignmentType;
   width?: TableColumnWidth;
-  minWidth?: TableColumnWidth;
+  minWidth?: TableColumnFixedWidth;
   /**
    * Use the `options` to pass additional data to the renderer for
    * customizations.
@@ -107,7 +107,7 @@ export const enum TableSelectionMode {
 
 export type TableColumnWidth = TableColumnFlexWidth | TableColumnFixedWidth;
 
-export type TableColumnFlexWidth = number;
+export type TableColumnFlexWidth = `${number}`;
 
 // Keeping `%` widths for minimal blast radius
 export type TableColumnFixedWidth = `${number}%` | `${number}px`;

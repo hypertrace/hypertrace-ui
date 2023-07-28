@@ -55,7 +55,7 @@ describe('Table Widget Column service', () => {
             title: 'Boolean Attribute',
             titleTooltip: 'Boolean Attribute',
             visible: false,
-            width: 1
+            width: '1'
           },
           {
             alignment: 'left',
@@ -70,7 +70,7 @@ describe('Table Widget Column service', () => {
             title: 'String Array Attribute',
             titleTooltip: 'String Array Attribute',
             visible: false,
-            width: 1
+            width: '1'
           },
           {
             alignment: 'left',
@@ -85,7 +85,7 @@ describe('Table Widget Column service', () => {
             title: 'String Map Attribute',
             titleTooltip: 'String Map Attribute',
             visible: false,
-            width: 1
+            width: '1'
           },
           {
             alignment: 'right',
@@ -100,7 +100,7 @@ describe('Table Widget Column service', () => {
             title: 'Timestamp Attribute',
             titleTooltip: 'Timestamp Attribute',
             visible: false,
-            width: 1
+            width: '1'
           }
         ]
       });

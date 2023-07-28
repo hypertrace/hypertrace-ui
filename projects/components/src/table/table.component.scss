@@ -92,8 +92,8 @@ $data-row-border: 1px solid $gray-2;
 }
 
 .header-cell {
-  flex: 1 0;
   position: relative;
+  flex-shrink: 0;
 
   .header-cell-container {
     @include fill-container;
