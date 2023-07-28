@@ -22,7 +22,7 @@ export const backendTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Name',
-        width: '10%',
+        width: 1,
         filterable: true,
         value: {
           type: 'attribute-specification',

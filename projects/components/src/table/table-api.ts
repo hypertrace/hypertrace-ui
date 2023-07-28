@@ -105,4 +105,9 @@ export const enum TableSelectionMode {
   Multiple = 'multiple'
 }
 
-export type TableColumnWidth = number | `${number}%` | `${number}px`;
+export type TableColumnWidth = TableColumnFlexWidth | TableColumnFixedWidth;
+
+export type TableColumnFlexWidth = number;
+
+// Keeping `%` widths for minimal blast radius
+export type TableColumnFixedWidth = `${number}%` | `${number}px`;

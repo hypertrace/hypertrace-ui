@@ -67,6 +67,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { TableColumnWidthUtil } from './util/column-width.util';
 
 @Component({
   selector: 'ht-table',
@@ -94,9 +95,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
             <cdk-header-cell
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
-              [style.flex-basis]="columnDef.width"
-              [style.max-width]="columnDef.width"
-              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
+              [style.flex-basis]="this.getFlexBasis | htMemoize: columnDef.width"
+              [style.max-width]="this.getWidth | htMemoize: columnDef.width"
+              [style.min-width]="this.getMinWidth | htMemoize: columnDef.minWidth"
+              [style.flex-grow]="this.getFlexGrow | htMemoize: columnDef.width"
               class="header-cell"
               [ngClass]="{
                 'state-col': this.isStateColumn | htMemoize: columnDef,
@@ -159,9 +161,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
             </cdk-header-cell>
             <cdk-cell
               *cdkCellDef="let row"
-              [style.flex-basis]="columnDef.width"
-              [style.min-width]="columnDef.minWidth ?? columnDef.width ?? this.minColumnWidth"
-              [style.max-width]="columnDef.width"
+              [style.flex-basis]="this.getFlexBasis | htMemoize: columnDef.width"
+              [style.max-width]="this.getWidth | htMemoize: columnDef.width"
+              [style.min-width]="this.getMinWidth | htMemoize: columnDef.minWidth"
+              [style.flex-grow]="this.getFlexGrow | htMemoize: columnDef.width"
               [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
               [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
               [ngClass]="{
@@ -1058,6 +1061,22 @@ export class TableComponent
 
   public isRowExpanded(row: StatefulTableRow): boolean {
     return this.hasExpandableRows() && row.$$state.expanded;
+  }
+
+  public getWidth(value?: TableColumnWidth): string | undefined {
+    return TableColumnWidthUtil.getWidth(value);
+  }
+
+  public getMinWidth(value?: TableColumnWidth): string {
+    return TableColumnWidthUtil.getMinWidth(value);
+  }
+
+  public getFlexGrow(value?: TableColumnWidth): number | undefined {
+    return TableColumnWidthUtil.getFlexGrow(value);
+  }
+
+  public getFlexBasis(value?: TableColumnWidth): string | undefined {
+    return TableColumnWidthUtil.getWidth(value);
   }
 
   public onPageChange(pageEvent: PageEvent): void {
