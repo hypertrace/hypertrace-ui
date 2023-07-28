@@ -7,7 +7,14 @@ import {
   TableSortDirection
 } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import {
+  BOOLEAN_PROPERTY,
+  Model,
+  ModelProperty,
+  ModelPropertyType,
+  STRING_PROPERTY,
+  UNKNOWN_PROPERTY
+} from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -45,7 +52,7 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'width',
     displayName: 'Width',
-    type: STRING_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type
   })
   public width?: TableColumnWidth;
 

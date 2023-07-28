@@ -1,9 +1,8 @@
-import { isNumber } from 'lodash-es';
 import { TableColumnWidth } from '../table-api';
 
 export abstract class TableColumnWidthUtil {
   public static isWidthCompatible(width?: TableColumnWidth): boolean {
-    if (width === undefined || isNumber(Number(width))) {
+    if (width === undefined || typeof width === 'number') {
       return true;
     }
 
@@ -27,7 +26,7 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getWidth(value?: TableColumnWidth): string | undefined {
-    if (value === undefined || isNumber(Number(value))) {
+    if (value === undefined || typeof value === 'number') {
       return undefined;
     }
 
@@ -35,7 +34,7 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getMinWidth(value?: TableColumnWidth): string {
-    if (value === undefined || isNumber(Number(value))) {
+    if (value === undefined || typeof value === 'number') {
       return '0px';
     }
 
@@ -43,20 +42,16 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getFlexGrow(value?: TableColumnWidth): number | undefined {
-    if (value === undefined) {
-      return 1;
-    }
-
-    if (isNumber(Number(value))) {
-      return Number(value);
+    if (value === undefined || typeof value === 'number') {
+      return value ?? 1;
     }
 
     return undefined;
   }
 
   public static getFlexBasis(value?: TableColumnWidth): string | undefined {
-    if (value === undefined || isNumber(Number(value))) {
-      return undefined;
+    if (value === undefined || typeof value === 'number') {
+      return '0px';
     }
 
     return value;

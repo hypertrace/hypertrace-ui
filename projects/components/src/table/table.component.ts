@@ -1067,7 +1067,7 @@ export class TableComponent
   }
 
   public getFlexBasis(value?: TableColumnWidth): string | undefined {
-    return TableColumnWidthUtil.getWidth(value);
+    return TableColumnWidthUtil.getFlexBasis(value);
   }
 
   public onPageChange(pageEvent: PageEvent): void {
