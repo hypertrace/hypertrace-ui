@@ -25,8 +25,8 @@ export interface TableColumnConfig<TableColumnOptions = unknown> {
   sortable?: boolean;
   filterable?: boolean;
   alignment?: TableCellAlignmentType;
-  width?: number | string;
-  minWidth?: number | string;
+  width?: TableColumnWidth;
+  minWidth?: TableColumnWidth;
   /**
    * Use the `options` to pass additional data to the renderer for
    * customizations.
@@ -104,3 +104,5 @@ export const enum TableSelectionMode {
   Single = 'single',
   Multiple = 'multiple'
 }
+
+export type TableColumnWidth = number | `${number}%` | `${number}px`;

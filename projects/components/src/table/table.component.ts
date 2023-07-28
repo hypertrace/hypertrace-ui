@@ -55,6 +55,7 @@ import { TableDataSource } from './data/table-data-source';
 import {
   StatefulTableRow,
   TableColumnConfig,
+  TableColumnWidth,
   TableFilter,
   TableMode,
   TableRow,
@@ -669,7 +670,7 @@ export class TableComponent
         this.updateColumnsWithPixelWidths();
       }
 
-      const resizedWidth = `${this.resizedColumn.element.offsetWidth + offsetX}px`;
+      const resizedWidth: TableColumnWidth = `${this.resizedColumn.element.offsetWidth + offsetX}px`;
       this.resizedColumn.config.width = resizedWidth;
       this.initialColumnConfigIdWidthMap.set(this.resizedColumn.config.id, resizedWidth);
       this.setColumnResizeDefaults(this.columnResizeHandler);
@@ -710,6 +711,10 @@ export class TableComponent
   }
 
   private initializeColumns(columnConfigs?: TableColumnConfigExtended[]): void {
+    (columnConfigs ?? this.columnConfigs ?? []).forEach(column => {
+      this.checkColumnWidthCompatibility(column.width);
+      this.checkColumnWidthCompatibility(column.minWidth);
+    });
     const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
@@ -719,6 +724,21 @@ export class TableComponent
     this.updateVisibleColumns(visibleColumns);
 
     this.columnConfigsSubject.next(columnConfigurations);
+  }
+
+  private checkColumnWidthCompatibility(width?: TableColumnWidth): void {
+    if (isNil(width) || typeof width === 'number') {
+      return;
+    }
+
+    const value = Number(width.substring(0, width.length - 2));
+    const unit = width.substring(width.length - 2);
+
+    if (!Number.isNaN(value) && (unit === 'px' || unit === '%')) {
+      return;
+    }
+
+    throw new Error(`Column width: ${width} is not compatible`);
   }
 
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
