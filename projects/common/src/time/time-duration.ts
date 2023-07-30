@@ -1,8 +1,19 @@
 import { parse, toSeconds } from 'iso8601-duration';
+import { indexOf, isNil } from 'lodash-es';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 import { TimeUnit } from './time-unit.type';
 
 export class TimeDuration {
+  private static readonly TIME_UNITS: ConvertibleTimeUnit[] = [
+    TimeUnit.Year,
+    TimeUnit.Month,
+    TimeUnit.Week,
+    TimeUnit.Day,
+    TimeUnit.Hour,
+    TimeUnit.Minute,
+    TimeUnit.Second,
+    TimeUnit.Millisecond
+  ];
   private readonly millis: number;
 
   public constructor(public readonly value: number, public readonly unit: TimeUnit) {
@@ -52,17 +63,10 @@ export class TimeDuration {
     return unitStringType === UnitStringType.Short ? this.toString() : this.toLongString();
   }
 
-  public getMostSignificantUnitOnly(): TimeDuration {
-    const orderedUnits: ConvertibleTimeUnit[] = [
-      TimeUnit.Year,
-      TimeUnit.Month,
-      TimeUnit.Week,
-      TimeUnit.Day,
-      TimeUnit.Hour,
-      TimeUnit.Minute,
-      TimeUnit.Second,
-      TimeUnit.Millisecond
-    ];
+  public getMostSignificantUnitOnly(maxSupportedUnit?: TimeUnit): TimeDuration {
+    let orderedUnits: ConvertibleTimeUnit[] = isNil(maxSupportedUnit)
+      ? TimeDuration.TIME_UNITS
+      : TimeDuration.TIME_UNITS.slice(indexOf(TimeDuration.TIME_UNITS, maxSupportedUnit));
 
     const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
