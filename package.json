@@ -106,7 +106,7 @@
     "@typescript-eslint/parser": "5.62.0",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.43.0",
+    "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsdoc": "46.4.4",
