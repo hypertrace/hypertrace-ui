@@ -2,7 +2,7 @@ import { TableColumnWidth } from '../table-api';
 
 export abstract class TableColumnWidthUtil {
   public static isWidthCompatible(width?: TableColumnWidth): boolean {
-    if (width === undefined || typeof width === 'number') {
+    if (this.isNumberOrUndefined(width)) {
       return true;
     }
 
@@ -26,7 +26,7 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getWidth(value?: TableColumnWidth): string | undefined {
-    if (value === undefined || typeof value === 'number') {
+    if (this.isNumberOrUndefined(value)) {
       return undefined;
     }
 
@@ -34,7 +34,7 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getMinWidth(value?: TableColumnWidth): string {
-    if (value === undefined || typeof value === 'number') {
+    if (this.isNumberOrUndefined(value)) {
       return '0px';
     }
 
@@ -42,7 +42,7 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getFlexGrow(value?: TableColumnWidth): number | undefined {
-    if (value === undefined || typeof value === 'number') {
+    if (this.isNumberOrUndefined(value)) {
       return value ?? 1;
     }
 
@@ -50,10 +50,33 @@ export abstract class TableColumnWidthUtil {
   }
 
   public static getFlexBasis(value?: TableColumnWidth): string | undefined {
-    if (value === undefined || typeof value === 'number') {
+    if (this.isNumberOrUndefined(value)) {
       return '0px';
     }
 
     return value;
+  }
+
+  public static isPxWidthColumn(width?: TableColumnWidth): boolean {
+    if (typeof width === 'string') {
+      let value = Number(width.substring(0, width.length - 2));
+      let unit = width.substring(width.length - 2);
+
+      if (!Number.isNaN(value) && unit === 'px') {
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
+  }
+
+  public static getColWidthInPx(width?: TableColumnWidth): number {
+    return typeof width === 'string' && this.isPxWidthColumn(width) ? Number(width.substring(0, width.length - 2)) : 0;
+  }
+
+  private static isNumberOrUndefined(value?: TableColumnWidth): value is number | undefined {
+    return value === undefined || typeof value === 'number';
   }
 }

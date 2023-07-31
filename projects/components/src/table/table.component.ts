@@ -33,7 +33,7 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, isNumber, without } from 'lodash-es';
+import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { switchMap, take, filter, map } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -95,10 +95,7 @@ import { TableColumnWidthUtil } from './util/column-width.util';
             <cdk-header-cell
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
-              [style.flex-basis]="this.getFlexBasis | htMemoize: columnDef.width"
-              [style.max-width]="this.getWidth | htMemoize: columnDef.width"
-              [style.min-width]="this.getMinWidth | htMemoize: columnDef.minWidth"
-              [style.flex-grow]="this.getFlexGrow | htMemoize: columnDef.width"
+              [ngStyle]="this.getHeaderColumnStyles | htMemoize: columnDef"
               class="header-cell"
               [ngClass]="{
                 'state-col': this.isStateColumn | htMemoize: columnDef,
@@ -161,12 +158,7 @@ import { TableColumnWidthUtil } from './util/column-width.util';
             </cdk-header-cell>
             <cdk-cell
               *cdkCellDef="let row"
-              [style.flex-basis]="this.getFlexBasis | htMemoize: columnDef.width"
-              [style.max-width]="this.getWidth | htMemoize: columnDef.width"
-              [style.min-width]="this.getMinWidth | htMemoize: columnDef.minWidth"
-              [style.flex-grow]="this.getFlexGrow | htMemoize: columnDef.width"
-              [style.margin-left]="index === 0 ? this.calcLeftMarginIndent(row) : 0"
-              [style.margin-right]="index === 1 ? this.calcRightMarginIndent(row, columnDef) : 0"
+              [ngStyle]="this.getDataColumnStyles | htMemoize: columnDef:index:row"
               [ngClass]="{
                 'detail-expanded': this.isDetailExpanded(row),
                 'hide-divider': this.isDetailList(),
@@ -488,8 +480,9 @@ export class TableComponent
   public dataSource?: TableCdkDataSource;
   public isTableFullPage: boolean = false;
 
+  // Ensures whether columns have Pixel widths or not
   private hasColumnResized: boolean = false;
-  private initialColumnConfigIdWidthMap: Map<string, string | number> = new Map<string, string | number>();
+  private initialColumnConfigIdWidthMap: Map<string, TableColumnWidth> = new Map<string, TableColumnWidth>();
 
   private tableWidth: number = 0;
   private resizeStartX: number = 0;
@@ -829,7 +822,7 @@ export class TableComponent
     column.visible = false;
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
-    this.distributeWidthToColumns(column.width ?? 0);
+    this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
     this.columnConfigsSubject.next(updatedColumns);
   }
 
@@ -1054,20 +1047,25 @@ export class TableComponent
     return this.hasExpandableRows() && row.$$state.expanded;
   }
 
-  public getWidth(value?: TableColumnWidth): string | undefined {
-    return TableColumnWidthUtil.getWidth(value);
+  public getHeaderColumnStyles(column: TableColumnConfigExtended): Dictionary<string | number | undefined> {
+    return {
+      'max-width': TableColumnWidthUtil.getWidth(column.width),
+      'min-width': TableColumnWidthUtil.getMinWidth(column.minWidth),
+      'flex-grow': TableColumnWidthUtil.getFlexGrow(column.width),
+      'flex-basis': TableColumnWidthUtil.getFlexBasis(column.width)
+    };
   }
 
-  public getMinWidth(value?: TableColumnWidth): string {
-    return TableColumnWidthUtil.getMinWidth(value);
-  }
-
-  public getFlexGrow(value?: TableColumnWidth): number | undefined {
-    return TableColumnWidthUtil.getFlexGrow(value);
-  }
-
-  public getFlexBasis(value?: TableColumnWidth): string | undefined {
-    return TableColumnWidthUtil.getFlexBasis(value);
+  public getDataColumnStyles(
+    column: TableColumnConfigExtended,
+    index: number,
+    row: StatefulTableRow
+  ): Dictionary<string | number | undefined> {
+    return {
+      ...this.getHeaderColumnStyles(column),
+      'margin-left': index === 0 ? this.calcLeftMarginIndent(row) : 0,
+      'margin-right': index === 1 ? this.calcRightMarginIndent(row, column) : 0
+    };
   }
 
   public onPageChange(pageEvent: PageEvent): void {
@@ -1130,7 +1128,7 @@ export class TableComponent
     let totalColWidth = 0;
 
     this.visibleColumnConfigs.forEach(column => {
-      const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
+      const columnWidthInPx = TableColumnWidthUtil.getColWidthInPx(column.width);
 
       totalColWidth += columnWidthInPx;
     });
@@ -1142,42 +1140,29 @@ export class TableComponent
     this.distributeWidthToColumns(latestWidth - totalColWidth);
   }
 
-  private distributeWidthToColumns(width: string | number): void {
+  private distributeWidthToColumns(pixelWidth: number): void {
     if (!this.hasColumnResized) {
       return;
     }
 
-    const hasScrollbar =
-      this.table.nativeElement.scrollHeight -
-        this.table.nativeElement.offsetHeight +
-        (this.cdkTable.nativeElement.scrollHeight - this.cdkTable.nativeElement.offsetHeight) >
-      0;
+    const tableHeightOffset = this.table.nativeElement.scrollHeight - this.table.nativeElement.offsetHeight;
+    const cdkTableHeightOffset = this.cdkTable.nativeElement.scrollHeight - this.cdkTable.nativeElement.offsetHeight;
+    const hasScrollbar = tableHeightOffset > 0 || cdkTableHeightOffset > 0;
 
-    const widthInPx = this.getColWidthInPx(width) - (hasScrollbar ? TableComponent.SCROLLBAR_WIDTH_IN_PX : 0);
+    const width = pixelWidth - (hasScrollbar ? TableComponent.SCROLLBAR_WIDTH_IN_PX : 0);
 
     const nonStateResizableVisibleColumnConfigs = this.visibleColumnConfigs
       .filter(column => !this.isStateColumn(column))
-      .filter(column => {
-        const colWidth = this.initialColumnConfigIdWidthMap.get(column.id) ?? -1;
-        const isPxWidthColumn =
-          typeof colWidth === 'string' ? colWidth.substring(colWidth.length - 2) === 'px' : colWidth > -1;
-
-        return !isPxWidthColumn;
-      });
+      .filter(column => !TableColumnWidthUtil.isPxWidthColumn(this.initialColumnConfigIdWidthMap.get(column.id) ?? -1));
 
     const widthPerColumn =
-      nonStateResizableVisibleColumnConfigs.length > 0 ? widthInPx / nonStateResizableVisibleColumnConfigs.length : 0;
+      nonStateResizableVisibleColumnConfigs.length > 0 ? width / nonStateResizableVisibleColumnConfigs.length : 0;
 
     nonStateResizableVisibleColumnConfigs.forEach(column => {
-      const columnWidthInPx = this.getColWidthInPx(column.width ?? 0);
+      const columnWidthInPx = TableColumnWidthUtil.getColWidthInPx(column.width);
 
       column.width = `${columnWidthInPx + widthPerColumn}px`;
     });
-  }
-
-  // Converts width `123px` to `123`
-  private getColWidthInPx(width: string | number): number {
-    return isNumber(width) ? width : Number(width.substring(0, width.length - 2));
   }
 }
 

@@ -25,7 +25,14 @@ export interface TableColumnConfig<TableColumnOptions = unknown> {
   sortable?: boolean;
   filterable?: boolean;
   alignment?: TableCellAlignmentType;
+  /**
+   * Passing a `number` is considered as flex-grow
+   * Width can also be passed as `px` or `%`
+   */
   width?: TableColumnWidth;
+  /**
+   * Min Width can be passed as `px` or `%`
+   */
   minWidth?: TableColumnFixedWidth;
   /**
    * Use the `options` to pass additional data to the renderer for
