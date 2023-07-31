@@ -67,7 +67,16 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       traceId: trace[traceIdKey],
       statusCode: trace.statusCode as string,
       tags: trace.tags as Dictionary<unknown>,
-      requestUrl: trace.requestUrl as string
+      requestUrl: trace.requestUrl as string,
+      requestBody: trace.requestBody as string,
+      requestHeaders: trace.requestHeaders as Dictionary<unknown>,
+      ipAddress: trace.ipAddress as string,
+      userId: trace.userIdentifier as string,
+      userAgent: trace.userAgent as string,
+      userCountry: trace.userCountry as string,
+      apiName: trace.apiName as string,
+      responseBody: trace.responseBody as string,
+      responseHeader: trace.responseHeaders as Dictionary<unknown>
     };
   }
 }
@@ -77,4 +86,13 @@ export interface TraceDetailData {
   statusCode: string;
   tags: Dictionary<unknown>;
   requestUrl: string;
+  requestBody: string;
+  requestHeaders: Dictionary<unknown>;
+  ipAddress: string;
+  userId: string;
+  userAgent: string;
+  userCountry: string;
+  apiName: string;
+  responseBody: string;
+  responseHeader: Dictionary<unknown>;
 }

@@ -1,5 +1,5 @@
 import { ActivatedRouteSnapshot, convertToParamMap } from '@angular/router';
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import {
   ExternalNavigationPathParams,
   ExternalNavigationWindowHandling,
@@ -8,18 +8,39 @@ import {
 import { ExternalUrlNavigator } from './external-url-navigator';
 
 describe('External URL navigator', () => {
-  let spectator: SpectatorService<ExternalUrlNavigator>;
   const buildNavigator = createServiceFactory({
     service: ExternalUrlNavigator,
-    providers: [mockProvider(NavigationService)]
+    providers: [
+      mockProvider(NavigationService, {
+        canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(true),
+        firstNavigatedUrl: '/test-url'
+      })
+    ]
   });
 
   beforeEach(() => {
-    spectator = buildNavigator();
     window.open = jest.fn();
   });
 
+  test('goes to error page on first navigation as external navigation', () => {
+    const spectator = buildNavigator({
+      providers: [
+        mockProvider(NavigationService, {
+          canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(false),
+          firstNavigatedUrl: '/external'
+        })
+      ]
+    });
+    spectator.service.canActivate({
+      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
+    } as ActivatedRouteSnapshot);
+
+    expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalledTimes(1);
+  });
+
   test('goes back when unable to detect a url on navigation', () => {
+    const spectator = buildNavigator();
+
     spectator.service.canActivate({
       paramMap: convertToParamMap({})
     } as ActivatedRouteSnapshot);
@@ -37,6 +58,8 @@ describe('External URL navigator', () => {
   });
 
   test('navigates when a url is provided', () => {
+    const spectator = buildNavigator();
+
     spectator.service.canActivate({
       paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
     } as ActivatedRouteSnapshot);

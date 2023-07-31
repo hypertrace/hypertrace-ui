@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { SelectOption } from '@hypertrace/components';
+import { SelectOption, SelectSearchMode } from '@hypertrace/components';
 import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
@@ -21,6 +21,7 @@ import { ExploreOrderBy } from '../explore-visualization-builder';
           <span class="order-by-label"> Attribute </span>
           <ht-select
             class="attribute-selector"
+            searchMode="${SelectSearchMode.CaseInsensitive}"
             [selected]="this.selectedAttribute$ | async"
             [showBorder]="true"
             (selectedChange)="this.onAttributeChange($event)"

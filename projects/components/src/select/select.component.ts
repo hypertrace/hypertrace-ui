@@ -182,7 +182,7 @@ import { SelectSize } from './select-size';
               <ht-icon
                 class="status-icon"
                 *ngIf="showSelectionStatus && this.highlightSelected && this.isSelectedItem(item)"
-                icon="${IconType.Checkmark}"
+                icon="${IconType.Done}"
                 size="${IconSize.Small}"
               ></ht-icon>
             </div>
@@ -247,7 +247,7 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public searchMode: SelectSearchMode = SelectSearchMode.Disabled;
 
   @Output()
-  public readonly selectedChange: EventEmitter<V> = new EventEmitter<V>();
+  public readonly selectedChange: EventEmitter<V | undefined> = new EventEmitter<V | undefined>();
 
   @Output()
   public readonly searchValueChange: EventEmitter<string> = new EventEmitter<string>();

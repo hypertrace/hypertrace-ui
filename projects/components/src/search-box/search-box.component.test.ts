@@ -1,11 +1,18 @@
-import { fakeAsync } from '@angular/core/testing';
-import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
+import { fakeAsync, flush } from '@angular/core/testing';
+import { FeatureState, FeatureStateResolver, IsEmptyPipeModule } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { SearchBoxComponent, SearchBoxDisplayMode, SearchBoxEmitMode } from './search-box.component';
+import { PopoverService } from '../popover/popover.service';
 
 describe('Search box Component', () => {
+  const testPopoverRef = {
+    closeOnBackdropClick: jest.fn(),
+    closeOnPopoverContentClick: jest.fn(),
+    close: jest.fn()
+  };
+
   let spectator: Spectator<SearchBoxComponent>;
 
   const createHost = createHostFactory({
@@ -14,8 +21,12 @@ describe('Search box Component', () => {
     providers: [
       mockProvider(FeatureStateResolver, {
         getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+      }),
+      mockProvider(PopoverService, {
+        drawPopover: jest.fn().mockReturnValue(testPopoverRef)
       })
-    ]
+    ],
+    imports: [IsEmptyPipeModule]
   });
 
   test('should work with default values', fakeAsync(() => {
@@ -106,5 +117,41 @@ describe('Search box Component', () => {
       spectator.triggerEventHandler('input', 'input', spectator.component.value);
       spectator.tick();
     });
+  }));
+
+  test('enabled search history should work as expected', fakeAsync(() => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.Incremental,
+          enableSearchHistory: true
+        }
+      }
+    );
+
+    const searchBoxELement = spectator.query('.ht-search-box')!;
+    expect(searchBoxELement).toHaveClass('with-search-history');
+    expect(searchBoxELement).not.toHaveClass('has-value');
+    expect(searchBoxELement).not.toHaveClass('focused');
+
+    spectator.click('.icon.search');
+    expect(searchBoxELement).toHaveClass('focused');
+    expect(spectator.inject(PopoverService).drawPopover).not.toHaveBeenCalled();
+
+    const inputElement = spectator.query('input') as HTMLInputElement;
+    spectator.setInput({ value: 'test-value' });
+    spectator.triggerEventHandler('input', 'input', 'test-value');
+    expect(searchBoxELement).toHaveClass('has-value');
+    spectator.tick(500);
+
+    inputElement.blur();
+    spectator.click('.icon.close');
+    spectator.tick(500);
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
+
+    flush();
   }));
 });

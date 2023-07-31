@@ -380,7 +380,7 @@ interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
   value: ExplorerContextScope;
 }
 
-interface InitialExplorerState {
+export interface InitialExplorerState {
   contextToggle: ContextToggleItem;
   series: ExploreSeries[];
   interval?: IntervalValue;
