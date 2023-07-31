@@ -1056,17 +1056,15 @@ export class TableComponent
     };
   }
 
-  public getDataColumnStyles(
+  public getDataColumnStyles = (
     column: TableColumnConfigExtended,
     index: number,
     row: StatefulTableRow
-  ): Dictionary<string | number | undefined> {
-    return {
-      ...this.getHeaderColumnStyles(column),
-      'margin-left': index === 0 ? this.calcLeftMarginIndent(row) : 0,
-      'margin-right': index === 1 ? this.calcRightMarginIndent(row, column) : 0
-    };
-  }
+  ): Dictionary<string | number | undefined> => ({
+    ...this.getHeaderColumnStyles(column),
+    'margin-left': index === 0 ? this.calcLeftMarginIndent(row) : 0,
+    'margin-right': index === 1 ? this.calcRightMarginIndent(row, column) : 0
+  });
 
   public onPageChange(pageEvent: PageEvent): void {
     this.pageSubject.next(pageEvent);
