@@ -21,14 +21,10 @@ import { PaginationProvider } from './paginator-api';
   styleUrls: ['./paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      class="paginator"
-      [class.compact]="this.showCompactView"
-      *ngIf="this.totalItems && this.totalItems >= this.minItemsBeforeDisplay"
-    >
+    <div class="paginator" [class.compact]="this.showCompactView" *ngIf="this.shouldDisplayTotal()">
       <ht-label
         class="label"
-        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalItems }}"
+        label="{{ this.firstItemNumberForPage() }}-{{ this.lastItemNumberForPage() }} of {{ this.totalCountLabel }}"
       >
       </ht-label>
       <div class="pagination-buttons">
@@ -111,7 +107,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   private _pageSize?: number;
 
   @Input()
-  public set totalItems(totalItems: number) {
+  public set totalItems(totalItems: number | PaginatorTotalCode) {
     this._totalItems = totalItems;
     this.totalRecordsChange.emit(totalItems);
     this.recordsDisplayedChange.emit(Math.min(this.pageSize, totalItems));
@@ -161,6 +157,14 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     }
   }
 
+  public shouldDisplayTotal(): boolean {
+    return (
+      this.totalItems >= this.minItemsBeforeDisplay ||
+      this.totalItems === PaginatorTotalCode.Unknown ||
+      this.totalItems === PaginatorTotalCode.Last
+    );
+  }
+
   public onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this.gotoFirstPage();
@@ -192,6 +196,10 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
 
   public hasNextPage(): boolean {
+    if (this.totalItems === PaginatorTotalCode.Unknown) {
+      return true;
+    }
+
     return this.pageIndex < this.maxPageIndex() && this.pageSize !== 0;
   }
 
@@ -203,12 +211,28 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     return this.itemIndexAtPage() + this.itemsInPage();
   }
 
+  public get totalCountLabel(): string {
+    if (this.totalItems === PaginatorTotalCode.Unknown) {
+      return 'many';
+    }
+
+    if (this.totalItems === PaginatorTotalCode.Last) {
+      return 'last';
+    }
+
+    return this.totalItems.toString();
+  }
+
   private itemIndexAtPage(): number {
     return this.pageIndex * this.pageSize;
   }
 
   private itemsInPage(): number {
     if (this.pageIndex < this.maxPageIndex()) {
+      return this.pageSize;
+    }
+
+    if (this.totalItems === PaginatorTotalCode.Unknown || this.totalItems === PaginatorTotalCode.Last) {
       return this.pageSize;
     }
 
@@ -239,4 +263,9 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
 const enum PaginatorButtonType {
   Next = 'Next',
   Prev = 'Prev'
+}
+
+export enum PaginatorTotalCode {
+  Unknown = -1,
+  Last = -2
 }

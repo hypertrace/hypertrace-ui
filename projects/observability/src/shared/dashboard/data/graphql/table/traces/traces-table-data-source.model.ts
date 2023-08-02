@@ -1,5 +1,5 @@
-import { TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
-import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { PaginatorTotalCode, TableDataRequest, TableDataResponse, TableRow } from '@hypertrace/components';
+import { BOOLEAN_PROPERTY, Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../../../shared/graphql/model/schema/filter/graphql-filter';
 import { TRACE_SCOPE, TraceType } from '../../../../../../shared/graphql/model/schema/trace';
 import {
@@ -20,6 +20,12 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
   })
   public traceType: TraceType = TRACE_SCOPE;
 
+  @ModelProperty({
+    key: 'ignoreTotal',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public ignoreTotal: boolean = false;
+
   public getScope(): string {
     return this.traceType;
   }
@@ -32,21 +38,32 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
       requestType: TRACES_GQL_REQUEST,
       traceType: this.traceType,
       properties: request.columns.filter(column => column.visible).map(column => column.specification),
-      limit: request.position.limit * 2, // Prefetch 2 pages
+      limit: request.position.limit,
       offset: request.position.startIndex,
       sort: request.sort && {
         direction: request.sort.direction,
         key: request.sort.column.specification
       },
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
-      timeRange: this.getTimeRangeOrThrow()
+      timeRange: this.getTimeRangeOrThrow(),
+      ignoreTotal: this.ignoreTotal
     };
   }
 
-  protected buildTableResponse(response: TracesResponse): TableDataResponse<TableRow> {
+  protected buildTableResponse(
+    response: TracesResponse,
+    request: TableDataRequest<SpecificationBackedTableColumnDef>
+  ): TableDataResponse<TableRow> {
     return {
       data: response.results,
-      totalCount: response.total
+      // We want to avoid showing real totals for traces table.
+      // Provide the `last` code when results are lesser than the limit (aka, we know there are no more results)
+      // Provide the `unknown` code otherwise
+      totalCount: this.ignoreTotal
+        ? response.results.length < request.position.limit
+          ? PaginatorTotalCode.Last
+          : PaginatorTotalCode.Unknown
+        : response.total
     };
   }
 }
