@@ -95,7 +95,7 @@ import { TableColumnWidthUtil } from './util/column-width.util';
             <cdk-header-cell
               [attr.data-column-index]="index"
               *cdkHeaderCellDef
-              [ngStyle]="this.getHeaderColumnStyles | htMemoize: columnDef"
+              [ngStyle]="this.getHeaderColumnStyles(columnDef)"
               class="header-cell"
               [ngClass]="{
                 'state-col': this.isStateColumn | htMemoize: columnDef,
@@ -158,7 +158,7 @@ import { TableColumnWidthUtil } from './util/column-width.util';
             </cdk-header-cell>
             <cdk-cell
               *cdkCellDef="let row"
-              [ngStyle]="this.getDataColumnStyles | htMemoize: columnDef:index:row"
+              [ngStyle]="this.getDataColumnStyles(columnDef, index, row)"
               [ngClass]="{
                 'detail-expanded': this.isDetailExpanded(row),
                 'hide-divider': this.isDetailList(),
@@ -645,7 +645,7 @@ export class TableComponent
 
   private removeEventListeners(): void {
     this.document.removeEventListener('mousemove', event => this.onResizeMouseMove(event));
-    this.document.removeEventListener('mouseup', event => this.onResizeMouseMove(event));
+    this.document.removeEventListener('mouseup', event => this.onResizeMouseUp(event));
   }
 
   private checkAndResizeColumn(event: MouseEvent): void {
