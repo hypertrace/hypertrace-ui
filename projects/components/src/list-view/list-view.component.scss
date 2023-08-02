@@ -55,6 +55,29 @@ $horizontal-offset: 12px;
     .key {
       font-weight: 500;
     }
+
+    .metadata {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  .metadata-row {
+    @include body-small();
+    display: flex;
+    padding: 0 20px;
+    gap: 8px;
+
+    .key {
+      color: $gray-5;
+      font-weight: 400;
+    }
+
+    .value {
+      color: $gray-7;
+      font-weight: 500;
+    }
   }
 
   .data-row.striped:nth-child(odd) {
