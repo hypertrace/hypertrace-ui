@@ -99,7 +99,7 @@ describe('Interactions graphql query handler', () => {
         {
           path: 'results',
           children: [
-            { path: 'id' },
+            { path: 'id', alias: 'entityId' },
             {
               path: 'incomingEdges',
               arguments: [{ name: 'neighborType', value: new GraphQlEnumArgument(ObservabilityEntityType.Service) }],
@@ -123,7 +123,7 @@ describe('Interactions graphql query handler', () => {
                     {
                       path: 'neighbor',
                       children: [
-                        { path: 'id' },
+                        { path: 'id', alias: 'entityId' },
                         {
                           path: 'attribute',
                           alias: 'name',
@@ -147,7 +147,7 @@ describe('Interactions graphql query handler', () => {
     const serverResponse = {
       results: [
         {
-          id: 'test',
+          entityId: 'test',
           incomingEdges: {
             results: [
               {
@@ -157,7 +157,7 @@ describe('Interactions graphql query handler', () => {
                   }
                 },
                 neighbor: {
-                  id: '1',
+                  entityId: '1',
                   name: 'first-neighbor'
                 }
               },
@@ -168,7 +168,7 @@ describe('Interactions graphql query handler', () => {
                   }
                 },
                 neighbor: {
-                  id: '2',
+                  entityId: '2',
                   name: 'second-neighbor'
                 }
               }
