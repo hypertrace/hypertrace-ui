@@ -36,7 +36,10 @@ export class EntitiesGraphQlQueryHandlerService
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, ...this.entitiesGraphQlQueryBuilderService.buildRequestSpecifications(request)]
+          children: [
+            { path: 'id', alias: 'entityId' },
+            ...this.entitiesGraphQlQueryBuilderService.buildRequestSpecifications(request)
+          ]
         },
         ...totalSelection
       ]

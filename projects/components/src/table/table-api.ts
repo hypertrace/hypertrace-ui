@@ -25,8 +25,15 @@ export interface TableColumnConfig<TableColumnOptions = unknown> {
   sortable?: boolean;
   filterable?: boolean;
   alignment?: TableCellAlignmentType;
-  width?: number | string;
-  minWidth?: number | string;
+  /**
+   * Passing a `number` is considered as flex-grow
+   * Width can also be passed as `px` or `%`
+   */
+  width?: TableColumnWidth;
+  /**
+   * Min Width can be passed as `px` or `%`
+   */
+  minWidth?: TableColumnFixedWidth;
   /**
    * Use the `options` to pass additional data to the renderer for
    * customizations.
@@ -104,3 +111,10 @@ export const enum TableSelectionMode {
   Single = 'single',
   Multiple = 'multiple'
 }
+
+export type TableColumnWidth = TableColumnFlexWidth | TableColumnFixedWidth;
+
+export type TableColumnFlexWidth = number;
+
+// Keeping `%` widths for minimal blast radius
+export type TableColumnFixedWidth = `${number}%` | `${number}px`;

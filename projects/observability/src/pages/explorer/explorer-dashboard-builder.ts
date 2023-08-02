@@ -189,7 +189,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Service',
-            width: '2',
+            width: 2,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -202,7 +202,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Endpoint',
-            width: '2',
+            width: 2,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -306,7 +306,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'API Boundary Type',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -320,7 +320,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'API Discovery State',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -334,7 +334,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'API ID',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -348,7 +348,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Entry Span ID',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -362,7 +362,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Service ID',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -376,7 +376,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Trace ID',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -390,7 +390,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Request URL',
-            width: '1',
+            width: 1,
             visible: false,
             filterable: true,
             value: {
@@ -420,7 +420,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Service',
-            width: '2',
+            width: 2,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -433,7 +433,7 @@ export class ExplorerDashboardBuilder {
           {
             type: 'table-widget-column',
             title: 'Name',
-            width: '2',
+            width: 2,
             filterable: true,
             value: {
               type: 'attribute-specification',
@@ -569,7 +569,7 @@ export class ExplorerDashboardBuilder {
       .map(attribute => ({
         type: 'table-widget-column',
         title: attribute.displayName,
-        width: '1',
+        width: 1,
         display: this.getRendererForType(attribute.type),
         filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
         value: {
