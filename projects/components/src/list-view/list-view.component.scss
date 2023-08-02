@@ -68,7 +68,14 @@ $horizontal-offset: 12px;
     display: flex;
     padding: 0 20px;
     gap: 8px;
+    align-items: center;
 
+    .marker {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: $gray-5;
+    }
     .key {
       color: $gray-5;
       font-weight: 400;
