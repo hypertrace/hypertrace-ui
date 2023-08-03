@@ -19,7 +19,6 @@ import {
   PopoverRelativePositionLocation,
   PopoverService,
   SequenceSegment,
-  SplitterDirection,
   StatefulTableRow,
   TableColumnConfig,
   TableComponent,
@@ -57,7 +56,6 @@ import { WaterfallChartService } from './waterfall-chart.service';
         >
         </ht-table>
       </div>
-      <ht-splitter class="splitter" direction="${SplitterDirection.Vertical}"></ht-splitter>
       <div class="sequence">
         <ht-sequence-chart
           unit="ms"
