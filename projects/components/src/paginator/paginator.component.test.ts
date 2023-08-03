@@ -3,7 +3,7 @@ import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
 import { SelectComponent } from '../select/select.component';
-import { PaginatorComponent } from './paginator.component';
+import { PaginatorComponent, PaginatorTotalCode } from './paginator.component';
 
 describe('Paginator component', () => {
   const totalResults = 202;
@@ -148,6 +148,29 @@ describe('Paginator component', () => {
     spectator.setHostInput({ totalItems: 50 });
 
     expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 50');
+    expect(spectator.component.hasNextPage()).toBe(false);
+  });
+
+  test('should work as expected for `unknown` total count', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: PaginatorTotalCode.Unknown
+      }
+    });
+
+    expect(spectator.component.hasPrevPage()).toBe(false);
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of many');
+    expect(spectator.component.hasNextPage()).toBe(true);
+  });
+
+  test('should work as expected for `last` total count', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: PaginatorTotalCode.Last
+      }
+    });
+
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of last');
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 

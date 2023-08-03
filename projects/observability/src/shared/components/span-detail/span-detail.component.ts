@@ -52,6 +52,7 @@ import { SpanDetailTab } from './span-detail-tab';
                 [layout]="this.layout"
                 [responseHeaders]="this.spanData?.responseHeaders"
                 [responseCookies]="this.spanData?.responseCookies"
+                [cookieMetadata]="this.spanData?.responseCookiesMetadata"
                 [responseBody]="this.spanData?.responseBody"
               ></ht-span-response-detail>
             </ng-container>

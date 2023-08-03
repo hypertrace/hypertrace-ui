@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
 import { ListViewKeyRendererDirective } from './list-view-key-renderer.directive';
 import { ListViewValueRendererDirective } from './list-view-value-renderer.directive';
+import { Dictionary } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-list-view',
@@ -23,24 +24,38 @@ import { ListViewValueRendererDirective } from './list-view-value-renderer.direc
           <span>{{ this.header.valueLabel }}</span>
         </div>
       </div>
-      <div class="data-row" [class]="this.display" *ngFor="let record of this.records">
-        <div class="key">
-          <ng-container
-            *ngTemplateOutlet="
-              this.keyRenderer ? this.keyRenderer!.getTemplateRef() : defaultKeyRenderer;
-              context: { $implicit: record }
-            "
-          ></ng-container>
+      <ng-container *ngFor="let record of this.records">
+        <div class="data-row" [class]="this.display">
+          <div class="key">
+            <ng-container
+              *ngTemplateOutlet="
+                this.keyRenderer ? this.keyRenderer!.getTemplateRef() : defaultKeyRenderer;
+                context: { $implicit: record }
+              "
+            ></ng-container>
+          </div>
+          <div class="value">
+            <ng-container
+              *ngTemplateOutlet="
+                this.valueRenderer ? this.valueRenderer!.getTemplateRef() : defaultValueRenderer;
+                context: { $implicit: record }
+              "
+            ></ng-container>
+          </div>
         </div>
-        <div class="value">
-          <ng-container
-            *ngTemplateOutlet="
-              this.valueRenderer ? this.valueRenderer!.getTemplateRef() : defaultValueRenderer;
-              context: { $implicit: record }
-            "
-          ></ng-container>
-        </div>
-      </div>
+        <ng-container *ngIf="!(this.getMetadataForKey | htMemoize: record.key | htIsEmpty)">
+          <div class="metadata-row" attr.data-key="{{ record.key }}">Metadata :</div>
+          <div
+            class="metadata-row"
+            attr.data-key="{{ record.key }}"
+            *ngFor="let item of this.getMetadataForKey | htMemoize: record.key"
+          >
+            <div class="marker"></div>
+            <div class="key">{{ item[0] }} :</div>
+            <div class="value">{{ item[1] }}</div>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
   `
 })
@@ -51,6 +66,10 @@ export class ListViewComponent {
   @Input()
   public records?: ListViewRecord[];
 
+  // Metadata should be of the form { key: { metadataKey: metadataValue } } where key is a key in the record.
+  @Input()
+  public metadata?: Dictionary<Dictionary<unknown>>;
+
   @Input()
   public display: ListViewDisplay = ListViewDisplay.Striped;
 
@@ -59,6 +78,8 @@ export class ListViewComponent {
 
   @ContentChild(ListViewKeyRendererDirective)
   public keyRenderer?: ListViewKeyRendererDirective;
+
+  public readonly getMetadataForKey = (key: string): [string, unknown][] => Object.entries(this.metadata?.[key] ?? {});
 }
 
 export interface ListViewHeader {

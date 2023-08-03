@@ -34,6 +34,7 @@ describe('Span detail component', () => {
       requestBody: '[{"data": 5000}]',
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseCookies: { cookie1: 'value1', cookie2: 'value2' },
+      responseCookiesMetadata: { cookie1: { key: 'value' } },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
@@ -61,6 +62,7 @@ describe('Span detail component', () => {
       requestBody: '',
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseCookies: { cookie1: 'value1', cookie2: 'value2' },
+      responseCookiesMetadata: { cookie1: { key: 'value' } },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
@@ -77,10 +79,11 @@ describe('Span detail component', () => {
     expect(spectator.component.tabs.findIndex(tab => tab.value === SpanDetailTab.Request)).toEqual(-1);
     // Response tab will be selected as it's the first tab
     expect(spectator.query(SpanResponseDetailComponent)).toExist();
+    expect(spectator.query(SpanResponseDetailComponent)?.cookieMetadata).toEqual({ cookie1: { key: 'value' } });
   }));
 
   test('should show Request tab if either request header params and body are present', fakeAsync(() => {
-    const spanData = {
+    const spanData: SpanData = {
       id: '2',
       serviceName: 'My Service Name',
       apiName: 'My API Name',
@@ -90,6 +93,7 @@ describe('Span detail component', () => {
       requestBody: '[{"data": 5000}]',
       responseHeaders: { header1: 'value1', header2: 'value2' },
       responseCookies: { cookie1: 'value1', cookie2: 'value2' },
+      responseCookiesMetadata: { cookie1: { key: 'value' } },
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
@@ -117,6 +121,7 @@ describe('Span detail component', () => {
       requestBody: '[{"data": 5000}]',
       responseHeaders: {},
       responseCookies: {},
+      responseCookiesMetadata: { cookie1: { key: 'value' } },
       responseBody: '',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',

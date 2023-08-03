@@ -57,6 +57,30 @@ $horizontal-offset: 12px;
     }
   }
 
+  .metadata-row {
+    @include body-small();
+    display: flex;
+    padding: 0 20px;
+    gap: 8px;
+    align-items: center;
+
+    .marker {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: $gray-5;
+    }
+    .key {
+      color: $gray-5;
+      font-weight: 400;
+    }
+
+    .value {
+      color: $gray-7;
+      font-weight: 500;
+    }
+  }
+
   .data-row.striped:nth-child(odd) {
     background: $gray-1;
   }
