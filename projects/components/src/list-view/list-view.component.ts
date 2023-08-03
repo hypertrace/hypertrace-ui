@@ -62,6 +62,7 @@ export class ListViewComponent {
   @Input()
   public records?: ListViewRecord[];
 
+  // Metadata should be of the form { key: { metadataKey: metadataValue } } where key is a key in the record.
   @Input()
   public metadata?: Dictionary<Dictionary<unknown>>;
 
