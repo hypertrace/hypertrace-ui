@@ -73,7 +73,7 @@ export class EntitiesGraphqlQueryBuilderService {
       .pipe(
         map(mappedResult => {
           const entity: Entity = {
-            [entityIdKey]: rawResult.id as string,
+            [entityIdKey]: rawResult.entityId as string,
             [entityTypeKey]: request.entityType
           };
 
@@ -106,6 +106,7 @@ export interface GraphQlEntitiesRequest {
   includeTotal?: boolean;
   includeInactive?: boolean;
   ignoreGlobalFilters?: boolean;
+  ignoreSourcesFilter?: boolean;
 }
 
 export interface EntitiesResponse {

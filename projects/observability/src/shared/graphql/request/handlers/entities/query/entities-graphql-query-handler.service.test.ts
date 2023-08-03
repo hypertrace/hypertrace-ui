@@ -90,7 +90,7 @@ describe('Entities graphql query handler', () => {
       {
         path: 'results',
         children: [
-          { path: 'id' },
+          { path: 'id', alias: 'entityId' },
           {
             path: 'attribute',
             alias: 'name',
@@ -153,11 +153,11 @@ describe('Entities graphql query handler', () => {
     const serverResponse = {
       results: [
         {
-          id: '1',
+          entityId: '1',
           name: 'first'
         },
         {
-          id: '2',
+          entityId: '2',
           name: 'second'
         }
       ],
@@ -213,7 +213,7 @@ describe('Entities graphql query handler', () => {
         {
           path: 'results',
           children: [
-            { path: 'id' },
+            { path: 'id', alias: 'entityId' },
             {
               path: 'metric',
               alias: 'some_metric',
@@ -256,7 +256,7 @@ describe('Entities graphql query handler', () => {
     const serverResponse = {
       results: [
         {
-          id: '1',
+          entityId: '1',
           some_metric: {
             avgrate_min: {
               value: 60
@@ -339,7 +339,7 @@ describe('Entities graphql query handler', () => {
         {
           path: 'results',
           children: [
-            { path: 'id' },
+            { path: 'id', alias: 'entityId' },
             {
               path: 'metric',
               alias: 'a_metric',
@@ -407,7 +407,7 @@ describe('Entities graphql query handler', () => {
     const serverResponse = {
       results: [
         {
-          id: '1',
+          entityId: '1',
           a_metric: {
             min_series_1m: [
               {

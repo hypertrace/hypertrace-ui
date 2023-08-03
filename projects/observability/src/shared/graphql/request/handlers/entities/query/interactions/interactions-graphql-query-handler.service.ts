@@ -89,7 +89,10 @@ export class InteractionsGraphQlQueryHandlerService
             ...this.selectionBuilder.fromSpecifications(request.interactionSpecifications),
             {
               path: 'neighbor',
-              children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.neighborSpecifications)]
+              children: [
+                { path: 'id', alias: 'entityId' },
+                ...this.selectionBuilder.fromSpecifications(request.neighborSpecifications)
+              ]
             }
           ]
         },
@@ -158,7 +161,7 @@ interface InteractionServerResponse {
   [key: string]: unknown;
 
   neighbor: {
-    id: string;
+    entityId: string;
     [key: string]: unknown;
   };
 }
