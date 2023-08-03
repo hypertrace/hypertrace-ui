@@ -135,8 +135,8 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     }
 
     if (!this.mouseUpListener) {
-      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event => {
-        this.resizeEnd(event);
+      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', () => {
+        this.resizeEnd();
         this.unbindMouseListeners();
       });
     }
@@ -202,7 +202,7 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     }
   }
 
-  private resizeEnd(_event: MouseEvent) {
+  private resizeEnd() {
     if (this.previous !== undefined && this.resizeColumnSize !== undefined && this.size !== undefined) {
       if (this.horizontal()) {
         this.previous.size = this.getElementSize(this.previous.element);
@@ -260,14 +260,9 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   }
 
   private validateResize(_newPrevPanelSize: number, _newNextPanelSize?: number): boolean {
-    // if (this.minSizes.length >= 1 && this.minSizes[0] && this.minSizes[0] > newPrevPanelSize) {
-    //     return false;
-    // }
-
-    // if (this.minSizes.length > 1 && this.minSizes[1] && this.minSizes[1] > newNextPanelSize) {
-    //     return false;
-    // }
-
+    /**
+     * Stub method to validate resize. For now, returning true
+     */
     return true;
   }
 
