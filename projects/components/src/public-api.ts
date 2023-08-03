@@ -302,10 +302,6 @@ export * from './splitter/splitter-content.directive';
 export * from './splitter/splitter.component';
 export * from './splitter/splitter.module';
 
-// Multi-select
-export * from './multi-select/multi-select.component';
-export * from './multi-select/multi-select.module';
-
 // Sequence
 export { Marker, MarkerDatum, SequenceSegment } from './sequence/sequence';
 export * from './sequence/sequence-chart.component';

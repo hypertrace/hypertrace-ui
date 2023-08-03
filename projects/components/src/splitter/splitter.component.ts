@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -26,7 +25,7 @@ import { debounce } from 'lodash-es';
   styleUrls: ['./splitter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="splitter-container" [ngClass]="[this.direction | lowercase]">
+    <div class="splitter-container" *ngIf="this.direction" [ngClass]="[this.direction | lowercase]">
       <ng-container *ngFor="let content of this.contents$ | async as contents; let index = index">
         <div class="splitter-content" [ngStyle]="{ flex: this.getFlex | htMemoize: content.dimension }">
           <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
@@ -34,10 +33,7 @@ import { debounce } from 'lodash-es';
 
         <div
           class="splitter"
-          *ngIf="
-            this.direction &&
-            (this.direction === '${SplitterDirection.Horizontal}' ? index !== contents.length - 1 : true)
-          "
+          *ngIf="this.direction === '${SplitterDirection.Horizontal}' ? index !== contents.length - 1 : true"
           [ngClass]="[this.direction | lowercase]"
           [ngStyle]="this.splitterSizeStyle"
           (mousedown)="this.onGutterMouseDown($event, index)"
@@ -50,7 +46,7 @@ import { debounce } from 'lodash-es';
 })
 export class SplitterComponent implements OnChanges, AfterContentInit {
   @Input()
-  public readonly direction?: SplitterDirection;
+  public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
 
   @Input()
   public readonly debounceTime: number = 20;
@@ -63,19 +59,16 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
   @ContentChildren(SplitterContentDirective)
   private readonly contents!: QueryList<SplitterContentDirective>;
-  public contents$!: Observable<SplitterContentDirective[]>;
+  protected contents$!: Observable<SplitterContentDirective[]>;
 
-  public splitterSizeStyle?: Partial<CSSStyleDeclaration>;
-  public dragging: boolean = false;
-  public gutterSize: number = 4;
-  public mouseMoveListener?: () => void;
-  public mouseUpListener?: () => void;
+  protected splitterSizeStyle?: Partial<CSSStyleDeclaration>;
+  private mouseMoveListener?: () => void;
+  private mouseUpListener?: () => void;
 
-  public size?: number;
-  public resizeColumnSize?: number;
-  public currentSplitterElement?: HTMLElement;
-  public startPos?: number;
-
+  private size?: number;
+  private resizeColumnSize?: number;
+  private currentSplitterElement?: HTMLElement;
+  private startPos?: number;
   private previous?: ContentWithMetadata;
   private next?: ContentWithMetadata;
 
@@ -154,7 +147,6 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     this.currentSplitterElement = event.currentTarget as HTMLElement;
     this.size = this.getElementSize(this.element.nativeElement);
     this.resizeColumnSize = this.horizontal() ? this.size / 12 : 1;
-    this.dragging = true;
 
     this.startPos = this.horizontal() ? event.pageX : event.pageY;
 
@@ -277,7 +269,6 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   }
 
   private clear() {
-    this.dragging = false;
     this.size = undefined;
     this.startPos = undefined;
     this.previous = undefined;
