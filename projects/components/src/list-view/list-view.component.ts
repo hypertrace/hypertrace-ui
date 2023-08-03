@@ -44,8 +44,12 @@ import { Dictionary } from '@hypertrace/common';
           </div>
         </div>
         <ng-container *ngIf="!(this.getMetadataForKey | htMemoize: record.key | htIsEmpty)">
-          <div class="metadata-row">Metadata :</div>
-          <div class="metadata-row" *ngFor="let item of this.getMetadataForKey | htMemoize: record.key">
+          <div class="metadata-row" attr.data-key="{{ record.key }}">Metadata :</div>
+          <div
+            class="metadata-row"
+            attr.data-key="{{ record.key }}"
+            *ngFor="let item of this.getMetadataForKey | htMemoize: record.key"
+          >
             <div class="marker"></div>
             <div class="key">{{ item[0] }} :</div>
             <div class="value">{{ item[1] }}</div>
