@@ -296,6 +296,12 @@ export * from './select/select-control-option.component';
 export * from './select/select.component';
 export * from './select/select.module';
 
+// Splitter
+export * from './splitter/splitter';
+export * from './splitter/splitter-content.directive';
+export * from './splitter/splitter.component';
+export * from './splitter/splitter.module';
+
 // Sequence
 export { Marker, MarkerDatum, SequenceSegment } from './sequence/sequence';
 export * from './sequence/sequence-chart.component';
