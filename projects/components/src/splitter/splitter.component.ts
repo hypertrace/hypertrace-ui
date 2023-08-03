@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -12,17 +13,11 @@ import {
   QueryList,
   Renderer2
 } from '@angular/core';
-import {
-  LayoutChangeService,
-  SubscriptionLifecycle,
-  TypedSimpleChanges,
-  queryListAndChanges$
-} from '@hypertrace/common';
-import { EMPTY, Observable, throwError } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { LayoutChangeService, TypedSimpleChanges, queryListAndChanges$ } from '@hypertrace/common';
+import { EMPTY, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
-import { SplitterService } from './splitter.service';
-import { SplitterContentDirective } from './splitter-content.directive';
+import { SplitterCellDimension, SplitterContentDirective } from './splitter-content.directive';
 import { DOCUMENT } from '@angular/common';
 import { debounce } from 'lodash-es';
 
@@ -30,11 +25,12 @@ import { debounce } from 'lodash-es';
   selector: 'ht-splitter',
   styleUrls: ['./splitter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SplitterService, SubscriptionLifecycle],
   template: `
     <div class="splitter-container" [ngClass]="[this.direction | lowercase]">
       <ng-container *ngFor="let content of this.contents$ | async as contents; let index = index">
-        <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
+        <div class="splitter-content" [ngStyle]="{ flex: this.getFlex | htMemoize: content.dimension }">
+          <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
+        </div>
 
         <div
           class="splitter"
@@ -63,14 +59,13 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   public readonly splitterSize: number = 16;
 
   @Output()
-  public readonly layoutChange: EventEmitter<boolean> = new EventEmitter();
+  public readonly layoutChange: EventEmitter<SplitterCellDimension[]> = new EventEmitter();
 
   @ContentChildren(SplitterContentDirective)
   private readonly contents!: QueryList<SplitterContentDirective>;
   public contents$!: Observable<SplitterContentDirective[]>;
 
   public splitterSizeStyle?: Partial<CSSStyleDeclaration>;
-  public panels: unknown[] = [];
   public dragging: boolean = false;
   public gutterSize: number = 4;
   public mouseMoveListener?: () => void;
@@ -78,291 +73,44 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
   public size?: number;
   public resizeColumnSize?: number;
-
   public currentSplitterElement?: HTMLElement;
-
   public startPos?: number;
 
-  public prevPanelElement?: HTMLElement;
-
-  public nextPanelElement?: HTMLElement;
-
-  public nextPanelSize?: number;
-
-  public prevPanelSize?: number;
-
-  public _panelSizes: number[] = [];
-
-  public prevPanelIndex?: number;
-
-  // private readonly window: Window;
+  private previous?: ContentWithMetadata;
+  private next?: ContentWithMetadata;
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly element: ElementRef<HTMLElement>,
-    private readonly splitterService: SplitterService,
-    private readonly subscriptionLifecycle: SubscriptionLifecycle,
     private readonly layoutChangeService: LayoutChangeService,
     private readonly renderer: Renderer2
-  ) {
-    // this.window = this.document.defaultView as Window;
-  }
+  ) {}
 
   public ngAfterContentInit(): void {
-    this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(
-      map(contents => contents.toArray()),
-      tap(contents => (this.panels = contents))
-    );
+    this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(map(contents => contents.toArray()));
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.splitterSize || changes.direction) {
       this.setSplitterSizeStyle();
     }
-    //   this.setupMouseActionSubscription();
   }
 
-  public onGutterMouseDown(event: MouseEvent, index: number) {
+  protected onGutterMouseDown(event: MouseEvent, index: number) {
     this.resizeStart(event, index);
     this.bindMouseListeners();
   }
 
-  public bindMouseListeners() {
-    if (!this.mouseMoveListener) {
-      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event => {
-        this.debouncedOnResize(event);
-      });
+  protected readonly getFlex = (dimension: SplitterCellDimension): string => {
+    if (dimension.unit === 'PX') {
+      return `1 1 ${dimension.value}${dimension.unit.toLowerCase()}`;
+    } else {
+      return `${dimension.value} ${dimension.value} 0`;
     }
-
-    if (!this.mouseUpListener) {
-      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event => {
-        this.resizeEnd(event);
-        this.unbindMouseListeners();
-      });
-    }
-  }
-
-  public unbindMouseListeners() {
-    this.mouseMoveListener?.();
-    this.mouseMoveListener = undefined;
-
-    this.mouseUpListener?.();
-    this.mouseUpListener = undefined;
-  }
-
-  public resizeStart(event: MouseEvent, index: number) {
-    this.currentSplitterElement = event.currentTarget as HTMLElement;
-    this.size = this.horizontal()
-      ? this.element.nativeElement.getBoundingClientRect().width
-      : this.element.nativeElement.getBoundingClientRect().height;
-    this.resizeColumnSize = this.horizontal() ? this.size / 12 : 1;
-    this.dragging = true;
-
-    this.startPos = this.horizontal() ? event.pageX : event.pageY;
-
-    this.prevPanelElement = this.currentSplitterElement.previousElementSibling as HTMLElement;
-    this.nextPanelElement = this.currentSplitterElement.nextElementSibling as HTMLElement;
-
-    this.prevPanelSize =
-      (100 *
-        (this.horizontal()
-          ? this.prevPanelElement.getBoundingClientRect().width
-          : this.prevPanelElement.getBoundingClientRect().height)) /
-      this.size;
-
-    this.nextPanelSize =
-      (100 *
-        (this.horizontal()
-          ? this.nextPanelElement.getBoundingClientRect().width
-          : this.nextPanelElement.getBoundingClientRect().height)) /
-      this.size;
-
-    this.prevPanelIndex = index;
-  }
-
-  private readonly debouncedOnResize: (event: MouseEvent) => void = debounce(this.onResize, 0);
-
-  public onResize(event: MouseEvent): void {
-    let newPos;
-
-    if (
-      this.size !== undefined &&
-      this.startPos !== undefined &&
-      this.resizeColumnSize !== undefined &&
-      this.prevPanelSize !== undefined &&
-      this.nextPanelSize !== undefined
-    ) {
-      let newPrevPanelSize;
-      let newNextPanelSize;
-
-      if (this.horizontal()) {
-        newPos = (event.pageX * 100) / this.size - (this.startPos * 100) / this.size;
-        newPrevPanelSize = this.prevPanelSize + newPos;
-        newNextPanelSize = this.nextPanelSize - newPos;
-      } else {
-        newPos = (event.pageY * 100) / this.size - (this.startPos * 100) / this.size;
-        newPrevPanelSize = this.prevPanelSize + newPos;
-
-        newPrevPanelSize = this.prevPanelSize + newPos;
-        newNextPanelSize = this.nextPanelSize;
-      }
-
-      if (this.validateResize(newPrevPanelSize, newNextPanelSize)) {
-        (this.prevPanelElement as HTMLElement).style.flexBasis = `calc(${newPrevPanelSize}% - ${
-          (this.panels.length - 1) * this.gutterSize
-        }px)`;
-        (this.nextPanelElement as HTMLElement).style.flexBasis = `calc(${newNextPanelSize}% - ${
-          (this.panels.length - 1) * this.gutterSize
-        }px)`;
-        this._panelSizes[this.prevPanelIndex as number] = newPrevPanelSize;
-        this._panelSizes[(this.prevPanelIndex as number) + 1] = newNextPanelSize;
-
-        // if (this.prevPanelElement !== undefined && this.nextPanelElement !== undefined) {
-        //   this.prevPanelSize =
-        //   (100 *
-        //     (this.horizontal()
-        //       ? this.prevPanelElement.getBoundingClientRect().width
-        //       : this.prevPanelElement.getBoundingClientRect().height)) /
-        //   this.size;
-        // this.nextPanelSize =
-        //   (100 *
-        //     (this.horizontal()
-        //       ? this.nextPanelElement.getBoundingClientRect().width
-        //       : this.nextPanelElement.getBoundingClientRect().height)) /
-        //   this.size;
-        // }
-      }
-    }
-  }
-
-  public validateResize(_newPrevPanelSize: number, _newNextPanelSize: number): boolean {
-    // if (this.minSizes.length >= 1 && this.minSizes[0] && this.minSizes[0] > newPrevPanelSize) {
-    //     return false;
-    // }
-
-    // if (this.minSizes.length > 1 && this.minSizes[1] && this.minSizes[1] > newNextPanelSize) {
-    //     return false;
-    // }
-
-    return true;
-  }
-
-  public resizeEnd(_event: MouseEvent) {
-    if (
-      this.prevPanelSize !== undefined &&
-      this.resizeColumnSize !== undefined &&
-      this.nextPanelSize !== undefined &&
-      this.size !== undefined
-    ) {
-      if (this.prevPanelElement !== undefined && this.nextPanelElement !== undefined) {
-        this.prevPanelSize = this.horizontal()
-          ? this.prevPanelElement.getBoundingClientRect().width
-          : this.prevPanelElement.getBoundingClientRect().height;
-        this.nextPanelSize = this.horizontal()
-          ? this.nextPanelElement.getBoundingClientRect().width
-          : this.nextPanelElement.getBoundingClientRect().height;
-      }
-
-      if (this.horizontal()) {
-        let newPrevPanelSize =
-          (Math.round(this.prevPanelSize / this.resizeColumnSize) * this.resizeColumnSize * 100) / this.size;
-        let newPos = newPrevPanelSize - (this.prevPanelSize * 100) / this.size;
-        let newNextPanelSize = (this.nextPanelSize * 100) / this.size - newPos;
-
-        if (this.validateResize(newPrevPanelSize, newNextPanelSize)) {
-          (this.prevPanelElement as HTMLElement).style.flexBasis = `calc(${newPrevPanelSize}% - ${
-            (this.panels.length - 1) * this.gutterSize
-          }px)`;
-          (this.nextPanelElement as HTMLElement).style.flexBasis = `calc(${newNextPanelSize}% - ${
-            (this.panels.length - 1) * this.gutterSize
-          }px)`;
-          this._panelSizes[this.prevPanelIndex as number] = newPrevPanelSize;
-          this._panelSizes[(this.prevPanelIndex as number) + 1] = newNextPanelSize;
-
-          if (this.prevPanelElement !== undefined && this.nextPanelElement !== undefined) {
-            this.prevPanelSize =
-              (100 *
-                (this.horizontal()
-                  ? this.prevPanelElement.getBoundingClientRect().width
-                  : this.prevPanelElement.getBoundingClientRect().height)) /
-              this.size;
-            this.nextPanelSize =
-              (100 *
-                (this.horizontal()
-                  ? this.nextPanelElement.getBoundingClientRect().width
-                  : this.nextPanelElement.getBoundingClientRect().height)) /
-              this.size;
-          }
-        }
-      }
-    }
-
-    this.layoutChange.emit(true);
-    this.layoutChangeService.publishLayoutChange();
-    // this.onResizeEnd.emit({ originalEvent: event, sizes: this._panelSizes });
-    // DomHandler.removeClass(this.gutterElement, 'p-splitter-gutter-resizing');
-    // DomHandler.removeClass((this.containerViewChild as ElementRef).nativeElement, 'p-splitter-resizing');
-    //  this.clear();
-  }
-
-  public clear() {
-    this.dragging = false;
-    this.size = undefined;
-    this.startPos = undefined;
-    this.prevPanelElement = undefined;
-    this.nextPanelElement = undefined;
-    this.prevPanelSize = undefined;
-    this.nextPanelSize = undefined;
-    this.currentSplitterElement = undefined;
-    this.prevPanelIndex = undefined;
-  }
-
-  public horizontal() {
-    return this.direction === SplitterDirection.Horizontal;
-  }
-
-  public setupMouseActionSubscription(): void {
-    this.subscriptionLifecycle.unsubscribe();
-
-    this.subscriptionLifecycle.add(
-      this.buildSplitterLayoutChangeObservable()
-        .pipe(debounceTime(this.debounceTime))
-        .subscribe(layoutChange => {
-          this.layoutChange.emit(layoutChange);
-          layoutChange && this.layoutChangeService.publishLayoutChange();
-        })
-    );
-  }
-
-  public readonly buildSplitterLayoutObservable = (splitterElement: HTMLElement): Observable<boolean> => {
-    const hostElement = this.element.nativeElement;
-
-    if (this.direction === undefined) {
-      return throwError('Direction must be defined');
-    }
-
-    return this.splitterService.buildSplitterLayoutChangeObservable(
-      splitterElement,
-      hostElement,
-      this.direction,
-      this.splitterSize
-    );
   };
 
-  public buildSplitterLayoutChangeObservable(): Observable<boolean> {
-    const hostElement = this.element.nativeElement;
-    const splitterElement = hostElement.querySelector('.splitter') as HTMLElement;
-
-    if (this.direction === undefined) {
-      return throwError('Direction must be defined');
-    }
-
-    return this.splitterService.buildSplitterLayoutChangeObservable(
-      splitterElement,
-      hostElement,
-      this.direction,
-      this.splitterSize
-    );
+  protected horizontal() {
+    return this.direction === SplitterDirection.Horizontal;
   }
 
   private setSplitterSizeStyle(): void {
@@ -379,25 +127,173 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     }
   }
 
-  //   public static getOuterWidth(el, margin?) {
-  //     let width = el.offsetWidth;
+  private bindMouseListeners() {
+    if (!this.mouseMoveListener) {
+      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event => {
+        this.debouncedOnResize(event);
+      });
+    }
 
-  //     if (margin) {
-  //         let style = getComputedStyle(el);
-  //         width += parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-  //     }
+    if (!this.mouseUpListener) {
+      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event => {
+        this.resizeEnd(event);
+        this.unbindMouseListeners();
+      });
+    }
+  }
 
-  //     return width;
-  // }
+  private unbindMouseListeners() {
+    this.mouseMoveListener?.();
+    this.mouseMoveListener = undefined;
 
-  // public static getOuterHeight(el, margin?) {
-  //   let width = el.offsetWidth;
+    this.mouseUpListener?.();
+    this.mouseUpListener = undefined;
+  }
 
-  //   if (margin) {
-  //       let style = getComputedStyle(el);
-  //       width += parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-  //   }
+  private resizeStart(event: MouseEvent, index: number) {
+    this.currentSplitterElement = event.currentTarget as HTMLElement;
+    this.size = this.getElementSize(this.element.nativeElement);
+    this.resizeColumnSize = this.horizontal() ? this.size / 12 : 1;
+    this.dragging = true;
 
-  //   return width;
-  // }
+    this.startPos = this.horizontal() ? event.pageX : event.pageY;
+
+    this.previous = this.buildPreviousContentWithMetaData(index, this.currentSplitterElement);
+    this.next = this.buildNextContentWithMetaData(index, this.currentSplitterElement);
+  }
+
+  private readonly debouncedOnResize: (event: MouseEvent) => void = debounce(this.onResize, 0);
+
+  private onResize(event: MouseEvent): void {
+    let newPos;
+
+    if (
+      this.size !== undefined &&
+      this.startPos !== undefined &&
+      this.resizeColumnSize !== undefined &&
+      this.previous !== undefined
+    ) {
+      let newPrevPanelSize = 0;
+      let newNextPanelSize = 0;
+
+      if (this.horizontal()) {
+        newPos = event.pageX - this.startPos;
+        newPrevPanelSize = this.previous.size + newPos;
+        if (this.next) {
+          newNextPanelSize = this.next.size - newPos;
+        }
+      } else {
+        newPos = event.pageY - this.startPos;
+        newPrevPanelSize = this.previous.size + newPos;
+        if (this.next) {
+          newNextPanelSize = this.next.size; // Let the top container grow.
+        }
+      }
+
+      if (this.validateResize(newPrevPanelSize, newNextPanelSize) && this.previous !== undefined) {
+        this.previous.content.dimension = { value: newPrevPanelSize, unit: 'PX' };
+
+        if (this.next) {
+          this.next.content.dimension = { value: newNextPanelSize, unit: 'PX' };
+        }
+
+        this.setStyle();
+      }
+    }
+  }
+
+  private resizeEnd(_event: MouseEvent) {
+    if (this.previous !== undefined && this.resizeColumnSize !== undefined && this.size !== undefined) {
+      if (this.horizontal()) {
+        this.previous.size = this.getElementSize(this.previous.element);
+
+        let previousPanelColumnWidth = Math.round(this.previous.size / this.resizeColumnSize);
+        this.previous.content.dimension = { value: previousPanelColumnWidth, unit: 'FR' };
+
+        if (this.next) {
+          this.next.size = this.getElementSize(this.next.element);
+
+          let nextPanelColumnWidth = Math.round(
+            (this.next.size - (previousPanelColumnWidth * this.resizeColumnSize - this.previous.size)) /
+              this.resizeColumnSize
+          );
+          this.next.content.dimension = { value: nextPanelColumnWidth, unit: 'FR' };
+        }
+
+        this.setStyle();
+      }
+    }
+
+    this.layoutChange.emit(this.contents.map(c => c.dimension));
+    this.layoutChangeService.publishLayoutChange();
+    this.clear();
+  }
+
+  private buildPreviousContentWithMetaData(index: number, splitterElement: HTMLElement): ContentWithMetadata {
+    const element = splitterElement.previousElementSibling as HTMLElement;
+
+    return {
+      content: this.contents.get(index)!,
+      index: index,
+      element: element,
+      size: this.getElementSize(element)
+    };
+  }
+
+  private buildNextContentWithMetaData(index: number, splitterElement: HTMLElement): ContentWithMetadata | undefined {
+    const element = splitterElement.nextElementSibling as HTMLElement | undefined;
+
+    if (!element) {
+      return undefined;
+    }
+
+    return {
+      content: this.contents.get(index + 1)!,
+      index: index,
+      element: element,
+      size: this.getElementSize(element)
+    };
+  }
+
+  private getElementSize(element: HTMLElement): number {
+    return this.horizontal() ? element.getBoundingClientRect().width : element.getBoundingClientRect().height;
+  }
+
+  private validateResize(_newPrevPanelSize: number, _newNextPanelSize?: number): boolean {
+    // if (this.minSizes.length >= 1 && this.minSizes[0] && this.minSizes[0] > newPrevPanelSize) {
+    //     return false;
+    // }
+
+    // if (this.minSizes.length > 1 && this.minSizes[1] && this.minSizes[1] > newNextPanelSize) {
+    //     return false;
+    // }
+
+    return true;
+  }
+
+  private setStyle(): void {
+    if (this.previous !== undefined) {
+      this.renderer.setStyle(this.previous.element, 'flex', this.getFlex(this.previous.content.dimension));
+
+      if (this.next) {
+        this.renderer.setStyle(this.next.element, 'flex', this.getFlex(this.next.content.dimension));
+      }
+    }
+  }
+
+  private clear() {
+    this.dragging = false;
+    this.size = undefined;
+    this.startPos = undefined;
+    this.previous = undefined;
+    this.next = undefined;
+    this.currentSplitterElement = undefined;
+  }
+}
+
+interface ContentWithMetadata {
+  content: SplitterContentDirective;
+  index: number;
+  element: HTMLElement;
+  size: number;
 }
