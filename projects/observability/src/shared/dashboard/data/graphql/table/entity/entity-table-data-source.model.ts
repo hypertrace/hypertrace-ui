@@ -1,6 +1,7 @@
 import { TableDataRequest, TableDataResponse, TableRow, TableSortDirection } from '@hypertrace/components';
 import {
   ARRAY_PROPERTY,
+  BOOLEAN_PROPERTY,
   Model,
   ModelModelPropertyTypeInstance,
   ModelProperty,
@@ -31,6 +32,13 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     type: STRING_PROPERTY.type
   })
   public entityType!: EntityType;
+
+  @ModelProperty({
+    key: 'ignore-sources-filter',
+    required: false,
+    type: BOOLEAN_PROPERTY.type
+  })
+  public ignoreSourcesFilter: boolean = false;
 
   @ModelProperty({
     key: 'child-data-source',
@@ -73,7 +81,8 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true,
-      includeInactive: request.includeInactive
+      includeInactive: request.includeInactive,
+      ignoreSourcesFilter: this.ignoreSourcesFilter
     };
   }
 
