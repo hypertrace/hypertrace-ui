@@ -23,6 +23,7 @@ export interface GraphQlExploreRequest {
   filters?: GraphQlFilter[];
   groupBy?: GraphQlGroupBy;
   ignoreGlobalFilters?: boolean;
+  entityContextOptions?: EntityContextOptions;
 }
 
 export interface GraphQlExploreResponse {
@@ -49,4 +50,8 @@ export interface GraphQlExploreServerResponse {
 export interface GraphQlExploreServerResult {
   [INTERVAL_START_QUERY_KEY]?: string;
   [key: string]: GraphQlExploreResultValue | string | undefined;
+}
+
+export interface EntityContextOptions {
+  includeNonLiveEntities?: boolean;
 }
