@@ -949,6 +949,8 @@ export class TableComponent
 
   public toggleRowSelected(toggledRow: StatefulTableRow): void {
     const previousSelections = this.selections ?? [];
+    toggledRow.$$state.selected = !toggledRow.$$state.selected;
+
     const deselectedRow = previousSelections.find(selection => isEqualIgnoreFunctions(selection, toggledRow));
     if (deselectedRow !== undefined) {
       this.selections = without(previousSelections, deselectedRow);
