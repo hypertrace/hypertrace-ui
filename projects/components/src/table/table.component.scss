@@ -92,8 +92,8 @@ $data-row-border: 1px solid $gray-2;
 }
 
 .header-cell {
-  flex: 1 0;
   position: relative;
+  flex-shrink: 0;
 
   .header-cell-container {
     @include fill-container;
@@ -125,9 +125,9 @@ $data-row-border: 1px solid $gray-2;
   .header-column-resize-handle {
     position: absolute;
     top: 0;
-    right: 2px;
+    right: 1px;
     background-color: transparent;
-    width: 3px;
+    width: 5px;
     height: 100%;
     z-index: 2;
     cursor: col-resize;

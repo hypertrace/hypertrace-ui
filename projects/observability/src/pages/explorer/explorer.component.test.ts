@@ -172,7 +172,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [],
-        limit: 100
+        limit: 50
       }),
       undefined
     );
@@ -217,7 +217,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
-        limit: 100
+        limit: 50
       }),
       undefined
     );
