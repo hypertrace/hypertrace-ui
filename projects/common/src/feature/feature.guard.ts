@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanLoad, UrlSegment, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HtRoute } from '../navigation/ht-route';
@@ -8,7 +8,7 @@ import { FeatureStateResolver } from './state/feature-state.resolver';
 import { FeatureState } from './state/feature.state';
 
 @Injectable({ providedIn: 'root' })
-export class FeatureGuard implements CanLoad, CanActivate {
+export class FeatureGuard {
   public constructor(
     private readonly navService: NavigationService,
     private readonly featureStateResolver: FeatureStateResolver

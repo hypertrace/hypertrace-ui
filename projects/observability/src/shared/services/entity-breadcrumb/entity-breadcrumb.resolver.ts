@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
 import { GraphQlRequestCacheability, GraphQlRequestOptions, GraphQlRequestService } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
@@ -11,8 +11,7 @@ import { EntityIconLookupService } from '../entity/entity-icon-lookup.service';
 import { Specification } from './../../graphql/model/schema/specifier/specification';
 import { ENTITY_GQL_REQUEST } from './../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
-export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = EntityBreadcrumb>
-  implements Resolve<Observable<Breadcrumb>> {
+export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = EntityBreadcrumb> {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
   public constructor(

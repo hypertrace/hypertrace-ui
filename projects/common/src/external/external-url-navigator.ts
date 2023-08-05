@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import {
   ExternalNavigationPathParams,
@@ -9,7 +9,7 @@ import {
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 
 @Injectable({ providedIn: 'root' })
-export class ExternalUrlNavigator implements CanActivate {
+export class ExternalUrlNavigator {
   public constructor(private readonly navService: NavigationService) {}
 
   public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
