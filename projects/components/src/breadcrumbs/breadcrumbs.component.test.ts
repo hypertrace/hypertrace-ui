@@ -52,7 +52,7 @@ describe('BreadcrumbsComponent', () => {
       }
     });
 
-    spy = spectator.inject(NavigationService).navigateWithinApp;
+    spy = jest.spyOn(spectator.inject(NavigationService), 'navigateWithinApp');
     spy.mockReset();
   });
 

@@ -51,7 +51,7 @@ import { ExplorerModule } from './explorer.module';
 
 describe('Explorer component', () => {
   let spectator: Spectator<ExplorerComponent>;
-  let querySpy: jest.Mock;
+  let querySpy: jest.SpyInstance;
 
   const mockAttributes = [
     {
@@ -145,7 +145,7 @@ describe('Explorer component', () => {
     spectator.tick();
     patchRouterNavigateForTest(spectator);
     detectQueryChange();
-    querySpy = spectator.inject(GraphQlRequestService).query;
+    querySpy = jest.spyOn(spectator.inject(GraphQlRequestService), 'query');
   };
 
   test('fires query on init for traces', fakeAsync(() => {

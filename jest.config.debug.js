@@ -13,7 +13,6 @@ module.exports = {
   rootDir: '.',
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
-  globalSetup: 'jest-preset-angular/global-setup',
   transform: {
     '^.+\\.(ts|js|html|svg)$': [
       'jest-preset-angular',
