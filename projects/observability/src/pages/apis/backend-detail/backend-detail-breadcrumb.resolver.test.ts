@@ -69,16 +69,17 @@ describe('Backend detail breadcrumb resolver', () => {
             alwaysShowIcon: true
           }
         });
+
+        expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Backend,
+            id: 'test-id'
+          })
+        );
       });
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
-      expect.objectContaining({
-        requestType: ENTITY_GQL_REQUEST,
-        entityType: ObservabilityEntityType.Backend,
-        id: 'test-id'
-      })
-    );
   }));
 });

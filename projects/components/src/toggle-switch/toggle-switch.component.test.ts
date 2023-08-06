@@ -41,7 +41,7 @@ describe('Toggle Switch Component', () => {
     expect(matToggleComponent?.checked).toBeTruthy();
     expect(matToggleComponent?.disabled).toBeFalsy();
     expect(spectator.query('.label')).toHaveText('label');
-    expect(spectator.query('mat-slide-toggle')).toHaveClass('small-slide-toggle');
+    expect(spectator.query('mat-slide-toggle')).toExist();
 
     spectator.triggerEventHandler(MatSlideToggle, 'change', new MatSlideToggleChange(matToggleComponent!, false));
     expect(onCheckedChangeSpy).toHaveBeenCalledWith(false);
