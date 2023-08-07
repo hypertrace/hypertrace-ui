@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule } from '@angular/router';
+import { NgModule, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, PreloadAllModules, RouterModule } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
 import { ExternalUrlNavigator, HtRoute, RelativeTimeRange, TimeDuration, TimeUnit } from '@hypertrace/common';
 import { NotFoundComponent, NotFoundModule } from '@hypertrace/components';
@@ -114,7 +114,7 @@ const ROUTE_CONFIG: HtRoute[] = [
       },
       {
         path: 'external',
-        canActivate: [ExternalUrlNavigator],
+        canActivate: [(route: ActivatedRouteSnapshot) => inject(ExternalUrlNavigator).canActivate(route)],
         component: NotFoundComponent // Not actually used, but required by router
       },
       {
