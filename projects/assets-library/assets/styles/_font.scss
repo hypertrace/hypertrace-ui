@@ -338,7 +338,7 @@ $font-family: 'Work Sans', sans-serif;
   @include chart-small-regular;
 }
 
-$mat-typography: mat.define-typography-config(
+$mat-typography: mat.define-legacy-typography-config(
   $font-family: $font-family
 );
 

@@ -1,5 +1,4 @@
 import {
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   Injector,
@@ -32,7 +31,6 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
 
   public constructor(
     private readonly viewContainer: ViewContainerRef,
-    private readonly componentFactoryResolver: ComponentFactoryResolver,
     private readonly loadAsyncService: LoadAsyncService,
     public readonly templateRef: TemplateRef<LoadAsyncContext>
   ) {
@@ -67,8 +65,8 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
   }
 
   private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent> {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LoadAsyncWrapperComponent);
-
-    return this.viewContainer.createComponent(componentFactory, undefined, this.wrapperInjector);
+    return this.viewContainer.createComponent<LoadAsyncWrapperComponent>(LoadAsyncWrapperComponent, {
+      injector: this.wrapperInjector
+    });
   }
 }

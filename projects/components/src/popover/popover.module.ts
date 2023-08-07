@@ -8,10 +8,6 @@ import { PopoverTriggerComponent } from './popover-trigger.component';
 import { PopoverComponent } from './popover.component';
 import { PopoverService } from './popover.service';
 
-/*
-Need to investigate this a bit more. Looks like it can't be root injectable because it needs overlay, which needs a
-ComponentFactoryResolver that can vary based on import scope.
-*/
 @NgModule({
   providers: [PopoverService, PopoverPositionBuilder],
   declarations: [PopoverComponent, PopoverContainerComponent, PopoverContentComponent, PopoverTriggerComponent],

@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatLegacyInput as MatInput, MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { InputComponent } from './input.component';
 
