@@ -8,7 +8,7 @@
     "sourceMap": true,
     "declaration": false,
     "module": "es2020",
-    "target": "es2015",
+    "target": "ES2021",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -19,7 +19,17 @@
     "downlevelIteration": true,
     "allowJs": true,
     "useDefineForClassFields": false,
-    "lib": ["es2015", "es2016", "es2017", "es2019", "esnext.string", "esnext.array", "esnext.asynciterable", "dom"],
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "es2019",
+      "es2021",
+      "esnext.string",
+      "esnext.array",
+      "esnext.asynciterable",
+      "dom"
+    ],
     "paths": {
       "@hypertrace/assets-library": ["projects/assets-library/src/public-api.ts"],
       "@hypertrace/common": ["projects/common/src/public-api.ts"],

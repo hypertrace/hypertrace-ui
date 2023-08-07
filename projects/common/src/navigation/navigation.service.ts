@@ -299,6 +299,10 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
+  public getCurrentHost(): string {
+    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  }
+
   public getShareableUrl(navParams: NavigationParams): string {
     return navParams.navType === NavigationParamsType.InApp
       ? this.getShareableUrlForInAppNavParams(navParams)
@@ -306,7 +310,7 @@ export class NavigationService {
   }
 
   private getShareableUrlForInAppNavParams(navParams: InAppNavigationParams): string {
-    const host = new URL(this.getAbsoluteCurrentUrl()).origin;
+    const host = this.getCurrentHost();
     const path = isString(navParams.path) ? [navParams.path] : isArray(navParams.path) ? navParams.path : [];
 
     return `${host}${this.router.createUrlTree(path, { queryParams: navParams.queryParams }).toString()}`;

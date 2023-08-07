@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { RouterModule } from '@angular/router';
 import { MemoizeModule } from '@hypertrace/common';
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';

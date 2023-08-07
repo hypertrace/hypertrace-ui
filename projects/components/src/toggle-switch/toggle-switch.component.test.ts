@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { fakeAsync } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {
+  MatLegacySlideToggle as MatSlideToggle,
+  MatLegacySlideToggleChange as MatSlideToggleChange,
+  MatLegacySlideToggleModule as MatSlideToggleModule
+} from '@angular/material/legacy-slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockModule } from 'ng-mocks';
 import { ToggleSwitchSize } from './toggle-switch-size';

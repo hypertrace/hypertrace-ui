@@ -40,7 +40,7 @@
               "includePaths": ["./projects/assets-library/assets/styles", "./node_modules"]
             },
             "scripts": [],
-            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable"],
+            "allowedCommonJsDependencies": ["graphql-tag", "zen-observable", "mixpanel-browser", "iso8601-duration"],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -96,7 +96,10 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run"
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "silent": true
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ComponentFactoryResolver,
   Injector,
   Input,
   OnChanges,
@@ -68,10 +67,7 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
   public popoverOpen: boolean = false;
   public filterValue: unknown;
 
-  public constructor(
-    private readonly injector: Injector,
-    private readonly componentFactoryResolver: ComponentFactoryResolver
-  ) {}
+  public constructor(private readonly injector: Injector) {}
 
   public ngOnInit(): void {
     if (this.columnConfig === undefined) {
@@ -87,10 +83,9 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
     }
 
     // Dynamic Component Setup
-    this.cellRenderer.createComponent(
-      this.componentFactoryResolver.resolveComponentFactory(this.columnConfig.renderer),
-      0,
-      createTableCellInjector(
+    this.cellRenderer.createComponent(this.columnConfig.renderer, {
+      index: 0,
+      injector: createTableCellInjector(
         this.columnConfig,
         this.index,
         this.columnConfig.parser,
@@ -98,7 +93,7 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
         this.rowData,
         this.injector
       )
-    );
+    });
 
     // Allow columnConfig to override default alignment for cell renderer
     this.alignment = this.columnConfig.alignment ?? this.columnConfig.renderer.alignment;
