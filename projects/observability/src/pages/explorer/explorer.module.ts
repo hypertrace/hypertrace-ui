@@ -14,6 +14,7 @@ import { ObservabilityDashboardModule } from '../../shared/dashboard/observabili
 import { EXPLORER_DASHBOARD_BUILDER_FACTORY } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
 import { CartesianExplorerClickHandlerModel } from './interactions/cartesian-explorer-click-handler.model';
+import { FilterButtonWrapperModule } from './interactions/filter-button-wrapper/filter-button-wrapper.module';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { CartesianExplorerClickHandlerModel } from './interactions/cartesian-exp
     ToggleGroupModule,
     LetAsyncModule,
     FilterButtonModule,
+    FilterButtonWrapperModule,
     DashboardCoreModule.with({
       models: [CartesianExplorerClickHandlerModel]
     })

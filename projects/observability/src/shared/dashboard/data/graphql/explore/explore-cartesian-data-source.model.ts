@@ -126,7 +126,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     return [];
   }
 
-  private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {
+  private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {    
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
@@ -138,7 +138,8 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         name: !isEmpty(result.groupName) ? result.groupName! : obj.specDisplayName,
         groupName:
           !isEmpty(result.groupName) && (request.useGroupName ?? false) ? result.groupName! : obj.specDisplayName,
-        color: color
+        color: color,
+        groupByFilterAttribute: request.attributes.find(attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key)
       }))
     );
   }
