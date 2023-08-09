@@ -24,7 +24,8 @@ export const enum ModalSize {
   Large = 'large',
   LargeTall = 'large-tall',
   MediumWide = 'medium-wide',
-  LargeWide = 'large-wide'
+  LargeWide = 'large-wide',
+  ExpandTo90 = 'expand-to-90'
 }
 
 export interface ModalDimension {
@@ -53,6 +54,8 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
       return getModalDimensionObject(840, 600);
     case ModalSize.LargeWide:
       return getModalDimensionObject('95em', '90vh');
+    case ModalSize.ExpandTo90:
+      return getModalDimensionObject('90vw', '90vh');
     default:
       return getModalDimensionObject(420, 365);
   }
