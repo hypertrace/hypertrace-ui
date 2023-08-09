@@ -135,6 +135,10 @@ export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
 export * from './filtering/filter-modal/in-filter-modal.component';
 
+// Filter Button Wrapper
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.component';
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.module';
+
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
 
