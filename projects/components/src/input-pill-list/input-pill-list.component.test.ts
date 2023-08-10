@@ -2,10 +2,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KeyCode } from '@hypertrace/common';
-import { InputComponent } from '@hypertrace/components';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
+import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockComponents } from 'ng-mocks';
 import { InputPillListComponent } from './input-pill-list.component';
+import { InputComponent } from '../input/input.component';
+import { PopoverService } from '../popover/popover.service';
 
 describe('InputPillListComponent', () => {
   let spectator: SpectatorHost<InputPillListComponent>;
@@ -14,7 +15,12 @@ describe('InputPillListComponent', () => {
     shallow: true,
     imports: [ReactiveFormsModule],
     declarations: [MockComponents(InputComponent)],
-    providers: [FormBuilder]
+    providers: [
+      FormBuilder,
+      mockProvider(PopoverService, {
+        drawPopover: jest.fn().mockReturnValue({ close: jest.fn(), closeOnBackdropClick: jest.fn() })
+      })
+    ]
   });
 
   const getPillValues = (spectatorInstance: SpectatorHost<InputPillListComponent>): string[] =>
@@ -51,11 +57,15 @@ describe('InputPillListComponent', () => {
   });
 
   test('interactions should function as expected', fakeAsync(() => {
-    spectator = createHost(`<ht-input-pill-list [values]="values"></ht-input-pill-list>`, {
-      hostProps: {
-        values: ['test-1', 'test-2']
+    spectator = createHost(
+      `<ht-input-pill-list [values]="values" [dropdownValues]="dropdownValues"></ht-input-pill-list>`,
+      {
+        hostProps: {
+          values: ['test-1', 'test-2'],
+          dropdownValues: ['drop-1']
+        }
       }
-    });
+    );
 
     const valueChangeEmitterSpy = jest.spyOn(spectator.component.valueChange, 'next');
 
@@ -93,5 +103,12 @@ describe('InputPillListComponent', () => {
     expect(getPillValues(spectator)).toEqual(['input-from-buffer', 'i-am-test-2-now', 'test-2']);
     expect(valueChangeEmitterSpy).toHaveBeenCalledWith(['input-from-buffer', 'i-am-test-2-now', 'test-2']);
     expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(2);
+
+    // On Focus
+    spectator.triggerEventHandler(InputComponent, 'inputFocus', undefined);
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
+    spectator.component.onDropdownValueClick('drop-1');
+    expect(getPillValues(spectator)).toEqual(['drop-1', 'input-from-buffer', 'i-am-test-2-now', 'test-2']);
+    expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(3);
   }));
 });
