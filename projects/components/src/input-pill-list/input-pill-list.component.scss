@@ -63,3 +63,24 @@ $border-radius: 6px;
     }
   }
 }
+
+.dropdown-values {
+  @include m.dropdown;
+  width: 420px;
+  max-height: 268px;
+
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+
+  .dropdown-value {
+    @include m.ellipsis-overflow;
+    @include m.body-1-regular;
+    cursor: pointer;
+    padding: 8px 16px;
+
+    &:hover {
+      background-color: m.$gray-1;
+    }
+  }
+}

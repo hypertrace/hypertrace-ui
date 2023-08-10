@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {
   ControlValueAccessor,
   UntypedFormArray,
@@ -20,6 +30,11 @@ import {
 import { debounce, isEmpty, uniq } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
 import { InputAppearance } from '../input/input-appearance';
+import { Observable, of } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from '../popover/popover';
+import { PopoverService } from '../popover/popover.service';
+import { PopoverRef } from '../popover/popover-ref';
 
 @Component({
   selector: 'ht-input-pill-list',
@@ -28,9 +43,11 @@ import { InputAppearance } from '../input/input-appearance';
       <div class="header">
         <ht-form-field class="form-field">
           <ht-input
+            #input
             [disabled]="this.shouldDisableAdd"
             class="input primary-input"
             formControlName="inputBuffer"
+            (inputFocus)="this.onFocus()"
             (keydown)="this.addBufferValueToList($event)"
             (paste)="this.onContentPaste($event)"
             [placeholder]="this.placeholder"
@@ -61,6 +78,20 @@ import { InputAppearance } from '../input/input-appearance';
           </div>
         </div>
       </ng-container>
+
+      <ng-template #dropdownValuesTemplate>
+        <div class="dropdown-values">
+          <ht-event-blocker event="click">
+            <div
+              *ngFor="let value of this.dropdownValues$ | async"
+              class="dropdown-value"
+              (click)="this.onDropdownValueClick(value)"
+            >
+              {{ value }}
+            </div>
+          </ht-event-blocker>
+        </div>
+      </ng-template>
     </div>
   `,
   styleUrls: ['./input-pill-list.component.scss'],
@@ -95,8 +126,17 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   @Input()
   public readonly placeholder: string = 'Type in a value and hit enter';
 
+  @Input()
+  public readonly dropdownValues: string[] = [];
+
   @Output()
   public readonly valueChange: EventEmitter<string[]> = new EventEmitter();
+
+  @ViewChild('dropdownValuesTemplate')
+  private readonly dropdownValuesTemplate!: TemplateRef<unknown>;
+
+  @ViewChild('input', { read: ElementRef })
+  private readonly input!: ElementRef<unknown>;
 
   public readonly form: UntypedFormGroup = new UntypedFormGroup({
     inputBuffer: new UntypedFormControl(''),
@@ -104,13 +144,27 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   });
 
   public currentValues: string[] = [];
+  public dropdownValues$: Observable<string[]> = of([]);
 
+  private popover?: PopoverRef;
   private propagateControlValueChange?: (value: string[]) => void;
   private propagateControlValueChangeOnTouch?: (value: string[]) => void;
-  public constructor(private readonly formBuilder: UntypedFormBuilder) {}
+
+  public constructor(
+    private readonly formBuilder: UntypedFormBuilder,
+    private readonly popoverService: PopoverService
+  ) {}
+
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.values) {
       this.initForm(this.values);
+    }
+
+    if (changes.dropdownValues) {
+      this.dropdownValues$ = this.form.controls.inputBuffer.valueChanges.pipe(
+        startWith(''),
+        map(bufferValue => this.dropdownValues.filter(value => value.includes(bufferValue ?? '')))
+      );
     }
   }
 
@@ -170,6 +224,17 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     this.propagateControlValueChangeOnTouch = onTouch;
   }
 
+  public onFocus() {
+    if (this.dropdownValues.length > 0) {
+      this.showPopover();
+    }
+  }
+
+  public onDropdownValueClick(value: string): void {
+    this.addValues([value]);
+    this.closePopover();
+  }
+
   public get pillControlsArray(): UntypedFormArray {
     return this.form.get('pillControls') as UntypedFormArray;
   }
@@ -213,5 +278,30 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     const validValues = this.getValuesFromPills().filter(value => !isEmpty(value));
     this.valueChange.next(validValues);
     this.propagateValueChangeToFormControl(validValues);
+  }
+
+  private showPopover(): void {
+    this.closePopover();
+
+    this.popover = this.popoverService.drawPopover({
+      position: {
+        type: PopoverPositionType.Relative,
+        origin: this.input,
+        locationPreferences: [
+          PopoverRelativePositionLocation.BelowLeftAligned,
+          PopoverRelativePositionLocation.BelowRightAligned,
+          PopoverRelativePositionLocation.AboveLeftAligned,
+          PopoverRelativePositionLocation.AboveRightAligned
+        ]
+      },
+      componentOrTemplate: this.dropdownValuesTemplate,
+      backdrop: PopoverBackdrop.Transparent
+    });
+    this.popover.closeOnBackdropClick();
+  }
+
+  private closePopover(): void {
+    this.popover?.close();
+    this.popover = undefined;
   }
 }
