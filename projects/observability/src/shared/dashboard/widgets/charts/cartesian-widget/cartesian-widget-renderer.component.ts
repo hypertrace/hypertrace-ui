@@ -33,6 +33,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [legend]="this.model.legendPosition"
         [groupId]="this.model.syncGroupId"
         (selectedIntervalChange)="this.onIntervalChange($event)"
+        (dataClicked)="this.onDataClicked($event)"
         (selectionChange)="this.onSelectionChange($event)"
       >
       </ht-cartesian-chart>
@@ -58,6 +59,10 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
     this.updateDataObservable();
+  }
+
+  public onDataClicked(selectedData: CartesianSelectedData<TData>): void {
+    this.model.dataClickHandler?.execute(selectedData);
   }
 
   public onSelectionChange(selectedData: CartesianSelectedData<TData>): void {

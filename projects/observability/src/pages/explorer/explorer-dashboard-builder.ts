@@ -67,6 +67,10 @@ export class ExplorerDashboardBuilder {
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false
+        },
+        'data-click-handler': {
+          type: 'cartesian-explorer-click-handler',
+          attributes: request.attributes
         }
       },
       onReady: dashboard => {

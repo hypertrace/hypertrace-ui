@@ -6,7 +6,7 @@ import {
   TimeDuration,
   TimeRangeService
 } from '@hypertrace/common';
-import { Filter } from '@hypertrace/components';
+import { Filter, FilterAttribute } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, shareReplay, takeUntil } from 'rxjs/operators';
@@ -137,6 +137,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return {
       context: state.context,
       resultLimit: state.resultLimit,
+      attributes: state.attributes,
       series: [...state.series],
       filters: state.filters && [...state.filters],
       interval: state.interval,
@@ -261,6 +262,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return {
       context: context,
       interval: 'AUTO',
+      attributes: [],
       resultLimit: ExploreVisualizationBuilder.DEFAULT_LIMIT,
       series: [this.buildDefaultSeries(context)]
     };
@@ -292,6 +294,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 export interface ExploreRequestState {
   series: ExploreSeries[];
   context: ExploreRequestContext;
+  attributes: FilterAttribute[];
   interval?: TimeDuration | 'AUTO';
   filters?: Filter[];
   groupBy?: GraphQlGroupBy;

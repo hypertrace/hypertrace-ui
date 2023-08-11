@@ -24,13 +24,11 @@ import { FilterUrlService } from '../filter/filter-url.service';
         </ht-popover-trigger>
         <ht-popover-content>
           <div [style.min-width.px]="trigger.offsetWidth" class="popover-content">
-            <div
-              *ngFor="let availableFilter of this.availableFilters"
-              (click)="this.onFilterClick(availableFilter)"
-              class="popover-item"
-            >
-              <div>{{ availableFilter.userString }}</div>
-            </div>
+            <ht-filter-button-content
+              [metadata]="this.metadata"
+              [attribute]="this.attribute"
+              [value]="this.value"
+            ></ht-filter-button-content>
           </div>
         </ht-popover-content>
       </ht-popover>
