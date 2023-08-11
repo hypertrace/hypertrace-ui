@@ -55,6 +55,16 @@ export class PreferenceService {
       );
   }
 
+  public getOnce<T extends PreferenceValue>(
+    key: PreferenceKey,
+    defaultValue: T,
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+  ): T {
+    const value = this.preferenceStorage(type).get(this.asStorageKey(key));
+
+    return this.fromStorageValue<T>(value) ?? defaultValue;
+  }
+
   public set(
     key: PreferenceKey,
     value: PreferenceValue,
