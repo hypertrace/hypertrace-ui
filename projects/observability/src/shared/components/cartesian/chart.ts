@@ -5,6 +5,7 @@ import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
 import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.component';
+import { FilterAttribute } from '@hypertrace/components';
 
 export interface CartesianChart<TInterval> {
   destroy(): this;
@@ -43,6 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
+  groupByFilterAttribute?: FilterAttribute;
   stacking?: boolean;
   hide?: boolean;
 
