@@ -82,7 +82,7 @@
     "@angular/language-service": "^15.2.9",
     "@ngneat/spectator": "^14.0.0",
     "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.6.6",
+    "@commitlint/config-conventional": "^17.7.0",
     "@compodoc/compodoc": "^1.1.21",
     "@types/d3-array": "^2.9.0",
     "@types/d3-axis": "^2.0.0",
