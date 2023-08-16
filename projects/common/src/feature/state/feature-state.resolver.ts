@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs';
-import { defaultIfEmpty, map } from 'rxjs/operators';
-import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
+import { combineLatest, Observable } from 'rxjs';
+import { defaultIfEmpty, map, take } from 'rxjs/operators';
 import { Dictionary } from '../../utilities/types/types';
 import { FeatureState } from './feature.state';
 
@@ -18,7 +17,8 @@ export abstract class FeatureStateResolver {
   }
 
   public getCombinedFeatureState(features: string[]): Observable<FeatureState> {
-    return forkJoinSafeEmpty(features.map(feature => this.getFeatureState(feature))).pipe(
+    return combineLatest(features.map(feature => this.getFeatureState(feature))).pipe(
+      take(1),
       map(values => this.reduceFeatureState(values)),
       defaultIfEmpty<FeatureState>(FeatureState.Enabled)
     );
