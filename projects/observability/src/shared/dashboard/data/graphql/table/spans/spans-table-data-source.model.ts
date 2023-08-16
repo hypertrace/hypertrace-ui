@@ -16,7 +16,7 @@ import { TableDataSourceModel } from '../table-data-source.model';
 })
 export class SpansTableDataSourceModel extends TableDataSourceModel {
   // Mandatory fields: added to the request even if they are not visible
-  private mandatoryColumns: string[] = ['traceId'];
+  private readonly mandatoryColumns: string[] = ['traceId'];
 
   public getScope(): string {
     return SPAN_SCOPE;
