@@ -510,6 +510,7 @@ export class ExplorerDashboardBuilder {
           },
           {
             type: 'table-widget-column',
+            visible: false,
             filterable: true,
             value: {
               type: 'attribute-specification',
