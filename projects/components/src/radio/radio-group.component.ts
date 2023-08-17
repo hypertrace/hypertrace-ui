@@ -9,8 +9,9 @@ import {
   TemplateRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LoggerService } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { RadioOption } from './radio-option';
 
 @Component({
@@ -29,7 +30,7 @@ import { RadioOption } from './radio-option';
     <mat-radio-group
       class="radio-group"
       [ngClass]="this.optionsDirection"
-      [ngModel]="this.selected!.value"
+      [ngModel]="this.selected?.value"
       (change)="this.onRadioChange($event)"
       [disabled]="this.disabled"
     >
@@ -39,7 +40,6 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
-        (change)="$event.stopPropagation()"
       >
         <div class="radio-button-item">
           <ng-container
@@ -83,7 +83,6 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   public constructor(private readonly loggerService: LoggerService, private readonly cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
-    // tslint:disable-next-line:strict-type-predicates
     if (this.title === undefined) {
       this.loggerService.warn('RadioGroupComponent requires "title" input');
     }
@@ -114,7 +113,9 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   public onRadioChange(event: MatRadioChange): void {
-    this.setSelection(event.value);
+    if (!isNil(event.value)) {
+      this.setSelection(event.value);
+    }
   }
 
   public isLabelAString(label: string | TemplateRef<unknown>): boolean {

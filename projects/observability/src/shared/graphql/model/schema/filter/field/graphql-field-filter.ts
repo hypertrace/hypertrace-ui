@@ -37,7 +37,7 @@ export class GraphQlFieldFilter implements GraphQlFilter {
   }
 }
 
-// tslint:disable-next-line: interface-over-type-literal https://github.com/Microsoft/TypeScript/issues/15300
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type FieldFilter = {
   keyExpression: AttributeExpression & GraphQlArgumentObject;
   value: GraphQlArgumentValue;

@@ -6,11 +6,13 @@
   flex-direction: column;
   justify-content: center;
   min-height: 36px;
+  overflow-y: scroll;
   width: 100%;
   padding: 0 1px 0 8px;
   background: white;
   border: 1px solid $color-border;
   border-radius: 6px;
+  max-height: 180px;
 
   &.focused {
     caret-color: $blue-5;
@@ -46,11 +48,14 @@
   }
 
   .filters {
+    min-width: 0;
+    flex: 1 1 auto;
+
     display: flex;
-    flex: auto;
     flex-wrap: wrap;
 
     .filter {
+      max-width: 100%;
       padding: 2px;
     }
 
@@ -76,7 +81,7 @@
 }
 
 .instructions {
-  @include body-small($gray-4);
+  @include body-small($gray-5);
   @include ellipsis-overflow();
   font-size: 12px;
   padding-left: 40px;

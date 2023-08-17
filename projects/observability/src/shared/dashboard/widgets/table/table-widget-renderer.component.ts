@@ -64,7 +64,6 @@ import { TableWidgetControlSelectOptionModel } from './table-widget-control-sele
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
 
-// tslint:disable: max-file-line-count
 @Renderer({ modelClass: TableWidgetModel })
 @Renderer({ modelClass: TableWidgetViewToggleModel })
 @Component({
@@ -114,6 +113,7 @@ import { TableWidgetModel } from './table-widget.model';
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
           [rowHeight]="this.api.model.getRowHeight()"
+          [maxRowHeight]="this.api.model.getMaxRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
@@ -287,7 +287,7 @@ export class TableWidgetRendererComponent
 
           return {
             ...option,
-            applied: found?.applied || this.isFilterApplied(option.metaValue, filters)
+            applied: option.applied || found?.applied || this.isFilterApplied(option.metaValue, filters)
           };
         });
 
@@ -566,6 +566,7 @@ export class TableWidgetRendererComponent
       ]).pipe(
         switchMap(([data, columns])  => this.getDownloadableData(data, columns)),
         map(result => result.data.map(row => {
+            debugger;
             const eventAttributes: Dictionary<unknown> = {};
             Object.keys(row).forEach(key => {
               if(typeof row[key] !== 'object') {
@@ -586,7 +587,7 @@ export class TableWidgetRendererComponent
       columns: columns,
         position: {
           startIndex: 0,
-          limit: 2
+          limit: 1000
         },
       ...( sortedByColumn !== undefined ? {
         sort: {

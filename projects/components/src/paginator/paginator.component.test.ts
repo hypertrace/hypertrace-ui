@@ -3,7 +3,7 @@ import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { LabelComponent } from '../label/label.component';
 import { SelectComponent } from '../select/select.component';
-import { PaginatorComponent } from './paginator.component';
+import { PaginatorComponent, PaginatorTotalCode } from './paginator.component';
 
 describe('Paginator component', () => {
   const totalResults = 202;
@@ -18,12 +18,22 @@ describe('Paginator component', () => {
 
   test('should notify when page size selection changes', () => {
     const onPageChangeSpy = jest.fn();
+    const onRecordsDisplayedChangeSpy = jest.fn();
+    const onTotalRecordsChangeSpy = jest.fn();
+
     const spectator = createHost(
-      `<ht-paginator [totalItems]="totalItems" (pageChange)="onPageChange($event)"></ht-paginator>`,
+      `<ht-paginator
+        [totalItems]="totalItems"
+        (pageChange)="onPageChange($event)"
+        (recordsDisplayedChange)="onRecordsDisplayedChange($event)"
+        (totalRecordsChange)="onTotalRecordsChange($event)"
+        ></ht-paginator>`,
       {
         hostProps: {
           totalItems: totalResults,
-          onPageChange: onPageChangeSpy
+          onPageChange: onPageChangeSpy,
+          onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
+          onTotalRecordsChange: onTotalRecordsChangeSpy
         }
       }
     );
@@ -35,6 +45,36 @@ describe('Paginator component', () => {
       pageIndex: 0,
       pageSize: 25
     });
+
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(25);
+    expect(onTotalRecordsChangeSpy).toHaveBeenLastCalledWith(totalResults);
+  });
+
+  test('should notify when page size selection changes', () => {
+    const onRecordsDisplayedChangeSpy = jest.fn();
+    const onTotalRecordsChangeSpy = jest.fn();
+
+    const spectator = createHost(
+      `<ht-paginator
+        [totalItems]="totalItems"
+        (pageChange)="onPageChange($event)"
+        (recordsDisplayedChange)="onRecordsDisplayedChange($event)"
+        (totalRecordsChange)="onTotalRecordsChange($event)"
+        ></ht-paginator>`,
+      {
+        hostProps: {
+          totalItems: 10,
+          onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
+          onTotalRecordsChange: onTotalRecordsChangeSpy
+        }
+      }
+    );
+    expect(spectator.component.pageSize).toBe(defaultPageSize);
+
+    spectator.query(SelectComponent)!.selectedChange.emit(25);
+
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(10);
+    expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(10);
   });
 
   test('should have the correct number of pages for the provided page size and total items', () => {
@@ -111,14 +151,48 @@ describe('Paginator component', () => {
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 
-  test('should hide the paginator when totalItems is less than the pageSizeOptions options', () => {
+  test('should work as expected for `unknown` total count', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: 20
+        totalItems: PaginatorTotalCode.Unknown
+      }
+    });
+
+    expect(spectator.component.hasPrevPage()).toBe(false);
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of many');
+    expect(spectator.component.hasNextPage()).toBe(true);
+  });
+
+  test('should work as expected for `last` total count', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: PaginatorTotalCode.Last
+      }
+    });
+
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of last');
+    expect(spectator.component.hasNextPage()).toBe(false);
+  });
+
+  test('should hide the paginator when totalItems is less than the minItemsBeforeDisplay', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 9
       }
     });
 
     const paginator = spectator.query('.paginator')!;
     expect(paginator).toBeNull();
+  });
+
+  test('should show the paginator when totalItems is at least minItemsBeforeDisplay', () => {
+    const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
+      hostProps: {
+        totalItems: 10
+      }
+    });
+
+    const paginator = spectator.query('.paginator')!;
+    expect(paginator).toBeTruthy();
   });
 });

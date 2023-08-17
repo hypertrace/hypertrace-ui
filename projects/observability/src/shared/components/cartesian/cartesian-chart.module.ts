@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormattingModule } from '@hypertrace/common';
-import { LabelModule, LayoutChangeModule, SelectModule } from '@hypertrace/components';
+import { FilterButtonWrapperModule, LabelModule, LayoutChangeModule, SelectModule } from '@hypertrace/components';
 import { IntervalSelectModule } from '../interval-select/interval-select.module';
 import { ChartTooltipModule } from '../utils/chart-tooltip/chart-tooltip.module';
 import { CartesianChartComponent } from './cartesian-chart.component';
@@ -18,7 +18,8 @@ import { CartesianSummaryComponent } from './d3/legend/cartesian-summary.compone
     SelectModule,
     LayoutChangeModule,
     IntervalSelectModule,
-    ChartTooltipModule
+    ChartTooltipModule,
+    FilterButtonWrapperModule
   ]
 })
 export class CartesianChartModule {}

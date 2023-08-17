@@ -5,8 +5,8 @@ import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphq
 import { SPAN_SCOPE } from '../../../../../graphql/model/schema/span';
 import {
   GraphQlSpansRequest,
-  SpansResponse,
-  SPANS_GQL_REQUEST
+  SPANS_GQL_REQUEST,
+  SpansResponse
 } from '../../../../../graphql/request/handlers/spans/spans-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model'; // Todo: Fix this dependency
 import { TableDataSourceModel } from '../table-data-source.model';
@@ -15,6 +15,9 @@ import { TableDataSourceModel } from '../table-data-source.model';
   type: 'spans-table-data-source'
 })
 export class SpansTableDataSourceModel extends TableDataSourceModel {
+  // Mandatory fields: added to the request even if they are not visible
+  private readonly mandatoryColumns: string[] = ['traceId'];
+
   public getScope(): string {
     return SPAN_SCOPE;
   }
@@ -25,7 +28,9 @@ export class SpansTableDataSourceModel extends TableDataSourceModel {
   ): GraphQlSpansRequest {
     return {
       requestType: SPANS_GQL_REQUEST,
-      properties: request.columns.map(column => column.specification),
+      properties: request.columns
+        .filter(column => column.visible || this.mandatoryColumns.includes(column.id))
+        .map(column => column.specification),
       limit: request.position.limit * 2, // Prefetch 2 pages
       offset: request.position.startIndex,
       sort: request.sort && {

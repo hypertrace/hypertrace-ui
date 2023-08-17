@@ -1,6 +1,8 @@
 @import 'color-palette';
+@import 'mixins';
 
 .metric-cell {
+  @include body-1-regular;
   border-radius: 2px;
   color: $gray-7;
   align-items: center;

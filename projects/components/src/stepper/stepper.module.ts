@@ -6,12 +6,13 @@ import { ButtonModule } from '../button/button.module';
 import { IconModule } from '../icon/icon.module';
 import { LabelModule } from '../label/label.module';
 import { LoadAsyncModule } from '../public-api';
-import { StepperTabComponent } from './stepper-tab.component';
 import { StepperComponent } from './stepper.component';
+import { StepperTabControlsComponent } from './tab-controls/stepper-tab-controls.component';
+import { StepperTabComponent } from './tab/stepper-tab.component';
 
 @NgModule({
   imports: [ButtonModule, CommonModule, IconModule, LabelModule, LoadAsyncModule, MatStepperModule, MemoizeModule],
-  declarations: [StepperComponent, StepperTabComponent],
-  exports: [StepperComponent, StepperTabComponent]
+  declarations: [StepperComponent, StepperTabComponent, StepperTabControlsComponent],
+  exports: [StepperComponent, StepperTabComponent, StepperTabControlsComponent]
 })
 export class StepperModule {}

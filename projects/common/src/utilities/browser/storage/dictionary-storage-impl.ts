@@ -20,17 +20,15 @@ export class DictionaryStorageImpl implements Storage {
   }
 
   public getItem(key: string): string | null {
-    // tslint:disable-next-line: no-null-keyword
     return this.data[key] ?? null;
   }
 
   public key(index: number): string | null {
-    // tslint:disable-next-line: no-null-keyword
     return Object.keys(this.data)[index] ?? null;
   }
 
   public removeItem(key: string): void {
-    // tslint:disable-next-line:no-dynamic-delete
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.data[key];
   }
 

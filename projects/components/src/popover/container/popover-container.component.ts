@@ -30,7 +30,6 @@ export class PopoverContainerComponent {
     layoutChangeService: LayoutChangeService
   ) {
     this.isComponentRenderer = !(containerData.popoverRenderer instanceof TemplateRef);
-    // tslint:disable-next-line: no-null-keyword Required so angular doesn't default to throw
     this.templateContext = this.containerData.popoverInjector.get(POPOVER_DATA, null);
 
     this.componentInjector = Injector.create({

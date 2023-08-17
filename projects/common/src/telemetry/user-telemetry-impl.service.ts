@@ -1,6 +1,8 @@
 import { Injectable, Injector, Optional } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivationEnd, Router } from '@angular/router';
+import { isEmpty } from 'lodash-es';
 import { delay, filter } from 'rxjs/operators';
+import { HtRouteData } from '../navigation/ht-route-data';
 import { Dictionary } from '../utilities/types/types';
 import { UserTelemetryProvider, UserTelemetryRegistrationConfig, UserTraits } from './telemetry';
 import { UserTelemetryService } from './user-telemetry.service';
@@ -24,7 +26,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
        * Fail silently
        */
 
-      // tslint:disable-next-line: no-console
+      // eslint-disable-next-line  no-console
       console.error(error);
     }
   }
@@ -75,10 +77,19 @@ export class UserTelemetryImplService extends UserTelemetryService {
   private setupAutomaticPageTracking(): void {
     this.router?.events
       .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        filter((event): event is ActivationEnd => event instanceof ActivationEnd),
         delay(50)
       )
-      .subscribe(route => this.trackPageEvent(`Visited: ${route.url}`, { url: route.url }));
+      .subscribe(event => {
+        const url = event.snapshot.pathFromRoot
+          .map(snapshot => snapshot.routeConfig?.path)
+          .filter(path => !isEmpty(path))
+          .join('/');
+        const title = (event.snapshot.data as HtRouteData).title ?? url;
+        const queryParams = event.snapshot.queryParams;
+
+        this.trackPageEvent(`${url}`, { url: url, title: title, ...queryParams });
+      });
   }
 }
 

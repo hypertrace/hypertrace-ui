@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { NavigationService } from '@hypertrace/common';
@@ -12,7 +13,7 @@ describe('Modal service', () => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
       <div class="test-modal-content">Test Component Content Data: {{ this.data }}</div>
-      <button class="test-close-button" (click)="this.modalRef.close(this.data)">Close</button>
+      <button class="test-close-button" role="button" (click)="this.modalRef.close(this.data)">Close</button>
     `
   })
   class TestComponent {

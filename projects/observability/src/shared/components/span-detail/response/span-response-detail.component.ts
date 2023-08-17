@@ -14,7 +14,11 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         </div>
 
         <div class="section-item">
-          <ht-span-detail-call-headers [data]="this.responseCookies" title="Cookies"></ht-span-detail-call-headers>
+          <ht-span-detail-call-headers
+            [data]="this.responseCookies"
+            [metadata]="this.cookieMetadata"
+            title="Cookies"
+          ></ht-span-detail-call-headers>
         </div>
       </div>
       <div class="section">
@@ -29,6 +33,9 @@ export class SpanResponseDetailComponent {
 
   @Input()
   public responseCookies?: Dictionary<unknown>;
+
+  @Input()
+  public cookieMetadata?: Dictionary<Dictionary<unknown>>;
 
   @Input()
   public responseBody?: string;

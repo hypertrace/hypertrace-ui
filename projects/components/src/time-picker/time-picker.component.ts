@@ -9,10 +9,10 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
   styleUrls: ['./time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="time-picker" [ngClass]="{ disabled: this.disabled }">
+    <div class="time-picker" [ngClass]="[this.size, this.disabled ? 'disabled' : '']">
       <ht-popover class="time-selector" [disabled]="this.disabled" [ngClass]="this.displayMode" [closeOnClick]="true">
         <ht-popover-trigger>
-          <div class="popover-trigger" #popoverTrigger>
+          <div class="popover-trigger" [class]="this.size" #popoverTrigger>
             <ht-icon
               class="trigger-icon"
               icon="${IconType.Time}"
@@ -55,6 +55,9 @@ export class TimePickerComponent {
   public iconSize?: TimePickerIconSize = TimePickerIconSize.Regular;
 
   @Input()
+  public size: TimePickerSize = TimePickerSize.Small;
+
+  @Input()
   public showTimeTriggerIcon?: boolean = false;
 
   @Input()
@@ -93,4 +96,10 @@ export const enum TimePickerDisplayMode {
 export const enum TimePickerIconSize {
   Small = 'small',
   Regular = 'regular'
+}
+
+export const enum TimePickerSize {
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large'
 }

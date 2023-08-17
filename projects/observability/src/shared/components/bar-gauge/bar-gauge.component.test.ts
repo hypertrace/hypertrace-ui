@@ -8,9 +8,7 @@ import { BarGaugeComponent } from './bar-gauge.component';
 describe('Bar Gauge component', () => {
   let spectator: Spectator<BarGaugeComponent>;
 
-  const setMeasureHtmlElement = (right: number = 33): ((element: HTMLElement) => ClientRect) => (
-    element: HTMLElement
-  ) => {
+  const setMeasureHtmlElement = (right: number = 33): ((element: HTMLElement) => DOMRect) => (element: HTMLElement) => {
     switch (element.getAttribute('class')) {
       case 'segment-bar':
         return {
@@ -19,7 +17,10 @@ describe('Bar Gauge component', () => {
           left: 0,
           right: right,
           top: 0,
-          width: 33
+          width: 33,
+          x: 0,
+          y: 0,
+          toJSON: () => ''
         };
       case 'max-value-bar':
       default:
@@ -29,7 +30,10 @@ describe('Bar Gauge component', () => {
           left: 0,
           right: 100,
           top: 0,
-          width: 100
+          width: 100,
+          x: 0,
+          y: 0,
+          toJSON: () => ''
         };
     }
   };

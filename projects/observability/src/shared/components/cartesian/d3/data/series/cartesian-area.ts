@@ -14,7 +14,7 @@ export class CartesianArea<TData> extends CartesianSeries<TData> {
     const seriesGroup = select(element).append('g').classed(CartesianArea.CSS_CLASS, true);
     this.drawAreaGradient(element);
     this.drawSvgArea(seriesGroup);
-    this.buildLine().drawSvg(seriesGroup.node()!);
+    this.buildLine().drawSvg(seriesGroup.node());
   }
 
   public drawCanvas(context: CanvasRenderingContext2D): void {

@@ -3,6 +3,7 @@ import {
   ColorService,
   DomElementMeasurerService,
   DynamicComponentService,
+  NumericFormatter,
   PartialBy,
   selector
 } from '@hypertrace/common';
@@ -42,6 +43,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   private static readonly MIN_FONT_SIZE_FOR_TITLE: number = 12;
   private static readonly MAX_FONT_SIZE_FOR_TITLE: number = 15;
   private static readonly MAX_FONT_SIZE_FOR_VALUE: number = 64;
+
+  private readonly numberFormatter: NumericFormatter = new NumericFormatter();
 
   public constructor(
     d3: D3UtilService,
@@ -116,7 +119,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       textGroupSelection
         .append('text')
         .classed(DonutBuilderService.DONUT_VALUE_CLASS, true)
-        .text(() => String(config.center!.value));
+        .text(() => String(this.numberFormatter.format(config.center!.value)));
     }
   }
 

@@ -50,9 +50,13 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
           path: 'results',
           children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.properties)]
         },
-        {
-          path: 'total'
-        }
+        ...(request.ignoreTotal ?? false
+          ? []
+          : [
+              {
+                path: 'total'
+              }
+            ])
       ]
     };
   }
@@ -60,7 +64,7 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   public convertResponse(response: TracesServerResponse, request: GraphQlTracesRequest): Observable<TracesResponse> {
     return forkJoinSafeEmpty(response.results.map(traceResult => this.normalizeTrace(traceResult, request))).pipe(
       map(results => ({
-        total: response.total,
+        total: response.total ?? 0,
         results: results
       }))
     );
@@ -116,6 +120,7 @@ export interface GraphQlTracesRequest {
   offset?: number;
   sort?: GraphQlSortBySpecification;
   filters?: GraphQlFilter[];
+  ignoreTotal?: boolean;
 }
 
 export interface TracesResponse {

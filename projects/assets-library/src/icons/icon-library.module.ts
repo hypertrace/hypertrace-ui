@@ -77,6 +77,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.LinkUrl, url: `${iconsRootPath}/link-url.svg` },
         { key: IconType.Loading, url: `${iconsRootPath}/loading.svg` },
         { key: IconType.MailUnread, url: `${iconsRootPath}/mail-unread.svg` },
+        { key: IconType.Minus, url: `${iconsRootPath}/minus.svg` },
         { key: IconType.MoreHorizontal, url: `${iconsRootPath}/more-horizontal.svg` },
         { key: IconType.MoreVertical, url: `${iconsRootPath}/more-vertical.svg` },
         { key: IconType.NoData, url: `${iconsRootPath}/no-data.svg` },
@@ -97,12 +98,14 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.Spinner, url: `${iconsRootPath}/spinner.svg` },
         { key: IconType.StatusCode, url: `${iconsRootPath}/status-code.svg` },
         { key: IconType.StringAttribute, url: `${iconsRootPath}/string-attribute.svg` },
+        { key: IconType.TimeHistory, url: `${iconsRootPath}/time-history.svg` },
         { key: IconType.TraceId, url: `${iconsRootPath}/trace-id.svg` },
         { key: IconType.Trash, url: `${iconsRootPath}/trash.svg` },
         { key: IconType.TriangleDown, url: `${iconsRootPath}/triangle-down.svg` },
         { key: IconType.TriangleLeft, url: `${iconsRootPath}/triangle-left.svg` },
         { key: IconType.TriangleRight, url: `${iconsRootPath}/triangle-right.svg` },
         { key: IconType.TriangleUp, url: `${iconsRootPath}/triangle-up.svg` },
+        { key: IconType.Undo, url: `${iconsRootPath}/undo.svg` },
         { key: IconType.VerticalGrabHandle, url: `${iconsRootPath}/vertical-grab-handle.svg` },
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
         { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
@@ -111,7 +114,6 @@ const iconsRootPath = 'assets/icons';
     }
   ]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class IconLibraryModule {
   public constructor(
     iconRegistryService: IconRegistryService,

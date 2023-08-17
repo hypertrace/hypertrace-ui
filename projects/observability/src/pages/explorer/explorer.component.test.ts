@@ -162,21 +162,19 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: ObservabilityTraceType.Api,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
-    // RunFakeRxjs(({ expectObservable }) => {
-    //   ExpectObservable(spectator.component.resultsDashboard$).toBe('x', { x: undefined });
-    // });
-    expect(querySpy).toHaveBeenCalledWith(
+    expect(querySpy).toHaveBeenNthCalledWith(
+      3,
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [],
-        limit: 100
+        limit: 50
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -188,7 +186,6 @@ describe('Explorer component', () => {
     );
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],
@@ -210,9 +207,9 @@ describe('Explorer component', () => {
         context: ObservabilityTraceType.Api,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -220,9 +217,9 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: TRACES_GQL_REQUEST,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
-        limit: 100
+        limit: 50
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -244,9 +241,9 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second)
+        interval: new TimeDuration(1, TimeUnit.Minute)
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -256,7 +253,7 @@ describe('Explorer component', () => {
         filters: [],
         limit: 100
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -266,6 +263,7 @@ describe('Explorer component', () => {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)
       })
     );
+
     // Select traces tab
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     detectQueryChange();
@@ -274,7 +272,6 @@ describe('Explorer component', () => {
 
     const filterBar = spectator.query(FilterBarComponent)!;
 
-    // tslint:disable-next-line: no-object-literal-type-assertion
     filterBar.filtersChange.emit([
       {
         metadata: mockAttributes[0],
@@ -294,10 +291,10 @@ describe('Explorer component', () => {
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
         limit: 1000,
-        interval: new TimeDuration(15, TimeUnit.Second),
+        interval: new TimeDuration(1, TimeUnit.Minute),
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
 
     expect(querySpy).toHaveBeenNthCalledWith(
@@ -307,7 +304,7 @@ describe('Explorer component', () => {
         limit: 100,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')]
       }),
-      expect.objectContaining({})
+      undefined
     );
   }));
 
@@ -359,10 +356,10 @@ describe('Explorer component', () => {
 
   test('updates URL with query param when query updated', fakeAsync(() => {
     init();
-    const queryParamChangeSpy = spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
+    const queryParamChangeSpy = jest.spyOn(spectator.inject(NavigationService), 'addQueryParametersToUrl');
     spectator.click(spectator.queryAll('ht-toggle-item')[1]);
     spectator.query(ExploreQueryEditorComponent)!.setSeries([buildSeries('second', MetricAggregationType.Average)]);
-    spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(30, TimeUnit.Second));
+    spectator.query(ExploreQueryEditorComponent)!.setInterval(new TimeDuration(5, TimeUnit.Minute));
     spectator.query(ExploreQueryEditorComponent)!.updateGroupByExpression(
       {
         keyExpressions: [{ key: 'apiName' }],
@@ -378,7 +375,7 @@ describe('Explorer component', () => {
       group: ['apiName'],
       limit: 6,
       other: true,
-      interval: '30s'
+      interval: '5m'
     });
   }));
 
@@ -393,7 +390,7 @@ describe('Explorer component', () => {
             group: 'apiName',
             limit: '6',
             other: 'true',
-            interval: '30s'
+            interval: '5m'
           })
         )
       }
@@ -410,7 +407,7 @@ describe('Explorer component', () => {
       visualizationOptions: { type: CartesianSeriesVisualizationType.Line }
     });
     expect(spectator.query(ExploreQueryIntervalEditorComponent)?.interval).toEqual(
-      new TimeDuration(30, TimeUnit.Second)
+      new TimeDuration(5, TimeUnit.Minute)
     );
   }));
 });

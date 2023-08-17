@@ -15,8 +15,20 @@ describe('Time', () => {
     expect(mockedTime.toISOString()).toBe('08:30:00.000Z');
   });
 
+  test('can get ISO String with timezone offset from time', () => {
+    expect(mockedTime.toISOString(true)).toBe('08:30:00Z');
+  });
+
   test('can compare two times', () => {
     expect(mockedTime.equals(new Time(8, 30))).toBeTruthy();
     expect(mockedTime.equals(new Time(9, 30))).toBeFalsy();
+  });
+
+  test('can return correct Time from an ISOString', () => {
+    expect(Time.parse('00:00:00.000Z')).toEqual(new Time(0, 0, 0, 0, true));
+    expect(Time.parse('12:30:00.000Z')).toEqual(new Time(12, 30, 0, 0, true));
+    expect(Time.parse('02:00:00.000Z')).toEqual(new Time(2, 0, 0, 0, true));
+    expect(Time.parse('14:00:00.000Z')).toEqual(new Time(14, 0, 0, 0, true));
+    expect(Time.parse('14:00:00.000+05:30')).toEqual(new Time(8, 30, 0, 0, true));
   });
 });

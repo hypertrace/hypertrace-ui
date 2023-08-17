@@ -35,7 +35,7 @@ import {
           <span class="units" *ngIf="this.units && !this.isUnlimited"> {{ this.units }}</span>
         </div>
       </div>
-      <div class="bar" [ngClass]="this.display">
+      <div class="bar" [ngClass]="[this.display, this.size]">
         <div
           #maxValueBar
           class="max-value-bar"
@@ -61,7 +61,7 @@ import {
       <div *ngIf="this.showLegend" class="legend">
         <div class="legend-item" *ngFor="let segment of this.barSegments">
           <span class="legend-symbol" [style.backgroundColor]="segment.color"></span>
-          <span class="legend-value" *ngIf="this.barSegments.length > 1">{{ segment.value | number }}</span>
+          <span class="legend-value">{{ segment.value | number }}</span>
           <span class="legend-label">{{ segment.label }}</span>
         </div>
       </div>
@@ -99,6 +99,9 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   public display: BarGaugeStyle = BarGaugeStyle.Regular;
 
   @Input()
+  public size: BarGaugeSize = BarGaugeSize.Small; // Only used for single-bar display type as of now
+
+  @Input()
   public isUnlimited: boolean = false;
 
   @Input()
@@ -133,6 +136,10 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
   }
 
   public checkNearMaxValue(): void {
+    if (this.segmentBars.length === 0) {
+      return;
+    }
+
     /*
      * On the far right of each segment is a small 1px white vertical bar used to indicate the end of the segment.
      * We want to remove it if we fill up the bar so that the bar actually looks full instead of cut off with the
@@ -186,4 +193,9 @@ export const enum BarGaugeStyle {
   Regular = 'regular',
   Compact = 'compact',
   SingleBar = 'single-bar'
+}
+
+export const enum BarGaugeSize {
+  Small = 'small',
+  Large = 'large'
 }

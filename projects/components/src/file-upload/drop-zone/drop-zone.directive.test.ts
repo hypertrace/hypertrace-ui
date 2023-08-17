@@ -7,8 +7,8 @@ describe('Drop Zone Directive', () => {
   test('should emit events correctly', () => {
     const spectator = createDirective(`<div class="content" htDropZone></div>`);
 
-    spyOn(spectator.directive.dragHover, 'emit');
-    spyOn(spectator.directive.dropped, 'emit');
+    jest.spyOn(spectator.directive.dragHover, 'emit');
+    jest.spyOn(spectator.directive.dropped, 'emit');
 
     spectator.dispatchMouseEvent(spectator.element, 'dragover');
     expect(spectator.directive.dropped.emit).toHaveBeenCalledTimes(0);

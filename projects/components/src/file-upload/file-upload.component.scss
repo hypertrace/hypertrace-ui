@@ -1,4 +1,4 @@
-@import 'mixins';
+@use 'mixins' as m;
 
 .file-upload {
   width: 100%;
@@ -7,40 +7,40 @@
   gap: 8px;
 
   .upload-section {
-    @include center-contents;
+    @include m.center-contents;
     flex-direction: column;
     width: 100%;
     min-height: 140px;
-    border: 1px solid $gray-2;
+    border: 1px solid m.$gray-2;
     border-radius: 8px;
 
     .title {
-      @include body-2-regular;
+      @include m.body-2-regular;
       display: flex;
       align-items: center;
 
       .click-to-upload {
-        color: $blue-4;
+        color: m.$blue-5;
         padding-right: 4px;
         cursor: pointer;
 
         &:hover {
-          color: $blue-5;
+          color: m.$blue-6;
         }
       }
     }
 
     .sub-text {
-      @include body-2-regular($gray-4);
+      @include m.body-2-regular(m.$gray-4);
     }
 
     &.drag-hover {
-      border: 1px dashed $blue-4;
+      border: 1px dashed m.$blue-4;
     }
 
     &.disabled {
       pointer-events: none;
-      background-color: $gray-1;
+      background-color: m.$gray-1;
       opacity: 0.8;
     }
   }
@@ -55,5 +55,24 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+  }
+}
+
+.file-requirements-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .item {
+    @include m.footnote(m.$gray-5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .icon {
+      color: m.$green-4;
+    }
   }
 }

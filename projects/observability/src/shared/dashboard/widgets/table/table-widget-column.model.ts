@@ -2,11 +2,19 @@ import {
   CoreTableCellRendererType,
   TableCellAlignmentType,
   TableColumnConfig,
+  TableColumnWidth,
   TableRow,
   TableSortDirection
 } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
-import { BOOLEAN_PROPERTY, Model, ModelProperty, ModelPropertyType, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import {
+  BOOLEAN_PROPERTY,
+  Model,
+  ModelProperty,
+  ModelPropertyType,
+  STRING_PROPERTY,
+  UNKNOWN_PROPERTY
+} from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -44,9 +52,9 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'width',
     displayName: 'Width',
-    type: STRING_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type
   })
-  public width?: string;
+  public width?: TableColumnWidth;
 
   @ModelProperty({
     key: 'alignment',
@@ -72,7 +80,6 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'display',
     displayName: 'Display',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: STRING_PROPERTY.type
   })
   public display: string = CoreTableCellRendererType.Text;
@@ -87,7 +94,6 @@ export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'sort',
     displayName: 'Sort',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableSortDirection.Ascending, TableSortDirection.Descending]
@@ -100,6 +106,12 @@ export class TableWidgetColumnModel {
     type: BOOLEAN_PROPERTY.type
   })
   public sortable: boolean = true;
+
+  @ModelProperty({
+    key: 'editable',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public editable: boolean = true;
 
   @ModelInject(MetadataService)
   private readonly metadataService!: MetadataService;
@@ -122,7 +134,7 @@ export class TableWidgetColumnModel {
       alignment: this.alignment,
       width: this.width,
       visible: this.visible,
-      editable: true,
+      editable: this.editable,
       filterable: this.filterable,
       sort: this.sort,
       sortable: this.sortable,

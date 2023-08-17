@@ -15,7 +15,7 @@ import {
   UrlSegment,
   UrlTree
 } from '@angular/router';
-import { isArray, isString } from 'lodash-es';
+import { isArray, isEmpty, isString } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, skip, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { isEqualIgnoreFunctions, throwIfNil } from '../utilities/lang/lang-utils';
@@ -32,6 +32,7 @@ export class NavigationService {
   private isFirstNavigation: boolean = true;
   private readonly globalQueryParams: Set<string> = new Set();
   private pendingQueryParams: QueryParamObject = {};
+  public firstNavigatedUrl: string = '';
 
   public constructor(
     private readonly router: Router,
@@ -42,6 +43,15 @@ export class NavigationService {
   ) {
     this.event$(RoutesRecognized)
       .pipe(
+        tap(event => {
+          // In case of reloading a correct URL, we only have a single event
+          // Due to that we are getting `this.isFirstNavigation = true` since
+          // we're not reaching to .subscribe due to skip(1) and causing external navigation failure from the app
+          // So we're storing the first navigated URL to check whether it is external URL or not.
+          if (isEmpty(this.firstNavigatedUrl)) {
+            this.firstNavigatedUrl = decodeURIComponent(event.url);
+          }
+        }),
         skip(1),
         filter(() => !this.getActiveNavigation()?.extras.skipLocationChange),
         take(1)
@@ -289,6 +299,10 @@ export class NavigationService {
     return this.platformLocation.href;
   }
 
+  public getCurrentHost(): string {
+    return new URL(this.getAbsoluteCurrentUrl()).origin;
+  }
+
   public getShareableUrl(navParams: NavigationParams): string {
     return navParams.navType === NavigationParamsType.InApp
       ? this.getShareableUrlForInAppNavParams(navParams)
@@ -296,7 +310,7 @@ export class NavigationService {
   }
 
   private getShareableUrlForInAppNavParams(navParams: InAppNavigationParams): string {
-    const host = new URL(this.getAbsoluteCurrentUrl()).origin;
+    const host = this.getCurrentHost();
     const path = isString(navParams.path) ? [navParams.path] : isArray(navParams.path) ? navParams.path : [];
 
     return `${host}${this.router.createUrlTree(path, { queryParams: navParams.queryParams }).toString()}`;

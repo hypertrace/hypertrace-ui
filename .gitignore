@@ -16,6 +16,7 @@ build
 .project
 .classpath
 .c9/
+.angular/
 *.launch
 .settings/
 *.sublime-workspace
@@ -28,6 +29,7 @@ build
 !.vscode/extensions.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage

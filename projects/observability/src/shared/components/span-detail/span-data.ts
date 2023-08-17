@@ -11,6 +11,7 @@ export interface SpanData {
   requestBody: string;
   responseHeaders: Dictionary<unknown>;
   responseCookies: Dictionary<unknown>;
+  responseCookiesMetadata: Dictionary<Dictionary<unknown>>;
   responseBody: string;
   tags: Dictionary<unknown>;
   requestUrl: string;

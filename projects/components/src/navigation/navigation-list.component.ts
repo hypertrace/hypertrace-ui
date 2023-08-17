@@ -8,6 +8,7 @@ import {
   NavigationService,
   TypedSimpleChanges
 } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
@@ -76,7 +77,11 @@ import {
 
         <hr class="nav-divider" />
         <div *ngFor="let footerItem of footerItems" class="footer-item">
-          <ht-link class="link" [paramsOrUrl]="this.getFooterItemNavigationParams | htMemoize: footerItem.url">
+          <ht-link
+            class="link"
+            [paramsOrUrl]="this.getFooterItemNavigationParams | htMemoize: footerItem.url"
+            [ariaLabel]="footerItem.label"
+          >
             <ht-icon *ngIf="this.collapsed" [icon]="footerItem.icon" size="${IconSize.Small}"></ht-icon>
             <ht-label *ngIf="!this.collapsed" [label]="footerItem.label"></ht-label>
           </ht-link>
@@ -127,7 +132,7 @@ export class NavigationListComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
-    if (changes.navItems) {
+    if (changes.navItems && !isNil(this.navItems)) {
       this.navItems = this.navListComponentService.resolveFeaturesAndUpdateVisibilityForNavItems(this.navItems);
 
       // Must remain subscribed to in template to maintain time range functionality for activeItemChange.

@@ -4,6 +4,7 @@
 
 // Angular
 export * from './utilities/angular/angular-utils';
+export * from './utilities/angular/pipes';
 export { DynamicComponentService } from './utilities/angular/dynamic-component.service';
 
 // Browser
@@ -49,9 +50,11 @@ export * from './utilities/formatters/date/display-date.pipe';
 export * from './utilities/formatters/time/display-time-ago.pipe';
 export * from './utilities/formatters/duration/duration-formatter';
 export * from './utilities/formatters/duration/display-duration.pipe';
+export * from './utilities/formatters/string/display-string.pipe';
 export * from './utilities/formatters/ordinal/ordinal.pipe';
 export * from './utilities/formatters/ordinal/ordinal-formatter';
 export * from './utilities/formatters/formatting.module';
+export * from './utilities/formatters/file-size/display-file-size.pipe';
 export * from './utilities/formatters/numeric/display-number.pipe';
 export * from './utilities/formatters/numeric/numeric-formatter';
 export * from './utilities/formatters/string/string-formatter';
@@ -135,3 +138,7 @@ export * from './color/color-palette';
 
 // Global header height provider
 export * from './global-header-height/global-header-height-provider.service';
+
+// Key codes
+export * from './key-codes/key-code';
+export * from './event/event-utils';

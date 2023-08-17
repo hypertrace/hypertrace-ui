@@ -10,7 +10,6 @@ import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 export class EntityAttributeDataSourceModel extends EntityValueDataSourceModel<string | number> {
   @ModelProperty({
     key: 'attribute',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: AttributeSpecificationModel

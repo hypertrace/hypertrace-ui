@@ -22,7 +22,7 @@ export const backendTraceListDashboard = {
       {
         type: 'table-widget-column',
         title: 'Name',
-        width: '1',
+        width: 1,
         filterable: true,
         value: {
           type: 'attribute-specification',
@@ -78,7 +78,7 @@ export const backendTraceListDashboard = {
       type: 'trace-detail-widget',
       data: {
         type: 'api-trace-detail-data-source',
-        // tslint:disable-next-line: no-invalid-template-strings
+
         trace: '${row}'
       }
     },

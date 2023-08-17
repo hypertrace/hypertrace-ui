@@ -1,0 +1,86 @@
+@use 'mixins' as m;
+
+$input-height: 34px;
+$border-radius: 6px;
+
+.input-pill-list {
+  @include m.fill-container();
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: inherit;
+  padding: 8px;
+
+  .header {
+    @include m.fill-container();
+
+    .primary-input {
+      border: 1px solid m.$gray-2;
+    }
+  }
+
+  .input {
+    height: $input-height;
+    align-items: center;
+    width: 100%;
+    line-height: $input-height;
+    border-radius: $border-radius;
+    display: block;
+  }
+
+  .pill-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-flow: row;
+    gap: 12px;
+    background-color: white;
+    border-radius: $border-radius;
+    padding: 8px;
+
+    .pill {
+      @include m.body-small(m.$gray-9);
+      align-items: center;
+      background-color: m.$blue-1;
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      border: 1px solid m.$gray-5;
+      border-radius: $border-radius;
+      padding: 2px 4px;
+
+      .form-field {
+        @include m.fill-container();
+        background-color: m.$blue-1;
+      }
+
+      .close-icon {
+        cursor: pointer;
+
+        &.disabled {
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.dropdown-values {
+  @include m.dropdown;
+  width: 420px;
+  max-height: 268px;
+
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+
+  .dropdown-value {
+    @include m.ellipsis-overflow;
+    @include m.body-1-regular;
+    cursor: pointer;
+    padding: 8px 16px;
+
+    &:hover {
+      background-color: m.$gray-1;
+    }
+  }
+}

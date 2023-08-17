@@ -4,20 +4,42 @@ import { FieldFilter, FilterValue } from '../filtering/filter/filter';
 import { FilterOperator } from '../filtering/filter/filter-operators';
 import { TableCellAlignmentType } from './cells/types/table-cell-alignment-type';
 
-export interface TableColumnConfig {
-  id: string; // This is the unique ID for the column (often same as 'name' except for composite fields)
-  name?: string; // Attribute name (for composite columns use the attribute that should be filtered/sorted)
+export interface TableColumnConfig<TableColumnOptions = unknown> {
+  /**
+   * This is the unique ID for the column (often same as 'name' except for composite fields)
+   */
+  id: string;
+  /**
+   * Attribute name (for composite columns use the attribute that should be filtered/sorted)
+   */
+  name?: string;
+  /**
+   * This is used to correlate with a cell renderer that should be used for the column
+   */
   display?: string;
   title?: string;
   titleTooltip?: string;
   sort?: TableSortDirection;
-  visible?: boolean; // Is the column shown
-  editable?: boolean; // Can the column be added/removed
-  sortable?: boolean; // Can the column be sorted
-  filterable?: boolean; // Can the column be filtered
+  visible?: boolean;
+  editable?: boolean;
+  sortable?: boolean;
+  filterable?: boolean;
   alignment?: TableCellAlignmentType;
-  width?: number | string;
-  minWidth?: number | string;
+  /**
+   * Passing a `number` is considered as flex-grow
+   * Width can also be passed as `px` or `%`
+   */
+  width?: TableColumnWidth;
+  /**
+   * Min Width can be passed as `px` or `%`
+   */
+  minWidth?: TableColumnFixedWidth;
+  /**
+   * Use the `options` to pass additional data to the renderer for
+   * customizations.
+   */
+  options?: TableColumnOptions;
+
   onClick?(row: TableRow, column: TableColumnConfig): void;
 }
 
@@ -89,3 +111,10 @@ export const enum TableSelectionMode {
   Single = 'single',
   Multiple = 'multiple'
 }
+
+export type TableColumnWidth = TableColumnFlexWidth | TableColumnFixedWidth;
+
+export type TableColumnFlexWidth = number;
+
+// Keeping `%` widths for minimal blast radius
+export type TableColumnFixedWidth = `${number}%` | `${number}px`;

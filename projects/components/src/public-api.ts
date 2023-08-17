@@ -14,7 +14,7 @@ export { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 // Button
 export { ButtonComponent } from './button/button.component';
 export { ButtonModule } from './button/button.module';
-export { ButtonRole, ButtonSize, ButtonStyle } from './button/button';
+export { ButtonVariant, ButtonSize, ButtonStyle } from './button/button';
 
 // Back Button
 export { BackButtonComponent } from './back-button/back-button.component';
@@ -108,13 +108,13 @@ export * from './feature-check/feature.pipe';
 export * from './feature-check/if-feature.directive';
 
 // File Upload
-export * from './file-upload/file-upload-validators';
 export * from './file-upload/file-upload.component';
 export * from './file-upload/file-upload.module';
 export * from './file-upload/file-display/file-display.module';
 export * from './file-upload/file-display/file-display.component';
 
 export * from './file-upload/file-upload.service';
+export * from './file-upload/file-types';
 
 // Filter
 export * from './filtering/filter/filter';
@@ -134,6 +134,10 @@ export * from './filtering/filter-bar/filter-bar.component';
 export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
 export * from './filtering/filter-modal/in-filter-modal.component';
+
+// Filter Button Wrapper
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.component';
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.module';
 
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
@@ -214,6 +218,7 @@ export * from './load-async/load-async.directive';
 export * from './load-async/load-async.module';
 export * from './load-async/load-async.service';
 export * from './load-async/load-async-state.type';
+export * from './load-async/loader/loader.module';
 
 // Message Display
 export { MessageDisplayComponent } from './message-display/message-display.component';
@@ -277,6 +282,10 @@ export * from './radio/radio-group.component';
 export * from './radio/radio-option';
 export * from './radio/radio.module';
 
+// Refresh Button
+export * from './refresh-button/refresh-button.component';
+export * from './refresh-button/refresh-button.module';
+
 // Search box
 export * from './search-box/search-box.component';
 export * from './search-box/search-box.module';
@@ -290,6 +299,12 @@ export * from './select/select-option.component';
 export * from './select/select-control-option.component';
 export * from './select/select.component';
 export * from './select/select.module';
+
+// Splitter
+export * from './splitter/splitter';
+export * from './splitter/splitter-content.directive';
+export * from './splitter/splitter.component';
+export * from './splitter/splitter.module';
 
 // Sequence
 export { Marker, MarkerDatum, SequenceSegment } from './sequence/sequence';
@@ -396,6 +411,7 @@ export * from './toggle-switch/toggle-switch.module';
 export { ToggleSwitchSize } from './toggle-switch/toggle-switch-size';
 
 // Tooltip
+export { ActionableTooltipDirective } from './tooltip/actionable/actionable-tooltip.directive';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { TooltipDirective } from './tooltip/tooltip.directive';
 
@@ -407,6 +423,8 @@ export * from './page-time-range/page-time-range.component';
 export * from './page-time-range/page-time-range.module';
 
 // Stepper
-export * from './stepper/stepper.module';
-export * from './stepper/stepper.component';
-export * from './stepper/stepper-tab.component';
+export * from './stepper';
+
+// Pill list
+export * from './input-pill-list/input-pill-list.component';
+export * from './input-pill-list/input-pill-list.module';

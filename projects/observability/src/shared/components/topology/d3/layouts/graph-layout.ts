@@ -1,16 +1,20 @@
 import { RenderableTopology, RenderableTopologyNode, TopologyEdge, TopologyNode } from '../../topology';
 
 export class GraphLayout {
-  private readonly levelToNodesMap: Map<number, RenderableTopologyNode[]> = new Map<number, RenderableTopologyNode[]>([
-    [0, []]
-  ]);
+  private levelToNodesMap: Map<number, RenderableTopologyNode[]> = new Map<number, RenderableTopologyNode[]>([[0, []]]);
   private readonly nodeToLevelMap: Map<RenderableTopologyNode, number> = new Map<RenderableTopologyNode, number>();
 
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
+    this.initialize();
     this.findRootNodes(topology);
     this.fillNodeAndLevelMaps();
     this.assignCoordinatesToNodes();
     this.verticallyCenterAlignNodes();
+  }
+
+  private initialize(): void {
+    this.levelToNodesMap = new Map([[0, []]]);
+    this.nodeToLevelMap.clear();
   }
 
   private findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {

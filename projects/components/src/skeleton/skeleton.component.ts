@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'ht-skeleton',
@@ -20,6 +20,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
     </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom,
   styleUrls: ['./skeleton.component.scss']
 })
 export class SkeletonComponent implements OnChanges {

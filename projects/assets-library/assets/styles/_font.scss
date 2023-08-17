@@ -1,4 +1,4 @@
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @import 'color-palette';
 
 $font-family: 'Work Sans', sans-serif;
@@ -338,6 +338,13 @@ $font-family: 'Work Sans', sans-serif;
   @include chart-small-regular;
 }
 
-$mat-typography: mat.define-typography-config(
+$mat-typography: mat.define-legacy-typography-config(
   $font-family: $font-family
 );
+
+@mixin line-clamp($maxLines: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $maxLines;
+}

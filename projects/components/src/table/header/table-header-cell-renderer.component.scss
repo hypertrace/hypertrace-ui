@@ -1,15 +1,11 @@
 @import 'mixins';
 
 .table-header-cell-renderer {
-  @include ellipsis-overflow();
   display: flex;
   align-items: center;
   width: 100%;
   height: 32px;
   padding: 0 6px;
-  &.sortable {
-    cursor: pointer;
-  }
 
   &:hover {
     color: $gray-9;
@@ -38,6 +34,11 @@
     flex: 1 1 auto;
     display: flex;
 
+    .title-text {
+      @include ellipsis-overflow;
+      width: 100%;
+    }
+
     &.left {
       justify-content: flex-start;
     }
@@ -49,15 +50,24 @@
     &.right {
       justify-content: flex-end;
     }
+  }
+
+  .sort-icons {
+    cursor: pointer;
+    margin-left: 4px;
+
+    display: flex;
+    color: $gray-2;
 
     .sort-icon {
-      margin-left: 4px;
-      color: $gray-9;
+      &.active {
+        color: $gray-9;
+      }
     }
   }
 
-  .state-checkbox {
-    margin-left: 6px;
+  &.state-col {
+    justify-content: center;
   }
 }
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { CheckboxModule } from '../../checkbox/checkbox.module';
+import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
 import { MultiSelectModule } from '../../multi-select/multi-select.module';
 import { MenuDropdownModule } from '../../public-api';
 import { TraceSearchBoxModule } from '../../search-box/search-box.module';
@@ -18,10 +19,10 @@ import { TableControlsComponent } from './table-controls.component';
     CheckboxModule,
     MenuDropdownModule,
     SelectModule,
-    MultiSelectModule
+    MultiSelectModule,
+    FeatureConfigCheckModule
   ],
   declarations: [TableControlsComponent],
   exports: [TableControlsComponent]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class TableControlsModule {}

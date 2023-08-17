@@ -1,5 +1,12 @@
-@import 'layout';
+.custom-templated-message {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 
-:host {
-  @include fill-container();
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

@@ -39,7 +39,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   public viewId?: string;
 
   @ModelProperty({
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: WidgetHeaderModel
@@ -72,7 +71,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'select-control-options',
     displayName: 'Select Options',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -86,7 +84,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'checkbox-control-options',
     displayName: 'Checkbox Options',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ARRAY_PROPERTY.type,
       subtype: {
@@ -100,7 +97,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'mode',
     displayName: 'Table Mode',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
@@ -111,7 +107,6 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'style',
     displayName: 'Table Style',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [TableStyle.FullPage, TableStyle.Embedded, TableStyle.List]
@@ -139,6 +134,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     type: STRING_PROPERTY.type
   })
   public rowHeight: string = '44px';
+
+  @ModelProperty({
+    key: 'max-row-height',
+    displayName: 'Max Row Height',
+    type: STRING_PROPERTY.type
+  })
+  public maxRowHeight?: string;
 
   @ModelProperty({
     key: 'loadingConfig',
@@ -216,6 +218,10 @@ export abstract class TableWidgetBaseModel extends BaseModel {
 
   public getRowHeight(): string {
     return this.rowHeight;
+  }
+
+  public getMaxRowHeight(): string | undefined {
+    return this.maxRowHeight;
   }
 
   public getLoadingConfig(): LoadAsyncConfig | undefined {

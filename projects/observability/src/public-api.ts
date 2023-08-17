@@ -21,7 +21,8 @@ export * from './shared/graphql/request/builders/specification/trace/trace-statu
 
 // Dashboard Graphql
 export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
-export * from './shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
+export * from './shared/dashboard/data/graphql/filter/graphql-id-scope-filter.model';
+export * from './shared/dashboard/data/graphql/filter/graphql-key-value-filter.model';
 export * from './shared/dashboard/data/graphql/graphql-data-source.model';
 export * from './shared/dashboard/data/graphql/graphql-query-event.service';
 export * from './shared/dashboard/data/graphql/graphql-data-source.module';
@@ -102,6 +103,8 @@ export { SpanDetailTab } from './shared/components/span-detail/span-detail-tab';
 
 export * from './shared/components/span-detail/span-detail.component';
 export * from './shared/components/span-detail/span-detail.module';
+export * from './shared/components/span-detail/request/span-request-detail.module';
+export * from './shared/components/span-detail/response/span-response-detail.module';
 export { SpanDetailLayoutStyle } from './shared/components/span-detail/span-detail-layout-style';
 
 // Specifications

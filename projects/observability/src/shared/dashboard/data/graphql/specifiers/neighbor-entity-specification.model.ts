@@ -12,7 +12,6 @@ export class NeighborEntitySpecificationModel extends EntitySpecificationModel i
   @ModelProperty({
     key: 'neighbor-direction',
     displayName: 'Neighbor Direction',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [NeighborDirection.Upstream, NeighborDirection.Downstream]
@@ -24,7 +23,6 @@ export class NeighborEntitySpecificationModel extends EntitySpecificationModel i
   @ModelProperty({
     key: 'neighbor-type',
     displayName: 'Neighbor Entity Type',
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ENUM_TYPE.type,
       values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend]

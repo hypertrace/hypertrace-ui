@@ -8,9 +8,11 @@ import { IconSize } from '../icon/icon-size';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="this.paramsOrUrl" class="open-in-new-tab" htTooltip="Open in a new tab">
-      <ht-link [paramsOrUrl]="this.paramsOrUrl">
-        <ht-icon icon="${IconType.OpenInNewTab}" [size]="this.iconSize"></ht-icon>
-      </ht-link>
+      <ht-event-blocker event="click">
+        <ht-link [paramsOrUrl]="this.paramsOrUrl" ariaLabel="Open in a new tab">
+          <ht-icon icon="${IconType.OpenInNewTab}" [size]="this.iconSize"></ht-icon>
+        </ht-link>
+      </ht-event-blocker>
     </div>
   `
 })

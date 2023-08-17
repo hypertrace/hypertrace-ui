@@ -24,13 +24,18 @@ export const enum ModalSize {
   Large = 'large',
   LargeTall = 'large-tall',
   MediumWide = 'medium-wide',
-  LargeWide = 'large-wide'
+  LargeWide = 'large-wide',
+  ExpandTo90 = 'expand-to-90'
 }
 
 export interface ModalDimension {
   // Number => without unit (considered px) and String => with units (expression included)
   width: number | string;
   height: number | string;
+  minWidth?: number | string;
+  minHeight?: number | string;
+  maxWidth?: number | string;
+  maxHeight?: number | string;
 }
 
 export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
@@ -49,6 +54,8 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
       return getModalDimensionObject(840, 600);
     case ModalSize.LargeWide:
       return getModalDimensionObject('95em', '90vh');
+    case ModalSize.ExpandTo90:
+      return getModalDimensionObject('90vw', '90vh');
     default:
       return getModalDimensionObject(420, 365);
   }
@@ -63,5 +70,6 @@ export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');
 
 export abstract class ModalRef<TResult> {
   public abstract readonly closed$: Observable<TResult>;
+
   public abstract close(result?: TResult): void;
 }

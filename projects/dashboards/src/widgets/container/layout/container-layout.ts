@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Injector, Type, ViewContainerRef } from '@angular/core';
+import { Injector, ViewContainerRef } from '@angular/core';
 import { BOOLEAN_PROPERTY, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { ContainerLayoutComponent, CONTAINER_LAYOUT } from './container-layout.component';
 
@@ -23,17 +23,12 @@ export abstract class ContainerLayout {
   public abstract getContainerLayoutData(children: object[]): ContainerLayoutData;
 
   public draw(containerRef: ViewContainerRef, children: object[]): void {
-    const resolver = containerRef.injector.get((ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>);
-
-    const containerFactory = resolver.resolveComponentFactory(ContainerLayoutComponent);
     const layoutData = this.getContainerLayoutData(children);
 
     containerRef.clear();
-    containerRef.createComponent(
-      containerFactory,
-      undefined,
-      this.createInjectorForContainer(containerRef, layoutData)
-    );
+    containerRef.createComponent(ContainerLayoutComponent, {
+      injector: this.createInjectorForContainer(containerRef, layoutData)
+    });
   }
 
   private createInjectorForContainer(containerRef: ViewContainerRef, gridLayoutData: ContainerLayoutData): Injector {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
 import { ToggleSwitchSize } from './toggle-switch-size';
 
 @Component({
@@ -12,6 +12,7 @@ import { ToggleSwitchSize } from './toggle-switch-size';
       <mat-slide-toggle
         color="primary"
         [checked]="this.isChecked"
+        [aria-label]="this.ariaLabel ?? this.label || 'toggle switch'"
         [ngClass]="{ 'small-slide-toggle': this.size === '${ToggleSwitchSize.Small}', disabled: this.isDisabled }"
         [disabled]="this.isDisabled"
         (change)="this.onToggle($event)"
@@ -31,6 +32,9 @@ import { ToggleSwitchSize } from './toggle-switch-size';
 export class ToggleSwitchComponent implements ControlValueAccessor {
   @Input()
   public label?: string = '';
+
+  @Input()
+  public ariaLabel?: string;
 
   @Input()
   public size: ToggleSwitchSize = ToggleSwitchSize.Small;

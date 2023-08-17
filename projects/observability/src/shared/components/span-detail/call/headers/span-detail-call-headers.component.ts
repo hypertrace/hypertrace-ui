@@ -13,7 +13,11 @@ import { EMPTY, Observable, of } from 'rxjs';
       <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container" data-sensitive-pii>
         <ng-container *htLoadAsync="this.records$ as records">
-          <ht-list-view [records]="records" display="${ListViewDisplay.Plain}"></ht-list-view>
+          <ht-list-view
+            [records]="records"
+            [metadata]="this.metadata"
+            display="${ListViewDisplay.Plain}"
+          ></ht-list-view>
         </ng-container>
       </div>
     </div>
@@ -22,6 +26,9 @@ import { EMPTY, Observable, of } from 'rxjs';
 export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
   public data?: Dictionary<unknown>;
+
+  @Input()
+  public metadata?: Dictionary<Dictionary<unknown>>;
 
   @Input()
   public title?: string;

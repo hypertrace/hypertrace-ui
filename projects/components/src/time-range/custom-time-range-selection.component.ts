@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TimeRange, TimeRangeService, TypedSimpleChanges } from '@hypertrace/common';
-import { ButtonRole } from '../button/button';
+import { ButtonVariant } from '../button/button';
 
 @Component({
   selector: 'ht-custom-time-range-selection',
@@ -25,7 +25,7 @@ import { ButtonRole } from '../button/button';
 
         <div class="buttons">
           <!-- Cancel -->
-          <ht-button class="button" label="Cancel" role="${ButtonRole.Destructive}" (click)="this.onCancel()">
+          <ht-button class="button" label="Cancel" variant="${ButtonVariant.Destructive}" (click)="this.onCancel()">
           </ht-button>
 
           <div style="flex: 1 1 auto;"></div>
@@ -34,7 +34,7 @@ import { ButtonRole } from '../button/button';
           <ht-button
             class="button apply-button"
             label="Apply"
-            role="${ButtonRole.Primary}"
+            variant="${ButtonVariant.Primary}"
             (click)="this.onApply()"
             [disabled]="!this.from || !this.to"
           >

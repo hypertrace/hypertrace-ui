@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 
 @Component({
   selector: 'ht-checkbox',
@@ -9,6 +9,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   template: `
     <mat-checkbox
       labelPosition="after"
+      [aria-label]="this.label || 'checkbox'"
       [checked]="this.isChecked"
       [disabled]="this.isDisabled"
       [(indeterminate)]="this.indeterminate"

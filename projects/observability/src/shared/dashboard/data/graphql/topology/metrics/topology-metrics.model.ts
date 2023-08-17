@@ -14,7 +14,6 @@ export class TopologyMetricsModel implements TopologyMetricsData {
   @ModelProperty({
     key: 'primary',
     required: true,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: TopologyMetricWithCategoryModel
@@ -25,7 +24,6 @@ export class TopologyMetricsModel implements TopologyMetricsData {
   @ModelProperty({
     key: 'secondary',
     required: false,
-    // tslint:disable-next-line: no-object-literal-type-assertion
     type: {
       key: ModelPropertyType.TYPE,
       defaultModelClass: TopologyMetricWithCategoryModel

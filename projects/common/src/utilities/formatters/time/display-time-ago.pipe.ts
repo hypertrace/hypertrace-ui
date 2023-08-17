@@ -15,21 +15,21 @@ import { DateCoercer } from '../../coercers/date-coercer';
 export class DisplayTimeAgo implements PipeTransform {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
 
-  public transform(value?: DateOrMillis | null): string {
+  public transform(value?: DateOrMillis | null, suffix: string = 'ago', dateCoercer?: DateCoercer): string {
     if (value === null || value === undefined || value === 0) {
       return '-';
     }
 
-    const durationAgo = new TimeDuration(this.calcSecondsAgo(value), TimeUnit.Second);
+    const durationAgo = new TimeDuration(this.calcSecondsAgo(value, dateCoercer ?? this.dateCoercer), TimeUnit.Second);
     if (durationAgo.getAmountForUnit(TimeUnit.Minute) < 1) {
       return 'Just now';
     }
 
-    return `${durationAgo.getMostSignificantUnitOnly().toLongString()} ago`;
+    return `${durationAgo.getMostSignificantUnitOnly().toLongString()} ${suffix}`;
   }
 
-  private calcSecondsAgo(timestamp: DateOrMillis): number {
-    return Math.floor((Date.now() - this.dateCoercer.coerce(timestamp)!.getTime()) / 1000);
+  private calcSecondsAgo(timestamp: DateOrMillis, dateCoercer: DateCoercer): number {
+    return Math.floor((Date.now() - dateCoercer.coerce(timestamp)!.getTime()) / 1000);
   }
 }
 

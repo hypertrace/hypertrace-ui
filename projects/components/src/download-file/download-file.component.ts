@@ -17,6 +17,7 @@ import { FileDownloadService } from './service/file-download.service';
         icon="${IconType.Download}"
         display="${ButtonStyle.Text}"
         size="${ButtonSize.Large}"
+        ariaLabel="Download"
       ></ht-button>
       <ht-icon *ngIf="this.dataLoading" icon="${IconType.Loading}" size="${IconSize.Large}"></ht-icon>
     </div>

@@ -1,6 +1,11 @@
 import { RouterLinkWithHref } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavigationService, TrackDirective } from '@hypertrace/common';
+import {
+  ExternalNavigationWindowHandling,
+  NavigationParamsType,
+  NavigationService,
+  TrackDirective
+} from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
@@ -26,10 +31,12 @@ describe('Link component', () => {
 
     const anchorElement = spectator.query('.ht-link');
     expect(anchorElement).toExist();
-    expect(anchorElement).toHaveClass('ht-link disabled');
+    expect(anchorElement).toHaveClass('ht-link internal disabled');
   });
 
   test('Link should navigate correctly to external URLs', () => {
+    window.open = jest.fn();
+
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
         paramsOrUrl: 'http://test.hypertrace.ai'
@@ -47,28 +54,30 @@ describe('Link component', () => {
               ],
               extras: { skipLocationChange: true }
             })
-          )
+          ),
+          isExternalUrl: jest.fn().mockReturnValue(true)
         })
       ]
     });
 
-    const anchorElement = spectator.query('.ht-link');
+    let anchorElement = spectator.query('.ht-link.external') as HTMLAnchorElement;
     expect(anchorElement).toExist();
     expect(anchorElement).not.toHaveClass('disabled');
-    const routerLinkDirective = spectator.query(RouterLinkWithHref);
+    expect(anchorElement.href).toBe('http://test.hypertrace.ai/');
+    spectator.click(anchorElement);
+    expect(window.open).toHaveBeenLastCalledWith('http://test.hypertrace.ai', '_self');
 
-    expect(routerLinkDirective).toBeDefined();
-    expect(routerLinkDirective?.routerLink).toEqual([
-      '/external',
-      {
-        url: 'http://test.hypertrace.ai',
-        navType: 'same_window'
+    // With new window
+    spectator.setHostInput({
+      paramsOrUrl: {
+        navType: NavigationParamsType.External,
+        url: '/test',
+        windowHandling: ExternalNavigationWindowHandling.NewWindow
       }
-    ]);
-    expect(routerLinkDirective!.skipLocationChange).toBeTruthy();
-    expect(routerLinkDirective!.queryParams).toBeUndefined();
-    expect(routerLinkDirective!.queryParamsHandling).toBeUndefined();
-    expect(routerLinkDirective!.replaceUrl).toBeUndefined();
+    });
+    expect(anchorElement.href).toBe('http://localhost/test');
+    spectator.click(anchorElement);
+    expect(window.open).toHaveBeenLastCalledWith('/test', undefined);
   });
 
   test('Link should navigate correctly to internal relative URLs', () => {
@@ -83,7 +92,7 @@ describe('Link component', () => {
       ]
     });
 
-    const anchorElement = spectator.query('.ht-link');
+    const anchorElement = spectator.query('.ht-link.internal');
     expect(anchorElement).toExist();
     expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
@@ -108,7 +117,7 @@ describe('Link component', () => {
       ]
     });
 
-    const anchorElement = spectator.query('.ht-link');
+    const anchorElement = spectator.query('.ht-link.internal');
     expect(anchorElement).toExist();
     expect(anchorElement).not.toHaveClass('disabled');
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
@@ -133,9 +142,9 @@ describe('Link component', () => {
       ]
     });
 
-    const anchorElement = spectator.query('.ht-link');
+    const anchorElement = spectator.query('.ht-link.internal');
     expect(anchorElement).toExist();
-    expect(anchorElement).toHaveClass('ht-link disabled');
+    expect(anchorElement).toHaveClass('ht-link internal disabled');
 
     const routerLinkDirective = spectator.query(RouterLinkWithHref);
 

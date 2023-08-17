@@ -27,7 +27,6 @@ import { ExplorerComponent } from './explorer.component';
   ],
   declarations: [ExplorerComponent]
 })
-// tslint:disable-next-line: no-unnecessary-class
 export class ExplorerModule {
   public static withDashboardBuilderFactory(builderFactory: FactorySansProvider): ModuleWithProviders<ExplorerModule> {
     return {

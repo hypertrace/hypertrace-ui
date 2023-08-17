@@ -12,6 +12,7 @@ import {
   INTERVAL_DATA
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
+import { FILTER_BUTTON_WRAPPER, FilterButtonWrapperComponent } from '@hypertrace/components';
 
 export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
@@ -128,7 +129,7 @@ export class CartesianLegend<TData> {
       .selectAll('.legend-entry')
       .data(seriesGroup)
       .enter()
-      .each((_, index, elements) => this.drawLegendEntry(elements[index]));
+      .each((_, index, elements) => this.drawLegendEntry(elements[index], true));
   }
 
   private drawLegendContainer(
@@ -150,7 +151,10 @@ export class CartesianLegend<TData> {
       .classed('grouped', this.isGrouped);
   }
 
-  private drawLegendEntry(element: EnterElement): Selection<HTMLDivElement, Series<TData>, null, undefined> {
+  private drawLegendEntry(
+    element: EnterElement,
+    showFilters?: boolean
+  ): Selection<HTMLDivElement, Series<TData>, null, undefined> {
     const legendEntry = select<EnterElement, Series<TData>>(element).append('div').classed('legend-entry', true);
 
     this.appendLegendSymbol(legendEntry);
@@ -161,7 +165,15 @@ export class CartesianLegend<TData> {
       .text(series => series.name)
       .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
+    this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+
     this.updateLegendClassesAndStyle();
+
+    if (showFilters) {
+      legendEntry
+        .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
+        .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
+    }
 
     return legendEntry;
   }
@@ -203,6 +215,14 @@ export class CartesianLegend<TData> {
         CartesianLegend.INACTIVE_CSS_CLASS,
         series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<TData>)
       );
+
+    // Legend filters
+    legendElementSelection
+      .selectAll('.filter')
+      .style('position', 'relative')
+      .style('left', '4px')
+      .style('top', '2px')
+      .style('visibility', 'hidden');
   }
 
   private appendLegendSymbol(selection: Selection<HTMLDivElement, Series<TData>, null, undefined>): void {
@@ -214,6 +234,25 @@ export class CartesianLegend<TData> {
       .attr('cx', 10)
       .attr('cy', 10)
       .style('fill', series => series.color);
+  }
+
+  private drawFilterControl(container: ContainerElement): ComponentRef<unknown> {
+    return this.injector.get(DynamicComponentService).insertComponent(
+      container as Element,
+      FilterButtonWrapperComponent,
+      Injector.create({
+        providers: [
+          {
+            provide: FILTER_BUTTON_WRAPPER,
+            useValue: {
+              attribute: this.activeSeries[0].groupByFilterAttribute,
+              value: container.textContent
+            }
+          }
+        ],
+        parent: this.injector
+      })
+    );
   }
 
   private drawIntervalControl(container: ContainerElement, intervalData: CartesianIntervalData): ComponentRef<unknown> {

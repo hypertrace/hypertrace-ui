@@ -4,7 +4,7 @@ import { TrackDirective } from '@hypertrace/common';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
 import { IconSize } from '../icon/icon-size';
-import { ButtonRole, ButtonSize, ButtonStyle, ButtonType } from './button';
+import { ButtonVariant, ButtonSize, ButtonStyle, ButtonType } from './button';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -53,33 +53,33 @@ describe('Button Component', () => {
 
     // Primary
     spectator.setInput({
-      role: ButtonRole.Primary
+      variant: ButtonVariant.Primary
     });
-    expect(spectator.query('.button')).toHaveClass('button primary small solid');
+    expect(spectator.query('.button')).toHaveClass('button small solid primary');
 
     // Secondary
     spectator.setInput({
-      role: ButtonRole.Secondary
+      variant: ButtonVariant.Secondary
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary small solid');
+    expect(spectator.query('.button')).toHaveClass('button small solid secondary');
 
     // Tertiary
     spectator.setInput({
-      role: ButtonRole.Tertiary
+      variant: ButtonVariant.Tertiary
     });
-    expect(spectator.query('.button')).toHaveClass('button tertiary small solid');
+    expect(spectator.query('.button')).toHaveClass('button small solid tertiary');
 
     // Quaternary
     spectator.setInput({
-      role: ButtonRole.Quaternary
+      variant: ButtonVariant.Quaternary
     });
-    expect(spectator.query('.button')).toHaveClass('button quaternary small solid');
+    expect(spectator.query('.button')).toHaveClass('button small solid quaternary');
 
     // Destructive
     spectator.setInput({
-      role: ButtonRole.Destructive
+      variant: ButtonVariant.Destructive
     });
-    expect(spectator.query('.button')).toHaveClass('button destructive small solid');
+    expect(spectator.query('.button')).toHaveClass('button small solid destructive');
   });
 
   test('should have correct style class for selected size', () => {
@@ -97,35 +97,35 @@ describe('Button Component', () => {
     spectator.setInput({
       size: ButtonSize.ExtraSmall
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary extra-small');
-    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
+    expect(spectator.query('.button')).toHaveClass('button secondary solid extra-small');
+    expect(spectator.component.getIconSizeClass()).toEqual(IconSize.ExtraSmall);
 
     // Large
     spectator.setInput({
       size: ButtonSize.Large
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary large');
+    expect(spectator.query('.button')).toHaveClass('button secondary solid large');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Large);
 
     // Small
     spectator.setInput({
       size: ButtonSize.Small
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary small');
+    expect(spectator.query('.button')).toHaveClass('button secondary solid small');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
 
     // Medium
     spectator.setInput({
       size: ButtonSize.Medium
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary medium');
+    expect(spectator.query('.button')).toHaveClass('button secondary solid medium');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Medium);
 
     // Tiny
     spectator.setInput({
       size: ButtonSize.Tiny
     });
-    expect(spectator.query('.button')).toHaveClass('button secondary tiny');
+    expect(spectator.query('.button')).toHaveClass('button secondary solid tiny');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
   });
 

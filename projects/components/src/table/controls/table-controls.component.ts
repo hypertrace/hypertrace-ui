@@ -11,10 +11,11 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { isEqual } from 'lodash-es';
+import { isEqual, isNil } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { MultiSelectJustify } from '../../multi-select/multi-select-justify';
 import { MultiSelectSearchMode, TriggerLabelDisplayMode } from '../../multi-select/multi-select.component';
+import { SearchBoxEmitMode } from '../../search-box/search-box.component';
 import { ToggleItem } from '../../toggle-group/toggle-item';
 import { StatefulTableRow } from '../table-api';
 import {
@@ -40,6 +41,8 @@ import {
           [placeholder]="this.searchPlaceholder || this.DEFAULT_SEARCH_PLACEHOLDER"
           [debounceTime]="400"
           (valueChange)="this.onSearchChange($event)"
+          (submit)="this.onSearchChange($event)"
+          searchMode="${SearchBoxEmitMode.OnSubmit}"
         ></ht-search-box>
 
         <!-- Selects -->
@@ -64,11 +67,12 @@ import {
 
           <ht-select
             *ngIf="!selectControl.isMultiSelect"
-            [selected]="this.appliedFilters(selectControl)"
+            [selected]="this.appliedFilters(selectControl)?.[0]"
             [placeholder]="selectControl.placeholder"
             class="control select"
             [ngClass]="{ applied: this.appliedFilters(selectControl).length > 0 }"
             showBorder="true"
+            [showClearSelected]="selectControl.showClearSelected"
             searchMode="${MultiSelectSearchMode.CaseInsensitive}"
             (selectedChange)="this.onSelectChange(selectControl, $event)"
           >
@@ -267,10 +271,10 @@ export class TableControlsComponent implements OnChanges {
     );
   }
 
-  public onSelectChange(selectControl: TableSelectControl, selection: TableSelectControlOption): void {
+  public onSelectChange(selectControl: TableSelectControl, selection?: TableSelectControlOption): void {
     this.selectChange.emit({
       select: selectControl,
-      values: [selection]
+      values: !isNil(selection) ? [selection] : []
     });
     this.diffSelections();
   }

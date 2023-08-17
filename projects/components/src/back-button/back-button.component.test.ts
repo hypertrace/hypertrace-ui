@@ -2,7 +2,7 @@ import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { ButtonRole } from '../button/button';
+import { ButtonVariant } from '../button/button';
 import { ButtonComponent } from '../button/button.component';
 import { BackButtonComponent } from './back-button.component';
 
@@ -21,7 +21,7 @@ describe('Back Button Component', () => {
 
     const button = spectator.query(ButtonComponent);
     expect(button).toExist();
-    expect(button?.role).toBe(ButtonRole.Primary);
+    expect(button?.variant).toBe(ButtonVariant.Primary);
     expect(button?.icon).toBe(IconType.ArrowLeft);
   });
 

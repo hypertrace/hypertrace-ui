@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DateCoercer, Dictionary } from '@hypertrace/common';
 import { GraphQlArgument, GraphQlSelection } from '@hypertrace/graphql-client';
+import { isNil } from 'lodash-es';
 import { INTERVAL_START_QUERY_KEY } from '../../../model/schema/explore';
 import { GlobalGraphQlFilterService } from '../../../model/schema/filter/global-graphql-filter.service';
 import { GraphQlGroupBy } from '../../../model/schema/groupby/graphql-group-by';
@@ -9,6 +10,7 @@ import { GraphQlObservabilityArgumentBuilder } from '../../builders/argument/gra
 import { GraphQlSelectionBuilder } from '../../builders/selections/graphql-selection-builder';
 import { ExploreSpecificationBuilder } from '../../builders/specification/explore/explore-specification-builder';
 import {
+  EntityContextOptions,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreRequest,
   GraphQlExploreResponse,
@@ -39,7 +41,8 @@ export class ExploreGraphqlQueryBuilderService {
       ...this.argBuilder.forInterval(request.interval),
       ...this.buildFilters(request),
       ...this.argBuilder.forGroupBy(request.groupBy),
-      ...this.argBuilder.forOrderBys(request.orderBy)
+      ...this.argBuilder.forOrderBys(request.orderBy),
+      ...this.buildEntityContextOptionsArgument(request.entityContextOptions)
     ];
   }
 
@@ -96,7 +99,7 @@ export class ExploreGraphqlQueryBuilderService {
       ...specifications.map(specification => ({
         [specification.resultAlias()]: specification.extractFromServerData(row as Dictionary<GraphQlExploreResultValue>)
       }))
-    );
+    ) as Pick<GraphQlExploreResult, string>;
   }
 
   private getAnyIntervalSelections(request: GraphQlExploreRequest): GraphQlSelection[] {
@@ -107,5 +110,15 @@ export class ExploreGraphqlQueryBuilderService {
     return (groupBy?.keyExpressions ?? []).map(expression =>
       this.specBuilder.exploreSpecificationForAttributeExpression(expression)
     );
+  }
+
+  private buildEntityContextOptionsArgument(entityContextOptions?: EntityContextOptions): GraphQlArgument[] {
+    if (!isNil(entityContextOptions) && !isNil(entityContextOptions.includeNonLiveEntities)) {
+      return [
+        { name: 'entityContextOptions', value: { includeNonLiveEntities: entityContextOptions.includeNonLiveEntities } }
+      ];
+    }
+
+    return [];
   }
 }

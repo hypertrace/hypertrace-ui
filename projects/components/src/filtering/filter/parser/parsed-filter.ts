@@ -53,9 +53,12 @@ export const tryParseStringForAttribute = (
 ): FilterAttributeExpression | undefined => {
   const [stringContainingFullAttribute] = text.trim().split(MAP_LHS_DELIMITER, 1);
   // The string to the left of any delimeter must start with the attribute otherwise no match
-  const matchingNameField = nameFields.find(nameField =>
-    stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase())
-  );
+  const matchingNameField = nameFields
+    .sort((key1, key2) => attributeToTest[key2].length - attributeToTest[key1].length)
+    .find(nameField =>
+      stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase())
+    );
+
   if (!matchingNameField) {
     return undefined;
   }

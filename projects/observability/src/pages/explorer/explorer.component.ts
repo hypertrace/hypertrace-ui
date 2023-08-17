@@ -8,7 +8,7 @@ import {
   TimeDuration,
   TimeDurationService
 } from '@hypertrace/common';
-import { Filter, ToggleItem } from '@hypertrace/components';
+import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import {
 import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
-import { AttributeMetadata } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
@@ -52,8 +52,9 @@ import {
       ></ht-toggle-group>
 
       <ht-filter-bar
+        *ngIf="this.attributes$ | async as attributes"
         class="explorer-filter-bar"
-        [attributes]="this.attributes$ | async"
+        [attributes]="attributes"
         [syncWithUrl]="true"
         (filtersChange)="this.onFiltersUpdated($event)"
       ></ht-filter-bar>
@@ -73,13 +74,14 @@ import {
           <ht-panel-body>
             <div class="visualization-panel-content">
               <ht-explore-query-editor
+                *ngIf="this.attributes$ | async as attributes"
                 [context]="this.currentContext$ | async"
-                (visualizationRequestChange)="this.onVisualizationRequestUpdated($event)"
                 [filters]="this.filters"
                 [series]="initialState.series"
                 [interval]="initialState.interval"
                 [groupBy]="initialState.groupBy"
                 [orderBy]="initialState.orderBy"
+                (visualizationRequestChange)="this.onVisualizationRequestUpdated($event, attributes)"
               ></ht-explore-query-editor>
 
               <ht-application-aware-dashboard
@@ -126,7 +128,7 @@ export class ExplorerComponent {
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly initialState$: Observable<InitialExplorerState>;
   public readonly currentContext$: Observable<ExplorerGeneratedDashboardContext>;
-  public attributes$: Observable<AttributeMetadata[]> = EMPTY;
+  public attributes$: Observable<FilterAttribute[]> = EMPTY;
 
   public readonly contextItems: ContextToggleItem[] = [
     {
@@ -174,9 +176,10 @@ export class ExplorerComponent {
     );
   }
 
-  public onVisualizationRequestUpdated(newRequest: ExploreVisualizationRequest): void {
-    this.explorerDashboardBuilder.updateForRequest(newRequest);
-    this.updateUrlWithVisualizationData(newRequest);
+  public onVisualizationRequestUpdated(newRequest: ExploreVisualizationRequest, attributes: FilterAttribute[]): void {
+    const updatedRequest = { ...newRequest, attributes: attributes };
+    this.explorerDashboardBuilder.updateForRequest(updatedRequest);
+    this.updateUrlWithVisualizationData(updatedRequest);
   }
 
   public onFiltersUpdated(newFilters: Filter[]): void {
@@ -199,7 +202,18 @@ export class ExplorerComponent {
   }
 
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
-    this.attributes$ = this.metadataService.getFilterAttributes(contextWrapper.dashboardContext);
+    this.attributes$ = this.metadataService.getFilterAttributes(contextWrapper.dashboardContext).pipe(
+      map(attributes =>
+        attributes.map(attribute => ({
+          name: attribute.name,
+          displayName: attribute.displayName,
+          units: attribute.units,
+          type: toFilterAttributeType(attribute.type),
+          onlySupportsAggregation: attribute.onlySupportsAggregation,
+          onlySupportsGrouping: attribute.onlySupportsGrouping
+        }))
+      )
+    );
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
   }
 
@@ -264,7 +278,7 @@ export class ExplorerComponent {
               .getAll(ExplorerQueryParam.Group)
               .flatMap(expressionString => this.tryDecodeAttributeExpression(expressionString)),
             includeRest: param.get(ExplorerQueryParam.OtherGroup) === 'true',
-            // tslint:disable-next-line: strict-boolean-expressions
+
             limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
           }
         : undefined,
@@ -366,7 +380,7 @@ interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
   value: ExplorerContextScope;
 }
 
-interface InitialExplorerState {
+export interface InitialExplorerState {
   contextToggle: ContextToggleItem;
   series: ExploreSeries[];
   interval?: IntervalValue;

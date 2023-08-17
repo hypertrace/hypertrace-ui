@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 
-import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holder';
+import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-holder';
+import { StepperTabControlsComponent } from '../tab-controls/stepper-tab-controls.component';
 
 @Component({
   selector: `ht-stepper-tab`,
@@ -10,6 +11,9 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holde
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StepperTabComponent extends ContentHolder {
+  @ContentChild(StepperTabControlsComponent)
+  public tabControls?: StepperTabControlsComponent;
+
   @Input()
   public label?: string;
 
@@ -18,6 +22,9 @@ export class StepperTabComponent extends ContentHolder {
 
   @Input()
   public optional: boolean = false;
+
+  @Input()
+  public editable: boolean = true;
 
   @Input()
   public completed: boolean = true;
