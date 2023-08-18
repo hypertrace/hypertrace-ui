@@ -39,6 +39,7 @@ import {
 } from './explorer-dashboard-builder';
 
 @Component({
+  selector: 'ht-explorer',
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
