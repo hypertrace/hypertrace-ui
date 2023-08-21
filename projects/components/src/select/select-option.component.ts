@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnChanges } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
 import { Observable, Subject } from 'rxjs';
 import { IconBorder } from '../icon/icon-border';
 import { IconSize } from '../icon/icon-size';
@@ -25,7 +24,7 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   public style: SelectOptionStyle = SelectOptionStyle.Default;
 
   @Input()
-  public icon?: IconType;
+  public icon?: string;
 
   @Input()
   public iconSize?: IconSize = IconSize.Small;
