@@ -41,7 +41,7 @@ export class MenuDropdownComponent implements AfterContentInit {
   @ContentChildren(MenuItemComponent)
   public items?: QueryList<MenuItemComponent>;
 
-  public hasItems$: Observable<boolean> = of(false);
+  protected hasItems$: Observable<boolean> = of(false);
 
   public ngAfterContentInit(): void {
     if (this.items) {
