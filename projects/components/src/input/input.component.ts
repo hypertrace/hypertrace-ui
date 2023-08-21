@@ -27,6 +27,8 @@ import { InputAppearance } from './input-appearance';
       <input
         matInput
         [type]="this.type"
+        [min]="this.min"
+        [max]="this.max"
         [required]="this.required"
         [disabled]="this.disabled"
         [placeholder]="this.placeholderValue"
@@ -56,6 +58,12 @@ export class InputComponent<T extends string | number> implements ControlValueAc
 
   @Input()
   public disabled: boolean = false;
+
+  @Input()
+  public min?: number | undefined;
+
+  @Input()
+  public max?: number | undefined;
 
   @Input()
   public ariaLabel?: string;
