@@ -9,6 +9,7 @@ import { GraphQlKeyValueFilterModel } from './filter/graphql-key-value-filter.mo
 import { GRAPHQL_DATA_SOURCE_HANDLER_PROVIDERS } from './graphql-handler-configuration';
 import { GraphQlRequestOptionsModel } from './request-option/graphql-request-options.model';
 import { SpanDataSourceModel } from './span/span-data-source.model';
+import { AttributeSortSpecificationModel } from './specifiers/attribute-sort-specification.model';
 import { AttributeSpecificationModel } from './specifiers/attribute-specification.model';
 import { CompositeSpecificationModel } from './specifiers/composite-specification.model';
 import { EnrichedAttributeSpecificationModel } from './specifiers/enriched-attribute-specification.model';
@@ -41,7 +42,8 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         AttributeSpecificationModel,
         TraceStatusSpecificationModel,
         EnrichedAttributeSpecificationModel,
-        MappedAttributeSpecificationModel
+        MappedAttributeSpecificationModel,
+        AttributeSortSpecificationModel
       ]
     })
   ]
