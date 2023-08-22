@@ -1,7 +1,6 @@
 import { Dictionary } from '@hypertrace/common';
-import { TableSortDirection } from '@hypertrace/components';
-import { ENUM_TYPE, EnumPropertyTypeInstance } from '@hypertrace/dashboards';
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
+import { GraphQlSortDirection } from '../../../../graphql/model/schema/sort/graphql-sort-direction';
 import { Specification } from '../../../../graphql/model/schema/specifier/specification';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import { SpecificationModel } from './specification.model';
@@ -20,12 +19,9 @@ export class AttributeSortSpecificationModel extends SpecificationModel<Specific
 
   @ModelProperty({
     key: 'direction',
-    type: {
-      key: ENUM_TYPE.type,
-      values: [TableSortDirection.Ascending, TableSortDirection.Descending]
-    } as EnumPropertyTypeInstance
+    type: STRING_PROPERTY.type,
   })
-  public direction!: TableSortDirection;
+  public direction!: GraphQlSortDirection;
 
   protected buildInnerSpec(): Specification {
     return new SpecificationBuilder().attributeSpecificationForKey(this.key);
