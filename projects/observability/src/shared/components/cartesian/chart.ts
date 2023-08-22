@@ -44,7 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
-  groupByFilterAttribute?: FilterAttribute;
+  groupByFilter?: GroupByFilter;
   stacking?: boolean;
   hide?: boolean;
 
@@ -61,6 +61,11 @@ export interface Band<TInterval> {
   opacity: number;
   name: string;
   hide?: boolean;
+}
+
+export interface GroupByFilter {
+  attribute?: FilterAttribute;
+  metadata: FilterAttribute[];
 }
 
 export interface Summary {
