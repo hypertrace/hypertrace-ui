@@ -22,10 +22,7 @@ export class AttributeSortSpecificationModel extends SpecificationModel<Specific
     key: 'direction',
     type: {
       key: ENUM_TYPE.type,
-      values: [
-        TableSortDirection.Ascending,
-        TableSortDirection.Descending
-      ]
+      values: [TableSortDirection.Ascending, TableSortDirection.Descending]
     } as EnumPropertyTypeInstance
   })
   public direction!: TableSortDirection;
