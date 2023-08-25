@@ -6,13 +6,15 @@ import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalCsvDownloadService {
+  // Note: This service should be use to connect and donwload data from two unrelated components. The component's data to be downloaded should be register and can be executed from a different component.
+
   private readonly csvDataSourceMap: Map<string, Observable<Dictionary<unknown>[]>> = new Map();
 
   public constructor(private readonly fileDownloaderService: FileDownloadService) {}
 
   public downloadCsv(key: string, fileDownloadConfig?: CsvDownloadFileConfig): void {
     if (isEmpty(fileDownloadConfig)) {
-      throw new Error('File download config undefined');
+      throw new Error('File download config should be defined.');
     } else {
       this.fileDownloaderService.downloadAsCsv({
         ...fileDownloadConfig,
