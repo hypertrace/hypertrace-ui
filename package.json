@@ -118,7 +118,7 @@
     "jest-preset-angular": "^12.2.3",
     "jest-config": "^29.6.3",
     "jest-environment-jsdom": "^29.6.3",
-    "jest-html-reporter": "^3.10.1",
+    "jest-html-reporter": "^3.10.2",
     "jest-junit": "16.0.0",
     "lodash": "^4.17.21",
     "ng-mocks": "^14.10.0",
