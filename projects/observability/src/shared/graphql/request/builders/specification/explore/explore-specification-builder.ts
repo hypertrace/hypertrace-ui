@@ -65,6 +65,7 @@ export class ExploreSpecificationBuilder {
 
         if (aggregation !== undefined) {
           fragment.aggregation = this.aggregationAsEnum(aggregation);
+          fragment.size = this.argBuilder.forAggregationArgs(aggregation).find(arg => arg.name === 'size')?.value;
         }
 
         return fragment;
