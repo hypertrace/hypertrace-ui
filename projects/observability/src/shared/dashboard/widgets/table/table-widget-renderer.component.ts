@@ -58,6 +58,7 @@ import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
+import { GlobalCsvDownloadService } from '../../../services/global-csv-download/global-csv-download.service';
 
 @Renderer({ modelClass: TableWidgetModel })
 @Renderer({ modelClass: TableWidgetViewToggleModel })
@@ -110,6 +111,7 @@ import { TableWidgetModel } from './table-widget.model';
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
+          (visibleColumnsChange)="this.onVisibleColumnsChange($event)"
         >
         </ht-table>
       </div>
@@ -154,7 +156,8 @@ export class TableWidgetRendererComponent
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
     changeDetectorRef: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly globalCsvDownloadService: GlobalCsvDownloadService
   ) {
     super(api, changeDetectorRef);
   }
@@ -496,6 +499,13 @@ export class TableWidgetRendererComponent
       );
     }
     this.columnConfigs$ = this.getColumnConfigs();
+  }
+
+  public onVisibleColumnsChange(columns: TableColumnConfig[]): void {
+    this.globalCsvDownloadService.registerDataSource('table-widget-renderer', {
+      columns: columns,
+      getData: this.model.getData()
+    });
   }
 
   public onColumnsChange(columns: TableColumnConfig[]): void {

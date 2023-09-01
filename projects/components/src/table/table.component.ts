@@ -405,6 +405,9 @@ export class TableComponent
   public readonly columnConfigsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
 
   @Output()
+  public readonly visibleColumnsChange: EventEmitter<TableColumnConfig[]> = new EventEmitter<TableColumnConfig[]>();
+
+  @Output()
   public readonly sortChange: EventEmitter<SortedColumn<TableColumnConfig>> = new EventEmitter<
     SortedColumn<TableColumnConfig>
   >();
@@ -731,6 +734,7 @@ export class TableComponent
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
     this.visibleColumnConfigs = visibleColumnConfigs;
     this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
+    this.visibleColumnsChange.next(this.visibleColumnConfigs.filter(column => column.id !== '$$expanded'));
   }
 
   private initializeData(): void {
