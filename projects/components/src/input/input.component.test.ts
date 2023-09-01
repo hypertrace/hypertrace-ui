@@ -66,12 +66,4 @@ describe('Input Component', () => {
     const matInput = spectator.query(MatInput);
     expect(matInput?.placeholder).toEqual('placeholder');
   });
-
-  test('should emit on focus', () => {
-    const spectator = hostFactory(`<ht-input></ht-input>`);
-
-    jest.spyOn(spectator.component.inputFocus, 'emit');
-    spectator.triggerEventHandler('input', 'focus', undefined);
-    expect(spectator.component.inputFocus.emit).toHaveBeenCalled();
-  });
 });

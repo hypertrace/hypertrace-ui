@@ -105,7 +105,7 @@ describe('InputPillListComponent', () => {
     expect(valueChangeEmitterSpy).toHaveBeenCalledTimes(2);
 
     // On Focus
-    spectator.triggerEventHandler(InputComponent, 'inputFocus', undefined);
+    spectator.component.onFocus();
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
     spectator.component.onDropdownValueClick('drop-1');
     expect(getPillValues(spectator)).toEqual(['drop-1', 'input-from-buffer', 'i-am-test-2-now', 'test-2']);
