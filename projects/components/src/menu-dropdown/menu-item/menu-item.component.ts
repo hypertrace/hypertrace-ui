@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../../icon/icon-size';
 
 @Component({
@@ -24,7 +23,7 @@ export class MenuItemComponent {
   public label!: string;
 
   @Input()
-  public icon?: IconType;
+  public icon?: string;
 
   @Input()
   public iconColor?: string;

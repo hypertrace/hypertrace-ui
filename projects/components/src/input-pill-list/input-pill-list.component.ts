@@ -47,7 +47,7 @@ import { PopoverRef } from '../popover/popover-ref';
             [disabled]="this.shouldDisableAdd"
             class="input primary-input"
             formControlName="inputBuffer"
-            (inputFocus)="this.onFocus()"
+            (focusin)="this.onFocus()"
             (keydown)="this.addBufferValueToList($event)"
             (paste)="this.onContentPaste($event)"
             [placeholder]="this.placeholder"
