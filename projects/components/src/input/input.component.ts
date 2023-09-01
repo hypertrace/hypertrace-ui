@@ -35,6 +35,7 @@ import { InputAppearance } from './input-appearance';
         [attr.aria-label]="this.ariaLabel || 'input'"
         [ngModel]="this.value"
         (focus)="this.inputFocus.emit()"
+        (blur)="this.inputBlur.emit()"
         (ngModelChange)="this.onValueChange($event)"
       />
     </mat-form-field>
@@ -70,6 +71,9 @@ export class InputComponent<T extends string | number> implements ControlValueAc
 
   @Output()
   public readonly inputFocus: EventEmitter<void> = new EventEmitter();
+
+  @Output()
+  public readonly inputBlur: EventEmitter<void> = new EventEmitter();
 
   @Output()
   public readonly valueChange: EventEmitter<T | undefined> = new EventEmitter();
