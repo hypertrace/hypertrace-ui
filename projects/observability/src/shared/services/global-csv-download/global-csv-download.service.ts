@@ -35,7 +35,6 @@ export class GlobalCsvDownloadService {
   }
 }
 
-
 export interface GlobalCsvDownloadData {
   columns: TableColumnConfig[];
   getData: Observable<TableDataSource<TableRow>>;
