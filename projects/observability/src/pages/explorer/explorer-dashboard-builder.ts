@@ -26,6 +26,8 @@ import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
+import { isEmpty } from 'lodash-es';
+import { ScaleType } from '../../shared/components/cartesian/chart';
 
 @Injectable()
 export class ExplorerDashboardBuilder {
@@ -67,7 +69,12 @@ export class ExplorerDashboardBuilder {
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false
-        }
+        },
+        ...(!isEmpty(request.groupBy) && isEmpty(request.interval)
+          ? {
+              'predefined-scale-type': ScaleType.Band
+            }
+          : {})
       },
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);

@@ -18,7 +18,7 @@ import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
 import { DefaultChartTooltipRenderData } from '../utils/chart-tooltip/default/default-chart-tooltip.component';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
-import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, Series } from './chart';
+import { Axis, AxisLocation, AxisType, Band, CartesianChart, RenderingStrategy, ScaleType, Series } from './chart';
 import { ChartBuilderService } from './chart-builder.service';
 import { CartesianSelectedData, ChartEvent } from './chart-interactivty';
 import { ChartSyncService } from './chart-sync-service';
@@ -49,6 +49,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
   @Input()
   public showXAxis?: boolean = true;
+
+  @Input()
+  public scaleType?: ScaleType;
 
   @Input()
   public legend?: LegendPosition = LegendPosition.TopRight;
@@ -154,6 +157,10 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
 
     if (this.timeRange !== undefined) {
       this.chart.withTimeRange(this.timeRange);
+    }
+
+    if (this.scaleType !== undefined) {
+      this.chart.withScaleType(this.scaleType);
     }
 
     if (this.legend !== undefined) {

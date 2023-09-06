@@ -18,6 +18,7 @@ import {
   CartesianChart,
   CartesianSeriesVisualizationType,
   RenderingStrategy,
+  ScaleType,
   Series,
   Summary
 } from '../../chart';
@@ -63,6 +64,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   // Provided by user
   protected legendPosition?: LegendPosition;
   protected timeRange?: TimeRange;
+  protected scaleType?: ScaleType;
   protected readonly requestedAxes: Axis[] = [];
   protected intervalData?: CartesianIntervalData;
   protected readonly series: Series<TData>[] = [];
@@ -157,6 +159,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   public withLegend(legendPosition: LegendPosition): this {
     this.legendPosition = legendPosition;
+
+    return this;
+  }
+
+  public withScaleType(scaleType: ScaleType): this {
+    this.scaleType = scaleType;
+    this.scaleBuilder = this.scaleBuilder.withScaleType(scaleType);
 
     return this;
   }
