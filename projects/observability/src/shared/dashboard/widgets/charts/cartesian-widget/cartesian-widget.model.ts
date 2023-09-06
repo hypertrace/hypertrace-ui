@@ -13,7 +13,7 @@ import {
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Band, CartesianSeriesVisualizationType, ScaleType, Series } from '../../../../components/cartesian/chart';
+import { Band, CartesianSeriesVisualizationType, Series } from '../../../../components/cartesian/chart';
 import { LegendPosition } from '../../../../components/legend/legend.component';
 import { MetricTimeseriesBandInterval } from '../../../../graphql/model/metric/metric-timeseries';
 import { InteractionHandler } from '../../../interaction/interaction-handler';
@@ -68,13 +68,6 @@ export class CartesianWidgetModel<TInterval> {
     type: BOOLEAN_PROPERTY.type
   })
   public seriesFromData?: boolean = false;
-
-  @ModelProperty({
-    key: 'predefined-scale-type',
-    displayName: 'Predefined Scale Type',
-    type: STRING_PROPERTY.type
-  })
-  public predefinedScaleType?: ScaleType;
 
   @ModelProperty({
     key: 'x-axis',

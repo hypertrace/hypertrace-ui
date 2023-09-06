@@ -72,7 +72,10 @@ export class ExplorerDashboardBuilder {
         },
         ...(!isEmpty(request.groupBy) && isEmpty(request.interval)
           ? {
-              'predefined-scale-type': ScaleType.Band
+              'x-axis': {
+                type: 'cartesian-axis',
+                'scale-type': ScaleType.Band
+              }
             }
           : {})
       },

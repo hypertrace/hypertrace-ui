@@ -163,13 +163,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     return this;
   }
 
-  public withScaleType(scaleType: ScaleType): this {
-    this.scaleType = scaleType;
-    this.scaleBuilder = this.scaleBuilder.withScaleType(scaleType);
-
-    return this;
-  }
-
   public withSeries(...series: Series<TData>[]): this {
     this.series.length = 0;
     this.series.push(...series);
