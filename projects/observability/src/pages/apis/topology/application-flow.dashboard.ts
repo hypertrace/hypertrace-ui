@@ -9,6 +9,7 @@ import {
   defaultSecondaryNodeMetricCategories
 } from '../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 import { MetricAggregationType } from '../../../shared/graphql/model/metrics/metric-aggregation';
+import { TopologyEdgeFilterMetadata } from '../../../shared/dashboard/data/graphql/topology/topology-data-source.model';
 
 export const getTopologyJson = (options?: TopologyJsonOptions): ModelJson => ({
   type: 'topology-widget',
@@ -18,6 +19,7 @@ export const getTopologyJson = (options?: TopologyJsonOptions): ModelJson => ({
     type: 'topology-data-source',
     entity: 'SERVICE',
     'downstream-entities': ['SERVICE', 'BACKEND'],
+    'edge-filter-metadata': options?.edgeFilterMetadata,
     'edge-metrics': {
       type: 'topology-metrics',
       primary: {
@@ -211,4 +213,5 @@ export const applicationFlowDefaultJson: DashboardDefaultConfiguration = {
 
 export interface TopologyJsonOptions {
   showBrush?: boolean;
+  edgeFilterMetadata?: TopologyEdgeFilterMetadata;
 }
