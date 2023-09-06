@@ -18,7 +18,6 @@ import {
   CartesianChart,
   CartesianSeriesVisualizationType,
   RenderingStrategy,
-  ScaleType,
   Series,
   Summary
 } from '../../chart';
@@ -64,7 +63,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   // Provided by user
   protected legendPosition?: LegendPosition;
   protected timeRange?: TimeRange;
-  protected scaleType?: ScaleType;
   protected readonly requestedAxes: Axis[] = [];
   protected intervalData?: CartesianIntervalData;
   protected readonly series: Series<TData>[] = [];
