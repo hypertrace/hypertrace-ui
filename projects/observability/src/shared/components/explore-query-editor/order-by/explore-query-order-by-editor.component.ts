@@ -100,7 +100,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private readonly defaultDirection: GraphQlSortDirection = SortDirection.Asc;
   private readonly incomingOrderByExpressionSubject: Subject<ExploreOrderBy> = new ReplaySubject(1);
   private readonly contextSubject: Subject<TraceType> = new ReplaySubject(1);
-  private readonly notSupportedAggregations: MetricAggregationType[] = [
+  private readonly redundantOrderingAggregations: MetricAggregationType[] = [
     MetricAggregationType.AvgrateSecond,
     MetricAggregationType.AvgrateMinute
   ];
@@ -212,7 +212,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }
 
     return this.metadataService.getSelectionAttributes(context).pipe(
-      map(attributes => this.removeNotAllowedAggregations(attributes, this.notSupportedAggregations)),
+      map(attributes => this.removeRedundantOrderingAggregations(attributes, this.redundantOrderingAggregations)),
       map(attributes => attributes.filter(attribute => attribute.allowedAggregations.length > 0)), // Removes attributes without aggregations
       map(attributes =>
         attributes.map(attribute => ({
@@ -223,13 +223,13 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     );
   }
 
-  private removeNotAllowedAggregations(
+  private removeRedundantOrderingAggregations(
     attributes: AttributeMetadata[],
-    notSupportedAggregations: MetricAggregationType[]
+    redundantOrderingAggregations: MetricAggregationType[]
   ): AttributeMetadata[] {
     return attributes.map(attribute => ({
       ...attribute,
-      allowedAggregations: difference(attribute.allowedAggregations, notSupportedAggregations)
+      allowedAggregations: difference(attribute.allowedAggregations, redundantOrderingAggregations)
     }));
   }
 
