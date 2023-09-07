@@ -44,7 +44,9 @@ import { debounce } from 'lodash-es';
           [ngStyle]="this.splitterSizeStyle"
           (mousedown)="this.onGutterMouseDown($event, index)"
         >
-          <div class="cursor"></div>
+          <div class="background">
+            <div class="cursor"></div>
+          </div>
         </div>
       </ng-container>
     </div>
