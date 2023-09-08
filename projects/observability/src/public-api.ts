@@ -402,4 +402,4 @@ export * from './shared/components/bar-gauge/bar-gauge.module';
 export * from './shared/utils/time-range';
 
 // CSV Downloader Service
-export * from './shared/services/global-csv-download/global-csv-download.service';
+export * from './shared/services/global-csv-download-table/global-csv-download-table.service';

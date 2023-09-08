@@ -734,7 +734,7 @@ export class TableComponent
   private updateVisibleColumns(visibleColumnConfigs: TableColumnConfigExtended[]): void {
     this.visibleColumnConfigs = visibleColumnConfigs;
     this.visibleColumnIds = this.visibleColumnConfigs.map(column => column.id);
-    this.visibleColumnsChange.next(this.visibleColumnConfigs.filter(column => column.id !== '$$expanded'));
+    this.visibleColumnsChange.next(this.visibleColumnConfigs.filter(column => !this.isStateColumn(column)));
   }
 
   private initializeData(): void {
