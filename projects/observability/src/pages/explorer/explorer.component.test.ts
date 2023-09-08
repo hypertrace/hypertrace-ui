@@ -21,12 +21,13 @@ import {
   FilterBarComponent,
   FilterBuilderLookupService,
   FilterOperator,
+  NotificationService,
   ToggleGroupComponent
 } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { getMockFlexLayoutProviders, patchRouterNavigateForTest } from '@hypertrace/test-utils';
 import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY, NEVER, of } from 'rxjs';
+import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import { ExploreQueryEditorComponent } from '../../shared/components/explore-query-editor/explore-query-editor.component';
@@ -94,6 +95,7 @@ describe('Explorer component', () => {
         getCurrentTimeRange: () => testTimeRange,
         getTimeRangeAndChanges: () => NEVER.pipe(startWith(testTimeRange))
       }),
+      mockProvider(NotificationService, { withNotification: jest.fn().mockReturnValue((x: Observable<unknown>) => x) }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
       {
         provide: ActivatedRoute,
