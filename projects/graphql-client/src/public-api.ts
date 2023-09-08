@@ -2,7 +2,9 @@
  * Public API Surface of graphql-client
  */
 
-export { GraphQlRequestService, RequestTypeForHandler, ResponseTypeForHandler } from './graphql-request.service';
+export { RequestTypeForHandler, ResponseTypeForHandler } from './graphql-request.api';
+export { GraphqlRequestError } from './graphql-request-error';
+export { GraphQlRequestService } from './graphql-request.service';
 export {
   GraphQlHandler,
   GraphQlQueryHandler,
