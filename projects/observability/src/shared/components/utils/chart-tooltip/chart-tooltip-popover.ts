@@ -1,14 +1,17 @@
 import { PopoverPositionType, PopoverRef } from '@hypertrace/components';
-import { Observer } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { MouseLocationData } from '../mouse-tracking/mouse-tracking';
 
 export class ChartTooltipPopover<TData, TContext> implements ChartTooltipRef<TData, TContext> {
   private boundElement?: Element;
+  public readonly hovered$: Observable<boolean>;
 
   public constructor(
     private readonly popoverRef: PopoverRef,
     private readonly dataObserver: Observer<MouseLocationData<TData, TContext>[]>
-  ) {}
+  ) {
+    this.hovered$ = popoverRef.hovered$;
+  }
 
   public showWithData(element: Element, data: MouseLocationData<TData, TContext>[]): void {
     this.updatePositionStrategyIfNeeded(element);
@@ -30,8 +33,8 @@ export class ChartTooltipPopover<TData, TContext> implements ChartTooltipRef<TDa
       this.popoverRef.updatePositionStrategy({
         type: PopoverPositionType.FollowMouse,
         boundingElement: element,
-        offsetX: 20,
-        offsetY: 30
+        offsetX: 0,
+        offsetY: 0
       });
       this.boundElement = element;
     }
@@ -42,4 +45,5 @@ export interface ChartTooltipRef<TData, TContext = unknown> {
   showWithData(relativeTo: Element, data: MouseLocationData<TData, TContext>[]): void;
   hide(): void;
   destroy(): void;
+  hovered$: Observable<boolean>;
 }
