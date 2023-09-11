@@ -142,6 +142,13 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   })
   public loadingConfig?: LoadAsyncConfig;
 
+  @ModelProperty({
+    key: 'loadingConfig',
+    required: false,
+    type: BOOLEAN_PROPERTY.type
+  })
+  public initialExpandAll?: boolean = false;
+
   @ModelInject(MODEL_API)
   protected readonly api!: ModelApi;
 

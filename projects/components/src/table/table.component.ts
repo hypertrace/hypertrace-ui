@@ -567,6 +567,10 @@ export class TableComponent
     ) {
       this.toggleRowSelections(this.selections);
     }
+
+    if (changes.initialExpandAll && this.initialExpandAll) {
+      this.expandAllRows();
+    }
   }
 
   public ngAfterViewInit(): void {

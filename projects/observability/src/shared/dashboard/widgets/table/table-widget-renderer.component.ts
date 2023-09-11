@@ -103,6 +103,7 @@ import { TableWidgetModel } from './table-widget.model';
           [queryProperties]="this.queryProperties$ | async"
           [pageable]="this.api.model.isPageable()"
           [resizable]="this.api.model.isResizable()"
+          [initialExpandAll]="this.model.initialExpandAll"
           [detailContent]="childDetail"
           [syncWithUrl]="this.syncWithUrl"
           [rowHeight]="this.api.model.getRowHeight()"

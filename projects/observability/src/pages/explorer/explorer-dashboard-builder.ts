@@ -147,6 +147,7 @@ export class ExplorerDashboardBuilder {
       mode: TableMode.Detail,
       style: TableStyle.Embedded,
       columns: columns,
+      initialExpandAll: true,
       'child-template': {
         type: 'trace-detail-widget',
         data: {
