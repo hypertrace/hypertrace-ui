@@ -27,7 +27,13 @@ import { debounce } from 'lodash-es';
   template: `
     <div class="splitter-container" *ngIf="this.direction" [ngClass]="[this.direction | lowercase]">
       <ng-container *ngFor="let content of this.contents$ | async as contents; let index = index">
-        <div class="splitter-content" [ngStyle]="{ flex: this.getFlex | htMemoize: content.dimension }">
+        <div
+          class="splitter-content"
+          [ngStyle]="{
+            flex: this.getFlex | htMemoize: content.dimension,
+            maxHeight: this.getMaxHeight | htMemoize: content.dimension
+          }"
+        >
           <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
         </div>
 
@@ -38,7 +44,9 @@ import { debounce } from 'lodash-es';
           [ngStyle]="this.splitterSizeStyle"
           (mousedown)="this.onGutterMouseDown($event, index)"
         >
-          <div class="cursor"></div>
+          <div class="background">
+            <div class="cursor"></div>
+          </div>
         </div>
       </ng-container>
     </div>
@@ -99,6 +107,12 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
       return `1 1 ${dimension.value}${dimension.unit.toLowerCase()}`;
     } else {
       return `${dimension.value} ${dimension.value} 0`;
+    }
+  };
+
+  protected readonly getMaxHeight = (dimension: SplitterCellDimension): string | undefined => {
+    if (dimension.unit === 'PX') {
+      return `${dimension.value}${dimension.unit.toLowerCase()}`;
     }
   };
 
