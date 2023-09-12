@@ -17,7 +17,7 @@ export class GlobalCsvDownloadService {
 
   public constructor(private readonly fileDownloadService: FileDownloadService) {}
 
-  public downloadCsv(csvDownloadFileConfig: CsvDownloadFileConfig): Observable<unknown> {
+  public downloadCsv(csvDownloadFileConfig?: CsvDownloadFileConfig): Observable<unknown> {
     return !isNil(csvDownloadFileConfig)
       ? this.fileDownloadService.downloadAsCsv(csvDownloadFileConfig)
       : throwError('No data available.');
