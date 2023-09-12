@@ -50,7 +50,7 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
-import { GlobalCsvDownloadTableService } from '../../../services/global-csv-download-table/global-csv-download-table.service';
+import { GlobalCsvDownloadTableService } from '../../../services/global-csv-download/global-csv-download.service';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
