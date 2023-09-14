@@ -245,7 +245,7 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
   protected readonly buildFlex = (pixels: number): string => `1 1 ${pixels}px`;
 
-  protected readonly buildMaxHeight = (pixels: number): string => this.isHorizontal() ? '' : `${pixels}px`;
+  protected readonly buildMaxHeight = (pixels: number): string => (this.isHorizontal() ? '' : `${pixels}px`);
 }
 
 interface NormalizationParameters {
