@@ -719,8 +719,7 @@ export class TableComponent
     this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
     this.updateVisibleColumns(visibleColumns);
 
-    this.columnConfigsSubject.next(columnConfigurations);
-    this.columnConfigsChange.next(columnConfigurations);
+    this.propagateUpdatedColumns(columnConfigurations);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -824,8 +823,7 @@ export class TableComponent
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
-    this.columnConfigsSubject.next(updatedColumns);
-    this.columnConfigsChange.next(updatedColumns);
+    this.propagateUpdatedColumns(updatedColumns);
   }
 
   public showEditColumnsModal(): void {
@@ -909,6 +907,11 @@ export class TableComponent
     }
 
     return this.hasExpandableRows() ? index - 1 : index;
+  }
+
+  private propagateUpdatedColumns(updatedColumns: TableColumnConfigExtended[]): void {
+    this.columnConfigsSubject.next(updatedColumns);
+    this.columnConfigsChange.next(updatedColumns);
   }
 
   private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
