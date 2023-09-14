@@ -23,7 +23,8 @@ import {
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
-import { AttributeExpression, GraphQlFieldFilter } from '../../../../../public-api';
+import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
+import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 
 @Model({
   type: 'topology-data-source'
@@ -104,16 +105,16 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
       const topologyFilters = this.getTopologyFilters(filters as GraphQlFieldFilter[]);
       const edgeFilterEntityType = this.edgeFilterConfig?.entityType;
       const requiredEdgeEntityTypes =
-        topologyFilters.forEdge.length > 0 && edgeFilterEntityType !== undefined ? [edgeFilterEntityType] : undefined;
+        topologyFilters.edges.length > 0 && edgeFilterEntityType !== undefined ? [edgeFilterEntityType] : undefined;
 
       return {
         requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
         rootNodeType: this.entityType,
         rootNodeLimit: 100,
         rootNodeSpecification: rootEntitySpec,
-        rootNodeFilters: topologyFilters.forNode,
+        rootNodeFilters: topologyFilters.nodes,
         edgeSpecification: edgeSpec,
-        edgeFilters: topologyFilters.forEdge,
+        edgeFilters: topologyFilters.edges,
         upstreamNodeSpecifications: this.buildUpstreamSpecifications(requiredEdgeEntityTypes),
         downstreamNodeSpecifications: this.buildDownstreamSpecifications(requiredEdgeEntityTypes),
         timeRange: this.getTimeRangeOrThrow()
@@ -148,8 +149,8 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     });
 
     return {
-      forNode: nodeFilters,
-      forEdge: edgeFilters
+      nodes: nodeFilters,
+      edges: edgeFilters
     };
   }
 
@@ -221,6 +222,6 @@ export interface TopologyEdgeFilterConfig {
 }
 
 interface TopologyFilters {
-  forNode: GraphQlFieldFilter[];
-  forEdge: GraphQlFieldFilter[];
+  nodes: GraphQlFieldFilter[];
+  edges: GraphQlFieldFilter[];
 }
