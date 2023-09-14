@@ -43,8 +43,8 @@ $font-family: 'Work Sans', sans-serif;
   letter-spacing: -0.02em;
 }
 
-@mixin font-placeholder {
-  color: $gray-5;
+@mixin font-placeholder($color: $gray-5) {
+  color: $color;
   font-size: 15px;
   line-height: 18px;
   letter-spacing: -0.01em;
