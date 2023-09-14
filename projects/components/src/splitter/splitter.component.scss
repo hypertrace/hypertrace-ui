@@ -13,16 +13,6 @@
     flex-direction: column;
   }
 
-  .grid-lines {
-    height: 100%;
-    width: calc(100% + 16px);
-    position: absolute;
-    background: repeating-linear-gradient(90deg, m.$gray-2, m.$gray-2 2px, transparent 1px, transparent 6.25%);
-    border-right: 2px solid m.$gray-2;
-    margin: -8px;
-    pointer-events: none;
-  }
-
   .splitter-content {
     display: flex;
   }

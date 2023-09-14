@@ -16,7 +16,7 @@ import {
 import { assertUnreachable, LayoutChangeService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
 import { debounce, isEmpty } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
 import { SplitterCellDimension, SplitterContentDirective } from './splitter-content.directive';
 
@@ -49,18 +49,15 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
           </div>
         </div>
       </ng-container>
-      <div *ngIf="this.isShowGrid" class="grid-lines"></div>
     </div>
   `
 })
 export class SplitterComponent implements OnChanges, AfterContentInit {
-  // private readonly GRID_COLUMNS_COUNT: number = 16;
-
   @Input()
   public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
 
   @Input()
-  public readonly debounceTime: number = 4;
+  public readonly debounceTime: number = 12;
 
   @Input()
   public readonly splitterSize: number = 16;
@@ -72,25 +69,24 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   private readonly contents!: QueryList<SplitterContentDirective>;
   protected contents$!: Observable<SplitterContentDirective[]>;
 
-  protected classes: string[] =[];
+  protected classes: string[] = [];
   protected splitterSizeStyle?: Partial<CSSStyleDeclaration>;
-  protected isShowGrid: boolean = true;
 
   private mouseMoveListener?: () => void;
   private mouseUpListener?: () => void;
 
   private normalizationParameters: NormalizationParameters = {
     itemCount: 0,
-    pxPerItem: 0,
+    pxPerItem: 0
   };
 
   private resizeStartParameters: ResizeStartParameters = {
     startPositionPx: 0,
     prevContentStartSizePx: 0,
-    nextContentStartSizePx: 0,
+    nextContentStartSizePx: 0
   };
 
-  private readonly debounceResize = debounce(this.resizeEnd, this.debounceTime);
+  private readonly debounceResize = debounce(this.resize, this.debounceTime);
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -106,12 +102,6 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     }
   }
 
-  private buildClasses(): string[] {
-    return [
-      this.direction?.toLowerCase() ?? '',
-    ].filter(c => !isEmpty(c))
-  }
-
   public ngAfterContentInit(): void {
     this.subscribeToQueryListChanges();
   }
@@ -119,40 +109,11 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   private buildNormalizationParams(contents: SplitterContentDirective[]): NormalizationParameters {
     const totalAvailablePx = this.getElementSizePx(this.element.nativeElement);
     const splitterPx = this.splitterSize * (contents.length - 1);
-    // const pxPerGridUnit = (totalAvailablePx - splitterPx) / this.GRID_COLUMNS_COUNT;
     const pxPerItem = (totalAvailablePx - splitterPx) / contents.length;
-
-    const totalContentPxs = contents
-      .filter(content => content.dimension.unit === 'PX')
-      .reduce((prev, curr) => prev + curr.dimension.value, 0);
-
-    const totalContentFrs = contents
-      .filter(content => content.dimension.unit === 'FR')
-      .reduce((prev, curr) => prev + curr.dimension.value, 0);
-
-    // const pxContentGridUnits = Math.floor(totalContentPxs / pxPerGridUnit);
-    // const frContentGridUnits = Math.floor(totalContentFrs - pxContentGridUnits);
-
-    // const normalizedMultiple = Math.floor(this.GRID_COLUMNS_COUNT / (pxContentGridUnits + frContentGridUnits));
-
-    console.debug('buildNormalizationParams', {
-      totalAvailablePx: totalAvailablePx,
-      splitterPx: splitterPx,
-      // pxPerGridUnit: pxPerGridUnit,
-      totalContentPxs: totalContentPxs,
-      totalContentFrs: totalContentFrs,
-      // pxContentGridUnits: pxContentGridUnits,
-      // frContentGridUnits: frContentGridUnits,
-      // normalizedMultiple: normalizedMultiple,
-      itemCount: contents.length,
-      pxPerItem: pxPerItem
-    })
 
     return {
       itemCount: contents.length,
       pxPerItem: pxPerItem
-      // pxPerGridUnit: pxPerGridUnit,
-      // normalizedMultiple: normalizedMultiple
     };
   }
 
@@ -164,11 +125,9 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
   private normalizeContentDimension(content: SplitterContentDirective): SplitterContentDirective {
     if (content.dimension.unit === 'FR') {
-      // Coerce FR content to nearest pixel
       content.dimension = {
         unit: 'PX',
         value: content.dimension.value * this.normalizationParameters.pxPerItem
-        // value: content.dimension.value * this.normalizationParameters.pxPerGridUnit * this.normalizationParameters.normalizedMultiple
       };
     }
 
@@ -181,23 +140,19 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   }
 
   protected onGutterMouseUp(event: MouseEvent) {
-    this.resizeEnd(event);
+    this.resize(event);
     this.unbindMouseListeners();
-  }
-
-  private getClientPx(event: MouseEvent): number {
-    return this.isHorizontal() ? event.clientX : event.clientY;
   }
 
   private resizeStart(startEvent: MouseEvent, index: number): void {
     this.resizeStartParameters = this.buildResizeStartParameters(index, startEvent);
   }
 
-  private resizeEnd(endEvent: MouseEvent): void {
+  private resize(endEvent: MouseEvent): void {
     const prev = this.resizeStartParameters.prevContent;
     const next = this.resizeStartParameters.nextContent;
 
-    const positionDiffPx =  this.getClientPx(endEvent) - this.resizeStartParameters.startPositionPx;
+    const positionDiffPx = this.getClientPx(endEvent) - this.resizeStartParameters.startPositionPx;
 
     if (prev) {
       prev.dimension.value = this.resizeStartParameters.prevContentStartSizePx + positionDiffPx;
@@ -220,34 +175,27 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
       prevContentStartSizePx: prevContent?.dimension.value ?? 0,
       nextContentStartSizePx: nextContent?.dimension.value ?? 0,
       prevContent: prevContent,
-      nextContent: nextContent,
+      nextContent: nextContent
     };
   }
 
   private subscribeToQueryListChanges(): void {
     this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(
       map(contents => contents.toArray()),
-      tap(contents =>
-        console.debug('contents', contents.map(c => c.dimension.value))
-      ),
-      map(contents => this.normalizeContentsDimensions(contents)),
-      tap(normalizedContents =>
-        console.debug('normalizedContents', normalizedContents.map(c => c.dimension.value))
-      )
+      map(contents => this.normalizeContentsDimensions(contents))
     );
   }
 
   private bindMouseListeners() {
     if (!this.mouseMoveListener) {
-      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event =>
-        this.debounceResize(event)
-      );
+      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event => this.debounceResize(event));
     }
 
     if (!this.mouseUpListener) {
-      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event =>
-        this.resizeEnd(event)
-      );
+      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event => {
+        this.resize(event);
+        this.unbindMouseListeners();
+      });
     }
   }
 
@@ -257,6 +205,10 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
     this.mouseUpListener?.();
     this.mouseUpListener = undefined;
+  }
+
+  private getClientPx(event: MouseEvent): number {
+    return this.isHorizontal() ? event.clientX : event.clientY;
   }
 
   private getElementSizePx(element: HTMLElement): number {
@@ -286,18 +238,16 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     }
   }
 
+  private buildClasses(): string[] {
+    return [this.direction?.toLowerCase() ?? ''].filter(c => !isEmpty(c));
+  }
+
   protected readonly buildFlex = (pixels: number): string => `1 1 ${pixels}px`;
-
-  protected readonly buildMaxHeight = (pixels: number): string => this.isHorizontal() ? '' : `${pixels}px`;
-
-  protected readonly buildMaxWidth = (pixels: number): string => this.isHorizontal() ? `${pixels}px` : '';
 }
 
 interface NormalizationParameters {
   itemCount: number;
   pxPerItem: number;
-  // pxPerGridUnit: number;
-  // normalizedMultiple: number;
 }
 
 interface ResizeStartParameters {
