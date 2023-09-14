@@ -31,6 +31,7 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
           class="splitter-content"
           [ngStyle]="{
             flex: this.buildFlex | htMemoize: content.dimension.value,
+            maxHeight: this.buildMaxHeight | htMemoize: content.dimension.value
           }"
         >
           <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
@@ -243,6 +244,8 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   }
 
   protected readonly buildFlex = (pixels: number): string => `1 1 ${pixels}px`;
+
+  protected readonly buildMaxHeight = (pixels: number): string => this.isHorizontal() ? '' : `${pixels}px`;
 }
 
 interface NormalizationParameters {
