@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Dictionary } from '@hypertrace/common';
 import {
   CsvDownloadFileConfig,
   FileDownloadService,
@@ -46,7 +47,19 @@ export class GlobalCsvDownloadService {
   }
 }
 
-export interface GlobalCsvDownloadData {
+export type GlobalCsvDownloadData = GlobalCsvDownloadTableDataSource | GlobalCsvDownloadDataSource;
+
+export const enum GlobalCsvDownloadDataType {
+  Table = 'table',
+  DataSource = 'datasource'
+}
+export interface GlobalCsvDownloadTableDataSource {
+  type: GlobalCsvDownloadDataType.Table;
   columns: TableColumnConfig[];
   data: Observable<TableDataSource<TableRow>>;
+}
+
+export interface GlobalCsvDownloadDataSource {
+  type: GlobalCsvDownloadDataType.DataSource;
+  data: Observable<Dictionary<unknown>[]>;
 }

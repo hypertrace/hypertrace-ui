@@ -1,5 +1,9 @@
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { GlobalCsvDownloadService } from './global-csv-download.service';
+import {
+  GlobalCsvDownloadDataType,
+  GlobalCsvDownloadService,
+  GlobalCsvDownloadTableDataSource
+} from './global-csv-download.service';
 import { of } from 'rxjs';
 import { FileDownloadService, TableColumnConfig } from '@hypertrace/components';
 
@@ -38,10 +42,13 @@ describe('Global Csv Download Service', () => {
   test('Register, get, check, delete and clean data source should work as expected', () => {
     const spectator = serviceFactory();
     spectator.service.registerDataSource('test', {
+      type: GlobalCsvDownloadDataType.Table,
       columns: mockColumnConfigs,
       data: of(mockModel)
     });
-    expect(spectator.service.getRegisteredDataSource('test')?.columns).toEqual(mockColumnConfigs);
+    expect((spectator.service.getRegisteredDataSource('test') as GlobalCsvDownloadTableDataSource).columns).toEqual(
+      mockColumnConfigs
+    );
 
     expect(spectator.service.hasRegisteredDataSource('test')).toBe(true);
 
@@ -49,6 +56,7 @@ describe('Global Csv Download Service', () => {
     expect(spectator.service.hasRegisteredDataSource('test')).toBe(false);
 
     spectator.service.registerDataSource('test', {
+      type: GlobalCsvDownloadDataType.Table,
       columns: mockColumnConfigs,
       data: of(mockModel)
     });

@@ -50,7 +50,10 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
-import { GlobalCsvDownloadService } from '../../../services/global-csv-download/global-csv-download.service';
+import {
+  GlobalCsvDownloadDataType,
+  GlobalCsvDownloadService
+} from '../../../services/global-csv-download/global-csv-download.service';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
@@ -502,7 +505,8 @@ export class TableWidgetRendererComponent
   }
 
   public onVisibleColumnsChange(columns: TableColumnConfig[]): void {
-    this.globalCsvDownloadService.registerDataSource('table-widget-renderer', {
+    this.globalCsvDownloadService.registerDataSource(`table-widget-renderer-${this.model.id}`, {
+      type: GlobalCsvDownloadDataType.Table,
       columns: columns,
       data: this.model.getData()
     });
