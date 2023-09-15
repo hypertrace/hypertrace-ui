@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -12,26 +13,25 @@ import {
   QueryList,
   Renderer2
 } from '@angular/core';
-import { LayoutChangeService, TypedSimpleChanges, queryListAndChanges$ } from '@hypertrace/common';
+import { assertUnreachable, LayoutChangeService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
+import { debounce, isEmpty } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SplitterDirection } from './splitter';
 import { SplitterCellDimension, SplitterContentDirective } from './splitter-content.directive';
-import { DOCUMENT } from '@angular/common';
-import { debounce } from 'lodash-es';
 
 @Component({
   selector: 'ht-splitter',
   styleUrls: ['./splitter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="splitter-container" *ngIf="this.direction" [ngClass]="[this.direction | lowercase]">
+    <div class="splitter-container" *ngIf="this.direction" [ngClass]="this.classes">
       <ng-container *ngFor="let content of this.contents$ | async as contents; let index = index">
         <div
           class="splitter-content"
           [ngStyle]="{
-            flex: this.getFlex | htMemoize: content.dimension,
-            maxHeight: this.getMaxHeight | htMemoize: content.dimension
+            flex: this.buildFlex | htMemoize: content.dimension.value,
+            maxHeight: this.buildMaxHeight | htMemoize: content.dimension.value
           }"
         >
           <ng-container *ngTemplateOutlet="content.templateRef"></ng-container>
@@ -43,6 +43,7 @@ import { debounce } from 'lodash-es';
           [ngClass]="[this.direction | lowercase]"
           [ngStyle]="this.splitterSizeStyle"
           (mousedown)="this.onGutterMouseDown($event, index)"
+          (mouseup)="this.onGutterMouseUp($event)"
         >
           <div class="background">
             <div class="cursor"></div>
@@ -57,7 +58,7 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
 
   @Input()
-  public readonly debounceTime: number = 20;
+  public readonly debounceTime: number = 12;
 
   @Input()
   public readonly splitterSize: number = 16;
@@ -69,16 +70,24 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   private readonly contents!: QueryList<SplitterContentDirective>;
   protected contents$!: Observable<SplitterContentDirective[]>;
 
+  protected classes: string[] = [];
   protected splitterSizeStyle?: Partial<CSSStyleDeclaration>;
+
   private mouseMoveListener?: () => void;
   private mouseUpListener?: () => void;
 
-  private size?: number;
-  private resizeColumnSize?: number;
-  private currentSplitterElement?: HTMLElement;
-  private startPos?: number;
-  private previous?: ContentWithMetadata;
-  private next?: ContentWithMetadata;
+  private normalizationParameters: NormalizationParameters = {
+    itemCount: 0,
+    pxPerItem: 0
+  };
+
+  private resizeStartParameters: ResizeStartParameters = {
+    startPositionPx: 0,
+    prevContentStartSizePx: 0,
+    nextContentStartSizePx: 0
+  };
+
+  private readonly debounceResize = debounce(this.resize, this.debounceTime);
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -87,14 +96,43 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     private readonly renderer: Renderer2
   ) {}
 
-  public ngAfterContentInit(): void {
-    this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(map(contents => contents.toArray()));
-  }
-
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.splitterSize || changes.direction) {
       this.setSplitterSizeStyle();
+      this.classes = this.buildClasses();
     }
+  }
+
+  public ngAfterContentInit(): void {
+    this.subscribeToQueryListChanges();
+  }
+
+  private buildNormalizationParams(contents: SplitterContentDirective[]): NormalizationParameters {
+    const totalAvailablePx = this.getElementSizePx(this.element.nativeElement);
+    const splitterPx = this.splitterSize * (contents.length - 1);
+    const pxPerItem = (totalAvailablePx - splitterPx) / contents.length;
+
+    return {
+      itemCount: contents.length,
+      pxPerItem: pxPerItem
+    };
+  }
+
+  private normalizeContentsDimensions(contents: SplitterContentDirective[]): SplitterContentDirective[] {
+    this.normalizationParameters = this.buildNormalizationParams(contents);
+
+    return contents.map(content => this.normalizeContentDimension(content));
+  }
+
+  private normalizeContentDimension(content: SplitterContentDirective): SplitterContentDirective {
+    if (content.dimension.unit === 'FR') {
+      content.dimension = {
+        unit: 'PX',
+        value: content.dimension.value * this.normalizationParameters.pxPerItem
+      };
+    }
+
+    return content;
   }
 
   protected onGutterMouseDown(event: MouseEvent, index: number) {
@@ -102,48 +140,61 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     this.bindMouseListeners();
   }
 
-  protected readonly getFlex = (dimension: SplitterCellDimension): string => {
-    if (dimension.unit === 'PX') {
-      return `1 1 ${dimension.value}${dimension.unit.toLowerCase()}`;
-    } else {
-      return `${dimension.value} ${dimension.value} 0`;
-    }
-  };
-
-  protected readonly getMaxHeight = (dimension: SplitterCellDimension): string | undefined => {
-    if (dimension.unit === 'PX') {
-      return `${dimension.value}${dimension.unit.toLowerCase()}`;
-    }
-  };
-
-  protected horizontal() {
-    return this.direction === SplitterDirection.Horizontal;
+  protected onGutterMouseUp(event: MouseEvent) {
+    this.resize(event);
+    this.unbindMouseListeners();
   }
 
-  private setSplitterSizeStyle(): void {
-    if (this.direction === SplitterDirection.Vertical) {
-      this.splitterSizeStyle = {
-        height: `${this.splitterSize}px`
-      };
+  private resizeStart(startEvent: MouseEvent, index: number): void {
+    this.resizeStartParameters = this.buildResizeStartParameters(index, startEvent);
+  }
+
+  private resize(endEvent: MouseEvent): void {
+    const prev = this.resizeStartParameters.prevContent;
+    const next = this.resizeStartParameters.nextContent;
+
+    const positionDiffPx = this.getClientPx(endEvent) - this.resizeStartParameters.startPositionPx;
+
+    if (prev) {
+      prev.dimension.value = this.resizeStartParameters.prevContentStartSizePx + positionDiffPx;
     }
 
-    if (this.direction === SplitterDirection.Horizontal) {
-      this.splitterSizeStyle = {
-        width: `${this.splitterSize}px`
-      };
+    if (next) {
+      next.dimension.value = this.resizeStartParameters.nextContentStartSizePx - positionDiffPx;
     }
+
+    this.layoutChange.emit(this.contents.map(c => c.dimension));
+    this.layoutChangeService.publishLayoutChange();
+  }
+
+  private buildResizeStartParameters(index: number, startEvent: MouseEvent): ResizeStartParameters {
+    const prevContent = this.contents.get(index);
+    const nextContent = this.contents.get(index + 1);
+
+    return {
+      startPositionPx: this.getClientPx(startEvent),
+      prevContentStartSizePx: prevContent?.dimension.value ?? 0,
+      nextContentStartSizePx: nextContent?.dimension.value ?? 0,
+      prevContent: prevContent,
+      nextContent: nextContent
+    };
+  }
+
+  private subscribeToQueryListChanges(): void {
+    this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(
+      map(contents => contents.toArray()),
+      map(contents => this.normalizeContentsDimensions(contents))
+    );
   }
 
   private bindMouseListeners() {
     if (!this.mouseMoveListener) {
-      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event => {
-        this.debouncedOnResize(event);
-      });
+      this.mouseMoveListener = this.renderer.listen(this.document, 'mousemove', event => this.debounceResize(event));
     }
 
     if (!this.mouseUpListener) {
-      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', () => {
-        this.resizeEnd();
+      this.mouseUpListener = this.renderer.listen(this.document, 'mouseup', event => {
+        this.resize(event);
         this.unbindMouseListeners();
       });
     }
@@ -157,143 +208,55 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     this.mouseUpListener = undefined;
   }
 
-  private resizeStart(event: MouseEvent, index: number) {
-    this.currentSplitterElement = event.currentTarget as HTMLElement;
-    this.size = this.getElementSize(this.element.nativeElement);
-    this.resizeColumnSize = this.horizontal() ? this.size / 12 : 1;
-
-    this.startPos = this.horizontal() ? event.pageX : event.pageY;
-
-    this.previous = this.buildPreviousContentWithMetaData(index, this.currentSplitterElement);
-    this.next = this.buildNextContentWithMetaData(index, this.currentSplitterElement);
+  private getClientPx(event: MouseEvent): number {
+    return this.isHorizontal() ? event.clientX : event.clientY;
   }
 
-  private readonly debouncedOnResize: (event: MouseEvent) => void = debounce(this.onResize, 0);
+  private getElementSizePx(element: HTMLElement): number {
+    return this.isHorizontal() ? element.getBoundingClientRect().width : element.getBoundingClientRect().height;
+  }
 
-  private onResize(event: MouseEvent): void {
-    let newPos;
+  private isHorizontal() {
+    return this.direction === SplitterDirection.Horizontal;
+  }
 
-    if (
-      this.size !== undefined &&
-      this.startPos !== undefined &&
-      this.resizeColumnSize !== undefined &&
-      this.previous !== undefined
-    ) {
-      let newPrevPanelSize = 0;
-      let newNextPanelSize = 0;
-
-      if (this.horizontal()) {
-        newPos = event.pageX - this.startPos;
-        newPrevPanelSize = this.previous.size + newPos;
-        if (this.next) {
-          newNextPanelSize = this.next.size - newPos;
-        }
-      } else {
-        newPos = event.pageY - this.startPos;
-        newPrevPanelSize = this.previous.size + newPos;
-        if (this.next) {
-          newNextPanelSize = this.next.size; // Let the top container grow.
-        }
-      }
-
-      if (this.validateResize(newPrevPanelSize, newNextPanelSize) && this.previous !== undefined) {
-        this.previous.content.dimension = { value: newPrevPanelSize, unit: 'PX' };
-
-        if (this.next) {
-          this.next.content.dimension = { value: newNextPanelSize, unit: 'PX' };
-        }
-
-        this.setStyle();
-      }
+  private setSplitterSizeStyle(): void {
+    switch (this.direction) {
+      case SplitterDirection.Horizontal:
+        this.splitterSizeStyle = {
+          width: `${this.splitterSize}px`
+        };
+        break;
+      case SplitterDirection.Vertical:
+        this.splitterSizeStyle = {
+          height: `${this.splitterSize}px`
+        };
+        break;
+      case undefined:
+        break;
+      default:
+        assertUnreachable(this.direction);
     }
   }
 
-  private resizeEnd() {
-    if (this.previous !== undefined && this.resizeColumnSize !== undefined && this.size !== undefined) {
-      if (this.horizontal()) {
-        this.previous.size = this.getElementSize(this.previous.element);
-
-        let previousPanelColumnWidth = Math.round(this.previous.size / this.resizeColumnSize);
-        this.previous.content.dimension = { value: previousPanelColumnWidth, unit: 'FR' };
-
-        if (this.next) {
-          this.next.size = this.getElementSize(this.next.element);
-
-          let nextPanelColumnWidth = Math.round(
-            (this.next.size - (previousPanelColumnWidth * this.resizeColumnSize - this.previous.size)) /
-              this.resizeColumnSize
-          );
-          this.next.content.dimension = { value: nextPanelColumnWidth, unit: 'FR' };
-        }
-
-        this.setStyle();
-      }
-    }
-
-    this.layoutChange.emit(this.contents.map(c => c.dimension));
-    this.layoutChangeService.publishLayoutChange();
-    this.clear();
+  private buildClasses(): string[] {
+    return [this.direction?.toLowerCase() ?? ''].filter(c => !isEmpty(c));
   }
 
-  private buildPreviousContentWithMetaData(index: number, splitterElement: HTMLElement): ContentWithMetadata {
-    const element = splitterElement.previousElementSibling as HTMLElement;
+  protected readonly buildFlex = (pixels: number): string => `1 1 ${pixels}px`;
 
-    return {
-      content: this.contents.get(index)!,
-      index: index,
-      element: element,
-      size: this.getElementSize(element)
-    };
-  }
-
-  private buildNextContentWithMetaData(index: number, splitterElement: HTMLElement): ContentWithMetadata | undefined {
-    const element = splitterElement.nextElementSibling as HTMLElement | undefined;
-
-    if (!element) {
-      return undefined;
-    }
-
-    return {
-      content: this.contents.get(index + 1)!,
-      index: index,
-      element: element,
-      size: this.getElementSize(element)
-    };
-  }
-
-  private getElementSize(element: HTMLElement): number {
-    return this.horizontal() ? element.getBoundingClientRect().width : element.getBoundingClientRect().height;
-  }
-
-  private validateResize(_newPrevPanelSize: number, _newNextPanelSize?: number): boolean {
-    /**
-     * Stub method to validate resize. For now, returning true
-     */
-    return true;
-  }
-
-  private setStyle(): void {
-    if (this.previous !== undefined) {
-      this.renderer.setStyle(this.previous.element, 'flex', this.getFlex(this.previous.content.dimension));
-
-      if (this.next) {
-        this.renderer.setStyle(this.next.element, 'flex', this.getFlex(this.next.content.dimension));
-      }
-    }
-  }
-
-  private clear() {
-    this.size = undefined;
-    this.startPos = undefined;
-    this.previous = undefined;
-    this.next = undefined;
-    this.currentSplitterElement = undefined;
-  }
+  protected readonly buildMaxHeight = (pixels: number): string => (this.isHorizontal() ? '' : `${pixels}px`);
 }
 
-interface ContentWithMetadata {
-  content: SplitterContentDirective;
-  index: number;
-  element: HTMLElement;
-  size: number;
+interface NormalizationParameters {
+  itemCount: number;
+  pxPerItem: number;
+}
+
+interface ResizeStartParameters {
+  startPositionPx: number;
+  prevContentStartSizePx: number;
+  nextContentStartSizePx: number;
+  prevContent?: SplitterContentDirective;
+  nextContent?: SplitterContentDirective;
 }

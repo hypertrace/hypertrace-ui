@@ -2,8 +2,8 @@
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
 import {
-  TableEditColumnsModalConfig,
-  TableEditColumnsModalComponent
+  TableEditColumnsModalComponent,
+  TableEditColumnsModalConfig
 } from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
@@ -35,7 +35,7 @@ import {
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { switchMap, take, filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -722,7 +722,7 @@ export class TableComponent
     this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
     this.updateVisibleColumns(visibleColumns);
 
-    this.columnConfigsSubject.next(columnConfigurations);
+    this.propagateUpdatedColumns(columnConfigurations);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -827,7 +827,7 @@ export class TableComponent
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
-    this.columnConfigsSubject.next(updatedColumns);
+    this.propagateUpdatedColumns(updatedColumns);
   }
 
   public showEditColumnsModal(): void {
@@ -911,6 +911,11 @@ export class TableComponent
     }
 
     return this.hasExpandableRows() ? index - 1 : index;
+  }
+
+  private propagateUpdatedColumns(updatedColumns: TableColumnConfigExtended[]): void {
+    this.columnConfigsSubject.next(updatedColumns);
+    this.columnConfigsChange.next(updatedColumns);
   }
 
   private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {

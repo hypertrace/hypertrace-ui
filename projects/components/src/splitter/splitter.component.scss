@@ -2,6 +2,7 @@
 
 .splitter-container {
   @include m.fill-container();
+  position: relative;
   display: flex;
 
   &.horizontal {
