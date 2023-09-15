@@ -11,13 +11,14 @@ import {
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
+import { NotificationService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { ModelJson } from '@hypertrace/hyperdash';
 import { DashboardManagerService, LoggerService, RENDERER_API } from '@hypertrace/hyperdash-angular';
 import { GraphQlQueryEventService, MetadataService } from '@hypertrace/observability';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 
 export const isValidModelJson = (
   spectator: Spectator<unknown>,
@@ -55,6 +56,7 @@ export const mockDashboardProviders = [
     getFilterAttributes: () => of([]),
     getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
   }),
+  mockProvider(NotificationService, { withNotification: jest.fn().mockReturnValue((x: Observable<unknown>) => x) }),
   // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/55803#discussioncomment-1341954
   mockProvider(LoggerService, {
     warn: jest.fn().mockReturnValue(() => {

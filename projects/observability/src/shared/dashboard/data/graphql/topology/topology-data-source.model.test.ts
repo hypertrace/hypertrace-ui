@@ -13,12 +13,20 @@ import { TopologyMetricCategoryModel } from './metrics/topology-metric-category.
 import { TopologyMetricWithCategoryModel } from './metrics/topology-metric-with-category.model';
 import { TopologyMetricsModel } from './metrics/topology-metrics.model';
 import { TopologyDataSourceModel } from './topology-data-source.model';
+import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
+import { GraphQlOperatorType } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 describe('topology data source model', () => {
   const testTimeRange = { startTime: new Date(1568907645141), endTime: new Date(1568911245141) };
   let model!: TopologyDataSourceModel;
+  let totalQueries: number = 0;
   let lastEmittedQuery: unknown;
   let lastEmittedQueryRequestOption: GraphQlRequestOptions | undefined;
+
+  const filters = [
+    new GraphQlFieldFilter('service_id', GraphQlOperatorType.Equals, 'test-id'),
+    new GraphQlFieldFilter('backend_id', GraphQlOperatorType.Equals, 'test-backend-id')
+  ];
 
   const createCategoryModel = (
     name: string,
@@ -81,17 +89,24 @@ describe('topology data source model', () => {
     model.entityType = ObservabilityEntityType.Service;
     model.nodeMetricsModel = createTopologyMetricsModel('numCalls', MetricAggregationType.Average);
     model.edgeMetricsModel = createTopologyMetricsModel('duration', MetricAggregationType.Average);
+    model.edgeFilterConfig = { entityType: ObservabilityEntityType.Backend, fields: ['backend_id'] };
 
     model.api = mockApi as ModelApi;
     model.query$.subscribe(query => {
-      lastEmittedQuery = query.buildRequest([]);
+      if (totalQueries === 0) {
+        // Without filters
+        lastEmittedQuery = query.buildRequest([]);
+      } else {
+        // With filters
+        lastEmittedQuery = query.buildRequest(filters);
+      }
       lastEmittedQueryRequestOption = query.requestOptions;
+      totalQueries += 1;
     });
     model.getData();
   });
 
-  test('builds expected request', () => {
-    model.getData();
+  test('builds expected request without filters', () => {
     expect(lastEmittedQuery).toEqual({
       requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
       rootNodeType: ObservabilityEntityType.Service,
@@ -102,6 +117,7 @@ describe('topology data source model', () => {
         ]
       },
       rootNodeFilters: [],
+      edgeFilters: [],
       rootNodeLimit: 100,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
@@ -145,6 +161,40 @@ describe('topology data source model', () => {
     expect(lastEmittedQueryRequestOption).toEqual({
       cacheability: GraphQlRequestCacheability.Cacheable,
       isolated: true
+    });
+  });
+
+  test('builds expected request with filters', () => {
+    expect(lastEmittedQuery).toEqual({
+      requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
+      rootNodeType: ObservabilityEntityType.Service,
+      rootNodeSpecification: {
+        titleSpecification: expect.objectContaining({ name: 'name' }),
+        metricSpecifications: [
+          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+        ]
+      },
+      rootNodeFilters: [filters[0]],
+      edgeFilters: [filters[1]],
+      rootNodeLimit: 100,
+      timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
+        [
+          ObservabilityEntityType.Backend,
+          {
+            titleSpecification: expect.objectContaining({ name: 'name' }),
+            metricSpecifications: [
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
+            ]
+          }
+        ]
+      ]),
+      upstreamNodeSpecifications: new Map(),
+      edgeSpecification: {
+        metricSpecifications: [
+          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average })
+        ]
+      }
     });
   });
 });
