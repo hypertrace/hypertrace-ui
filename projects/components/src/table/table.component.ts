@@ -911,7 +911,7 @@ export class TableComponent
 
   private propagateUpdatedColumns(updatedColumns: TableColumnConfigExtended[]): void {
     this.columnConfigsSubject.next(updatedColumns);
-    this.columnConfigsChange.next(updatedColumns);
+    this.columnConfigsChange.next(updatedColumns.filter(column => !this.isStateColumn(column)));
   }
 
   private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
