@@ -50,6 +50,10 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
+import {
+  GlobalCsvDownloadDataType,
+  GlobalCsvDownloadService
+} from '../../../services/global-csv-download/global-csv-download.service';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
@@ -110,6 +114,7 @@ import { TableWidgetModel } from './table-widget.model';
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
           (columnConfigsChange)="this.onColumnsChange($event)"
+          (visibleColumnsChange)="this.onVisibleColumnsChange($event)"
         >
         </ht-table>
       </div>
@@ -154,7 +159,8 @@ export class TableWidgetRendererComponent
     @Inject(RENDERER_API) api: RendererApi<TableWidgetModel>,
     changeDetectorRef: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly globalCsvDownloadService: GlobalCsvDownloadService
   ) {
     super(api, changeDetectorRef);
   }
@@ -496,6 +502,14 @@ export class TableWidgetRendererComponent
       );
     }
     this.columnConfigs$ = this.getColumnConfigs();
+  }
+
+  public onVisibleColumnsChange(columns: TableColumnConfig[]): void {
+    this.globalCsvDownloadService.registerDataSource(`table-widget-renderer-${this.model.id}`, {
+      type: GlobalCsvDownloadDataType.Table,
+      columns: columns,
+      data: this.model.getData()
+    });
   }
 
   public onColumnsChange(columns: TableColumnConfig[]): void {
