@@ -25,6 +25,7 @@ import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
 import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
+import { GraphQlFilter } from '../../../../../public-api';
 
 @Model({
   type: 'topology-data-source'
@@ -102,7 +103,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     };
 
     return this.query<EntityTopologyGraphQlQueryHandlerService>(filters => {
-      const topologyFilters = this.getTopologyFilters(filters as GraphQlFieldFilter[]);
+      const topologyFilters = this.getTopologyFilters(filters);
       const edgeFilterEntityType = this.edgeFilterConfig?.entityType;
       const requiredEdgeEntityTypes =
         topologyFilters.edges.length > 0 && edgeFilterEntityType !== undefined ? [edgeFilterEntityType] : undefined;
@@ -135,16 +136,23 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     );
   }
 
-  private getTopologyFilters(filters: GraphQlFieldFilter[]): TopologyFilters {
+  private getTopologyFilters(filters: GraphQlFilter[]): TopologyFilters {
     const edgeFilterFields = this.edgeFilterConfig?.fields ?? [];
-    const edgeFilters: GraphQlFieldFilter[] = [];
-    const nodeFilters: GraphQlFieldFilter[] = [];
+    const edgeFilters: GraphQlFilter[] = [];
+    const nodeFilters: GraphQlFilter[] = [];
 
-    filters.forEach(fieldFilter => {
-      if (edgeFilterFields.includes(this.getFieldFromExpression(fieldFilter.keyOrExpression))) {
-        edgeFilters.push(fieldFilter);
+    const isFieldFilter = (gqlFilter: GraphQlFilter): gqlFilter is GraphQlFieldFilter =>
+      'keyOrExpression' in gqlFilter && 'operator' in gqlFilter && 'value' in gqlFilter;
+
+    filters.forEach(gqlFilter => {
+      // Edge filter only supported for `GraphQlFieldFilter` for now
+      if (
+        isFieldFilter(gqlFilter) &&
+        edgeFilterFields.includes(this.getFieldFromExpression(gqlFilter.keyOrExpression))
+      ) {
+        edgeFilters.push(gqlFilter);
       } else {
-        nodeFilters.push(fieldFilter);
+        nodeFilters.push(gqlFilter);
       }
     });
 
@@ -222,6 +230,6 @@ export interface TopologyEdgeFilterConfig {
 }
 
 interface TopologyFilters {
-  nodes: GraphQlFieldFilter[];
-  edges: GraphQlFieldFilter[];
+  nodes: GraphQlFilter[];
+  edges: GraphQlFilter[];
 }
