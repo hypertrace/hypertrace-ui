@@ -25,7 +25,7 @@ import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
 import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
-import { GraphQlFilter } from '../../../../../public-api';
+import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
   type: 'topology-data-source'
