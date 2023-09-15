@@ -464,12 +464,10 @@ describe('Table component', () => {
 
     // Hiding a column
     spectator.component.onHideColumn(columns[0]);
-    expect(mockColumnConfigsChange).toHaveBeenLastCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ ...columns[0], visible: false }),
-        expect.objectContaining({ ...columns[1] })
-      ])
-    );
+    expect(mockColumnConfigsChange).toHaveBeenLastCalledWith([
+      expect.objectContaining({ ...columns[0], visible: false }),
+      expect.objectContaining({ ...columns[1] })
+    ]);
     flush();
   }));
 
