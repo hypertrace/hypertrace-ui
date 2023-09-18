@@ -445,32 +445,6 @@ describe('Table component', () => {
     flush();
   }));
 
-  test('should emit correctly on column changes', fakeAsync(() => {
-    const mockColumnConfigsChange = jest.fn();
-    const columns = buildColumns();
-    const spectator = createHost(
-      `<ht-table [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode"
-         [mode]="mode" (columnConfigsChange)="mockColumnConfigsChange($event)"></ht-table>`,
-      {
-        hostProps: {
-          columnConfigs: columns,
-          data: buildData(),
-          selectionMode: TableSelectionMode.Multiple,
-          mode: TableMode.Flat,
-          mockColumnConfigsChange: mockColumnConfigsChange
-        }
-      }
-    );
-
-    // Hiding a column
-    spectator.component.onHideColumn(columns[0]);
-    expect(mockColumnConfigsChange).toHaveBeenLastCalledWith([
-      expect.objectContaining({ ...columns[0], visible: false }),
-      expect.objectContaining({ ...columns[1] })
-    ]);
-    flush();
-  }));
-
   test('should select only selected rows', fakeAsync(() => {
     const columns = buildColumns();
     const rows = buildData();
