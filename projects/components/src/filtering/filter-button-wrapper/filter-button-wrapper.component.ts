@@ -13,6 +13,7 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
       [metadata]="this.filterButtonWrapperData.metadata"
       [attribute]="this.filterButtonWrapperData.attribute"
       [value]="this.filterButtonWrapperData.value"
+      [subpath]="this.filterButtonWrapperData.subpath"
     ></ht-filter-button>
   `
 })
@@ -24,4 +25,5 @@ export interface FilterButtonWrapperData {
   metadata?: FilterAttribute[];
   attribute?: FilterAttribute;
   value?: FilterValue;
+  subpath?: string;
 }

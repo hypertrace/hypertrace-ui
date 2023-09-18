@@ -19,6 +19,14 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
     return [...this.supportedTopLevelOperators(), ...this.supportedSubpathOperators()];
   }
 
+  public buildFiltersForSupportedSubpathOperators(
+    attribute: FilterAttribute,
+    value: TValue,
+    subpath: string
+  ): Filter<TValue>[] {
+    return this.supportedSubpathOperators().map(operator => this.buildFilter(attribute, operator, value, subpath));
+  }
+
   public buildFiltersForSupportedOperators(attribute: FilterAttribute, value: TValue): Filter<TValue>[] {
     return this.supportedTopLevelOperators().map(operator => this.buildFilter(attribute, operator, value));
   }

@@ -66,6 +66,7 @@ export interface Band<TInterval> {
 export interface GroupByFilter {
   attribute?: FilterAttribute;
   metadata: FilterAttribute[];
+  subpath?: string;
 }
 
 export interface Summary {

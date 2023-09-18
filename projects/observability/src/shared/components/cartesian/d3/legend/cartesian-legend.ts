@@ -247,6 +247,7 @@ export class CartesianLegend<TData> {
             useValue: {
               metadata: this.activeSeries[0].groupByFilter?.metadata,
               attribute: this.activeSeries[0].groupByFilter?.attribute,
+              subpath: this.activeSeries[0].groupByFilter?.subpath,
               value: container.textContent
             }
           }

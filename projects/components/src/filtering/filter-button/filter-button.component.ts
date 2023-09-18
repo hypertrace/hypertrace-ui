@@ -47,6 +47,9 @@ export class FilterButtonComponent implements OnChanges {
   @Input()
   public value?: FilterValue;
 
+  @Input()
+  public subpath?: string;
+
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
@@ -60,13 +63,21 @@ export class FilterButtonComponent implements OnChanges {
   public ngOnChanges(): void {
     this.availableFilters =
       this.attribute !== undefined && this.value !== undefined
-        ? this.filterBuilderLookupService
-            .lookup(this.attribute.type)
-            .buildFiltersForSupportedOperators(this.attribute, this.value)
+        ? this.buildAvailableFilters(this.attribute, this.value, this.subpath)
         : [];
   }
 
   public onFilterClick(filter: Filter): void {
     this.filterUrlService.addUrlFilter(this.metadata || [], filter);
+  }
+
+  private buildAvailableFilters(attribute: FilterAttribute, value: FilterValue, subpath?: string): Filter[] {
+    if (subpath !== undefined) {
+      return this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFiltersForSupportedSubpathOperators(attribute, value, subpath);
+    }
+
+    return this.filterBuilderLookupService.lookup(attribute.type).buildFiltersForSupportedOperators(attribute, value);
   }
 }
