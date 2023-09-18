@@ -368,6 +368,7 @@ export * from './table/cells/data-parsers/table-cell-no-op-parser';
 export * from './table/cells/data-parsers/table-cell-string-parser';
 export * from './table/cells/data-parsers/table-cell-timestamp-parser';
 export * from './table/cells/data-parsers/table-cell-icon-parser';
+export * from './table/util/table-column.util';
 
 // Table Controls
 export * from './table/controls/table-controls.module';

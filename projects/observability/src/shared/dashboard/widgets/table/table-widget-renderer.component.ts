@@ -18,6 +18,7 @@ import {
   TableCheckboxControlOption,
   TableCheckboxOptions,
   TableColumnConfig,
+  TableColumnUtil,
   TableControlOption,
   TableControlOptionType,
   TableDataSource,
@@ -33,7 +34,7 @@ import {
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
 import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import {
@@ -517,7 +518,9 @@ export class TableWidgetRendererComponent
       this.getLocalPreferences().subscribe(preferences =>
         this.setLocalPreferences({
           ...preferences,
-          columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+          columns: columns
+            .filter(column => !TableColumnUtil.isStateColumn(column))
+            .map(column => this.dehydratePersistedColumnConfig(column))
         })
       );
     }

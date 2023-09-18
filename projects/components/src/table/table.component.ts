@@ -2,8 +2,8 @@
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
 import {
-  TableEditColumnsModalConfig,
-  TableEditColumnsModalComponent
+  TableEditColumnsModalComponent,
+  TableEditColumnsModalConfig
 } from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
@@ -33,9 +33,9 @@ import {
   NumberCoercer,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, without } from 'lodash-es';
+import { isNil, isUndefined, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { switchMap, take, filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -68,6 +68,7 @@ import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
+import { TableColumnUtil } from './util/table-column.util';
 
 @Component({
   selector: 'ht-table',
@@ -547,7 +548,14 @@ export class TableComponent
       this.isTableFullPage = this.display === TableStyle.FullPage;
     }
 
-    if (changes.mode || changes.columnConfigs || changes.detailContent || changes.metadata) {
+    if (
+      changes.columnConfigs &&
+      this.hasNonStateColumnsChanged(changes.columnConfigs.previousValue, changes.columnConfigs.currentValue)
+    ) {
+      this.initializeColumns();
+    }
+
+    if (changes.mode || changes.detailContent || changes.metadata) {
       this.initializeColumns();
     }
 
@@ -570,6 +578,17 @@ export class TableComponent
     ) {
       this.toggleRowSelections(this.selections);
     }
+  }
+
+  private hasNonStateColumnsChanged(previousValue?: TableColumnConfig[], currentValue?: TableColumnConfig[]): boolean {
+    if (previousValue === undefined || currentValue === undefined) {
+      return false;
+    }
+
+    const previousColumns = previousValue.filter(column => !this.isStateColumn(column));
+    const currentColumns = currentValue.filter(column => !this.isStateColumn(column));
+
+    return !isEqualIgnoreFunctions(previousColumns, currentColumns);
   }
 
   public ngAfterViewInit(): void {
@@ -714,7 +733,7 @@ export class TableComponent
       this.checkColumnWidthCompatibilityOrThrow(column.width);
       this.checkColumnWidthCompatibilityOrThrow(column.minWidth);
     });
-    const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
+    const columnConfigurations = this.buildColumnConfigExtended(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
     }
@@ -723,6 +742,7 @@ export class TableComponent
     this.updateVisibleColumns(visibleColumns);
 
     this.columnConfigsSubject.next(columnConfigurations);
+    this.columnConfigsChange.next(columnConfigurations);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -789,12 +809,11 @@ export class TableComponent
     return this.showColumnDivider(columns, index);
   };
 
-  public isSelectionStateColumn = (column?: TableColumnConfig): boolean => column?.id === '$$selected';
+  protected isSelectionStateColumn = TableColumnUtil.isSelectionStateColumn;
 
-  public isExpansionStateColumn = (column?: TableColumnConfig): boolean => column?.id === '$$expanded';
+  protected isExpansionStateColumn = TableColumnUtil.isExpansionStateColumn;
 
-  public isStateColumn = (column?: TableColumnConfig): boolean =>
-    this.isSelectionStateColumn(column) || this.isExpansionStateColumn(column);
+  protected isStateColumn = TableColumnUtil.isStateColumn;
 
   public isLastStateColumn = (columns: TableColumnConfig[], index: number): boolean => {
     if (this.isStateColumn(columns[index]) && !this.isStateColumn(columns[index + 1])) {
@@ -828,6 +847,7 @@ export class TableComponent
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
     this.columnConfigsSubject.next(updatedColumns);
+    this.columnConfigsChange.next(updatedColumns);
   }
 
   public showEditColumnsModal(): void {
@@ -913,14 +933,17 @@ export class TableComponent
     return this.hasExpandableRows() ? index - 1 : index;
   }
 
-  private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
+  private buildColumnConfigExtended(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
     const stateColumns = [];
 
-    if (this.hasMultiSelect()) {
+    if (this.hasMultiSelect() && columnConfigs.find(TableColumnUtil.isSelectionStateColumn) === undefined) {
       stateColumns.push(this.multiSelectRowColumnConfig);
     }
 
-    if (this.hasExpandableRows()) {
+    if (
+      this.hasExpandableRows() &&
+      isUndefined(columnConfigs.find(TableColumnUtil.isExpansionStateColumn)) === undefined
+    ) {
       stateColumns.push(this.expandableToggleColumnConfig);
     }
 
