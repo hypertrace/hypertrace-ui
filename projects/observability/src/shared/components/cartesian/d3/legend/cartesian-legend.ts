@@ -245,7 +245,7 @@ export class CartesianLegend<TData> {
           {
             provide: FILTER_BUTTON_WRAPPER,
             useValue: {
-              targetAttribute: this.activeSeries[0].groupBy?.targetAttribute,
+              targetAttribute: this.activeSeries[0].groupBy,
               value: container.textContent
             }
           }

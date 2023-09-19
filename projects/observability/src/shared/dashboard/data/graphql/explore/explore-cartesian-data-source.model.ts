@@ -142,12 +142,10 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         ...(request.attributes
           ? {
               groupBy: {
-                targetAttribute: {
-                  attribute: request.attributes?.find(
-                    attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
-                  )!,
-                  subpath: request.groupBy?.keyExpressions?.[0].subpath
-                }
+                attribute: request.attributes?.find(
+                  attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
+                )!,
+                subpath: request.groupBy?.keyExpressions?.[0].subpath
               }
             }
           : {})

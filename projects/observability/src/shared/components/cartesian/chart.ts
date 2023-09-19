@@ -1,5 +1,5 @@
-import { FilterAttribute } from '@hypertrace/components';
 import { TimeRange } from '@hypertrace/common';
+import { FilterAttributeExpression } from '@hypertrace/components';
 import { AxisDomain } from 'd3-axis';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
@@ -44,7 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
-  groupBy?: GroupBy;
+  groupBy?: FilterAttributeExpression;
   stacking?: boolean;
   hide?: boolean;
 
@@ -61,15 +61,6 @@ export interface Band<TInterval> {
   opacity: number;
   name: string;
   hide?: boolean;
-}
-
-export interface GroupBy {
-  targetAttribute: TargetAttribute;
-}
-
-export interface TargetAttribute {
-  attribute: FilterAttribute;
-  subpath?: string;
 }
 
 export interface Summary {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken } from '@angular/core';
-import { TargetAttribute } from '@hypertrace/observability';
 import { FilterValue } from '../filter/filter';
+import { FilterAttributeExpression } from '../filter/parser/parsed-filter';
 
 export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>('INTERVAL_DATA');
 
@@ -21,6 +21,6 @@ export class FilterButtonWrapperComponent {
 }
 
 export interface FilterButtonWrapperData {
-  targetAttribute: TargetAttribute;
+  targetAttribute: FilterAttributeExpression;
   value: FilterValue;
 }
