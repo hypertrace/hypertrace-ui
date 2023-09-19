@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash-es';
+
 export const displayString = (provided?: unknown, defaultValueOnEmpty: string = '-'): string => {
   if (provided === null || provided === 'null') {
     return defaultValueOnEmpty;
@@ -13,7 +15,7 @@ export const displayString = (provided?: unknown, defaultValueOnEmpty: string = 
     case 'function':
       return 'Function';
     case 'string':
-      return provided;
+      return !isEmpty(provided.trim()) ? provided : defaultValueOnEmpty;
     case 'boolean':
     case 'number':
     case 'bigint':
