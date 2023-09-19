@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken } from '@angular/core';
+import { TargetAttribute } from '@hypertrace/observability';
 import { FilterValue } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 
@@ -10,10 +11,10 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
   template: `
     <ht-filter-button
       *ngIf="this.filterButtonWrapperData"
-      [metadata]="this.filterButtonWrapperData.metadata"
-      [attribute]="this.filterButtonWrapperData.attribute"
+      [metadata]="this.filterButtonWrapperData.allAttributes"
+      [attribute]="this.filterButtonWrapperData.targetAttribute.attribute"
       [value]="this.filterButtonWrapperData.value"
-      [subpath]="this.filterButtonWrapperData.subpath"
+      [subpath]="this.filterButtonWrapperData.targetAttribute.subpath"
     ></ht-filter-button>
   `
 })
@@ -22,8 +23,7 @@ export class FilterButtonWrapperComponent {
 }
 
 export interface FilterButtonWrapperData {
-  metadata?: FilterAttribute[];
-  attribute?: FilterAttribute;
-  value?: FilterValue;
-  subpath?: string;
+  allAttributes: FilterAttribute[];
+  targetAttribute: TargetAttribute;
+  value: FilterValue;
 }

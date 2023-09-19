@@ -72,12 +72,8 @@ export class FilterButtonComponent implements OnChanges {
   }
 
   private buildAvailableFilters(attribute: FilterAttribute, value: FilterValue, subpath?: string): Filter[] {
-    if (subpath !== undefined) {
-      return this.filterBuilderLookupService
-        .lookup(attribute.type)
-        .buildFiltersForSupportedSubpathOperators(attribute, value, subpath);
-    }
-
-    return this.filterBuilderLookupService.lookup(attribute.type).buildFiltersForSupportedOperators(attribute, value);
+    return this.filterBuilderLookupService
+      .lookup(attribute.type)
+      .buildFiltersForSupportedOperators(attribute, value, subpath);
   }
 }
