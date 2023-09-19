@@ -147,8 +147,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
                     attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
                   )!,
                   subpath: request.groupBy?.keyExpressions?.[0].subpath
-                },
-                allAttributes: request.attributes
+                }
               }
             }
           : {})

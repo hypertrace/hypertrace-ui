@@ -65,7 +65,6 @@ export interface Band<TInterval> {
 
 export interface GroupBy {
   targetAttribute: TargetAttribute;
-  allAttributes: FilterAttribute[];
 }
 
 export interface TargetAttribute {
