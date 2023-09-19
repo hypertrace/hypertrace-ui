@@ -39,9 +39,14 @@ import { TableCellParserConstructor } from './table-cell-parser';
 import { TableCellParserLookupService } from './table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 import { TableCellRendererLookupService } from './table-cell-renderer-lookup.service';
+import {
+  TableCellCsvGeneratorConstructor,
+  TableCellCsvGeneratorLookupService
+} from './table-cell-csv-generator-lookup.service';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
+export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_CELL_CSV_GENERATORS');
 
 @NgModule({
   imports: [
@@ -115,6 +120,10 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCellNoOpParser
       ],
       multi: true
+    },
+    {
+      provide: TABLE_CELL_CSV_GENERATORS,
+      useValue: []
     }
   ]
 })
@@ -122,11 +131,14 @@ export class TableCellsModule {
   public constructor(
     private readonly tableCellParserLookupService: TableCellParserLookupService,
     private readonly tableCellRendererLookupService: TableCellRendererLookupService,
+    private readonly tableCellCsvGeneratorLookupService: TableCellCsvGeneratorLookupService,
     @Inject(TABLE_CELL_PARSERS) cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[][],
-    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][]
+    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][],
+    @Inject(TABLE_CELL_CSV_GENERATORS) cellCsvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[][]
   ) {
     this.registerAllParsers(cellParsers.flat());
     this.registerAllRenderers(cellRenderers.flat());
+    this.registerAllCsvGenerators(cellCsvGenerators.flat());
   }
 
   private registerAllParsers(cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[] = []): void {
@@ -135,5 +147,9 @@ export class TableCellsModule {
 
   private registerAllRenderers(cellRenderers: TableCellRendererConstructor[] = []): void {
     this.tableCellRendererLookupService.registerAll(cellRenderers, TextTableCellRendererComponent);
+  }
+
+  private registerAllCsvGenerators(csvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[]) {
+    this.tableCellCsvGeneratorLookupService.register(...csvGenerators);
   }
 }

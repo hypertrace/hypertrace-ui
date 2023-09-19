@@ -11,7 +11,12 @@ import { TraceSearchBoxModule } from '../search-box/search-box.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { TableCellParserConstructor } from './cells/table-cell-parser';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
-import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './cells/table-cells.module';
+import {
+  TABLE_CELL_CSV_GENERATORS,
+  TABLE_CELL_PARSERS,
+  TABLE_CELL_RENDERERS,
+  TableCellsModule
+} from './cells/table-cells.module';
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
 import { TableComponent } from './table.component';
 import { DraggableListModule } from '../draggable-list/draggable-list.module';
@@ -19,6 +24,7 @@ import { ExpanderToggleModule } from '../expander/expander-toggle.module';
 import { MemoizeModule } from '@hypertrace/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutChangeModule } from '../layout/layout-change.module';
+import { TableCellCsvGeneratorConstructor } from './cells/table-cell-csv-generator-lookup.service';
 
 @NgModule({
   imports: [
@@ -53,6 +59,20 @@ export class TableModule {
         {
           provide: TABLE_CELL_PARSERS,
           useValue: cellParsers,
+          multi: true
+        }
+      ]
+    };
+  }
+  public static withCellCsvGenerators(
+    cellCsvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[]
+  ): ModuleWithProviders<TableModule> {
+    return {
+      ngModule: TableModule,
+      providers: [
+        {
+          provide: TABLE_CELL_CSV_GENERATORS,
+          useValue: cellCsvGenerators,
           multi: true
         }
       ]

@@ -8,11 +8,15 @@ import { TableCellRendererLookupService } from './cells/table-cell-renderer-look
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
 import { TableCdkDataSource } from './data/table-cdk-data-source';
 import { TableColumnConfig } from './table-api';
+import { TableCellCsvGeneratorLookupService } from './cells/table-cell-csv-generator-lookup.service';
+import { CoreTableCellCsvGeneratorType } from './cells/types/core-table-cell-csv-generator-type';
+import { TableCellCsvGeneratorBase } from './cells/table-cell-csv-generator-base';
 
 export interface TableColumnConfigExtended extends TableColumnConfig {
   attribute?: FilterAttribute; // Undefined if we can't determine scope yet (e.g. Interactions)
   renderer: TableCellRendererConstructor;
   parser: TableCellParserBase<unknown, unknown, unknown>;
+  csvGenerator?: TableCellCsvGeneratorBase<unknown>;
   filterValues: unknown[];
 }
 
@@ -29,7 +33,8 @@ export class TableService {
   public constructor(
     private readonly rootInjector: Injector,
     private readonly tableCellRendererLookupService: TableCellRendererLookupService,
-    private readonly tableCellParserLookupService: TableCellParserLookupService
+    private readonly tableCellParserLookupService: TableCellParserLookupService,
+    private readonly tableCellCsvGeneratorLookupService: TableCellCsvGeneratorLookupService
   ) {}
 
   public buildExtendedColumnConfigs(
@@ -44,6 +49,9 @@ export class TableService {
       const rendererConstructor = this.tableCellRendererLookupService.lookup(
         columnConfig.display !== undefined ? columnConfig.display : CoreTableCellRendererType.Text
       );
+      const csvGeneratorConstructor = this.tableCellCsvGeneratorLookupService.lookup(
+        columnConfig.csv ?? CoreTableCellCsvGeneratorType.Skip
+      );
 
       const parserConstructor = this.tableCellParserLookupService.lookup(rendererConstructor.parser);
 
@@ -52,7 +60,8 @@ export class TableService {
         attribute: attribute,
         renderer: rendererConstructor,
         parser: new parserConstructor(this.rootInjector),
-        filterValues: dataSource?.getFilterValues(columnConfig.id) ?? []
+        filterValues: dataSource?.getFilterValues(columnConfig.id) ?? [],
+        csvGenerator: new csvGeneratorConstructor(this.rootInjector)
       };
     });
   }

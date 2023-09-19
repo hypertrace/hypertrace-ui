@@ -3,6 +3,7 @@ import { TableCellRendererBase } from './table-cell-renderer-base';
 import { CoreTableCellParserType } from './types/core-table-cell-parser-type';
 import { CoreTableCellRendererType } from './types/core-table-cell-renderer-type';
 import { TableCellAlignmentType } from './types/table-cell-alignment-type';
+import { CoreTableCellCsvGeneratorType } from './types/core-table-cell-csv-generator-type';
 
 /*
  * TableCellRendererConstructor is used by lookup service to dynamically instantiate cell renderers
@@ -20,6 +21,7 @@ export function TableCellRenderer(tableCellRendererMetadata: TableCellRendererMe
     constructor.type = tableCellRendererMetadata.type;
     constructor.alignment = tableCellRendererMetadata.alignment;
     constructor.parser = tableCellRendererMetadata.parser;
+    constructor.csvGenerator = tableCellRendererMetadata.csvGenerator;
   };
 }
 
@@ -29,4 +31,5 @@ export interface TableCellRendererMetadata {
   type: CoreTableCellRendererType | string;
   alignment: TableCellAlignmentType;
   parser: CoreTableCellParserType | string;
+  csvGenerator?: CoreTableCellCsvGeneratorType | string;
 }

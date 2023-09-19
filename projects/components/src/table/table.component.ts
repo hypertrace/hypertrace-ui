@@ -2,8 +2,8 @@
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
 import {
-  TableEditColumnsModalConfig,
-  TableEditColumnsModalComponent
+  TableEditColumnsModalComponent,
+  TableEditColumnsModalConfig
 } from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
@@ -35,7 +35,7 @@ import {
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { switchMap, take, filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -640,6 +640,8 @@ export class TableComponent
     this.checkAndResizeColumn(event);
     this.changeDetector.detectChanges();
   }
+
+  public downloadCsv(): void {}
 
   private addEventListeners(): void {
     this.document.addEventListener('mousemove', event => this.onResizeMouseMove(event));

@@ -17,6 +17,10 @@ export interface TableColumnConfig<TableColumnOptions = unknown> {
    * This is used to correlate with a cell renderer that should be used for the column
    */
   display?: string;
+  /**
+   * This is used to correlate with a csv generator that should be used for the column
+   */
+  csv?: string;
   title?: string;
   titleTooltip?: string;
   sort?: TableSortDirection;
