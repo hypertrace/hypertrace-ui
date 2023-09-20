@@ -11,7 +11,7 @@ import {
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreOrderBy,
@@ -156,7 +156,7 @@ export class ExplorerComponent {
 
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly navigationService: NavigationService,
+    protected readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
@@ -167,10 +167,7 @@ export class ExplorerComponent {
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.initialState$ = activatedRoute.queryParamMap.pipe(
-      take(1),
-      map(paramMap => this.mapToInitialState(paramMap))
-    );
+    this.initialState$ = activatedRoute.queryParamMap.pipe(map(paramMap => this.mapToInitialState(paramMap)));
     this.currentContext$ = concat(
       this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
       this.contextChangeSubject
@@ -398,12 +395,13 @@ export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
 }
-const enum ExplorerQueryParam {
+export const enum ExplorerQueryParam {
   Scope = 'scope',
   Interval = 'interval',
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
   Series = 'series',
-  Order = 'order'
+  Order = 'order',
+  Filter = 'filter'
 }
