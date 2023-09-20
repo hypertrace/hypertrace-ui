@@ -2,8 +2,8 @@
 /* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { ModalService } from '../modal/modal.service';
 import {
-  TableEditColumnsModalConfig,
-  TableEditColumnsModalComponent
+  TableEditColumnsModalComponent,
+  TableEditColumnsModalConfig
 } from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
@@ -29,13 +29,16 @@ import {
   Dictionary,
   DomElementMeasurerService,
   isEqualIgnoreFunctions,
+  isNonEmptyString,
   NavigationService,
   NumberCoercer,
+  PreferenceService,
+  StorageType,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { switchMap, take, filter, map } from 'rxjs/operators';
+import { isNil, pick, without } from 'lodash-es';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -309,6 +312,9 @@ export class TableComponent
   };
 
   @Input()
+  public id?: string;
+
+  @Input()
   public columnConfigs?: TableColumnConfig[];
 
   @Input()
@@ -433,7 +439,9 @@ export class TableComponent
   private readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
-  public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
+  public readonly columnConfigs$: Observable<
+    TableColumnConfigExtended[]
+  > = this.columnConfigsSubject.asObservable().pipe(tap(columns => this.saveTablePreferences(columns)));
   public columnDefaultConfigs?: TableColumnConfigExtended[];
 
   public visibleColumnConfigs: TableColumnConfigExtended[] = [];
@@ -505,7 +513,8 @@ export class TableComponent
     private readonly activatedRoute: ActivatedRoute,
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly preferenceService: PreferenceService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
@@ -686,6 +695,51 @@ export class TableComponent
     }
   }
 
+  private dehydratePersistedColumnConfig(column: TableColumnConfig): PersistedTableColumnConfig {
+    /*
+     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
+     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
+     */
+    return pick(column, ['id', 'visible']);
+  }
+
+  private saveTablePreferences(columns: TableColumnConfig[]): void {
+    if (isNonEmptyString(this.id)) {
+      this.getLocalPreferences().subscribe(preferences =>
+        this.setLocalPreferences({
+          ...preferences,
+          columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+        })
+      );
+    }
+  }
+
+  private getLocalPreferences(): Observable<TableLocalPreferences> {
+    return isNonEmptyString(this.id)
+      ? this.preferenceService.get<TableLocalPreferences>(this.id, {}, StorageType.Local).pipe(first())
+      : of({ columns: [] });
+  }
+
+  private setLocalPreferences(preferences: TableLocalPreferences): void {
+    if (isNonEmptyString(this.id)) {
+      this.preferenceService.set(this.id, preferences, StorageType.Local);
+    }
+  }
+
+  private hydratePersistedColumnConfigs(
+    columns: TableColumnConfigExtended[],
+    persistedColumns: PersistedTableColumnConfig[]
+  ): TableColumnConfigExtended[] {
+    return columns.map(column => {
+      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
+
+      return {
+        ...column, // Apply default column config
+        ...(found ? found : {}) // Override with any saved properties
+      };
+    });
+  }
+
   private setColumnResizeDefaults(columnResizeHandler: HTMLDivElement): void {
     columnResizeHandler.style.backgroundColor = Color.Transparent;
     columnResizeHandler.style.right = '2px';
@@ -714,15 +768,23 @@ export class TableComponent
       this.checkColumnWidthCompatibilityOrThrow(column.width);
       this.checkColumnWidthCompatibilityOrThrow(column.minWidth);
     });
-    const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
+    const columnConfigurations = this.buildColumnConfigExtended(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
     }
-    const visibleColumns = columnConfigurations.filter(column => column.visible);
-    this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
-    this.updateVisibleColumns(visibleColumns);
 
-    this.columnConfigsSubject.next(columnConfigurations);
+    this.getLocalPreferences()
+      .pipe(take(1))
+      .subscribe(preferences => {
+        const restoredColumnConfigs = this.hydratePersistedColumnConfigs(
+          columnConfigurations,
+          preferences.columns ?? []
+        );
+        const visibleColumns = restoredColumnConfigs.filter(column => column.visible);
+        this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
+        this.updateVisibleColumns(visibleColumns);
+        this.columnConfigsSubject.next(restoredColumnConfigs);
+      });
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -849,6 +911,7 @@ export class TableComponent
         )
       )
       .subscribe(editedColumnConfigs => {
+        this.saveTablePreferences(editedColumnConfigs);
         this.initializeColumns(editedColumnConfigs);
       });
   }
@@ -913,7 +976,7 @@ export class TableComponent
     return this.hasExpandableRows() ? index - 1 : index;
   }
 
-  private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
+  private buildColumnConfigExtended(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
     const stateColumns = [];
 
     if (this.hasMultiSelect()) {
@@ -1183,3 +1246,9 @@ interface ColumnInfo {
   element: HTMLElement;
   bounds: ColumnBounds;
 }
+
+interface TableLocalPreferences {
+  columns?: PersistedTableColumnConfig[];
+}
+
+type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
