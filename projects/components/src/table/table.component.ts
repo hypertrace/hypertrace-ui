@@ -37,8 +37,8 @@ import {
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil, pick, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -705,19 +705,17 @@ export class TableComponent
 
   private saveTablePreferences(columns: TableColumnConfig[]): void {
     if (isNonEmptyString(this.id)) {
-      this.getLocalPreferences().subscribe(preferences =>
-        this.setLocalPreferences({
-          ...preferences,
-          columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
-        })
-      );
+      this.setLocalPreferences({
+        ...this.getLocalPreferences(),
+        columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+      });
     }
   }
 
-  private getLocalPreferences(): Observable<TableLocalPreferences> {
+  private getLocalPreferences(): TableLocalPreferences {
     return isNonEmptyString(this.id)
-      ? this.preferenceService.get<TableLocalPreferences>(this.id, {}, StorageType.Local).pipe(first())
-      : of({ columns: [] });
+      ? this.preferenceService.getOnce<TableLocalPreferences>(this.id, {}, StorageType.Local)
+      : { columns: [] };
   }
 
   private setLocalPreferences(preferences: TableLocalPreferences): void {
@@ -773,18 +771,13 @@ export class TableComponent
       this.columnDefaultConfigs = columnConfigurations;
     }
 
-    this.getLocalPreferences()
-      .pipe(take(1))
-      .subscribe(preferences => {
-        const restoredColumnConfigs = this.hydratePersistedColumnConfigs(
-          columnConfigurations,
-          preferences.columns ?? []
-        );
-        const visibleColumns = restoredColumnConfigs.filter(column => column.visible);
-        this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
-        this.updateVisibleColumns(visibleColumns);
-        this.columnConfigsSubject.next(restoredColumnConfigs);
-      });
+    const preferences = this.getLocalPreferences();
+
+    const restoredColumnConfigs = this.hydratePersistedColumnConfigs(columnConfigurations, preferences.columns ?? []);
+    const visibleColumns = restoredColumnConfigs.filter(column => column.visible);
+    this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
+    this.updateVisibleColumns(visibleColumns);
+    this.columnConfigsSubject.next(restoredColumnConfigs);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {

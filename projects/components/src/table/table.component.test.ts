@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
+import { DomElementMeasurerService, NavigationService, PreferenceService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -75,6 +75,10 @@ describe('Table component', () => {
       }),
       mockProvider(ModalService, {
         createModal: jest.fn().mockReturnValue({ closed$: of([]) })
+      }),
+      mockProvider(PreferenceService, {
+        getOnce: jest.fn().mockReturnValue({ columns: [] }),
+        set: jest.fn()
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
