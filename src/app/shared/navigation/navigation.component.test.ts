@@ -41,7 +41,6 @@ describe('NavigationComponent', () => {
           of(
             navItems.map(navItem => ({
               ...navItem,
-              pageLevelTimeRangeIsEnabled: true,
               timeRangeResolver: mockTimeRange
             }))
           )

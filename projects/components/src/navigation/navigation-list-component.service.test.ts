@@ -107,16 +107,14 @@ describe('Navigation List Component Service', () => {
             label: 'label-1',
             features: ['feature'],
             matchPaths: [''],
-            timeRangeResolver: mockTimeRangeResolver,
-            pageLevelTimeRangeIsEnabled: true
+            timeRangeResolver: mockTimeRangeResolver
           },
           {
             type: NavItemType.Link,
             icon: 'icon',
             label: 'label-2',
             matchPaths: [''],
-            timeRangeResolver: mockTimeRangeResolver,
-            pageLevelTimeRangeIsEnabled: true
+            timeRangeResolver: mockTimeRangeResolver
           },
           {
             type: NavItemType.Header,

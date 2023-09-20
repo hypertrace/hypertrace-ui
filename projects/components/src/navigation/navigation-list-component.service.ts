@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
-import {
-  ApplicationFeature,
-  FeatureState,
-  FeatureStateResolver,
-  PageTimeRangePreferenceService
-} from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver, PageTimeRangePreferenceService } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { defaultIfEmpty, map, switchMap } from 'rxjs/operators';
+import { defaultIfEmpty, map } from 'rxjs/operators';
 import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
@@ -35,23 +30,16 @@ export class NavigationListComponentService {
   }
 
   public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
-    return this.featureStateResolver.getFeatureState(ApplicationFeature.PageTimeRange).pipe(
-      switchMap(featureState => combineLatest(this.getTimeRangesForNavItems(navItems, featureState))),
-      defaultIfEmpty<NavItemConfig[]>([])
-    );
+    return combineLatest(this.getTimeRangesForNavItems(navItems)).pipe(defaultIfEmpty<NavItemConfig[]>([]));
   }
 
-  private getTimeRangesForNavItems(
-    navItems: NavItemConfig[],
-    pageLevelTimeRangeFeatureState: FeatureState
-  ): Observable<NavItemConfig>[] {
+  private getTimeRangesForNavItems(navItems: NavItemConfig[]): Observable<NavItemConfig>[] {
     return navItems.map(navItem => {
       if (navItem.type === NavItemType.Link) {
         return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
           map(timeRangeResolver => ({
             ...navItem,
-            timeRangeResolver: timeRangeResolver,
-            pageLevelTimeRangeIsEnabled: pageLevelTimeRangeFeatureState === FeatureState.Enabled
+            timeRangeResolver: timeRangeResolver
           }))
         );
       }
