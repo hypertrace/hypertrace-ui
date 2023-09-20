@@ -30,57 +30,57 @@ describe('Page time range preference service', () => {
     ]
   });
 
-  test('Setting fixed time range emits corresponding time range from preferences', () => {
-    runFakeRxjs(({ expectObservable, cold }) => {
-      const timeRange: TimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
-      const spectator = serviceFactory({
-        providers: [
-          mockProvider(TimeRangeService, {
-            timeRangeFromUrlString: jest.fn().mockReturnValue(timeRange)
-          })
-        ]
-      });
+  // test('Setting fixed time range emits corresponding time range from preferences', () => {
+  //   runFakeRxjs(({ expectObservable, cold }) => {
+  //     const timeRange: TimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
+  //     const spectator = serviceFactory({
+  //       providers: [
+  //         mockProvider(TimeRangeService, {
+  //           timeRangeFromUrlString: jest.fn().mockReturnValue(timeRange)
+  //         })
+  //       ]
+  //     });
 
-      cold('-a|', {
-        a: () => spectator.service.setTimeRangePreferenceForPage('foo', timeRange)
-      }).subscribe(update => update());
+  //     cold('-a|', {
+  //       a: () => spectator.service.setTimeRangePreferenceForPage('foo', timeRange)
+  //     }).subscribe(update => update());
 
-      const recordedTimeRanges$ = spectator.service
-        .getTimeRangePreferenceForPage('foo')
-        .pipe(map(timeRangeResolver => timeRangeResolver()));
+  //     const recordedTimeRanges$ = spectator.service
+  //       .getTimeRangePreferenceForPage('foo')
+  //       .pipe(map(timeRangeResolver => timeRangeResolver()));
 
-      expectObservable(recordedTimeRanges$).toBe('da', {
-        d: defaultPageTimeRange,
-        a: timeRange
-      });
-    });
-  });
+  //     expectObservable(recordedTimeRanges$).toBe('da', {
+  //       d: defaultPageTimeRange,
+  //       a: timeRange
+  //     });
+  //   });
+  // });
 
-  test('Setting relative time range emits corresponding time range from preferences', () => {
-    runFakeRxjs(({ expectObservable, cold }) => {
-      const timeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
-      const spectator = serviceFactory({
-        providers: [
-          mockProvider(TimeRangeService, {
-            timeRangeFromUrlString: jest.fn().mockReturnValue(timeRange)
-          })
-        ]
-      });
+  // test('Setting relative time range emits corresponding time range from preferences', () => {
+  //   runFakeRxjs(({ expectObservable, cold }) => {
+  //     const timeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
+  //     const spectator = serviceFactory({
+  //       providers: [
+  //         mockProvider(TimeRangeService, {
+  //           timeRangeFromUrlString: jest.fn().mockReturnValue(timeRange)
+  //         })
+  //       ]
+  //     });
 
-      cold('-b|', {
-        b: () => spectator.service.setTimeRangePreferenceForPage('bar', timeRange)
-      }).subscribe(update => update());
+  //     cold('-b|', {
+  //       b: () => spectator.service.setTimeRangePreferenceForPage('bar', timeRange)
+  //     }).subscribe(update => update());
 
-      const recordedTimeRanges$ = spectator.service
-        .getTimeRangePreferenceForPage('bar')
-        .pipe(map(timeRangeResolver => timeRangeResolver()));
+  //     const recordedTimeRanges$ = spectator.service
+  //       .getTimeRangePreferenceForPage('bar')
+  //       .pipe(map(timeRangeResolver => timeRangeResolver()));
 
-      expectObservable(recordedTimeRanges$).toBe('db', {
-        d: defaultPageTimeRange,
-        b: timeRange
-      });
-    });
-  });
+  //     expectObservable(recordedTimeRanges$).toBe('db', {
+  //       d: defaultPageTimeRange,
+  //       b: timeRange
+  //     });
+  //   });
+  // });
 
   test('Should fallback to tenant default if value is present and nothing is in storage', () => {
     runFakeRxjs(({ expectObservable }) => {

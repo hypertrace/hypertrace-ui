@@ -36,7 +36,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
           <ng-container *ngIf="this.shouldShowTimeRange">
-            <ht-page-time-range class="time-range"></ht-page-time-range>
+            <ht-time-range class="time-range"></ht-time-range>
           </ng-container>
           <ng-container *ngIf="this.shouldShowRefreshButton">
             <ht-refresh-button class="refresh-only-button" (click)="this.refresh.emit()"></ht-refresh-button>

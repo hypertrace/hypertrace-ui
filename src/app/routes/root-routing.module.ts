@@ -26,8 +26,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: IconType.Dashboard,
                 label: 'Dashboard'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () => import('../home/home.module').then(module => module.HomeModule)
           },
@@ -38,8 +37,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: ObservabilityIconType.ApplicationFlow,
                 label: 'Application Flow'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () =>
               import('./application-flow/application-flow-routing.module').then(
@@ -53,8 +51,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: ObservabilityIconType.Backend,
                 label: 'Backends'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () =>
               import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
@@ -66,8 +63,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: ObservabilityIconType.Service,
                 label: 'Services'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () =>
               import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
@@ -79,8 +75,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: ObservabilityIconType.Api,
                 label: 'Endpoints'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () =>
               import('./endpoints/endpoint-routing.module').then(module => module.EndpointRoutingModule)
@@ -100,8 +95,7 @@ const ROUTE_CONFIG: HtRoute[] = [
                 icon: IconType.Search,
                 label: 'Explorer'
               },
-              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)),
-              shouldSavePageTimeRange: true
+              defaultTimeRange: new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))
             },
             loadChildren: () =>
               import('./explorer/explorer-routing.module').then(module => module.ExplorerRoutingModule)

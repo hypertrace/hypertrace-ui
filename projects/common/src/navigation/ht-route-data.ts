@@ -7,5 +7,4 @@ export interface HtRouteData {
   features?: string[];
   title?: string;
   defaultTimeRange?: TimeRange;
-  shouldSavePageTimeRange?: boolean;
 }

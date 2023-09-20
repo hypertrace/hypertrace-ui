@@ -10,8 +10,8 @@ import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { BreadcrumbsService } from '../../breadcrumbs/breadcrumbs.service';
 import { FeatureConfigCheckModule } from '../../feature-check/feature-config-check.module';
-import { PageTimeRangeComponent } from '../../page-time-range/page-time-range.component';
 import { PageHeaderComponent, PageHeaderDisplayMode } from './page-header.component';
+import { TimeRangeComponent } from '../../time-range/time-range.component';
 
 describe('Page Header Component', () => {
   let spectator: Spectator<PageHeaderComponent>;
@@ -19,7 +19,7 @@ describe('Page Header Component', () => {
   const createHost = createHostFactory({
     component: PageHeaderComponent,
     imports: [FeatureConfigCheckModule],
-    declarations: [MockComponent(PageTimeRangeComponent)],
+    declarations: [MockComponent(TimeRangeComponent)],
     shallow: true,
     providers: [
       mockProvider(NavigationService),
@@ -57,7 +57,7 @@ describe('Page Header Component', () => {
       ]
     });
 
-    expect(spectator.query(PageTimeRangeComponent)).toExist();
+    expect(spectator.query(TimeRangeComponent)).toExist();
   });
 
   test('should display page time range component when with time range mode is selected', () => {
@@ -73,7 +73,7 @@ describe('Page Header Component', () => {
     });
 
     expect(spectator.component.mode).toBe(PageHeaderDisplayMode.Default);
-    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
+    expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 
   test('should display page time range component when with time range mode is selected', () => {
@@ -88,7 +88,7 @@ describe('Page Header Component', () => {
       ]
     });
 
-    expect(spectator.query(PageTimeRangeComponent)).toExist();
+    expect(spectator.query(TimeRangeComponent)).toExist();
   });
 
   test('should not display any time range if FF is disabled', () => {
@@ -100,7 +100,7 @@ describe('Page Header Component', () => {
       ]
     });
 
-    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
+    expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 
   test('should show the refresh button', () => {
@@ -115,7 +115,7 @@ describe('Page Header Component', () => {
       ]
     });
     expect(spectator.query('.refresh-only-button')).toExist();
-    expect(spectator.query(PageTimeRangeComponent)).not.toExist();
+    expect(spectator.query(TimeRangeComponent)).not.toExist();
   });
 
   test('should not show standalone refresh button when time range is shown', () => {
