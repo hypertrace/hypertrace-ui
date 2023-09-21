@@ -59,7 +59,7 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
   styleUrls: ['./load-async-wrapper.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadAsyncWrapperComponent<T = any> {
+export class LoadAsyncWrapperComponent<T = unknown> {
   public readonly state$: Observable<AsyncState<T>>;
 
   public icon?: IconType;
