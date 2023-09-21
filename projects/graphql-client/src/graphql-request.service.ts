@@ -145,7 +145,7 @@ export class GraphQlRequestService {
     options: GraphQlRequestOptions
   ): Observable<TResponse> {
     return type === GraphQlHandlerType.Mutation
-      ? this.executeMutation(requestString)
+      ? this.executeMutation(requestString, options)
       : this.executeQuery(requestString, options);
   }
 
@@ -155,7 +155,7 @@ export class GraphQlRequestService {
   ): Observable<TResponse> {
     return this.apollo
       .query<TResponse>({
-        query: gql(requestString),
+        query: gql(`query ${options?.name ?? ''} ${requestString}`),
         errorPolicy: 'all',
         fetchPolicy: options.cacheability
       })
@@ -169,10 +169,13 @@ export class GraphQlRequestService {
       );
   }
 
-  private executeMutation<TResponse extends Dictionary<unknown>>(requestString: string): Observable<TResponse> {
+  private executeMutation<TResponse extends Dictionary<unknown>>(
+    requestString: string,
+    options: GraphQlRequestOptions
+  ): Observable<TResponse> {
     return this.apollo
       .mutate<TResponse>({
-        mutation: gql(`mutation ${requestString}`)
+        mutation: gql(`mutation ${options?.name ?? ''} ${requestString}`)
       })
       .pipe(
         tap(response => {
