@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { DomElementMeasurerService, NavigationService, PreferenceService } from '@hypertrace/common';
+import { DomElementMeasurerService, NavigationService, PreferenceService, PreferenceValue } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -20,6 +20,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalService } from '../modal/modal.service';
 
 describe('Table component', () => {
+  let localStorage: PreferenceValue = { columns: [] };
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
     {
@@ -56,7 +57,6 @@ describe('Table component', () => {
     imports: [LetAsyncModule],
     providers: [
       mockProvider(NavigationService),
-      mockProvider(ActivatedRoute),
       mockProvider(ActivatedRoute, {
         queryParamMap: EMPTY
       }),
@@ -77,8 +77,8 @@ describe('Table component', () => {
         createModal: jest.fn().mockReturnValue({ closed$: of([]) })
       }),
       mockProvider(PreferenceService, {
-        getOnce: jest.fn().mockReturnValue({ columns: [] }),
-        set: jest.fn()
+        getOnce: () => localStorage,
+        set: (_: unknown, value: PreferenceValue) => (localStorage = value)
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
@@ -277,6 +277,7 @@ describe('Table component', () => {
         syncWithUrl: false
       }
     });
+    spectator.tick();
 
     spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 

@@ -441,7 +441,7 @@ export class TableComponent
   >([]);
   public readonly columnConfigs$: Observable<
     TableColumnConfigExtended[]
-  > = this.columnConfigsSubject.asObservable().pipe(tap(columns => this.saveTablePreferences(columns)));
+  > = this.columnConfigsSubject.asObservable().pipe(tap(columnConfigs => this.saveTablePreferences(columnConfigs)));
   public columnDefaultConfigs?: TableColumnConfigExtended[];
 
   public visibleColumnConfigs: TableColumnConfigExtended[] = [];
@@ -714,7 +714,7 @@ export class TableComponent
 
   private getLocalPreferences(): TableLocalPreferences {
     return isNonEmptyString(this.id)
-      ? this.preferenceService.getOnce<TableLocalPreferences>(this.id, {}, StorageType.Local)
+      ? this.preferenceService.getOnce<TableLocalPreferences>(this.id, { columns: [] }, StorageType.Local)
       : { columns: [] };
   }
 
@@ -772,12 +772,14 @@ export class TableComponent
     }
 
     const preferences = this.getLocalPreferences();
-
-    const restoredColumnConfigs = this.hydratePersistedColumnConfigs(columnConfigurations, preferences.columns ?? []);
-    const visibleColumns = restoredColumnConfigs.filter(column => column.visible);
+    const columnConfigsWithPersistedData = this.hydratePersistedColumnConfigs(
+      columnConfigurations,
+      preferences.columns ?? []
+    );
+    const visibleColumns = columnConfigsWithPersistedData.filter(column => column.visible);
     this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
     this.updateVisibleColumns(visibleColumns);
-    this.columnConfigsSubject.next(restoredColumnConfigs);
+    this.columnConfigsSubject.next(columnConfigsWithPersistedData);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
