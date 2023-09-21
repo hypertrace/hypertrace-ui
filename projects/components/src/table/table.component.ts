@@ -883,7 +883,7 @@ export class TableComponent
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
-    this.saveTablePreferences(updatedColumns);
+    this.saveTablePreferences(updatedColumns.map(col => (column.id === col.id ? { ...col, visible: false } : col)));
     this.columnConfigsSubject.next(updatedColumns);
   }
 
