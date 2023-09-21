@@ -15,16 +15,14 @@ import { EMPTY, Observable, of } from 'rxjs';
       <div class="container">
         <ng-container *htLoadAsync="this.records$ as records">
           <ht-list-view [records]="records" [metadata]="metadata" display="${ListViewDisplay.Plain}" data-sensitive-pii>
-            <div *ngIf="!this.metadata">
-              <div class="record-value" *htListViewValueRenderer="let record">
-                <div class="value">{{ record.value }}</div>
-                <ht-explore-filter-link
-                  class="filter-link"
-                  [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
-                  htTooltip="See traces in Explorer"
-                >
-                </ht-explore-filter-link>
-              </div>
+            <div class="record-value" *htListViewValueRenderer="let record">
+              <div class="value">{{ record.value }}</div>
+              <ht-explore-filter-link
+                class="filter-link"
+                [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+                htTooltip="See traces in Explorer"
+              >
+              </ht-explore-filter-link>
             </div>
           </ht-list-view>
         </ng-container>
@@ -43,7 +41,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public title?: string;
 
   @Input()
-  public filterName?: string;
+  public filterName: string = '';
 
   public records$?: Observable<ListViewRecord[]>;
 
@@ -57,7 +55,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
 
   public getExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: this.filterName ?? '', subpath: record.key, operator: FilterOperator.Equals, value: record.value }
+      { field: this.filterName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
     ]);
 
   private buildRecords(): void {
