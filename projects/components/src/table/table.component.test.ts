@@ -260,12 +260,15 @@ describe('Table component', () => {
     });
     spectator.tick();
 
-    expect(spectator.component.columnConfigs![0]).toEqual(
-      expect.objectContaining({
-        sort: TableSortDirection.Ascending,
-        id: 'firstId'
-      })
-    );
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.columnConfigs$.pipe(map(columns => columns[0]))).toBe('x', {
+        x: expect.objectContaining({
+          sort: TableSortDirection.Ascending,
+          id: 'firstId'
+        })
+      });
+    });
+    flush();
   }));
 
   test('does not alter the URL on sorting if syncWithUrl false', fakeAsync(() => {
@@ -277,7 +280,6 @@ describe('Table component', () => {
         syncWithUrl: false
       }
     });
-    spectator.tick();
 
     spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 

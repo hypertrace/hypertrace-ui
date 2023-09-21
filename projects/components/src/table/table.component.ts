@@ -36,9 +36,9 @@ import {
   StorageType,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, pick, without } from 'lodash-es';
+import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -439,9 +439,7 @@ export class TableComponent
   private readonly columnConfigsSubject: BehaviorSubject<TableColumnConfigExtended[]> = new BehaviorSubject<
     TableColumnConfigExtended[]
   >([]);
-  public readonly columnConfigs$: Observable<
-    TableColumnConfigExtended[]
-  > = this.columnConfigsSubject.asObservable().pipe(tap(columnConfigs => this.saveTablePreferences(columnConfigs)));
+  public readonly columnConfigs$: Observable<TableColumnConfigExtended[]> = this.columnConfigsSubject.asObservable();
   public columnDefaultConfigs?: TableColumnConfigExtended[];
 
   public visibleColumnConfigs: TableColumnConfigExtended[] = [];
@@ -700,7 +698,7 @@ export class TableComponent
      * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
      * to convert and store. We want to just pluck the relevant properties that are required to be saved.
      */
-    return pick(column, ['id', 'visible']);
+    return { id: column.id, visible: column.visible };
   }
 
   private saveTablePreferences(columns: TableColumnConfig[]): void {
@@ -733,7 +731,7 @@ export class TableComponent
 
       return {
         ...column, // Apply default column config
-        ...(found ? found : {}) // Override with any saved properties
+        ...(found ? { visible: found.visible } : {}) // Override with any saved properties
       };
     });
   }
@@ -772,14 +770,15 @@ export class TableComponent
     }
 
     const preferences = this.getLocalPreferences();
-    const columnConfigsWithPersistedData = this.hydratePersistedColumnConfigs(
+    const columnConfigsWithUserPref = this.hydratePersistedColumnConfigs(
       columnConfigurations,
       preferences.columns ?? []
     );
-    const visibleColumns = columnConfigsWithPersistedData.filter(column => column.visible);
+
+    const visibleColumns = columnConfigsWithUserPref.filter(column => column.visible);
     this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
     this.updateVisibleColumns(visibleColumns);
-    this.columnConfigsSubject.next(columnConfigsWithPersistedData);
+    this.columnConfigsSubject.next(columnConfigsWithUserPref);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -884,6 +883,7 @@ export class TableComponent
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
+    this.saveTablePreferences(updatedColumns);
     this.columnConfigsSubject.next(updatedColumns);
   }
 
