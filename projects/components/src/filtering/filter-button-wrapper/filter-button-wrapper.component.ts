@@ -10,9 +10,9 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
   template: `
     <ht-filter-button
       *ngIf="this.filterButtonWrapperData"
-      [attribute]="this.filterButtonWrapperData.targetAttribute.attribute"
+      [attribute]="this.filterButtonWrapperData.targetAttribute?.attribute"
       [value]="this.filterButtonWrapperData.value"
-      [subpath]="this.filterButtonWrapperData.targetAttribute.subpath"
+      [subpath]="this.filterButtonWrapperData.targetAttribute?.subpath"
     ></ht-filter-button>
   `
 })
