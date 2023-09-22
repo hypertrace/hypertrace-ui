@@ -34,7 +34,7 @@ import {
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -51,7 +51,7 @@ import {
   TableDataSourceProvider
 } from './data/table-cdk-data-source-api';
 import { TableCdkRowUtil } from './data/table-cdk-row-util';
-import { TableDataSource } from './data/table-data-source';
+import { TableDataResponse, TableDataSource } from './data/table-data-source';
 import {
   StatefulTableRow,
   TableColumnConfig,
@@ -68,6 +68,9 @@ import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
+import { FileDownloadService } from '../download-file/service/file-download.service';
+import { TableCsvDownloaderService } from './table-csv-downloader.service';
+import { TableCellSkipCsvGenerator } from './cells/csv-generators/table-cell-skip-csv-generator';
 
 @Component({
   selector: 'ht-table',
@@ -309,6 +312,9 @@ export class TableComponent
   };
 
   @Input()
+  public id?: string;
+
+  @Input()
   public columnConfigs?: TableColumnConfig[];
 
   @Input()
@@ -505,8 +511,14 @@ export class TableComponent
     private readonly activatedRoute: ActivatedRoute,
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly fileDownloadService: FileDownloadService,
+    private readonly tableCsvDownloaderService: TableCsvDownloaderService
   ) {
+    this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
+      this.downloadCsv();
+    });
+
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
@@ -641,7 +653,52 @@ export class TableComponent
     this.changeDetector.detectChanges();
   }
 
-  public downloadCsv(): void {}
+  private downloadCsv(): void {
+    combineLatest([this.columnConfigs$, this.filters$])
+      .pipe(
+        switchMap(([columnConfigs, filters]) =>
+          (!isNil(this.data)
+            ? this.data.getData({
+                columns: columnConfigs,
+                position: { limit: 1000, startIndex: 0 },
+                filters: filters ?? []
+              })
+            : of({ data: [], totalCount: 0 })
+          ).pipe(
+            take(1),
+            map((response: TableDataResponse<TableRow>) => response.data),
+            map(rows => {
+              const csvGeneratorMap = new Map(
+                columnConfigs
+                  .filter(
+                    column => !isNil(column.csvGenerator) && !(column.csvGenerator instanceof TableCellSkipCsvGenerator)
+                  )
+                  .map(column => [column.id, column.csvGenerator])
+              );
+
+              return rows.map(row => {
+                const rowValue: Dictionary<string | undefined> = {};
+                Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
+                  const value = row[columnKey];
+                  const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
+
+                  rowValue[columnKey] = csvGenerator.generateCsv(value, row);
+                });
+
+                return rowValue;
+              });
+            })
+          )
+        ),
+        switchMap((content: Dictionary<string | undefined>[]) =>
+          this.fileDownloadService.downloadAsCsv({
+            fileName: 'table-data.csv',
+            dataSource: of(content)
+          })
+        )
+      )
+      .subscribe();
+  }
 
   private addEventListeners(): void {
     this.document.addEventListener('mousemove', event => this.onResizeMouseMove(event));

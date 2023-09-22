@@ -43,6 +43,10 @@ import {
   TableCellCsvGeneratorConstructor,
   TableCellCsvGeneratorLookupService
 } from './table-cell-csv-generator-lookup.service';
+import { TableCellStringArrayCsvGenerator } from './csv-generators/table-cell-string-array-csv-generator';
+import { TableCellBooleanCsvGenerator } from './csv-generators/table-cell-boolean-csv-generator';
+import { TableCellNumberCsvGenerator } from './csv-generators/table-cell-number-csv-generator';
+import { TableCellSkipCsvGenerator } from './csv-generators/table-cell-skip-csv-generator';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
@@ -123,7 +127,12 @@ export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_
     },
     {
       provide: TABLE_CELL_CSV_GENERATORS,
-      useValue: []
+      useValue: [
+        TableCellStringArrayCsvGenerator,
+        TableCellBooleanCsvGenerator,
+        TableCellNumberCsvGenerator,
+        TableCellSkipCsvGenerator
+      ]
     }
   ]
 })

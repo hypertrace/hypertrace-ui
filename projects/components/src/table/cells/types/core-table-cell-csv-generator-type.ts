@@ -1,5 +1,6 @@
 export const enum CoreTableCellCsvGeneratorType {
   Boolean = 'boolean',
+  Entity = 'entity',
   Number = 'number',
   String = 'string',
   StringArray = 'string-array',
