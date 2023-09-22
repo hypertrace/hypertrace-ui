@@ -395,6 +395,7 @@ export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
 }
+
 export const enum ExplorerQueryParam {
   Scope = 'scope',
   Interval = 'interval',
@@ -403,5 +404,6 @@ export const enum ExplorerQueryParam {
   GroupLimit = 'limit',
   Series = 'series',
   Order = 'order',
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   Filter = 'filter'
 }
