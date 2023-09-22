@@ -11,7 +11,9 @@ import {
   LayoutChangeService,
   NavigationService,
   PreferenceService,
+  PreferenceValue,
   RelativeTimeRange,
+  StorageType,
   TimeDuration,
   TimeRangeService,
   TimeUnit
@@ -71,6 +73,7 @@ describe('Explorer component', () => {
   const testTimeRange = new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute));
   const createComponent = createComponentFactory({
     component: ExplorerComponent,
+    shallow: true,
     imports: [
       ExplorerModule.withDashboardBuilderFactory({
         useFactory: (metadataService: MetadataService, filterBuilderLookupService: FilterBuilderLookupService) =>
@@ -111,7 +114,10 @@ describe('Explorer component', () => {
         }
       },
       mockProvider(PreferenceService, {
-        get: jest.fn().mockReturnValue(of(true))
+        get: jest.fn().mockReturnValue(of(true)),
+        getOnce: jest
+          .fn()
+          .mockImplementation((_key: string, defaultValue: PreferenceValue, _storageType: StorageType) => defaultValue)
       }),
       ...getMockFlexLayoutProviders()
     ]
