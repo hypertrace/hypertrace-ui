@@ -7,18 +7,18 @@ import { LoadAsyncStateType } from './load-async-state.type';
 
 @Injectable({ providedIn: 'root' })
 export class LoadAsyncService {
-  public mapObservableState(data$: Observable<unknown>): Observable<AsyncState> {
+  public mapObservableState<T>(data$: Observable<T>): Observable<AsyncState<T>> {
     return data$.pipe(
-      map(data => this.buildStateForEmittedData(data)),
-      defaultIfEmpty(this.buildNoDataState()),
-      catchError(error => of(this.buildStateForEmittedError(error))),
+      map(data => this.buildStateForEmittedData<T>(data)),
+      defaultIfEmpty(this.buildNoDataState<T>()),
+      catchError(error => of(this.buildStateForEmittedError<T>(error))),
       startWith({ type: LoadAsyncStateType.Loading })
     );
   }
 
-  private buildStateForEmittedData(data: unknown): AsyncState {
+  private buildStateForEmittedData<T>(data: T): AsyncState<T> {
     if (Array.isArray(data) && data.length === 0) {
-      return this.buildNoDataState();
+      return this.buildNoDataState<T>();
     }
 
     return {
@@ -30,8 +30,8 @@ export class LoadAsyncService {
     };
   }
 
-  private buildStateForEmittedError(error: Error): AsyncState {
-    const asyncState: AsyncState = { type: LoadAsyncStateType.GenericError };
+  private buildStateForEmittedError<T>(error: Error): AsyncState<T> {
+    const asyncState: AsyncState<T> = { type: LoadAsyncStateType.GenericError };
     if (error instanceof CustomError) {
       asyncState.description = error.message;
     }
@@ -39,16 +39,16 @@ export class LoadAsyncService {
     return asyncState;
   }
 
-  private buildNoDataState(): AsyncState {
+  private buildNoDataState<T>(): AsyncState<T> {
     return {
       type: LoadAsyncStateType.NoData
     };
   }
 }
 
-export interface LoadAsyncContext {
-  htLoadAsync: unknown;
-  $implicit: unknown;
+export interface LoadAsyncContext<T = unknown> {
+  htLoadAsync: T;
+  $implicit: T;
 }
 
 export interface LoadAsyncConfig {
@@ -57,7 +57,7 @@ export interface LoadAsyncConfig {
   error?: NoDataOrErrorStateConfig;
 }
 
-export type AsyncState = LoadingAsyncState | SuccessAsyncState | NoDataOrErrorAsyncState;
+export type AsyncState<T> = LoadingAsyncState | SuccessAsyncState<T> | NoDataOrErrorAsyncState;
 
 export const enum LoaderType {
   Spinner = 'spinner',
@@ -75,9 +75,9 @@ export const enum LoaderType {
 interface LoadingAsyncState {
   type: LoadAsyncStateType.Loading;
 }
-interface SuccessAsyncState {
+interface SuccessAsyncState<T> {
   type: LoadAsyncStateType.Success;
-  context: LoadAsyncContext;
+  context: LoadAsyncContext<T>;
 }
 
 export interface NoDataOrErrorAsyncState {

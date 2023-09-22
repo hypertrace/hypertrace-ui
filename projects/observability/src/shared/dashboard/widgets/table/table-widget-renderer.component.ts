@@ -33,8 +33,8 @@ import {
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
-import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { capitalize, isEmpty, isEqual, pick } from 'lodash-es';
+import { RENDERER_API, RendererApi } from '@hypertrace/hyperdash-angular';
+import { capitalize, isEmpty, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import {
   filter,
@@ -58,7 +58,6 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
 import { TableWidgetRowInteractionModel } from './selections/table-widget-row-interaction.model';
 import { TableWidgetBaseModel } from './table-widget-base.model';
-import { SpecificationBackedTableColumnDef } from './table-widget-column.model';
 import { TableWidgetControlSelectOptionModel } from './table-widget-control-select-option.model';
 import { TableWidgetViewToggleModel } from './table-widget-view-toggle.model';
 import { TableWidgetModel } from './table-widget.model';
@@ -96,6 +95,7 @@ import { TableWidgetModel } from './table-widget.model';
 
         <ht-table
           class="table"
+          [id]="this.model.getId()"
           [columnConfigs]="this.columnConfigs$ | async"
           [metadata]="this.metadata$ | async"
           [mode]="this.model.mode"
@@ -113,7 +113,6 @@ import { TableWidgetModel } from './table-widget.model';
           [maxRowHeight]="this.api.model.getMaxRowHeight()"
           (rowClicked)="this.onRowClicked($event)"
           (selectionsChange)="this.onRowSelection($event)"
-          (columnConfigsChange)="this.onColumnsChange($event)"
           (visibleColumnsChange)="this.onVisibleColumnsChange($event)"
         >
         </ht-table>
@@ -316,21 +315,14 @@ export class TableWidgetRendererComponent
   }
 
   private getColumnConfigs(): Observable<TableColumnConfig[]> {
-    return this.getLocalPreferences().pipe(
-      switchMap(preferences =>
-        combineLatest([this.getScope(), this.api.change$.pipe(mapTo(true), startWith(true))]).pipe(
-          switchMap(([scope]) => this.model.getColumns(scope)),
-          startWith([]),
-          map((columns: SpecificationBackedTableColumnDef[]) =>
-            this.hydratePersistedColumnConfigs(columns, preferences.columns ?? [])
-          ),
-          pairwise(),
-          filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
-          map(([_, current]) => current),
-          share(),
-          tap(() => this.onDashboardRefresh())
-        )
-      )
+    return combineLatest([this.getScope(), this.api.change$.pipe(mapTo(true), startWith(true))]).pipe(
+      switchMap(([scope]) => this.model.getColumns(scope)),
+      startWith([]),
+      pairwise(),
+      filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
+      map(([_, current]) => current),
+      share(),
+      tap(() => this.onDashboardRefresh())
     );
   }
 
@@ -512,17 +504,6 @@ export class TableWidgetRendererComponent
     });
   }
 
-  public onColumnsChange(columns: TableColumnConfig[]): void {
-    if (isNonEmptyString(this.model.getId())) {
-      this.getLocalPreferences().subscribe(preferences =>
-        this.setLocalPreferences({
-          ...preferences,
-          columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
-        })
-      );
-    }
-  }
-
   public onRowClicked(row: StatefulTableRow): void {
     this.getRowClickInteractionHandler(row)?.execute(row);
   }
@@ -558,28 +539,6 @@ export class TableWidgetRendererComponent
       : viewItems[TableWidgetRendererComponent.DEFAULT_TAB_INDEX];
   }
 
-  private hydratePersistedColumnConfigs(
-    columns: SpecificationBackedTableColumnDef[],
-    persistedColumns: TableColumnConfig[]
-  ): SpecificationBackedTableColumnDef[] {
-    return columns.map(column => {
-      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
-
-      return {
-        ...column, // Apply default column config
-        ...(found ? found : {}) // Override with any saved properties
-      };
-    });
-  }
-
-  private dehydratePersistedColumnConfig(column: TableColumnConfig): PersistedTableColumnConfig {
-    /*
-     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
-     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
-     */
-    return pick(column, ['id', 'visible']);
-  }
-
   private getViewPreferences(): Observable<TableWidgetViewPreferences> {
     return isNonEmptyString(this.model.viewId)
       ? this.preferenceService.get<TableWidgetViewPreferences>(this.model.viewId, {}, StorageType.Local).pipe(first())
@@ -589,20 +548,6 @@ export class TableWidgetRendererComponent
   private setViewPreferences(preferences: TableWidgetViewPreferences): void {
     if (isNonEmptyString(this.model.viewId)) {
       this.preferenceService.set(this.model.viewId, preferences, StorageType.Local);
-    }
-  }
-
-  private getLocalPreferences(): Observable<TableWidgetLocalPreferences> {
-    return isNonEmptyString(this.model.getId())
-      ? this.preferenceService
-          .get<TableWidgetLocalPreferences>(this.model.getId()!, {}, StorageType.Local)
-          .pipe(first())
-      : of({});
-  }
-
-  private setLocalPreferences(preferences: TableWidgetLocalPreferences): void {
-    if (isNonEmptyString(this.model.getId())) {
-      this.preferenceService.set(this.model.getId()!, preferences, StorageType.Local);
     }
   }
 
@@ -649,13 +594,7 @@ interface TableWidgetViewPreferences {
   activeView?: string;
 }
 
-interface TableWidgetLocalPreferences {
-  columns?: PersistedTableColumnConfig[];
-}
-
 interface TableWidgetSessionPreferences {
   checkboxes?: TableCheckboxControl[];
   selections?: TableSelectControl[];
 }
-
-type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;

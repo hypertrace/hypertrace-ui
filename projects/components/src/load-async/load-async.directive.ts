@@ -19,20 +19,20 @@ import {
 @Directive({
   selector: '[htLoadAsync]'
 })
-export class LoadAsyncDirective implements OnChanges, OnDestroy {
+export class LoadAsyncDirective<T> implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
-  public data$?: Observable<unknown>;
+  public data$?: Observable<T>;
 
   @Input('htLoadAsyncConfig')
   public config?: LoadAsyncConfig;
-  private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters> = new ReplaySubject(1);
+  private readonly wrapperParamsSubject: ReplaySubject<LoadAsyncWrapperParameters<T>> = new ReplaySubject(1);
   private readonly wrapperInjector: Injector;
-  private wrapperView?: ComponentRef<LoadAsyncWrapperComponent>;
+  private wrapperView?: ComponentRef<LoadAsyncWrapperComponent<T>>;
 
   public constructor(
     private readonly viewContainer: ViewContainerRef,
     private readonly loadAsyncService: LoadAsyncService,
-    public readonly templateRef: TemplateRef<LoadAsyncContext>
+    public readonly templateRef: TemplateRef<LoadAsyncContext<T>>
   ) {
     this.wrapperInjector = Injector.create({
       providers: [
@@ -49,7 +49,7 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     if (this.data$) {
       this.wrapperView = this.wrapperView || this.buildWrapperView();
       this.wrapperParamsSubject.next({
-        state$: this.loadAsyncService.mapObservableState(this.data$),
+        state$: this.loadAsyncService.mapObservableState<T>(this.data$),
         content: this.templateRef,
         config: this.config
       });
@@ -64,8 +64,12 @@ export class LoadAsyncDirective implements OnChanges, OnDestroy {
     this.wrapperParamsSubject.complete();
   }
 
-  private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent> {
-    return this.viewContainer.createComponent<LoadAsyncWrapperComponent>(LoadAsyncWrapperComponent, {
+  public static ngTemplateContextGuard<T>(_dir: LoadAsyncDirective<T>, _ctx: unknown): _ctx is LoadAsyncContext<T> {
+    return true;
+  }
+
+  private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent<T>> {
+    return this.viewContainer.createComponent<LoadAsyncWrapperComponent<T>>(LoadAsyncWrapperComponent, {
       injector: this.wrapperInjector
     });
   }
