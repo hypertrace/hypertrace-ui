@@ -29,8 +29,11 @@ import {
   Dictionary,
   DomElementMeasurerService,
   isEqualIgnoreFunctions,
+  isNonEmptyString,
   NavigationService,
   NumberCoercer,
+  PreferenceService,
+  StorageType,
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
@@ -309,6 +312,9 @@ export class TableComponent
   };
 
   @Input()
+  public id?: string;
+
+  @Input()
   public columnConfigs?: TableColumnConfig[];
 
   @Input()
@@ -505,7 +511,8 @@ export class TableComponent
     private readonly activatedRoute: ActivatedRoute,
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly preferenceService: PreferenceService
   ) {
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
@@ -686,6 +693,49 @@ export class TableComponent
     }
   }
 
+  private dehydratePersistedColumnConfig(column: TableColumnConfig): PersistedTableColumnConfig {
+    /*
+     * Note: The table columns have nested methods, so those are lost here when persistService uses JSON.stringify
+     * to convert and store. We want to just pluck the relevant properties that are required to be saved.
+     */
+    return { id: column.id, visible: column.visible };
+  }
+
+  private saveTablePreferences(columns: TableColumnConfig[]): void {
+    if (isNonEmptyString(this.id)) {
+      this.setLocalPreferences({
+        ...this.getLocalPreferences(),
+        columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+      });
+    }
+  }
+
+  private getLocalPreferences(): TableLocalPreferences {
+    return isNonEmptyString(this.id)
+      ? this.preferenceService.getOnce<TableLocalPreferences>(this.id, { columns: [] }, StorageType.Local)
+      : { columns: [] };
+  }
+
+  private setLocalPreferences(preferences: TableLocalPreferences): void {
+    if (isNonEmptyString(this.id)) {
+      this.preferenceService.set(this.id, preferences, StorageType.Local);
+    }
+  }
+
+  private hydratePersistedColumnConfigs(
+    columns: TableColumnConfigExtended[],
+    persistedColumns: PersistedTableColumnConfig[]
+  ): TableColumnConfigExtended[] {
+    return columns.map(column => {
+      const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
+
+      return {
+        ...column, // Apply default column config
+        ...(found ? { visible: found.visible } : {}) // Override with any saved properties
+      };
+    });
+  }
+
   private setColumnResizeDefaults(columnResizeHandler: HTMLDivElement): void {
     columnResizeHandler.style.backgroundColor = Color.Transparent;
     columnResizeHandler.style.right = '2px';
@@ -714,15 +764,21 @@ export class TableComponent
       this.checkColumnWidthCompatibilityOrThrow(column.width);
       this.checkColumnWidthCompatibilityOrThrow(column.minWidth);
     });
-    const columnConfigurations = this.buildColumnConfigExtendeds(columnConfigs ?? this.columnConfigs ?? []);
+    const columnConfigurations = this.buildColumnConfigExtended(columnConfigs ?? this.columnConfigs ?? []);
     if (isNil(this.columnDefaultConfigs)) {
       this.columnDefaultConfigs = columnConfigurations;
     }
-    const visibleColumns = columnConfigurations.filter(column => column.visible);
+
+    const preferences = this.getLocalPreferences();
+    const columnConfigsWithUserPref = this.hydratePersistedColumnConfigs(
+      columnConfigurations,
+      preferences.columns ?? []
+    );
+
+    const visibleColumns = columnConfigsWithUserPref.filter(column => column.visible);
     this.initialColumnConfigIdWidthMap = new Map(visibleColumns.map(column => [column.id, column.width ?? -1]));
     this.updateVisibleColumns(visibleColumns);
-
-    this.propagateUpdatedColumns(columnConfigurations);
+    this.columnConfigsSubject.next(columnConfigsWithUserPref);
   }
 
   private checkColumnWidthCompatibilityOrThrow(width?: TableColumnWidth): void {
@@ -827,7 +883,8 @@ export class TableComponent
     const updatedColumns = this.columnConfigsSubject.value;
     this.updateVisibleColumns(updatedColumns.filter(c => c.visible));
     this.distributeWidthToColumns(TableColumnWidthUtil.getColWidthInPx(column.width));
-    this.propagateUpdatedColumns(updatedColumns);
+    this.saveTablePreferences(updatedColumns.map(col => (column.id === col.id ? { ...col, visible: false } : col)));
+    this.columnConfigsSubject.next(updatedColumns);
   }
 
   public showEditColumnsModal(): void {
@@ -849,6 +906,7 @@ export class TableComponent
         )
       )
       .subscribe(editedColumnConfigs => {
+        this.saveTablePreferences(editedColumnConfigs);
         this.initializeColumns(editedColumnConfigs);
       });
   }
@@ -913,12 +971,7 @@ export class TableComponent
     return this.hasExpandableRows() ? index - 1 : index;
   }
 
-  private propagateUpdatedColumns(updatedColumns: TableColumnConfigExtended[]): void {
-    this.columnConfigsSubject.next(updatedColumns);
-    this.columnConfigsChange.next(updatedColumns);
-  }
-
-  private buildColumnConfigExtendeds(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
+  private buildColumnConfigExtended(columnConfigs: TableColumnConfig[]): TableColumnConfigExtended[] {
     const stateColumns = [];
 
     if (this.hasMultiSelect()) {
@@ -1188,3 +1241,9 @@ interface ColumnInfo {
   element: HTMLElement;
   bounds: ColumnBounds;
 }
+
+interface TableLocalPreferences {
+  columns?: PersistedTableColumnConfig[];
+}
+
+type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;

@@ -16,7 +16,7 @@ import {
   NoDataOrErrorStateConfigWithCustomTemplate
 } from '../load-async.service';
 
-export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters>>(
+export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters<unknown>>>(
   'ASYNC_WRAPPER_PARAMETERS$'
 );
 
@@ -59,8 +59,8 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
   styleUrls: ['./load-async-wrapper.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadAsyncWrapperComponent {
-  public readonly state$: Observable<AsyncState>;
+export class LoadAsyncWrapperComponent<T = unknown> {
+  public readonly state$: Observable<AsyncState<T>>;
 
   public icon?: IconType;
   public loaderType?: LoaderType;
@@ -71,7 +71,7 @@ export class LoadAsyncWrapperComponent {
   public config?: LoadAsyncConfig;
   public customNoDataOrErrorTemplate?: TemplateRef<LoadAsyncContext>;
 
-  public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters>) {
+  public constructor(@Inject(ASYNC_WRAPPER_PARAMETERS$) parameters$: Observable<LoadAsyncWrapperParameters<T>>) {
     this.state$ = parameters$.pipe(
       tap(params => {
         this.content = params.content;
@@ -82,7 +82,7 @@ export class LoadAsyncWrapperComponent {
     );
   }
 
-  private updateMessage(state: AsyncState): void {
+  private updateMessage(state: AsyncState<T>): void {
     switch (state.type) {
       case LoadAsyncStateType.Loading:
         this.loaderType = this.config?.load?.loaderType;
@@ -146,8 +146,8 @@ export class LoadAsyncWrapperComponent {
   }
 }
 
-export interface LoadAsyncWrapperParameters {
-  state$: Observable<AsyncState>;
-  content: TemplateRef<LoadAsyncContext>;
+export interface LoadAsyncWrapperParameters<T> {
+  state$: Observable<AsyncState<T>>;
+  content: TemplateRef<LoadAsyncContext<T>>;
   config?: LoadAsyncConfig;
 }

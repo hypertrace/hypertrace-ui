@@ -428,3 +428,6 @@ export * from './stepper';
 // Pill list
 export * from './input-pill-list/input-pill-list.component';
 export * from './input-pill-list/input-pill-list.module';
+
+// Parsed Filter
+export * from './filtering/filter/parser/parsed-filter';
