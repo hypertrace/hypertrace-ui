@@ -35,6 +35,7 @@ export interface GraphQlMutationHandler<TRequest, TResponse> extends GraphQlHand
 export interface GraphQlRequestOptions {
   cacheability?: GraphQlRequestCacheability;
   isolated?: boolean;
+  name?: string;
 }
 
 export const enum GraphQlRequestCacheability {
