@@ -9,12 +9,14 @@ export interface GraphQlHandler<TRequest, TResponse> {
   readonly type: GraphQlHandlerType;
 
   matchesRequest(request: unknown): request is TRequest;
+
   /**
    * Converts the provided request into a single selection, or a map of selections with arbitrary keys.
    * If a map is provided, the response provided to the converter will use the same keys to disambiguate
    * the response for each selection.
    */
   convertRequest(request: TRequest): GraphQlSelection | Map<unknown, GraphQlSelection>;
+
   /**
    * Converts the provided response, or map of responses (if a map of selections were provided in the request
    * conversion), to a response object.
@@ -32,9 +34,15 @@ export interface GraphQlMutationHandler<TRequest, TResponse> extends GraphQlHand
   readonly type: GraphQlHandlerType.Mutation;
 }
 
+/**
+ * @param cacheability - Cache config
+ * @param isolated - If true, the request will be sent to the backend without any other requests in the same batch.
+ * @param name - The name of the query or mutation which will be shown in the network tab
+ */
 export interface GraphQlRequestOptions {
   cacheability?: GraphQlRequestCacheability;
   isolated?: boolean;
+  name?: string;
 }
 
 export const enum GraphQlRequestCacheability {

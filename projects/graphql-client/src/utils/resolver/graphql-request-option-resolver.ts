@@ -5,7 +5,7 @@ export class GraphQlRequestOptionResolver {
 
   public groupQueriesByResolvedOptions(
     ...requests: GraphQlRequestWithOptions[]
-  ): Map<GraphQlRequestOptions, GraphQlRequest[]> {
+  ): Map<GraphQlRequestOptions, GraphQlRequestWithMetadata[]> {
     return requests
       .map(request => this.resolveOptions(request))
       .reduce((resolvedMap, request) => {
@@ -13,11 +13,11 @@ export class GraphQlRequestOptionResolver {
           this.areOptionsCompatible(options, request.options)
         ) || [request.options, []];
 
-        entryToUpdate[1].push(request.request);
+        entryToUpdate[1].push({ request: request.request, name: request.options.name });
         resolvedMap.set(...entryToUpdate);
 
         return resolvedMap;
-      }, new Map<GraphQlRequestOptions, GraphQlRequest[]>());
+      }, new Map<GraphQlRequestOptions, GraphQlRequestWithMetadata[]>());
   }
 
   private areOptionsCompatible(first: GraphQlRequestOptions, second: GraphQlRequestOptions): boolean {
@@ -37,6 +37,7 @@ export class GraphQlRequestOptionResolver {
 }
 
 type GraphQlRequest = unknown;
+
 interface GraphQlRequestWithMergedOptions {
   request: GraphQlRequest;
   options: GraphQlRequestOptions;
@@ -46,4 +47,9 @@ export interface GraphQlRequestWithOptions {
   request: GraphQlRequest;
   handlerOptions?: GraphQlRequestOptions;
   requestOptions?: GraphQlRequestOptions;
+}
+
+export interface GraphQlRequestWithMetadata {
+  request: GraphQlRequest;
+  name?: string;
 }

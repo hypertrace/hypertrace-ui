@@ -31,7 +31,10 @@ export class GraphQlRequestBuilder {
     return new Map(
       this.originalSelections.map(selection => {
         const key = this.getKeyForSelection(selection);
-        const requestString = `{ ${this.translateRequestFragmentToGql(key, this.mergedRequest[key])} }`;
+        const requestString = `${selection.name ?? selection.path} { ${this.translateRequestFragmentToGql(
+          key,
+          this.mergedRequest[key]
+        )} }`;
 
         return [selection, requestString];
       })
@@ -203,5 +206,6 @@ interface MergedRequestArgumentMap {
 
 interface GeneratedRequestKey {
   toString(): string;
+
   next(): GeneratedRequestKey;
 }
