@@ -9,15 +9,21 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ht-filter-button
-      *ngIf="this.filterButtonWrapperData"
-      [attribute]="this.filterButtonWrapperData.targetAttribute?.attribute"
-      [value]="this.filterButtonWrapperData.value"
-      [subpath]="this.filterButtonWrapperData.targetAttribute?.subpath"
+      *ngIf="this.targetAttribute && this.value"
+      [attribute]="this.targetAttribute.attribute"
+      [value]="this.value"
+      [subpath]="this.targetAttribute?.subpath"
     ></ht-filter-button>
   `
 })
 export class FilterButtonWrapperComponent {
-  public constructor(@Inject(FILTER_BUTTON_WRAPPER) public readonly filterButtonWrapperData: FilterButtonWrapperData) {}
+  public targetAttribute: FilterAttributeExpression;
+  public value: FilterValue;
+
+  public constructor(@Inject(FILTER_BUTTON_WRAPPER) private readonly filterButtonWrapperData: FilterButtonWrapperData) {
+    this.targetAttribute = this.filterButtonWrapperData.targetAttribute;
+    this.value = this.filterButtonWrapperData.value;
+  }
 }
 
 export interface FilterButtonWrapperData {

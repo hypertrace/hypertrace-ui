@@ -44,7 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
-  groupBy?: FilterAttributeExpression;
+  legendConfig?: LegendConfig;
   stacking?: boolean;
   hide?: boolean;
 
@@ -61,6 +61,17 @@ export interface Band<TInterval> {
   opacity: number;
   name: string;
   hide?: boolean;
+}
+
+export type LegendConfig = UrlFilterLegendConfig;
+
+export interface UrlFilterLegendConfig {
+  type: LegendConfigType.UrlFilter;
+  filterAttribute: FilterAttributeExpression;
+}
+
+export const enum LegendConfigType {
+  UrlFilter = 'url-filter'
 }
 
 export interface Summary {

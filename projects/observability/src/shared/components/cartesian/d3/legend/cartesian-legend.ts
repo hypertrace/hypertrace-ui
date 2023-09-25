@@ -1,18 +1,18 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { groupBy, isEmpty } from 'lodash-es';
+import { groupBy, isEmpty, isNil } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
-import { Series, Summary } from '../../chart';
+import { LegendConfig, LegendConfigType, Series, Summary } from '../../chart';
 import {
   CartesianIntervalControlComponent,
   CartesianIntervalData,
   INTERVAL_DATA
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
-import { FILTER_BUTTON_WRAPPER, FilterButtonWrapperComponent } from '@hypertrace/components';
+import { FILTER_BUTTON_WRAPPER, FilterAttributeExpression, FilterButtonWrapperComponent } from '@hypertrace/components';
 
 export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
@@ -129,7 +129,7 @@ export class CartesianLegend<TData> {
       .selectAll('.legend-entry')
       .data(seriesGroup)
       .enter()
-      .each((_, index, elements) => this.drawLegendEntry(elements[index], true));
+      .each((_, index, elements) => this.drawLegendEntry(elements[index], this.activeSeries[0]?.legendConfig));
   }
 
   private drawLegendContainer(
@@ -153,7 +153,7 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntry(
     element: EnterElement,
-    showFilters?: boolean
+    legendConfig?: LegendConfig
   ): Selection<HTMLDivElement, Series<TData>, null, undefined> {
     const legendEntry = select<EnterElement, Series<TData>>(element).append('div').classed('legend-entry', true);
 
@@ -165,11 +165,15 @@ export class CartesianLegend<TData> {
       .text(series => series.name)
       .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
 
-    this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+    if (!isNil(legendConfig) && legendConfig.type === LegendConfigType.UrlFilter) {
+      this.drawFilterControl(legendEntry.node()!, legendConfig.filterAttribute).location.nativeElement.classList.add(
+        'filter'
+      );
+    }
 
     this.updateLegendClassesAndStyle();
 
-    if (showFilters) {
+    if (!isNil(legendConfig) && legendConfig.type === LegendConfigType.UrlFilter) {
       legendEntry
         .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
         .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
@@ -236,7 +240,10 @@ export class CartesianLegend<TData> {
       .style('fill', series => series.color);
   }
 
-  private drawFilterControl(container: ContainerElement): ComponentRef<unknown> {
+  private drawFilterControl(
+    container: ContainerElement,
+    filterAttribute: FilterAttributeExpression
+  ): ComponentRef<unknown> {
     return this.injector.get(DynamicComponentService).insertComponent(
       container as Element,
       FilterButtonWrapperComponent,
@@ -245,7 +252,7 @@ export class CartesianLegend<TData> {
           {
             provide: FILTER_BUTTON_WRAPPER,
             useValue: {
-              targetAttribute: this.activeSeries[0].groupBy,
+              targetAttribute: filterAttribute,
               value: container.textContent
             }
           }

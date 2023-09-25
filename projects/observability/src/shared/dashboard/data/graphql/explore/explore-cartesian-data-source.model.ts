@@ -3,7 +3,7 @@ import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { isEmpty } from 'lodash-es';
 import { NEVER, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Series } from '../../../../components/cartesian/chart';
+import { LegendConfigType, Series } from '../../../../components/cartesian/chart';
 import { ExploreRequestState } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { MetricTimeseriesInterval } from '../../../../graphql/model/metric/metric-timeseries';
@@ -141,11 +141,14 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
         color: color,
         ...(request.attributes
           ? {
-              groupBy: {
-                attribute: request.attributes?.find(
-                  attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
-                )!,
-                subpath: request.groupBy?.keyExpressions?.[0].subpath
+              legendConfig: {
+                type: LegendConfigType.UrlFilter,
+                filterAttribute: {
+                  attribute: request.attributes.find(
+                    attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
+                  )!,
+                  subpath: request.groupBy?.keyExpressions?.[0].subpath
+                }
               }
             }
           : {})
