@@ -1,11 +1,11 @@
-import { Dictionary } from '@hypertrace/common';
-import { LabelComponent, ListViewComponent } from '@hypertrace/components';
-import { ExplorerService } from '@hypertrace/observability';
+import { Dictionary, MemoizeModule } from '@hypertrace/common';
+import { LabelComponent, ListViewComponent, ListViewModule, LoadAsyncModule, TooltipDirective } from '@hypertrace/components';
+import { ExploreFilterLinkComponent, ExplorerService } from '@hypertrace/observability';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+import { MockComponents, MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
-import { SpanDetailCallHeadersModule } from './span-detail-call-headers.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
 
 describe('Span Detail Call Headers Component', () => {
   let spectator: Spectator<SpanDetailCallHeadersComponent>;
@@ -18,9 +18,12 @@ describe('Span Detail Call Headers Component', () => {
 
   const createHost = createHostFactory({
     component: SpanDetailCallHeadersComponent,
-    imports: [SpanDetailCallHeadersModule, HttpClientTestingModule],
+    declarations: [
+      MockComponents(LabelComponent, ExploreFilterLinkComponent),
+      MockDirective(TooltipDirective)
+    ],
+    imports: [CommonModule, MemoizeModule, ListViewModule, LoadAsyncModule],
     shallow: true,
-    declareComponent: false,
     providers: [
       mockProvider(ExplorerService, {
         buildNavParamsWithFilters: jest.fn().mockReturnValue(of('http://test-url.abc'))
