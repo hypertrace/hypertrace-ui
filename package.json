@@ -101,7 +101,7 @@
     "@types/mixpanel-browser": "^2.47.1",
     "@types/node": "^18.17.17",
     "@types/uuid": "^9.0.4",
-    "@types/webpack-env": "^1.18.1",
+    "@types/webpack-env": "^1.18.2",
     "@typescript-eslint/eslint-plugin": "5.57.1",
     "@typescript-eslint/parser": "5.62.0",
     "commitizen": "^4.3.0",
