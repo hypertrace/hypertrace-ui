@@ -73,7 +73,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
 import { FileDownloadService } from '../download-file/service/file-download.service';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
-import { TableCellSkipCsvGenerator } from './cells/csv-generators/table-cell-skip-csv-generator';
 
 @Component({
   selector: 'ht-table',
@@ -674,9 +673,7 @@ export class TableComponent
             map(rows => {
               const csvGeneratorMap = new Map(
                 columnConfigs
-                  .filter(
-                    column => !isNil(column.csvGenerator) && !(column.csvGenerator instanceof TableCellSkipCsvGenerator)
-                  )
+                  .filter(column => !isNil(column.csvGenerator))
                   .map(column => [column.id, column.csvGenerator])
               );
 
@@ -686,7 +683,7 @@ export class TableComponent
                   const value = row[columnKey];
                   const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
 
-                  rowValue[columnKey] = csvGenerator.generateCsv(value, row);
+                  rowValue[columnKey] = csvGenerator.generateSafeCsvString(value, row);
                 });
 
                 return rowValue;

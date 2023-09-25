@@ -6,7 +6,7 @@ import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-gene
   type: CoreTableCellCsvGeneratorType.StringArray
 })
 export class TableCellStringArrayCsvGenerator extends TableCellCsvGeneratorBase<string[]> {
-  public generateCsv(cellData: string[]): string {
+  protected generateCsv(cellData: string[]): string {
     return cellData.join(', ');
   }
 }

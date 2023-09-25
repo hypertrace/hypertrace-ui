@@ -8,7 +8,7 @@ import { DateFormatMode, DisplayDatePipe } from '@hypertrace/common';
 })
 export class TableCellTimestampCsvGenerator extends TableCellCsvGeneratorBase<Date | number | string> {
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();
-  public generateCsv(cellData: Date | number | string): string {
+  protected generateCsv(cellData: Date | number | string): string {
     return this.displayDate.transform(cellData, { mode: DateFormatMode.TimeWithSeconds });
   }
 }

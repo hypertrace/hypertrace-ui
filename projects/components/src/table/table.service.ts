@@ -9,7 +9,6 @@ import { CoreTableCellRendererType } from './cells/types/core-table-cell-rendere
 import { TableCdkDataSource } from './data/table-cdk-data-source';
 import { TableColumnConfig } from './table-api';
 import { TableCellCsvGeneratorLookupService } from './cells/table-cell-csv-generator-lookup.service';
-import { CoreTableCellCsvGeneratorType } from './cells/types/core-table-cell-csv-generator-type';
 import { TableCellCsvGeneratorBase } from './cells/table-cell-csv-generator-base';
 
 export interface TableColumnConfigExtended extends TableColumnConfig {
@@ -49,9 +48,9 @@ export class TableService {
       const rendererConstructor = this.tableCellRendererLookupService.lookup(
         columnConfig.display !== undefined ? columnConfig.display : CoreTableCellRendererType.Text
       );
-      const csvGeneratorConstructor = this.tableCellCsvGeneratorLookupService.lookup(
-        columnConfig.csv ?? CoreTableCellCsvGeneratorType.Skip
-      );
+      const csvGeneratorConstructor = columnConfig.csv
+        ? this.tableCellCsvGeneratorLookupService.lookup(columnConfig.csv)
+        : undefined;
 
       const parserConstructor = this.tableCellParserLookupService.lookup(rendererConstructor.parser);
 
@@ -61,7 +60,7 @@ export class TableService {
         renderer: rendererConstructor,
         parser: new parserConstructor(this.rootInjector),
         filterValues: dataSource?.getFilterValues(columnConfig.id) ?? [],
-        csvGenerator: new csvGeneratorConstructor(this.rootInjector)
+        csvGenerator: csvGeneratorConstructor ? new csvGeneratorConstructor(this.rootInjector) : undefined
       };
     });
   }

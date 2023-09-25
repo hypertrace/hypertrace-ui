@@ -6,7 +6,7 @@ import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-gene
   type: CoreTableCellCsvGeneratorType.Number
 })
 export class TableCellNumberCsvGenerator extends TableCellCsvGeneratorBase<number> {
-  public generateCsv(cellData: number): string {
+  protected generateCsv(cellData: number): string {
     return cellData.toString();
   }
 }

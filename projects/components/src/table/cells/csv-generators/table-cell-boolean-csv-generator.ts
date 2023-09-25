@@ -6,7 +6,7 @@ import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-gene
   type: CoreTableCellCsvGeneratorType.Boolean
 })
 export class TableCellBooleanCsvGenerator extends TableCellCsvGeneratorBase<boolean> {
-  public generateCsv(cellData: boolean): string {
+  protected generateCsv(cellData?: boolean): string {
     return String(cellData);
   }
 }
