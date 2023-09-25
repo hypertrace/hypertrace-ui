@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, NavigationParams } from '@hypertrace/common';
 import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
-import { ExplorerService, ScopeQueryParam } from '@hypertrace/observability';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
+import { ExplorerService } from '../../../../../pages/explorer/explorer-service';
+import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.component';
 
 @Component({
   selector: 'ht-span-detail-call-headers',

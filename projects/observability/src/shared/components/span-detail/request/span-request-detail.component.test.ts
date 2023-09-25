@@ -1,19 +1,34 @@
-import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
+import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
+
+import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { JsonViewerComponent, ListViewComponent, ToggleButtonGroupComponent } from '@hypertrace/components';
+import { of } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
 import { SpanRequestDetailComponent } from './span-request-detail.component';
-import { MockComponents } from 'ng-mocks';
-import { SpanDetailCallBodyComponent } from '../call/body/span-detail-call-body.component';
-import { CommonModule } from '@angular/common';
-import { SpanDetailCallHeadersComponent } from '../call/headers/span-detail-call-headers.component';
+import { SpanRequestDetailModule } from './span-request-detail.module';
 
 describe('Span request detail component', () => {
   let spectator: Spectator<SpanRequestDetailComponent>;
 
   const createHost = createHostFactory({
     component: SpanRequestDetailComponent,
-    shallow: true,
-    declarations:[MockComponents(SpanDetailCallHeadersComponent, SpanDetailCallBodyComponent)],
-    imports: [CommonModule]
+    imports: [SpanRequestDetailModule, HttpClientTestingModule, IconLibraryTestingModule],
+    declareComponent: false,
+    providers: [
+      mockProvider(NavigationService),
+      mockProvider(ExplorerService, {
+        buildNavParamsWithFilters: jest.fn().mockReturnValue(
+          of({
+            navType: NavigationParamsType.InApp,
+            path: 'test-'
+          })
+        )
+      }),
+      mockProvider(ActivatedRoute)
+    ]
   });
 
   test('should display headers and body title', () => {
