@@ -404,6 +404,5 @@ export const enum ExplorerQueryParam {
   GroupLimit = 'limit',
   Series = 'series',
   Order = 'order',
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  Filter = 'filter'
+  Filters = 'filter'
 }
