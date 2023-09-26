@@ -1,34 +1,26 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
   assertUnreachable,
   NavigationService,
   PreferenceService,
   QueryParamObject,
-  TimeDuration,
-  TimeDurationService
+  TimeDuration
 } from '@hypertrace/common';
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
-import { isEmpty, isNil } from 'lodash-es';
+import { isEmpty } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreOrderBy,
   ExploreRequestState,
   ExploreSeries,
   ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
-import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
 import { toFilterAttributeType } from '../../shared/graphql/model/metadata/attribute-metadata';
-import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlGroupBy } from '../../shared/graphql/model/schema/groupby/graphql-group-by';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
-import { GraphQlSortDirection } from '../../shared/graphql/model/schema/sort/graphql-sort-direction';
-import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
-import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import {
   ExplorerDashboardBuilder,
@@ -37,6 +29,7 @@ import {
   ExplorerGeneratedDashboardContext,
   EXPLORER_DASHBOARD_BUILDER_FACTORY
 } from './explorer-dashboard-builder';
+import { ExplorerStateManagerComponentService } from './explorer-state-manager-component.service';
 
 @Component({
   selector: 'ht-explorer',
@@ -122,6 +115,7 @@ import {
   `
 })
 export class ExplorerComponent {
+  public readonly contextItems: ContextToggleItem[];
   private static readonly VISUALIZATION_EXPANDED_PREFERENCE: string = 'explorer.visualizationExpanded';
   private static readonly RESULTS_EXPANDED_PREFERENCE: string = 'explorer.resultsExpanded';
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
@@ -130,24 +124,6 @@ export class ExplorerComponent {
   public readonly initialState$: Observable<InitialExplorerState>;
   public readonly currentContext$: Observable<ExplorerGeneratedDashboardContext>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
-
-  public readonly contextItems: ContextToggleItem[] = [
-    {
-      label: 'Endpoint Traces',
-      value: {
-        dashboardContext: ObservabilityTraceType.Api,
-        scopeQueryParam: ScopeQueryParam.EndpointTraces
-      }
-    },
-    {
-      label: 'Spans',
-      value: {
-        dashboardContext: SPAN_SCOPE,
-        scopeQueryParam: ScopeQueryParam.Spans
-      }
-    }
-  ];
-
   public filters: Filter[] = [];
   public visualizationExpanded$: Observable<boolean>;
   public resultsExpanded$: Observable<boolean>;
@@ -157,17 +133,17 @@ export class ExplorerComponent {
   public constructor(
     private readonly metadataService: MetadataService,
     protected readonly navigationService: NavigationService,
-    private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
-    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
-    activatedRoute: ActivatedRoute
+    protected readonly explorerStateManagerComponentService: ExplorerStateManagerComponentService,
+    @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory
   ) {
+    this.contextItems = this.explorerStateManagerComponentService.contextItems;
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.initialState$ = activatedRoute.queryParamMap.pipe(map(paramMap => this.mapToInitialState(paramMap)));
+    this.initialState$ = this.explorerStateManagerComponentService.currentState$;
     this.currentContext$ = concat(
       this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
       this.contextChangeSubject
@@ -182,10 +158,6 @@ export class ExplorerComponent {
 
   public onFiltersUpdated(newFilters: Filter[]): void {
     this.filters = [...newFilters];
-  }
-
-  private getOrDefaultContextItemFromQueryParam(value?: ScopeQueryParam): ContextToggleItem {
-    return this.contextItems.find(item => value === item.value.scopeQueryParam) || this.contextItems[0];
   }
 
   private getQueryParamFromContext(context: ExplorerGeneratedDashboardContext): ScopeQueryParam {
@@ -261,34 +233,6 @@ export class ExplorerComponent {
     };
   }
 
-  private mapToInitialState(param: ParamMap): InitialExplorerState {
-    const series: ExploreSeries[] = param
-      .getAll(ExplorerQueryParam.Series)
-      .flatMap((seriesString: string) => this.tryDecodeExploreSeries(seriesString));
-
-    const interval: IntervalValue = this.decodeInterval(param.get(ExplorerQueryParam.Interval));
-
-    return {
-      contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
-      groupBy: param.has(ExplorerQueryParam.Group)
-        ? {
-            keyExpressions: param
-              .getAll(ExplorerQueryParam.Group)
-              .flatMap(expressionString => this.tryDecodeAttributeExpression(expressionString)),
-            includeRest: param.get(ExplorerQueryParam.OtherGroup) === 'true',
-
-            limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
-          }
-        : undefined,
-      interval: interval,
-      series: series,
-      orderBy:
-        interval === 'NONE'
-          ? this.tryDecodeExploreOrderBy(series[0], param.get(ExplorerQueryParam.Order) ?? undefined)
-          : undefined
-    };
-  }
-
   private encodeInterval(interval?: TimeDuration | 'AUTO'): string | undefined {
     if (!interval) {
       return 'NONE';
@@ -300,65 +244,12 @@ export class ExplorerComponent {
     return interval.toString();
   }
 
-  private decodeInterval(durationString: string | null): IntervalValue {
-    if (isNil(durationString)) {
-      return 'AUTO';
-    }
-    if (durationString === 'NONE') {
-      return durationString;
-    }
-
-    return this.timeDurationService.durationFromString(durationString) ?? 'AUTO';
-  }
-
   private encodeExploreSeries(series: ExploreSeries): string {
     return `${series.visualizationOptions.type}:${series.specification.aggregation}(${series.specification.name})`;
   }
 
   private encodeExploreOrderBy(orderBy: ExploreOrderBy): string {
     return `${orderBy.aggregation}(${orderBy.attribute.key}):${orderBy.direction}`;
-  }
-
-  private tryDecodeExploreSeries(seriesString: string): [ExploreSeries] | [] {
-    const matches = seriesString.match(/(\w+):(\w+)\((\w+)\)/);
-    if (matches?.length !== 4) {
-      return [];
-    }
-
-    const visualizationType = matches[1] as CartesianSeriesVisualizationType;
-    const aggregation = matches[2] as MetricAggregationType;
-    const key = matches[3];
-
-    return [
-      {
-        specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
-        visualizationOptions: {
-          type: visualizationType
-        }
-      }
-    ];
-  }
-
-  private tryDecodeExploreOrderBy(selectedSeries: ExploreSeries, orderByString?: string): ExploreOrderBy {
-    const matches = orderByString?.match(/(\w+)\((\w+)\):(\w+)/);
-
-    if (matches?.length !== 4) {
-      return {
-        aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
-        direction: SortDirection.Desc,
-        attribute: {
-          key: selectedSeries.specification.name
-        }
-      };
-    }
-
-    return {
-      aggregation: matches[1] as MetricAggregationType,
-      direction: matches[3] as GraphQlSortDirection,
-      attribute: {
-        key: matches[2]
-      }
-    };
   }
 
   private encodeAttributeExpression(attributeExpression: AttributeExpression): string {
@@ -368,27 +259,10 @@ export class ExplorerComponent {
 
     return `${attributeExpression.key}__${attributeExpression.subpath}`;
   }
-  private tryDecodeAttributeExpression(expressionString: string): [AttributeExpression] | [] {
-    const [key, subpath] = expressionString.split('__');
-
-    return [{ key: key, ...(!isEmpty(subpath) ? { subpath: subpath } : {}) }];
-  }
 }
-interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
+
+export interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
   value: ExplorerContextScope;
-}
-
-export interface InitialExplorerState {
-  contextToggle: ContextToggleItem;
-  series: ExploreSeries[];
-  interval?: IntervalValue;
-  groupBy?: GraphQlGroupBy;
-  orderBy?: ExploreOrderBy;
-}
-
-interface ExplorerContextScope {
-  dashboardContext: ExplorerGeneratedDashboardContext;
-  scopeQueryParam: ScopeQueryParam;
 }
 
 export const enum ScopeQueryParam {
@@ -405,4 +279,17 @@ export const enum ExplorerQueryParam {
   Series = 'series',
   Order = 'order',
   Filters = 'filter'
+}
+
+export interface ExplorerContextScope {
+  dashboardContext: ExplorerGeneratedDashboardContext;
+  scopeQueryParam: ScopeQueryParam;
+}
+
+export interface InitialExplorerState {
+  contextToggle: ContextToggleItem;
+  series: ExploreSeries[];
+  interval?: IntervalValue;
+  groupBy?: GraphQlGroupBy;
+  orderBy?: ExploreOrderBy;
 }

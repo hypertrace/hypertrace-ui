@@ -10,6 +10,7 @@ import {
 import { ExploreQueryEditorModule } from '../../shared/components/explore-query-editor/explore-query-editor.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
 import { EXPLORER_DASHBOARD_BUILDER_FACTORY } from './explorer-dashboard-builder';
+import { ExplorerStateManagerComponentService } from './explorer-state-manager-component.service';
 import { ExplorerComponent } from './explorer.component';
 
 @NgModule({
@@ -37,7 +38,8 @@ export class ExplorerModule {
           useFactory: (...deps: unknown[]) => ({
             build: () => builderFactory.useFactory(...deps)
           })
-        }
+        },
+        ExplorerStateManagerComponentService
       ]
     };
   }
