@@ -1,0 +1,19 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - rudder-sdk-js > @rudderstack/analytics-js-common > rudder-component-cookie > debug:
+        patched: '2023-09-26T07:01:15.339Z'
+        id: 'npm:debug:20170905'
+        path: >-
+          rudder-sdk-js > @rudderstack/analytics-js-common >
+          rudder-component-cookie > debug
+  'npm:ms:20170412':
+    - rudder-sdk-js > @rudderstack/analytics-js-common > rudder-component-cookie > debug > ms:
+        patched: '2023-09-26T07:01:15.339Z'
+        id: 'npm:ms:20170412'
+        path: >-
+          rudder-sdk-js > @rudderstack/analytics-js-common >
+          rudder-component-cookie > debug > ms
