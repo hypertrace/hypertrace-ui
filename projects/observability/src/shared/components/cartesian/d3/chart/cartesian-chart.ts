@@ -610,11 +610,6 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private onMouseLeave(): void {
-    console.log(this.getMouseDataForCurrentEvent());
-    // if(isEqual(this.lastDataPoint, this.getMouseDataForCurrentEvent()[0].dataPoint)) {
-    //   return;
-    // }
-
     this.tooltip?.hovered$
       .pipe(
         tap(onHoverTooltip => {
