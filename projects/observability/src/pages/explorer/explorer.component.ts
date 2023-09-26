@@ -11,7 +11,7 @@ import {
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty, isNil } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreOrderBy,
@@ -127,8 +127,8 @@ export class ExplorerComponent {
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
-  public readonly initialState$: Observable<InitialExplorerState>;
-  public readonly currentContext$: Observable<ExplorerGeneratedDashboardContext>;
+  public initialState$!: Observable<InitialExplorerState>;
+  public currentContext$!: Observable<ExplorerGeneratedDashboardContext>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
 
   public readonly contextItems: ContextToggleItem[] = [
@@ -160,14 +160,21 @@ export class ExplorerComponent {
     private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
-    activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.initialState$ = activatedRoute.queryParamMap.pipe(map(paramMap => this.mapToInitialState(paramMap)));
+    this.buildState();
+  }
+
+  public buildState(): void {
+    this.initialState$ = this.activatedRoute.queryParamMap.pipe(
+      take(1),
+      map(paramMap => this.mapToInitialState(paramMap))
+    );
     this.currentContext$ = concat(
       this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
       this.contextChangeSubject
