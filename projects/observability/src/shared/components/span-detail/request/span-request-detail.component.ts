@@ -10,10 +10,18 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
     <div class="span-request-detail" [ngClass]="this.layout">
       <div class="section">
         <div class="section-item">
-          <ht-span-detail-call-headers [data]="this.requestHeaders" title="Headers"></ht-span-detail-call-headers>
+          <ht-span-detail-call-headers
+            [data]="this.requestHeaders"
+            title="Headers"
+            filterName="${RequestFilterName.Headers}"
+          ></ht-span-detail-call-headers>
         </div>
         <div class="section-item">
-          <ht-span-detail-call-headers [data]="this.requestCookies" title="Cookies"></ht-span-detail-call-headers>
+          <ht-span-detail-call-headers
+            [data]="this.requestCookies"
+            title="Cookies"
+            filterName="${RequestFilterName.Cookies}"
+          ></ht-span-detail-call-headers>
         </div>
       </div>
       <div class="section">
@@ -34,4 +42,9 @@ export class SpanRequestDetailComponent {
 
   @Input()
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
+}
+
+const enum RequestFilterName {
+  Headers = 'requestHeaders',
+  Cookies = 'requestCookies'
 }

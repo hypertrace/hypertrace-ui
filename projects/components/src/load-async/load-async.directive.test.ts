@@ -13,9 +13,9 @@ import { LoaderComponent } from './loader/loader.component';
 import { LoadAsyncWrapperComponent } from './wrapper/load-async-wrapper.component';
 
 describe('Load Async directive', () => {
-  let spectator: SpectatorDirective<LoadAsyncDirective, { data$: Observable<string> }>;
+  let spectator: SpectatorDirective<LoadAsyncDirective<unknown>, { data$: Observable<string> }>;
 
-  const createDirective = createDirectiveFactory<LoadAsyncDirective, { data$: Observable<string> }>({
+  const createDirective = createDirectiveFactory<LoadAsyncDirective<unknown>, { data$: Observable<string> }>({
     directive: LoadAsyncDirective,
     declarations: [LoadAsyncWrapperComponent, MessageDisplayComponent, LoaderComponent],
     entryComponents: [LoadAsyncWrapperComponent],
