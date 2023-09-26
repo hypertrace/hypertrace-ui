@@ -13,14 +13,14 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
           <ht-span-detail-call-headers
             [data]="this.requestHeaders"
             title="Headers"
-            filterName="${RequestFilterName.Headers}"
+            fieldName="${RequestFieldName.Headers}"
           ></ht-span-detail-call-headers>
         </div>
         <div class="section-item">
           <ht-span-detail-call-headers
             [data]="this.requestCookies"
             title="Cookies"
-            filterName="${RequestFilterName.Cookies}"
+            fieldName="${RequestFieldName.Cookies}"
           ></ht-span-detail-call-headers>
         </div>
       </div>
@@ -44,7 +44,7 @@ export class SpanRequestDetailComponent {
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
 }
 
-const enum RequestFilterName {
+const enum RequestFieldName {
   Headers = 'requestHeaders',
   Cookies = 'requestCookies'
 }
