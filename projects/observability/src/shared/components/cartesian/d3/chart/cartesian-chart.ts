@@ -36,7 +36,7 @@ import { CartesianIntervalData } from '../legend/cartesian-interval-control.comp
 import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
-import { debounceTime, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
@@ -76,6 +76,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private activeSeriesSubscription?: Subscription;
   private activeSeries: Series<TData>[] = [];
+  // private lastDataPoint?: TData;
 
   public constructor(
     protected readonly hostElement: Element,
@@ -609,9 +610,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private onMouseLeave(): void {
+    console.log(this.getMouseDataForCurrentEvent());
+    // if(isEqual(this.lastDataPoint, this.getMouseDataForCurrentEvent()[0].dataPoint)) {
+    //   return;
+    // }
+
     this.tooltip?.hovered$
       .pipe(
-        debounceTime(300),
         tap(onHoverTooltip => {
           if (!onHoverTooltip) {
             this.tooltip?.hide();
