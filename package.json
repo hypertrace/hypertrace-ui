@@ -18,7 +18,8 @@
     "prettier:check": "prettier --check '**'",
     "test:ci": "ng test hypertrace-ui --max-workers 2 --ci --coverage",
     "docs": "compodoc -p tsconfig.json",
-    "prepare": "husky install"
+    "prepare": "npm run snyk-protect && husky install",
+    "snyk-protect": "snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -67,7 +68,8 @@
     "rxjs": "~6.6.7",
     "tslib": "^2.6.2",
     "uuid": "^9.0.1",
-    "zone.js": "~0.11.8"
+    "zone.js": "~0.11.8",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "@angular-builders/jest": "^15.0.0",
@@ -142,5 +144,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  }
+  },
+  "snyk": true
 }
