@@ -20,7 +20,7 @@ import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.componen
               <div class="value">{{ record.value }}</div>
               <ht-explore-filter-link
                 class="filter-link"
-                [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+                [paramsOrUrl]="this.buildExploreNavigationParams | htMemoize: record | async"
                 htTooltip="See traces in Explorer"
               >
               </ht-explore-filter-link>
@@ -54,7 +54,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
     this.buildRecords();
   }
 
-  public getExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
+  public buildExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
       { field: this.filterName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
     ]);

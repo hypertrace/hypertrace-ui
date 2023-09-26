@@ -21,7 +21,7 @@ describe('Span Detail Call Headers Component', () => {
     test: 'test-name'
   };
   const mockTitle: string = 'Header';
-  const mockFilterName: string = 'testHeader';
+  const mockFieldName: string = 'testHeader';
 
   const createHost = createHostFactory({
     component: SpanDetailCallHeadersComponent,
@@ -42,12 +42,12 @@ describe('Span Detail Call Headers Component', () => {
 
   test('should display span detail call headers component', () => {
     spectator = createHost(
-      `<ht-span-detail-call-headers [data]="data" [title]="title" [filterName]="filterName"></ht-span-detail-call-headers>`,
+      `<ht-span-detail-call-headers [data]="data" [title]="title" [fieldName]="fieldName"></ht-span-detail-call-headers>`,
       {
         hostProps: {
           data: mockData,
           title: mockTitle,
-          filterName: mockFilterName
+          fieldName: mockFieldName
         }
       }
     );
