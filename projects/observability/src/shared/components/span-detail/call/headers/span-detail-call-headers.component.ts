@@ -42,7 +42,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public title?: string;
 
   @Input()
-  public filterName: string = '';
+  public fieldName: string = '';
 
   public records$?: Observable<ListViewRecord[]>;
 
@@ -56,7 +56,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
 
   public buildExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: this.filterName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
+      { field: this.fieldName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
     ]);
 
   private buildRecords(): void {

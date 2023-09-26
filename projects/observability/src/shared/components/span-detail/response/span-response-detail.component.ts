@@ -13,7 +13,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
           <ht-span-detail-call-headers
             [data]="this.responseHeaders"
             title="Headers"
-            filterName="${ResponseFilterName.Headers}"
+            fieldName="${ResponseFieldName.Headers}"
           ></ht-span-detail-call-headers>
         </div>
 
@@ -21,7 +21,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
           <ht-span-detail-call-headers
             [data]="this.responseCookies"
             [metadata]="this.cookieMetadata"
-            filterName="${ResponseFilterName.Cookies}"
+            fieldName="${ResponseFieldName.Cookies}"
             title="Cookies"
           ></ht-span-detail-call-headers>
         </div>
@@ -49,7 +49,7 @@ export class SpanResponseDetailComponent {
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
 }
 
-const enum ResponseFilterName {
+const enum ResponseFieldName {
   Headers = 'responseHeaders',
   Cookies = 'responseCookies'
 }
