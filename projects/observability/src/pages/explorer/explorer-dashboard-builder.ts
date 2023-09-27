@@ -571,11 +571,9 @@ export class ExplorerDashboardBuilder {
   }
 
   private removeColumnsDuplicated(columns: ModelSpecificationJson[]): ModelJson[] {
-    return uniqBy(columns, column => {
-      if (column.value?.type === ValueSpecificationType.Attribute) {
-        return column.value.attribute;
-      }
-    });
+    return uniqBy(columns, column =>
+      column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column
+    );
   }
 
   private getGeneratedTableColumns(
