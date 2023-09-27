@@ -170,7 +170,7 @@ export class ExplorerComponent {
     this.buildState();
   }
 
-  public buildState(): void {
+  protected buildState(): void {
     this.currentState$ = this.activatedRoute.queryParamMap.pipe(
       take(1),
       map(paramMap => this.mapToInitialState(paramMap))
