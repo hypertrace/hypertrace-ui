@@ -571,7 +571,7 @@ export class ExplorerDashboardBuilder {
   }
 
   private removeColumnsDuplicated(columns: ModelJson[]): ModelJson[] {
-    return uniqBy(columns, 'title'); // Todo: this should be improved
+    return uniqBy(columns, column => (column?.value as AttributeValue).attribute ?? '');
   }
 
   private getGeneratedTableColumns(
@@ -604,6 +604,11 @@ export class ExplorerDashboardBuilder {
 export interface ExplorerGeneratedDashboard {
   json: ModelJson;
   onReady(dashboard: Dashboard): void;
+}
+
+interface AttributeValue {
+  type: string;
+  attribute: string;
 }
 
 export type ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api | 'SPAN';
