@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { isNil } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { Filter, FilterValue } from '../filter/filter';
@@ -62,7 +63,7 @@ export class FilterButtonComponent implements OnChanges {
 
   public ngOnChanges(): void {
     this.availableFilters =
-      this.attribute !== undefined && this.value !== undefined
+      !isNil(this.attribute) && !isNil(this.value)
         ? this.buildAvailableFilters(this.attribute, this.value, this.subpath)
         : [];
   }

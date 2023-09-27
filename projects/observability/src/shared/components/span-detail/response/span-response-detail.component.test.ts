@@ -1,9 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationService } from '@hypertrace/common';
+import { ActivatedRoute } from '@angular/router';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { JsonViewerComponent, ListViewComponent, ToggleButtonGroupComponent } from '@hypertrace/components';
+import { of } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
 import { SpanResponseDetailComponent } from './span-response-detail.component';
 import { SpanResponseDetailModule } from './span-response-detail.module';
 
@@ -14,7 +17,18 @@ describe('Span response detail component', () => {
     component: SpanResponseDetailComponent,
     imports: [SpanResponseDetailModule, HttpClientTestingModule, IconLibraryTestingModule],
     declareComponent: false,
-    providers: [mockProvider(NavigationService)]
+    providers: [
+      mockProvider(NavigationService),
+      mockProvider(ExplorerService, {
+        buildNavParamsWithFilters: jest.fn().mockReturnValue(
+          of({
+            navType: NavigationParamsType.InApp,
+            path: 'test-'
+          })
+        )
+      }),
+      mockProvider(ActivatedRoute)
+    ]
   });
 
   test('should display headers and body title', () => {
