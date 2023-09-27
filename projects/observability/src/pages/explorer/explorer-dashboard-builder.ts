@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Injectable, InjectionToken } from '@angular/core';
-import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
+import { assertUnreachable, isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
   FilterBuilderLookupService,
@@ -10,7 +10,7 @@ import {
 } from '@hypertrace/components';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, take } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
@@ -26,8 +26,9 @@ import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, uniqBy } from 'lodash-es';
 import { ScaleType } from '../../shared/components/cartesian/chart';
+import { Specification } from '../../shared/graphql/model/schema/specifier/specification';
 
 @Injectable()
 export class ExplorerDashboardBuilder {
@@ -101,14 +102,18 @@ export class ExplorerDashboardBuilder {
   private buildDashboardData(request: ExploreVisualizationRequest): Observable<ResultsDashboardData> {
     return request.resultsQuery$.pipe(
       switchMap(resultsQuery =>
-        forkJoinSafeEmpty(
-          resultsQuery.properties.map(property => this.metadataService.getAttribute(request.context, property.name))
-        ).pipe(
+        this.metadataService.getSelectionAttributes(request.context).pipe(
+          take(1),
           map(attributes => [
             ...this.getDefaultTableColumns(request.context as ExplorerGeneratedDashboardContext),
-            ...this.getUserRequestedNonDefaultColumns(attributes, request.context as ExplorerGeneratedDashboardContext)
+            ...this.getGeneratedTableColumns(
+              attributes,
+              request.context as ExplorerGeneratedDashboardContext,
+              resultsQuery.properties
+            )
           ]),
-          map(columns => this.buildColumnModelJson(request.context, columns)),
+          map(columnsMetadata => this.removeColumnsDuplicated(columnsMetadata)),
+          map(columnsMetadata => this.buildColumnModelJson(request.context, columnsMetadata)),
           map(json => ({
             json: json,
             filters: resultsQuery.filters || []
@@ -565,9 +570,14 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private getUserRequestedNonDefaultColumns(
+  private removeColumnsDuplicated(columns: ModelJson[]): ModelJson[] {
+    return uniqBy(columns, 'title'); // Todo: this should be improved
+  }
+
+  private getGeneratedTableColumns(
     attributes: AttributeMetadata[],
-    context: ExplorerGeneratedDashboardContext
+    context: ExplorerGeneratedDashboardContext,
+    selectedProperties: Specification[]
   ): ModelJson[] {
     const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
 
@@ -583,6 +593,7 @@ export class ExplorerDashboardBuilder {
           type: 'attribute-specification',
           attribute: attribute.name
         },
+        visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
         'click-handler': {
           type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
         }
