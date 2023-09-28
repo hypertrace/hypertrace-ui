@@ -112,7 +112,7 @@ export class ExplorerDashboardBuilder {
               resultsQuery.properties
             )
           ]),
-          map(columnsMetadata => this.removeColumnsDuplicated(columnsMetadata)),
+          map(columnsMetadata => this.removeDuplicatedColumns(columnsMetadata)),
           map(columnsMetadata => this.buildColumnModelJson(request.context, columnsMetadata)),
           map(json => ({
             json: json,
@@ -180,7 +180,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelJson[] {
+  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelSpecificationJson[] {
     switch (context) {
       case ObservabilityTraceType.Api:
         return [
@@ -570,7 +570,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private removeColumnsDuplicated(columns: ModelSpecificationJson[]): ModelJson[] {
+  private removeDuplicatedColumns(columns: ModelSpecificationJson[]): ModelJson[] {
     return uniqBy(columns, column =>
       column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column
     );
@@ -581,21 +581,25 @@ export class ExplorerDashboardBuilder {
     context: ExplorerGeneratedDashboardContext,
     selectedProperties: Specification[]
   ): ModelSpecificationJson[] {
-    return attributes.map(attribute => ({
-      type: 'table-widget-column',
-      title: attribute.displayName,
-      width: 1,
-      display: this.getRendererForType(attribute.type),
-      filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
-      value: {
-        type: ValueSpecificationType.Attribute,
-        attribute: attribute.name
-      },
-      visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
-      'click-handler': {
-        type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
-      }
-    }));
+    const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
+
+    return attributes
+      .filter(attribute => !attributesToExclude.has(attribute.name))
+      .map(attribute => ({
+        type: 'table-widget-column',
+        title: attribute.displayName,
+        width: 1,
+        display: this.getRendererForType(attribute.type),
+        filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
+        value: {
+          type: ValueSpecificationType.Attribute,
+          attribute: attribute.name
+        },
+        visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
+        'click-handler': {
+          type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
+        }
+      }));
   }
 }
 
@@ -604,8 +608,8 @@ export interface ExplorerGeneratedDashboard {
   onReady(dashboard: Dashboard): void;
 }
 
-interface ModelSpecificationJson extends ModelJson {
-  value?:
+export interface ModelSpecificationJson extends ModelJson {
+  value:
     | {
         type: ValueSpecificationType.Attribute;
         attribute: string;
