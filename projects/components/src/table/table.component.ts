@@ -995,21 +995,7 @@ export class TableComponent
           ).pipe(
             take(1),
             map((response: TableDataResponse<TableRow>) => response.data),
-            map(rows => {
-              const csvGeneratorMap = this.tableColumnCsvMapper.columnCsvMapperConfigMap;
-
-              return rows.map(row => {
-                const rowValue: Dictionary<string | undefined> = {};
-                Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
-                  const value = row[columnKey];
-                  const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
-
-                  rowValue[columnKey] = csvGenerator(value, row);
-                });
-
-                return rowValue;
-              });
-            })
+            map(rows => this.tableColumnCsvMapper.generateCsv(rows))
           )
         ),
         switchMap((content: Dictionary<string | undefined>[]) =>
