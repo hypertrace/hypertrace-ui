@@ -43,12 +43,12 @@ import {
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="explorer" *htLetAsync="this.initialState$ as initialState">
+    <div class="explorer" *htLetAsync="this.currentState$ as currentState">
       <ht-page-header class="explorer-header"></ht-page-header>
       <ht-toggle-group
         class="explorer-data-toggle"
         [items]="this.contextItems"
-        [activeItem]="initialState.contextToggle"
+        [activeItem]="currentState.contextToggle"
         (activeItemChange)="this.onContextUpdated($event.value)"
       ></ht-toggle-group>
 
@@ -78,10 +78,10 @@ import {
                 *ngIf="this.attributes$ | async as attributes"
                 [context]="this.currentContext$ | async"
                 [filters]="this.filters"
-                [series]="initialState.series"
-                [interval]="initialState.interval"
-                [groupBy]="initialState.groupBy"
-                [orderBy]="initialState.orderBy"
+                [series]="currentState.series"
+                [interval]="currentState.interval"
+                [groupBy]="currentState.groupBy"
+                [orderBy]="currentState.orderBy"
                 (visualizationRequestChange)="this.onVisualizationRequestUpdated($event, attributes)"
               ></ht-explore-query-editor>
 
@@ -127,8 +127,8 @@ export class ExplorerComponent {
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
-  public readonly initialState$: Observable<InitialExplorerState>;
-  public readonly currentContext$: Observable<ExplorerGeneratedDashboardContext>;
+  public currentState$!: Observable<InitialExplorerState>;
+  public currentContext$!: Observable<ExplorerGeneratedDashboardContext>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
 
   public readonly contextItems: ContextToggleItem[] = [
@@ -156,23 +156,27 @@ export class ExplorerComponent {
 
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly navigationService: NavigationService,
+    protected readonly navigationService: NavigationService,
     private readonly timeDurationService: TimeDurationService,
     private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
-    activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
-    this.initialState$ = activatedRoute.queryParamMap.pipe(
+    this.buildState();
+  }
+
+  protected buildState(): void {
+    this.currentState$ = this.activatedRoute.queryParamMap.pipe(
       take(1),
       map(paramMap => this.mapToInitialState(paramMap))
     );
     this.currentContext$ = concat(
-      this.initialState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
+      this.currentState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
       this.contextChangeSubject
     );
   }
@@ -398,12 +402,14 @@ export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
   Spans = 'spans'
 }
-const enum ExplorerQueryParam {
+
+export const enum ExplorerQueryParam {
   Scope = 'scope',
   Interval = 'interval',
   Group = 'group',
   OtherGroup = 'other',
   GroupLimit = 'limit',
   Series = 'series',
-  Order = 'order'
+  Order = 'order',
+  Filters = 'filter'
 }
