@@ -180,7 +180,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelSpecificationJson[] {
+  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): SpecificationBackedColumnModelJson[] {
     switch (context) {
       case ObservabilityTraceType.Api:
         return [
@@ -570,7 +570,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private removeDuplicatedColumns(columns: ModelSpecificationJson[]): ModelJson[] {
+  private removeDuplicatedColumns(columns: SpecificationBackedColumnModelJson[]): ModelJson[] {
     return uniqBy(columns, column =>
       column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column
     );
@@ -580,7 +580,7 @@ export class ExplorerDashboardBuilder {
     attributes: AttributeMetadata[],
     context: ExplorerGeneratedDashboardContext,
     selectedProperties: Specification[]
-  ): ModelSpecificationJson[] {
+  ): SpecificationBackedColumnModelJson[] {
     const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
 
     return attributes
@@ -608,7 +608,7 @@ export interface ExplorerGeneratedDashboard {
   onReady(dashboard: Dashboard): void;
 }
 
-export interface ModelSpecificationJson extends ModelJson {
+export interface SpecificationBackedColumnModelJson extends ModelJson {
   value:
     | {
         type: ValueSpecificationType.Attribute;
