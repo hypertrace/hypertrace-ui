@@ -50,7 +50,14 @@ export class MetadataService {
   public getSelectionAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return this.getAllAttributes(scope).pipe(
       // Types we can't aggregate we can't select/visualize
-      map(attributes => attributes.filter(attribute => attribute.allowedAggregations.length > 0))
+      map(attributes =>
+        attributes.filter(
+          attribute =>
+            attribute.allowedAggregations.length > 0 &&
+            attribute.type !== AttributeMetadataType.StringMap &&
+            !(attribute.type === AttributeMetadataType.String && !attribute.groupable)
+        )
+      )
     );
   }
 
