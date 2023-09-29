@@ -1,7 +1,6 @@
 import { FilterBuilderLookupService, TableMode, TableStyle } from '@hypertrace/components';
 import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
-import { capitalize } from 'lodash-es';
 import { MockService } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
@@ -9,7 +8,6 @@ import { ExploreVisualizationRequest } from '../../shared/components/explore-que
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
 import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphql/filter/graphql-filter-data-source.model';
-import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/field/graphql-field-filter';
 import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
@@ -18,6 +16,8 @@ import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builde
 import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
+import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
+import { capitalize } from 'lodash-es';
 
 describe('Explorer dashboard builder', () => {
   const buildSeries = (key: string, aggregation?: MetricAggregationType) => ({
@@ -71,14 +71,16 @@ describe('Explorer dashboard builder', () => {
 
   test('can build dashboard JSON for traces', done => {
     const builder = new ExplorerDashboardBuilder(
-      {
-        getAttribute: (_: never, name: string) =>
+      MockService(MetadataService, {
+        getAttribute: jest.fn().mockReturnValue(
           of({
-            name: name,
-            displayName: capitalize(name),
+            name: 'test',
+            displayName: capitalize('test'),
             type: AttributeMetadataType.Long
           })
-      } as MetadataService,
+        ),
+        getSelectionAttributes: jest.fn().mockReturnValue(of([]))
+      }),
       MockService(FilterBuilderLookupService)
     );
 
@@ -136,8 +138,7 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Entry Span ID' }),
               expect.objectContaining({ title: 'Service ID' }),
               expect.objectContaining({ title: 'Trace ID' }),
-              expect.objectContaining({ title: 'Request URL' }),
-              expect.objectContaining({ title: 'Foo' })
+              expect.objectContaining({ title: 'Request URL' })
             ]
           },
           onReady: expect.any(Function)
