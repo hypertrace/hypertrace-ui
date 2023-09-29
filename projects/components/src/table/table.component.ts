@@ -73,7 +73,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
 import { FileDownloadService } from '../download-file/service/file-download.service';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
-import { TABLE_COLUMN_CSV_MAPPER, TableCsvMapperService } from './table-csv-mapper.service';
+import { TableCsvMapperService } from './table-csv-mapper.service';
 
 @Component({
   selector: 'ht-table',
@@ -508,7 +508,7 @@ export class TableComponent
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
-    @Inject(TABLE_COLUMN_CSV_MAPPER) private readonly tableColumnCsvMapper: TableCsvMapperService,
+    private readonly tableColumnCsvMapper: TableCsvMapperService,
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,

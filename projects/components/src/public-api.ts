@@ -368,6 +368,13 @@ export * from './table/cells/data-parsers/table-cell-no-op-parser';
 export * from './table/cells/data-parsers/table-cell-string-parser';
 export * from './table/cells/data-parsers/table-cell-timestamp-parser';
 export * from './table/cells/data-parsers/table-cell-icon-parser';
+export * from './table/table-csv-mapper.service';
+export * from './table/table-csv-downloader.service';
+
+// Table cell csv mappers
+export * from './table/csv-generators/number-csv-generator';
+export * from './table/csv-generators/cell-csv-generator';
+export * from './table/csv-generators/string-csv-generator';
 
 // Table Controls
 export * from './table/controls/table-controls.module';

@@ -1,30 +1,27 @@
-import { Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import { TableRow } from './table-api';
-
-export const TABLE_COLUMN_CSV_MAPPER = new InjectionToken<TableCsvMapperService>('Table Column CSV Mapper Service');
+import { CellCsvGenerator } from './csv-generators/cell-csv-generator';
 
 @Injectable({ providedIn: 'root' })
-export class TableCsvMapperService {
+export class TableCsvMapperService<TKeyType> {
   // Each table should provide its own column to csv mapper config
-  protected readonly columnCsvMapperConfigMap: Map<
-    ColumnId,
-    (cellData?: unknown, rowData?: unknown) => string | undefined
-  > = new Map();
+  private readonly columnCsvMapperConfigMap: Map<TKeyType, CellCsvGenerator>;
 
-  public generateCsv(rows: TableRow[]): Dictionary<string | undefined>[] {
+  public constructor(mappers: [TKeyType, CellCsvGenerator][]) {
+    this.columnCsvMapperConfigMap = new Map(mappers);
+  }
+
+  public generateCsv(rows: Dictionary<unknown>[]): Dictionary<string | undefined>[] {
     return rows.map(row => {
       const rowValue: Dictionary<string | undefined> = {};
       Array.from(this.columnCsvMapperConfigMap.keys()).forEach(columnKey => {
-        const value = row[columnKey];
+        const value = row[columnKey as string];
         const csvGenerator = this.columnCsvMapperConfigMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
 
-        rowValue[columnKey] = csvGenerator(value, row);
+        rowValue[columnKey as string] = csvGenerator.generate(value, row);
       });
 
       return rowValue;
     });
   }
 }
-
-type ColumnId = string;
