@@ -93,6 +93,7 @@ export class NavigationComponent {
     );
 
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
+    this.updateDefaultTimeRangeIfUnset();
   }
 
   public updateDefaultTimeRangeIfUnset(): void {

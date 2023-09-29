@@ -2,20 +2,13 @@ import { ActivatedRoute } from '@angular/router';
 import {
   LoggerService,
   NavigationService,
-  PageTimeRangePreferenceService,
   PreferenceService,
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
   TimeUnit
 } from '@hypertrace/common';
-import {
-  LetAsyncModule,
-  NavigationListComponent,
-  NavigationListComponentService,
-  NavigationListService,
-  NavItemConfig
-} from '@hypertrace/components';
+import { LetAsyncModule, NavigationListComponent, NavigationListService, NavItemConfig } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
@@ -44,7 +37,6 @@ describe('NavigationComponent', () => {
       }),
       mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),
-      mockProvider(PageTimeRangePreferenceService),
       mockProvider(LoggerService)
     ]
   });
